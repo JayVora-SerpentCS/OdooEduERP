@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_exam_exam","exam.exam","model_exam_exam","school.group_school_administration",1,1,1,1
+"access_additional_exam","additional.exam","model_additional_exam","school.group_school_administration",1,1,1,1
+"access_exam_result","exam.result","model_exam_result","school.group_school_administration",1,1,1,1
+"access_exm_subject","exam.subject","model_exm_subject","school.group_school_administration",1,1,1,1
+"access_additional_exam_result","additional.exam.result","model_additional_exam_result","school.group_school_administration",1,1,1,1

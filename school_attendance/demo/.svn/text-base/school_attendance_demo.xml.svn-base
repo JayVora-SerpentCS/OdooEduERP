@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+ 	<!-- Daily Attendance Information-->
+ 		
+    	<record id="demo_daily_attendance_1" model="daily.attendance">
+			<field name="date">2011-08-11</field>
+			<field name="class_id" ref="school.demo_standard_standard_1"/>
+			<field name="medium_id" ref="school.demo_standard_medium_1"/>
+			<field name="division_id" ref="school.demo_standard_division_1"/>
+			<field name="state">draft</field>
+		</record>
+		
+
+	<!-- Daily Attendance Line Information-->
+		
+    	<record id="demo_daily_attendance_line_1" model="daily.attendance.line">
+			<field name="standard_id" ref="demo_daily_attendance_1"/>
+			<field name="roll_no">2</field>
+			<field name="name">Divyesh</field>
+		</record>
+		
+		<record id="demo_daily_attendance_line_2" model="daily.attendance.line">
+			<field name="standard_id" ref="demo_daily_attendance_1"/>
+			<field name="roll_no">4</field>
+			<field name="name">Jalpesh</field>
+		</record>
+
+		<record id="demo_daily_attendance_line_3" model="daily.attendance.line">
+			<field name="standard_id" ref="demo_daily_attendance_1"/>
+			<field name="roll_no">3</field>
+			<field name="name">Hitesh</field>
+		</record>
+
+		<record id="demo_daily_attendance_line_4" model="daily.attendance.line">
+			<field name="standard_id" ref="demo_daily_attendance_1"/>
+			<field name="roll_no">5</field>
+			<field name="name">Samir</field>
+		</record>
+
+		<record id="demo_daily_attendance_line_5" model="daily.attendance.line">
+			<field name="standard_id" ref="demo_daily_attendance_1"/>
+			<field name="roll_no">1</field>
+			<field name="name">Darshan</field>
+		</record>
+		
+	
+		<!-- Attendance Sheet Information-->
+		
+		<record id="demo_attendance_sheet_1" model="attendance.sheet">
+			<field name="name">Month-(Aug)-2011</field>
+			<field name="class_id" ref="school.demo_standard_standard_1"/>
+			<field name="medium_id" ref="school.demo_standard_medium_1"/>
+			<field name="division_id" ref="school.demo_standard_division_1"/>
+			<field name="month_id" ref="school.demo_academic_month_8"/>
+			<field name="year_id" ref="school.demo_academic_year_1"/>
+		</record>
+
+		<!-- Attendance Sheet Line Information-->
+		
+		<record id="demo_attendance_sheet_line_1" model="attendance.sheet.line">
+			<field name="standard_id" ref="demo_attendance_sheet_1"/>
+			<field name="name">Divyesh</field>
+			<field name="roll_no">2</field>
+			<field name="one">True</field>
+			<field name="two">True</field>
+			<field name="three">False</field>
+			<field name="four">True</field>
+			<field name="five">True</field>
+			<field name="six">True</field>
+			<field name="seven">True</field>
+			<field name="eight">True</field>
+			<field name="nine">True</field>
+			<field name="ten">False</field>
+			<field name="one_1">True</field>
+			<field name="one_2">True</field>
+		</record>
+
+		<record id="demo_attendance_sheet_line_2" model="attendance.sheet.line">
+			<field name="standard_id" ref="demo_attendance_sheet_1"/>
+			<field name="name">Jalpesh</field>
+			<field name="roll_no">4</field>
+			<field name="one">True</field>
+			<field name="two">True</field>
+			<field name="three">False</field>
+			<field name="four">True</field>
+			<field name="five">True</field>
+			<field name="six">True</field>
+			<field name="seven">True</field>
+			<field name="eight">True</field>
+			<field name="nine">True</field>
+			<field name="ten">False</field>
+			<field name="one_1">True</field>
+			<field name="one_2">True</field>
+		</record>
+
+		<record id="demo_attendance_sheet_line_3" model="attendance.sheet.line">
+			<field name="standard_id" ref="demo_attendance_sheet_1"/>
+			<field name="name">Hitesh</field>
+			<field name="roll_no">3</field>
+			<field name="one">True</field>
+			<field name="two">True</field>
+			<field name="three">False</field>
+			<field name="four">True</field>
+			<field name="five">True</field>
+			<field name="six">True</field>
+			<field name="seven">True</field>
+			<field name="eight">True</field>
+			<field name="nine">True</field>
+			<field name="ten">False</field>
+			<field name="one_1">True</field>
+			<field name="one_2">True</field>
+		</record>
+
+		<record id="demo_attendance_sheet_line_4" model="attendance.sheet.line">
+			<field name="standard_id" ref="demo_attendance_sheet_1"/>
+			<field name="name">Samir</field>
+			<field name="roll_no">5</field>
+			<field name="one">True</field>
+			<field name="two">True</field>
+			<field name="three">False</field>
+			<field name="four">True</field>
+			<field name="five">True</field>
+			<field name="six">True</field>
+			<field name="seven">True</field>
+			<field name="eight">True</field>
+			<field name="nine">True</field>
+			<field name="ten">False</field>
+			<field name="one_1">True</field>
+			<field name="one_2">True</field>
+		</record>
+
+		<record id="demo_attendance_sheet_line_5" model="attendance.sheet.line">
+			<field name="standard_id" ref="demo_attendance_sheet_1"/>
+			<field name="name">Darshan</field>
+			<field name="roll_no">1</field>
+			<field name="one">True</field>
+			<field name="two">True</field>
+			<field name="three">False</field>
+			<field name="four">True</field>
+			<field name="five">True</field>
+			<field name="six">True</field>
+			<field name="seven">True</field>
+			<field name="eight">True</field>
+			<field name="nine">True</field>
+			<field name="ten">False</field>
+			<field name="one_1">True</field>
+			<field name="one_2">True</field>
+		</record>
+
+    </data>
+</openerp>

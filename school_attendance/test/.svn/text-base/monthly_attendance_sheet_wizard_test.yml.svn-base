@@ -1,0 +1,38 @@
+-
+  I called the 'monthly_attendance_sheet' wizard
+-
+  !record {model: monthly.attendance.sheet, id: monthly_attendance_sheet_0}:
+    class_id: school.demo_standard_standard_1
+    medium_id: school.demo_standard_medium_1
+    division_id: school.demo_standard_division_1
+    year_id: school.demo_academic_year_1
+    month_id: school.demo_academic_month_1
+
+-
+  I create the 'attendance.sheet' record
+-
+  !record {model: attendance.sheet, id: attendance_sheet_0}:
+    name: Attendance Sheet Of Aug-2011
+    class_id: school.demo_standard_standard_1
+    medium_id: school.demo_standard_medium_1
+    division_id: school.demo_standard_division_1
+    year_id: school.demo_academic_year_1
+    month_id: school.demo_academic_month_1
+
+-
+  I create the 'attendance.sheet.line' record
+-
+  !record {model: attendance.sheet.line, id: attendance_sheet_line_0}:
+    roll_no: 1
+    standard_id: attendance_sheet_0
+    name: Divyesh
+
+-
+  I clicked on 'Open Attendance Sheet' Button
+-
+  !python {model: monthly.attendance.sheet}: |
+    
+    self.monthly_attendance_sheet_open_window(cr, uid, [ref("monthly_attendance_sheet_0")], {"lang": 'en_US',
+      "active_model": "ir.ui.menu", "active_ids": ['active_ids'],
+      "tz": False, "active_id":['active_id'], })
+

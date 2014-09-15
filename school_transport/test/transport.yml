@@ -1,0 +1,184 @@
+-
+    In order to check the transport module in OpenERP.
+-
+    create transport point.
+-
+    !record {model: 'transport.point', id: transport_point_0}:
+        name: 'unjha'
+        amount: 2000
+-
+    Call Search mathod in transport.point
+-
+    !python {model: transport.point}: |
+     self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "name":
+      1, "tz": False},{})
+-
+    Call Search mathod in transport.point with context={}
+-
+    !python {model: transport.point}: |
+     self.search(cr, uid,[])
+-
+    create vehicle driver.
+-
+    !record {model: 'hr.employee', id: hr_employee_0}:
+        name: 'driver007'
+        licence_no: 'GJ1007'
+-
+    create transport vehicle.
+-
+    !record {model: 'transport.vehicle', id: transport_vehicle_0}:
+        driver_id: hr_employee_0
+        vehicle: 'GJ-2 6233'
+        capacity: 56
+-
+    create transport vehicle.
+-
+    !record {model: 'transport.vehicle', id: transport_vehicle_1}:
+        driver_id: hr_employee_0
+        vehicle: 'GJ-2 62332'
+        capacity: 56
+-
+    Call Search mathod in transport.vehicle
+-
+    !python {model: transport.vehicle}: |
+     self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "name":
+      1, "tz": False},{})
+-
+    Call Search mathod in transport.vehicle with context={}
+-
+    !python {model: transport.vehicle}: |
+     self.search(cr, uid,[])
+-
+    Call Search mathod in transport.participant
+-
+    !python {model: transport.participant}: |
+     self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "name":
+      1, "tz": False},{})
+- 
+    Call Search mathod in transport.participant with context={}
+-
+    !python {model: transport.participant}: |
+     self.search(cr, uid,[])
+-   
+    I Create the one transport root.
+-
+    !record {model: 'student.transport', id: transport_root_0}:
+        name: 'Ahmedabad-Unjha'
+        start_date: '2011-08-02'
+        end_date: '2012-08-20'
+        contact_per_id: school.demo_student_student_6
+-
+    Do one registration of the participant 
+-
+    !record {model: 'transport.registration', id: transport_registration_0}:
+        name: transport_root_0
+        part_name: school.demo_student_student_1
+        reg_date: '2011-08-13'
+        reg_end_date: '2011-12-13'
+        for_month: 4
+        vehicle_id: transport_vehicle_0
+        point_id: transport_point_0
+        amount: 8000
+-
+    Do one entry of the transport.participant 
+-
+    !record {model: 'transport.participant', id: transport_participant_0}:
+        name: school.demo_student_student_1
+        transport_id: transport_root_0
+        stu_pid_id: '123-456-789'
+        tr_reg_date: '2011-09-13'
+        tr_end_date: '2011-10-13'
+        months: 1
+        vehicle_id: transport_vehicle_0
+        point_id: transport_point_0
+        amount: 2000
+-
+    create transport vehicle Participant.
+-
+    !record {model: 'transport.vehicle', id: transport_vehicle_0}:
+        vehi_participants_ids: ['transport_participant_0']
+-
+    create transport root Participant.
+-
+    !record {model: 'student.transport', id: transport_root_0}:
+        trans_participants_ids: ['transport_participant_0']
+-
+    I confirm the transport registration.
+-
+    !python {model: transport.registration}: |
+     self.trans_regi_confirm(cr,uid,[ref('transport_registration_0')])
+-
+    I cancel the transport registration.
+-
+    !python {model: transport.registration}: |
+     self.trans_regi_cancel(cr,uid,[ref('transport_registration_0')])
+-
+    on change in for month
+-
+    !python {model: transport.registration}: |
+     self.onchange_for_month(cr,uid,[ref('transport_registration_0')],4)
+-
+    on change in for month with context={}
+-
+    !python {model: transport.registration}: |
+     self.onchange_for_month(cr,uid,[],{})
+-
+    on change in point_id
+-
+    !python {model: transport.registration}: |
+     self.onchange_point_id(cr,uid,[ref('transport_registration_0')],ref("transport_point_1"))
+-
+    on change in point_id with context={}
+-
+    !python {model: transport.registration}: |
+     self.onchange_point_id(cr,uid,[],{})
+-
+    do the state of transport open.
+-
+    !python {model: student.transport}: |
+     self.transport_open(cr, uid, [ref("transport_root_0")], {"lang": 'en_US', "active_model":
+      "student.transport", "tz": False
+      })
+-
+    do the state of transport close.
+-
+    !python {model: student.transport}: |
+     self.transport_close(cr, uid, [ref("transport_root_0")], {"lang": 'en_US', "active_model":
+      "student.transport", "tz": False
+      })
+-
+    do the delete entry of the participants of which transportation registration is over.
+-
+    !python {model: student.transport}: |
+     self.delet_entry(cr, uid, [], {"lang": 'en_US', "active_model":
+      "student.transport", "tz": False
+      })
+-
+    create transfer.vehicle.
+-
+    !record {model: 'transfer.vehicle', id: transfer_vehicle_0}:
+        name: school.demo_student_student_1
+        participation_id: transport_participant_0
+        root_id: transport_root_0
+        old_vehicle_id: transport_vehicle_0
+        new_vehicle_id: transport_vehicle_1
+-
+    on change in participation_id
+-
+    !python {model: transfer.vehicle}: |
+     self.onchange_participation_id(cr,uid,[ref('transfer_vehicle_0')],ref("transport_participant_1"))
+-
+    on change in participation_id with context=0
+-
+    !python {model: transfer.vehicle}: |
+     self.onchange_participation_id(cr,uid,[],{})
+-
+    call Defaultget
+-
+    !python {model: transfer.vehicle}: |
+     self.default_get(cr,uid,['old_vehicle_id', 'new_vehicle_id', 'name', 'participation_id', 'root_id'],{'lang': 'en_US', 'tz': False, 'active_model': 'student.student', 'department_id': False, 'active_ids': [5], 'active_id': 5})
+-
+    call vehicle_transfer
+-
+    !python {model: transfer.vehicle}: |
+     self.vehicle_transfer(cr,uid,[ref('transfer_vehicle_0')])

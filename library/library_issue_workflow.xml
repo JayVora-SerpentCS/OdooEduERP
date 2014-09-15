@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- General structure of a workflow XML file -->
+
+    <record model="workflow" id="wkf_library">
+        <field name="name">workflow.library</field>
+        <field name="osv">library.book.issue</field>
+        <field name="on_create">True</field>
+    </record>
+
+    <!-- Library book issue Workflow Activities -->
+    <record model="workflow.activity" id="act_draft">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Draft</field>
+        <field name="kind">function</field>
+        <field name="action">draft_book()</field>
+        <field name="flow_start">True</field>
+    </record>
+    
+    <record model="workflow.activity" id="act_cancel">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Cancel</field>
+        <field name="kind">function</field>
+        <field name="action">cancel_book()</field>
+    </record>
+
+    <record model="workflow.activity" id="act_issue">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Issue</field>
+         <field name="kind">function</field>
+         <field name="action">issue_book()</field>
+    </record>
+    
+    <record model="workflow.activity" id="act_reissue">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Reissue</field>
+         <field name="kind">function</field>
+         <field name="action">reissue_book()</field>
+    </record>
+
+    <record model="workflow.activity" id="act_return">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Return</field>
+         <field name="kind">function</field>
+         <field name="action">return_book()</field>
+    </record>
+
+    <record model="workflow.activity" id="act_lost">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Lost</field>
+        <field name="kind">function</field>
+        <field name="action">lost_book()</field>
+    </record>
+    
+    <record model="workflow.activity" id="act_fine">
+        <field name="wkf_id" ref="wkf_library" />
+        <field name="name">Fine</field>
+        <field name="kind">function</field>
+        <field name="action">user_fine()</field>
+        <field name="flow_stop">True</field>
+    </record>
+
+    <!-- library book issue Workflow Transitions -->
+    <record model="workflow.transition" id="trans_issue">
+        <field name="act_from" ref="act_draft" />
+        <field name="act_to" ref="act_issue" />
+        <field name="signal">issue_book</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_cancel">
+        <field name="act_from" ref="act_draft" />
+        <field name="act_to" ref="act_cancel" />
+        <field name="signal">cancel_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_draft">
+        <field name="act_from" ref="act_cancel" />
+        <field name="act_to" ref="act_draft" />
+        <field name="signal">draft_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_issue2">
+        <field name="act_from" ref="act_issue" />
+        <field name="act_to" ref="act_cancel" />
+        <field name="signal">cancel_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_reissue">
+        <field name="act_from" ref="act_issue" />
+        <field name="act_to" ref="act_reissue" />
+        <field name="signal">reissue_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_reissue2">
+        <field name="act_from" ref="act_reissue" />
+        <field name="act_to" ref="act_return" />
+        <field name="signal">return_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_reissue3">
+        <field name="act_from" ref="act_reissue" />
+        <field name="act_to" ref="act_lost" />
+        <field name="signal">lost_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_return">
+        <field name="act_from" ref="act_issue" />
+        <field name="act_to" ref="act_return" />
+        <field name="signal">return_book</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_lost">
+        <field name="act_from" ref="act_issue" />
+        <field name="act_to" ref="act_lost" />
+        <field name="signal">lost_book</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_fine">
+        <field name="act_from" ref="act_lost" />
+        <field name="act_to" ref="act_fine" />
+        <field name="signal">user_fine</field>
+    </record>
+    
+    <record model="workflow.transition" id="trans_fine2">
+        <field name="act_from" ref="act_return" />
+        <field name="act_to" ref="act_fine" />
+        <field name="signal">user_fine</field>
+    </record>
+
+</data>
+</openerp>

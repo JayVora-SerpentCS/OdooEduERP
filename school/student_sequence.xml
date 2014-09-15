@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+		<record id="sequence_type_grn" model='ir.sequence.type'>
+                <field name="name">General Reg Number</field>
+                <field name="code">student.grn</field>
+        </record>
+            
+        <record id="sequence_grn" model="ir.sequence">
+             <field name="name">GRN</field>
+             <field name="code">student.grn</field>
+             <field name="padding">4</field>
+             <field name="prefix"></field>
+             <field name="suffix"></field>
+             <field name="number_next">1</field>
+             <field name="number_increment">1</field>
+        </record>
+        
+		<!-- Sequences for student.code (student code) -->
+        <record id="seq_student_code_type" model="ir.sequence.type">
+            <field name="name">Student code</field>
+            <field name="code">student.code</field>
+        </record>
+
+        <record id="seq_student_code" model="ir.sequence">
+            <field name="name">Student code</field>
+            <field name="code">student.code</field>
+            <field name="padding">3</field>
+        </record>
+        
+		<!-- Sequences for student.registration (Registration code) -->
+        <record id="seq_student_reg_type" model="ir.sequence.type">
+            <field name="name">Registration code</field>
+            <field name="code">student.registration</field>
+        </record>
+
+        <record id="seq_student_reg" model="ir.sequence">
+            <field name="name">Student registration code</field>
+            <field name="code">student.registration</field>
+            <field name="padding">3</field>
+        </record>
+        
+        <!-- Sequences for student.student (Personal Identification Number) -->
+        <record id="seq_student_student_type" model="ir.sequence.type">
+            <field name="name">Personal Identification Number</field>
+            <field name="code">student.student</field>
+        </record>
+
+        <record id="seq_student_student" model="ir.sequence">
+            <field name="name">Student</field>
+            <field name="code">student.student</field>
+            <field name="prefix">%(year)s/%(month)s/</field>
+            <field name="padding">3</field>
+        </record>
+        
+        <record id="seq_student_document_type" model="ir.sequence.type">
+            <field name="name">File Number</field>
+            <field name="code">student.document</field>
+        </record>
+        
+        <record id="seq_student_document" model="ir.sequence">
+            <field name="name">Document</field>
+            <field name="code">student.document</field>
+            <field name="prefix">F</field>
+            <field name="padding">3</field>
+        </record>
+        
+        
+        <record id="seq_student_seq_no" model="ir.sequence.type">
+            <field name="name">Sequence Number</field>
+            <field name="code">document.type</field>
+        </record>
+        
+        <record id="seq_student_sequence" model="ir.sequence">
+            <field name="name">sequence</field>
+            <field name="code">document.type</field>
+            <field name="padding">1</field>
+        </record>
+        
+    </data>
+</openerp>

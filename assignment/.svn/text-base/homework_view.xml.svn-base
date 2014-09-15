@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+         <!-- Teacher Assigment Information Tree View -->
+        <record model="ir.ui.view" id="view_school_teacher_assigment_tree">
+            <field name="name">school.teacher.assignment.tree</field>
+            <field name="model">school.teacher.assignment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Assignment Information">
+                    <field name="name" />
+                    <field name="teacher_id" select="1"/>
+                    <field name="standard_id"/>
+                    <field name="subject_id" />
+                    <field name="division_id" />
+                    <field name="assign_date" />
+                    <field name="due_date" />
+                    <field name="state" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_school_teacher_assigment_search">
+            <field name="name">school.teacher.assignment.search</field>
+            <field name="model">school.teacher.assignment</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Assignment Information">
+                    <filter string="Active" domain="[('state','=','active')]" icon="terp-camera_test"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" />
+                    <field name="teacher_id"/>
+                    <field name="standard_id"/>
+                    <field name="subject_id" />
+                    <field name="division_id" />
+                    <field name="assign_date" />
+                    <field name="due_date" />
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Teacher" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'teacher_id'}"/>
+                        <filter string="Subject" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'subject_id'}"/>
+                        <filter string="Standard" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'standard_id'}"/>
+                        <filter string="Assign Date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Teacher Assigment Information From View -->
+        <record model="ir.ui.view" id="view_school_teacher_assigment_form">
+            <field name="name">school.teacher.assignment.form</field>
+            <field name="model">school.teacher.assignment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Assignment Information">
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="name" />
+                        <field name="teacher_id" />
+                    </group>
+                    <group col="2" string="Standard and Division" colspan="2">
+                        <separator  colspan="4" col="4"/>
+                        <field name="standard_id" select="1" />
+                        <field name="division_id"/>
+                        <field name="medium_id"/>
+                    </group>
+                    <group col="2" string="Subject and Dates" colspan="2">
+                        <separator colspan="4" col="4"/>
+                        <field name="subject_id" select="1"/>
+                        <field name="assign_date" />
+                        <field name="due_date" />
+                    </group>
+                    <separator string="Attachements" colspan="4"/>
+                    <group col="6" colspan="4">
+                        <field name="attached_homework"/>
+                    </group>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="state"/>
+                        <button name = "active_assigment" states="draft" string="Active Assiment" type="object" icon="gtk-ok"/>
+                        <!--<button name = "remove_assigment" string="Remove Assiment" type="object" icon="gtk-ok"/> -->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Assigment Information Action -->
+        <record model="ir.actions.act_window" id="action_school_teacher_assigment_form">
+            <field name="name">Teacher Assignment</field>
+            <field name="res_model">school.teacher.assignment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+<!--        <menuitem name="Assignment"-->
+<!--                parent="school.menu_teacher"-->
+<!--                id="menu_assigment_form"-->
+<!--                action="action_school_teacher_assigment_form"/>-->
+
+
+    <!-- student Assigment Information Tree View -->
+        <record model="ir.ui.view" id="view_school_student_assigment_tree">
+            <field name="name">school.student.assignment.tree</field>
+            <field name="model">school.student.assignment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Assignment Information">
+                    <field name="student_id" />
+                    <field name="name" />
+                    <field name="teacher_id" />
+                    <field name="subject_id"/>
+                    <field name="standard_id"/>
+                    <field name="assign_date"/>
+                    <field name="due_date" />
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_school_student_assigment_search">
+            <field name="name">school.student.assignment.search</field>
+            <field name="model">school.student.assignment</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Assignment Information">
+                    <filter string="Active" domain="[('state','=','active')]" icon="terp-camera_test"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" />
+                    <field name="student_id"/>
+                    <field name="teacher_id"/>
+                    <field name="standard_id"/>
+                    <field name="subject_id" />
+                    <field name="assign_date" />
+                    <field name="due_date" />
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Student" icon="terp-folder-orange" domain="" context="{'group_by':'student_id'}"/>
+                        <filter string="Teacher" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'teacher_id'}"/>
+                        <filter string="Subject" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'subject_id'}"/>
+                        <filter string="Standard" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'standard_id'}"/>
+                        <filter string="Assign Date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <!-- student Assigment Information From View -->
+        <record model="ir.ui.view" id="view_school_student_assigment_form">
+            <field name="name">school.student.assignment.form</field>
+            <field name="model">school.student.assignment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Assignment Information">
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="student_id" />
+                        <field name="name" />
+                        <newline />
+                        <field name="teacher_id" />
+                    </group>
+                    <group col="2" string="Standard and Division" colspan="2">
+                        <separator  colspan="4" col="4"/>
+                        <field name="subject_id" />
+                        <field name="standard_id" />
+                    </group>
+                    <group col="2" colspan="2" string="Dates">
+                        <separator colspan="4" col="4"/>
+                        <field name="assign_date" />
+                        <field name="due_date" />
+                    </group>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="state"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Assigment Information Action -->
+        <record model="ir.actions.act_window" id="action_school_student_assigment_form">
+            <field name="name">Student Assignment</field>
+            <field name="res_model">school.student.assignment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+		<menuitem name="Assignment"
+				parent="school.menu_ems"
+                id="menu_assigment"
+                />
+
+
+        <menuitem name="Student Assignment"
+                parent="menu_assigment"
+                id="menu_student_assigment_form1"
+                action="action_school_student_assigment_form"/>
+                
+                
+         <menuitem name="Teacher Assignment"
+                parent="menu_assigment"
+                id="menu_teacher_assigment_form"
+                action="action_school_teacher_assigment_form"/>
+        
+    </data>
+</openerp>

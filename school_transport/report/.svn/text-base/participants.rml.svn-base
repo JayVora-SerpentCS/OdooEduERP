@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="12.0" leading="15" alignment="LEFT"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="12.0" leading="15" alignment="LEFT"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P11" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P13" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P15" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P16" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P17" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Helvetica"/>
+    <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9_italic" fontName="Helvetica-Oblique" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Heading 3" fontName="Helvetica-Bold" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_2">[[repeatIn(objects,'transport')]]</para>
+    <para style="P2">Transport information<font face="Helvetica"></font></para>
+    <blockTable colWidths="84.0,398.0" style="Table2">
+      <tr>
+        <td>
+          <para style="P4">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P3">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">Root Name</para>
+        </td>
+        <td>
+          <para style="P7">[[ transport.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica">Contact person</font>
+          </para>
+        </td>
+        <td>
+          <para style="P7">[[ transport.contact_per_id.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">Start date</para>
+        </td>
+        <td>
+          <para style="P7">[[ transport.start_date ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">End Date</para>
+        </td>
+        <td>
+          <para style="P7">[[ transport.end_date ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">Total Participants</para>
+        </td>
+        <td>
+          <para style="P7">[[ transport.total_participantes ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <para style="P15">
+      <font face="Helvetica">1. participated vehicle information.</font>
+    </para>
+    <section>
+      <para style="terp_default_2">
+        <font face="Helvetica" size="6.0">[[ repeatIn(transport.trans_vehicle_ids,'trans_vehicle_ids') ]] </font>
+      </para>
+      <blockTable colWidths="104.0,278.0" style="Table1">
+        <tr>
+          <td>
+            <para style="P8">
+              <font face="Helvetica">Vehicle No</font>
+              <font face="Helvetica">:</font>
+            </para>
+          </td>
+          <td>
+            <para style="P8">[[ trans_vehicle_ids.vehicle ]] </para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="P16">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <para style="P14">
+      <font face="Helvetica">2. Root Point with monthly amount.</font>
+    </para>
+    <section>
+      <para style="P17">[[ repeatIn(transport.trans_point_ids,'trans_point_ids') ]]</para>
+      <blockTable colWidths="186.0,215.0" style="Table5">
+        <tr>
+          <td>
+            <para style="P8">
+              <font face="Helvetica">[[ trans_point_ids.name ]]</font>
+            </para>
+          </td>
+          <td>
+            <para style="P8">[[ trans_point_ids.amount ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="terp_default_2">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <para style="P14">
+      <font face="Helvetica">3. participated Student information</font>
+      <font face="Helvetica">.</font>
+    </para>
+    <blockTable colWidths="135.0,102.0,79.0,70.0,96.0" style="Table3">
+      <tr>
+        <td>
+          <para style="P11">
+            <font face="Helvetica">Name</font>
+          </para>
+        </td>
+        <td>
+          <para style="P11">
+            <font face="Helvetica">Standard</font>
+          </para>
+        </td>
+        <td>
+          <para style="P10">
+            <font face="Helvetica">Point</font>
+          </para>
+        </td>
+        <td>
+          <para style="P10">
+            <font face="Helvetica">Vehical No</font>
+          </para>
+        </td>
+        <td>
+          <para style="P10">
+            <font face="Helvetica">Reg. End date</font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P17">
+      <font face="Helvetica"/>
+    </para>
+    <section>
+      <para style="P17">[[ repeatIn(objects,'transport') ]][[ repeatIn(transport.trans_participants_ids,'trans_participants_ids') ]]</para>
+      <section>
+        <blockTable colWidths="135.0,101.0,80.0,69.0,97.0" style="Table4">
+          <tr>
+            <td>
+              <para style="P5">[[ trans_participants_ids.name.name ]]<font face="Helvetica"> </font>[[ trans_participants_ids.name.last ]]</para>
+            </td>
+            <td>
+              <para style="P12">[[ trans_participants_ids.name.class_id.name ]]<font face="Helvetica">(</font>[[ trans_participants_ids.name.medium_id.code ]]<font face="Helvetica">-</font><font face="Helvetica">[[ trans_participants_ids.name.division_id.name ]]</font><font face="Helvetica">)</font></para>
+            </td>
+            <td>
+              <para style="P5">[[ trans_participants_ids.point_id.name ]]</para>
+            </td>
+            <td>
+              <para style="P5">[[ trans_participants_ids.vehicle_id.vehicle ]]</para>
+            </td>
+            <td>
+              <para style="P5">[[ trans_participants_ids.tr_end_date ]]</para>
+            </td>
+          </tr>
+        </blockTable>
+        <para style="P17">
+          <font color="white"> </font>
+        </para>
+      </section>
+    </section>
+    <para style="P9">
+      <font color="white"> </font>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+    <para>
+      <seqReset id="L1"/>
+    </para>
+  </story>
+</document>

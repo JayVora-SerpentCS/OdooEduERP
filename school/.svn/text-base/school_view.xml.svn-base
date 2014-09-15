@@ -1,0 +1,1402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Student Information Form View -->
+        <record model="ir.ui.view" id="view_student_student_form_1">
+            <field name="name">student.student.form.1</field>
+            <field name="model">student.student</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Student Information">
+                    <group colspan="4" col="8">
+                        <group col="6" colspan="3">
+                            <field name="pid" colspan="3"/>
+                            <field name="roll_no" colspan="3"/>
+                            <field name="year" widget="selection" colspan="3"/>
+                            <field name="school_id" colspan="3"/>
+                        </group>
+                        <group col="2" colspan="1">
+                            <field name="photo"  widget='image' nolabel="1"/>
+                        </group>
+                    </group>
+                    <separator string="Standard Information" colspan="4"/>
+                    <group col="6" colspan="4">
+                        <field name="class_id" widget="selection"/>
+                        <field name="medium_id" widget="selection"/>
+                        <field name="division_id" widget="selection"/>
+                    </group>    
+                    <separator string="Personal Information" colspan="4"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="middle"/>
+                        <field name="last"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <group col="4" colspan="4">
+                                <field name="gender"/>
+                                <field name="home_language"/>
+                                <field name="date_of_birth"/>
+                                <field name="admission_date"/>
+                                <field name="age"/>
+                                <field name="maritual_status"/>
+                                <field name="email"/>
+                            </group>
+                        </page>
+                        <page string="Contacts">
+                            <field name="address" nolabel="1" colspan="4"/> 
+                        </page>
+                        <page string="References">
+                            <field name="reference_ids" nolabel="1" colspan="4"> 
+                                <tree string="Reference">
+                                    <field name="name"/>
+                                    <field name="middle"/>
+                                    <field name="last"/>
+                                    <field name="designation"/>
+                                    <field name="phone"/>
+                                    <field name="gender"/>
+                                </tree>
+                                <form string="Reference">
+                                    <group col="4" colspan="4">
+                                        <field name="name"/>
+                                        <field name="middle"/>
+                                        <field name="last"/>
+                                        <field name="designation"/>
+                                        <field name="phone"/>
+                                        <field name="gender"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Academic">
+                            <field name="previous_school_ids" nolabel="1" colspan="4"> 
+                                <tree string="Previous School Details">
+                                    <field name="name"/>
+                                    <field name="registration_no"/>
+                                    <field name="admission_date"/>
+                                    <field name="exit_date"/>
+                                    <field name="email"/>
+                                    <field name="phone"/>
+                                </tree>
+                                <form string="Previous School Details">
+                                    <group col="4" colspan="4">
+                                        <field name="name"/>
+                                        <field name="registration_no"/>
+                                        <field name="admission_date"/>
+                                        <field name="exit_date"/>
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Medical">
+                            <separator string="Doctor Information" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="doctor"/>
+                                <field name="designation"/>
+                                <field name="doctor_phone"/>
+                            </group>
+                            <separator string="Physical Information" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="blood_group"/>
+                                <field name="height"/>
+                                <field name="weight"/>
+                            </group>
+                            <separator string="Does the applicant have any Disabilities?" colspan="4"/>
+                                <group col="6" colspan="4">
+                                    <field name="eye"/>
+                                    <field name="ear"/>
+                                    <field name="nose_throat"/>
+                                    <field name="respiratory"/>
+                                    <field name="cardiovascular"/>
+                                    <field name="neurological"/>
+                                    <field name="muskoskeletal"/>
+                                    <field name="dermatological"/>
+                                    <field name="blood_pressure"/>
+                                </group>
+                            <separator string="Notes" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="comment" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Emergency">
+                            <field name="emergency_contact_ids" nolabel="1" colspan="4"> 
+                                <tree string="Emergency Contact Details">
+                                    <field name="name"/>
+                                    <field name="relation"/>
+                                    <field name="phone"/>
+                                </tree>
+                                <form string="Emergency Contact Details">
+                                    <group col="6" colspan="4">
+                                        <field name="name"/>
+                                        <field name="relation"/>
+                                        <field name="phone"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Remarks">
+                            <field name="remark" nolabel="1" colspan="4"/>
+                        </page>
+                        <page string="History">
+                            <field name="history_ids" nolabel="1" colspan="4">
+                                <tree string="History">
+                                    <field name="academice_year_id"/>
+                                    <field name="class_id"/>
+                                    <field name="division_id"/>
+                                    <field name="medium_id"/>
+                                </tree>
+                                <form string="History">
+                                    <group col="4" colspan="4">
+                                    <field name="academice_year_id"/>
+                                    <field name="class_id"/>
+                                    <field name="division_id"/>
+                                    <field name="medium_id"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <field name="attendance_ids" nolabel="1" colspan="4">
+								<tree string="Monthly Attendance">
+									<field name="roll_no" />
+									<field name="standard_id" />
+									<field name="one" />
+									<field name="two" />
+									<field name="three" />
+									<field name="four" />
+									<field name="five" />
+									<field name="six" />
+									<field name="seven" />
+									<field name="eight" />
+									<field name="nine" />
+									<field name="ten" />
+									<field name="one_1" />
+									<field name="one_2" />
+									<field name="one_3" />
+									<field name="one_4" />
+									<field name="one_5" />
+									<field name="one_6" />
+									<field name="one_7" />
+									<field name="one_8" />
+									<field name="one_9" />
+									<field name="one_0" />
+									<field name="two_1" />
+									<field name="two_2" />
+									<field name="two_3" />
+									<field name="two_4" />
+									<field name="two_5" />
+									<field name="two_6" />
+									<field name="two_7" />
+									<field name="two_8" />
+									<field name="two_9" />
+									<field name="two_0" />
+									<field name="three_1" />
+									<field name="percentage"
+										widget="progressbar" />
+								</tree>
+							</field>
+							<field name="exam_results_ids" nolabel="1" colspan="4">
+								<tree string="Results">
+									<field name="standard_id" />
+									<field name="medium_id" />
+									<field name="division_id" />
+									<field name="s_exam_ids" />
+									<field name="percentage" />
+									<field name="total" />
+									<field name="result" />
+								</tree>
+							</field>
+                        </page>
+                        <page string="Certificates">
+                        	<field name="certificate_ids" nolabel="1" colspan="4">
+                        		<form string="Certificate">
+                        			<field name="description"/>
+                                    <field name="certi" colspan="4"/>                                    
+                                </form>
+                                <tree string="Certifaicate">
+                                    <field name="description"/>
+                                </tree>                             
+                        	</field>
+                        </page>
+                    </notebook>
+                    <field name="state" invisible="1"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Student Information Tree View -->
+        <record model="ir.ui.view" id="view_student_student_tree_1">
+            <field name="name">student.student.tree.1</field>
+            <field name="model">student.student</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Student Information">
+                    <field name="pid" />
+                    <field name="name" />
+                    <field name="year" widget="selection"/>
+                    <field name="class_id" widget="selection"/>
+                    <field name="medium_id" widget="selection"/>
+                    <field name="division_id" widget="selection"/>
+                    <field name="admission_date" />
+                    <field name="gender" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Student Information Search View -->
+        <record model="ir.ui.view" id="view_student_student_search_1">
+            <field name="name">student.student.search.1</field>
+            <field name="model">student.student</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Student Information">
+                    <group col="10" colspan="4">
+                         <field name="pid" />
+                         <field name="name"/>
+                         <field name="year"/>
+                         <field name="class_id"/>
+                         <field name="division_id"/>
+                         <field name="medium_id"/>
+                         <field name="gender"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'class_id'}"/>
+                        <filter icon="terp-project" string="Division" help="By Division" context="{'group_by':'division_id'}"/>
+                        <filter icon="terp-project" string="Medium" help="By Medium" context="{'group_by':'medium_id'}"/>
+                        <filter icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>      	
+        	
+        <record model="ir.ui.view" id="student_student_kanban_view">
+            <field name="name">Student KANBAN</field>
+            <field name="model">student.student</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="class_id">
+                    <field name="color"/>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td class="oe_kanban_title1" align="left" valign="middle">
+                                                    <field name="name"/>
+                                                    <field name="middle"/>
+                                                    <field name="last"/>
+                                                </td>
+                                                <td valign="top" width="22">
+                                                    <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" width="64" align="left">
+                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'photo', record.id.value)"/>
+                                                </td>
+                                                <td valign="top" align="left">
+                                                    <div class="oe_kanban_title2">
+                                                        <div>Student ID : <field name="pid"/></div>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <div>Class : <field name="class_id"/></div>
+                                                        <div>Medium : <field name="medium_id"/></div>
+                                                        <div>Division :<field name="division_id"/></div>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <div>Admission Date : <field name="admission_date"/></div>
+                                                        <div>Gender<field name="gender"/></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Admission Register Information Form View -->
+        <record model="ir.ui.view" id="view_student_student_form_2">
+            <field name="name">student.student.form.2</field>
+            <field name="model">student.student</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Admission Register">
+                    <group colspan="4" col="8">
+                        <group col="6" colspan="3">
+                            <field name="pid" colspan="3"/>
+                            <field name="year" widget="selection" colspan="3"/>
+                            <field name="school_id" colspan="3"/>
+                        </group>
+                        <group col="2" colspan="1">
+                            <field name="photo"  widget='image' nolabel="1"/>
+                         </group>
+                     </group>
+                     <separator string="Class Information" colspan="4"/>
+                     <group col="6" colspan="4">
+                         <field name="class_id" widget="selection"/>
+                         <field name="medium_id" widget="selection"/>
+                         <field name="division_id" widget="selection"/>
+                     </group>    
+                    <separator string="Personal Information" colspan="4"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="middle"/>
+                        <field name="last"/>
+                     </group>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <group col="4" colspan="4">
+                                <field name="gender"/>
+                                <field name="home_language"/>
+                                <field name="date_of_birth"/>
+                                <field name="admission_date"/>
+                                <field name="age"/>
+                                <field name="maritual_status"/>
+                                <field name="email"/>
+                            </group>
+                            <separator string="" colspan="4"/>
+                            <group colspan="9" col="8">
+                                <field name="state"/>
+                                <button name="admission_confirm" string="Confirm" states="draft" icon="gtk-execute"/>
+                                <button name="admission_cancel" string="Cancel" states="confirm" icon="gtk-cancel"/>
+                                <button name="admission_done" string="Done" states="confirm" icon="gtk-jump-to"/>
+                            </group>
+                        </page>
+                        <page string="Contacts">
+                            <field name="address" nolabel="1" colspan="4"/> 
+                        </page>
+                        <page string="References">
+                            <field name="reference_ids" nolabel="1" colspan="4"> 
+                                <tree string="Reference">
+                                    <field name="name"/>
+                                    <field name="middle"/>
+                                    <field name="last"/>
+                                    <field name="designation"/>
+                                    <field name="phone"/>
+                                    <field name="gender"/>
+                                </tree>
+                                <form string="Reference">
+                                    <group col="4" colspan="4">
+                                        <field name="name"/>
+                                        <field name="middle"/>
+                                        <field name="last"/>
+                                        <field name="designation"/>
+                                        <field name="phone"/>
+                                        <field name="gender"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Academic">
+                            <field name="previous_school_ids" nolabel="1" colspan="4"> 
+                                <tree string="Previous School Details">
+                                    <field name="name"/>
+                                    <field name="registration_no"/>
+                                    <field name="admission_date"/>
+                                    <field name="exit_date"/>
+                                    <field name="email"/>
+                                    <field name="phone"/>
+                                </tree>
+                                <form string="Previous School Details">
+                                    <group col="4" colspan="4">
+                                        <field name="name"/>
+                                        <field name="registration_no"/>
+                                        <field name="admission_date"/>
+                                        <field name="exit_date"/>
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Medical">
+                            <separator string="Doctor Information" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="doctor"/>
+                                <field name="designation"/>
+                                <field name="doctor_phone"/>
+                            </group>
+                            <separator string="Physical Information" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="blood_group"/>
+                                <field name="height"/>
+                                <field name="weight"/>
+                            </group>
+                            <separator string="Does the applicant have any Disabilities?" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="eye"/>
+                                <field name="ear"/>
+                                <field name="nose_throat"/>
+                                <field name="respiratory"/>
+                                <field name="cardiovascular"/>
+                                <field name="neurological"/>
+                                <field name="muskoskeletal"/>
+                                <field name="dermatological"/>
+                                <field name="blood_pressure"/>
+                            </group>
+                            <separator string="Notes" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="comment" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Emergency">
+                            <field name="emergency_contact_ids" nolabel="1" colspan="4"> 
+                                <tree string="Emergency Contact Details">
+                                    <field name="name"/>
+                                    <field name="relation"/>
+                                    <field name="phone"/>
+                                </tree>
+                                <form string="Emergency Contact Details">
+                                    <group col="6" colspan="4">
+                                        <field name="name"/>
+                                        <field name="relation"/>
+                                        <field name="phone"/>
+                                        <field name="email"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Remarks">
+                            <field name="remark" nolabel="1" colspan="4"/>
+                        </page>
+                        <page string="Attachments">
+                        	<field name="student_attachment_line" nolabel="1"/>
+<!--	                        	<tree string="Student Attachment">-->
+<!--		                            <field name="name"/>-->
+<!--		                            <field name="file_name"/>-->
+<!--	                            </tree>-->
+<!--	                            <form string="Students Attachment">-->
+<!--		                            <field name="name"/>-->
+<!--		                            <field name="new_datas" />-->
+<!--		                            <field name="file_name" />-->
+<!--	                            </form>-->
+<!--	                        </field>-->
+                        </page>
+                        <page string="Discipline">
+                        	<field name="student_discipline_line" nolabel="1">
+	                        	<tree string="Student Attachment">
+	                                    <field name="teacher_id"/>
+	                                    <field name="date"/>
+	                                    <field name="class_id"/>
+	                            </tree>
+	                            <form string="Students Attachment">
+	                                    <field name="teacher_id"/>
+	                                    <field name="date"/>
+	                                    <field name="class_id"/>
+	                                    <newline/>
+	                                    <field name="note"/>
+	                                    <field name="action_taken"/>
+	                            </form>
+	                        </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!-- Admission Register Information Tree View -->
+        <record model="ir.ui.view" id="view_student_student_tree_2">
+            <field name="name">student.student.tree.2</field>
+            <field name="model">student.student</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Admission Register">
+                    <field name="pid"/>
+                    <field name="name"/>
+                    <field name="year" widget="selection"/>
+                    <field name="class_id" widget="selection"/>
+                    <field name="medium_id" widget="selection"/>
+                    <field name="division_id" widget="selection"/>
+                    <field name="admission_date"/>
+                    <field name="gender"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Admission Register Information Search View -->
+        <record model="ir.ui.view" id="view_student_student_search_2">
+            <field name="name">student.student.search.2</field>
+            <field name="model">student.student</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Admission Register">
+                    <group col="10" colspan="4">
+                        <filter icon="terp-project"  string="Draft" domain="[('state','=', 'draft')]" help="Admission In Draft State"/>
+                        <filter icon="terp-project"  string="Confirm" domain="[('state','=', 'confirm')]" help="Admission In Confirm State"/>
+                        <filter icon="terp-project"  string="Cancel" domain="[('state','=', 'cancel')]" help="Admission In Pending State"/>
+                        <filter icon="terp-project"  string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="year"/>
+                        <field name="class_id"/>
+                        <field name="division_id"/>
+                        <field name="medium_id"/>
+                        <field name="gender"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter icon="terp-project" string="State" help="By State" context="{'group_by':'state'}"/>
+                        <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'class_id'}"/>
+                        <filter icon="terp-project" string="Division" help="By Division" context="{'group_by':'division_id'}"/>
+                        <filter icon="terp-project" string="Medium" help="By Medium" context="{'group_by':'medium_id'}"/>
+                        <filter icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- School Information Form View -->
+        <record model="ir.ui.view" id="view_school_school_form">
+            <field name="name">school.school.form</field>
+            <field name="model">school.school</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="School Information">
+                    <group col="6" colspan="4">
+                         <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Standards">
+                            <field name="standards" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <!-- School Information Tree View -->
+        <record model="ir.ui.view" id="view_school_school_tree">
+            <field name="name">school.school.tree</field>
+            <field name="model">school.school</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="School Information">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- School Standard Information Form View -->
+        <record model="ir.ui.view" id="view_school_standard_form">
+            <field name="name">school.standard.form</field>
+            <field name="model">school.standard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Standard Information">
+                    <group col="4" colspan="4">
+                        <field name="standard_id" widget="selection"/>
+                        <field name="division_id" widget="selection"/>
+                        <field name="medium_id" widget="selection"/>
+                        <field name="school_id" widget="selection"/>
+                        <field name="user_id"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Students">
+                            <field name="student_ids" nolabel="1" colspan="4" >
+                                <tree string="Student Information">
+                                    <field name="roll_no"/>
+                                    <field name="name"/>
+                                    <field name="year"/>
+                                </tree>
+                                <form string="Student Information">
+                                    <group col="4" colspan="4">
+                                        <field name="roll_no"/>
+                                        <field name="name"/>
+                                        <field name="year"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Subjects">
+                            <field name="subject_ids" nolabel="1" colspan="4" />
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        
+        <record model="ir.ui.view" id="school_standard_kanban_view">
+            <field name="name">school.standard.kanban</field>
+            <field name="model">school.standard</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="standard_id">
+                    <field name="school_id"/>
+                    <field name="standard_id"/>
+                    <field name="division_id"/>
+                    <field name="medium_id"/>
+                    <field name="user_id"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.school_id.value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td class="oe_kanban_title1" align="left" valign="middle">
+                                                    <div> School :- <field name="school_id"/></div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" align="left">
+                                                    <div class="oe_kanban_title2">
+                                                        <div> Class Teacher :- <field name="user_id"/></div>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <div> Standard :- <field name="standard_id"/></div>
+                                                        <div> Division :- <field name="division_id"/></div>
+                                                        <div> Medium :- <field name="medium_id"/></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Delete" icon="gtk-delete" type="delete"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+    <!-- School Standard Information Tree View -->
+        <record model="ir.ui.view" id="view_school_standard_tree">
+            <field name="name">school.standard.tree</field>
+            <field name="model">school.standard</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Standard Information">
+                    <field name="standard_id"/>
+                    <field name="division_id"/>
+                    <field name="medium_id"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- School Standard Information Search View -->
+        <record model="ir.ui.view" id="view_student_student_search">
+            <field name="name">school.standard.search</field>
+            <field name="model">school.standard</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Standard Information">
+                    <group col="10" colspan="4">
+                         <field name="standard_id"/>
+                         <field name="division_id"/>
+                         <field name="medium_id"/>
+                         <field name="user_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}"/>
+                        <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}"/>
+                        <filter icon="terp-project" string="Division" help="By Division" context="{'group_by':'division_id'}"/>
+                        <filter icon="terp-project" string="Medium" help="By Medium" context="{'group_by':'medium_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+ 
+        <!-- Academic Years Information From View -->
+        <record model="ir.ui.view" id="view_academic_year_form">
+            <field name="name">acdemic.year.form</field>
+            <field name="model">academic.year</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Academic Years">
+                    <group col="4" colspan="4">
+                        <field name="sequence"/>
+                        <field name="name"/>  
+                        <field name="code"/>
+                        <field name="date_start"/>
+                        <field name="date_stop"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Months">
+                            <field name="month_ids" nolabel="1" colspan="4">
+                                <tree string="Months">
+                                    <field name="name"/>  
+                                    <field name="code"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                                <form string="Months">
+                                    <group col="4" colspan="4">
+                                        <field name="name"/>  
+                                        <field name="code"/>
+                                        <field name="date_start"/>
+                                        <field name="date_stop"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!-- Academic Years Information Tree View -->
+        <record model="ir.ui.view" id="view_academic_year_tree">
+            <field name="name">academic.year.tree</field>
+            <field name="model">academic.year</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Academic Years">
+                    <field name="sequence"/>
+                    <field name="name"/>  
+                    <field name="code"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Academic Months Information From View -->
+        <record model="ir.ui.view" id="view_academic_month_form">
+            <field name="name">academic.month.form</field>
+            <field name="model">academic.month</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Months">
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="date_start"/>
+                        <field name="date_stop"/>
+                        <field name="year_id" colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Academic Months Information Tree View -->
+        <record model="ir.ui.view" id="view_academic_month_tree">
+            <field name="name">academic.month.tree</field>
+            <field name="model">academic.month</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Months">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="year_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Standard Medium Information From View -->
+        <record model="ir.ui.view" id="view_standard_medium_form">
+            <field name="name">standard.medium.form</field>
+            <field name="model">standard.medium</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Mediums">
+                    <group col="4" colspan="4">
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Standard Medium Information Tree View -->
+        <record model="ir.ui.view" id="view_standard_medium_tree">
+            <field name="name">standard.medium.tree</field>
+            <field name="model">standard.medium</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Mediums">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Standard Division Information From View -->
+        <record model="ir.ui.view" id="view_standard_division_form">
+            <field name="name">standard.division.form</field>
+            <field name="model">standard.division</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Divisions">
+                    <group col="4" colspan="4">
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Standard Division Information Tree View -->
+        <record model="ir.ui.view" id="view_standard_division_tree">
+            <field name="name">standard.division.tree</field>
+            <field name="model">standard.division</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Divisions">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Subject Information From View -->
+        <record model="ir.ui.view" id="view_subject_subject_form">
+            <field name="name">subject.subject.form</field>
+            <field name="model">subject.subject</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Subjects">
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="maximum_marks" />
+                        <field name="minimum_marks" />
+                        <field name="weightage" />
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Standards">
+                            <field name="standard_ids" nolabel="1" colspan="4">
+                                <tree string="Standards">
+                                    <field name="standard_id"/>
+                                    <field name="division_id"/>
+                                    <field name="medium_id"/>
+                                </tree>
+                                <form string="Standards">
+                                    <group col="4" colspan="4">
+                                        <field name="standard_id"/>
+                                        <field name="division_id"/>
+                                        <field name="medium_id"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Teachers">
+                            <field name="teacher_ids" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!--  Subject Information Tree View -->
+        <record model="ir.ui.view" id="view_subject_subject_tree">
+            <field name="name">subject.subject.tree</field>
+            <field name="model">subject.subject</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Subjects">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="maximum_marks"/>
+                    <field name="minimum_marks"/>
+                    <field name="weightage"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Standard Information Form View -->
+        <record model="ir.ui.view" id="view_standard_standard_form">
+            <field name="name">standard.standard.form</field>
+            <field name="model">standard.standard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Standard Information">
+                    <group col="6" colspan="4">
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Standard Information Tree View -->
+        <record model="ir.ui.view" id="view_standard_standard_tree">
+            <field name="name">standard.standard.tree</field>
+            <field name="model">standard.standard</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Standard Information">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Teacher Information Form View -->
+        <record model="ir.ui.view" id="view_teacher_teacher_form">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                     <xpath expr="//page[@string = 'Categories']" position="after">
+                        <page string="Subjects">
+                            <field name="subject_ids" nolabel="1"/>
+                        </page>
+                    </xpath>
+                </data> 
+            </field>
+        </record>
+
+        <!-- Student Information Form Action -->
+        <record model="ir.actions.act_window" id="action_student_student_form_12">
+            <field name="name">Students</field>
+            <field name="res_model">student.student</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_student_student_search_1"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('state','=','done')]</field>
+        </record>
+
+        <!-- Student Information Tree Action View-->
+        <record id="action_view_student_student_tree_1" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field eval="20" name="sequence"/>
+            <field name="view_id" ref="view_student_student_tree_1"/>
+            <field name="act_window_id" ref="action_student_student_form_12"/>
+        </record>
+        <record id="action_view_student_student_form_1" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field eval="30" name="sequence"/>
+            <field name="view_id" ref="view_student_student_form_1"/>
+            <field name="act_window_id" ref="action_student_student_form_12"/>
+        </record>
+        <record id="action_view_student_student_kanban_1" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field eval="0" name="sequence"/>
+            <field name="view_id" ref="student_student_kanban_view"/>
+            <field name="act_window_id" ref="action_student_student_form_12"/>
+        </record>
+
+        <!-- Admission Register Information Form Action -->
+        <record model="ir.actions.act_window" id="action_student_student_form_2">
+            <field name="name">Admission Register</field>
+            <field name="res_model">student.student</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_student_student_form_2"/>
+            <field name="search_view_id" ref="view_student_student_search_2"/>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <!-- Admission Register Information Tree Action -->
+        <record id="action_student_student_tree_2" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_student_student_tree_2"/>
+            <field name="act_window_id" ref="action_student_student_form_2"/>
+        </record>
+        
+        <!-- Teacher Information Action -->
+        <record model="ir.actions.act_window" id="action_teacher_teacher_form_1">
+            <field name="name">Teachers</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        
+        <!-- Contact Information Action -->
+        <record model="ir.actions.act_window" id="action_student_address_form">
+            <field name="name">Contacts</field>
+            <field name="res_model">res.partner.address</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- School Information Action -->
+        <record model="ir.actions.act_window" id="action_school_school_form">
+            <field name="name">Schools</field>
+            <field name="res_model">school.school</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Standard Information Action -->
+        <record model="ir.actions.act_window" id="action_school_standard_form">
+            <field name="name">Standards</field>
+            <field name="res_model">school.standard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <!-- Academic Year Information Action -->
+        <record model="ir.actions.act_window" id="action_academic_year_form">
+            <field name="name">Academic Years</field>
+            <field name="res_model">academic.year</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Academic Month Information Action -->
+        <record model="ir.actions.act_window" id="action_academic_month_form">
+            <field name="name">Months</field>
+            <field name="res_model">academic.month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Standard Medium Information Action -->
+        <record model="ir.actions.act_window" id="action_standard_medium_form">
+            <field name="name">Mediums</field>
+            <field name="res_model">standard.medium</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Standard Division Information Action -->
+        <record model="ir.actions.act_window" id="action_standard_division_form">
+            <field name="name">Divisions</field>
+            <field name="res_model">standard.division</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Subject Information Action -->
+        <record model="ir.actions.act_window" id="action_subject_subject_form">
+            <field name="name">Subjects</field>
+            <field name="res_model">subject.subject</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Standard Information Action -->
+        <record model="ir.actions.act_window" id="action_standard_standard_form">
+            <field name="name">Classes</field>
+            <field name="res_model">standard.standard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_parent_form" model="ir.ui.view">
+            <field name="name">res.partner.parent.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Partners" col='1'>
+                    <group col="6" colspan="4">
+                        <group colspan="5" col="6">
+                            <field name="name" select="1"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
+                                <form string="Partner Contacts">
+                                    <group colspan="4" col="6">
+                                        <field name="name" string="Contact Name"/>
+                                        <field domain="[('domain', '=', 'contact')]" name="title" size="0"/>
+                                    </group>
+                                    <newline/>
+                                      <group colspan="2" col="4">
+                                        <separator string="Postal Address" colspan="4" col="4" />
+                                        <field name="type" string="Type" colspan="2"/>
+                                        <field name="street" colspan="4"/>
+                                        <field name="street2" colspan="4"/>
+                                        <field name="zip"/>
+                                        <field name="city"/>
+                                        <field name="country_id" completion="1"/>
+                                        <field name="state_id"/>
+                                     </group>
+                                     <group colspan="2" col="2">
+                                        <separator string="Communication" colspan="2" col="2" />
+                                        <field name="phone"/>
+                                        <field name="mobile"/>
+                                        <field name="fax"/>
+                                        <field name="email" widget="email"/>
+                                     </group>
+                                </form>
+                                <tree string="Partner Contacts">
+                                    <field name="name"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                </tree>
+                            </field>
+                            <group  groups="base.group_extended">
+                                    <separator colspan="4" string="Categories"/>
+                                    <field  colspan="4" name="category_id" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field colspan="4" name="comment" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+       <record id="view_res_partner_parent_filter" model="ir.ui.view">
+            <field name="name">res.partner.parent.select</field>
+            <field name="model">res.partner</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                   <group col='10' colspan='4'>
+                        <field name="name" select="1"/>
+                        <field name="address" select="1"/>
+                        <field name="country" select="1"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="view_parent_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field name="type">tree</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Partners">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="city"/>
+                    <field name="country"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Parent Information Action -->
+        <record model="ir.actions.act_window" id="action_parent_form">
+            <field name="name">Parents</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="search_view_id" ref="view_res_partner_parent_filter"/>
+        </record>
+
+        <record id="action_partner_form_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_parent_tree"/>
+            <field name="act_window_id" ref="action_parent_form"/>
+        </record>
+
+        <record id="action_parent_form_view2" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_parent_form"/>
+            <field name="act_window_id" ref="action_parent_form"/>
+        </record>
+
+        <menuitem
+            icon="terp-project" id="menu_ems"
+            name="EMS" sequence="4"
+            web_icon="images/icon.png"
+            web_icon_hover="images/hover.png"/>
+
+         <menuitem
+            name="Configuration" parent="menu_ems"
+            id="menu_configuration"
+            sequence="10"
+            groups="group_school_administration"/>
+            
+        <menuitem
+            name="Students Profile" parent="menu_ems"
+            id="menu_student_profile"
+            sequence="2"
+            action="action_student_student_form_12"/>
+
+        <!-- <menuitem
+            name="Teachers Profile" parent="menu_configuration"
+            id="menu_teacher_teacher_form"
+            action="action_teacher_teacher_form_1"/>
+ -->
+        <menuitem
+            name="Parents Details" parent="menu_configuration"
+            id="menu_res_partner_form"
+            action="action_parent_form"/>
+
+        
+        
+        <menuitem
+            name="Admission Register" parent="menu_ems"
+            id="menu_admission_register_form"
+            action="action_student_student_form_2"
+            sequence="1"/>
+
+
+        <menuitem
+            name="School" parent="menu_configuration"
+            id="menu_school"
+            sequence="5"/>
+
+        <menuitem
+            name="Schools" parent="menu_school"
+            id="menu_school_school_form"
+            action="action_school_school_form"/>
+
+        <menuitem
+            name="Academic Year" parent="menu_configuration"
+            id="menu_academic_year" 
+            sequence="1"/>
+
+         <menuitem
+            name="Years" parent="menu_academic_year"
+            id="menu_academic_year_form"
+            action="action_academic_year_form"
+            sequence="1"/>
+
+         <menuitem
+            name="Months" parent="menu_academic_year"
+            id="menu_academic_month_form"
+            action="action_academic_month_form"
+            sequence="2"/>
+
+         <menuitem
+            name="Standard" parent="menu_configuration"
+            id="menu_standards" 
+            sequence="2"/>
+
+        <menuitem
+            name="Standards" parent="menu_standards"
+            id="menu_school_standard_form"
+            action="action_school_standard_form"/>
+
+         <menuitem
+            name="Classes" parent="menu_standards"
+            id="menu_standard_standard_form"
+            action="action_standard_standard_form"
+            sequence="1"/>
+                  
+         <menuitem
+            name="Mediums" parent="menu_standards"
+            id="menu_standard_medium_form"
+            action="action_standard_medium_form"
+            sequence="2"/>
+
+         <menuitem
+            name="Divisions" parent="menu_standards"
+            id="menu_standard_division_form"
+            action="action_standard_division_form"
+            sequence="3"/>
+            
+        <menuitem
+            name="Subject" parent="menu_configuration"
+            id="menu_subjects" 
+            sequence="3"/>
+
+        <menuitem
+            name="Subjects" parent="menu_subjects"
+            id="menu_subject_subject_form"
+            action="action_subject_subject_form"
+            sequence="1"/>
+
+		<record model="ir.ui.view" id="view_partner_add_tree1">
+            <field name="name">res.partner.address.tree</field>
+            <field name="model">res.partner.address</field>
+            <field name="inherit_id" ref="base.view_partner_address_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Partner Addresses" position="attributes">
+                	<attribute name="string">PARENT ADDRESS</attribute>
+                </tree>
+                <field name="partner_id" position="attributes">
+                	<attribute name="string">Parent</attribute>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_partner_add_form2">
+            <field name="name">res.partner.address.tree</field>
+            <field name="model">res.partner.address</field>
+            <field name="inherit_id" ref="base.view_partner_address_form1"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                	<attribute name="string">Parent Name</attribute>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_company_form_inherit">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                	<attribute name="string">School Name</attribute>
+                </field>
+            </field>
+        </record>
+
+
+		<record id="view_student_attachment_tree" model="ir.ui.view">
+            <field name="name">student.attachment.tree</field>
+            <field name="model">student.attachment</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Attachment">
+                    <field name="name"/>
+		            <field name="file_name" />
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id="view_student_attachment_form" model="ir.ui.view">
+            <field name="name">student.attachment.form</field>
+            <field name="model">student.attachment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Attachment">
+                    <field name="name"/>
+                    <field name="new_datas" />
+                    <field name="file_name" />
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

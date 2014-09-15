@@ -1,0 +1,41 @@
+-
+ In order to test assignment module of School Management System,
+ I create records of Assignment.
+
+- 
+  I Create "First Exercise" in school.teacher.assignment
+- 
+  !record {model: school.teacher.assignment, id: school_teacher_assignment_abcexercise0}:
+    assign_date: !eval time.strftime('%Y-%m-%d')
+    division_id: school.demo_standard_division_1
+    due_date: !eval time.strftime('%Y-%m-%d')
+    medium_id: school.demo_standard_medium_1
+    name: First Exercise
+    standard_id: school.demo_standard_standard_1
+    subject_id: school.demo_subject_subject_1
+    teacher_id: hr.employee_al
+
+- 
+  I Create "Second Practice" in school.teacher.assignment.
+- 
+  !record {model: school.teacher.assignment, id: school_teacher_assignment_secondpractice0}:
+    assign_date: !eval time.strftime('%Y-%m-%d')
+    division_id: school.demo_standard_division_1
+    due_date: !eval time.strftime('%Y-%m-%d')
+    medium_id: school.demo_standard_medium_1
+    name: Second practice
+    standard_id: school.demo_standard_standard_3
+    subject_id: school.demo_subject_subject_2
+    teacher_id: hr.employee_mit
+
+-
+ I Press active button on "First Exercise" Assignment
+-
+ !python {model: school.teacher.assignment}: |
+    self.active_assignment(cr, uid, [ref('school_teacher_assignment_abcexercise0')])
+
+-
+ I Press active button on "Second Practice" Assignment 
+-
+ !python {model: school.teacher.assignment}: |
+    self.active_assignment(cr, uid, [ref('school_teacher_assignment_secondpractice0')])

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Indentity Card" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <!-- 
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      -->
+      <frame id="first" x1="0.0" y1="0.0" width="150.0" height="850.0"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,1" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,2" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,2" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,3" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,3" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,4" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,4" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,5" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,5" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" alignment="CENTER"/>
+    <paraStyle name="P2" fontName="Helvetica"/>
+    <paraStyle name="P3" fontName="Helvetica" alignment="LEFT"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="0" spaceBefore="0" spaceAfter="0"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="0" spaceBefore="0" spaceAfter="0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <section>
+
+    <para style="Standard">[[ repeatIn(objects,'student') ]]</para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="132.0" style="Table1">
+      <tr>
+        <td>
+          <para style="P1">[[ student.school_id.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+           <image >[[ student.photo or removeParentNode('image') ]]</image>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P3">[[ student.name ]] [[ student.middle ]] [[ student.last ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P3">Roll No. : [[ student.roll_no ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P3">Class : [[ student.class_id.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P3">Medium : [[ student.medium_id.name ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P3">Division : [[ student.division_id.name ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    </section>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>

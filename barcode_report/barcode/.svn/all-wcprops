@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/eduerp/!svn/ver/2/barcode_report/barcode
+END
+common.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/common.py
+END
+out.pdf
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/out.pdf
+END
+usps.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/usps.py
+END
+fourstate.py
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/fourstate.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/__init__.py
+END
+test.py
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/test.py
+END
+code128.py
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/code128.py
+END
+code39.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/code39.py
+END
+code93.py
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/eduerp/!svn/ver/2/barcode_report/barcode/code93.py
+END

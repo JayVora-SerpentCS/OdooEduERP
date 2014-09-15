@@ -1,0 +1,11 @@
+-
+  Print the Attendance Sheet Report through wizard
+-
+  !python {model: student.student}: |
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'student.student','active_ids': [ref('school.demo_student_student_1')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_student_attendance_by_month',wiz_data=data_dict, context=ctx, our_module='school_attendance')
+

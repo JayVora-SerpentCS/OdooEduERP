@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.actions.act_window" id="action_student_eval_form">
+			<field name="name">Student Evaluation</field>
+			<field name="res_model">student.evaluation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{'search_default_student_id': active_id}</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_student_student_form2">
+			<field name="name">student.student.form</field>
+			<field name="model">student.student</field>
+			<field name="inherit_id" ref="school.view_student_student_form_1"/>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//div[@name='buttons']" position="inside">
+						<button name="%(action_student_eval_form)d" string="Evaluation"
+							type="action"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Tree View -->
+		<record id="view_student_evaluation_tree" model="ir.ui.view">
+			<field name="name">student.evaluation.tree</field>
+			<field name="model">student.evaluation</field>
+			<field name="arch" type="xml">
+				<tree string="Student Evaluation">
+					<field name="student_id"/>
+					<field name="type"/>
+					<field name="date"/>
+					<field name="evaluator_id"/>
+					<field name="total"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Search View -->
+		<record id="view_student_eval_search" model="ir.ui.view">
+			<field name="name">student.evaluation.search</field>
+			<field name="model">student.evaluation</field>
+			<field name="arch" type="xml">
+				<search string="Student Evaluation Search">
+					<group colspan="6" col="4">
+						<field name="student_id"/>
+						<field name="evaluator_id"/>
+						<field name="date"/>
+					</group>
+					<separator orientation="vertical"/>
+					<newline />
+					<group expand="0" string="Group By..." colspan="6" col="4">
+						<filter string="Type" icon="terp-stock_symbol-selection"
+							name="type" context="{'group_by':'type'}"/>
+						<filter string="Faculty" icon="terp-personal" name="faculty_id"
+							context="{'group_by':'evaluator_id'}"/>
+						<filter string="Student" icon="terp-personal" name="student_id"
+							context="{'group_by':'student_id'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Form View -->
+		<record id="view_student_evaluation_form" model="ir.ui.view">
+			<field name="name">student.evaluation.form</field>
+			<field name="model">student.evaluation</field>
+			<field name="arch" type="xml">
+				<form string="Student Evaluation" version="7.0">
+					<header>
+						<button name="set_start" string="Start" type="object"
+							states="draft" icon="gtk-execute" class="oe_highlight"/>
+						<button name="set_finish" string="Finish" type="object"
+							states="start" icon="gtk-jump-to"/>
+						<button name="set_cancel" string="Cancel" type="object"
+							states="start,draft" icon="gtk-cancel"/>
+						<button name="set_draft" string="Set to Draft" type="object"
+							states="cancelled" icon="gtk-execute"/>
+						<field name="state" readonly="1" widget="statusbar"/>
+					</header>
+					<sheet>
+						<separator string="Student Evaluation"/>
+						<group col="4" colspan="2"
+							attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
+							<field name="student_id" placeholder="Select Or Create Student Name"/>
+							<field name="type"/>
+							<field name="date" style="width: 84%%"/>
+							<field name="user_id"/>
+							<field name="evaluator_id" attrs="{'invisible': [('type','=','student')]}"
+								placeholder="Select Or Create Faculty Name" />
+							<button name="get_record" string="Get Questions" type='object'
+								attrs="{'invisible' : [('state', '!=', 'draft')]}"/>
+						</group>
+						<newline />
+						<notebook colspan="4">
+							<page string="General">
+								<field name="eval_line" nolabel='1'>
+									<tree string="Evaluation Line" editable='top'>
+										<field name="stu_eval_id"/>
+										<field name="point_id" on_change="onchange_point(point_id)"/>
+										<field name="rating"/>
+									</tree>
+									<form string="Evaluation Line">
+										<field name="stu_eval_id" placeholder="Select Or Create Question"/>
+										<field name="point_id" placeholder="Select Or Create Rating"/>
+										<field name="rating" placeholder="Enter Remarks"/>
+									</form>
+								</field>
+								<group colspan="4">
+									<field name="total"/>
+									<newline/>
+								</group>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Template Search View -->
+		<record id="view_student_eval_temp_search" model="ir.ui.view">
+			<field name="name">student.evaluation.template.search</field>
+			<field name="model">student.evaluation.template</field>
+			<field name="arch" type="xml">
+				<search string="Student Evaluation Template Search">
+					<group colspan="4">
+						<field name="desc"/>
+					</group>
+					<newline />
+					<group expand="0" string="Group By..." colspan="6" col="4">
+						<filter string="Type" icon="terp-stock_symbol-selection"
+							name="type" context="{'group_by':'type'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Template Tree View -->
+		<record id="view_student_eval_template_tree" model="ir.ui.view">
+			<field name="name">student.evaluation.template.tree</field>
+			<field name="model">student.evaluation.template</field>
+			<field name="arch" type="xml">
+				<tree string="Student Evaluation Template ">
+					<field name="desc"/>
+					<field name="type"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Template Form View -->
+		<record id="view_student_eval_template_form" model="ir.ui.view">
+			<field name="name">student.evaluation.template.form</field>
+			<field name="model">student.evaluation.template</field>
+			<field name="arch" type="xml">
+				<form string="Student Evaluation Template" version="7.0">
+					<sheet>
+						<separator string="Evaluation Template"/>
+						<group colspan="4">
+							<field name="desc" placeholder="Enter Description"/>
+							<field name="type"/>
+						</group>
+						<field name="rating_line" nolabel="1"/>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Student Rating Form View -->
+		<record id="view_student_rating_form" model="ir.ui.view">
+			<field name="name">student.rating.form</field>
+			<field name="model">rating.rating</field>
+			<field name="arch" type="xml">
+				<form string="Student Rating" version="7.0">
+					<sheet>
+						<separator string="Student Rating" />
+						<group col="4" colspan="2">
+							<field name="point" placeholder="Enter Rating Point" />
+							<field name="rating" placeholder="Enter Remarks" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- Student Rating Tree View -->
+		<record id="view_student_rating_tree" model="ir.ui.view">
+			<field name="name">student.rating.tree</field>
+			<field name="model">rating.rating</field>
+			<field name="arch" type="xml">
+				<tree string="Student Rating">
+					<field name="point"/>
+					<field name="rating"/>
+				</tree>
+			</field>
+		</record>
+
+		<!-- Student Rating Search View -->
+		<record id="view_student_rating_search" model="ir.ui.view">
+			<field name="name">student.rating.search</field>
+			<field name="model">rating.rating</field>
+			<field name="arch" type="xml">
+				<search string="Student Rating">
+					<field name="point"/>
+					<field name="rating"/>
+				</search>
+			</field>
+		</record>
+
+		<!-- Student Evaluation Action -->
+		<record id="action_student_eval" model="ir.actions.act_window">
+			<field name="name">Student Evaluation</field>
+			<field name="res_model">student.evaluation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Student Evaluation Template Action -->
+		<record id="action_student_eval_temp" model="ir.actions.act_window">
+			<field name="name">Student Evaluation Template</field>
+			<field name="res_model">student.evaluation.template</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Student Rating Action -->
+		<record id="action_student_rating" model="ir.actions.act_window">
+			<field name="name">Student Rating</field>
+			<field name="res_model">rating.rating</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<!-- Record Rule for Student Evaluation for Student -->
+		<record id="student_rule_student_evaluation_record" model="ir.rule">
+			<field name="name">Personal Student Evaluation Record</field>
+			<field ref="model_student_evaluation" name="model_id" />
+			<field eval="1" name="global" />
+			<field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+			<field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+		</record>
+
+		<!-- Menu Items of Student Evaluation -->
+		<menuitem name="Student Evaluation" parent="school.menu_ems"
+			id="menu_stu_eval" sequence="8"/>
+
+		<menuitem name="Evaluation" parent="menu_stu_eval" id="menu_eval"/>
+
+		<menuitem name="Evaluations" parent="menu_eval" id="menu_evals"
+			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"
+			action="action_student_eval"/>
+
+		<menuitem name="Evaluation Template" parent="menu_stu_eval"
+			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"
+			id="menu_eval_temp"/>
+
+		<menuitem name="Evaluation Templates" parent="menu_eval_temp"
+			id="menu_eval_temps" action="action_student_eval_temp"
+			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" />
+
+		<menuitem name="Rating" parent="school.menu_configuration"
+			id="menu_rating" action="action_student_rating"/>
+	</data>
+</openerp>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False" id="report_time_table" model="time.table" name="time.table" rml="timetable/report/timetable.rml" string="Timetable"/>
+
+    </data>
+</openerp>
+

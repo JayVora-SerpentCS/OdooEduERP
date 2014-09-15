@@ -1,0 +1,25 @@
+===============================================================================
+ Version Change Log
+ Module: school
+===============================================================================
+Version 2.0 on 2014-09-09 by Murtuza Saleh
+    * Migrated Module.
+
+Version 1.4 on 2013-10-07 by Anu Patel
+    * Improved the elective subject functionality.
+    * Improved the button action of "Result" Button in student profile.
+    * Fixed the error faced while clicking the "Send Email" Button in News/Update form.
+
+Version 1.3 on 2013-10-04 by Anu Patel
+    * Added the functionality to manage History of previous standard of student.
+
+Version 1.2 on 2013-09-30 by Anu Patel
+    * Remove commented code.
+    
+Version 1.1 on 2013-09-30 by Sudhir Arya
+    * v7 Standard
+    
+Version 1.0 on 2013-09-19 by Anu Patel
+    * Added record rule in student.
+    * Added groups to menu "Parent details".
+    * Added groups in buttons like "Alumni,Terminale" in student.student

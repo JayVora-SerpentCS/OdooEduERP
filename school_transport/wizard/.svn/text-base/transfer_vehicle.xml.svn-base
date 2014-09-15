@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="transfer_vehicle_1" model="ir.ui.view">
+            <field name="name">transfer.vehicle</field>
+            <field name="model">transfer.vehicle</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Transfer Vehicle">
+                    <group colspan="4">
+                        <field name='name' />
+                        <field name='participation_id' on_change="onchange_participation_id(participation_id)" context="{'name':name}" />
+                        <field name='root_id' />
+                        <field name='old_vehicle_id'/>
+                        <field name='new_vehicle_id' context="{'name':root_id}"/>
+                    </group>
+                    <separator colspan="4"/>
+                    <group colspan="4">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="Close" icon="gtk-close" colspan="1"/>
+                        <button  name="vehicle_transfer"  string="Transfer" icon="gtk-ok" type="object" colspan="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="act_transfer_vehicle"
+            multi="True"
+            key2="client_action_multi" 
+            name="Transfer Vehicle"
+            res_model="transfer.vehicle" 
+            src_model="student.student"
+            view_mode="form" 
+            target="new" 
+            view_type="form" />
+
+    </data>
+</openerp>  

@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+<!-- Time Table Information From View -->
+    	<record model="ir.ui.view" id="view_time_table_form">
+            <field name="name">time.table.form</field>
+            <field name="model">time.table</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="TimeTable">
+                	<group col="4" colspan="4">
+                		<field name="name" />  
+                		<field name="class_id" on_change="onchange_class(class_id)"/>
+                    	<field name="division_id" />
+                    	<field name="medium_id" />
+                    	<field name="year_id" colspan="4"/>                    	
+                    </group>
+                    <notebook colspan="4">
+				        <page string="TimeTable">
+				            <field name="timetable_ids" nolabel="1" colspan="4">
+				            <tree string="TimeTable">
+								<field name="week_day" />
+								<field name="start_time" />
+								<field name="end_time" />
+				            	<field name="teacher_id" />
+								<field name="subject_id" />
+              	            </tree>
+				
+                           <form string="TimeTable">
+				            	<group col="4" colspan="4">
+									<field name="week_day" />
+									<field name="start_time" />
+								    <field name="end_time" />
+								    <field name="recess" on_change="onchange_recess(recess)"/>
+									<field name="subject_id" attrs="{'invisible':[('recess','=',True)]}"/>
+									<field name="teacher_id" context="{'subject_id':subject_id}" attrs="{'invisible':[('recess','=',True)]}"/>
+				            	</group>
+				            </form>
+			            </field>
+					</page>
+			    </notebook>
+               </form>
+           </field>
+       </record>
+
+    <!--  Time Table Information Tree View -->
+        <record model="ir.ui.view" id="view_time_table_tree">
+            <field name="name">time.table.tree</field>
+            <field name="model">time.table</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="TimeTable">
+                	<field name="name" />  
+                	<field name="class_id" select="1"/>
+                	<field name="division_id" select="1" /> 
+                	<field name="medium_id" select="1" />  
+                	<field name="year_id" select="1"/> 
+                </tree>
+            </field>
+        </record>
+
+    <!--  Time Table Information serach View -->
+ 		<record model="ir.ui.view" id="timetable_search">
+            <field name="name">time.table.search</field>
+            <field name="model">time.table</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="TimeTable">
+                    <field name="name" />  
+                    <field name="class_id"/>
+                    <field name="division_id"/> 
+                    <field name="medium_id"/>  
+                    <field name="year_id"/> 
+                    <newline/>
+					 <group expand="0" string="Group By..." colspan="12" col="10">
+    	                <separator orientation="vertical"/>
+						<filter icon="terp-stock_symbol-selection" string="Academic Class" help="By class" context="{'group_by':'class_id'}"/>
+    	                <filter icon="terp-stock_effects-object-colorize" string="Division" help="By division" context="{'group_by':'division_id'}"/>				
+    	                <filter icon="terp-stock_symbol-selection" string="Medium" help="By medium" context="{'group_by':'medium_id'}"/>
+    	                <filter icon="terp-stock_effects-object-colorize" string="Year" help="By year" context="{'group_by':'year_id'}"/>
+    	            </group>         
+                </search>
+            </field>
+        </record>
+
+    <!-- Time Table Information Action -->
+		<record model="ir.actions.act_window" id="action_time_table_form">
+		    <field name="name">Time Table</field>
+		    <field name="res_model">time.table</field>
+		    <field name="view_type">form</field>
+        	<field name="view_mode">tree,form</field>
+    	</record> 
+	
+  <menuitem
+        name="TimeTable" parent="school.menu_ems"
+        id="menu_timetable_1"
+        sequence="9"/>
+        
+	<menuitem
+        name="TimeTable" parent="menu_timetable_1"
+        id="menu_time_table_form"
+        action="action_time_table_form"
+        sequence="1"/> 
+
+    </data>
+</openerp>

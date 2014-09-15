@@ -1,0 +1,8 @@
+-
+    I called 'daily.attendance.current.open' wizard
+-
+  !python {model: daily.attendance.current.open}: |
+    self.open_attendance(cr, uid, ['active_ids'], {"lang": 'en_US',
+      "active_model": "daily.attendance", "active_ids": ['active_ids'],
+      "tz": False, "active_id": ['active_id'], })
+

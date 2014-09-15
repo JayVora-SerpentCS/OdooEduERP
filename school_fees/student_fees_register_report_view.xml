@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <!-- Student fees registration report -->
+        <report 
+            auto="False" 
+            id="report_student_fees_register" 
+            model="student.fees.register" 
+            name="student.fees.register" 
+            rml="school_fees/report/student_fees_register.rml"
+            menu = "True" 
+            string="Fees Register" 
+            header="False" />
+
+    </data>
+</openerp>
