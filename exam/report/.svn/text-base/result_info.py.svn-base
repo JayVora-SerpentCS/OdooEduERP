@@ -1,0 +1,13 @@
+import time
+
+from report import report_sxw
+
+class result(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context=None):
+        super(result, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+        })
+
+report_sxw.report_sxw('report.result', 'exam.result', 'exam/report/result_information_report.rml', parser=result, header="internal")
+

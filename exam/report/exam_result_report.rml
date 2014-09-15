@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+    <document filename="Exam result.pdf">
+    <template pageSize="(595.0,842.0)" title="Test" author="Serpentcs" allowSplitting="20">
+    <pageTemplate id="first">
+        <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+    </template>
+    
+  <stylesheet>
+  
+     <blockTableStyle id="Standard_Outline">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+     </blockTableStyle>
+      
+        
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
+            <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+       </blockTableStyle>
+
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+            <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+            <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+            <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="5,0" stop="5,-1"/>
+            <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="5,0" stop="5,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="5,0" stop="5,0"/>
+            </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+            <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,0" stop="2,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="3,0" stop="3,-1"/>
+            <lineStyle kind="LINEAFTER" colorName="#cccccc" start="3,0" stop="3,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,0" stop="3,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+            <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="4,-1" stop="4,-1"/>
+            <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="5,0" stop="5,-1"/>
+            <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="5,0" stop="5,-1"/>
+            <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="5,0" stop="5,0"/>
+            <lineStyle kind="LINEBELOW" colorName="#cccccc" start="5,-1" stop="5,-1"/>
+     </blockTableStyle>
+     
+     <initialize>
+            <paraStyle name="all" alignment="justify"/>
+     </initialize>
+     
+            <paraStyle name="P1" fontName="Helvetica" fontSize="14.0" leading="17" alignment="CENTER"/>
+            <paraStyle name="P2" fontName="Helvetica"/>
+            <paraStyle name="P3" fontName="Helvetica-bold" fontSize="11.0" leading="14"/>
+            <paraStyle name="P4" fontName="Helvetica"/>
+            <paraStyle name="P5" fontName="Helvetica"/>
+            <paraStyle name="P6" fontName="Helvetica"/>
+            <paraStyle name="P7" fontName="Helvetica" fontSize="11.0" leading="14"/>
+            <paraStyle name="P8" fontName="Helvetica" fontSize="14.0" leading="17" alignment="CENTER"/>
+            <paraStyle name="P9" fontName="Helvetica"/>
+            <paraStyle name="P10" fontName="Helvetica-bold" fontSize="11.0" leading="14" alignment="CENTER"/>
+            <paraStyle name="P11" fontName="Helvetica"/>
+            <paraStyle name="P12" fontName="Helvetica"/>
+            <paraStyle name="P13" fontName="Helvetica"/>
+            <paraStyle name="P14" fontName="Helvetica"/>
+            <paraStyle name="P15" fontName="Helvetica-bold"/>
+            <paraStyle name="Standard" fontName="Helvetica"/>
+            <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+            <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+            <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+            <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+            <paraStyle name="Index" fontName="Helvetica"/>
+            <paraStyle name="Table Contents" fontName="Helvetica"/>
+            <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
+     <images/>
+     </stylesheet>
+     
+  <story>
+  
+     <blockTable colWidths="500.0" style="Standard_Outline" >
+     
+     <para style="Standard"></para>
+        <tr>
+            <td>
+                <para style="P3" alignment="center">[[objects and objects[0].s_exam_ids.name or '']]</para>
+            </td>
+        </tr>
+     </blockTable>
+     
+     <para style="P6">
+            <font color="red"> </font>
+     </para>
+     
+     <blockTable colWidths="98.0,165.0,135.0,150.0" style="Table5">
+        <tr>
+        <td>
+             <para style="P10">Subject Name</para>
+        </td>
+        <td>
+             <para style="P10">Maximum marks</para>
+        </td>
+        <td>
+             <para style="P10">Minimum Marks</para>
+        </td>
+        <td>
+             <para style="P10">Obtain Mark</para>
+        </td>
+        </tr>
+     </blockTable>
+     <section >[[ repeatIn(objects,'result') ]]
+
+     <blockTable colWidths="95.0,460.0" style="Table2" >
+       <tr>
+       <td>
+            <para style="P4">Student Name:</para>
+       </td>
+       <td>
+            <para style="P4">[[result.student_id.name]]</para>
+       </td>
+       </tr>
+       </blockTable>
+     <section>
+         <blockTable colWidths="98.0,165.0,135.0,150.0" style="Table3">
+            <para style="Standard">[[ repeatIn(get_result_detail(data['form']['result_ids'],result),'sub_res_info') ]]</para>
+            <tr>
+                <td>
+                      <para style="P4">[[ sub_res_info.get('subject')]]</para>
+                </td>
+                <td>
+                      <para style="P4">[[ sub_res_info.get('max_mark') ]]</para>
+                </td>
+                <td>
+                      <para style="P4">[[ sub_res_info.get('mini_marks') ]]</para>
+                </td>
+                <td>
+                      <para style="P4">[[ sub_res_info.get('obt_marks') ]]</para>
+                </td>
+            </tr>
+         </blockTable>
+     </section>
+     </section>
+  </story>
+    </document>
