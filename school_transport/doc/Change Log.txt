@@ -1,0 +1,11 @@
+===============================================================================
+ Version Change Log
+ Module: school_transport
+===============================================================================
+Version 2.0 on 2014-09-09 by Murtuza Saleh
+    * Migrated Module.
+
+Version 1.0 on 2013-09-25 by Anu Patel
+    * Added groups in menus.
+    * Added Record rule in transport for student.
+    * Added groups to Buttons,Improved filed level Access rights.
