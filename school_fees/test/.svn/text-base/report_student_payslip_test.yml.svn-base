@@ -1,0 +1,10 @@
+-
+  In order to test the PDF reports defined on Student Payslip, Print a Student Payslip Report
+- 
+  !python {model: student.payslip}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.student.payslip').create(cr, uid, [ref('demo_student_payslip_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'school_fees-payslip_report.'+format), 'wb+').write(data)
+
+

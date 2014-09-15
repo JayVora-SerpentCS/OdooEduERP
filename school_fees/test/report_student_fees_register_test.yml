@@ -1,0 +1,9 @@
+-
+  In order to test the PDF reports defined on Student Payroll Register, Print a Student Fees Register Report
+- 
+  !python {model: student.fees.register}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.student.fees.register').create(cr, uid, [ref('student_fees_register_0')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'school_fees-fees_register_report.'+format), 'wb+').write(data)
+
