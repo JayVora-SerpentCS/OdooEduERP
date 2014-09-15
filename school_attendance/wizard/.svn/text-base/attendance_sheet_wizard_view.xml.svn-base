@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_monthly_attendance_sheet" model="ir.ui.view">
+            <field name="name">monthly.attendance.sheet.form</field>
+            <field name="model">monthly.attendance.sheet</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Monthly Attendance Sheet">
+                    <separator string="Standard Information" colspan="4"/>
+                        <group col="6" colspan="4">
+                            <field name="class_id"  widget="selection"  />
+                            <field name="division_id"  widget="selection"  />
+                            <field name="medium_id"  widget="selection"  />
+                     </group>
+                    <separator string="Academic Year Information" colspan="4"/>
+                        <group col="4" colspan="4">
+                            <field name="month_id" widget="selection" />
+                            <field name="year_id" widget="selection" />
+                        </group>
+                    
+                    <separator string="" colspan="4"/>
+                    <group colspan="4" col="6">
+                        <label string="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="terp-gtk-go-back-rtl" string="Open Attendance Sheet" name="monthly_attendance_sheet_open_window" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_monthly_attendance_sheet" model="ir.actions.act_window">
+            <field name="name">Monthly Attendance Sheet</field>
+            <field name="res_model">monthly.attendance.sheet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+           <field name="view_id" ref="view_monthly_attendance_sheet"/>
+            <field name="target">new</field>
+            <field name="help">
+            	Display the Monthly Attendance Sheet.
+            </field>
+        </record>
+
+        <menuitem icon="STOCK_INDENT" action="action_monthly_attendance_sheet"
+            id="menu_monthly_attendance_sheet_form"
+            parent="school_attendance.menu_attendance" 
+			sequence="2"/>
+    </data>
+</openerp>

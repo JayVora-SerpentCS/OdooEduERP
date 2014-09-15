@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- Attendance Sheet Information From View -->
+		<record model="ir.ui.view" id="view_attendance_sheet_form">
+			<field name="name">attendance.sheet.form</field>
+			<field name="model">attendance.sheet</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Attendance Sheet">
+					<group col="6" colspan="6">
+						<field name="name" />
+					</group>
+					<group col="6" colspan="4">
+						<field name="class_id" widget="selection" on_change="onchange_class_info(class_id, division_id, medium_id)"/>
+						<field name="division_id" widget="selection" on_change="onchange_class_info(class_id, division_id, medium_id)"/>
+						<field name="medium_id" widget="selection" on_change="onchange_class_info(class_id, division_id, medium_id)"/>
+					</group>
+					<newline />
+					<group col="4">
+						<field name="year_id" widget="selection"
+							colspan="2" />
+						<field name="month_id" widget="selection" colspan="2" />
+					</group>
+					<notebook colspan="4">
+						<page string="Attendances">
+							<field name="attendance_ids" nolabel="1"
+								colspan="4">
+								<tree string="Monthly Attendance">
+									<field name="roll_no" />
+									<field name="name" />
+									<field name="one" />
+									<field name="two" />
+									<field name="three" />
+									<field name="four" />
+									<field name="five" />
+									<field name="six" />
+									<field name="seven" />
+									<field name="eight" />
+									<field name="nine" />
+									<field name="ten" />
+									<field name="one_1" />
+									<field name="one_2" />
+									<field name="one_3" />
+									<field name="one_4" />
+									<field name="one_5" />
+									<field name="one_6" />
+									<field name="one_7" />
+									<field name="one_8" />
+									<field name="one_9" />
+									<field name="one_0" />
+									<field name="two_1" />
+									<field name="two_2" />
+									<field name="two_3" />
+									<field name="two_4" />
+									<field name="two_5" />
+									<field name="two_6" />
+									<field name="two_7" />
+									<field name="two_8" />
+									<field name="two_9" />
+									<field name="two_0" />
+									<field name="three_1" />
+									<field name="percentage"
+										widget="progressbar" />
+								</tree>
+								<form string="Monthly Attendance">
+									<group col="6" colspan="4">
+										<field name="roll_no" />
+										<field name="name" />
+										<field name="one" />
+										<field name="two" />
+										<field name="three" />
+										<field name="four" />
+										<field name="five" />
+										<field name="six" />
+										<field name="seven" />
+										<field name="eight" />
+										<field name="nine" />
+										<field name="ten" />
+										<field name="one_1" />
+										<field name="one_2" />
+										<field name="one_3" />
+										<field name="one_4" />
+										<field name="one_5" />
+										<field name="one_6" />
+										<field name="one_7" />
+										<field name="one_8" />
+										<field name="one_9" />
+										<field name="one_0" />
+										<field name="two_1" />
+										<field name="two_2" />
+										<field name="two_3" />
+										<field name="two_4" />
+										<field name="two_5" />
+										<field name="two_6" />
+										<field name="two_7" />
+										<field name="two_8" />
+										<field name="two_9" />
+										<field name="two_0" />
+										<field name="three_1" />
+									</group>
+								</form>
+							</field>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<!--  Attendance Sheet Information Tree View -->
+		<record model="ir.ui.view" id="view_attendance_sheet_tree">
+			<field name="name">attendance.sheet.tree</field>
+			<field name="model">attendance.sheet</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Attendance Sheet">
+					<field name="name" />
+					<field name="class_id" />
+					<field name="medium_id" />
+					<field name="division_id" />
+					<field name="month_id" />
+					<field name="year_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Attendance Sheets Information Search View -->
+
+		<record model="ir.ui.view" id="view_attendance_sheet_search">
+			<field name="name">attendance.sheet.search</field>
+			<field name="model">attendance.sheet</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Monthly Attendance Sheet">
+					<group col="10" colspan="4">
+
+						<separator orientation="vertical" />
+						<field name="class_id" select="1" />
+						<field name="division_id" select="1" />
+						<field name="medium_id" select="1" />
+
+					</group>
+					<newline />
+
+					<group expand="0" string="Group By..." colspan="12"
+						col="10">
+
+						<filter icon="terp-project" string="Class"
+							help="By Class" context="{'group_by':'class_id'}" />
+						<filter icon="terp-project" string="Division"
+							help="By Division" context="{'group_by':'division_id'}" />
+						<filter icon="terp-project" string="Medium"
+							help="By Medium" context="{'group_by':'medium_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+		
+		<!-- Attendance Sheet Information Action -->
+		<record model="ir.actions.act_window"
+			id="action_attendance_sheet_form">
+			<field name="name">Attendance Sheet</field>
+			<field name="res_model">attendance.sheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+
+		<menuitem name="Attendance" parent="school.menu_ems"
+			id="menu_attendance" sequence="8" />
+
+
+		<!-- Daily Attendance Information Form View -->
+		<record model="ir.ui.view" id="view_daily_attendance_form">
+			<field name="name">daily.attendance.form</field>
+			<field name="model">daily.attendance</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Daily Attendance Information">
+					<group col="6" colspan="4">
+						<field name="date" />
+						<field name="user_id" />
+					</group>
+					<group col="6" colspan="4">
+						<field name="class_id"
+							on_change="onchange_class_id(class_id, division_id, medium_id)"
+							widget="selection" />
+						<field name="division_id"
+							on_change="onchange_class_id(class_id, division_id, medium_id)"
+							widget="selection" />
+						<field name="medium_id"
+							on_change="onchange_class_id(class_id, division_id, medium_id)"
+							widget="selection" />
+					</group>
+					<notebook colspan="4">
+						<page string="Students">
+							<field name="student_ids" nolabel="1"
+								colspan="4">
+								<tree string="Student Information"
+									editable="top">
+									<field name="roll_no" />
+									<field name="stud_id" />
+<!-- 									<field name="is_present" -->
+<!-- 										attrs="{'readonly':[('is_absent','=',True)]}" /> -->
+									<field name="is_absent"
+										attrs="{'readonly':[('is_present','=',True)]}" />
+
+
+								</tree>
+								<form string="Student Information">
+									<group col="4" colspan="4">
+										<field name="stud_id"
+											on_change="onchange_name(stud_id)" />
+										<field name="roll_no" />
+<!-- 										<field name="is_present" -->
+<!-- 											attrs="{'readonly':[('is_absent','=',True)]}" -->
+<!-- 											on_change="onchange_is_present_option(is_present)" /> -->
+										<field name="is_absent"
+											attrs="{'readonly':[('is_present','=',True)]}" />
+									</group>
+
+								</form>
+							</field>
+
+							<separator string="" colspan="4" />
+							<group colspan="4" col="4">
+								<field name="state" />
+								<button name="attendance_validate"
+									string="Validate" states="draft" />
+								<button name="attendance_draft"
+									string="Reset To Draft" states="validate" />
+							</group>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<!-- Daily Attendance Information Tree View -->
+		<record model="ir.ui.view" id="view_daily_attendance_tree">
+			<field name="name">daily.attendance.tree</field>
+			<field name="model">daily.attendance</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Daily Attendance Information">
+					<field name="date" />
+					<field name="class_id" />
+					<field name="division_id" />
+					<field name="medium_id" />
+				</tree>
+			</field>
+		</record>
+
+		<!-- Standard Student Information Search View -->
+
+		<record model="ir.ui.view" id="view_daily_attendance_search">
+			<field name="name">daily.attendance.search</field>
+			<field name="model">daily.attendance</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Daily Attendance Sheet">
+					<group col="10" colspan="4">
+
+						<separator orientation="vertical" />
+						<field name="class_id" select="1" />
+						<field name="division_id" select="1" />
+						<field name="medium_id" select="1" />
+					</group>
+					<newline />
+					<group expand="0" string="Group By..." colspan="12"
+						col="10">
+						<filter icon="terp-project" string="Class"
+							help="By Class" context="{'group_by':'class_id'}" />
+						<filter icon="terp-project" string="Division"
+							help="By Division" context="{'group_by':'division_id'}" />
+						<filter icon="terp-project" string="Medium"
+							help="By Medium" context="{'group_by':'medium_id'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
+<!--		 Daily Attendance Information Action -->
+		<record model="ir.actions.act_window"
+			id="action_daily_attendance_form">
+			<field name="name">Daily Attendance Information</field>
+			<field name="res_model">daily.attendance</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+
+		<menuitem name="Daily Attendance Sheet" parent="menu_attendance"
+			id="menu_daily_attendance" action="action_daily_attendance_form" sequence="1"/>
+
+	</data>
+</openerp>

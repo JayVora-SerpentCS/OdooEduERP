@@ -1,0 +1,15 @@
+-
+  I create 'student.attendance.by.month' wizard
+-
+  !record {model: student.attendance.by.month, id: student_attendance_by_month_0}:
+    month: 8
+    year: 2011
+-
+  I called 'student.attendance.by.month' wizard
+-
+  !python {model: student.attendance.by.month}: |
+    self.print_report(cr, uid, [ref('school.demo_student_student_1'), ref('school.demo_student_student_2'), ref('school.demo_student_student_3'), ref('school.demo_student_student_4'), ref('school.demo_student_student_5')], {"lang": 'en_US',
+      "active_model": "student.student", "active_ids": [ref('school.demo_student_student_1'), ref('school.demo_student_student_2'), ref('school.demo_student_student_3'), ref('school.demo_student_student_4'), ref('school.demo_student_student_5')],
+      "tz": False, "active_id": [ref('school.demo_student_student_1')], })
+
+

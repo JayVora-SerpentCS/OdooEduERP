@@ -1,0 +1,24 @@
+<?xml version="1.0"  encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="ir_actions_server_attendance" model="ir.actions.server">
+            <field eval="5" name="sequence"/>
+            <field eval="&quot;&quot;&quot;code&quot;&quot;&quot;" name="state"/>
+            <field eval="&quot;&quot;&quot;ir.actions.server&quot;&quot;&quot;" name="type"/>
+            <field name="model_id" ref="model_daily_attendance_current_open"/>
+            <field eval="[(6,0,[])]" name="child_ids"/>
+            <field eval="&quot;&quot;&quot;action = self.pool.get('daily.attendance.current.open').open_attendance(cr, uid, object.id, context)&quot;&quot;&quot;" name="code"/>
+            <field eval="&quot;&quot;&quot;True&quot;&quot;&quot;" name="condition"/>
+            <field eval="&quot;&quot;&quot;Daily Attendance&quot;&quot;&quot;" name="name"/>
+        </record>
+
+        <record id="menu_daily_attendance_current" model="ir.ui.menu">
+            <field name="name">Daily Attendance Sheet</field>
+            <field eval="1" name="sequence"/>
+            <field name="parent_id" ref="menu_attendance"/>
+            <field name="icon">STOCK_NEW</field>
+            <field name="action" ref="ir_actions_server_attendance"/>
+        </record>
+
+    </data>
+</openerp>

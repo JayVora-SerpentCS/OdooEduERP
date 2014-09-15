@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<!-- General structure of a workflow XML file -->
+	<record model="workflow" id="wkf_event_2">
+		<field name="name">workflow.event.2</field>
+		<field name="osv">daily.attendance</field>
+		<field name="on_create">True</field>
+	</record>
+
+	<!-- Attendance Procedure Workflow Activities -->
+	<record model="workflow.activity" id="act_draft_2">
+    	<field name="wkf_id" ref="wkf_event_2" />
+		<field name="name">activity.draft.2</field>
+		<field name="flow_start">True</field>
+    	<field name="kind">function</field>
+        <field name="action">attendance_draft()</field>
+	</record>
+
+	<record model="workflow.activity" id="act_validate_2">
+		<field name="name">activity.validate.2</field>
+		<field name="wkf_id" ref="wkf_event_2" />
+		<field name="kind">function</field>
+        <field name="action">attendance_validate()</field>
+	</record>
+
+	<!-- Attendance Procedure Workflow Transitions -->
+	<record model="workflow.transition" id="trans_draft_2_validate_2">
+		<field name="act_from" ref="act_draft_2" />
+		<field name="act_to" ref="act_validate_2" />
+		<field name="signal">attendance_validate</field>
+	</record>
+
+	<record model="workflow.transition" id="trans_validate_2_draft_2">
+		<field name="act_from" ref="act_validate_2" />
+		<field name="act_to" ref="act_draft_2" />
+		<field name="signal">attendance_draft</field>
+	</record>
+	
+</data>
+</openerp>
+
