@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    	<!--Academic Year  Information-->
+        
+		<record id="demo_academic_year_1" model="academic.year">
+			<field name="name">Academic Year 2011</field>
+			<field name="code">2011</field>
+			<field name="sequence">1</field>
+			<field name="date_start">01/01/2011</field>
+			<field name="date_stop">12/31/2011</field>
+		</record>
+
+    	<!--Academic Month Information-->
+		<record id="demo_academic_month_1" model="academic.month">
+			<field name="name">January</field>
+			<field name="code">1</field>
+			<field name="date_start">01/01/2011</field>
+			<field name="date_stop">01/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_2" model="academic.month">
+			<field name="name">February</field>
+			<field name="code">2</field>
+			<field name="date_start">02/01/2011</field>
+			<field name="date_stop">02/28/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_3" model="academic.month">
+			<field name="name">March</field>
+			<field name="code">3</field>
+			<field name="date_start">03/01/2011</field>
+			<field name="date_stop">03/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_4" model="academic.month">
+			<field name="name">April</field>
+			<field name="code">4</field>
+			<field name="date_start">04/01/2011</field>
+			<field name="date_stop">04/30/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_5" model="academic.month">
+			<field name="name">May</field>
+			<field name="code">5</field>
+			<field name="date_start">05/01/2011</field>
+			<field name="date_stop">05/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_6" model="academic.month">
+			<field name="name">June</field>
+			<field name="code">6</field>
+			<field name="date_start">06/01/2011</field>
+			<field name="date_stop">06/30/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_7" model="academic.month">
+			<field name="name">July</field>
+			<field name="code">7</field>
+			<field name="date_start">07/01/2011</field>
+			<field name="date_stop">07/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_8" model="academic.month">
+			<field name="name">August</field>
+			<field name="code">8</field>
+			<field name="date_start">08/01/2011</field>
+			<field name="date_stop">08/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_9" model="academic.month">
+			<field name="name">September</field>
+			<field name="code">9</field>
+			<field name="date_start">09/01/2011</field>
+			<field name="date_stop">09/30/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_10" model="academic.month">
+			<field name="name">October</field>
+			<field name="code">10</field>
+			<field name="date_start">10/01/2011</field>
+			<field name="date_stop">10/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_11" model="academic.month">
+			<field name="name">November</field>
+			<field name="code">11</field>
+			<field name="date_start">11/01/2011</field>
+			<field name="date_stop">11/30/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<record id="demo_academic_month_12" model="academic.month">
+			<field name="name">December</field>
+			<field name="code">12</field>
+			<field name="date_start">12/01/2011</field>
+			<field name="date_stop">12/31/2011</field>
+			<field name="year_id" ref='demo_academic_year_1'/>
+		</record>
+
+		<!--Standard Information-->
+		
+		<record id="demo_standard_standard_1" model="standard.standard">
+			<field name="name">First</field>
+			<field name="code">FRT</field>
+			<field name="sequence">1</field>
+		</record>
+
+		<record id="demo_standard_standard_2" model="standard.standard">
+			<field name="name">Second</field>
+			<field name="code">SCN</field>
+			<field name="sequence">2</field>
+		</record>
+
+		<record id="demo_standard_standard_3" model="standard.standard">
+			<field name="name">Third</field>
+			<field name="code">THR</field>
+			<field name="sequence">3</field>
+		</record>
+
+		<!--Standard Medium Information-->
+		
+		<record id="demo_standard_medium_1" model="standard.medium">
+			<field name="name">English</field>
+			<field name="code">ENG</field>
+			<field name="sequence">1</field>
+		</record>
+
+		<record id="demo_standard_medium_2" model="standard.medium">
+			<field name="name">Hindi</field>
+			<field name="code">HIN</field>
+			<field name="sequence">2</field>
+		</record>
+
+		<record id="demo_standard_medium_3" model="standard.medium">
+			<field name="name">Gujarati</field>
+			<field name="code">GUJ</field>
+			<field name="sequence">3</field>
+		</record>
+
+		<!--Standard Division Information-->
+		
+		<record id="demo_standard_division_1" model="standard.division">
+			<field name="name">A</field>
+			<field name="code">A</field>
+			<field name="sequence">1</field>
+		</record>
+
+		<record id="demo_standard_division_2" model="standard.division">
+			<field name="name">B</field>
+			<field name="code">B</field>
+			<field name="sequence">2</field>
+		</record>
+
+		<!--Subject Information-->
+		
+		<record id="demo_subject_subject_1" model="subject.subject">
+			<field name="name">Maths</field>
+			<field name="code">MAT</field>
+		</record>
+
+		<record id="demo_subject_subject_2" model="subject.subject">
+			<field name="name">Science</field>
+			<field name="code">SCN</field>
+		</record>
+
+		<record id="demo_subject_subject_3" model="subject.subject">
+			<field name="name">English</field>
+			<field name="code">ENG</field>
+		</record>
+
+		<record id="demo_subject_subject_4" model="subject.subject">
+			<field name="name">Gujarati</field>
+			<field name="code">GUJ</field>
+		</record>
+
+		<record id="demo_subject_subject_5" model="subject.subject">
+			<field name="name">Hindi</field>
+			<field name="code">HIN</field>
+		</record>
+
+		<record id="demo_subject_subject_6" model="subject.subject">
+			<field name="name">Social Science</field>
+			<field name="code">SOS</field>
+		</record>
+
+		<record id="demo_subject_subject_7" model="subject.subject">
+			<field name="name">Computer</field>
+			<field name="code">CMP</field>
+		</record>
+
+		<record id="demo_subject_subject_8" model="subject.subject">
+			<field name="name">Sport</field>
+			<field name="code">PET</field>
+		</record>
+
+	<!--School Information-->
+		
+		<record id="demo_school_school_1" model="school.school">
+			<field name="name">Swaminarayan Gurukul</field>
+			<field name="code">SGVP</field>
+		</record>
+
+	<!--Parent Information-->
+
+		<record id="demo_partner1" model="res.partner">
+			<field name="name">Divyesh Parent</field>
+			<field name="ref">div</field>
+		</record>	
+
+		<record id="demo_partner2" model="res.partner">
+			<field name="name">Jalpesh Parent</field>
+			<field name="ref">jal</field>
+		</record>
+	
+		<record id="demo_partner3" model="res.partner">
+			<field name="name">Hitesh Parent</field>
+			<field name="ref">hit</field>
+			<field name="photo"></field>
+		</record>	
+
+		<record id="demo_partner4" model="res.partner">
+			<field name="name">Samir Parent</field>
+			<field name="ref">sam</field>
+			<field name="photo"></field>
+		</record>
+
+		<record id="demo_partner5" model="res.partner">
+			<field name="name">Darshan Parent</field>
+			<field name="ref">dar</field>
+		</record>
+
+		<!--Student Information-->
+		
+		<record id="demo_student_student_1" model="student.student">
+			<field name="year" ref= 'demo_academic_year_1'/>
+			<field name="class_id" ref= 'demo_standard_standard_1'/>
+			<field name="medium_id" ref= 'demo_standard_medium_1'/>
+			<field name="division_id" ref= 'demo_standard_division_1' />
+			<field name="roll_no">2</field>
+			<field name="name">Divyesh</field>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="middle">J</field>
+			<field name="last">Makwana</field>
+			<field name="gender">male</field>
+			<field name="date_of_birth">07/01/1988</field>
+			<field name="admission_date">07/01/2011</field>
+			<field name="state">done</field>
+		</record>
+
+		<record id="demo_student_student_2" model="student.student">
+			<field name="year" ref= 'demo_academic_year_1'/>
+			<field name="class_id" ref= 'demo_standard_standard_2'/>
+			<field name="medium_id" ref= 'demo_standard_medium_1'/>
+			<field name="division_id" ref= 'demo_standard_division_1' />
+			<field name="roll_no">4</field>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="name">Jalpesh</field>
+			<field name="middle">J</field>
+			<field name="last">Makwana</field>
+			<field name="gender">male</field>
+			<field name="date_of_birth">07/01/1988</field>
+			<field name="admission_date">07/01/2011</field>
+			<field name="state">done</field>
+		</record>
+
+		<record id="demo_student_student_3" model="student.student">
+			<field name="year" ref= 'demo_academic_year_1'/>
+			<field name="class_id" ref= 'demo_standard_standard_2'/>
+			<field name="medium_id" ref= 'demo_standard_medium_1'/>
+			<field name="division_id" ref= 'demo_standard_division_1' />
+			<field name="roll_no">3</field>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="name">Hitesh</field>
+			<field name="middle">B</field>
+			<field name="last">Makwana</field>
+			<field name="gender">male</field>
+			<field name="date_of_birth">07/01/1988</field>
+			<field name="admission_date">07/01/2011</field>
+			<field name="state">done</field>
+		</record>
+
+		<record id="demo_student_student_4" model="student.student">
+			<field name="year" ref= 'demo_academic_year_1'/>
+			<field name="class_id" ref= 'demo_standard_standard_1'/>
+			<field name="medium_id" ref= 'demo_standard_medium_1'/>
+			<field name="division_id" ref= 'demo_standard_division_1' />
+			<field name="roll_no">5</field>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="name">Samir</field>
+			<field name="middle">B</field>
+			<field name="last">Makwana</field>
+			<field name="gender">male</field>
+			<field name="date_of_birth">07/01/1988</field>
+			<field name="admission_date">07/01/2011</field>
+			<field name="state">done</field>
+		</record>
+
+		<record id="demo_student_student_5" model="student.student">
+			<field name="year" ref= 'demo_academic_year_1'/>
+			<field name="class_id" ref= 'demo_standard_standard_3'/>
+			<field name="medium_id" ref= 'demo_standard_medium_1'/>
+			<field name="division_id" ref= 'demo_standard_division_1' />
+			<field name="roll_no">1</field>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="name">Darshan</field>
+			<field name="middle">J</field>
+			<field name="last">Makwana</field>
+			<field name="gender">male</field>
+			<field name="date_of_birth">07/01/1988</field>
+			<field name="admission_date">07/01/2011</field>
+			<field name="state">done</field>
+		</record>
+
+	<!-- Student Address Information-->
+
+		<record id="demo_partner_address1" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner1'/>
+			<field name="type">default</field>
+			<field name="name">Divyesh1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">div@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<record id="demo_partner_address2" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner2'/>
+			<field name="type">invoice</field>
+			<field name="name">Jalpesh1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">jal@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<record id="demo_partner_address3" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner3'/>
+			<field name="type">delivery</field>
+			<field name="name">Hitesh1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">hit@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<record id="demo_partner_address4" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner4'/>
+			<field name="type">contact</field>
+			<field name="name">Samir1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">sam@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+		
+		<record id="demo_partner_address5" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner5'/>
+			<field name="type">other</field>
+			<field name="name">Darshan1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">dar@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+
+		<record id="demo_partner_address6" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner1'/>
+			<field name="student_id" ref= 'demo_student_student_1'/>
+			<field name="type">default</field>
+			<field name="name">Divyesh1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">div@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<record id="demo_partner_address7" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner2'/>
+			<field name="student_id" ref= 'demo_student_student_2'/>
+			<field name="type">invoice</field>
+			<field name="name">Jalpesh1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">jal@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<record id="demo_partner_address8" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner3'/>
+			<field name="student_id" ref= 'demo_student_student_3'/>
+			<field name="type">delivery</field>
+			<field name="name">Hitesh1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">hit@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<record id="demo_partner_address9" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner4'/>
+			<field name="student_id" ref= 'demo_student_student_4'/>
+			<field name="type">contact</field>
+			<field name="name">Samir1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">sam@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+		
+		<record id="demo_partner_address10" model="res.partner.address">
+			<field name="partner_id" ref= 'demo_partner5'/>
+			<field name="student_id" ref= 'demo_student_student_5'/>
+			<field name="type">other</field>
+			<field name="name">Darshan1</field>
+			<field name="street">street1</field>
+			<field name="street2">street2</field>
+			<field name="zip">jnd</field>
+			<field name="city">junagadh</field>
+			<field name="email">dar@tinyerp.com</field>
+			<field name="phone">989898</field>
+			<field name="mobile">9898989898</field>
+		</record>
+
+		<!--Teacher User Information-->
+		<record id="user_hda" model="res.users">
+        	<field name="name">Husen Sir</field>
+			<field name="user_email">hda@tinyerp.com</field>
+			<field name="login">hda</field>
+			<field name="password">hda123456</field>
+			<field eval="[(6,0,[ref('group_school_teacher')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="user_jvo" model="res.users">
+        	<field name="name">Jay Sir</field>
+			<field name="user_email">jvo@tinyerp.com</field>
+			<field name="login">jvo</field>
+			<field name="password">jvo123456</field>
+			<field eval="[(6,0,[ref('group_school_teacher')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="user_mga" model="res.users">
+        	<field name="name">Mantavya Sir</field>
+			<field name="user_email">mga@tinyerp.com</field>
+			<field name="login">mga</field>
+			<field name="password">mga123456</field>
+			<field eval="[(6,0,[ref('group_school_teacher')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="user_hmo" model="res.users">
+        	<field name="name">Harshad Sir</field>
+			<field name="user_email">hmo@tinyerp.com</field>
+			<field name="login">hmo</field>
+			<field name="password">hmo123456</field>
+			<field eval="[(6,0,[ref('group_school_teacher')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="user_gpa" model="res.users">
+        	<field name="name">Ganshym Sir</field>
+			<field name="user_email">gpa@tinyerp.com</field>
+			<field name="login">gpa</field>
+			<field name="password">gpa</field>
+			<field eval="[(6,0,[ref('group_school_teacher')])]" name="groups_id"/>
+    	</record>
+
+    	<!--Student User Information-->
+		<record id="base.user_divyesh" model="res.users">
+        	<field name="name">divyesh</field>
+			<field name="user_email">mdi@tinyerp.com</field>
+			<field name="login">mdi</field>
+			<field name="password">mdi</field>
+			<field eval="[(6,0,[ref('group_school_student')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_jalpesh" model="res.users">
+        	<field name="name">jalpesh</field>
+			<field name="user_email">jal@tinyerp.com</field>
+			<field name="login">jal</field>
+			<field name="password">jal</field>
+			<field eval="[(6,0,[ref('group_school_student')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_hitesh" model="res.users">
+        	<field name="name">hitesh</field>
+			<field name="user_email">hit@tinyerp.com</field>
+			<field name="login">hit</field>
+			<field name="password">hit</field>
+			<field eval="[(6,0,[ref('group_school_student')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_samir" model="res.users">
+        	<field name="name">samir</field>
+			<field name="user_email">sam@tinyerp.com</field>
+			<field name="login">sam</field>
+			<field name="password">sam</field>
+			<field eval="[(6,0,[ref('group_school_student')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_darshan" model="res.users">
+        	<field name="name">dar</field>
+			<field name="user_email">dar@tinyerp.com</field>
+			<field name="login">dar</field>
+			<field name="password">dar</field>
+			<field eval="[(6,0,[ref('group_school_student')])]" name="groups_id"/>
+    	</record>
+
+    	<!--Parent User Information-->
+		<record id="base.user_divyesh_parent" model="res.users">
+        	<field name="name">divyesh parent</field>
+			<field name="user_email">mdi@tinyerp.com</field>
+			<field name="login">mdip</field>
+			<field name="password">mdi123456</field>
+			<field eval="[(6,0,[ref('group_school_parent')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_jalpesh_parent" model="res.users">
+        	<field name="name">jalpesh parent</field>
+			<field name="user_email">jal@tinyerp.com</field>
+			<field name="login">jalp</field>
+			<field name="password">jal123456</field>
+			<field eval="[(6,0,[ref('group_school_parent')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_hitesh_parent" model="res.users">
+        	<field name="name">hitesh parent</field>
+			<field name="user_email">hit@tinyerp.com</field>
+			<field name="login">hitp</field>
+			<field name="password">hit123456</field>
+			<field eval="[(6,0,[ref('group_school_parent')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_samir_parent" model="res.users">
+        	<field name="name">samir parent</field>
+			<field name="user_email">sam@tinyerp.com</field>
+			<field name="login">samp</field>
+			<field name="password">sam123456</field>
+			<field eval="[(6,0,[ref('group_school_parent')])]" name="groups_id"/>
+    	</record>
+
+    	<record id="base.user_darshan_parent" model="res.users">
+        	<field name="name">darshan parent</field>
+			<field name="user_email">dar@tinyerp.com</field>
+			<field name="login">darp</field>
+			<field name="password">dar123456</field>
+			<field eval="[(6,0,[ref('group_school_parent')])]" name="groups_id"/>
+    	</record>
+
+		<!--Teacher Information-->
+		
+		<record id="demo_student_student_6" model="hr.employee">
+			<field name="name">HDA Sir</field>
+			<field name="gender">male</field>
+			<field name="user_id" ref="user_hda"/>
+		</record>
+
+		<record id="demo_student_student_7" model="hr.employee">
+			<field name="name">JVO sir</field>
+			<field name="gender">male</field>
+			<field name="user_id" ref="user_jvo"/>
+		</record>
+
+		<record id="demo_student_student_8" model="hr.employee">
+			<field name="name">MGA Sir</field>
+			<field name="gender">male</field>
+			<field name="user_id" ref="user_mga"/>
+		</record>
+
+		<record id="demo_student_student_9" model="hr.employee">
+			<field name="name">HMO Sir</field>
+			<field name="gender">male</field>
+			<field name="user_id" ref="user_hmo"/>
+		</record>
+
+		<record id="demo_student_student_10" model="hr.employee">
+			<field name="name">GPA Sir</field>
+			<field name="gender">male</field>
+			<field name="user_id" ref="user_gpa"/>
+		</record>
+
+		<!--School Standard Information-->
+		
+		<record id="demo_school_standard_1" model="school.standard">
+			<field name="standard_id" ref="demo_standard_standard_1"/>
+			<field name="division_id" ref="demo_standard_division_1"/>
+			<field name="medium_id" ref="demo_standard_medium_1"/>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="user_id" ref="base.user_root"/>
+		</record>
+
+		<record id="demo_school_standard_2" model="school.standard">
+			<field name="standard_id" ref="demo_standard_standard_2"/>
+			<field name="division_id" ref="demo_standard_division_1"/>
+			<field name="medium_id" ref="demo_standard_medium_1"/>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="user_id" ref="demo_student_student_6"/>
+		</record>
+
+		<record id="demo_school_standard_3" model="school.standard">
+			<field name="standard_id" ref="demo_standard_standard_3"/>
+			<field name="division_id" ref="demo_standard_division_1"/>
+			<field name="medium_id" ref="demo_standard_medium_1"/>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="user_id" ref="demo_student_student_7"/>
+		</record>
+		
+		<record id="demo_school_standard_4" model="school.standard">
+			<field name="standard_id" ref="demo_standard_standard_1"/>
+			<field name="division_id" ref="demo_standard_division_2"/>
+			<field name="medium_id" ref="demo_standard_medium_1"/>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="user_id" ref="demo_student_student_8"/>
+		</record>
+
+		<record id="demo_school_standard_5" model="school.standard">
+			<field name="standard_id" ref="demo_standard_standard_2"/>
+			<field name="division_id" ref="demo_standard_division_2"/>
+			<field name="medium_id" ref="demo_standard_medium_1"/>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="user_id" ref="demo_student_student_9"/>
+		</record>
+
+		<record id="demo_school_standard_6" model="school.standard">
+			<field name="standard_id" ref="demo_standard_standard_3"/>
+			<field name="division_id" ref="demo_standard_division_2"/>
+			<field name="medium_id" ref="demo_standard_medium_1"/>
+			<field name="school_id" ref="demo_school_school_1"/>
+			<field name="user_id" ref="demo_student_student_10"/>
+		</record>
+
+    </data>
+</openerp>
