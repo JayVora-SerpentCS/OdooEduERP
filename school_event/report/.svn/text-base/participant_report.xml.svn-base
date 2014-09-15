@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False" id="report_school_event" model="school.event" name="school.event" rml='addons/school_event/report/participants.rml' string="Event Detail"/>
+
+    </data>
+</openerp>
+
