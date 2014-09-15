@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="form_update_prices" model="ir.ui.view">
+            <field name="name">form.update.prices</field>
+            <field name="model">update.prices</field>
+            <field name="arch" type="xml">
+                <form string="Update Prices" version="7.0">
+                    <p>
+                        Update prices for this category?
+                    </p>
+                    <footer>
+	                    <button type='object' name='action_update_prices' string='Update Price' icon='gtk-ok'/>
+	                    <button special='cancel' string='Cancel' icon='gtk-cancel'/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+            <act_window id="action_update_prices"
+            name="Update Prices"
+            res_model="update.prices"
+            src_model="library.price.category"
+            view_mode="form"
+            target="new"
+            view_type="form"/>
+
+    </data>
+</openerp>
