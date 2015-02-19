@@ -21,14 +21,14 @@
 ##############################################################################
 
 {
-    "name" : "School",
-    "version" : "2.0",
+    "name" : "School Management",
+    "version" : "2.1",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com",
     "category": "School Management",
     "complexity": "easy",
-    "description": """A module to School Management.
-        A Module support the following functionalities:
+    "description": """A module for the School Management.
+        The Module supports the following functionalities:
         1. Admission Procedure
         2. Student Information
         3. Parent Information
@@ -50,15 +50,11 @@
             "wizard/wiz_meeting_view.xml",
             "indentity_card_report.xml",
     ],
-  'demo': [
-           'demo/school_demo.xml'
-            ],
-
-    'test': [
+    "demo": ['demo/school_demo.xml'],
+    "test": [
         'test/school_test.yml',
         'test/assign_roll_no_test.yml',
         ],
-
     "installable": True,
     "auto_install": False,
     "application": True,

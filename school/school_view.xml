@@ -553,6 +553,7 @@
 							groups="school.group_school_administration,school.group_school_teacher"/>
 						<button name="admission_done" type="object" string="Done"
 							states="draft,terminate" icon="gtk-jump-to"/>
+						<button name="set_to_draft" type="object" string="Reset" icon="gtk-undo" states="alumni,terminate" />
 						<field name="state" widget="statusbar" nolabel="1"/>
 					</header>
 					<sheet style="width: 10%%,height:10%%">
@@ -843,10 +844,10 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <search string="Admission Register">
-                     <filter icon="terp-project"  string="Draft" domain="[('state','=', 'draft')]" help="Admission In Draft State"/>
-                     <filter icon="terp-project"  string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
-                     <filter icon="terp-project"  string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
-                     <filter icon="terp-project"  string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
+                     <filter icon="terp-project"  string="Draft" domain="[('state','=', 'draft')]" help="Admission In Draft"/>
+                     <filter icon="terp-project"  string="Alumni" domain="[('state','=', 'alumni')]" help="Alumni"/>
+                     <filter icon="terp-project"  string="Terminated" domain="[('state','=', 'terminate')]" help="Terminated Admissions"/>
+                     <filter icon="terp-project"  string="Done" domain="[('state','=', 'done')]" help="Completed Admissions"/>
                      <separator orientation="vertical"/>
                      <field name="student_name" invisible="1"/>
                      <field name="year"/>
