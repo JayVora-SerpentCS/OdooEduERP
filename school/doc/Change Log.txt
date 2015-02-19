@@ -2,8 +2,11 @@
  Version Change Log
  Module: school
 ===============================================================================
+Version 2.1 on 2015-02-19 by Serpent Consulting Services Pvt Ltd
+    * Added Reset option for Admission Register.
+    
 Version 2.0 on 2014-09-09 by Murtuza Saleh
-    * Migrated Module.
+    * Migrated Module as per v8
 
 Version 1.4 on 2013-10-07 by Anu Patel
     * Improved the elective subject functionality.
