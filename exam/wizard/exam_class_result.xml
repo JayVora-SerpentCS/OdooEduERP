@@ -7,7 +7,7 @@
             <field name="name">result.print.form</field>
             <field name="model">result.print</field>
             <field name="arch" type="xml">
-                <form string="Result Info" version="7.0">
+                <form string="Result Info">
                     <group string="Result info" colspan="4" >
                          <field name="standard_id" placeholder="Select Standard"/>
                          <field name="exam_id" placeholder="Select Exam"/>

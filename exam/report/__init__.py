@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import result_info
-import additional_exam_result_info
 import add_exam_result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
