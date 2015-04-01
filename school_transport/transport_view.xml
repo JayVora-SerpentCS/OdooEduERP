@@ -157,7 +157,7 @@
             <field name="name">transport.point.form</field>
             <field name="model">transport.point</field>
             <field name="arch" type="xml">
-                <form string="Transport Point" version="7.0">
+                <form string="Transport Point">
                     <sheet>
                        <group col="4">
                         <field name="name" placeholder="Point Name"/>
@@ -206,7 +206,7 @@
             <field name="name">student.transport.form</field>
             <field name="model">student.transport</field>
             <field name="arch" type="xml">
-                <form string="Transport Information" version="7.0">
+                <form string="Transport Information">
                     <header>
                         <button name="transport_open" icon="terp-gtk-go-back-rtl" string="Open" states="draft"  type='object' groups="school.group_school_administration"/>
                         <button name="transport_close" icon="gtk-close" string="Close" states="open" type='object' groups="school.group_school_administration"/>
@@ -301,7 +301,7 @@
             <field name="name">transport.registration.form</field>
             <field name="model">transport.registration</field>
             <field name="arch" type="xml">
-                <form string="Transport Registration" version="7.0">
+                <form string="Transport Registration">
 	                <header>
 	                    <button name="trans_regi_confirm" icon="gtk-apply" string="Confirm" states="draft" type='object'/>
 	                    <button name="trans_regi_cancel" icon="gtk-cancel" string="Cancel" states="draft" type='object'/>
@@ -343,7 +343,7 @@
             <field name="name">transport.vehicle.form</field>
             <field name="model">transport.vehicle</field>
             <field name="arch" type="xml">
-                <form string="Transport vehicle Information" version="7.0">
+                <form string="Transport vehicle Information">
                     <sheet>
                     <group col="4" colspan="4">
                         <field name="vehicle"/>
