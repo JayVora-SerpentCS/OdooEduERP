@@ -22,6 +22,7 @@
 import time
 from datetime import datetime
 from openerp.report import report_sxw
+from openerp.osv import osv
 
 class student_fees_register(report_sxw.rml_parse):
 
@@ -43,11 +44,10 @@ class student_fees_register(report_sxw.rml_parse):
         out_date = new_date.strftime('%B')+'-'+new_date.strftime('%Y')
         return out_date
 
-report_sxw.report_sxw(
-    'report.student.fees.register',
-    'student.fees.register',
-    '/home/mdi/openerp/stable-6/openobject-addons/school_fees/report/student_fees_register.rml',
-    parser=student_fees_register, header="external"
-)
+class report_student_fees_register(osv.AbstractModel):
+    _name = 'report.school_fees.student_fees_register'
+    _inherit = 'report.abstract_report'
+    _template = 'school_fees.student_fees_register'
+    _wrapped_report_class = student_fees_register    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

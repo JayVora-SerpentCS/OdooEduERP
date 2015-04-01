@@ -46,8 +46,9 @@
         "school_fees_sequence.xml",
         "student_fees_register_workflow.xml",
         "student_payslip_workflow.xml",
-        "student_fees_register_report_view.xml",
-        "student_payslip_report_view.xml",
+        "view/student_payslip.xml",
+        "view/student_fees_register.xml",
+        "report_view.xml",
     ],
   
     'test': [

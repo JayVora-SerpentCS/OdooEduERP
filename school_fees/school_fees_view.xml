@@ -41,7 +41,7 @@
             <field name="name">student.fees.structure.form</field>
             <field name="model">student.fees.structure</field>
             <field name="arch" type="xml">
-                <form string="Student Fees Structure" version="7.0">
+                <form string="Student Fees Structure">
                     <sheet>
 	                   <group col="6" colspan="4">
 	                       <field name="name" placeholder="Name"/>
@@ -74,7 +74,7 @@
             <field name="name">student.payslip.line.form</field>
             <field name="model">student.payslip.line</field>
             <field name="arch" type="xml">
-                <form string="Student Payslip Line" version="7.0">
+                <form string="Student Payslip Line">
                     <sheet>
 	                    <group col="4" colspan="4">
 	                        <field name="name" placeholder="Name"/>
@@ -176,7 +176,7 @@
             <field name="name">student.payslip.form</field>
             <field name="model">student.payslip</field>
             <field name="arch" type="xml">
-                <form string="Student Payslip" version="7.0">
+                <form string="Student Payslip">
                     <header>
 	                    <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="workflow" groups="school.group_school_administration"/>
 	                    <button name="student_pay_fees" string="Payment" states="confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
@@ -275,7 +275,7 @@
             <field name="name">student.fees.register.form</field>
             <field name="model">student.fees.register</field>
             <field name="arch" type="xml">
-                <form string="Student Fees Register" version="7.0">
+                <form string="Student Fees Register">
                     <header>
 	                     <button name="fees_register_confirm" string="Confirm" states="draft" icon="gtk-execute" groups="school.group_school_administration"/>
 	                     <field name="state" widget="statusbar" readonly="1"/>
@@ -299,7 +299,7 @@
 	                                    <field name="total"/>
 	                                    <field name="state"/>
 	                                </tree>
-	                                <form string="Student Payslip" version="7.0">
+	                                <form string="Student Payslip">
 	                                    <header>
 	                                       <field name="state" widget="statusbar" readonly="1"/>
 	                                    </header>
