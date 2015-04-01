@@ -24,6 +24,7 @@ from openerp.report import report_sxw
 import qrcode
 import base64
 import tempfile
+from openerp.osv import osv
 
 class qr_code_label(report_sxw.rml_parse):
 
@@ -40,7 +41,13 @@ class qr_code_label(report_sxw.rml_parse):
         qr_img.save(filename)
         return base64.encodestring(file(filename, 'rb').read())
         
-report_sxw.report_sxw('report.qr_code_label', 'product.product',
-        'library/report/qrcode_label.rml',parser=qr_code_label, header=False)
+class report_qrcode_lable(osv.AbstractModel):
+    _name = 'report.library.qrcode_label'
+    _inherit = 'report.abstract_report'
+    _template = 'library.qrcode_label'
+    _wrapped_report_class = qr_code_label    
+        
+# report_sxw.report_sxw('report.qr.code.label', 'product.product',
+#         'library/report/qrcode_label.rml',parser=qr_code_label, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

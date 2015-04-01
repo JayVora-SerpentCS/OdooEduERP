@@ -20,8 +20,7 @@
 #
 ##############################################################################
 from openerp.osv import osv,fields
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from mx import DateTime
 from openerp import workflow
 
 class sale_order_line(osv.Model):
@@ -114,7 +113,7 @@ class sale_order(osv.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = (datetime.now() + relativedelta(days=line.delay or 0.0)).strftime('%Y-%m-%d')
+                date_planned = (DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
