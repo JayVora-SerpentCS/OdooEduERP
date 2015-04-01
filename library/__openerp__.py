@@ -50,7 +50,9 @@
         "library_workflow.xml",
         "wizard/update_book_view.xml",
         "wizard/book_issue_no_view.xml",
-        "wizard/card_no_view.xml"
+        "wizard/card_no_view.xml",
+        "report_view.xml",
+        "view/qrcode_label.xml"
     ],
     "installable" : True,
     "auto_install": False,

@@ -31,6 +31,8 @@
     """,
     'data': [
         'result_report.xml',
+        'view/result_label.xml',
+        'view/result_lable_info.xml',
     ],
     'test': [],
     'installable': True,

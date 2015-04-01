@@ -55,7 +55,7 @@
             <field name="name">participant.form.2</field>
             <field name="model">school.event.participant</field>
             <field name="arch" type="xml">
-                <form string="Event Participant Information" version="7.0">
+                <form string="Event Participant Information">
                     <sheet>
                         <separator string="Event Participant"/>
                         <group col="4" colspan="2">
@@ -111,7 +111,7 @@
             <field name="name">event.parameter.form</field>
             <field name="model">school.event.parameter</field>
             <field name="arch" type="xml">
-                <form string="Event Parameter" version="7.0">
+                <form string="Event Parameter">
                     <sheet>
                     <group>
                     <field name="name"/>
@@ -154,13 +154,13 @@
             <field name="name">event.form.1</field>
             <field name="model">school.event</field>
             <field name="arch" type="xml">
-                <form string="Event Information" version="7.0">
+                <form string="Event Information">
                     <header>
-                        <button name="event_open" icon="terp-gtk-go-back-rtl" 
+                        <button name="event_open" icon="terp-gtk-go-back-rtl" type="object"
                             string="Open" states="draft" groups="school.group_school_administration,school.group_school_teacher"/> 
-                        <button name="event_draft" icon="terp-gtk-go-back-ltr" 
+                        <button name="event_draft" icon="terp-gtk-go-back-ltr" type="object"
                             string="Draft" states="cancel" groups="school.group_school_administration,school.group_school_teacher"/> 
-                        <button name="event_close" icon="gtk-cancel" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="event_close" type="object" icon="gtk-cancel" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
                         <field name="state" nolabel="1" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -177,7 +177,8 @@
                         <field name="supervisor_id" placeholder="Select Or Create Supervisor Name" />
                         <field name="maximum_participants"/>
                         <field name="parameter_id" widget="selection"/>
-                         <field name="is_holiday"/>
+                        <field name="is_holiday"/>
+                        <field name="participants" readonly="1"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -339,7 +340,7 @@
             <field name="name">event.registration.form</field>
             <field name="model">school.event.registration</field>
             <field name="arch" type="xml">
-                <form string="Event Registration" version="7.0">
+                <form string="Event Registration">
                     <header>
                             <button name="regi_confirm" string="Confirm" icon="gtk-apply" 
                                 states="draft" type='object' groups="school.group_school_administration,school.group_school_teacher" />

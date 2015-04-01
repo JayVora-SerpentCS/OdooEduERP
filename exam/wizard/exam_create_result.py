@@ -20,40 +20,37 @@
 #
 ##############################################################################
 from openerp.osv import osv
+from openerp import models, fields, api, _
 
-class exam_create_result(osv.TransientModel):
+class exam_create_result(models.TransientModel):
 
     _name = 'exam.create.result'
 
-    def generate_result(self, cr, uid, ids, context=None):
-        
-        if context is None:
-            context = {}  
-        if not context.get('active_ids'):
+    @api.multi
+    def generate_result(self):
+        if not self._context.get('active_ids'):
             return {}
-        exam_obj = self.pool.get("exam.exam")
-        student_obj = self.pool.get('student.student')
-        result_obj = self.pool.get("exam.result")
-        result_subject_obj = self.pool.get("exam.subject")
-        for result in self.browse(cr, uid, ids, context):
-            for exam in exam_obj.browse(cr, uid, context.get('active_ids'), context):
+        exam_obj = self.env['exam.exam']
+        student_obj = self.env['student.student']
+        result_obj = self.env['exam.result']
+        result_subject_obj = self.env['exam.subject']
+        for result in self.browse(self.ids):
+            for exam in exam_obj.browse(self._context.get('active_ids')):
                 for timetable in exam.standard_id:
-                    student_ids = student_obj.search(cr, uid, [('standard_id', '=', timetable.standard_id.id), ('division_id', '=', timetable.division_id.id), ('medium_id', '=', timetable.medium_id.id)])
-                    for student in student_obj.browse(cr, uid, student_ids, context):
+                    student_ids = student_obj.search([('standard_id', '=', timetable.standard_id.id), ('division_id', '=', timetable.division_id.id), ('medium_id', '=', timetable.medium_id.id)])
+                    for student in student_ids:
                         result_exists = result_obj.search(cr, uid, [('standard_id', '=', timetable.standard.id), ('division_id', '=', timetable.division_id.id), ('medium_id', '=', timetable.medium_id.id), ('student_id','=', student.id)])
                         if not result_exists:
-                            result_id = result_obj.create(cr, uid, {'s_exam_ids': exam.id,
+                            result_id = result_obj.create({'s_exam_ids': exam.id,
                                                                     'student_id': student.id,
                                                                     'standard_id': timetable.class_id.id,
                                                                     'division_id': timetable.division_id.id,
                                                                     'medium_id': timetable.medium_id.id})
-                        
                             for line in timetable.timetable_ids:
-                                result_subject_obj.create(cr, uid, {'exam_id': result_id,
+                                result_subject_obj.create({'exam_id': result_id.id,
                                                                     'subject_id': line.subject_id and line.subject_id.id or False,
                                                                     'minimum_marks': line.subject_id and line.subject_id.minimum_marks or 0.0,
                                                                     'maximum_marks': line.subject_id and line.subject_id.maximum_marks or 0.0})
-                            
         return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "School_Event",
-    "version" : "2.0",
+    "version" : "3.0",
     "author" : "Serpent Consulting Services",
     "website" : "http://www.serpentcs.com", 
     "category": "School Management",
@@ -29,7 +29,7 @@
     "description": """A module to Event Management in School.
     A Module support the following functionalities:
    
-    1. In This Module we can define the Event for specific class so the students of that perticular class  can only participat in that event.
+    1. In This Module we can define the Event for specific class so the students of that perticular class can only participat in that event.
     2. student can do Registration for events.
     
     """,
@@ -38,8 +38,9 @@
     "data" : [
        "event_view.xml", 
        "event_workflow.xml",
-       "report/participant_report.xml",
        "security/ir.model.access.csv",
+       "view/participants.xml",
+       "report_view.xml",
     ],
     "demo": [
              "demo/event_demo.xml"

@@ -50,7 +50,7 @@
             <field name="name">school.teacher.assignment.form</field>
             <field name="model">school.teacher.assignment</field>
             <field name="arch" type="xml">
-                <form string="Assignment Information" version="7.0">
+                <form string="Assignment Information" >
                     <header>
                         <button name = "active_assignment" states="draft" string="Active Assignment" type="object" icon="gtk-ok"/>
                         <field name="state" widget="statusbar" readonly="1"/>
@@ -141,7 +141,7 @@
             <field name="name">school.student.assignment.form</field>
             <field name="model">school.student.assignment</field>
             <field name="arch" type="xml">
-                <form string="Assignment Information" version="7.0">
+                <form string="Assignment Information">
                     <header>
                         <button name = "done_assignment" states="active" string="Done" type="object" icon="gtk-ok"/>
                         <field name="state" widget="statusbar" readonly="1"/>

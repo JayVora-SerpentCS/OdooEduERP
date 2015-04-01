@@ -5,7 +5,7 @@
             <field name="name">monthly.attendance.sheet.form</field>
             <field name="model">monthly.attendance.sheet</field>
             <field name="arch" type="xml">
-                <form string="Monthly Attendance Sheet" version="7.0">
+                <form string="Monthly Attendance Sheet">
                     
                     <sheet>
                     <separator string="Standard Information" colspan="4"/>

@@ -162,13 +162,11 @@
 			<field name="name">daily.attendance.form</field>
 			<field name="model">daily.attendance</field>
 			<field name="arch" type="xml">
-				<form string="Daily Attendance Information" version="7.0">
+				<form string="Daily Attendance Information">
 					<header>
-                                <button name="attendance_validate"
-                                    string="Validate" states="draft"/>
-                                <button name="attendance_draft"
-                                    string="Reset To Draft" states="validate"/>
-                                <field name="state" widget="statusbar" nolabel="1"/>
+                        <button name="attendance_validate" string="Validate" states="draft" type="object"/>
+                        <button name="attendance_draft" string="Reset To Draft" states="validate" type="object"/>
+                        <field name="state" widget="statusbar"/>
 					</header>
 				<sheet>
 				<separator string="Daily Attendance Sheet"/>	

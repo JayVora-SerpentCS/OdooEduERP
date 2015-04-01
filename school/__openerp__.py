@@ -19,16 +19,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
-    "name" : "School Management",
-    "version" : "2.1",
+    "name" : "School",
+    "version" : "2.0",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com",
     "category": "School Management",
     "complexity": "easy",
-    "description": """A module for the School Management.
-        The Module supports the following functionalities:
+    "description": """A module to School Management.
+        A Module support the following functionalities:
         1. Admission Procedure
         2. Student Information
         3. Parent Information
@@ -37,7 +36,7 @@
         6. Standard, Medium and Division Information
         7. Subject Information
                     """,
-    "depends" : ["hr", "email_template", "crm"],
+    "depends" : ["hr", "email_template", "crm", "report"],
     "data" : [
             "wizard/wiz_send_email_view.xml",
             "security/school_security.xml",
@@ -49,12 +48,17 @@
             "wizard/move_standards_view.xml",
             "wizard/wiz_meeting_view.xml",
             "indentity_card_report.xml",
+            "view/identity_card.xml",
     ],
-    "demo": ['demo/school_demo.xml'],
-    "test": [
+  'demo': [
+           'demo/school_demo.xml',
+            ],
+
+    'test': [
         'test/school_test.yml',
         'test/assign_roll_no_test.yml',
         ],
+
     "installable": True,
     "auto_install": False,
     "application": True,

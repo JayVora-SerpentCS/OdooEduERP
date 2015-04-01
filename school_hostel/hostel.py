@@ -19,133 +19,121 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+#from openerp.osv import fields, osv
+#from openerp.tools.translate import _
 
-class hostel_type(osv.Model):
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
+
+class hostel_type(models.Model):
     
     _name = 'hostel.type'
     
-    _columns = {
-        'name': fields.char('Hostel Name', size=32, required=True),
-        'type': fields.selection([('boys','Boys'),('girls','Girls'),('common','Common')], 'Hostel Type', required=True),
-        'other_info': fields.text('Other Information'),
-        'rector': fields.many2one('res.partner', 'Rector'),
-        'room_ids': fields.one2many('hostel.room', 'name', 'Room'),
-    }
-    
-    _defaults = {
-            'type': 'common'
-    }
+    name = fields.Char('Hostel Name', size=32, required=True)
+    type = fields.Selection([('boys','Boys'),('girls','Girls'),('common','Common')], 'Hostel Type', required=True,default='common')
+    other_info = fields.Text('Other Information')
+    rector = fields.Many2one('res.partner', 'Rector')
+    room_ids =  fields.One2many('hostel.room', 'name', 'Room')
 
-class hostel_room(osv.Model):
+class hostel_room(models.Model):
     
     _name = 'hostel.room'
     
-    def _check_availability(self, cr, uid, ids, name, args, context=None):
+    @api.one
+    @api.depends('student_ids')
+    def _check_availability(self):
         res = {}
         room_availability = 0
-        for data in self.browse(cr, uid, ids, context):
+        for data in self:
             count = 0
-            for student in data.student_ids:
+            for student in self.student_ids:
                 count += 1
             room_availability = data.student_per_room - count
-#            if room_availability < 0:
-#                raise osv.except_osv(("You can not assign room more than %s student" % data.student_per_room))
-            res[data.id] = room_availability
-        return res
+            if room_availability < 0:
+                raise except_orm(_("You can not assign room more than %s student" % data.student_per_room))
+            else:
+                self.availability = room_availability
 
-    _columns = {
-        'name': fields.many2one('hostel.type', 'Hostel'),
-        'floor_no': fields.integer('Floor No.'),
-        'room_no': fields.char('Room No.', size=128, required=True),
-        'student_per_room': fields.integer('Student Per Room', required=True),
-        'availability': fields.function(_check_availability, type='float', string="Availability"),
-        'student_ids': fields.one2many('hostel.student','hostel_room_id', 'Student'),
-        'telephone' : fields.boolean ('Telephone access'),
-        'ac' : fields.boolean ('Air Conditioning'),
-        'private_bathroom' : fields.boolean ('Private Bathroom'),
-        'guest_sofa' : fields.boolean ('Guest sofa-bed'),
-        'tv' : fields.boolean ('Television'),
-        'internet' : fields.boolean ('Internet Access'),
-        'refrigerator' : fields.boolean ('Refrigerator'),
-        'microwave' : fields.boolean ('Microwave'),
-    }
+    name = fields.Many2one('hostel.type', 'Hostel')
+    floor_no = fields.Integer('Floor No.',default=1)
+    room_no = fields.Char('Room No.', size=128, required=True)
+    student_per_room = fields.Integer('Student Per Room', required=True)
+    availability = fields.Float(compute='_check_availability',string="Availability")
+    student_ids = fields.One2many('hostel.student','hostel_room_id', 'Student')
+    telephone = fields.Boolean('Telephone access')
+    ac = fields.Boolean('Air Conditioning')
+    private_bathroom = fields.Boolean ('Private Bathroom')
+    guest_sofa = fields.Boolean ('Guest sofa-bed')
+    tv = fields.Boolean ('Television')
+    internet = fields.Boolean ('Internet Access')
+    refrigerator = fields.Boolean ('Refrigerator')
+    microwave = fields.Boolean ('Microwave')
     
-    _defaults = {
-            'floor_no': 1
-    }
+
     _sql_constraints = [('room_no_unique', 'unique(room_no)', 'Room number must be unique!')]
     _sql_constraints = [('floor_per_hostel','check(floor_no < 10)','Error ! Floor per hostel should be less than 10.')]
     _sql_constraints = [('student_per_room_greater','check(student_per_room < 10)','Error ! Student per room should be less than 10.')]
 
-class hostel_student(osv.Model):
+class hostel_student(models.Model):
     
     _name = 'hostel.student'
 
-    def _get_remaining_fee_amt(self, cr, uid, ids, name, args, context=None):
-        if context is None:
+    @api.one
+    @api.depends('room_rent','paid_amount')
+    def _get_remaining_fee_amt(self):
+        if self._context is None:
             context = {}
-        res = {}
-        remaining_amount = 0.0
-        for data in self.browse(cr, uid, ids, context):
-            remaining_amount = data.room_rent - data.paid_amount
-            res[data.id] = remaining_amount
-        return res
-
-    def confirm_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        self.write(cr, uid, ids, {'status': 'confirm'})
+        if self.room_rent and self.paid_amount:
+            remaining_amount = self.room_rent - self.paid_amount
+            self.remaining_amount = remaining_amount
+        else:
+            self.remaining_amount = 0.0
+        
+    @api.multi
+    def confirm_state(self):
+#        if self.remaining_amount == 0.0:
+#            print '=========paid', self.remaining_amount
+#            self.write({'status': 'confirm'})
+        self.write({'status': 'confirm'})
         return True
 
-    def reservation_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        self.write(cr, uid, ids, {'status': 'reservation'})
+    @api.multi
+    def reservation_state(self):
+        self.write({'status': 'reservation'})
         return True
 
-    def print_fee_receipt(self, cr, uid, ids, context=None):
-        if context is None:
+    @api.multi
+    def print_fee_receipt(self):
+        if self._context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read([])[0]
         datas = {
             'ids': [data['id']],
             'form': data,
             'model':'hostel.student',
         }
-        return {'type': 'ir.actions.report.xml', 'report_name': 'hostel_fee_slip', 'datas': datas}
+        return {'type': 'ir.actions.report.xml', 'report_name': 'school_hostel.hostel_fee_reciept', 'datas': datas}
 
-    _columns = {
-        'hostel_room_id': fields.many2one('hostel.room', 'Hostel Room'),
-        'hostel_id': fields.char('Hostel ID', size=64, readonly=True),
-        'student_id': fields.many2one('student.student', 'Student'),
-        'school_id': fields.many2one('school.school', 'School'),
-        'room_rent': fields.float('Total Room Rent', required=True),
-        'bed_type' : fields.many2one('bed.type', 'Bed Type'),
-#        'bed_type' : fields.selection((('gatch','Gatch Bed'),('electric','Electric'),('stretcher','Stretcher'),('low','Low Bed'),('low_air_loss','Low Air Loss'),('circo_electric','Circo Electric'),('clinitron','Clinitron')),'Bed Type', required=True),
-        'admission_date': fields.datetime('Admission Date'),
-        'discharge_date': fields.datetime('Discharge Date'),
-        'paid_amount': fields.float('Paid Amount'),
-        'remaining_amount': fields.function(_get_remaining_fee_amt, type='float', string='Remaining Amount'),
-        'status': fields.selection([('draft','Draft'),('reservation','Reservation'),('confirm','Confirm')], 'Status')
-    }
-    
-    _defaults = {
-            'status': 'draft',
-            'hostel_id': lambda obj, cr, uid, context:obj.pool.get('ir.sequence').get(cr, uid, 'hostel.student'),
-    }
+    hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
+    hostel_id = fields.Char('Hostel ID', size=64, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('hostel.student'))
+    student_id = fields.Many2one('student.student', 'Student')
+    school_id = fields.Many2one('school.school', 'School')
+    room_rent = fields.Float('Total Room Rent', required=True)
+    bed_type = fields.Many2one('bed.type', 'Bed Type')
+    admission_date = fields.Datetime('Admission Date')
+    discharge_date = fields.Datetime('Discharge Date')
+    paid_amount = fields.Float('Paid Amount')
+    remaining_amount = fields.Float(compute='_get_remaining_fee_amt', string='Remaining Amount')
+    status = fields.Selection([('draft','Draft'),('reservation','Reservation'),('confirm','Confirm')], 'Status',default='draft')
     
     _sql_constraints = [('admission_date_greater','check(discharge_date >= admission_date)','Error ! Discharge Date cannot be set before Admission Date.')]
 
-class bed_type(osv.Model):
+class bed_type(models.Model):
     
     _name = 'bed.type'
     _description='Type of Bed in Hostel'
-    
-    _columns = {
-        'name': fields.char('Name',required=True),
-        'description': fields.text('Description'),
-    }
+        
+    name = fields.Char('Name',required=True)
+    description = fields.Text('Description')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=

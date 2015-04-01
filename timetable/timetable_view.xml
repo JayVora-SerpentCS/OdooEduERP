@@ -7,7 +7,7 @@
 			<field name="name">time.table.form</field>
 			<field name="model">time.table</field>
 			<field name="arch" type="xml">
-				<form string="TimeTable" version="7.0">
+				<form string="TimeTable">
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="name" placeholder="Enter Description"/>
