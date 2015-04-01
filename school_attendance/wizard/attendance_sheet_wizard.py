@@ -19,22 +19,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
+from openerp import models, fields, api, _
+# from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class monthly_attendance_sheet(osv.TransientModel):
+class monthly_attendance_sheet(models.TransientModel):
     """
     For Monthly Attendance Sheet
     """
     _name = "monthly.attendance.sheet"
     _description = "Monthly Attendance Sheet Wizard"
-    _columns = {
-        'standard_id': fields.many2one('school.standard', 'Academic Class', required=True ),
-        'year_id': fields.many2one('academic.year', 'Year', required=True),
-        'month_id': fields.many2one('academic.month', 'Month', required=True)
-    }
     
-    def monthly_attendance_sheet_open_window(self, cr, uid, ids, context=None):
+    standard_id = fields.Many2one('school.standard', 'Academic Class', required=True )
+    year_id = fields.Many2one('academic.year', 'Year', required=True)
+    month_id = fields.Many2one('academic.month', 'Month', required=True)
+    
+#     _columns = {
+#         'standard_id': fields.many2one('school.standard', 'Academic Class', required=True ),
+#         'year_id': fields.many2one('academic.year', 'Year', required=True),
+#         'month_id': fields.many2one('academic.month', 'Month', required=True)
+#     }
+    @api.multi
+    def monthly_attendance_sheet_open_window(self):
         ''' This method open new window with monthly attendance sheet
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -43,15 +49,15 @@ class monthly_attendance_sheet(osv.TransientModel):
         @param context : standard Dictionary
         @return : record of monthly attendance sheet        
         '''
-        if context is None:
-            context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
-        models_data = self.pool.get('ir.model.data')
+#         if context is None:
+#             context = {}
+        data = self.read([])[0]
+        models_data = self.env['ir.model.data']
         atten_sheet_line_created = 0
         # Get opportunity views
-        dummy, form_view = models_data.get_object_reference(cr, uid, 'school_attendance', 'view_attendance_sheet_form')
-        dummy, tree_view = models_data.get_object_reference(cr, uid, 'school_attendance', 'view_attendance_sheet_tree')
-        
+        dummy, form_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_form')
+        dummy, tree_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_tree')
+        print "\n data ::::::::::::",data
         return {
             'view_type': 'form',
             'view_mode': 'tree, form',

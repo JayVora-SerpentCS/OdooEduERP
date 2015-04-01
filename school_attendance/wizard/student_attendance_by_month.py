@@ -19,24 +19,32 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp import models, fields, api, _
 import time
-from openerp.osv import osv, fields
+# from openerp.osv import osv, fields
 
-class student_attendance_by_month(osv.TransientModel):
+class student_attendance_by_month(models.TransientModel):
     
     _name = 'student.attendance.by.month'
     _description = 'Student Monthly Attendance Report'
-    _columns = {
-        'month': fields.selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], 'Month', required=True),
-        'year': fields.integer('Year', required=True),
-        'attendance_type':fields.selection([('daily','FullDay'),('lecture','Lecture Wise')],'Type'),
-    }
-    _defaults = {
-         'month': lambda *a: time.gmtime()[1],
-         'year': lambda *a: time.gmtime()[0],
-    }
+    
+    month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], 'Month', required=True, default=lambda *a: time.gmtime()[1])
+    year = fields.Integer('Year', required=True, default=lambda *a: time.gmtime()[0])
+    attendance_type = fields.Selection([('daily','FullDay'),('lecture','Lecture Wise')],'Type')
+    
+    
+#     _columns = {
+#         'month': fields.selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], 'Month', required=True),
+#         'year': fields.integer('Year', required=True),
+#         'attendance_type':fields.selection([('daily','FullDay'),('lecture','Lecture Wise')],'Type'),
+#     }
+#     _defaults = {
+#          'month': lambda *a: time.gmtime()[1],
+#          'year': lambda *a: time.gmtime()[0],
+#     }
 
-    def print_report(self, cr, uid, ids, context=None):
+    @api.multi
+    def print_report(self):
         ''' This method prints report
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -45,8 +53,8 @@ class student_attendance_by_month(osv.TransientModel):
         @param context : standard Dictionary
         @return : printed report
         '''
-        data = self.read(cr, uid, ids)[0]
-        data.update({'stud_ids': context.get('active_ids', [])})
+        data = self.read([])[0]
+        data.update({'stud_ids': self._context.get('active_ids', [])})
         datas = {
              'ids': [],
              'model': 'student.student',
