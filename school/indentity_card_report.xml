@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        <report auto="True" 
-        id="report_student_student" 
-        model="student.student" 
-        name="Student Indentity Card" 
-        rml="school/report/indentity_card.rml" 
-        string="Indentity Card" 
-        header="False"/>
-    </data>
+	<data>
+	    
+		<report id="report_student_student" string="Indentity Card"
+			model="student.student" report_type="qweb-pdf" file="school.identity_card"
+			name="school.identity_card" />
+
+		<!-- <report auto="True" id="report_student_student_rml" model="student.student" 
+			name="Student Indentity Card" rml="school/report/indentity_card.rml" string="Indentity 
+			Card" header="False" /> -->
+	</data>
 </openerp>
 

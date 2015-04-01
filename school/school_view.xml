@@ -553,7 +553,6 @@
 							groups="school.group_school_administration,school.group_school_teacher"/>
 						<button name="admission_done" type="object" string="Done"
 							states="draft,terminate" icon="gtk-jump-to"/>
-						<button name="set_to_draft" type="object" string="Reset" icon="gtk-undo" states="alumni,terminate" />
 						<field name="state" widget="statusbar" nolabel="1"/>
 					</header>
 					<sheet style="width: 10%%,height:10%%">
@@ -796,14 +795,14 @@
 							<field name="name"/>
 							<newline/>
 							<field name="prefix" placeholder="Prefix" />
-							<field name="static_prefix" attrs="{'invisible':[('prefix','!=','static')]}"/>
+							<field name="static_prefix" attrs="{'invisible':[('prefix','!=','static')],'required':[('prefix','=','static')]}"/>
 							<newline/>
-							<field name="schoolprefix_id" attrs="{'invisible':[('prefix','!=','school')]}"/>
+							<field name="schoolprefix_id" attrs="{'invisible':[('prefix','!=','school')],'required':[('prefix','=','school')]}"/>
 							<newline/>
 							<field name="postfix" placeholder="Suffix" />
-							<field name="schoolpostfix_id" attrs="{'invisible':[('postfix','!=','school')]}"/>
+							<field name="schoolpostfix_id" attrs="{'invisible':[('postfix','!=','school')],'required':[('postfix','=','school')]}"/>
 							<newline/>
-							<field name="static_postfix" attrs="{'invisible':[('postfix','!=','static')]}"/>
+							<field name="static_postfix" attrs="{'invisible':[('postfix','!=','static')],'required':[('postfix','=','static')]}"/>
 							<newline/>
 							<field name="grn_no" />
 						</group>
@@ -844,10 +843,10 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <search string="Admission Register">
-                     <filter icon="terp-project"  string="Draft" domain="[('state','=', 'draft')]" help="Admission In Draft"/>
-                     <filter icon="terp-project"  string="Alumni" domain="[('state','=', 'alumni')]" help="Alumni"/>
-                     <filter icon="terp-project"  string="Terminated" domain="[('state','=', 'terminate')]" help="Terminated Admissions"/>
-                     <filter icon="terp-project"  string="Done" domain="[('state','=', 'done')]" help="Completed Admissions"/>
+                     <filter icon="terp-project"  string="Draft" domain="[('state','=', 'draft')]" help="Admission In Draft State"/>
+                     <filter icon="terp-project"  string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
+                     <filter icon="terp-project"  string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
+                     <filter icon="terp-project"  string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
                      <separator orientation="vertical"/>
                      <field name="student_name" invisible="1"/>
                      <field name="year"/>
@@ -958,10 +957,12 @@
 										<field name="state" invisible="1"/>
 									</tree>
 									<form string="Student Information">
+									    <group col="4" colspan="4">
 										<field name="roll_no"/>
 										<field name="name" placeholder="Name"/>
 										<field name="year" placeholder="Year"/>
 										<field name="state" invisible="1"/>
+										</group>
 									</form>
 								</field>
 							</page>
