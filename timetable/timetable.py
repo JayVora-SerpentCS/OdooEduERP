@@ -47,7 +47,7 @@ class time_table(models.Model):
                     count=count+1
                     if count >1:
                         records.append(i.id)
-                        raise Warning(_('Warning!'), _("You can Not set lecture at same time at same day.!!!"))
+                        raise Warning(_('Warning!'), _("You can Not set lecture at same time at same day..!!!"))
         return True
 
 class time_table_line(models.Model):
