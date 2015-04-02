@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
-        <report auto="False" id="report_transport_vehicle" model="transport.vehicle" name="transport.vehicle" rml='addons/school_transport/report/vehicle.rml' string="Vehicle Detail"/>
-
-    </data>
-</openerp>
-
