@@ -171,13 +171,15 @@ class school_standard(models.Model):
 #        return result
 
     @api.one
+    @api.depends('standard_id')
     def _compute_student(self):
         result = {}
         student_obj = self.env['student.student']
-        for standard_data in self:
-            student_ids = student_obj.search([('standard_id', '=', standard_data.standard_id.id)])
-            result[standard_data.id] = student_ids
-        return result
+        if self.standard_id:
+            student_ids = student_obj.search([('standard_id', '=', self.standard_id.id)])
+            self.student_ids = student_ids
+        else:
+            self.student_ids = False
     
 #    def import_subject(self, cr, uid, ids,context=None):
 #        ''' This function will automatically placed previous standard subject'''
@@ -193,11 +195,10 @@ class school_standard(models.Model):
 
     @api.multi
     def import_subject(self):
-        import_rec = self.browse(self.ids)
-        for im_ob in import_rec:
+        for im_ob in self:
             import_sub_id = self.search([('standard_id', '=', int(im_ob.standard_id)-1)])
             val = []
-            for import_sub_obj in self.browse(import_sub_id):
+            for import_sub_obj in import_sub_id:
                 for last in import_sub_obj.subject_ids: 
                     val.append(last.id)
                     self.write({'subject_ids': [(6, 0, val)]})

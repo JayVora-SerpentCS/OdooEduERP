@@ -6,8 +6,10 @@
 				<t t-foreach="docs" t-as="student">
 					<t t-call="report.external_layout">
 						<div class="page" style="height: 2px;">
+							<div class="oe_structure" />
+							<br/><br/><br/><br/><br/><br/><br/>
 							<table width="25%" height="50px" style="border: 3px solid black;">
-								<tr >
+								<tr>
 									<td width="100%" align="center" height="30">
 										<strong>
 											<span t-field="student.school_id.name" />
