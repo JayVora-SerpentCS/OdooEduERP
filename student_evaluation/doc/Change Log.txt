@@ -2,6 +2,9 @@
  Version Change Log
  Module: student_evaluation
 ===============================================================================
+Version 2.1 on 2014-04-02 by Hasmukh Bhalodiya
+    * Migrated Module Api 8.
+    
 Version 2.0 on 2014-09-09 by Murtuza Saleh
     * Migrated Module.
 
