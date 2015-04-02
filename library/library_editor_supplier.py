@@ -57,10 +57,10 @@ class library_editor_supplier(models.Model):
 #                 method=True, string=" ", type="text"),
 #     }
 
-    @api.model
-    def init(self):
-        tools.sql.drop_view_if_exists(self._table)
-        self._cr.execute("""
+    @api.v7
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, self._table)
+        cr.execute("""
             create view library_editor_supplier as (
                 select
                     case when min(ps.id) is null then - min(pp.id) else min(ps.id) end as id,

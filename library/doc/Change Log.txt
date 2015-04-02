@@ -1,7 +1,10 @@
 ===============================================================================
- Version Change Log
- Module: library
+ Version Change Log (library)
 ===============================================================================
+Version 2.1 on 2015-04-02 by Yogendrasinh Chavda.
+        * Migrated sale,purchase,stock,product files in v8.
+        * added qweb reports files.
+        
 Version 2.0 on 2014-09-09 by Murtuza Saleh
     * Migrated Module.
     
