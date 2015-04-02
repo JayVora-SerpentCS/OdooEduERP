@@ -37,7 +37,6 @@
         "security/ir.model.access.csv",
         "views/timetable.xml",
     ],
-  
     'test':[
         "test/timetable.yml"
     ],
