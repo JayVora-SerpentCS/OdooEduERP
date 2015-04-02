@@ -40,7 +40,7 @@
         "hostel_view.xml",
         "hostel_sequence.xml",
         "report_view.xml",
-        "view/hostel_fee_receipt.xml",
+        "views/hostel_fee_receipt.xml",
     ],
     "installable" : True,
     "auto_install": False,
