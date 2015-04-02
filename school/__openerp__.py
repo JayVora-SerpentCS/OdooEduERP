@@ -48,7 +48,7 @@
             "wizard/move_standards_view.xml",
             "wizard/wiz_meeting_view.xml",
             "indentity_card_report.xml",
-            "view/identity_card.xml",
+            "views/identity_card.xml",
     ],
   'demo': [
            'demo/school_demo.xml',
