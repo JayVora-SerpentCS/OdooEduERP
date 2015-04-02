@@ -44,10 +44,11 @@
               ],
     "data" : [
         "transport_view.xml",
-        "report/participant_report.xml",
-        "report/vehicle_report.xml",
+        "report_view.xml",
         "wizard/transfer_vehicle.xml",
         "security/ir.model.access.csv",
+        "view/vehicle.xml",
+        "view/participants.xml",
     ],
     
     'test': [
