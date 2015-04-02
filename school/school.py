@@ -80,14 +80,15 @@ class academic_year(models.Model):
     def _check_academic_year(self):
         obj_academic_ids = self.search([])
         academic_list = []
-        for rec_academic_id in obj_academic_ids:
-            academic_list.append(rec_academic_id.id)
-        academic_list.remove()
-        data_academic_yr = obj_academic_ids
-        for old_ac in data_academic_yr:
-            if old_ac.date_start <= self.date_start <= old_ac.date_stop or \
-                old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                raise Warning(_('Error! You cannot define overlapping academic years.'))
+        for rec_academic in obj_academic_ids:
+            academic_list.append(rec_academic.id)
+        for current_academic_yr in self:
+            academic_list.remove(current_academic_yr.id)
+            data_academic_yr = self.browse(academic_list)
+            for old_ac in data_academic_yr:
+                if old_ac.date_start <= self.date_start <= old_ac.date_stop or \
+                    old_ac.date_start <= self.date_stop <= old_ac.date_stop:
+                    raise Warning(_('Error! You cannot define overlapping academic years.'))
 
 #    @api.constrains('date_start','date_stop')
 #    def _check_duration(self):
