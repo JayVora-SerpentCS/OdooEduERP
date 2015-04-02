@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "Transport Management",
-    "version" : "2.0",
+    "version" : "3.0",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com",
     "category": "School Management",
