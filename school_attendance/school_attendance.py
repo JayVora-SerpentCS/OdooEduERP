@@ -40,16 +40,6 @@ class attendance_sheet(models.Model):
     user_id = fields.Many2one('hr.employee', 'Faculty')
     attendance_type = fields.Selection([('daily','FullDay'),('lecture','Lecture Wise')],'Type')
 
-#     _columns = {
-#         'name': fields.char('Description', size=64,readonly=True), 
-#         'standard_id': fields.many2one('school.standard', 'Academic Class', required=True), 
-#         'month_id': fields.many2one('academic.month', 'Month', required=True), 
-#         'year_id': fields.many2one('academic.year', 'Year', required=True), 
-#         'attendance_ids':fields.one2many('attendance.sheet.line', 'standard_id', 'Attendance'), 
-#         'user_id':fields.many2one('hr.employee', 'Faculty'),
-#         'attendance_type':fields.selection([('daily','FullDay'),('lecture','Lecture Wise')],'Type'),
-#     }
-    
     @api.multi
     def onchange_class_info(self, standard_id):
         '''  This method automatically fill up student records on standard field
@@ -242,46 +232,6 @@ class attendance_sheet_line(models.Model):
     percentage = fields.Float(compute="attendance_percentage", method=True, string='Attendance (%)', store= False) 
 
 
-#     _columns = {
-#         'roll_no':fields.integer('Roll Number', required=True, help='Roll Number of Student'), 
-#         'standard_id': fields.many2one('attendance.sheet', 'Standard'), 
-# #         'name': fields.many2one('student.student','Student Name', required=True),
-#          'name':fields.char('Student Name',required=True,readonly=True),
-#         'one': fields.boolean('1'),
-#         'two': fields.boolean('2'), 
-#         'three': fields.boolean('3'),
-#         'four': fields.boolean('4'),
-#         'five': fields.boolean('5'),
-#         'seven': fields.boolean('7'), 
-#         'six': fields.boolean('6'), 
-#         'eight': fields.boolean('8'), 
-#         'nine': fields.boolean('9'), 
-#         'ten': fields.boolean('10'), 
-#         'one_1': fields.boolean('11'), 
-#         'one_2': fields.boolean('12'), 
-#         'one_3': fields.boolean('13'), 
-#         'one_4': fields.boolean('14'), 
-#         'one_5': fields.boolean('15'), 
-#         'one_6': fields.boolean('16'), 
-#         'one_7': fields.boolean('17'), 
-#         'one_8': fields.boolean('18'), 
-#         'one_9': fields.boolean('19'), 
-#         'one_0': fields.boolean('20'), 
-#         'two_1': fields.boolean('21'), 
-#         'two_2': fields.boolean('22'), 
-#         'two_3': fields.boolean('23'), 
-#         'two_4': fields.boolean('24'), 
-#         'two_5': fields.boolean('25'), 
-#         'two_6': fields.boolean('26'), 
-#         'two_7': fields.boolean('27'), 
-#         'two_8': fields.boolean('28'), 
-#         'two_9': fields.boolean('29'), 
-#         'two_0': fields.boolean('30'), 
-#         'three_1': fields.boolean('31'), 
-#         'percentage': fields.function(attendance_percentage, method=True, string='Attendance (%)', type="float", store= False), 
-# 
-#     }
-
 class daily_attendance(models.Model):
     
     ''' Defining Daily Attendance Information '''
@@ -345,32 +295,8 @@ class daily_attendance(models.Model):
     total_presence = fields.Integer(compute="_present", method=True, store=True, string='Presenct Students') 
     total_absent = fields.Integer(compute="_absent", method=True, store=True, string='Absent Students')
     
-    
-#     _columns = {
-#         'date': fields.date("Today's Date"), 
-#         'standard_id': fields.many2one('school.standard', 'Academic Class', required=True, states={'validate':[('readonly', True)]}), 
-#         'student_ids':fields.one2many('daily.attendance.line', 'standard_id', 'Students', states={'validate':[('readonly', True)], 'draft':[('readonly', False)]}), 
-#         'user_id':fields.many2one('hr.employee', 'Faculty', states={'validate':[('readonly', True)]}), 
-#         'state':fields.selection([('draft', 'Draft'), ('validate', 'Validate')], 'State', readonly=True),
-#         'total_student': fields.function(_total, method=True, type="integer", store=True, string='Total Students'),
-#         'total_presence': fields.function(_present, method=True, type="integer", store=True, string='Presenct Students'), 
-#         'total_absent': fields.function(_absent, method=True, type="integer", store=True, string='Absent Students')
-#     }
-#     _defaults={
-#         'date': lambda *a: time.strftime('%Y-%m-%d'), 
-#         'state':'draft', 
-#     }
-    
     @api.model
     def create(self, vals):
-        ''' This method is Create new student 
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param vals : dict of new values to be set
-        @param context : standard Dictionary
-        @return :ID of newly created record.
-        '''
         child = ''
         if vals:
             if 'student_ids' in vals.keys():
@@ -382,15 +308,6 @@ class daily_attendance(models.Model):
     
     @api.multi
     def onchange_standard_id(self, standard_id):
-        '''This method automatically change value of standard field 
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @standard_id : Apply method on this Field name
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key and the value of student
-        '''
         res={}
         student_list = []
         stud_obj = self.env['student.student']
@@ -496,15 +413,6 @@ class daily_attendance(models.Model):
     
     @api.multi
     def attendance_validate(self):
-        ''' This method validate values of student attendance 
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True          
-        '''
-        
         attendance_sheet_line_obj = self.env['attendance.sheet.line']
         acadmic_year_obj = self.env['academic.year']
         acadmic_month_obj = self.env['academic.month']
@@ -946,12 +854,5 @@ class daily_attendance_line(models.Model):
     is_present = fields.Boolean('Present') 
     is_absent = fields.Boolean('Absent') 
 
-#     _columns = {
-#         'roll_no':fields.integer('Roll No.', required=True, help='Roll Number'), 
-#         'standard_id': fields.many2one('daily.attendance', 'Standard'), 
-#         'stud_id': fields.many2one('student.student','Name', required=True), 
-#         'is_present': fields.boolean('Present'), 
-#         'is_absent': fields.boolean('Absent'), 
-#     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
