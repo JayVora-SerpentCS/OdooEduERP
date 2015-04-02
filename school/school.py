@@ -61,6 +61,7 @@ class academic_year(models.Model):
     def name_get(self):
         res = []
         for acd_year_rec in self:
+#            print '===acd_year_rec', acd_year_rec, acd_year_rec['name'], acd_year_rec['code']
             name = "[" + acd_year_rec['code'] + "]" + acd_year_rec['name']
             res.append((acd_year_rec['id'], name))
         return res
@@ -77,29 +78,26 @@ class academic_year(models.Model):
 #        return True
     
     @api.constrains('date_start','date_stop')
-    def _check_duration(self):
+    def _check_academic_year(self):
         obj_academic_ids = self.search([])
-        for current_academic_yr in self:
-            obj_academic_ids.remove(current_academic_yr.id)
-            data_academic_yr = self.browse(obj_academic_ids)
-            for old_ac in data_academic_yr:
-                if old_ac.date_start <= current_academic_yr.date_start <= old_ac.date_stop or \
-                    old_ac.date_start <= current_academic_yr.date_stop <= old_ac.date_stop:
-                    raise Warning(_('Error! You cannot define overlapping academic years.'))
+        print '=======[] search', obj_academic_ids
+        academic_list = []
+        for rec_academic_id in obj_academic_ids:
+            print '====rec_academic_id', rec_academic_id
+            academic_list.append(rec_academic_id.id)
+        academic_list.remove()
+        data_academic_yr = obj_academic_ids
+        for old_ac in data_academic_yr:
+            if old_ac.date_start <= self.date_start <= old_ac.date_stop or \
+                old_ac.date_start <= self.date_stop <= old_ac.date_stop:
+                raise Warning(_('Error! You cannot define overlapping academic years.'))
 
-#    def _check_duration(self, cr, uid, ids, context=None):
-#        for obj_ac in self.browse(cr, uid, ids, context=context):
-#            if obj_ac.date_stop < obj_ac.date_start:
-#                return False
-#        return True
-
-    @api.constrains('date_start','date_stop')
-    def _check_duration(self):
-        if self.date_stop and self.date_start and self.date_stop < self.date_start:
-            raise Warning(_('Error! The duration of the academic year is invalid.'))
+#    @api.constrains('date_start','date_stop')
+#    def _check_duration(self):
+#        if self.date_stop and self.date_start and self.date_stop < self.date_start:
+#            raise Warning(_('Error! The duration of the academic year is invalid.'))
 
 #    _constraints = [
-#        (_check_duration, _('Error! The duration of the academic year is invalid.'), ['date_stop']),
 #        (_check_academic_year, _('Error! You cannot define overlapping academic years'), ['date_start', 'date_stop'])
 #    ]
 
