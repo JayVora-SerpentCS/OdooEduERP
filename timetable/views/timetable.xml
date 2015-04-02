@@ -9,11 +9,9 @@
 						<div class="page">
 							<div class="oe_structure" />
 							<div class="row" align="center">
-								<h1 t-field="o.standard_id.school_id.name"></h1>
-							</div>
-							<br />
-							<table width="100%" style="border: 2px solid black;">
-								<thead>
+								<br/><br/><br/><br/><br/><br/>
+								<table width="100%" style="border: 2px solid black;">
+									<h4 t-field="o.standard_id.school_id.name"></h4>
 									<tr>
 										<td width="25%" align="center"
 											style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
@@ -32,8 +30,6 @@
 											<b>Medium</b>
 										</td>
 									</tr>
-								</thead>
-								<tbody>
 									<tr>
 										<td width="25%" align="center"
 											style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
@@ -52,11 +48,9 @@
 											<span t-field="o.standard_id.medium_id.name"></span>
 										</td>
 									</tr>
-								</tbody>
-							</table>
-							<br />
-							<table width="100%" style="border: 2px solid black;">
-								<thead>
+								</table>
+								<br />
+								<table width="100%" style="border: 2px solid black;">
 									<tr>
 										<td width="15%" align="center"
 											style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
@@ -87,8 +81,6 @@
 											<b>Saturday</b>
 										</td>
 									</tr>
-								</thead>
-								<tbody>
 									<t t-foreach="get_timetable(o)" t-as="t">
 										<tr>
 											<td align="center" width="15%"
@@ -123,8 +115,8 @@
 											</td>
 										</tr>
 									</t>
-								</tbody>
-							</table>
+								</table>
+							</div>
 						</div>
 					</t>
 				</t>
