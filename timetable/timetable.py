@@ -28,26 +28,20 @@ class time_table(models.Model):
     _description ='Time Table'
     _name = 'time.table'
     
-    name = fields.Char('Description', size=64) 
+    name = fields.Char('Description') 
     standard_id = fields.Many2one('school.standard', 'Academic Class', required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
     do_not_create = fields.Boolean('Do not Create')
     
     @api.one
-    @api.constrains('name')
+    @api.constrains('timetable_ids')
     def _check_lecture(self):
-        records=[]
-        line_obj = self.env['time.table.line']
-        line_ids = line_obj.search([('table_id', '=', self.ids)])
+        line_ids = self.env['time.table.line'].search([('table_id', '=', self.ids)])
         for rec in line_ids:
-            count=0
-            for i in line_ids:
-                if (rec.week_day == i.week_day) and (rec.start_time == i.start_time) and  (rec.end_time == i.end_time):
-                    count=count+1
-                    if count >1:
-                        records.append(i.id)
-                        raise Warning(_('Warning!'), _("You can Not set lecture at same time at same day..!!!"))
+            records = [rec_check.id for rec_check in line_ids if (rec.week_day == rec_check.week_day) and (rec.start_time == rec_check.start_time) and  (rec.end_time == rec_check.end_time)]
+            if len(records) >1:
+                raise Warning(_('Warning!'), _("You can Not set lecture at same time at same day..!!!"))
         return True
 
 class time_table_line(models.Model):
@@ -59,10 +53,7 @@ class time_table_line(models.Model):
     @api.multi
     def onchange_recess(self,recess):
         recess = {}
-        sub_obj = self.env['subject.subject']
-        emp_obj = self.env['resource.resource']
-        hr_obj = self.env['hr.employee']
-        sub_id = sub_obj.search([('name', 'like', 'Recess')])
+        sub_id = self.env['subject.subject'].search([('name', 'like', 'Recess')])
         if not sub_id:
              raise Warning(_('Warning!'), _("You must have a 'Recess' as a subject"))
         recess.update({'value':{'subject_id':sub_id.id}})
@@ -82,11 +73,8 @@ class subject_subject(models.Model):
     
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context is None:
-            context = {}
         if self._context.get('teacher_id'):
-            teacher_obj = self.env['hr.employee']
-            for teacher_data in teacher_obj.browse(self._context['teacher_id']):
+            for teacher_data in self.env['hr.employee'].browse(self._context['teacher_id']):
                 args.append(('teacher_ids', 'in', [teacher_data.id]))
         return super(subject_subject, self).search(args, offset, limit, order, count=count)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
