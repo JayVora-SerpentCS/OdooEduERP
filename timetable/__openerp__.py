@@ -35,7 +35,7 @@
         "timetable_view.xml",
         "report_view.xml", 
         "security/ir.model.access.csv",
-        "view/timetable.xml",
+        "views/timetable.xml",
     ],
   
     'test':[

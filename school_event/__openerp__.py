@@ -39,7 +39,7 @@
        "event_view.xml", 
        "event_workflow.xml",
        "security/ir.model.access.csv",
-       "view/participants.xml",
+       "views/participants.xml",
        "report_view.xml",
     ],
     "demo": [

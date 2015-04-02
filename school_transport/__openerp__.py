@@ -47,8 +47,8 @@
         "report_view.xml",
         "wizard/transfer_vehicle.xml",
         "security/ir.model.access.csv",
-        "view/vehicle.xml",
-        "view/participants.xml",
+        "views/vehicle.xml",
+        "views/participants.xml",
     ],
     
     'test': [
