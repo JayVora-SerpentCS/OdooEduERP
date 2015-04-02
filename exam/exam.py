@@ -177,26 +177,6 @@ class exam_result(models.Model):
                 res[result.id] = {'percentage':per,'grade':grd}
         return res
     
-#    def _compute_result(self, cr, uid, ids, name, arg, context=None):
-#        if context is None:
-#            context = {}
-#        res={}
-#        flag = False
-#        for sub_line in self.browse(cr, uid, ids, context=context) or []:
-#            for l in sub_line.result_ids:
-#                if sub_line.student_id.year.grade_id.grade_ids:
-#                    for grades in sub_line.student_id.year.grade_id.grade_ids:
-#                        if grades.grade:
-#                            if not grades.fail:
-#                                res[sub_line.id] = 'Pass'
-#                            else:
-#                                flag=True
-#                else:
-#                        raise osv.except_osv(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
-#                if flag:
-#                    res[sub_line.id] = 'Fail'
-#            return res
-    
     @api.one
     @api.depends('result_ids')
     def _compute_result(self):
@@ -215,25 +195,6 @@ class exam_result(models.Model):
                 if flag:
                     self.result = 'Fail'
     
-#    @api.one
-#    @api.depends('result_ids')
-#    def _compute_result(self):
-#        flag = False
-#        if self.result_ids:
-#            for line in self.result_ids:
-#                if line.student_id.year.grade_id.grade_ids:
-#                    for grades in line.student_id.year.grade_id.grade_ids:
-#                        if grades.grade:
-#                            if not grades.fail:
-#                                self.result = 'Pass'
-#                            else:
-#                                flag=True
-#                else:
-#                        raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
-#                if flag:
-#                    self.result = 'Fail'
-#        else:
-#            self.result = 'Fail'
 
     @api.multi
     def on_change_student(self,student, exam_id, standard_id):
