@@ -113,7 +113,6 @@ class product_product(models.Model):
             if ean:
                 name = '[%s] %s' % (ean or '', name)
             return (d['id'], name)
-        
         return map(_name_get, self.read(['name', 'ean13']))
     
     @api.multi

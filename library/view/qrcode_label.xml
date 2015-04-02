@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+		<template id="qrcode_label">
+			<t t-call="report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t t-call="report.external_layout">
+						<div class="page">
+							<div class="oe_structure" />
+							<table width="100%">
+								<tr>
+									<td align="center" width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+										<span t-field="o.name"></span>
+									</td>
+									<td width="35%">
+										<img width="100px" height="100px"
+											t-att-src="'data:image/png;base64, %s' % get_qr_code(o.description)" />
+									</td>
+									<td width="35%">
+										<img width="100px" height="100px"
+											t-att-src="'data:image/png;base64, %s' % get_qr_code(o.description)" />
+									</td>
+								</tr>
+							</table>
+						</div>
+					</t>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>
