@@ -61,7 +61,6 @@ class academic_year(models.Model):
     def name_get(self):
         res = []
         for acd_year_rec in self:
-#            print '===acd_year_rec', acd_year_rec, acd_year_rec['name'], acd_year_rec['code']
             name = "[" + acd_year_rec['code'] + "]" + acd_year_rec['name']
             res.append((acd_year_rec['id'], name))
         return res
@@ -80,10 +79,8 @@ class academic_year(models.Model):
     @api.constrains('date_start','date_stop')
     def _check_academic_year(self):
         obj_academic_ids = self.search([])
-        print '=======[] search', obj_academic_ids
         academic_list = []
         for rec_academic_id in obj_academic_ids:
-            print '====rec_academic_id', rec_academic_id
             academic_list.append(rec_academic_id.id)
         academic_list.remove()
         data_academic_yr = obj_academic_ids
@@ -382,7 +379,6 @@ class student_student(models.Model):
 
     @api.model
     def create(self, vals):
-        print '=================vals', vals
         if vals.get('pid',False):
             vals['login']= vals['pid']
             vals['password']= vals['pid']
