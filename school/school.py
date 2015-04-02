@@ -46,7 +46,7 @@ class academic_year(models.Model):
     @api.model
     def next_year(self, sequence):
         year_ids = self.search([('sequence', '>', sequence)])
-        if year_ids.id:
+        if year_ids and year_ids[0].id:
             return year_ids[0].id
         return False
     
@@ -65,17 +65,6 @@ class academic_year(models.Model):
             res.append((acd_year_rec['id'], name))
         return res
 
-#    def _check_academic_year(self, cr, uid, ids, context=None):
-#        obj_academic_ids = self.search(cr, uid, [], context=context)
-#        for current_academic_yr in self.browse(cr, uid, ids, context=context):
-#            obj_academic_ids.remove(current_academic_yr.id)
-#            data_academic_yr = self.browse(cr, uid, obj_academic_ids, context=context)
-#            for old_ac in data_academic_yr:
-#                if old_ac.date_start <= current_academic_yr.date_start <= old_ac.date_stop or \
-#                    old_ac.date_start <= current_academic_yr.date_stop <= old_ac.date_stop:
-#                    return False
-#        return True
-    
     @api.constrains('date_start','date_stop')
     def _check_academic_year(self):
         obj_academic_ids = self.search([])
@@ -90,14 +79,10 @@ class academic_year(models.Model):
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                     raise Warning(_('Error! You cannot define overlapping academic years.'))
 
-#    @api.constrains('date_start','date_stop')
-#    def _check_duration(self):
-#        if self.date_stop and self.date_start and self.date_stop < self.date_start:
-#            raise Warning(_('Error! The duration of the academic year is invalid.'))
-
-#    _constraints = [
-#        (_check_academic_year, _('Error! You cannot define overlapping academic years'), ['date_start', 'date_stop'])
-#    ]
+    @api.constrains('date_start','date_stop')
+    def _check_duration(self):
+        if self.date_stop and self.date_start and self.date_stop < self.date_start:
+            raise Warning(_('Error! The duration of the academic year is invalid.'))
 
 
 class academic_month(models.Model):
@@ -113,26 +98,11 @@ class academic_month(models.Model):
     year_id =       fields.Many2one('academic.year', 'Academic Year', required=True, help="Related Academic year ")
     description=    fields.Text('Description')
 
-#    def _check_duration(self, cr, uid, ids, context=None):
-#        for obj_month in self.browse(cr, uid, ids, context=context):
-#            if obj_month.date_stop < obj_month.date_start:
-#                return False
-#        return True
-
     @api.constrains('date_start','date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start and self.date_stop < self.date_start:
             raise Warning(_('Error ! The duration of the Month(s) is/are invalid.'))
 
-#    def _check_year_limit(self,cr,uid,ids,context=None):
-#        for obj_month in self.browse(cr, uid, ids, context=context):
-#            if obj_month.year_id.date_stop < obj_month.date_stop or \
-#               obj_month.year_id.date_stop < obj_month.date_start or \
-#               obj_month.year_id.date_start > obj_month.date_start or \
-#               obj_month.year_id.date_start > obj_month.date_stop:
-#                return False
-#        return True
-    
     @api.constrains('year_id','date_start','date_stop')
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
@@ -141,11 +111,6 @@ class academic_month(models.Model):
                 self.year_id.date_start > self.date_start or \
                 self.year_id.date_start > self.date_stop:
                 raise Warning(_('Invalid Months ! Some months overlap or the date period is not in the scope of the academic year.'))
-
-#    _constraints = [
-#        (_check_duration, _('Error ! The duration of the Month(s) is/are invalid.'), ['date_stop']),
-#        (_check_year_limit, _('Invalid Months ! Some months overlap or the date period is not in the scope of the academic year.'), ['date_stop'])
-#    ]
 
 class standard_medium(models.Model):
     ''' Defining a medium(English, Hindi, Gujarati) related to standard'''
@@ -182,16 +147,10 @@ class standard_standard(models.Model):
     code =          fields.Char('Code', size=20, required=True)
     description =   fields.Text('Description')
 
-#    def next_standard(self, cr, uid, sequence, context=None):
-#        stand_ids = self.search(cr, uid, [('sequence', '>', sequence)])
-#        if stand_ids:
-#            return stand_ids[0]
-#        return False
-
     @api.model
     def next_standard(self, sequence):
         stand_ids = self.search([('sequence', '>', sequence)])
-        if stand_ids.id:
+        if stand_ids and stand_ids[0].id:
             return stand_ids[0].id
         return False
 
