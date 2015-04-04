@@ -19,33 +19,35 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
-class card_number(osv.TransientModel):
+class card_number(models.TransientModel):
     
     _name="card.number"
     _description="Card Number"
-    _columns={
-                'card_id': fields.many2one("library.card", "Card No", required=True), 
-              }
     
-    def card_number_ok(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        lib_book_obj = self.pool.get('library.book.issue')
-        for rec in self.browse(cr,uid,ids,context=context):
-                search_card_ids =lib_book_obj.search(cr,uid,[('card_id', '=', rec.card_id.id)],context=context)
-                if not search_card_ids:
-                        raise osv.except_osv(('Warning !'),('Invalid Card Number.'))
-                else:
-                    
-                    return {'type': 'ir.actions.act_window',
-                            'res_model':'book.name',
-                            'src_model':'library.book.issue',
-                            'target':'new',
-                            'view_mode':'form',
-                            'view_type':'form',
-                            'context' : {'default_card_id' : rec.card_id.id}
-                            }
-                    
+    card_id = fields.Many2one("library.card", "Card No", required=True)
+    
+#     _columns={
+#                 'card_id': fields.many2one("library.card", "Card No", required=True), 
+#               }
+    @api.multi
+    def card_number_ok(self):
+        lib_book_obj = self.env['library.book.issue']
+        for rec in self:
+            search_card_ids =lib_book_obj.search([('card_id', '=', rec.card_id.id)])
+            if not search_card_ids:
+                raise Warning(_('Invalid Card Number.'))
+            else:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model':'book.name',
+                    'src_model':'library.book.issue',
+                    'target':'new',
+                    'view_mode':'form',
+                    'view_type':'form',
+                    'context' : {'default_card_id' : rec.card_id.id}
+                }
+                
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,7 +22,7 @@
 
 {
     "name" : "Library Management",
-    "version" : "2.1",
+    "version" : "2.2",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website" : "http://www.serpentcs.com",

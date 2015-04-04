@@ -28,15 +28,6 @@ class library_editor_supplier(models.Model):
     _name = "library.editor.supplier"
     _description = "Editor Relations"
     _auto = False
-    
-#     @api.multi
-#     def get_junk(self):
-#         dict = []
-#         print "\n self.ids ::::::::::",self.ids
-#         for idn in self.ids:
-#             dict.append(dict([(idn, '')]))
-#         print "\n dict :::::::::::::::",dict
-#         return dict
      
     name = fields.Many2one('res.partner', 'Editor')
     supplier_id = fields.Many2one('res.partner', 'Supplier')
@@ -109,7 +100,6 @@ class library_editor_supplier(models.Model):
 
     @api.model
     def unlink(self, ids):
-        print "\n self ::::unlink::::::",self
         supplier_obj = self.env['product.supplierinfo']
         for rel in self:
             if not (rel.name and rel.supplier_id):
@@ -122,7 +112,6 @@ class library_editor_supplier(models.Model):
                        """where pp.editor = %s and si.name = %s""" % (rel.name.id, rel.supplier_id.id))
 
             ids = [x[0] for x in self._cr.fetchall()]
-            print "\n ids :::::::::::::::::unlink :::::::::::::::",ids
             supplier_obj.unlink(ids)
         return True
 

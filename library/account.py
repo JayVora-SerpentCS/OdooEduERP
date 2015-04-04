@@ -19,14 +19,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import fields, osv
+from openerp import models, fields, api, _
 
-class account_invoice_line(osv.Model):
+class account_invoice_line(models.Model):
     
     _inherit = 'account.invoice.line'
-    _columns = {
-        'production_lot_id':fields.many2one('stock.production.lot', 'Production Lot'),
-        'customer_ref': fields.char('Customer reference', size=64)
-    }
+    
+    production_lot_id = fields.Many2one('stock.production.lot', 'Production Lot')
+    customer_ref = fields.Char('Customer reference')
+        
+#     _columns = {
+#         'production_lot_id':fields.many2one('stock.production.lot', 'Production Lot'),
+#         'customer_ref': fields.char('Customer reference', size=64)
+#     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

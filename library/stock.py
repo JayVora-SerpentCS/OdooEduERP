@@ -38,9 +38,7 @@ class stock_move(models.Model):
 
     # New function to manage the update of the quantities
     @api.multi
-#     @api.onchange('product_uos_qty','product_qty')
     def onchange_qty(self):
-        print "\n self ::::::::::::::::",self
         '''  This method automatically change quantity of stock
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -50,8 +48,6 @@ class stock_move(models.Model):
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key and the value of quantity
         '''
-        print "\n onchange_qty :::::::::::::"
-        print "\n self.product_uos_qty :::::::self.product_qty:::::::",self.product_uos_qty, self.product_qty
         return {'value': {'product_uos_qty':self.product_uos_qty,'product_qty':self.product_qty}}
 
     # action_cancel overidden to avoid the cascading cancellation
@@ -65,7 +61,6 @@ class stock_move(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        print "\n self :::::::::::::::::",self
         if not len(self.ids):
             return True
         pickings = {}
@@ -74,16 +69,13 @@ class stock_move(models.Model):
                 if move.picking_id:
                     pickings[move.picking_id.id] = True
         self.write({'state':'cancel'})
-        print "\n pickings ::::::::::::",pickings
         for pick_id in pickings:
             workflow.trg_validate(self._uid, 'stock.picking', pick_id, 'button_cancel', self._cr)
         ids2 = []
         for res in self.read(['move_dest_id']):
-            print "\n res :::::::::::::::",res
             if res['move_dest_id']:
                 ids2.append(res['move_dest_id'][0])
         for stock_id in self.ids:
-            print "\n id ::::::::::::",stock_id
             workflow.trg_trigger(self._uid, 'stock.move', stock_id, self._cr)
         #self.action_cancel(cr,uid, ids2, context) # $$ [removed to avoid cascading cancellation]
         return True

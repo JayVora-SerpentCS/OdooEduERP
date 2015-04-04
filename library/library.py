@@ -201,14 +201,9 @@ class library_book_issue(models.Model):
         @return : Dictionary having identifier of the record as key and the book return date as value 
                 
         '''
-#         res = {}
-        print "\n self ::::_calc_retunr_date:::::::",self
-#         for line in self.browse(cr, uid, ids, context=context):
         if self.date_issue and self.day_to_return_book:
             ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S") + relativedelta(days=self.day_to_return_book.day or 0.0)
             self.date_return = ret_date
-            print "\n ret_date :::::::::::",ret_date
-#         return res
     
     @api.one
     @api.depends('date_return','day_to_return_book')
@@ -272,10 +267,8 @@ class library_book_issue(models.Model):
                 
         '''
 #         for issue in self.browse(cr, uid, ids, context = context):
-        print "\n self ::::::_check_issue_book_limit::constrains:::::",self
         if self.card_id:
             card_ids = self.search([('card_id', '=', self.card_id.id), ('state', 'in', ['issue', 'reissue'])])
-            print "\n card_ids ::::::::::::",card_ids
             if self.state == 'issue' or self.state == 'reissue':
                 if self.card_id.book_limit > len(card_ids)-1:
                     return True
