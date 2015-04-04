@@ -31,9 +31,9 @@ class student_fees_register(models.Model):
     _name = 'student.fees.register'
     _description = 'Student fees Register'
 
-    name  = fields.Char('Name', size=64, required=True, states={'confirm':[('readonly', True)]})
+    name  = fields.Char('Name',required=True, states={'confirm':[('readonly', True)]})
     date = fields.Date('Date', required=True, states={'confirm':[('readonly', True)]},default=lambda * a: time.strftime('%Y-%m-%d'))
-    number = fields.Char('Number', size=64, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('student.fees.register'))
+    number = fields.Char('Number',readonly=True,default=lambda obj:obj.env['ir.sequence'].get('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id', 'Payslips', states={'confirm':[('readonly', True)]})
     total_amount = fields.Float("Total", readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], 'State', readonly=True,default='draft')
@@ -80,51 +80,6 @@ class student_fees_register(models.Model):
         self.write({'state' : 'confirm'})
         return True
 
-    
-#    def fees_register_confirm(self, cr, uid, ids, context=None):
-#        ''' This method confirm fees registration
-#        @param self : Object Pointer
-#        @param cr : Database Cursor
-#        @param uid : Current Logged in User
-#        @param ids : Current Records
-#        @param context : standard Dictionary
-#        @return : True 
-#        '''
-#        
-#        student_pool = self.pool.get('student.student')
-#        slip_pool = self.pool.get('student.payslip')
-#        if context is None:
-#            context = {}
-#        student_ids = student_pool.search(cr, uid, [], context=context)
-#        for vals in self.browse(cr, uid, ids, context=context):
-#            for stu in student_pool.browse(cr, uid, student_ids, context=context):
-#                old_slips = slip_pool.search(cr, uid, [('student_id', '=', stu.id), ('date', '=', vals.date)], context=context)
-#                if old_slips:
-#                    slip_pool.write(cr, uid, old_slips, {'register_id':vals.id}, context=context)
-#                    for sid in old_slips:
-#                        workflow.trg_validate(uid, 'student.payslip', sid, 'payslip_confirm', cr)
-#                else:
-#                    res = {
-#                        'student_id':stu.id,
-#                        'register_id':vals.id,
-#                        'name':vals.name,
-#                        'date':vals.date,
-#                        'journal_id': vals.journal_id.id,
-#                        'period_id': vals.period_id.id,
-#                        'company_id': vals.company_id.id
-#                    }
-#                    slip_id = slip_pool.create(cr, uid, res, context=context)
-#                    workflow.trg_validate(uid, 'student.payslip', slip_id, 'payslip_confirm', cr)
-#                    
-#            amount = 0
-#            for datas in self.browse(cr, uid, ids, context=context):
-#                for data in datas.line_ids:
-#                    amount = amount + data.total
-#                student_fees_register_vals = {'total_amount':amount}
-#                self.write(cr, uid, datas.id, student_fees_register_vals, context=context)
-#        self.write(cr, uid, ids, {'state' : 'confirm'}, context=context)
-#        return True
-
 class student_payslip_line(models.Model):
     '''
     Student Payslip Line
@@ -132,8 +87,8 @@ class student_payslip_line(models.Model):
     _name = 'student.payslip.line'
     _description = 'Student Payslip Line'
 
-    name = fields.Char('Name', size=256, required=True)
-    code = fields.Char('Code', size=64, required=True)
+    name = fields.Char('Name',required=True)
+    code = fields.Char('Code',required=True)
     type = fields.Selection([
         ('month', 'Monthly'),
         ('year', 'Yearly'),
@@ -152,8 +107,8 @@ class student_fees_structure_line(models.Model):
     _description = 'Student Fees Structure Line'
     _order = 'sequence'
 
-    name = fields.Char('Name', size=256, required=True)
-    code = fields.Char('Code', size=64, required=True)
+    name = fields.Char('Name',required=True)
+    code = fields.Char('Code',required=True)
     type = fields.Selection([
         ('month', 'Monthly'),
         ('year', 'Yearly'),
@@ -170,8 +125,8 @@ class student_fees_structure(models.Model):
     _name = 'student.fees.structure'
     _description = 'Student Fees Structure'
     
-    name = fields.Char('Name', size=256, required=True)
-    code = fields.Char('Code', size=64, required=True)
+    name = fields.Char('Name',required=True)
+    code = fields.Char('Code',required=True)
     line_ids = fields.Many2many('student.fees.structure.line', 'fees_structure_payslip_rel', 'fees_id', 'slip_id', 'Fees Structure')
     
     _sql_constraints = [
@@ -199,8 +154,7 @@ class student_payslip(models.Model):
             if not student_payslip_datas['fees_structure_id']:
                 self.write({'state' : 'paid'})   
                 return True
-            student_fees_structure_domain = [('name', '=', student_payslip_datas['fees_structure_id'][1])]
-            student_fees_structure_search_ids = student_fees_structure_obj.search(student_fees_structure_domain)
+            student_fees_structure_search_ids = student_fees_structure_obj.search([('name', '=', student_payslip_datas['fees_structure_id'][1])])
             for datas in student_fees_structure_search_ids:
                 for data in datas.line_ids or []:
                     student_payslip_line_vals = {
@@ -230,8 +184,8 @@ class student_payslip(models.Model):
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
     register_id = fields.Many2one('student.fees.register', 'Register', states={'paid':[('readonly', True)]})
-    name = fields.Char('Description', size=64, states={'paid':[('readonly', True)]})
-    number = fields.Char('Number', size=64, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('student.payslip'))
+    name = fields.Char('Description',states={'paid':[('readonly', True)]})
+    number = fields.Char('Number',readonly=True,default=lambda obj:obj.env['ir.sequence'].get('student.payslip'))
     student_id = fields.Many2one('student.student', 'Student', required=True, states={'paid':[('readonly', True)]})
     date = fields.Date('Date', readonly=True,default=lambda * a: time.strftime('%Y-%m-%d'))
     line_ids = fields.One2many('student.payslip.line', 'slip_id', 'Payslip Line', states={'paid':[('readonly', True)]})
@@ -269,7 +223,6 @@ class student_payslip(models.Model):
 
     @api.multi
     def onchange_journal_id(self,journal_id=False):
-        
         result = {}
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
