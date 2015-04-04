@@ -7,7 +7,7 @@
             <field name="name">student.meeting.form</field>
             <field name="model">student.meeting</field>
             <field name="arch" type="xml">
-                <form string="Student Meeting" version="7.0">
+                <form string="Student Meeting">
                     <header>
                         <button name="set_meeting" string="Set Meeting" type="object"/>
                         <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
