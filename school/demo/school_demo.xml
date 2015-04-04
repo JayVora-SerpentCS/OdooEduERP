@@ -269,8 +269,8 @@
 		</record>
 		
         <!-- Student Informations -->
-        <!--
-								<record id="demo_student_student_1" model="student.student">
+  
+	      <record id="demo_student_student_1" model="student.student">
 			<field name="name">Mary</field>
 			<field name="middle">Daniel</field>
 			<field name="last">Richardson</field>
@@ -390,7 +390,7 @@
 			<field name="division_id" ref="demo_standard_division_2"/>
 			<field name="medium_id" ref="demo_standard_medium_2"/>
 		</record>
-								-->
+								
 		
 		<!-- Student cast -->
 		<record id="demo_student_cast_1" model="student.cast">

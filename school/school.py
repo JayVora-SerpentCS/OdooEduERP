@@ -23,6 +23,7 @@ from openerp import models, fields, api, _
 import time
 import openerp
 import datetime
+from datetime import date
 from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, image_colorize, image_resize_image_big
@@ -312,8 +313,8 @@ class student_student(models.Model):
     user_id =           fields.Many2one('res.users', string='User ID', ondelete="cascade", select=True, required=True)
     student_name =      fields.Char(related='user_id.name',string='Name', store=True, readonly=True)
     pid =               fields.Char('Student ID', required=True, default=lambda obj:obj.env['ir.sequence'].get('student.student'), help='Personal IDentification Number')
-    reg_code =          fields.Char('Registration Code',required=True,help='Student Registration Code')
-    student_code =      fields.Char('Student Code', required=True)
+    reg_code =          fields.Char('Registration Code',help='Student Registration Code')
+    student_code =      fields.Char('Student Code')
     contact_phone1 =    fields.Char('Phone no.',)
     contact_mobile1 =   fields.Char('Mobile no',)
     roll_no =           fields.Integer('Roll No.',readonly=True)
@@ -321,7 +322,7 @@ class student_student(models.Model):
 #    default=lambda self: self._get_default_image(self._context.get('default_is_company', False))
     year =              fields.Many2one('academic.year', 'Academic Year', required=True, states={'done':[('readonly',True)]})
     cast_id =           fields.Many2one('student.cast','Religion')
-    admission_date =    fields.Date('Admission Date', default=fields.datetime.now)
+    admission_date =    fields.Date('Admission Date',default=date.today())
     middle =            fields.Char('Middle Name', required=True, states={'done':[('readonly',True)]})
     last =              fields.Char('Surname', required=True, states={'done':[('readonly',True)]})
     gender =            fields.Selection([('male','Male'), 
