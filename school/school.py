@@ -202,12 +202,6 @@ class school_standard(models.Model):
 #    cmp_id =        fields.related('school_id','company_id',relation="res.company", string="Company Name", type="many2one", store=True)
     cmp_id =        fields.Many2one('res.company',related='school_id.company_id',string="Company Name", store=True)
 
-#    def name_get(self, cr, uid, ids, context=None):
-#        res = []
-#        for standard in self.browse(cr, uid, ids, context=context):
-#            nam = standard.standard_id.name+"[" + standard.division_id.name + "]" 
-#            res.append((standard.id,nam))
-#        return res
 
     @api.multi
     def name_get(self):
@@ -230,7 +224,6 @@ class school_school(models.Model):
         return [(language.code, language.name) for language in languages]
     
     company_id = fields.Many2one('res.company', 'Company',ondelete="cascade", required=True)
-#    com_name =   fields.related('company_id','name',string="School Name",size=128,store=True,type="char")
     com_name =   fields.Char(related='company_id.name',string="School Name",store=True)
     code =       fields.Char('Code', required=True, select=1)
     standards =  fields.One2many('school.standard', 'school_id',string='Standards')
@@ -317,7 +310,6 @@ class student_student(models.Model):
         return image_resize_image_big(image.encode('base64'))
     
     user_id =           fields.Many2one('res.users', string='User ID', ondelete="cascade", select=True, required=True)
-#    student_name =      fields.related('user_id', 'name',type='char', size=64, store=True, readonly=True)
     student_name =      fields.Char(related='user_id.name',string='Name', store=True, readonly=True)
     pid =               fields.Char('Student ID', required=True, default=lambda obj:obj.env['ir.sequence'].get('student.student'), help='Personal IDentification Number')
     reg_code =          fields.Char('Registration Code',required=True,help='Student Registration Code')
@@ -404,10 +396,6 @@ class student_student(models.Model):
     
     _sql_constraints = [('grn_unique', 'unique(grn_number)', 'GRN Number must be unique!')]
 
-#    _defaults = {
-#        'admission_date':fields.date.context_today,
-#        'photo': lambda self: self._get_default_image(cr, uid, ctx.get('default_is_company', False), ctx),
-#    }
 
     @api.multi
     def set_to_draft(self):
