@@ -448,7 +448,7 @@ class additional_exam_result(models.Model):
     a_exam_id = fields.Many2one("additional.exam", "Additional Examination", required=True)
     student_id = fields.Many2one("student.student", "Student Name", required=True)
     roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No", readonly=True)
-    standard_id = fields.Many2one("school.standard",related='student_id.standard_id',string="Standard", readonly=True)
+    standard_id = fields.Many2one(related='student_id.standard_id',string="Standard", readonly=True)
     obtain_marks = fields.Float("Obtain Marks")
     result = fields.Char(compute='_calc_result',string ='Result', method=True)
 
@@ -464,6 +464,6 @@ class student_student(models.Model):
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('class_id','in',std_ids))
-        return super(student_student, self).search(args, offset, limit, order,count)
+        return super(student_student, self).search(args=args, offset=offset, limit=limit, order=order,count=count)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
