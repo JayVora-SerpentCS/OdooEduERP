@@ -295,16 +295,16 @@
            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_4')])]" />
       </record>
-
+      
       <record model="ir.cron" id="ir_cron_student_transport_every_day">
             <field name="name">student_transport</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field><!-- it s every day -->
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field name="model" eval="'student.transport'"/>
-            <field name="function" eval="'delet_entry'"/>
-            <field name="args" eval="'()'"/>
+            <field eval="'student.transport'" name="model" />
+            <field eval="'delet_entry'" name="function" />
+            <field eval="'()'" name="args"/>
         </record>
 
     </data>
