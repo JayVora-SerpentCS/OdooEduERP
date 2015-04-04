@@ -37,7 +37,7 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
     _description = 'Driver Information'
     
-    licence_no = fields.Char('Licence No', size=50)
+    licence_no = fields.Char('Licence No')
 
 #class for points on root
 class transport_point(models.Model):
@@ -45,7 +45,7 @@ class transport_point(models.Model):
     _name = 'transport.point'
     _description = 'Transport Point Information'
     
-    name =      fields.Char('Point Name', size=50, required=True)
+    name =      fields.Char('Point Name',required=True)
     amount =    fields.Float('Amount', default=0.0)
 
     @api.model
@@ -76,7 +76,7 @@ class transport_vehicle(models.Model):
     _description = 'Transport vehicle Information'
 
     driver_id =             fields.Many2one('hr.employee', 'Driver Name', required=True)
-    vehicle =               fields.Char('Vehicle No', size=50, required=True)
+    vehicle =               fields.Char('Vehicle No',required=True)
     capacity =              fields.Integer('Capacity')
     participant =           fields.Integer(compute='_participants', string='Total Participants', readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant', 'vehicle_participant_student_rel', 'vehicle_id', 'student_id', ' vehicle Participants')
@@ -100,7 +100,7 @@ class transport_participant(models.Model):
     name = fields.Many2one('student.student', 'Participent Name' , readonly=True,required=True)
     amount = fields.Float('Amount', readonly=True)
     transport_id = fields.Many2one('student.transport', 'Transport Root', readonly=True,required=True)
-    stu_pid_id = fields.Char('Personal Identification Number', size=50, required=True)
+    stu_pid_id = fields.Char('Personal Identification Number',required=True)
     tr_reg_date = fields.Date('Transportation Registration Date')
     tr_end_date = fields.Date('Registration End Date')
     months = fields.Integer('Registration For Months')
@@ -137,7 +137,7 @@ class student_transports(models.Model):
             self.total_participantes = 0
 
     
-    name  = fields.Char('Transport Root Name', size=50, required=True)
+    name  = fields.Char('Transport Root Name',required=True)
     start_date = fields.Date('Start Date', required=True)
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
     end_date = fields.Date('End Date', required=True)
@@ -160,19 +160,27 @@ class student_transports(models.Model):
         self.write({'state' : 'close'})
         return True
     
-    @api.multi
-    def delet_entry(self, transport_ids=None):
-        prt_obj = self.env['transport.participant']
-        vehi_obj = self.env['transport.vehicle']
+    @api.v7
+    def delet_entry(self, cr, uid, transport_ids=None, context=None):
+        ''' This method delete entry of participants
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param transport_ids : list of transport ids
+        @param context : standard Dictionary
+        @return : True 
+        '''
+        prt_obj = self.pool.get('transport.participant')
+        vehi_obj = self.pool.get('transport.vehicle')
         
-        trans_ids = self.search([('state', '=', 'open')])
-        vehi_ids = vehi_obj.search([])
+        trans_ids = self.search(cr, uid, [('state', '=', 'open')], context=context)
+        vehi_ids = vehi_obj.search(cr, uid, [], context=context)
         
-        for trans in self.browse(trans_ids):
+        for trans in self.browse(cr, uid, trans_ids, context=context):
             stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
             participants = []
             trans_parti = []
-            for prt_data in prt_obj.browse(stu_ids):
+            for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
                 date = time.strftime("%Y-%m-%d")
                 if date > prt_data.tr_end_date:
                     if prt_data.state != 'over':
@@ -180,22 +188,16 @@ class student_transports(models.Model):
                 else :
                     participants.append(prt_data.id)
             if trans_parti:
-#                prt_obj.write(prt_data.id, {'state' : 'over'})
-                prt_id = prt_obj.browse(prt_data.id)
-                prt_id.write(prt_data.id, {'state' : 'over'})
+                prt_obj.write(cr, uid, prt_data.id, {'state' : 'over'}, context=context)
             if participants:
-#                self.write(cr, uid, trans.id, {'trans_participants_ids':[(6, 0, participants)]}, context=context)
-                std_tran_id = self.browse(trans.id)
-                std_tran_id.write({'trans_participants_ids':[(6, 0, participants)]})
-        for vehi in vehi_obj.browse(vehi_ids):
+                self.write(cr, uid, trans.id, {'trans_participants_ids':[(6, 0, participants)]}, context=context)
+        for vehi in vehi_obj.browse(cr, uid, vehi_ids, context=context):
             stu_ids = [stu_id.id for stu_id in vehi.vehi_participants_ids]
             list1 = []
-            for prt_data in prt_obj.browse(stu_ids):
+            for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
                 if prt_data.state != 'over':
                     list1.append(prt_data.id)
-#            vehi_obj.write(cr, uid, vehi.id, {'vehi_participants_ids':[(6, 0, list1)]}, context=context)
-            vehi_id = vehi_obj.browse(vehi.id)
-            vehi_id.write({'vehi_participants_ids':[(6, 0, list1)]})
+            vehi_obj.write(cr, uid, vehi.id, {'vehi_participants_ids':[(6, 0, list1)]}, context=context)
         return True
 
 class student_student(models.Model):
@@ -229,7 +231,6 @@ class transport_registration(models.Model):
     @api.model
     def create(self,vals):
         ret_val = super(transport_registration, self).create(vals)
-        print '/n/n/n/n/n/n/n/n :::::::::::::::::::::::::',ret_val
         m_amt = self.onchange_point_id(vals['point_id'])
         ex_dt = self.onchange_for_month(vals['for_month'])
         if ex_dt['value']:
@@ -261,13 +262,11 @@ class transport_registration(models.Model):
 
     @api.multi
     def trans_regi_confirm(self):
-
         self.write({'state' : 'confirm'})
         trans_obj = self.env['student.transport']
         prt_obj = self.env['student.student']
         stu_prt_obj = self.env['transport.participant']
         vehi_obj = self.env['transport.vehicle']
-        
         for reg_data in self:
             #registration months must one or more then one
             if reg_data.for_month <= 0:
@@ -298,7 +297,6 @@ class transport_registration(models.Model):
                                         'point_id' : reg_data.point_id.id,
                                         'vehicle_id': reg_data.vehicle_id.id,
                                         })
-            
             #make entry in Transport vehicle. 
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:

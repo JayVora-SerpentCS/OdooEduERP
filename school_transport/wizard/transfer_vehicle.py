@@ -35,8 +35,6 @@ class transfer_vehicle(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        if self._context is None:
-            context = {}
         result = super(transfer_vehicle, self).default_get(fields)
         if self._context.get('active_id'):
             student = self.env['student.student'].browse(self._context.get('active_id'))
@@ -66,17 +64,11 @@ class transfer_vehicle(models.TransientModel):
             if vehi_data.capacity < person:
                 raise except_orm(_('Error !'),_('There is No More vacancy on this vehicle.'))
             #remove entry of participant in old vehicle.
-#            print '======vehi_data',vehi_data
-#            print '==rel:::vehi_participants_ids',vehi_data.vehi_participants_ids
-            print '======new_data.participation_id',new_data.participation_id,[new_data.participation_id.id]
             participants = [prt_id.id for prt_id in vehi_data.vehi_participants_ids]
-#            print '==========participants',participants
             if new_data.participation_id.id in participants:
                 participants.remove(new_data.participation_id.id)
 #            vehi_obj.write(cr, uid, new_data.old_vehicle_id.id, {'vehi_participants_ids':[(6,0,participants)]}, context=context)
-            print '===old_vehicle_id', new_data, new_data.old_vehicle_id
             old_veh_id = vehi_obj.browse(new_data.old_vehicle_id.id)
-            print '====old_veh_id',old_veh_id, new_data.old_vehicle_id
             old_veh_id.write({'vehi_participants_ids':[(6,0,participants)]})
             #entry of participant in new vehicle.
             participants = [prt_id.id for prt_id in vehi_new_data.vehi_participants_ids]
@@ -87,7 +79,6 @@ class transfer_vehicle(models.TransientModel):
 #            stu_prt_obj.write(cr, uid, new_data.participation_id.id, {'vehicle_id': new_data.new_vehicle_id.id,}, context=context)  
             stu_prt_id = stu_prt_obj.browse(new_data.participation_id.id)
             stu_prt_id.write({'vehicle_id': new_data.new_vehicle_id.id,})
-            
         return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
