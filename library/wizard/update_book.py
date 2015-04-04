@@ -19,25 +19,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
 
-class update_books(osv.TransientModel):
+class update_books(models.TransientModel):
     
     _name="update.books"
     _description="Update Books"
-    _columns={
-               'name': fields.many2one('product.product', 'Book Name', required=True), 
-              }
     
-    def action_update_books(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        lib_book_obj = self.pool.get('library.book.issue')
-        for rec in self.browse(cr,uid,ids,context=context):
-            active_ids= context.get('active_ids',False)
-            if active_ids:
-                lib_book_obj.write(cr,uid,active_ids,{'name':rec.name.id},context=context)
+    name = fields.Many2one('product.product', 'Book Name', required=True) 
+    
+#     _columns={
+#                'name': fields.many2one('product.product', 'Book Name', required=True), 
+#               }
 
+    @api.multi
+    def action_update_books(self):
+        lib_book_obj = self.env['library.book.issue']
+        for rec in self:
+            if self._context.get('active_ids'):
+                for active_id in self._context.get('active_ids'):
+                    lib_book_obj.browse(active_id).write({'name':rec.name.id})
         return {}
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

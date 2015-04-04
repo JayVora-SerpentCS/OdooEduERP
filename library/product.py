@@ -134,7 +134,6 @@ class product_product(models.Model):
             res = md.get_object_reference('library', 'product_category_1')[1]
         except ValueError:
             res = False
-        print "\n _default_categ :::::::::::::::::::",res
         return res
     
     @api.multi
@@ -194,7 +193,6 @@ class product_product(models.Model):
 #             context = {}
         for p in self:
             res[p.id] = self._get_partner_code_name(p, self._context.get('parent_id', None))['code']
-        print "\n res  ::::::::_product_code::::::::",res
         return res
     
     @api.model
@@ -212,7 +210,6 @@ class product_product(models.Model):
         if default is None:
             default = {}
         default.update({'author_ids': []})
-        print "\n default ::::::copy::::",default
         return super(product_product, self).copy(default)
     
     @api.model
@@ -237,7 +234,6 @@ class product_product(models.Model):
             editor_id = vals['editor']
             supplier_model = self.env['library.editor.supplier']
             supplier_ids = [idn.id for idn in supplier_model.search([('name', '=', editor_id)]) if idn.id > 0]
-            print "\n supplier_ids :::::::::",supplier_ids
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
                 supplier = [

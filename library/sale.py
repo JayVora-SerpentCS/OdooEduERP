@@ -53,7 +53,6 @@ class sale_order_line(models.Model):
         
         l_id = 0
         production_obj = self.env['stock.production.lot']
-        print "\n self ::::::button_confirm::::::",self
         for line in self:
             if line.production_lot_id:
                 continue
@@ -63,7 +62,6 @@ class sale_order_line(models.Model):
                 'product_id': line.product_id and line.product_id.id or False
             }
             production_lot_id = production_obj.create(production_lot_dico)
-            print "\n ::button_confirm::::::::production_lot_id :::::::::",production_lot_id
             line.write({'production_lot_id': production_lot_id.id})
         super(sale_order_line, self).button_confirm()
         return True
@@ -85,7 +83,6 @@ class sale_order_line(models.Model):
             'production_lot_id': False,
             'customer_ref': ''
         })
-        print "\n copy ::::::::",default
         return super(sale_order_line, self).copy(default)
 
 class sale_order(models.Model):

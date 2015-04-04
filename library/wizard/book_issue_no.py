@@ -19,24 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
 
-class book_name(osv.TransientModel):
+class book_name(models.TransientModel):
     
     _name="book.name"
     _description="Book Name"
-    _columns={
-                'name': fields.many2one('product.product', 'Book Name', required=True),
-                'card_id': fields.many2one("library.card", "Card No", required=True), 
-              }
     
-    def create_new_books(self, cr, uid, ids,vals, context=None):
-        if context is None:
-            context = {}
-        lib_book_obj = self.pool.get('library.book.issue')
-        for rec in self.browse(cr,uid,ids,context=context):
-            lib_book_obj.create(cr, uid, {'name':rec.name.id, 'card_id':rec.card_id.id},context=context)
-        
+    name = fields.Many2one('product.product', 'Book Name', required=True)
+    card_id = fields.Many2one("library.card", "Card No", required=True)
+    
+#     _columns={
+#                 'name': fields.many2one('product.product', 'Book Name', required=True),
+#                 'card_id': fields.many2one("library.card", "Card No", required=True), 
+#               }
+    @api.multi
+    def create_new_books(self):
+        for rec in self:
+            rec.create({'name':rec.name.id, 'card_id':rec.card_id.id})
         return {}
    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
