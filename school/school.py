@@ -52,13 +52,6 @@ class academic_year(models.Model):
             return year_ids[0].id
         return False
     
-#    def name_get(self, cr, uid, ids, context=None):
-#        res = []
-#        for acd_year_rec in self.browse(cr, uid, ids, context=context):
-#            nam = "[" + acd_year_rec['code'] + "]" + acd_year_rec['name']
-#            res.append((acd_year_rec['id'], nam))
-#        return res
-    
     @api.multi
     def name_get(self):
         res = []
@@ -286,15 +279,6 @@ class student_student(models.Model):
             end = datetime.strptime(time.strftime(DEFAULT_SERVER_DATE_FORMAT),DEFAULT_SERVER_DATE_FORMAT)
             self.age =  ((end - start).days / 365)
     
-#    def create(self, cr, uid, data, context={}):
-#        if data.get('pid',False):
-#            data['login']= data['pid']
-#            data['password']= data['pid']
-#        else:
-#            raise osv.except_osv(_('Error!'), _('PID not valid, so record will not save.'))
-#        result = super(student_student, self).create(cr, uid, data, context=context)
-#        return result
-
     @api.model
     def create(self, vals):
         if vals.get('pid',False):
@@ -305,7 +289,8 @@ class student_student(models.Model):
         result = super(student_student, self).create(vals)
         return result
     
-    @api.multi
+    
+    @api.model
     def _get_default_image(self, is_company, colorize=False):
         image = image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
         return image_resize_image_big(image.encode('base64'))
@@ -318,8 +303,7 @@ class student_student(models.Model):
     contact_phone1 =    fields.Char('Phone no.',)
     contact_mobile1 =   fields.Char('Mobile no',)
     roll_no =           fields.Integer('Roll No.',readonly=True)
-    photo =             fields.Binary('Photo',)
-#    default=lambda self: self._get_default_image(self._context.get('default_is_company', False))
+    photo =             fields.Binary('Photo',default=lambda self: self._get_default_image(self._context.get('default_is_company', False)))
     year =              fields.Many2one('academic.year', 'Academic Year', required=True, states={'done':[('readonly',True)]})
     cast_id =           fields.Many2one('student.cast','Religion')
     admission_date =    fields.Date('Admission Date',default=date.today())
@@ -417,11 +401,6 @@ class student_student(models.Model):
     def set_done(self):
         self.write({'state' : 'done'})
         return True
-    
-#    def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
-#        image = image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
-#        return image_resize_image_big(image.encode('base64'))
-    
     
     @api.multi
     def admission_draft(self):
@@ -576,15 +555,6 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
     _description = 'Teacher Information'
     
-#    def _compute_subject(self, cr, uid, ids, name, args, context=None):
-#        ''' This function will automatically computes the subjects related to particular teacher.'''
-#        result = {}
-#        subject_obj = self.pool.get('subject.subject')
-#        for id in ids:
-#            subject_ids = subject_obj.search(cr, uid,[('teacher_ids.id','=',id)])
-#            result[id] = subject_ids
-#        return result
-
     @api.one
     def _compute_subject(self):
         ''' This function will automatically computes the subjects related to particular teacher.'''
@@ -596,7 +566,7 @@ class hr_employee(models.Model):
         self.subject_ids = sub_list
 
 #    subject_ids = fields.function(_compute_subject, method=True, relation='subject.subject', type="many2many", string='Subjects')
-    subject_ids = fields.Many2many(compute='_compute_subject', string='Subjects')
+    subject_ids = fields.Many2many('subject.subject','hr_employee_rel', compute='_compute_subject', string='Subjects')
 
 class res_partner(models.Model):
     '''Defining a address information '''
@@ -766,7 +736,6 @@ class student_news(models.Model):
                 if not email_list:
                     raise except_orm(_('Mail Error' ), _("Email not defined!")) 
 #            rec_date = fields.datetime.context_timestamp(datetime.strptime(news.date, DEFAULT_SERVER_DATETIME_FORMAT))
-#            rec_date = fields.Datetime.context_timestamp(datetime.strptime(news.date, DEFAULT_SERVER_DATETIME_FORMAT))
             t= datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body =  'Hi,<br/><br/> \
                 This is a news update from <b>%s</b> posted at %s<br/><br/>\

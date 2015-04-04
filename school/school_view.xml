@@ -7,7 +7,7 @@
 			<field name="name">student.student.form.1</field>
 			<field name="model">student.student</field>
 			<field name="arch" type="xml">
-				<form string="Student Information" version="7.0">
+				<form string="Student Information">
 					<sheet style="width: 10%%,height:10%%">
 						<separator string="Personal Information" />
 						<field name="photo" widget='image' class="oe_avatar oe_left"
@@ -112,7 +112,7 @@
 										<field name="course_id"/>
 
 									</tree>
-									<form string="Previous School Details" version="7.0">
+									<form string="Previous School Details" >
 										<separator string="Previous School Details"/>
 										<group col="4" colspan="4">
 											<field name="name" placeholder="School Name"/>
@@ -417,7 +417,7 @@
 			<field name="name">student.reminder.form</field>
 			<field name="model">student.reminder</field>
 			<field name="arch" type="xml">
-				<form string="Student Reminder" version="7.0">
+				<form string="Student Reminder" >
 					<sheet>
 						<separator string="Reminder"/>
 						<group col="4" colspan="4">
@@ -543,7 +543,7 @@
 			<field name="name">student.student.form.2</field>
 			<field name="model">student.student</field>
 			<field name="arch" type="xml">
-				<form string="Admission Register" version="7.0">
+				<form string="Admission Register" >
 					<header>
 						<button name="set_terminate" string="Terminate" type="object"
 							states="done" icon="gtk-cancel" class="oe_highlight"
@@ -604,7 +604,7 @@
 						</group>
 						<notebook colspan="4">
 							<page string="General">
-								<form string="General" version="7.0">
+								<form string="General" >
 									<sheet>
 										<separator string="General Information" />
 										<group col="4" colspan="4">
@@ -715,7 +715,7 @@
 										<field name="exit_date"/>
 										<field name="course_id"/>
 									</tree>
-									<form string="Previous School Details" version="7.0">
+									<form string="Previous School Details" >
 										<separator string="Previous School Details"/>
 										<group col="4" colspan="4">
 											<field name="name" placeholder="School Name"/>
@@ -787,7 +787,7 @@
 			<field name="name">student.grn.form</field>
 			<field name="model">student.grn</field>
 			<field name="arch" type="xml">
-				<form string="Student GRN format" version="7.0">
+				<form string="Student GRN format" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="grn" />
@@ -870,7 +870,7 @@
 			<field name="name">school.school.form</field>
 			<field name="model">school.school</field>
 			<field name="arch" type="xml">
-				<form string="School Information" version="7.0">
+				<form string="School Information" >
 					<sheet>
 						<separator string="School Configuration"/>
 						<group col="6" colspan="4">
@@ -921,7 +921,7 @@
 			<field name="name">school.attendance.form</field>
 			<field name="model">attendance.type</field>
 			<field name="arch" type="xml">
-				<form string="Standard Information" version="7.0">
+				<form string="Standard Information" >
 					<separator string="Attendance Type"/>
 					<group col="4" colspan="2">
 						<field name="name"/>
@@ -936,7 +936,7 @@
 			<field name="name">school.standard.form</field>
 			<field name="model">school.standard</field>
 			<field name="arch" type="xml">
-				<form string="Standard Information" version="7.0">
+				<form string="Standard Information" >
 					<sheet>
 						<separator string="Standard Information" />
 						<group col="4" colspan="4">
@@ -1114,7 +1114,7 @@
 			<field name="name">student.cast.form</field>
 			<field name="model">student.cast</field>
 			<field name="arch" type="xml">
-				<form string="Cast Information" version="7.0">
+				<form string="Cast Information" >
 					<sheet>
 						<group>
 							<field name="name" placeholder="Religion"/>
@@ -1137,7 +1137,7 @@
 			<field name="name">grade.master.form</field>
 			<field name="model">grade.master</field>
 			<field name="arch" type="xml">
-				<form string="Grade" version="7.0">
+				<form string="Grade" >
 					<sheet>
 						<group col="4" string="Grade" colspan="4">
 							<field name="name" string="Grade Names" />
@@ -1182,7 +1182,7 @@
             <field name="name">acdemic.year.form</field>
             <field name="model">academic.year</field>
             <field name="arch" type="xml">
-                <form string="Academic Years" version="7.0">
+                <form string="Academic Years" >
                     <sheet>
 	                    <group col="4" colspan="4">
 	                        <field name="sequence"/><newline/>
@@ -1242,7 +1242,7 @@
 			<field name="name">academic.month.form</field>
 			<field name="model">academic.month</field>
 			<field name="arch" type="xml">
-				<form string="Months" version="7.0">
+				<form string="Months" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="name" placeholder="Name"/>
@@ -1277,7 +1277,7 @@
 			<field name="name">standard.medium.form</field>
 			<field name="model">standard.medium</field>
 			<field name="arch" type="xml">
-				<form string="Mediums" version="7.0">
+				<form string="Mediums" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="sequence"/>
@@ -1309,7 +1309,7 @@
 			<field name="name">document.type.form</field>
 			<field name="model">document.type</field>
 			<field name="arch" type="xml">
-				<form string="Document Type" version="7.0">
+				<form string="Document Type" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="seq_no"/>
@@ -1345,7 +1345,7 @@
 			<field name="name">standard.division.form</field>
 			<field name="model">standard.division</field>
 			<field name="arch" type="xml">
-				<form string="Divisions" version="7.0">
+				<form string="Divisions" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="sequence"/>
@@ -1377,7 +1377,7 @@
 			<field name="name">elective.subject.form</field>
 			<field name="model">subject.elective</field>
 			<field name="arch" type="xml">
-				<form string="Elective Group" version="7.0">
+				<form string="Elective Group" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="name" colspan="4" required="1"/>
@@ -1447,7 +1447,7 @@
 			<field name="name">subject.subject.form</field>
 			<field name="model">subject.subject</field>
 			<field name="arch" type="xml">
-				<form string="Subjects" version="7.0">
+				<form string="Subjects" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="name" placeholder="Name"/>
@@ -1525,7 +1525,7 @@
 			<field name="name">standard.standard.form</field>
 			<field name="model">standard.standard</field>
 			<field name="arch" type="xml">
-				<form string="Standard Information" version="7.0">
+				<form string="Standard Information" >
 					<sheet>
 						<group col="4" colspan="4">
 							<field name="sequence"/>
@@ -1727,7 +1727,7 @@
 			<field name="name">student.news.form</field>
 			<field name="model">student.news</field>
 			<field name="arch" type="xml">
-				<form string="News" version="7.0">
+				<form string="News" >
 					<header>
 						<button string="Send Mail" type="object" name="news_update"
 							icon="gtk-ok" colspan="2"/>
@@ -1884,7 +1884,7 @@
 			<field name="name">res.partner.parent.form</field>
 			<field name="model">res.partner</field>
 			<field name="arch" type="xml">
-				<form string="Partners" col='1' version="7.0">
+				<form string="Partners" col='1' >
 					<sheet>
 						<form string="Partner Contacts">
 							<newline />
@@ -1976,7 +1976,7 @@
 			<field name="name">My Dashboard</field>
 			<field name="model">board.board</field>
 			<field name="arch" type="xml">
-				<form string="My Dashboard" version="7.0">
+				<form string="My Dashboard" >
 					<board style="2-1">
 						<column>
 							<action name="%(view_student_news)d" string="News Update"
