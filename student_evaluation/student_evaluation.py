@@ -53,7 +53,7 @@ class student_evaluation(models.Model):
             if self.eval_line:
                 for line in self.eval_line:
                     if line.point_id.point:
-                        total = line.point_id.point
+                        total += line.point_id.point
                 self.total = total
             else:
                 self.total = total
@@ -104,7 +104,7 @@ class student_evaluation_line(models.Model):
     eval_id = fields.Many2one('student.evaluation', 'eval id')
     stu_eval_id = fields.Many2one('student.evaluation.template', 'Question')
     point_id = fields.Many2one('rating.rating','Rating', domain="[('rating_id','=',stu_eval_id)]")
-    rating = fields.Char('Remarks',size=45)
+    rating = fields.Char('Remarks')
 
     _sql_constraints = [
         ('number_uniq', 'unique(eval_id, stu_eval_id)', 'Questions are already in Exists!'),
@@ -115,7 +115,7 @@ class student_evaluation_template(models.Model):
     _name = "student.evaluation.template"
     _rec_name = 'desc'
     
-    desc = fields.Char('Description', size=50, required=True)
+    desc = fields.Char('Description', required=True)
     type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')], 'User Type', required=True,default='faculty')
     rating_line = fields.One2many('rating.rating','rating_id','Rating')
     
@@ -127,6 +127,6 @@ class rating_rating(models.Model):
 
     rating_id = fields.Many2one('student.evaluation.template','Stud')
     point  = fields.Integer('Rating in points', required=True)
-    rating = fields.Char('Remarks', size=50,required=True)
+    rating = fields.Char('Remarks',required=True)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:                
