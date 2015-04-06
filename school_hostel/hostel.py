@@ -29,7 +29,7 @@ class hostel_type(models.Model):
     
     _name = 'hostel.type'
     
-    name = fields.Char('Hostel Name', size=32, required=True)
+    name = fields.Char('Hostel Name', required=True)
     type = fields.Selection([('boys','Boys'),('girls','Girls'),('common','Common')], 'Hostel Type', required=True,default='common')
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('res.partner', 'Rector')
@@ -42,7 +42,6 @@ class hostel_room(models.Model):
     @api.one
     @api.depends('student_ids')
     def _check_availability(self):
-        res = {}
         room_availability = 0
         for data in self:
             count = 0
@@ -56,7 +55,7 @@ class hostel_room(models.Model):
 
     name = fields.Many2one('hostel.type', 'Hostel')
     floor_no = fields.Integer('Floor No.',default=1)
-    room_no = fields.Char('Room No.', size=128, required=True)
+    room_no = fields.Char('Room No.',required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
     availability = fields.Float(compute='_check_availability',string="Availability")
     student_ids = fields.One2many('hostel.student','hostel_room_id', 'Student')
@@ -81,19 +80,13 @@ class hostel_student(models.Model):
     @api.one
     @api.depends('room_rent','paid_amount')
     def _get_remaining_fee_amt(self):
-        if self._context is None:
-            context = {}
         if self.room_rent and self.paid_amount:
-            remaining_amount = self.room_rent - self.paid_amount
-            self.remaining_amount = remaining_amount
+            self.remaining_amount = self.room_rent - self.paid_amount
         else:
             self.remaining_amount = 0.0
         
     @api.multi
     def confirm_state(self):
-#        if self.remaining_amount == 0.0:
-#            print '=========paid', self.remaining_amount
-#            self.write({'status': 'confirm'})
         self.write({'status': 'confirm'})
         return True
 
@@ -104,8 +97,6 @@ class hostel_student(models.Model):
 
     @api.multi
     def print_fee_receipt(self):
-        if self._context is None:
-            context = {}
         data = self.read([])[0]
         datas = {
             'ids': [data['id']],
@@ -115,7 +106,7 @@ class hostel_student(models.Model):
         return {'type': 'ir.actions.report.xml', 'report_name': 'school_hostel.hostel_fee_reciept', 'datas': datas}
 
     hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
-    hostel_id = fields.Char('Hostel ID', size=64, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('hostel.student'))
+    hostel_id = fields.Char('Hostel ID',readonly=True,default=lambda obj:obj.env['ir.sequence'].get('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', required=True)
