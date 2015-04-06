@@ -47,7 +47,7 @@
             "wizard/assign_roll_no_wizard.xml",
             "wizard/move_standards_view.xml",
             "wizard/wiz_meeting_view.xml",
-            "indentity_card_report.xml",
+            "report_view.xml",
             "views/identity_card.xml",
     ],
   'demo': [

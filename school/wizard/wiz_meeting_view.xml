@@ -26,7 +26,7 @@
                </form>
             </field>
         </record>
-
+		
         <act_window id="action_student_meeting_form"
             key2="client_action_multi"
             name="Student Meeting"
@@ -35,6 +35,6 @@
             view_mode="form"
             target="new"
             view_type="form"/>
-
+		
     </data>
 </openerp>

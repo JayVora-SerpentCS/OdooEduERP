@@ -20,30 +20,31 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp import models, fields, api, _
 
 # This wizard is designed for assigning the roll number to a student.
 
-class assign_roll_no(osv.TransientModel):
+class assign_roll_no(models.TransientModel):
 
     _name = 'assign.roll.no'
     _description = 'Assign Roll Number'
-    _columns = {
-        'standard_id': fields.many2one('standard.standard', 'Class', required=True),
-        'medium_id': fields.many2one('standard.medium', 'Medium', required=True),
-        'division_id': fields.many2one('standard.division', 'Division', required=True),
+    
+    standard_id = fields.Many2one('standard.standard', 'Class', required=True)
+    medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
+    division_id = fields.Many2one('standard.division', 'Division', required=True)
         
-    }
 
-    def assign_rollno(self, cr, uid, ids, context=None):
+    @api.multi
+    def assign_rollno(self):
         res = {}
-        student_obj = self.pool.get('school.standard')
-        for student_data in self.browse(cr, uid, ids, context=context):
-            domain = [('standard_id', '=', student_data.standard_id.id), ('medium_id' ,'=', student_data.medium_id.id), ('division_id', '=', student_data.division_id.id)]
-            search_student_ids = student_obj.search(cr, uid, domain, context=context)
+        student_obj = self.env['student.student']
+        for student_data in self:
+            search_student_ids = student_obj.search([('standard_id','=',student_data.standard_id.id),
+                                                    ('medium_id' ,'=', student_data.medium_id.id),
+                                                    ('division_id', '=', student_data.division_id.id)])
         number = 1
-        for student in student_obj.browse(cr, uid, search_student_ids, context=context):
-            student_obj.write(cr, uid, student.id, {'roll_no':number}, context=context)
+        for student in search_student_ids:
+            student.write({'roll_no':number})
             number = number + 1
         return res
 
