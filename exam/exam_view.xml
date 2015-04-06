@@ -92,6 +92,9 @@
 							<page string="Exam Schedule">
 								<field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
 							</page>
+							<page string="Standard">
+								<field name="standard_id" nolabel="1" colspan="4"/>
+							</page>
 						</notebook>
 					</group>
 					<group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
