@@ -41,7 +41,7 @@ class extended_time_table_line(models.Model):
     _inherit = 'time.table.line'
     
     exm_date = fields.Date('Exam Date')
-    day_of_week = fields.Char('Week Day',size=56)
+    day_of_week = fields.Char('Week Day')
     
     @api.multi
     def on_change_date_day(self,exm_date):
@@ -66,8 +66,8 @@ class exam_exam(models.Model):
     _name = 'exam.exam'
     _description = 'Exam Information'
     
-    name = fields.Char("Exam Name", size = 35, required = True)
-    exam_code = fields.Char('Exam Code', size=64, required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('exam.exam'))
+    name = fields.Char("Exam Name", required = True)
+    exam_code = fields.Char('Exam Code', required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('exam.exam'))
     standard_id = fields.Many2many('school.standard','school_standard_exam_rel','standard_id','event_id','Participant Standards')
     start_date = fields.Date("Exam Start Date",help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
@@ -107,14 +107,14 @@ class additional_exam(models.Model):
     _name = 'additional.exam'
     _description = 'additional Exam Information'
     
-    name = fields.Char("Additional Exam Name", size = 35,required=True)
-    addtional_exam_code = fields.Char('Exam Code', size=64, required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('additional.exam'))
+    name = fields.Char("Additional Exam Name",required=True)
+    addtional_exam_code = fields.Char('Exam Code', required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
-    maximum_marks = fields.Integer("Maximum Mark", size=30)
-    minimum_marks = fields.Integer("Minimum Mark", size = 30)
-    weightage = fields.Char("Weightage", size = 30)
+    maximum_marks = fields.Integer("Maximum Mark")
+    minimum_marks = fields.Integer("Minimum Mark")
+    weightage = fields.Char("Weightage")
     create_date = fields.Date("Created Date", help="Exam Created Date")
     write_date = fields.Date("Updated date", help="Exam Updated Date")
     
@@ -140,7 +140,6 @@ class exam_result(models.Model):
     def _compute_total(self):
         total=0.0
         if self.result_ids:
-            total=0.0
             for line in self.result_ids:
                 obtain_marks = line.obtain_marks
                 if line.state == "re-evaluation":
@@ -148,8 +147,6 @@ class exam_result(models.Model):
                 elif line.state == "re-access":
                     obtain_marks = line.marks_access
                 total += obtain_marks
-            self.total = total
-        else:
             self.total = total
             
     @api.multi 
@@ -198,42 +195,23 @@ class exam_result(models.Model):
 #            return res
     
     @api.one
-    @api.depends('result_ids')
+    @api.depends('result_ids','student_id')
     def _compute_result(self):
         flag = False
-        for sub_line in self.browse(self.ids) or []:
-            for l in sub_line.result_ids:
-                if sub_line.student_id.year.grade_id.grade_ids:
-                    for grades in sub_line.student_id.year.grade_id.grade_ids:
+        if self.result_ids and self.student_id:
+            for l in self.result_ids:
+                if self.student_id.year.grade_id.grade_ids:
+                    for grades in self.student_id.year.grade_id.grade_ids:
                         if grades.grade:
                             if not grades.fail:
                                 self.result = 'Pass'
                             else:
                                 flag=True
                 else:
-                        raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
-                if flag:
-                    self.result = 'Fail'
+                    raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
+        if flag:
+            self.result = 'Fail'
     
-#    @api.one
-#    @api.depends('result_ids')
-#    def _compute_result(self):
-#        flag = False
-#        if self.result_ids:
-#            for line in self.result_ids:
-#                if line.student_id.year.grade_id.grade_ids:
-#                    for grades in line.student_id.year.grade_id.grade_ids:
-#                        if grades.grade:
-#                            if not grades.fail:
-#                                self.result = 'Pass'
-#                            else:
-#                                flag=True
-#                else:
-#                        raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
-#                if flag:
-#                    self.result = 'Fail'
-#        else:
-#            self.result = 'Fail'
 
     @api.multi
     def on_change_student(self,student, exam_id, standard_id):
@@ -252,14 +230,14 @@ class exam_result(models.Model):
     student_id = fields.Many2one("student.student", "Student Name", required = True)
     
     roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No", readonly=True)
-    pid = fields.Char(related='student_id.pid',size=64, string="Student ID", readonly=True)
+    pid = fields.Char(related='student_id.pid', string="Student ID", readonly=True)
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     result_ids = fields.One2many("exam.subject","exam_id","Exam Subjects")
     total = fields.Float(compute='_compute_total', string ='Obtain Total', method=True,store=True)
     re_total = fields.Float('Re-access Obtain Total', readonly=True)
     percentage = fields.Float("Percentage", readonly=True )
-    result = fields.Char(compute='_compute_result', string ='Result', readonly=True, method=True, store=True, size =30)
-    grade = fields.Char("Grade", size=15, readonly=True)
+    result = fields.Char(compute='_compute_result', string ='Result', readonly=True, method=True, store=True)
+    grade = fields.Char("Grade", readonly=True)
     state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], 'State', readonly=True,default='draft')
     color = fields.Integer('Color')
     
@@ -349,7 +327,7 @@ class exam_grade_line(models.Model):
     
     standard_id = fields.Many2one('standard.standard', 'Standard')
     exam_id = fields.Many2one('exam.result', 'Result')
-    grade = fields.Char(string='Grade',size=21)
+    grade = fields.Char(string='Grade')
 
 class exam_subject(models.Model):
     _name = "exam.subject"
@@ -358,18 +336,17 @@ class exam_subject(models.Model):
     
     @api.constrains('obtain_marks','minimum_marks')
     def _validate_marks(self):
-        for marks_line in self.browse(self.ids):
-            if marks_line.obtain_marks > marks_line.maximum_marks or marks_line.minimum_marks > marks_line.maximum_marks:
-                raise Warning(_('The obtained marks and minimum marks should not extend maximum marks.'))
+        if self.obtain_marks > self.maximum_marks or self.minimum_marks > self.maximum_marks:
+            raise Warning(_('The obtained marks and minimum marks should not extend maximum marks.'))
     
     @api.one
     @api.depends('exam_id','obtain_marks')
     def _get_grade(self):
-        if self.exam_id:
-            if self.exam_id.student_id.year.grade_id.grade_ids:
-                for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                    if self.obtain_marks >= grade_id.from_mark and self.obtain_marks <= grade_id.to_mark:
-                        self.grade = grade_id.grade
+        if self.exam_id and self.exam_id.student_id and self.exam_id.student_id.year.grade_id.grade_ids:
+            for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
+                if self.obtain_marks >= grade_id.from_mark and self.obtain_marks <= grade_id.to_mark:
+                    self.grade = grade_id.grade
+                    
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], related='exam_id.state',string="State")
     subject_id = fields.Many2one("subject.subject","Subject Name")
@@ -379,7 +356,7 @@ class exam_subject(models.Model):
     marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_id = fields.Many2one('grade.master',"Grade")
-    grade = fields.Char(compute='_get_grade', string='Grade', type="char",method=True)
+    grade = fields.Char(compute='_get_grade', string='Grade', type="char")
 
 class exam_result_batchwise(models.Model):
 
@@ -395,19 +372,20 @@ class exam_result_batchwise(models.Model):
         divi=0
         year_obj=self.env['academic.year']
         stud_obj = self.env['exam.result']
-        year_ob=year_obj.browse(self.year.id)
-        stand_id = stud_obj.search([('standard_id', '=', self.standard_id.id )])
-        for stand in stand_id:
-            student_ids = stud_obj.browse(stand.id) 
-            if student_ids.result_ids:
-                for res_line in student_ids.result_ids:
-                    count+= 1
-                fina_tot += student_ids.total
-            divi=fina_tot/count#Total_obtain mark of all student
-            if year_ob.grade_id.grade_ids:
-                for grade_id in year_ob.grade_id.grade_ids:
-                    if divi >= grade_id.from_mark and divi <= grade_id.to_mark:
-                        self.grade = grade_id.grade
+        if self.standard_id and self.year:
+            year_ob=year_obj.browse(self.year.id)
+            stand_id = stud_obj.search([('standard_id', '=', self.standard_id.id )])
+            for stand in stand_id:
+                student_ids = stud_obj.browse(stand.id) 
+                if student_ids.result_ids:
+                    for res_line in student_ids.result_ids:
+                        count+= 1
+                    fina_tot += student_ids.total
+                divi=fina_tot/count#Total_obtain mark of all student
+                if year_ob.grade_id.grade_ids:
+                    for grade_id in year_ob.grade_id.grade_ids:
+                        if divi >= grade_id.from_mark and divi <= grade_id.to_mark:
+                            self.grade = grade_id.grade
          
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
@@ -421,13 +399,12 @@ class additional_exam_result(models.Model):
     @api.one
     @api.depends('a_exam_id','obtain_marks')
     def _calc_result(self):
-        if self.a_exam_id:
-            for line in self.browse(self.ids):
-                min_mark = line.a_exam_id.subject_id.minimum_marks
-                if min_mark <= line.obtain_marks:
-                    self.result = 'Pass'
-                else:
-                    self.result = 'Fail'
+        if self.a_exam_id and self.a_exam_id:
+            min_mark = self.a_exam_id.subject_id.minimum_marks
+            if min_mark <= self.obtain_marks:
+                self.result = 'Pass'
+            else:
+                self.result = 'Fail'
     
     @api.multi
     def on_change_student(self,student):
@@ -440,9 +417,8 @@ class additional_exam_result(models.Model):
     
     @api.constrains('obtain_marks')
     def _validate_marks(self):
-        for marks_line in self:
-            if marks_line.obtain_marks > marks_line.a_exam_id.subject_id.maximum_marks:
-                raise Warning(_('The obtained marks should not extend maximum marks.'))
+        if self.obtain_marks and self.a_exam_id and self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
+            raise Warning(_('The obtained marks should not extend maximum marks.'))
         return True
 
     a_exam_id = fields.Many2one("additional.exam", "Additional Examination", required=True)

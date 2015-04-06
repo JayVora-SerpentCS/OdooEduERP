@@ -19,8 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv
 from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 class exam_create_result(models.TransientModel):
 
@@ -34,23 +34,32 @@ class exam_create_result(models.TransientModel):
         student_obj = self.env['student.student']
         result_obj = self.env['exam.result']
         result_subject_obj = self.env['exam.subject']
-        for result in self.browse(self.ids):
+        for result in self:
             for exam in exam_obj.browse(self._context.get('active_ids')):
-                for timetable in exam.standard_id:
-                    student_ids = student_obj.search([('standard_id', '=', timetable.standard_id.id), ('division_id', '=', timetable.division_id.id), ('medium_id', '=', timetable.medium_id.id)])
-                    for student in student_ids:
-                        result_exists = result_obj.search(cr, uid, [('standard_id', '=', timetable.standard.id), ('division_id', '=', timetable.division_id.id), ('medium_id', '=', timetable.medium_id.id), ('student_id','=', student.id)])
-                        if not result_exists:
-                            result_id = result_obj.create({'s_exam_ids': exam.id,
-                                                                    'student_id': student.id,
-                                                                    'standard_id': timetable.class_id.id,
-                                                                    'division_id': timetable.division_id.id,
-                                                                    'medium_id': timetable.medium_id.id})
-                            for line in timetable.timetable_ids:
-                                result_subject_obj.create({'exam_id': result_id.id,
-                                                                    'subject_id': line.subject_id and line.subject_id.id or False,
-                                                                    'minimum_marks': line.subject_id and line.subject_id.minimum_marks or 0.0,
-                                                                    'maximum_marks': line.subject_id and line.subject_id.maximum_marks or 0.0})
-        return {}
+                if exam.standard_id:
+                    for school_std_rec in exam.standard_id:
+                        student_ids = student_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
+                                                          ('division_id', '=', school_std_rec.division_id.id),
+                                                          ('medium_id', '=', school_std_rec.medium_id.id)])
+                        for student in student_ids:
+                            result_exists = result_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
+                                                               ('student_id.division_id', '=', school_std_rec.division_id.id),
+                                                               ('student_id.medium_id', '=', school_std_rec.medium_id.id),
+                                                               ('student_id','=', student.id)])
+                            if not result_exists:
+                                result_id = result_obj.create({'s_exam_ids': exam.id,
+                                                               'student_id': student.id,
+                                                               'standard_id': school_std_rec.standard_id.id,
+                                                               'division_id': school_std_rec.division_id.id,
+                                                               'medium_id': school_std_rec.medium_id.id})
+                                for line in exam.standard_id:
+#                                    for line in school_std_rec.timetable_ids:
+                                    result_subject_obj.create({'exam_id': result_id.id,
+                                                               'subject_id': line.standard_id.subject_id and line.subject_id.id or False,
+                                                               'minimum_marks': line.subject_id and line.subject_id.minimum_marks or 0.0,
+                                                               'maximum_marks': line.subject_id and line.subject_id.maximum_marks or 0.0})
+                else:
+                    raise except_orm(_('Error !'), _('Please Select Standard Id.'))
+            return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

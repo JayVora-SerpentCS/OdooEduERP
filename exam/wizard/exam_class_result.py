@@ -19,8 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
-from openerp.tools.translate import _
 from openerp import models, fields, api, _
 
 class result_print(models.TransientModel):
@@ -35,7 +33,7 @@ class result_print(models.TransientModel):
     @api.multi
     def get_result(self):
         domain = []
-        for result_line in self.browse(self.ids):
+        for result_line in self:
             domain = [('standard_id','=',result_line.standard_id.id),('s_exam_ids','=',result_line.exam_id.id)]
             return {
             'name': _('Result Info'),

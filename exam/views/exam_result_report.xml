@@ -8,11 +8,10 @@
 					<t t-call="report.external_layout">
 						<div class="page">
 							<div class="oe_structure" />
-							<div class="row" align="center">
-								<h2 t-field="o and o[0].s_exam_ids.name"></h2>
-							</div>
+							<br/><br/><br/><br/><br/>
 							<t t-foreach="o" t-as="result">
 								<table width="100%">
+									<center><h2 t-field="o and o[0].s_exam_ids.name"></h2></center>
 									<tr>
 										<td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
 											<b>Student Name</b>
@@ -48,8 +47,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<t t-foreach="get_result_detail(data['result_ids'],result)"
-											t-as="sub_res_info">
+										<t t-foreach="get_result_detail(result.result_ids,result)" t-as="sub_res_info">
 											<tr>
 												<td align="center"
 													style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
