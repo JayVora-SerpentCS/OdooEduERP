@@ -20,7 +20,6 @@
 #
 ##############################################################################
 from openerp.report import report_sxw
-from openerp.osv import osv
 
 class result_label(report_sxw.rml_parse):
 
@@ -38,10 +37,6 @@ class result_label(report_sxw.rml_parse):
 			result.append(student.pid)
 		return result
 	
-class report_label(osv.AbstractModel):
-    _name = 'report.barcode_report.result_label'
-    _inherit = 'report.abstract_report'
-    _template = 'barcode_report.result_label'
-    _wrapped_report_class = result_label	
+report_sxw.report_sxw('report.time_table_label', 'time.table', 'addons/barcode_report/report/result_label.rml', parser=result_label, header="external")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

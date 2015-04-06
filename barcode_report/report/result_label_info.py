@@ -20,7 +20,6 @@
 #
 ##############################################################################
 from openerp.report import report_sxw
-from openerp.osv import osv
 
 class result_label_info(report_sxw.rml_parse):
 
@@ -37,11 +36,7 @@ class result_label_info(report_sxw.rml_parse):
 		for student in student_obj.browse(self.cr, self.uid, student_ids):
 			result.append({'name': student.name + " " + student.middle or '' + " " + student.last or '', 'roll_no': student.roll_no , 'pid': student.pid})
 		return result
-
-class report_label_info(osv.AbstractModel):
-    _name = 'report.barcode_report.result_label_info'
-    _inherit = 'report.abstract_report'
-    _template = 'barcode_report.result_label_info'
-    _wrapped_report_class = result_label_info		
 	
+report_sxw.report_sxw('report.time_table_info', 'time.table', 'addons/barcode_report/report/result_label_info.rml', parser=result_label_info, header="external")
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
