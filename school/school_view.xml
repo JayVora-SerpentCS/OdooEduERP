@@ -254,7 +254,7 @@
 				</form>
 			</field>
 		</record>
-
+		
 		<!-- Record Rule for student profile info for Student -->
 		<record id="student_rule_student_profile_record" model="ir.rule">
 			<field name="name">Personal Student Profile Record</field>
@@ -1650,7 +1650,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-
+		
 		<!-- Standard Information Action -->
 		<record model="ir.actions.act_window" id="action_school_standard_form">
 			<field name="name">Standards</field>

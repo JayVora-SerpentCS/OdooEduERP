@@ -47,9 +47,9 @@ class academic_year(models.Model):
 
     @api.model
     def next_year(self, sequence):
-        year_ids = self.search([('sequence', '>', sequence)])
-        if year_ids and year_ids[0].id:
-            return year_ids[0].id
+        year_ids = self.search([('sequence', '>', sequence)],order='id ASC', limit=1)
+        if year_ids:
+            return year_ids.id
         return False
     
     @api.multi
@@ -144,9 +144,9 @@ class standard_standard(models.Model):
 
     @api.model
     def next_standard(self, sequence):
-        stand_ids = self.search([('sequence', '>', sequence)])
-        if stand_ids and stand_ids[0].id:
-            return stand_ids[0].id
+        stand_ids = self.search([('sequence', '>', sequence)],order='id ASC', limit=1)
+        if stand_ids:
+            return stand_ids.id
         return False
 
 
