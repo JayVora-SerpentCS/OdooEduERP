@@ -37,7 +37,7 @@ class school_event_parameter(models.Model):
     _name = 'school.event.parameter'
     _description = 'Event Parameter'
     
-    name = fields.Char('Parameter Name', size=50, required=True)
+    name = fields.Char('Parameter Name',required=True)
 
 #class for Participant which are participeted in events
 class school_event_participant(models.Model):
@@ -49,7 +49,7 @@ class school_event_participant(models.Model):
     name =              fields.Many2one('student.student', 'Participant Name',readonly=True)
     score =             fields.Float('Score', default=0)
     event_id =          fields.Many2one('school.event', 'Event', readonly=True)
-    stu_pid =           fields.Char('Personal Identification Number', size=50,required=True, readonly=True)
+    stu_pid =           fields.Char('Personal Identification Number',required=True, readonly=True)
     win_parameter_id =  fields.Many2one('school.event.parameter', 'Parameter', readonly=True)
     sequence =          fields.Integer('Rank', help="The sequence field is used to Give Rank to the Participant", default=0)
 
@@ -67,7 +67,7 @@ class school_event(models.Model):
            cnt += 1
        self.participants = cnt
             
-    name = fields.Char('Event Name', size=50,  help= "Full Name of the event")
+    name = fields.Char('Event Name',help= "Full Name of the event")
     event_type = fields.Selection([('intra','Intra School'),
                                   ('inter','Inter School')],
                                   'Event Type',help='Event is either Intra chool or Inter school')
@@ -106,9 +106,6 @@ class school_event(models.Model):
     
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        
-        if self._context is None:
-            context = {}
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
             student_data = student_obj.browse(self._context['part_name_id'])
@@ -163,8 +160,7 @@ class school_event_registration(models.Model):
             prt_data = student_obj.browse(reg_data.part_name_id.id)
             #delete etry of participant
             stu_prt_data = event_part_obj.search([('stu_pid', '=', prt_data.pid),('event_id', '=', reg_data.name.id),('name', '=', reg_data.part_name_id.id)])
-            stu_prt_id = event_part_obj.browse(stu_prt_data.id)
-            stu_prt_id.unlink()
+            stu_prt_data.unlink()
             #remove entry of event from student
             list1 = []
             for part in prt_data.event_ids:
@@ -267,9 +263,6 @@ class student_student(models.Model):
     
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        
-        if self._context is None:
-            context = {}
         if self._context.get('name'):
             event_obj = self.env['school.event']
             event_data = event_obj.browse(self._context['name'])
