@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-# from openerp.osv import fields, osv
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 import time
@@ -32,7 +31,7 @@ class attendance_sheet(models.Model):
     _description ='Attendance Sheet'
     _name = 'attendance.sheet'
 
-    name = fields.Char('Description', size=64,readonly=True)
+    name = fields.Char('Description',readonly=True)
     standard_id = fields.Many2one('school.standard', 'Academic Class', required=True) 
     month_id = fields.Many2one('academic.month', 'Month', required=True) 
     year_id = fields.Many2one('academic.year', 'Year', required=True)
@@ -42,24 +41,12 @@ class attendance_sheet(models.Model):
 
     @api.multi
     def onchange_class_info(self, standard_id):
-        '''  This method automatically fill up student records on standard field
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param standard_id : Apply method on this Field name
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key and the value of student
-        '''
         res= {}
         student_list = []
         stud_obj = self.env['student.student']
-        student_domain=[('standard_id', '=', standard_id)]
-        stud_ids = stud_obj.search(student_domain)
+        stud_ids = stud_obj.search([('standard_id', '=', standard_id)])
         for stud_id in stud_ids:
-#             student_ids = stud_obj.browse(cr,uid, id)
-            student_dict = {'roll_no':stud_id.roll_no,'name':stud_id.name}
-            student_list.append(student_dict)
+            student_list.append({'roll_no':stud_id.roll_no,'name':stud_id.name})
         res.update({'value': {'attendance_ids':student_list}})
         return res
 
@@ -109,16 +96,6 @@ class attendance_sheet_line(models.Model):
     
     @api.multi
     def attendance_percentage(self):
-        ''' This method calculate percentage of total attendance
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key and the percentage as value 
-        '''
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -241,9 +218,7 @@ class daily_attendance(models.Model):
     @api.one
     @api.depends('student_ids')
     def _total(self):
-        res = {}
         count=0
-        atten_line_obj=self.env['daily.attendance']
         if self.student_ids:
             for att in self.student_ids:
                     count += 1
@@ -254,16 +229,11 @@ class daily_attendance(models.Model):
     @api.one
     @api.depends('student_ids')
     def _present(self):
-        res = {}
         count=0
-        count_fail=0
-        atten_line_obj=self.env['daily.attendance']
         if self.student_ids:
             for att in self.student_ids:
                 if att.is_present == True:
                     count += 1
-                elif att.is_absent==True:
-                    count_fail += 1
             self.total_presence = count
         else:
             self.total_presence = count
@@ -271,16 +241,10 @@ class daily_attendance(models.Model):
     @api.one
     @api.depends('student_ids')
     def _absent(self):
-        
-        res = {}
-        count=0
         count_fail=0
-        atten_line_obj=self.env['daily.attendance']
         if self.student_ids:
             for att in self.student_ids:
-                if att.is_present == True:
-                    count += 1
-                elif att.is_absent==True:
+                if att.is_absent==True:
                     count_fail += 1
             self.total_absent = count_fail
         else:
@@ -316,21 +280,17 @@ class daily_attendance(models.Model):
             stud_ids = self._cr.fetchall()
             for stud_id in stud_ids:
                 student_ids = stud_obj.browse(stud_id)
-                student_dict = {'roll_no':student_ids.roll_no,'stud_id':stud_id}
-                student_list.append(student_dict)
+                student_list.append({'roll_no':student_ids.roll_no,'stud_id':stud_id})
             res.update({'value': {'student_ids': student_list}})
         return res
     
     @api.multi
     def attendance_draft(self):
         attendance_sheet_obj = self.env['attendance.sheet']
-        attendance_sheet_line_obj = self.env['attendance.sheet.line']
-        daily_attendance_line_obj = self.env['daily.attendance.line']
         academic_year_obj = self.env['academic.year']
         academic_month_obj = self.env['academic.month']
-        daily_attendance_datas = self
 
-        for daily_attendance_data in daily_attendance_datas:
+        for daily_attendance_data in self:
             if not daily_attendance_data.date:
                 raise Warning(_('Please enter todays date.'))
             date = datetime.strptime(daily_attendance_data.date, "%Y-%m-%d")
@@ -442,8 +402,7 @@ class daily_attendance(models.Model):
                                                           })
                         for student_id in line.student_ids:
                             dict=attendance_sheet_line_obj.read([student_id.roll_no])
-                            domain = [('roll_no', '=', student_id.roll_no)]
-                            search_id = attendance_sheet_line_obj.search(domain)
+                            search_id = attendance_sheet_line_obj.search([('roll_no', '=', student_id.roll_no)])
                             if date.day == 1 and student_id.is_absent == True:
                                 val = {'one':False}
                                                 
@@ -641,8 +600,7 @@ class daily_attendance(models.Model):
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
                         dict = attendance_sheet_line_obj.read([student_id.roll_no])
-                        domain = [('roll_no', '=', student_id.roll_no),('standard_id', '=', attendance_sheet_id.id)]
-                        search_id = attendance_sheet_line_obj.search(domain)
+                        search_id = attendance_sheet_line_obj.search([('roll_no', '=', student_id.roll_no),('standard_id', '=', attendance_sheet_id.id)])
                         if date.day == 1 and student_id.is_absent == True:
                             val = {'one':False}
                                             
@@ -853,6 +811,5 @@ class daily_attendance_line(models.Model):
     stud_id = fields.Many2one('student.student','Name', required=True) 
     is_present = fields.Boolean('Present') 
     is_absent = fields.Boolean('Absent') 
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
