@@ -399,9 +399,8 @@ class additional_exam_result(models.Model):
     @api.one
     @api.depends('a_exam_id','obtain_marks')
     def _calc_result(self):
-        if self.a_exam_id and self.a_exam_id:
-            min_mark = self.a_exam_id.subject_id.minimum_marks
-            if min_mark <= self.obtain_marks:
+        if self.a_exam_id and self.a_exam_id.subject_id and self.a_exam_id.subject_id.minimum_marks:
+            if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
                 self.result = 'Fail'
@@ -417,7 +416,7 @@ class additional_exam_result(models.Model):
     
     @api.constrains('obtain_marks')
     def _validate_marks(self):
-        if self.obtain_marks and self.a_exam_id and self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
+        if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
             raise Warning(_('The obtained marks should not extend maximum marks.'))
         return True
 
