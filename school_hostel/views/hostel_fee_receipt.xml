@@ -8,10 +8,10 @@
 					<t t-call="report.external_layout">
 						<div class="page">
 							<div class="oe_structure" />
+							<br /><br /><br /><br /><br />
 							<div class="row" align="center">
 								<h1>Hostel Fee Receipt</h1>
 							</div>
-							<br />
 							<table width="100%" style="background: #e6e6e6;">
 								<tr>
 									<td>
