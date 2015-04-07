@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "School Barcode",
-    "version" : "2.0",
+    "version" : "3.0",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     'category': 'School Management',
     "depends" : ['timetable'],
@@ -31,6 +31,8 @@
     """,
     'data': [
         'result_report.xml',
+        'views/result_label.xml',
+        'views/result_lable_info.xml',
     ],
     'test': [],
     'installable': True,
