@@ -29,16 +29,8 @@ class sale_order_line(models.Model):
     _inherit = 'sale.order.line'
 
     production_lot_id = fields.Many2one('stock.production.lot', 'Production Lot')
-    customer_ref = fields.Char(string='Customer reference', size=64)
+    customer_ref = fields.Char(string='Customer reference')
 
-#     _columns = {
-#         'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
-#         'customer_ref': fields.char(string='Customer reference', size=64),
-#     }
-
-#     _defaults = {
-       # 'type': lambda *a: 'make_to_order'
-#     }
 
     @api.multi
     def button_confirm(self):
@@ -90,7 +82,6 @@ class sale_order(models.Model):
     _inherit = "sale.order"
     _order = "create_date desc"
 
-
     @api.model
     def default_get(self,fields_list):
         res = super(sale_order,self).default_get(fields_list)
@@ -100,12 +91,6 @@ class sale_order(models.Model):
                 })
         return res
     
-#     _defaults = {
-#       #  'invoice_quantity': lambda *a: 'procurement',
-#         'picking_policy': lambda *a: 'direct',
-#         'order_policy': lambda *a: 'picking',
-#     }
-
     @api.multi
     def action_ship_create(self):
         ''' This method is Create shipping record 

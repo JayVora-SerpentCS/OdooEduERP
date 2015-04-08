@@ -27,14 +27,9 @@ class stock_move(models.Model):
     
     _inherit = 'stock.move'
     
-    customer_ref = fields.Char('Customer reference', size=64)
-    origin_ref = fields.Char('Origin', size=64)
-    
-#     _columns = {
-#         'customer_ref': fields.char('Customer reference', size=64),
-#         'origin_ref': fields.char('Origin', size=64),
-#      #   'procurement_ids': fields.one2many('procurement.order','move_id', 'Procurements')
-#     }
+    customer_ref = fields.Char('Customer reference')
+    origin_ref = fields.Char('Origin')
+#    procurement_ids = fields.one2many('procurement.order','move_id', string='Procurements')
 
     # New function to manage the update of the quantities
     @api.multi
@@ -88,12 +83,6 @@ class stock_picking(models.Model):
     sale_id = fields.Many2one('sale.order', 'Sale Order', ondelete='set null', select=True, readonly=True, default=False)
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order', ondelete='set null', readonly=True,select=True, default=False)
     date_done = fields.Datetime('Picking date', readonly=True)
-
-#     _columns = {
-#         'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True, readonly=True),
-#         'purchase_id': fields.many2one('purchase.order', 'Purchase Order', ondelete='set null', readonly=True,select=True),
-#         'date_done': fields.datetime('Picking date', readonly=True),
-#     }
 
 #     _defaults = {
 #         'sale_id': lambda *a: False,

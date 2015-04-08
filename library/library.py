@@ -31,7 +31,7 @@ class library_price_category(models.Model):
     _name = 'library.price.category'
     _description = 'Book Price Category'
 
-    name = fields.Char('Category', size=64, required=True )
+    name = fields.Char('Category', required=True )
     price = fields.Float('Price', required=True, default=0)
     product_ids = fields.One2many('product.product', 'price_cat', 'Books')
 
@@ -50,8 +50,8 @@ class library_rack(models.Model):
     _name = 'library.rack'
     _description = "Library Rack"
 
-    name = fields.Char('Name', size=64, required=True, help="it will be show the position of book")
-    code = fields.Char('Code', size=16)
+    name = fields.Char('Name', required=True, help="it will be show the position of book")
+    code = fields.Char('Code')
     active = fields.Boolean('Active', default='True')
 
 #     _columns = {
@@ -68,8 +68,8 @@ class library_collection(models.Model):
     _name = 'library.collection'
     _description = "Library Collection"
     
-    name = fields.Char('Name', size=64, required=True)
-    code = fields.Char('Code', size=16)
+    name = fields.Char('Name', required=True)
+    code = fields.Char('Code')
     
 #     _columns = {
 #         'name': fields.char('Name', size=64, required=True),
@@ -83,7 +83,7 @@ class library_book_returnday(models.Model):
     _rec_name = 'day'
     
     day = fields.Integer('Days',required=True, help="It show the no of day/s for returning book")
-    code = fields.Char('Code', size=16)
+    code = fields.Char('Code')
     fine_amt = fields.Float('Fine Amount',required=True,help="Fine amount to be paid after due of book return date")
     
 #     _columns = {
@@ -97,7 +97,7 @@ class library_author(models.Model):
     _name = 'library.author'
     _description = "Author"
     
-    name = fields.Char('Name', size=30, required=True, select=True)
+    name = fields.Char('Name', required=True, select=True)
     born_date = fields.Date('Date of Birth')
     death_date = fields.Date('Date of Death')
     biography = fields.Text('Biography')
@@ -152,7 +152,7 @@ class library_card(models.Model):
                 user = rec.teacher_id.name
             self.gt_name = user
             
-    code = fields.Char('Card No', size=64, required=True, default=lambda self: self.env['ir.sequence'].get('library.card') or '/')
+    code = fields.Char('Card No', required=True, default=lambda self: self.env['ir.sequence'].get('library.card') or '/')
     book_limit = fields.Integer('No Of Book Limit On Card', required=True) 
     student_id = fields.Many2one('student.student', 'Student Name') 
     standard_id = fields.Many2one('school.standard', 'Standard')
@@ -284,10 +284,10 @@ class library_book_issue(models.Model):
                     
     
     name = fields.Many2one('product.product', 'Book Name', required=True) 
-    issue_code = fields.Char('Issue No.', size=24, required=True, default=lambda self: self.env['ir.sequence'].get('library.book.issue') or '/') 
+    issue_code = fields.Char('Issue No.', required=True, default=lambda self: self.env['ir.sequence'].get('library.book.issue') or '/') 
     student_id = fields.Many2one('student.student', 'Student Name') 
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name') 
-    gt_name = fields.Char('Name', size=64)
+    gt_name = fields.Char('Name')
     standard_id = fields.Many2one('standard.standard', 'Standard') 
     roll_no = fields.Integer('Roll No')
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
@@ -299,7 +299,7 @@ class library_book_issue(models.Model):
     day_to_return_book = fields.Many2one("library.book.returnday", "Book Return Days") 
     card_id = fields.Many2one("library.card", "Card No", required=True)
     state = fields.Selection([('draft', 'Draft'), ('issue', 'Issued'), ('reissue', 'Reissued'), ('cancel', 'Cancelled'), ('return', 'Returned'), ('lost', 'Lost'), ('fine', 'Fined')], "State", default='draft') 
-    user = fields.Char("User", size=30)
+    user = fields.Char("User")
     color = fields.Integer("Color Index")
                 
 #     _columns = {
@@ -544,11 +544,11 @@ class library_book_request(models.Model):
                 book = self.new1
             self.bk_nm = book
     
-    req_id = fields.Char('Request ID', size=24, readonly=True, default=lambda self: self.env['ir.sequence'].get('library.book.request') or '/')
+    req_id = fields.Char('Request ID', readonly=True, default=lambda self: self.env['ir.sequence'].get('library.book.request') or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')], 'Book Type') 
     name = fields.Many2one('product.product', 'Book Name') 
-    new1 = fields.Char('Book Name', size=32)
+    new1 = fields.Char('Book Name',)
     bk_nm = fields.Char(compute="gt_bname", method=True, string = 'Name', store=True)
     
 #     _columns = {
