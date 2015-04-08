@@ -2,7 +2,7 @@
  Version Change Log
  Module: assignment
 ===============================================================================
-Version 3.0 on 2015-04-07 by Hasmukh Bhalodiya
+Version 3.0 on 2014-09-09 by Hasmukh Bhalodiya
     * Migrated Module Api v8.
     
 Version 2.0 on 2014-09-09 by Murtuza Saleh
