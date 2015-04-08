@@ -27,17 +27,10 @@ class purchase_order_line(models.Model):
     
     _inherit = 'purchase.order.line'
 
-    origin = fields.Char('Origin', size=1024)
+    origin = fields.Char('Origin')
     production_lot_id = fields.Many2one('stock.production.lot', 'Production Lot')
-    customer_ref = fields.Char('Customer reference', size=64)
-    origin_ref = fields.Char('Origin', size=64)
-
-#     _columns = {
-#         'origin': fields.char('Origin', size=1024),
-#         'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
-#         'customer_ref': fields.char('Customer reference', size=64),
-#         'origin_ref': fields.char('Origin', size=64),
-#     }
+    customer_ref = fields.Char('Customer reference')
+    origin_ref = fields.Char('Origin')
 
 class purchase_order(models.Model):
     
@@ -114,8 +107,5 @@ class purchase_order(models.Model):
         res = super(purchase_order,self).default_get(fields_list)
         res.update({'invoice_method':'picking'})
         return res
-#     _defaults = {
-#         'invoice_method': lambda *a: 'picking',
-#     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

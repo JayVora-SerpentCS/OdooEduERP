@@ -28,15 +28,10 @@ class product_state(models.Model):
     _name = "product.state"
     _description = "States of Books"
 
-    name = fields.Char('State', size=64, select=1, required=True)
-    code = fields.Char('Code', size=64, required=True)
+    name = fields.Char('State', select=1, required=True)
+    code = fields.Char('Code', required=True)
     active = fields.Boolean('Active', select=2)
 
-#     _columns={
-#         'name': fields.char('State', size=64, select=1, required=True),
-#         'code': fields.char('Code', size=64, required=True),
-#         'active': fields.boolean('Active', select=2),
-#     }
 
 class many2manysym(fields.Many2many):
 
@@ -61,7 +56,7 @@ class product_template(models.Model):
     
     _inherit = "product.template"
 
-    name = fields.Char('Name', size=256, required=True, select=True)
+    name = fields.Char('Name', required=True, select=True)
 #     _columns = {
 #         'name': fields.char('Name', size=256, required=True, select=True),
 #     }
@@ -75,12 +70,8 @@ class product_lang(models.Model):
     """Book language"""
     _name = "product.lang"
 
-    code = fields.Char('Code', size=4, required=True, select=True)
-    name = fields.Char('Name', size=128, required=True, select=True, translate=True)
-#     _columns = {
-#         'code' : fields.char('Code', size=4, required=True, select=True),
-#         'name': fields.char('Name', size=128, required=True, select=True, translate=True),
-#     }
+    code = fields.Char('Code', required=True, select=True)
+    name = fields.Char('Name', required=True, select=True, translate=True)
     
     _sql_constraints = [
                         ('name_uniq', 'unique (name)', 'The name of the product must be unique !')
@@ -247,28 +238,28 @@ class product_product(models.Model):
         return super(product_product, self).create(vals)
 
 #     'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
-    isbn = fields.Char('Isbn code', size=64, unique=True, help ="It show the International Standard Book Number")
-    catalog_num = fields.Char('Catalog number', size=64, help ="It show the Identification number of books")
+    isbn = fields.Char('Isbn code', unique=True, help ="It show the International Standard Book Number")
+    catalog_num = fields.Char('Catalog number', help ="It show the Identification number of books")
 #     'author_om_ids': fields.one2many('author.book.rel', 'product_id', 'Authors'),
     lang = fields.Many2one('product.lang','Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
-    author = fields.Many2one('library.author','Author',size=30)
+    author = fields.Many2one('library.author','Author')
     code = fields.Char(compute="_product_code", method=True, string='Acronym',store=True)
-    catalog_num = fields.Char('Catalog number', size=64 , help="The reference number of the book")
+    catalog_num = fields.Char('Catalog number' , help="The reference number of the book")
     date_parution = fields.Date('Release date', help="Release(Issue) date of the book")
     creation_date = fields.Datetime('Creation date', readonly=True, help="Record creation date", default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Date('Return Date',readonly=True, help='Book Return date', default=lambda *a: str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"))
-    tome = fields.Char('Tome', size=8, help = "It will store the information of work in serveral volume")
-    nbpage = fields.Integer('Number of pages', size=8)
-    rack = fields.Many2one('library.rack', 'Rack', size=16, help="it will be show the position of book")
+    tome = fields.Char('Tome', help = "It will store the information of work in serveral volume")
+    nbpage = fields.Integer('Number of pages')
+    rack = fields.Many2one('library.rack', 'Rack', help="it will be show the position of book")
     availability = fields.Selection([('available','Available'),('notavailable','Not Available')], 'Book Availability', default='available')
     link_ids = many2manysym('product.product', 'book_book_rel', 'product_id1', 'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'Hardback'), ('paper', 'Paperback')], 'Reliure',help="It show the books binding type", default='paper')
     collection = fields.Many2one('library.collection', 'Collection',help="It show the collection in which book is resides")
-    pocket = fields.Char('Pocket', size=32)
-    num_pocket = fields.Char('Collection Num.', size=32,help="It show the collection number in which book is resides")
+    pocket = fields.Char('Pocket')
+    num_pocket = fields.Char('Collection Num.',help="It show the collection number in which book is resides")
     num_edition = fields.Integer('Num. edition', help="Edition number of book")
-    format = fields.Char('Format', size=128, help="The general physical appearance of a book")
+    format = fields.Char('Format', help="The general physical appearance of a book")
     price_cat = fields.Many2one('library.price.category', "Price category")
     day_to_return_book = fields.Many2one("library.book.returnday","Book return Days")
     attchment_ids = fields.One2many("book.attachment", "product_id", "Book Attachments")
@@ -323,29 +314,16 @@ class book_attachment(models.Model):
     
     _description = "Stores the attachments of the book"
     
-    name = fields.Char("Description", size=20, required=True)
+    name = fields.Char("Description", required=True)
     product_id = fields.Many2one("product.product", "Product")
     date = fields.Date("Attachment Date", required=True, default=lambda *a: time.strftime('%Y-%m-%d'))
     attachment = fields.Binary("Attachment")
     
-#     _columns = {
-#         "name" : fields.char("Description", size=20, required=True),
-#         "product_id" : fields.many2one("product.product", "Product"),    
-#         "date" : fields.date("Attachment Date", required=True),
-#         "attachment" : fields.binary("Attachment"),
-#     }
     
-#     _defaults = {
-#         'date': lambda *a: time.strftime('%Y-%m-%d'),
-#     }
-
 class library_author(models.Model):
     
     _inherit = 'library.author'
 
     book_ids =  fields.Many2many('product.product', 'author_book_rel', 'author_id', 'product_id', 'Books', select=1)
-#     _columns = {
-#         'book_ids': fields.many2many('product.product', 'author_book_rel', 'author_id', 'product_id', 'Books', select=1),
-#     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
