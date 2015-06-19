@@ -19,69 +19,70 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 import time
 
-class product_state(osv.Model):
+class product_state(models.Model):
     
     _name = "product.state"
     _description = "States of Books"
 
-    _columns={
-        'name': fields.char('State', size=64, select=1, required=True),
-        'code': fields.char('Code', size=64, required=True),
-        'active': fields.boolean('Active', select=2),
-    }
+    name = fields.Char('State', select=1, required=True)
+    code = fields.Char('Code', required=True)
+    active = fields.Boolean('Active', select=2)
 
-class many2manysym(fields.many2many):
 
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values={}):
-        if context is None:
-            context
+class many2manysym(fields.Many2many):
+
+    @api.multi
+    def get(self, offset=0):
+#         if context is None:
+#             context
         res = {}
-        if not ids:
+        if not self.ids:
             return res
-        ids_s = ','.join(map(str, ids))
-        for id in ids:
+        ids_s = ','.join(map(str, self.ids))
+        for id in self.ids:
             res[id] = []
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         for (self._id2, self._id1) in [(self._id2, self._id1), (self._id1, self._id2)]:
-            cr.execute('select '+self._id2+','+self._id1+' from '+self._rel+' where '+self._id1+' in ('+ids_s+')'+limit_str+' offset %s', (offset,))
-            for r in cr.fetchall():
+            self._cr.execute('select '+self._id2+','+self._id1+' from '+self._rel+' where '+self._id1+' in ('+ids_s+')'+limit_str+' offset %s', (offset,))
+            for r in self._cr.fetchall():
                 res[r[1]].append(r[0])
         return res
 
-class product_template(osv.Model):
+class product_template(models.Model):
     
     _inherit = "product.template"
 
-    _columns = {
-        'name': fields.char('Name', size=256, required=True, select=True),
-    }
+    name = fields.Char('Name', required=True, select=True)
+#     _columns = {
+#         'name': fields.char('Name', size=256, required=True, select=True),
+#     }
+@api.multi
+def _state_get(self):
+    self._cr.execute('select name, name from product_state order by name')
+    return self._cr.fetchall()
 
-def _state_get(self, cr, uid,context):
-    cr.execute('select name, name from product_state order by name')
-    return cr.fetchall()
-
-class product_lang(osv.Model):
+class product_lang(models.Model):
     
     """Book language"""
     _name = "product.lang"
 
-    _columns = {
-        'code' : fields.char('Code', size=4, required=True, select=True),
-        'name': fields.char('Name', size=128, required=True, select=True, translate=True),
-    }
+    code = fields.Char('Code', required=True, select=True)
+    name = fields.Char('Name', required=True, select=True, translate=True)
     
     _sql_constraints = [
                         ('name_uniq', 'unique (name)', 'The name of the product must be unique !')
         ]
 
-class product_product(osv.Model):
+class product_product(models.Model):
     """Book variant of product"""
     _inherit = "product.product"
 
-    def name_get(self, cr, user, ids, context=None):
+    @api.multi
+    def name_get(self):
         ''' This method Returns the preferred display value (text representation) for the records with the given ids. 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -91,25 +92,22 @@ class product_product(osv.Model):
         @return : tuples with the text representation of requested objects for to-many relationships
          '''
         
-        if context is None:
-            context = {}
+        if isinstance(self.ids, (int, long)):
+            ids = [self.ids]
             
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-            
-        if not len(ids):
+        if not len(self.ids):
             return []
-
+        
         def _name_get(d):
             name = d.get('name', '')
             ean = d.get('ean13', False)
             if ean:
                 name = '[%s] %s' % (ean or '', name)
             return (d['id'], name)
-
-        return map(_name_get, self.read(cr, user, ids, ['name', 'ean13'], context))
-
-    def _default_categ(self, cr, uid, context=None):
+        return map(_name_get, self.read(['name', 'ean13']))
+    
+    @api.multi
+    def _default_categ(self):
         ''' This method put default category of product 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -117,19 +115,20 @@ class product_product(osv.Model):
         @param context : context arguments, like lang, time zone
          '''
         
-        if context is None:
-            context = {}
-        if 'category_id' in context and context['category_id']:
-            return context['category_id']
-        md = self.pool.get('ir.model.data')
+        if self._context is None:
+            self._context = {}
+        if 'category_id' in self._context and self._context['category_id']:
+            return self._context['category_id']
+        md = self.env['ir.model.data']
         res = False
         try:
-            res = md.get_object_reference(cr, uid, 'library', 'product_category_1')[1]
+            res = md.get_object_reference('library', 'product_category_1')[1]
         except ValueError:
             res = False
         return res
     
-    def _tax_incl(self, cr, uid, ids, field_name, arg, context=None):
+    @api.multi
+    def _tax_incl(self):
         ''' This method include tax in product 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -142,14 +141,15 @@ class product_product(osv.Model):
          '''
         
         res = {}
-        for product in self.browse(cr, uid, ids):
+        for product in self:
             val = 0.0
-            for c in self.pool.get('account.tax').compute(cr, uid, product.taxes_id, product.list_price, 1, False):
+            for c in self.env['account.tax'].compute(product.taxes_id, product.list_price, 1, False):
                 val += round(c['amount'], 2)
             res[product.id] = round(val + product.list_price, 2)
         return res
 
-    def _get_partner_code_name(self, cr, uid, ids, product, parent_id, context=None):
+    @api.multi
+    def _get_partner_code_name(self, product, parent_id):
         ''' This method get the partner code name 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -166,7 +166,8 @@ class product_product(osv.Model):
         res = {'code': product.default_code, 'name': product.name}
         return res
 
-    def _product_code(self, cr, uid, ids, name, arg, context=None):
+    @api.multi
+    def _product_code(self):
         ''' This method get the product code 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -179,13 +180,14 @@ class product_product(osv.Model):
          '''
         
         res = {}
-        if context is None:
-            context = {}
-        for p in self.browse(cr, uid, ids, context=context):
-            res[p.id] = self._get_partner_code_name(cr, uid, [], p, context.get('parent_id', None), context=context)['code']
+#         if context is None:
+#             context = {}
+        for p in self:
+            res[p.id] = self._get_partner_code_name(p, self._context.get('parent_id', None))['code']
         return res
-
-    def copy(self, cr, uid, id, default=None, context={}):
+    
+    @api.model
+    def copy(self,default=None):
         ''' This method Duplicate record with given id updating it with default values
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -199,9 +201,10 @@ class product_product(osv.Model):
         if default is None:
             default = {}
         default.update({'author_ids': []})
-        return super(product_product, self).copy(cr, uid, id, default, context)
-
-    def create(self, cr, uid, vals, context= None):
+        return super(product_product, self).copy(default)
+    
+    @api.model
+    def create(self, vals):
         ''' This method is Create new student 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -220,9 +223,9 @@ class product_product(osv.Model):
         # add link from editor to supplier:
         if 'editor' in vals:
             editor_id = vals['editor']
-            supplier_model = self.pool.get('library.editor.supplier')
-            supplier_ids = [idn for idn in supplier_model.search(cr, uid, [('name', '=', editor_id)]) if idn > 0]
-            suppliers = supplier_model.browse(cr, uid, supplier_ids, context)
+            supplier_model = self.env['library.editor.supplier']
+            supplier_ids = [idn.id for idn in supplier_model.search([('name', '=', editor_id)]) if idn.id > 0]
+            suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
                 supplier = [
                     0, 0, {'pricelist_ids': [], 'name': obj.supplier_id.id, 'sequence': obj.sequence, 'qty': 0,
@@ -232,74 +235,95 @@ class product_product(osv.Model):
                     vals['seller_ids'] = [supplier]
                 else:
                     vals['seller_ids'].append(supplier)
-        return super(product_product, self).create(cr, uid, vals, context=context)
+        return super(product_product, self).create(vals)
 
-    _columns = {
-#        'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
-        'isbn': fields.char('Isbn code', size=64, unique=True, help ="It show the International Standard Book Number"),
-        'catalog_num': fields.char('Catalog number', size=64, help ="It show the Identification number of books"),
-#        'author_om_ids': fields.one2many('author.book.rel', 'product_id', 'Authors'),
-        'lang': fields.many2one('product.lang','Language'),
-        'editor': fields.many2one('res.partner', 'Editor', change_default=True),
-        'author': fields.many2one('library.author','Author',size=30),
-        'code': fields.function(_product_code, method=True, type='char', string='Acronym',store=True),
-        'catalog_num': fields.char('Catalog number', size=64 , help="The reference number of the book"),
-        'date_parution': fields.date('Release date', help="Release(Issue) date of the book"),
-        'creation_date': fields.datetime('Creation date', readonly=True, help="Record creation date"),
-        'date_retour': fields.date('Return Date',readonly=True, help='Book Return date'),
-        'tome': fields.char('Tome', size=8, help = "It will store the information of work in serveral volume"),
-        'nbpage': fields.integer('Number of pages', size=8),
-        'rack': fields.many2one('library.rack', 'Rack', size=16, help="it will be show the position of book"),
-        'availability': fields.selection([('available','Available'),('notavailable','Not Available')], 'Book Availability'),
-        'link_ids': many2manysym('product.product', 'book_book_rel', 'product_id1', 'product_id2', 'Related Books'),
-        'back': fields.selection([('hard', 'Hardback'), ('paper', 'Paperback')], 'Reliure',help="It show the books binding type"),
-        'collection': fields.many2one('library.collection', 'Collection',help="It show the collection in which book is resides"),
-        'pocket': fields.char('Pocket', size=32),
-        'num_pocket': fields.char('Collection Num.', size=32,help="It show the collection number in which book is resides"),
-        'num_edition': fields.integer('Num. edition', help="Edition number of book"),
-        'format': fields.char('Format', size=128, help="The general physical appearance of a book"),
-        'price_cat': fields.many2one('library.price.category', "Price category"),
-        'day_to_return_book': fields.many2one("library.book.returnday","Book return Days"),
-        "attchment_ids" : fields.one2many("book.attachment", "product_id", "Book Attachments"),
-    }
+#     'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
+    isbn = fields.Char('Isbn code', unique=True, help ="It show the International Standard Book Number")
+    catalog_num = fields.Char('Catalog number', help ="It show the Identification number of books")
+#     'author_om_ids': fields.one2many('author.book.rel', 'product_id', 'Authors'),
+    lang = fields.Many2one('product.lang','Language')
+    editor = fields.Many2one('res.partner', 'Editor', change_default=True)
+    author = fields.Many2one('library.author','Author')
+    code = fields.Char(compute="_product_code", method=True, string='Acronym',store=True)
+    catalog_num = fields.Char('Catalog number' , help="The reference number of the book")
+    date_parution = fields.Date('Release date', help="Release(Issue) date of the book")
+    creation_date = fields.Datetime('Creation date', readonly=True, help="Record creation date", default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
+    date_retour = fields.Date('Return Date',readonly=True, help='Book Return date', default=lambda *a: str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"))
+    tome = fields.Char('Tome', help = "It will store the information of work in serveral volume")
+    nbpage = fields.Integer('Number of pages')
+    rack = fields.Many2one('library.rack', 'Rack', help="it will be show the position of book")
+    availability = fields.Selection([('available','Available'),('notavailable','Not Available')], 'Book Availability', default='available')
+    link_ids = many2manysym('product.product', 'book_book_rel', 'product_id1', 'product_id2', 'Related Books')
+    back = fields.Selection([('hard', 'Hardback'), ('paper', 'Paperback')], 'Reliure',help="It show the books binding type", default='paper')
+    collection = fields.Many2one('library.collection', 'Collection',help="It show the collection in which book is resides")
+    pocket = fields.Char('Pocket')
+    num_pocket = fields.Char('Collection Num.',help="It show the collection number in which book is resides")
+    num_edition = fields.Integer('Num. edition', help="Edition number of book")
+    format = fields.Char('Format', help="The general physical appearance of a book")
+    price_cat = fields.Many2one('library.price.category', "Price category")
+    day_to_return_book = fields.Many2one("library.book.returnday","Book return Days")
+    attchment_ids = fields.One2many("book.attachment", "product_id", "Book Attachments")
 
-    _defaults = {
-        'creation_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'back': lambda *a: 'paper',
-        #'procure_method': lambda *a: 'make_to_order',
-        'date_retour': lambda *a: str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"),
-        'availability': 'available',
-#         'categ_id': lambda self,cr,uid:self.pool.get('product.category').browse(cr,uid).categ_id.name[1],
-    }
+
+#     _columns = {
+# #        'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
+#         'isbn': fields.char('Isbn code', size=64, unique=True, help ="It show the International Standard Book Number"),
+#         'catalog_num': fields.char('Catalog number', size=64, help ="It show the Identification number of books"),
+# #        'author_om_ids': fields.one2many('author.book.rel', 'product_id', 'Authors'),
+#         'lang': fields.many2one('product.lang','Language'),
+#         'editor': fields.many2one('res.partner', 'Editor', change_default=True),
+#         'author': fields.many2one('library.author','Author',size=30),
+#         'code': fields.function(_product_code, method=True, type='char', string='Acronym',store=True),
+#         'catalog_num': fields.char('Catalog number', size=64 , help="The reference number of the book"),
+#         'date_parution': fields.date('Release date', help="Release(Issue) date of the book"),
+#         'creation_date': fields.datetime('Creation date', readonly=True, help="Record creation date"),
+#         'date_retour': fields.date('Return Date',readonly=True, help='Book Return date'),
+#         'tome': fields.char('Tome', size=8, help = "It will store the information of work in serveral volume"),
+#         'nbpage': fields.integer('Number of pages', size=8),
+#         'rack': fields.many2one('library.rack', 'Rack', size=16, help="it will be show the position of book"),
+#         'availability': fields.selection([('available','Available'),('notavailable','Not Available')], 'Book Availability'),
+#         'link_ids': many2manysym('product.product', 'book_book_rel', 'product_id1', 'product_id2', 'Related Books'),
+#         'back': fields.selection([('hard', 'Hardback'), ('paper', 'Paperback')], 'Reliure',help="It show the books binding type"),
+#         'collection': fields.many2one('library.collection', 'Collection',help="It show the collection in which book is resides"),
+#         'pocket': fields.char('Pocket', size=32),
+#         'num_pocket': fields.char('Collection Num.', size=32,help="It show the collection number in which book is resides"),
+#         'num_edition': fields.integer('Num. edition', help="Edition number of book"),
+#         'format': fields.char('Format', size=128, help="The general physical appearance of a book"),
+#         'price_cat': fields.many2one('library.price.category', "Price category"),
+#         'day_to_return_book': fields.many2one("library.book.returnday","Book return Days"),
+#         "attchment_ids" : fields.one2many("book.attachment", "product_id", "Book Attachments"),
+#     }
+
+#     _defaults = {
+#         'creation_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+#         'back': lambda *a: 'paper',
+#         #'procure_method': lambda *a: 'make_to_order',
+#         'date_retour': lambda *a: str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"),
+#         'availability': 'available',
+# #         'categ_id': lambda self,cr,uid:self.pool.get('product.category').browse(cr,uid).categ_id.name[1],
+#     }
 
     _sql_constraints = [
         ('unique_ean13', 'unique(ean13)', 'The ean13 field must be unique across all the products'),
         ('code_uniq', 'unique (code)', 'The code of the product must be unique !')
     ]
 
-class book_attachment(osv.Model):
+class book_attachment(models.Model):
     
     _name = "book.attachment"
     
     _description = "Stores the attachments of the book"
     
-    _columns = {
-        "name" : fields.char("Description", size=20, required=True),
-        "product_id" : fields.many2one("product.product", "Product"),    
-        "date" : fields.date("Attachment Date", required=True),
-        "attachment" : fields.binary("Attachment"),
-    }
+    name = fields.Char("Description", required=True)
+    product_id = fields.Many2one("product.product", "Product")
+    date = fields.Date("Attachment Date", required=True, default=lambda *a: time.strftime('%Y-%m-%d'))
+    attachment = fields.Binary("Attachment")
     
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-    }
-
-class library_author(osv.Model):
+    
+class library_author(models.Model):
     
     _inherit = 'library.author'
 
-    _columns = {
-        'book_ids': fields.many2many('product.product', 'author_book_rel', 'author_id', 'product_id', 'Books', select=1),
-    }
+    book_ids =  fields.Many2many('product.product', 'author_book_rel', 'author_id', 'product_id', 'Books', select=1)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

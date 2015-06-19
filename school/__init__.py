@@ -23,8 +23,7 @@
 #----------------------------------------------------------
 # A Module to School Management System
 #----------------------------------------------------------
-from . import school
-from . import wizard
-from . import report
+import school
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -162,27 +162,21 @@
 			<field name="name">daily.attendance.form</field>
 			<field name="model">daily.attendance</field>
 			<field name="arch" type="xml">
-				<form string="Daily Attendance Information" version="7.0">
+				<form string="Daily Attendance Information">
 					<header>
-                                <button name="attendance_validate"
-                                    string="Validate" states="draft"/>
-                                <button name="attendance_draft"
-                                    string="Reset To Draft" states="validate"/>
-                                <field name="state" widget="statusbar" nolabel="1"/>
+                        <button name="attendance_validate" string="Validate" states="draft" type="object"/>
+                        <button name="attendance_draft" string="Reset To Draft" states="validate" type="object"/>
+                        <field name="state" widget="statusbar"/>
 					</header>
 				<sheet>
 				<separator string="Daily Attendance Sheet"/>	
-                        <group>
+                	<group colspan="4" col="4">
                         <field name="user_id" placeholder="Select Or Create Faculty"/>
-                        </group>
-				            <group col="4">
-	                            <group col="2">
-		                            <field name="standard_id"
+						<field name="standard_id"
 		                            on_change="onchange_standard_id(standard_id)"
 		                            widget="selection" />
-									<field name="date"/>
-	                            </group>
-                            </group>
+						<field name="date"/>
+					</group>
 					<notebook colspan="4">
 						<page string="Students">
 							<field name="student_ids" nolabel="1"

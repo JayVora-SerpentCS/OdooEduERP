@@ -19,49 +19,48 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp import workflow
 
-class purchase_order_line(osv.Model):
+class purchase_order_line(models.Model):
     
     _inherit = 'purchase.order.line'
 
-    _columns = {
-        'origin': fields.char('Origin', size=1024),
-        'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
-        'customer_ref': fields.char('Customer reference', size=64),
-        'origin_ref': fields.char('Origin', size=64),
-    }
+    origin = fields.Char('Origin')
+    production_lot_id = fields.Many2one('stock.production.lot', 'Production Lot')
+    customer_ref = fields.Char('Customer reference')
+    origin_ref = fields.Char('Origin')
 
-class purchase_order(osv.Model):
+class purchase_order(models.Model):
     
     _inherit = 'purchase.order'
     _order = "create_date desc"
 
-    def action_picking_create(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        picking_obj = self.pool.get('stock.picking')
-        move_obj = self.pool.get('stock.move')
+    @api.multi
+    def action_picking_create(self):
+        picking_obj = self.env['stock.picking']
+        move_obj = self.env['stock.move']
         picking_id = False
-        for order in self.browse(cr, uid, ids, context=context):
+        for order in self:
             loc_id = order.partner_id.property_stock_supplier.id,
             istate = 'none'
             if order.invoice_method == 'picking':
                 istate = '2binvoiced'
-            picking_id = picking_obj.create(cr, uid, {
+            picking_id = picking_obj.create({
                 'origin': 'PO:%d:%s' % (order.id, order.name),
                 'type': 'in',
                 'address_id': order.dest_address_id.id or order.partner_id.id,
                 'invoice_state': istate,
-                'purchase_id': order.id,
+                'purchase_id': order.id or False,
+                'picking_type_id': order.picking_type_id.id or False 
             })
             for order_line in order.order_line:
                 if not order_line.product_id:
                     continue
                 if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     dest = order.location_id.id
-                    move_obj.create(cr, uid, {
+                    move_obj.create({
                         'name': 'PO:' + order_line.name[:50],
                         'product_id': order_line.product_id.id,
                         'origin_ref': order.name,
@@ -70,7 +69,7 @@ class purchase_order(osv.Model):
                         'date_planned': order_line.date_planned,
                         'location_id': loc_id,
                         'location_dest_id': dest,
-                        'picking_id': picking_id,
+                        'picking_id': picking_id.id,
                         'move_dest_id': order.location_id and order.location_id.id,
                         'state': 'assigned',
                         'prodlot_id': order_line.production_lot_id.id,
@@ -78,18 +77,17 @@ class purchase_order(osv.Model):
                         'purchase_line_id': order_line.id,
                     })
             purchase_order_dict = {
-                'picking_ids': [(4, picking_id)]
+                'picking_ids': [(4, picking_id.id)]
             }
-            self.write(cr, uid, [order.id], purchase_order_dict)
-            workflow.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-        return picking_id
+            order.write(purchase_order_dict)
+            workflow.trg_validate(self._uid, 'stock.picking', picking_id.id, 'button_confirm', self._cr)
+        return picking_id.id
 
-    def wkf_confirm_order(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        production_obj = self.pool.get('stock.production.lot')
-        order_line_obj = self.pool.get('purchase.order.line')
-        for order in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def wkf_confirm_order(self):
+        production_obj = self.env['stock.production.lot']
+#         order_line_obj = self.env['purchase.order.line']
+        for order in self:
             l_id = 0
             for line in order.order_line:
                 if line.production_lot_id:
@@ -99,14 +97,15 @@ class purchase_order(osv.Model):
                     'product_id': line.product_id.id,
                     'name': line.order_id and (str(line.order_id.name)+'/Line'+str(l_id)) or False,
                 }
-                production_lot_id = production_obj.create(cr, uid, production_lot_dict )
-                order_line_obj.write(cr, uid, [line.id], {'production_lot_id': production_lot_id})
-
-        super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context)
+                production_lot_id = production_obj.create(production_lot_dict)
+                line.write({'production_lot_id': production_lot_id.id})
+        super(purchase_order, self).wkf_confirm_order()
         return True
 
-    _defaults = {
-        'invoice_method': lambda *a: 'picking',
-    }
+    @api.model
+    def default_get(self,fields_list):
+        res = super(purchase_order,self).default_get(fields_list)
+        res.update({'invoice_method':'picking'})
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

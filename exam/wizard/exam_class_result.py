@@ -19,24 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
-from openerp.tools.translate import _
+from openerp import models, fields, api, _
 
-class result_print(osv.TransientModel):
+class result_print(models.TransientModel):
 
     _name = 'result.print'
     _description = 'students result'
-    _columns = {
-            'standard_id': fields.many2one("school.standard", "Standard", required=True),
-            'exam_id': fields.many2one("exam.exam","Exam"),
-            'year_id':fields.many2one('academic.year', 'Academic Year', required=True),
-    }
+    
+    standard_id = fields.Many2one("school.standard", "Standard", required=True)
+    exam_id = fields.Many2one("exam.exam","Exam")
+    year_id = fields.Many2one('academic.year', 'Academic Year', required=True)
 
-    def get_result(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+    @api.multi
+    def get_result(self):
         domain = []
-        for result_line in self.browse(cr, uid, ids, context = context):
+        for result_line in self:
             domain = [('standard_id','=',result_line.standard_id.id),('s_exam_ids','=',result_line.exam_id.id)]
             return {
             'name': _('Result Info'),

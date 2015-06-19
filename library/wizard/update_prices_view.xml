@@ -6,7 +6,7 @@
             <field name="name">form.update.prices</field>
             <field name="model">update.prices</field>
             <field name="arch" type="xml">
-                <form string="Update Prices" version="7.0">
+                <form string="Update Prices">
                     <p>
                         Update prices for this category?
                     </p>

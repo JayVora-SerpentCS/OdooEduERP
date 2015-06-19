@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "Hostel",
-    "version" : "2.0",
+    "version" : "3.0",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website" : "http://www.serpentcs.com",
@@ -39,6 +39,8 @@
         "security/ir.model.access.csv",
         "hostel_view.xml",
         "hostel_sequence.xml",
+        "report_view.xml",
+        "views/hostel_fee_receipt.xml",
     ],
     "installable" : True,
     "auto_install": False,

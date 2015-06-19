@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "Transport Management",
-    "version" : "2.0",
+    "version" : "3.0",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com",
     "category": "School Management",
@@ -44,10 +44,11 @@
               ],
     "data" : [
         "transport_view.xml",
-        "report/participant_report.xml",
-        "report/vehicle_report.xml",
+        "report_view.xml",
         "wizard/transfer_vehicle.xml",
         "security/ir.model.access.csv",
+        "views/vehicle.xml",
+        "views/participants.xml",
     ],
     
     'test': [

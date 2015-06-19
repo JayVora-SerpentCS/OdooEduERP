@@ -7,7 +7,7 @@
 			<field name="name">library.author.form</field>
 			<field name="model">library.author</field>
 			<field name="arch" type="xml">
-				<form string="Authors" version="7.0">
+				<form string="Authors">
 					<sheet>
 						<notebook>
 							<page string="General Information">
@@ -68,7 +68,7 @@
 			<field name="name">Library Rack</field>
 			<field name="model">library.rack</field>
 			<field name="arch" type="xml">
-				<form string="Authors" version="7.0">
+				<form string="Authors">
 					<sheet>
 						<group>
 							<field name="name"/>
@@ -147,7 +147,7 @@
 			<field name="model">product.product</field>
 			<field name="priority" eval="1" />
 			<field name="arch" type="xml">
-				<form string="Books" version="7.0">
+				<form string="Books">
 					<sheet>
 						<separator string="Book Information"/>
 						<group col="4" colspan="2">
@@ -390,7 +390,7 @@
 			<field name="name">library.price.category</field>
 			<field name="model">library.price.category</field>
 			<field name="arch" type="xml">
-				<form string="Price Category" version="7.0">
+				<form string="Price Category">
 					<sheet>
 						<group>
 							<field name="name" select="1" placeholder="Category Name"/>
@@ -449,7 +449,7 @@
 			<field name="name">library.card.form</field>
 			<field name="model">library.card</field>
 			<field name="arch" type="xml">
-				<form string="Card Details" version="7.0">
+				<form string="Card Details">
 					<sheet>
 						<separator string="Card Details" colspan="4" col="4"/>
 						<group col="2" colspan="4">
@@ -522,7 +522,7 @@
 			<field name="name">library.book.issue.form</field>
 			<field name="model">library.book.issue</field>
 			<field name="arch" type="xml">
-				<form string="Student Information" version="7.0">
+				<form string="Student Information">
 					<header>
 						<button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl"
 							states="issue,reissue"
@@ -745,7 +745,7 @@
 			<field name="name">library.book.req.form</field>
 			<field name="model">library.book.request</field>
 			<field name="arch" type="xml">
-				<form string="Book Request Form" version="7.0">
+				<form string="Book Request Form">
 					<sheet>
 						<group col="4" colspan="4">
 							<separator string="Book Request" colspan="4" col="4"/>
@@ -820,7 +820,7 @@
 			<field name="name">product.lang.form</field>
 			<field name="model">product.lang</field>
 			<field name="arch" type="xml">
-				<form string="Product Languages" version="7.0">
+				<form string="Product Languages">
 					<sheet>
 						<separator string="Languages"/>
 						<group col="4" colspan="2">
@@ -877,7 +877,7 @@
 			<field name="name">library.book.returnday.form</field>
 			<field name="model">library.book.returnday</field>
 			<field name="arch" type="xml">
-				<form string="Book Return day" version="7.0">
+				<form string="Book Return day">
 					<sheet>
 						<separator string="Book Return Days"/>
 						<group colspan="2" col="4">
@@ -909,7 +909,7 @@
 			<field name="model">res.partner</field>
 			<field eval="1" name="priority" />
 			<field name="arch" type="xml">
-				<form string="Partners" version="7.0">
+				<form string="Partners">
 					<sheet>
 						<field name="image" widget='image' class="oe_left oe_avatar"
 							options='{"preview_image": "image_medium", "size": [90, 90]}'/>
@@ -1039,7 +1039,7 @@
 											</t>
 										</templates>
 									</kanban>
-									<form string="Contact" version="7.0">
+									<form string="Contact">
 										<field name="image" widget='image' class="oe_avatar oe_left"
 											options='{"preview_image": "image_medium"}'/>
 										<div class="oe_title">
@@ -1067,7 +1067,7 @@
 			<field name="name">library.editor.supplier</field>
 			<field name="model">library.editor.supplier</field>
 			<field name="arch" type="xml">
-				<form string="Editor and suppliers relations" version="7.0">
+				<form string="Editor and suppliers relations">
 					<sheet>
 						<group>
 							<field name="name" required="1"

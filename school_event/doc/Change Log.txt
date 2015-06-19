@@ -2,6 +2,9 @@
  Version Change Log
  Module: school_event
 ===============================================================================
+Version 3.0 on 2014-03-31 by Pankaj Goyani
+    * Migrated Module with use api decorator.
+
 Version 2.0 on 2014-09-09 by Murtuza Saleh
     * Migrated Module.
 

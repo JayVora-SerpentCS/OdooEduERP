@@ -21,6 +21,7 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
+from openerp.osv import osv
 
 class add_exam_result(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
@@ -31,20 +32,26 @@ class add_exam_result(report_sxw.rml_parse):
         })
 
     def _get_result_detail(self, subject_ids, result):
+        sub_list = []
+        for sub in subject_ids:
+            sub_list.append(sub.id)
         sub_obj = self.pool.get('exam.subject')
-        subject_ids = sub_obj.search(self.cr, self.uid, [('exam_id','=',result.id),('subject_id','in',subject_ids)])
+        subject_exam_ids = sub_obj.search(self.cr, self.uid, [('id','in',sub_list),
+                                                              ('exam_id','=',result.id)])
         result_data = []
-        for subject in sub_obj.browse(self.cr, self.uid, subject_ids):
-                
+        for subject in sub_obj.browse(self.cr, self.uid, subject_exam_ids):
                 result_data.append({
                     'subject':subject.subject_id and subject.subject_id.name or '',
                     'max_mark':subject.maximum_marks or '',
                     'mini_marks':subject.minimum_marks or '',
                     'obt_marks':subject.obtain_marks or '',
                  })
-                
         return result_data
 
-report_sxw.report_sxw('report.add_exam_result', 'exam.result', 'addons/exam/report/exam_result_report.rml', parser=add_exam_result, header="internal")
+class report_add_exam_result(osv.AbstractModel):
+    _name = 'report.exam.exam_result_report'
+    _inherit = 'report.abstract_report'
+    _template = 'exam.exam_result_report'
+    _wrapped_report_class = add_exam_result    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

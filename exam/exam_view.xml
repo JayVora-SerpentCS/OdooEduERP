@@ -17,7 +17,10 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_stu_result_form)d" string="Result" type="action"/>
+                            <button name="%(action_stu_result_form)d" class="oe_inline oe_stat_button" type="action">
+                            <img src="/exam/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
+                            <lable style="">Result</lable>
+                            </button>
                     </xpath>
                 </data>
             </field>
@@ -67,7 +70,7 @@
 			<field name="name">exam.exam.form</field>
 			<field name="model">exam.exam</field>
 			<field name="arch" type="xml">
-				<form string="Exam Information" version="7.0">
+				<form string="Exam Information">
 				    <header>
                         <button name="set_to_draft" string="Set to Draft" type="object" states="cancelled" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_running" string="Start" type="object" states="draft" groups="school.group_school_administration,school.group_school_teacher"/>
@@ -88,6 +91,9 @@
 						<notebook colspan="4" >
 							<page string="Exam Schedule">
 								<field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+							</page>
+							<page string="Standard">
+								<field name="standard_id" nolabel="1" colspan="4"/>
 							</page>
 						</notebook>
 					</group>
@@ -176,7 +182,7 @@
 			<field name="name">additional.exam.form</field>
 			<field name="model">additional.exam</field>
 			<field name="arch" type="xml">
-				<form string="Additional Exam Information" version="7.0">
+				<form string="Additional Exam Information">
 				    <sheet>
 						<group col="4" string="Additional Exam Information" colspan="6">
 							<field name="addtional_exam_code" />
@@ -252,7 +258,7 @@
             <field name="name">exam.results.form</field>
             <field name="model">exam.result</field>
             <field name="arch" type="xml">
-                <form string="Results" version="7.0">
+                <form string="Results">
                     <header>
                         <button name="result_confirm" string="Confirm" states="draft" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_result_confirm" string="Compute Re-aceess" states="re-access" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
@@ -293,13 +299,13 @@
                                 </group>
                             </form> 
                         </field>
-                        <group col="8" colspan="8">
-                            <field name="total" colspan="2" attrs="{'invisible':[('state','!=','confirm')]}"/>
-                            <field name="re_total" colspan="2" attrs="{'invisible':[('state','=','confirm')]}"/>
-                            <field name="grade" colspan="2"/>
-                            <field name="percentage" colspan="2"/>
-                            <field name="result" colspan="2"/>
-                        </group>
+                        <group col="4" colspan="4">
+                            <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/> 
+                            <field name="grade"/>
+                            <field name="percentage"/>
+                            <field name="result"/>
+                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/><field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                        </group> 
                     </sheet>
                 </form>
             </field>
@@ -436,7 +442,7 @@
             <field name="name">exam.batch.result.form</field>
             <field name="model">exam.batchwise.result</field>
             <field name="arch" type="xml">
-                <form string="Grade wise Results" version="7.0">
+                <form string="Grade wise Results">
                     <sheet>
                         <separator string="Batchwise Avg Grade"/>
                         <group col="4"  colspan="4">
@@ -482,7 +488,7 @@
 			<field name="name">additional.exam.result.form</field>
 			<field name="model">additional.exam.result</field>
 			<field name="arch" type="xml">
-				<form string="Results" version="7.0">
+				<form string="Results">
 				    <sheet>
 						<group col="4" string="Result Information" colspan="4">
 							<field name="a_exam_id"/>

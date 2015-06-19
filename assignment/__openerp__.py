@@ -22,7 +22,7 @@
 
 {
     "name" : "Assignment Management",
-    "version" : "2.0",
+    "version" : "3.0",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com",
     "category": "School Management",
@@ -33,9 +33,9 @@
             "homework_view.xml",
             "security/ir.model.access.csv",
         ],
-    'demo': [
-            "demo/assignment_demo.xml"
-             ],
+#     'demo': [
+#             "demo/assignment_demo.xml"
+#              ],
     "test" : ['test/assignment.yml'],
 
     "installable": True,

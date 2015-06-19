@@ -19,18 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
 
-class update_prices(osv.TransientModel):
+class update_prices(models.TransientModel):
     
     _name="update.prices"
     
-    def action_update_prices(self, cr, uid, ids, context=None):
-        product_obj = self.pool.get('product.product')
-        for cat in self.pool.get('library.price.category').browse(cr,uid,ids,context=context):
-            prod_ids = [x.id for x in cat.product_ids]
+    @api.multi
+    def action_update_prices(self):
+#         product_obj = self.env['product.product']
+        lib_price_categ_obj = self.env['library.price.category']
+        for cat in lib_price_categ_obj.browse(self._context.get('active_ids',False)):
+            prod_ids = [x for x in cat.product_ids]
             if prod_ids:
-                product_obj.write(cr, uid, prod_ids,{'list_price':cat.price})
+                for prod_line in prod_ids:
+                    prod_line.write({'list_price':cat.price})
         return {}
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

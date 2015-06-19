@@ -19,25 +19,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
+from mx import DateTime
 from openerp import workflow
 
-class sale_order_line(osv.Model):
+class sale_order_line(models.Model):
     
     _inherit = 'sale.order.line'
 
-    _columns = {
-        'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
-        'customer_ref': fields.char(string='Customer reference', size=64),
-    }
+    production_lot_id = fields.Many2one('stock.production.lot', 'Production Lot')
+    customer_ref = fields.Char(string='Customer reference')
 
-    _defaults = {
-       # 'type': lambda *a: 'make_to_order'
-    }
 
-    def button_confirm(self, cr, uid, ids, context=None):
+    @api.multi
+    def button_confirm(self):
         ''' This method confirm order.
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -48,8 +44,8 @@ class sale_order_line(osv.Model):
         '''
         
         l_id = 0
-        production_obj = self.pool.get('stock.production.lot')
-        for line in self.browse(cr, uid, ids, context=context):
+        production_obj = self.env['stock.production.lot']
+        for line in self:
             if line.production_lot_id:
                 continue
             l_id += 1
@@ -57,12 +53,13 @@ class sale_order_line(osv.Model):
                 'name': line.order_id and (str(line.order_id.name)+('/%02d'%(l_id,))) or False,
                 'product_id': line.product_id and line.product_id.id or False
             }
-            production_lot_id = production_obj.create(cr, uid, production_lot_dico)
-            self.write(cr, uid, [line.id], {'production_lot_id': production_lot_id}, context=context)
-        super(sale_order_line, self).button_confirm(cr, uid, ids, context)
+            production_lot_id = production_obj.create(production_lot_dico)
+            line.write({'production_lot_id': production_lot_id.id})
+        super(sale_order_line, self).button_confirm()
         return True
-
-    def copy(self, cr, uid, id, default=None, context=None):
+    
+    @api.model
+    def copy(self,default=None):
         ''' This method Duplicate record with given id updating it with default values
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -72,27 +69,30 @@ class sale_order_line(osv.Model):
         @param context : standard Dictionary
         @return : id of the newly created record 
         '''
-        
         if default is None:
             default = {}
         default.update({
             'production_lot_id': False,
             'customer_ref': ''
         })
-        return super(sale_order_line, self).copy(cr, uid, id, default, context)
+        return super(sale_order_line, self).copy(default)
 
-class sale_order(osv.Model):
+class sale_order(models.Model):
 
     _inherit = "sale.order"
     _order = "create_date desc"
 
-    _defaults = {
-      #  'invoice_quantity': lambda *a: 'procurement',
-        'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'picking',
-    }
-
-    def action_ship_create(self, cr, uid, ids, context=None):
+    @api.model
+    def default_get(self,fields_list):
+        res = super(sale_order,self).default_get(fields_list)
+        res.update({
+                    'picking_policy':'direct',
+                    'order_policy': 'picking'
+                })
+        return res
+    
+    @api.multi
+    def action_ship_create(self):
         ''' This method is Create shipping record 
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -102,25 +102,25 @@ class sale_order(osv.Model):
         @return :True
         '''
         
-        if context is None:
-            context = {}
-        picking_obj = self.pool.get('stock.picking')
-        move_obj = self.pool.get('stock.move')
-        procurment_obj = self.pool.get('procurement.order')
-        order_line_obj = self.pool.get('sale.order.line')
+#         if context is None:
+#             context = {}
+        picking_obj = self.env['stock.picking']
+        move_obj = self.env['stock.move']
+        procurment_obj = self.env['procurement.order']
+#         order_line_obj = self.env['sale.order.line']
         picking_id = False
-        for order in self.browse(cr, uid, ids, context={}):
+        for order in self:
             output_id = order.warehouse_id.wh_output_stock_loc_id.id
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = (datetime.now() + relativedelta(days=line.delay or 0.0)).strftime('%Y-%m-%d')
+                date_planned = (DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
-                        picking_id = picking_obj.create(cr, uid, {
+                        picking_id = picking_obj.create({
                             'origin': order.name,
                             'type': 'out',
                             'state': 'draft',
@@ -130,10 +130,11 @@ class sale_order(osv.Model):
                             'note': order.note,
                             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
                             'carrier_id': order.carrier_id.id,
+                            'picking_type_id': order.warehouse_id and order.warehouse_id.out_type_id and order.warehouse_id.out_type_id.id or False 
                         })
-                    move_id = move_obj.create(cr, uid, {
+                    move_id = move_obj.create({
                         'name': 'SO:' + order.name or '',
-                        'picking_id': picking_id,
+                        'picking_id': picking_id.id,
                         'origin_ref':order.name,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
@@ -152,7 +153,7 @@ class sale_order(osv.Model):
                         'prodlot_id': line.production_lot_id.id,
                         'customer_ref': line.customer_ref,
                     })
-                    proc_id = procurment_obj.create(cr, uid, {
+                    proc_id = procurment_obj.create({
                         'name': order.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -165,10 +166,10 @@ class sale_order(osv.Model):
                         'production_lot_id': line.production_lot_id.id,
                         'customer_ref': line.customer_ref,
                     })
-                    workflow.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                    order_line_obj.write(cr, uid, [line.id], {'procurement_id': proc_id})
+                    workflow.trg_validate(self._uid, 'procurement.order', proc_id.id, 'button_confirm', self._cr)
+                    line.write({'procurement_id': proc_id.id})
                 elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = procurment_obj.create(cr, uid, {
+                    proc_id = procurment_obj.create({
                         'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -178,8 +179,8 @@ class sale_order(osv.Model):
                         'location_id': order.warehouse_id.lot_stock_id.id,
                         'procure_method': line.type,
                     })
-                    workflow.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                    order_line_obj.write(cr, uid, [line.id], {'procurement_id': proc_id})
+                    workflow.trg_validate(self._uid, 'procurement.order', proc_id.id, 'button_confirm', self._cr)
+                    line.write({'procurement_id': proc_id.id})
                 else:
                     #
                     # No procurement because no product in the sale.order.line.
@@ -188,14 +189,14 @@ class sale_order(osv.Model):
 
             val = {}
             if picking_id:
-                workflow.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+                workflow.trg_validate(self._uid, 'stock.picking', picking_id.id, 'button_confirm', self._cr)
                 #val = {'picking_ids':[(6,0,[picking_id])]}
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
                 if (order.order_policy == 'manual') and order.invoice_ids:
                     val['state'] = 'manual'
-            self.write(cr, uid, [order.id], val)
+            order.write(val)
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

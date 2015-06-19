@@ -19,26 +19,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv,fields
+from openerp import models, fields, api, _
 
-class subject_result_wiz(osv.TransientModel):
+class subject_result_wiz(models.TransientModel):
     
     _name= "subject.result.wiz"
     _description= "Subject Wise Result"
     
-    _columns={
-                'result_ids': fields.many2many("exam.subject",'subject_result_wiz_rel','result_id',"exam_id","Exam Subjects",select=1),
-              }
+    result_ids = fields.Many2many("exam.subject",'subject_result_wiz_rel','result_id',"exam_id","Exam Subjects",select=1)
     
+    @api.v7
     def result_report(self, cr, uid, ids, context):
-            data = self.read(cr, uid, ids)[0]
-            
-            datas = {
-                     'ids': context.get('active_ids',[]),
-                     'form': data,
-                     
-                     'model':'exam.result',
-            }
-            return {'type': 'ir.actions.report.xml', 'report_name': 'add_exam_result', 'datas':datas }
+        data = self.read(cr, uid, ids)[0]
+        
+        datas = {
+                 'ids': context.get('active_ids',[]),
+                 'form': data,
+                 'model':'exam.result',
+        }
+        return self.pool['report'].get_action(cr, uid, [], 'exam.exam_result_report', data=data, context=context)
     
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

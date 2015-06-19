@@ -2,6 +2,9 @@
  Version Change Log
  Module: school_hostel
 ===============================================================================
+Version 3.0 on 2015-04-02 by Hasmukh Bhalodiya
+    * Migrated Module into 8.0 with use api.
+    
 Version 2.0 on 2014-09-09 by Murtuza Saleh
     * Migrated Module.
 

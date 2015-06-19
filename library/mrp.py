@@ -29,7 +29,7 @@ class procurement_order(osv.Model):
     _inherit = "procurement.order"
     _columns = {
         'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
-        'customer_ref': fields.char('Customer reference', size=64),
+        'customer_ref': fields.char('Customer reference'),
     }
 
     def make_po(self, cr, uid, ids, context=None):

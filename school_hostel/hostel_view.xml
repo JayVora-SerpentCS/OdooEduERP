@@ -7,7 +7,7 @@
             <field name="name">view.hostel.type.form</field>
             <field name="model">hostel.type</field>
             <field name="arch" type="xml">
-                <form string="Hostel Type" version="7.0">
+                <form string="Hostel Type">
                     <sheet style="width: 10%%,height:10%%">
                         <separator string="Hostel"/>
 	                    <group col="6">
@@ -42,7 +42,7 @@
 	                           <field name="microwave"/>
 	                           </group>
                                <field name="student_ids" colspan="4" nolabel="1">
-                                   <form version="7.0">
+                                   <form string="Hostel Student">
                                         <header>
                                             <button name="confirm_state" string="Confirm" type="object"/>
                                             <button name="reservation_state" string="Reservation" type="object"/>
@@ -82,7 +82,7 @@
             <field name="name">view.hostel.type.tree</field>
             <field name="model">hostel.type</field>
             <field name="arch" type="xml">
-                <tree string="Hostel Type" version="7.0">
+                <tree string="Hostel Type">
                     <field name="name"/>
                     <field name="type"/>
                 </tree>
@@ -102,7 +102,7 @@
             <field name="name">view.hostel.room.form</field>
             <field name="model">hostel.room</field>
             <field name="arch" type="xml">
-                <form string="Hostel Room" version="7.0">
+                <form string="Hostel Room">
                     <sheet style="width: 10%%,height:10%%">
                         <separator string="Hostel Room"/>
 	                    <group col="4">
@@ -128,7 +128,7 @@
             <field name="name">view.hostel.room.tree</field>
             <field name="model">hostel.room</field>
             <field name="arch" type="xml">
-                <tree string="Hostel Room" version="7.0">
+                <tree string="Hostel Room" >
                     <field name="name" />
                     <field name="floor_no" />
                     <field name="room_no" />
@@ -150,27 +150,25 @@
             <field name="name">view.hostel.student.form</field>
             <field name="model">hostel.student</field>
             <field name="arch" type="xml">
-                <form string="Hostel Student" version="7.0">
+                <form string="Hostel Student" >
                     <header>
                         <button name="confirm_state" string="Confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <button name="reservation_state" string="Reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <field name="status" widget="statusbar" nolabel="1" />
                     </header>
-                    <sheet style="width: 10%%,height:10%%">
+                    <sheet>
                         <separator string="Hostel student"/>
-                        <group col="4">
+                        <group col="4" colspan="4">
                             <field name="student_id" />
-                            <field name="hostel_id" />
+                            <field name="hostel_id" /> 
                             <field name="admission_date" />
                             <field name="discharge_date" />
-                        </group>
-                        <group col="4">
                             <field name="room_rent" />
                             <field name="bed_type"  widget="selection"/>
                             <field name="paid_amount" />
                             <field name="remaining_amount" />
-                        </group>
+                       </group>
                     </sheet>
                 </form>
             </field>
@@ -179,7 +177,7 @@
             <field name="name">view.hostel.room.student</field>
             <field name="model">hostel.student</field>
             <field name="arch" type="xml">
-                <tree string="Hostel student" version="7.0">
+                <tree string="Hostel student" >
                     <field name="hostel_id" />
                     <field name="student_id" />
                     <field name="admission_date" />
@@ -196,7 +194,7 @@
             <field name="name">view.hostel.room.student.search</field>
             <field name="model">hostel.student</field>
             <field name="arch" type="xml">
-                <search string="Hostel student" version="7.0">
+                <search string="Hostel student" >
                     <field name="hostel_id" />
                     <field name="student_id" />
                     <field name="admission_date" />
@@ -227,14 +225,17 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_right" name="%(action_hoste_student_button)d" string="Hostel Student" type="action"/>
+                        <button name="%(action_hoste_student_button)d" type="action" class="oe_right oe_stat_button">
+                        	<img src="/school_hostel/static/description/hostel.jpg" style="height:25px;width:50px;float:left;"/>
+                        	<lable style="">Hostel</lable>
+                        </button>
                     </xpath>
                 </data>
             </field>
         </record>
         
         <record model="ir.actions.act_window" id="action_hoste_student">
-            <field name="name">Hostel student</field>
+            <field name="name">Hostel Student</field>
             <field name="res_model">hostel.student</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -247,7 +248,7 @@
             <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record> 
-        <menuitem name="Hostel student" action="action_hoste_student" id="hostel_student_menu" parent="hostel_manin_menu" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user,school.group_school_student"/>
+        <menuitem name="Hostel Student" action="action_hoste_student" id="hostel_student_menu" parent="hostel_manin_menu" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user,school.group_school_student"/>
         
         <!--Bad Type Search View  -->
         <record model="ir.ui.view" id="bed_type_search">
@@ -266,7 +267,7 @@
              <field name="name">bed_type_Form</field>
              <field name="model">bed.type</field>
              <field name="arch" type="xml">
-                 <form string="Bad Type Form" version="7.0">
+                 <form string="Bad Type Form">
                       <sheet>
                             <group col="4" colspan="4">
                                <field name = "name"/><newline/>

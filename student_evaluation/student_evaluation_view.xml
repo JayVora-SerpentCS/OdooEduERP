@@ -17,8 +17,10 @@
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//div[@name='buttons']" position="inside">
-						<button name="%(action_student_eval_form)d" string="Evaluation"
-							type="action"/>
+						 <button name="%(action_student_eval_form)d" type="action" class="oe_inline oe_stat_button">
+							<img src="/student_evaluation/static/description/e.png" style="height:25px;width:50px;float:left;"/>
+							<lable style="">Evaluation</lable>
+						</button> 
 					</xpath>
 				</data>
 			</field>
@@ -69,7 +71,7 @@
 			<field name="name">student.evaluation.form</field>
 			<field name="model">student.evaluation</field>
 			<field name="arch" type="xml">
-				<form string="Student Evaluation" version="7.0">
+				<form string="Student Evaluation">
 					<header>
 						<button name="set_start" string="Start" type="object"
 							states="draft" icon="gtk-execute" class="oe_highlight"/>
@@ -91,8 +93,11 @@
 							<field name="user_id"/>
 							<field name="evaluator_id" attrs="{'invisible': [('type','=','student')]}"
 								placeholder="Select Or Create Faculty Name" />
-							<button name="get_record" string="Get Questions" type='object'
-								attrs="{'invisible' : [('state', '!=', 'draft')]}"/>
+							<button name="get_record" type='object' class="oe_inline oe_stat_button"
+								attrs="{'invisible' : [('state', '!=', 'draft')]}">
+								<img src="/student_evaluation/static/description/index1.png" style="height:25px;width:50px;float:left;"/>
+								<lable style="">Get Question</lable>		
+							</button>
 						</group>
 						<newline />
 						<notebook colspan="4">
@@ -155,7 +160,7 @@
 			<field name="name">student.evaluation.template.form</field>
 			<field name="model">student.evaluation.template</field>
 			<field name="arch" type="xml">
-				<form string="Student Evaluation Template" version="7.0">
+				<form string="Student Evaluation Template">
 					<sheet>
 						<separator string="Evaluation Template"/>
 						<group colspan="4">
@@ -173,7 +178,7 @@
 			<field name="name">student.rating.form</field>
 			<field name="model">rating.rating</field>
 			<field name="arch" type="xml">
-				<form string="Student Rating" version="7.0">
+				<form string="Student Rating">
 					<sheet>
 						<separator string="Student Rating" />
 						<group col="4" colspan="2">

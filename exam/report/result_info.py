@@ -21,6 +21,7 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
+from openerp.osv import osv
 
 class result(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
@@ -76,7 +77,11 @@ class result(report_sxw.rml_parse):
            
         list.append(value)
         return list
-
-report_sxw.report_sxw('report.result', 'student.student', 'exam/report/result_information_report.rml', parser=result, header="internal")
+    
+class report_result_info(osv.AbstractModel):
+    _name = 'report.exam.result_information_report'
+    _inherit = 'report.abstract_report'
+    _template = 'exam.result_information_report'
+    _wrapped_report_class = result        
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
