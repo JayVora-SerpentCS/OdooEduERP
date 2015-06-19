@@ -299,13 +299,13 @@
                                 </group>
                             </form> 
                         </field>
-                        <group col="8" colspan="8">
-                            <field name="total" colspan="2" attrs="{'invisible':[('state','!=','confirm')]}"/>
-                            <field name="re_total" colspan="2" attrs="{'invisible':[('state','=','confirm')]}"/>
-                            <field name="grade" colspan="2"/>
-                            <field name="percentage" colspan="2"/>
-                            <field name="result" colspan="2"/>
-                        </group>
+                        <group col="4" colspan="4">
+                            <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/> 
+                            <field name="grade"/>
+                            <field name="percentage"/>
+                            <field name="result"/>
+                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/><field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                        </group> 
                     </sheet>
                 </form>
             </field>
