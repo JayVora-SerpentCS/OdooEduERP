@@ -94,7 +94,7 @@
                         <field name="name"/>
                     </group>
                     <separator string="Transportation Detail" orientation="vertical"/>
-                    <group col="6" colspan="3">
+                    <group col="4" colspan="4">
 	                    <field name="transport_id"/>
 	                    <field name="vehicle_id"/>
 	                    <field name="point_id"/>
