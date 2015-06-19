@@ -58,7 +58,7 @@
                 <form string="Event Participant Information">
                     <sheet>
                         <separator string="Event Participant"/>
-                        <group col="4" colspan="2">
+                        <group col="4" colspan="4">
 		                    <field name="stu_pid"/>
 		                    <field name="name"/>
 		                    <field name="event_id"/>

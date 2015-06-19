@@ -233,7 +233,7 @@ class transport_registration(models.Model):
         ret_val = super(transport_registration, self).create(vals)
         m_amt = self.onchange_point_id(vals['point_id'])
         ex_dt = self.onchange_for_month(vals['for_month'])
-        if ex_dt['value']:
+        if ex_dt:
             ret_val.write({'m_amount':m_amt['value']['m_amount'],'reg_end_date': ex_dt['value']['reg_end_date']})
         else:
             ret_val.write({'m_amount':m_amt['value']['m_amount']})

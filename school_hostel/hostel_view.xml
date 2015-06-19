@@ -157,20 +157,18 @@
                         <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <field name="status" widget="statusbar" nolabel="1" />
                     </header>
-                    <sheet style="width: 10%%,height:10%%">
+                    <sheet>
                         <separator string="Hostel student"/>
-                        <group col="4">
+                        <group col="4" colspan="4">
                             <field name="student_id" />
-                            <field name="hostel_id" />
+                            <field name="hostel_id" /> 
                             <field name="admission_date" />
                             <field name="discharge_date" />
-                        </group>
-                        <group col="4">
                             <field name="room_rent" />
                             <field name="bed_type"  widget="selection"/>
                             <field name="paid_amount" />
                             <field name="remaining_amount" />
-                        </group>
+                       </group>
                     </sheet>
                 </form>
             </field>
@@ -227,7 +225,10 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button class="oe_right" name="%(action_hoste_student_button)d" string="Hostel Student" type="action"/>
+                        <button name="%(action_hoste_student_button)d" type="action" class="oe_right oe_stat_button">
+                        	<img src="/school_hostel/static/description/hostel.jpg" style="height:25px;width:50px;float:left;"/>
+                        	<lable style="">Hostel</lable>
+                        </button>
                     </xpath>
                 </data>
             </field>

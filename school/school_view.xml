@@ -617,7 +617,7 @@
 																:
 															</b>
 														</td>
-														<td width="35%%" style="padding-left:10px;">
+														<td width="35%%">
 															<field name="gender" placeholder="Gender"/>
 														</td>
 														<td width="15%%" style="text-align:right;vertical-align:middle;">
@@ -1185,7 +1185,7 @@
                 <form string="Academic Years" >
                     <sheet>
 	                    <group col="4" colspan="4">
-	                        <field name="sequence"/><newline/>
+	                        <field name="sequence"/>
 	                        <field name="name" placeholder="Name"/>  
 	                        <field name="code" placeholder="Code"/>
 	                        <field name="date_start" placeholder="Start Date"/>
