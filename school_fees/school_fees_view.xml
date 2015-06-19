@@ -453,7 +453,10 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_stu_fees_form)d" string="Fees Receipt" type="action"/>
+                        <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button">
+                        <img src="/school_fees/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
+                        <lable style="">Fees Receipt</lable>
+                        </button>
                     </xpath>
                 </data>
             </field>
