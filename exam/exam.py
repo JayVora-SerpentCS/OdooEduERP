@@ -139,15 +139,16 @@ class exam_result(models.Model):
     @api.depends('result_ids')
     def _compute_total(self):
         total=0.0
-        if self.result_ids:
-            for line in self.result_ids:
-                obtain_marks = line.obtain_marks
-                if line.state == "re-evaluation":
-                    obtain_marks = line.marks_reeval
-                elif line.state == "re-access":
-                    obtain_marks = line.marks_access
-                total += obtain_marks
-            self.total = total
+        for total_obj in self:
+            if total_obj.result_ids:
+                for line in total_obj.result_ids:
+                    obtain_marks = line.obtain_marks
+                    if line.state == "re-evaluation":
+                        obtain_marks = line.marks_reeval
+                    elif line.state == "re-access":
+                        obtain_marks = line.marks_access
+                    total += obtain_marks
+                total_obj.total = total
             
     @api.multi 
     def _compute_per(self):
@@ -198,19 +199,20 @@ class exam_result(models.Model):
     @api.depends('result_ids','student_id')
     def _compute_result(self):
         flag = False
-        if self.result_ids and self.student_id:
-            for l in self.result_ids:
-                if self.student_id.year.grade_id.grade_ids:
-                    for grades in self.student_id.year.grade_id.grade_ids:
-                        if grades.grade:
-                            if not grades.fail:
-                                self.result = 'Pass'
-                            else:
-                                flag=True
-                else:
-                    raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
-        if flag:
-            self.result = 'Fail'
+        for result_obj in self:
+            if result_obj.result_ids and result_obj.student_id:
+                for l in result_obj.result_ids:
+                    if result_obj.student_id.year.grade_id.grade_ids:
+                        for grades in result_obj.student_id.year.grade_id.grade_ids:
+                            if grades.grade:
+                                if not grades.fail:
+                                    result_obj.result = 'Pass'
+                                else:
+                                    flag=True
+                    else:
+                        raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
+            if flag:
+                result_obj.result = 'Fail'
     
 
     @api.multi
@@ -336,17 +338,19 @@ class exam_subject(models.Model):
     
     @api.constrains('obtain_marks','minimum_marks')
     def _validate_marks(self):
-        if self.obtain_marks > self.maximum_marks or self.minimum_marks > self.maximum_marks:
-            raise Warning(_('The obtained marks and minimum marks should not extend maximum marks.'))
+        for marks_obj in self:
+            if marks_obj.obtain_marks > marks_obj.maximum_marks or marks_obj.minimum_marks > marks_obj.maximum_marks:
+                raise Warning(_('The obtained marks and minimum marks should not extend maximum marks.'))
     
     @api.one
     @api.depends('exam_id','obtain_marks')
     def _get_grade(self):
-        if self.exam_id and self.exam_id.student_id and self.exam_id.student_id.year.grade_id.grade_ids:
-            for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if self.obtain_marks >= grade_id.from_mark and self.obtain_marks <= grade_id.to_mark:
-                    self.grade = grade_id.grade
-                    
+        for grade_obj in self:
+            if grade_obj.exam_id and grade_obj.exam_id.student_id and grade_obj.exam_id.student_id.year.grade_id.grade_ids:
+                for grade_id in grade_obj.exam_id.student_id.year.grade_id.grade_ids:
+                    if grade_obj.obtain_marks >= grade_id.from_mark and grade_obj.obtain_marks <= grade_id.to_mark:
+                        grade_obj.grade = grade_id.grade
+                        
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], related='exam_id.state',string="State")
     subject_id = fields.Many2one("subject.subject","Subject Name")
@@ -419,7 +423,8 @@ class additional_exam_result(models.Model):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
             raise Warning(_('The obtained marks should not extend maximum marks.'))
         return True
-
+    
+    
     a_exam_id = fields.Many2one("additional.exam", "Additional Examination", required=True)
     student_id = fields.Many2one("student.student", "Student Name", required=True)
     roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No", readonly=True)
@@ -438,7 +443,7 @@ class student_student(models.Model):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
-            args.append(('class_id','in',std_ids))
+            args.append(('id','in',std_ids))
         return super(student_student, self).search(args=args, offset=offset, limit=limit, order=order,count=count)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -277,7 +277,7 @@
                             <field name="standard_id" placeholder="Select or Create Standard"/>
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
-                            <tree string="Subjects" >
+                            <tree string="Subjects" editable="bottom" >
                                 <field name="subject_id" placeholder="Select or Create Subject"/>
                                 <field name="maximum_marks"/>
                                 <field name="minimum_marks"/>
