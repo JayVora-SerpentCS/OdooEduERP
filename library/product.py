@@ -21,6 +21,9 @@
 ##############################################################################
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from dateutil.relativedelta import relativedelta
+from datetime import datetime,date
 import time
 
 class product_state(models.Model):
@@ -213,7 +216,7 @@ class product_product(models.Model):
         @param context : standard Dictionary
         @return :ID of newly created record.
         '''
-        
+      
         def _uniq(seq):
             keys = {}
             for e in seq:
@@ -236,7 +239,17 @@ class product_product(models.Model):
                 else:
                     vals['seller_ids'].append(supplier)
         return super(product_product, self).create(vals)
-
+    
+    @api.onchange('date_parution')
+    def _cal_parution_date(self):
+        """
+        This method calculates the resign date with  
+        """
+        for date_rec in self:
+            if date_rec.date_parution:
+                r_date = datetime.strptime(date_rec.date_parution, DEFAULT_SERVER_DATE_FORMAT)
+                l_date = r_date + relativedelta(days=date_rec.day_to_return_book.day)
+                date_rec.date_retour = l_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
 #     'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
     isbn = fields.Char('Isbn code', unique=True, help ="It show the International Standard Book Number")
     catalog_num = fields.Char('Catalog number', help ="It show the Identification number of books")
@@ -248,7 +261,7 @@ class product_product(models.Model):
     catalog_num = fields.Char('Catalog number' , help="The reference number of the book")
     date_parution = fields.Date('Release date', help="Release(Issue) date of the book")
     creation_date = fields.Datetime('Creation date', readonly=True, help="Record creation date", default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_retour = fields.Date('Return Date',readonly=True, help='Book Return date', default=lambda *a: str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"))
+    date_retour = fields.Date('Return Date', help='Book Return date', default=lambda *a: str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"))
     tome = fields.Char('Tome', help = "It will store the information of work in serveral volume")
     nbpage = fields.Integer('Number of pages')
     rack = fields.Many2one('library.rack', 'Rack', help="it will be show the position of book")
@@ -264,7 +277,7 @@ class product_product(models.Model):
     day_to_return_book = fields.Many2one("library.book.returnday","Book return Days")
     attchment_ids = fields.One2many("book.attachment", "product_id", "Book Attachments")
 
-
+    
 #     _columns = {
 # #        'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
 #         'isbn': fields.char('Isbn code', size=64, unique=True, help ="It show the International Standard Book Number"),

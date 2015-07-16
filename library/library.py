@@ -281,7 +281,13 @@ class library_book_issue(models.Model):
                 else: 
 #                     return False
                     raise Warning(_('Book issue limit  is over on this card'))
-                    
+        
+    
+    @api.onchange('student_id')
+    def onchange_student(self):
+        for student_obj in self:
+            student_obj.standard_id = student_obj.student_id.standard_id
+            student_obj.roll_no = student_obj.student_id.roll_no
     
     name = fields.Many2one('product.product', 'Book Name', required=True) 
     issue_code = fields.Char('Issue No.', required=True, default=lambda self: self.env['ir.sequence'].get('library.book.issue') or '/') 

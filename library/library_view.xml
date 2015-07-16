@@ -566,9 +566,9 @@
 						<group col="4" colspan="4"
 							attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
 							<separator string="Student Details" colspan="4" col="4"/>
-							<field name="student_id" readonly="1"/>
-							<field name="roll_no" readonly="1"/>
-							<field name="standard_id" readonly="1"/>
+							<field name="student_id"/>
+							<field name="roll_no"/>
+							<field name="standard_id"/>
 						</group>
 						<group col="2" colspan="4"
 							attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
@@ -708,7 +708,9 @@
 			<field name="res_model">library.book.issue</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,kanban</field>
+			<field name="view_id" ref="library_book_issue_kanban_view"/>
+			<field name="search_view_id" ref="view_book_issue_search"/>
+			<field name="view_mode">kanban,tree,form</field>
 		</record>
 
 		<!--menu of library view -->
