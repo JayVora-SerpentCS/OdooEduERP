@@ -45,13 +45,13 @@ class hostel_room(models.Model):
         room_availability = 0
         for data in self:
             count = 0
-            for student in self.student_ids:
+            for student in data.student_ids:
                 count += 1
             room_availability = data.student_per_room - count
             if room_availability < 0:
                 raise except_orm(_("You can not assign room more than %s student" % data.student_per_room))
             else:
-                self.availability = room_availability
+                data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'Hostel')
     floor_no = fields.Integer('Floor No.',default=1)
@@ -80,20 +80,12 @@ class hostel_student(models.Model):
     @api.one
     @api.depends('room_rent','paid_amount')
     def _get_remaining_fee_amt(self):
-        if self.room_rent and self.paid_amount:
-            self.remaining_amount = self.room_rent - self.paid_amount
-        else:
-            self.remaining_amount = 0.0
+        for get_fee in self:
+            if get_fee.room_rent and get_fee.paid_amount:
+                get_fee.remaining_amount = get_fee.room_rent - get_fee.paid_amount
+            else:
+                get_fee.remaining_amount = 0.0
         
-    @api.multi
-    def confirm_state(self):
-        self.write({'status': 'confirm'})
-        return True
-
-    @api.multi
-    def reservation_state(self):
-        self.write({'status': 'reservation'})
-        return True
 
     @api.multi
     def print_fee_receipt(self):
@@ -118,6 +110,28 @@ class hostel_student(models.Model):
     status = fields.Selection([('draft','Draft'),('reservation','Reservation'),('confirm','Confirm')], 'Status',default='draft')
     
     _sql_constraints = [('admission_date_greater','check(discharge_date >= admission_date)','Error ! Discharge Date cannot be set before Admission Date.')]
+
+    @api.multi
+    def confirm_state(self):
+        """
+        This method is used to change the state 
+        to confirmed of the school hostel
+        --------------------------------------------
+        @param self : object pointer
+        """
+        for on in self:
+            on.status = 'confirm'
+        
+    @api.multi
+    def reservation_state(self):
+        """
+        This method is used to change the state 
+        to confirmed of the school hostel
+        --------------------------------------------
+        @param self : object pointer
+        """
+        for on in self:
+            on.status = 'reservation'
 
 class bed_type(models.Model):
     

@@ -1,0 +1,17 @@
+===============================================================================
+ Version Change Log
+ Module: school_hostel
+===============================================================================
+Version 3.1 on 2015-07-16 by Akash Patel
+    * To add a access right base on bed.type in school_hostel.
+    
+Version 3.0 on 2015-04-02 by Hasmukh Bhalodiya
+    * Migrated Module into 8.0 with use api.
+    
+Version 2.0 on 2014-09-09 by Murtuza Saleh
+    * Migrated Module.
+
+Version 1.0 on 2013-09-19 by Anu Patel
+    * Added groups to all menu.
+    * Added csv for field level access rights.
+    * Added record rule  for student.
