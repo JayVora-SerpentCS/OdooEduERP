@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-
 		<!-- Student Form View1 -->
 		<record model="ir.ui.view" id="view_student_student_form_1">
 			<field name="name">student.student.form.1</field>
@@ -1555,7 +1554,7 @@
 
 		<!-- Teacher Information Form View -->
 		<record model="ir.ui.view" id="view_teacher_teacher_form">
-			<field name="name">hr.employee.form</field>
+			<field name="name">view.teacher.teacher.form</field>
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
@@ -1569,7 +1568,129 @@
 				</data>
 			</field>
 		</record>
-
+		
+		<!-- Teacher Personal Details Form View. -->
+		<record id="view_teacher_details_form" model="ir.ui.view">
+            <field name="name">view.teacher.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <form string="Teacher Information">
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="work_email" class="oe_edit_only"/>
+                            <field name="work_email" widget="email"/>
+                            <label for="work_phone" class="oe_edit_only"/>
+                            <field name="work_phone"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
+                        <notebook colspan="4">
+                            <page string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="mobile_phone"/>
+                                        <field name="work_location"/>
+                                        <field name="school_id" />
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="job_id"/>
+                                        <field name="parent_id"/>
+                                        <field name="coach_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="bank_account_id"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
+                                        <field name="birthday"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- Teacher Personal Details Tree View. -->
+		<record id="view_teacher_details_tree" model="ir.ui.view">
+            <field name="name">view.teacher.details.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Teacher Information">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="school_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="parent_id"/>
+                    <field name="coach_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Teacher Personal Details Action View Form View. -->
+		<record id="view_teacher_details_action_view" model="ir.actions.act_window">
+            <field name="name">Teacher Information</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="tree_view_ref_teacher_details" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_teacher_details_tree"/>
+            <field name="act_window_id" ref="view_teacher_details_action_view"/>
+        </record>
+        
+		 <record id="form_view_ref_teacher_details" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_teacher_details_form"/>
+            <field name="act_window_id" ref="view_teacher_details_action_view"/>
+        </record>
+        
 		<!-- Student Information Form Action -->
 		<record model="ir.actions.act_window" id="action_student_student_form_12">
 			<field name="name">Students</field>
@@ -1584,20 +1705,21 @@
 		<!-- Student Information Tree Action View -->
 		<record id="action_view_student_student_tree_1" model="ir.actions.act_window.view">
 			<field name="view_mode">tree</field>
-			<field eval="20" name="sequence"/>
+			<field eval="30" name="sequence"/>
 			<field name="view_id" ref="view_student_student_tree_1"/>
 			<field name="act_window_id" ref="action_student_student_form_12"/>
 		</record>
+		
 		<record id="action_view_student_student_form_1" model="ir.actions.act_window.view">
 			<field name="view_mode">form</field>
-			<field eval="30" name="sequence"/>
+			<field eval="31" name="sequence"/>
 			<field name="view_id" ref="view_student_student_form_1"/>
 			<field name="act_window_id" ref="action_student_student_form_12"/>
 		</record>
 
 		<record id="action_view_student_student_kanban_1" model="ir.actions.act_window.view">
 			<field name="view_mode">kanban</field>
-			<field eval="31" name="sequence"/>
+			<field eval="20" name="sequence"/>
 			<field name="view_id" ref="student_student_kanban_view"/>
 			<field name="act_window_id" ref="action_student_student_form_12"/>
 		</record>
@@ -1633,14 +1755,6 @@
 			<field eval="21" name="sequence" />
 			<field name="view_id" ref="student_student_kanban_view" />
 			<field name="act_window_id" ref="action_student_student_form_2"/>
-		</record>
-
-		<!-- Teacher Information Action -->
-		<record model="ir.actions.act_window" id="action_teacher_teacher_form_1">
-			<field name="name">Teachers</field>
-			<field name="res_model">hr.employee</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
 		</record>
 
 		<!-- School Information Action -->
@@ -1947,30 +2061,18 @@
 				</tree>
 			</field>
 		</record>
-
+		
 		<!-- Parent Information Action -->
-		<record model="ir.actions.act_window" id="action_parent_form">
-			<field name="name">Parents</field>
-			<field name="res_model">res.partner</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree,kanban</field>
-			<field name="search_view_id" ref="view_res_partner_parent_filter"/>
-		</record>
-
-		<record id="action_partner_form_view1" model="ir.actions.act_window.view">
-			<field eval="10" name="sequence"/>
-			<field name="view_mode">tree</field>
-			<field name="view_id" ref="view_parent_tree"/>
-			<field name="act_window_id" ref="action_parent_form"/>
-		</record>
-
-		<record id="action_parent_form_view2" model="ir.actions.act_window.view">
-			<field eval="20" name="sequence"/>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="view_parent_form"/>
-			<field name="act_window_id" ref="action_parent_form"/>
-		</record>
-
+		<record id="action_student_parent" model="ir.actions.server">
+            <field name="sequence" eval="1"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="code">action = pool.get('res.partner').student_parent_view(cr, uid, None, context)</field>
+            <field name="condition">True</field>
+            <field name="name">Create Parent</field>
+        </record>
+        
 		<!--My Dashboard -->
 		<record model="ir.ui.view" id="board_my_dash_view">
 			<field name="name">My Dashboard</field>
@@ -2035,7 +2137,7 @@
 			id="menu_student_profile" sequence="2"/>
 
 		<menuitem name="School Config" parent="menu_configuration"
-			id="menu_school_config_form1" sequence="1"/>
+			id="menu_school_config_form1" sequence="2"/>
 
 		<menuitem name="GR No." parent="menu_school_config_form1" id="grn_menuid"
 			action="action_student_grn_form" sequence="10"/>
@@ -2051,7 +2153,16 @@
 
 		<menuitem name="Cast" parent="menu_casts" id="menu_cast"
 			action="action_student_cast_form_7"/>
-
+		
+		<!-- Teacher Personal Details Menu Item -->
+		<menuitem name="Teacher Config" parent="menu_configuration"
+			id="menu_teacher_config_form1" sequence="1"
+			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
+			
+		<!-- Teacher Personal Details Menu -->
+		<menuitem name="Teacher" parent="menu_teacher_config_form1" id="teacher_menuid"
+			action="view_teacher_details_action_view" sequence="10"/>
+			
 		<!-- new cast menu added in configure menu -->
 		<menuitem name="Cast" parent="menu_school_config_form1" id="menu_cast"
 			action="action_student_cast_form_7"/>
@@ -2068,7 +2179,7 @@
 
 		<!-- new -->
 		<menuitem name="Parents Details" parent="menu_student_profile"
-			id="menu_res_partner_form" action="action_parent_form"
+			id="menu_res_partner_form" action="action_student_parent"
 			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
 
 		<menuitem name="Admission Register" parent="menu_ems"
