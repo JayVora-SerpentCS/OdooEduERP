@@ -1,0 +1,12 @@
+===============================================================================
+ Version Change Log
+ Module: school_attendance
+===============================================================================
+Version 3.0 on 2015-04-02 by Hasmukh Bhalodiya
+    * Migrated Module api 8.
+    
+Version 2.0 on 2014-09-09 by Murtuza Saleh
+    * Migrated Module.
+
+Version 1.0 on 2013-09-30 by Sudhir Arya
+    * v7 Standard

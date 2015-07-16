@@ -1,0 +1,16 @@
+===============================================================================
+ Version Change Log
+ Module: assignment
+===============================================================================
+Version 3.0 on 2015-04-08 by Hasmukh Bhalodiya
+    * Migrated Module Api v8.
+    
+Version 2.0 on 2014-09-09 by Murtuza Saleh
+    * Migrated Module.
+
+Version 1.0 on 2013-09-23 by Anu Patel
+    * Added groups to menus.
+    * Added groups to Buttons.
+    * Added record rule for student.
+
+ 	 
