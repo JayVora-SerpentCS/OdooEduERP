@@ -39,8 +39,8 @@ class student_fees_register(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], 'State', readonly=True,default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=True, states={'confirm':[('readonly', True)]})
     period_id = fields.Many2one('account.period', 'Force Period', required=True, domain=[('state', '<>', 'done')],states={'confirm':[('readonly', True)]}, help="Keep empty to use the period of the validation(invoice) date.")
-    company_id = fields.Many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly', False)]},default=lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id)
-    
+    company_id = fields.Many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly', False)]},default=lambda obj_c: obj_c.env['res.users'].browse([obj_c._uid])[0].company_id)
+
     @api.multi
     def fees_register_draft(self):
         self.write({'state' : 'draft'})
@@ -48,36 +48,37 @@ class student_fees_register(models.Model):
     
     @api.multi
     def fees_register_confirm(self):
-        
+        cr,uid,context = self.env.args
         student_pool = self.env['student.student']
         slip_pool = self.env['student.payslip']
         student_ids = student_pool.search([])
-        for vals in self.browse(self.ids):
-            for stu in student_ids:
-                old_slips = slip_pool.search([('student_id', '=', stu.id), ('date', '=', vals.date)])
-                if old_slips:
-                    old_slips.write({'register_id':vals.id})
-                    for sid in old_slips:
-                        workflow.trg_validate(self._uid, 'student.payslip', sid, 'payslip_confirm', self._cr)
-                else:
-                    res = {
-                        'student_id':stu.id,
-                        'register_id':vals.id,
-                        'name':vals.name,
-                        'date':vals.date,
-                        'journal_id': vals.journal_id.id,
-                        'period_id': vals.period_id.id,
-                        'company_id': vals.company_id.id
-                    }
-                    slip_id = slip_pool.create(res)
-                    workflow.trg_validate(self._uid, 'student.payslip', slip_id, 'payslip_confirm', self._cr)
-            amount = 0
-            for datas in self.browse(self.ids):
-                for data in datas.line_ids:
-                    amount = amount + data.total
-                student_fees_register_vals = {'total_amount':amount}
-                datas.write(student_fees_register_vals)
-        self.write({'state' : 'confirm'})
+        for fees_obj in self:
+            for vals in fees_obj.browse(fees_obj.ids):
+                for stu in student_ids:
+                    old_slips = slip_pool.search([('student_id', '=', stu.id), ('date', '=', vals.date)])
+                    if old_slips:
+                        old_slips.write({'register_id':vals.id})
+                        for sid in old_slips:
+                            workflow.trg_validate(uid,'student.fees.register',sid.id, 'fees_register_confirm',cr)
+                    else:
+                        res = {
+                            'student_id':stu.id,
+                            'register_id':vals.id,
+                            'name':vals.name,
+                            'date':vals.date,
+                            'journal_id': vals.journal_id.id,
+                            'period_id': vals.period_id.id,
+                            'company_id': vals.company_id.id
+                        }
+                        slip_id = slip_pool.create(res)
+                        workflow.trg_validate(uid, 'student.fees.register',slip_id.id, 'fees_register_confirm',cr)
+                amount = 0
+                for datas in fees_obj.browse(self.ids):
+                    for data in datas.line_ids:
+                        amount = amount + data.total
+                    student_fees_register_vals = {'total_amount':amount}
+                    datas.write(student_fees_register_vals)
+                fees_obj.write({'state' : 'confirm'})
         return True
 
 class student_payslip_line(models.Model):
@@ -147,32 +148,32 @@ class student_payslip(models.Model):
     
     @api.multi
     def payslip_confirm(self):
-        
         student_fees_structure_obj = self.env['student.fees.structure']
         student_payslip_line_obj = self.env['student.payslip.line']
-        for student_payslip_datas in self.read(['fees_structure_id']):
-            if not student_payslip_datas['fees_structure_id']:
-                self.write({'state' : 'paid'})   
-                return True
-            student_fees_structure_search_ids = student_fees_structure_obj.search([('name', '=', student_payslip_datas['fees_structure_id'][1])])
-            for datas in student_fees_structure_search_ids:
-                for data in datas.line_ids or []:
-                    student_payslip_line_vals = {
-                            'slip_id':self.id,
-                            'name':data.name,
-                            'code':data.code,
-                            'sequence':data.sequence,
-                            'type':data.type,
-                            'amount':data.amount,
-                    }
-                    student_payslip_line_obj.create(student_payslip_line_vals)
-            amount = 0
-            for datas in self.browse(self.ids):
-                for data in datas.line_ids:
-                    amount = amount + data.amount
-                student_payslip_vals = {'total':amount}
-                datas.write(student_payslip_vals)
-        self.write({'state' : 'confirm'})
+        for payslip_obj in self:
+                for student_payslip_datas in self.read(['fees_structure_id']):
+                    if not student_payslip_datas['fees_structure_id']:
+                        payslip_obj.write({'state' : 'paid'})   
+                        return True
+                    student_fees_structure_search_ids = student_fees_structure_obj.search([('name', '=', student_payslip_datas['fees_structure_id'][1])])
+                    for datas in student_fees_structure_search_ids:
+                        for data in datas.line_ids or []:
+                            student_payslip_line_vals = {
+                                    'slip_id':self.id,
+                                    'name':data.name,
+                                    'code':data.code,
+                                    'sequence':data.sequence,
+                                    'type':data.type,
+                                    'amount':data.amount,
+                            }
+                            student_payslip_line_obj.create(student_payslip_line_vals)
+                    amount = 0
+                    for datas in self.browse(self.ids):
+                        for data in datas.line_ids:
+                            amount = amount + data.amount
+                        student_payslip_vals = {'total':amount}
+                        datas.write(student_payslip_vals)
+                payslip_obj.write({'state' : 'confirm'})
         return True
 
     _name = 'student.payslip'
@@ -202,13 +203,22 @@ class student_payslip(models.Model):
         ('in_refund', 'Supplier Refund'),
         ], 'Type', required=True, select=True, change_default=True,default='out_invoice')
     
-    company_id = fields.Many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly', False)]})
+#    school_id =   fields.Many2one('school.school', 'School', required=True , readonly=True, states={'draft':[('readonly', False)]})
     period_id = fields.Many2one('account.period', 'Force Period', required=True, domain=[('state', '<>', 'done')], help="Keep empty to use the period of the validation(invoice) date.")
-
+    company_id = fields.Many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly', False)]},default=lambda obj_c: obj_c.env['res.users'].browse([obj_c._uid])[0].company_id)
+    
     _sql_constraints = [
         ('code_uniq','unique(student_id,date,state)', 'The code of the Fees Structure must be unique !')
     ]
    
+    @api.onchange('student_id')
+    def onchange_student(self):
+        for student_obj in self:
+            student_obj.standard_id = student_obj.student_id.standard_id
+            student_obj.division_id = student_obj.student_id.division_id
+            student_obj.medium_id = student_obj.student_id.medium_id
+            student_obj.school_id = student_obj.student_id.school_id
+        
     @api.model   
     def copy(self):
         if default is None:
@@ -317,28 +327,29 @@ class student_payslip(models.Model):
     
     @api.multi
     def student_pay_fees(self):
-        self.write({'state' : 'paid'})
-        if not self.ids: return []
-        fees = self.browse(self.id)
-        return {
-        'name':_("Pay Fees"),
-            'view_mode': 'form',
-            'view_id': False,
-            'view_type': 'form',
-            'res_model': 'account.voucher',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'domain': '[]',
-            'context': {
-                'default_partner_id': fees.student_id.partner_id.id,
-                'default_amount': fees.total,
-                'default_name':fees.name,
-                'close_after_process': True,
-                'invoice_type': 'out_invoice',
-                'default_type': 'receipt',
-                'type': 'receipt'
-            }
+        for student_obj in self:
+            student_obj.write({'state' : 'paid'})
+            if not self.ids: return []
+            fees = student_obj.browse(student_obj.id)
+            return {
+            'name':_("Pay Fees"),
+                'view_mode': 'form',
+                'view_id': False,
+                'view_type': 'form',
+                'res_model': 'account.voucher',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'current',
+                'domain': '[]',
+                'context': {
+                    'default_partner_id': fees.student_id.partner_id.id,
+                    'default_amount': fees.total,
+                    'default_name':fees.name,
+                    'close_after_process': True,
+                    'invoice_type': 'out_invoice',
+                    'default_type': 'receipt',
+                    'type': 'receipt'
+                }
         }
 
 class student_payslip_line_line(models.Model):
