@@ -92,32 +92,35 @@ class school_event(models.Model):
     
     @api.constrains('start_date','end_date')
     def _check_dates(self):
-        if self.start_date and self.end_date and self.start_date > self.end_date:
-            raise Warning(_('Error! Event start-date must be lower then Event end-date.'))
+        for date_obj in self:
+            if date_obj.start_date and date_obj.end_date and date_obj.start_date > date_obj.end_date:
+                raise Warning(_('Error! Event start-date must be lower then Event end-date.'))
 
     @api.constrains('start_date','end_date','start_reg_date','last_reg_date')
     def _check_all_dates(self):
-        if self.start_date and self.end_date and self.start_reg_date and self.last_reg_date:
-            if self.start_reg_date > self.last_reg_date:
-                raise Warning(_('Error! Event Registration start-date must be lower than Event Registration end-date.'))
-            elif self.last_reg_date >= self.start_date:
-                raise Warning(_('Error! Event Registration last-date must be lower than Event start-date.'))
+        for all_date_obj in self:
+            if all_date_obj.start_date and all_date_obj.end_date and all_date_obj.start_reg_date and all_date_obj.last_reg_date:
+                if all_date_obj.start_reg_date > all_date_obj.last_reg_date:
+                    raise Warning(_('Error! Event Registration start-date must be lower than Event Registration end-date.'))
+                elif all_date_obj.last_reg_date >= all_date_obj.start_date:
+                    raise Warning(_('Error! Event Registration last-date must be lower than Event start-date.'))
 
     
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
-            student_data = student_obj.browse(self._context['part_name_id'])
+            student_data = student_obj.browse(self._context.get('part_name_id'))
             args.append(('part_standard_ids', 'in', [student_data.class_id.id]))
         return super(school_event, self).search(args, offset, limit, order, count=count)
     
     @api.multi
     def event_open(self):
-        if self.part_ids and self.part_ids[0].id:
-            self.write({'state' : 'open'})
-        else:
-            raise except_orm(_('No Participants !'), _('No Participants to open the Event.'))
+        for event_open_obj in self:
+            if event_obj.part_ids and event_obj.part_ids[0].id:
+                event_obj.write({'state' : 'open'})
+            else:
+                raise except_orm(_('No Participants !'), _('No Participants to open the Event.'))
 
     @api.multi
     def event_close(self):
@@ -265,7 +268,7 @@ class student_student(models.Model):
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self._context.get('name'):
             event_obj = self.env['school.event']
-            event_data = event_obj.browse(self._context['name'])
+            event_data = event_obj.browse(self._context.get('name'))
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
             args.append(('class_id','in',std_ids))
         return super(student_student, self).search(args, offset, limit, order, count=count)

@@ -426,8 +426,8 @@
             <field name="name">Event Registration</field>
             <field name="res_model">school.event.registration</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="event_registration_form"/>
-            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="school_event_registration_tree_view"/>
+            <field name="view_mode">tree,form</field>
         </record>
          <!-- Event Dashboard View for all user -->
         <record id="event_info_dashboard_view" model="ir.ui.view">
