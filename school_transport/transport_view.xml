@@ -224,7 +224,7 @@
                     <notebook colspan="4">
                         <page string="Vehicles" >
                                 <separator string="Transport Vehicle Details" colspan="4"/>
-                                <field name="trans_vehicle_ids" nolabel='1'/>
+                                <field name="trans_vehicle_ids" nolabel='1' required="1"/>
                         </page>
                         <page string="Root Points" >
                              <separator string="Transport Point Details" colspan="4"/>
@@ -312,7 +312,7 @@
 	                       <separator string="Transport Registration" colspan="4"/>
 	                        <field name="part_name" placeholder="Enter Participant Name"/>
 	                        <field name="name" placeholder="Enter Transport Root Name"/>
-	                        <field name="vehicle_id" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
+	                        <field name="vehicle_id" attrs="{'invisible':[('name','=',False)]}" context="{}"/>
 	                        <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
 	                        <field name="m_amount"/>
 	                        <field name="for_month" on_change="onchange_for_month(for_month)"/>
@@ -321,6 +321,20 @@
 	                    </group>
                    </sheet>
                 </form>
+            </field>
+        </record>
+        
+        <!-- Transport Registration Tree View -->
+       <record model="ir.ui.view" id="view_transport_registration_tree">
+            <field name="name">transport.registration.tree</field>
+            <field name="model">transport.registration</field>
+            <field name="arch" type="xml">
+                <tree string="Transport Registration">
+                    <field name="part_name" />
+                    <field name="name" />
+                    <field name="reg_date"/>
+                    <field name="reg_end_date" context="{'for_month':for_month}"/>
+                </tree>
             </field>
         </record>
         
@@ -394,7 +408,7 @@
             <field name="name">Transport Registration</field>
             <field name="res_model">transport.registration</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="transport_registration_form1"/>
+            <field name="view_id" ref="view_transport_registration_tree"/>
             <field name="view_mode">tree,form</field>
         </record>
         

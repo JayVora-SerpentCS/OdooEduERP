@@ -239,6 +239,15 @@ class transport_registration(models.Model):
             ret_val.write({'m_amount':m_amt['value']['m_amount']})
         return ret_val
 
+    @api.onchange('name')
+    def onchange_vehicle(self):
+        vehicle_lst = []
+        for trans_obj in self:
+            if trans_obj.name.trans_vehicle_ids:
+                for vehicle_obj in trans_obj.name.trans_vehicle_ids:
+                        vehicle_lst.append(vehicle_obj.id)
+            return {'domain':{'vehicle_id':[('id','in',vehicle_lst)]}}
+    
     @api.multi
     def onchange_point_id(self,point):
         if not point:
