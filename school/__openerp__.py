@@ -21,7 +21,7 @@
 ##############################################################################
 {
     "name" : "School",
-    "version" : "3.1",
+    "version" : "3.2",
     "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com",
     "category": "School Management",

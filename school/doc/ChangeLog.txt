@@ -2,10 +2,13 @@
  Version Change Log
  Module: school
 ===============================================================================
+Version 3.2 on 2015-07-16 by Akash Patel
+    * To add a librarian form view and tree view in configuration of EMS.
+    * To add a facility for a teacher can see his profile and librarian can see his profile.
+
 Version 3.1 on 2015-07-16 by Akash Patel
     * Improve the code base on Family Details in school.py And Change the view.
     * Add  a new menu item for teacher details and a form view and tree view.
-    
     
 Version 3.0 on 2014-04-02 by Pankaj Goyani
     * Migrated Module into 8.0 with use api.

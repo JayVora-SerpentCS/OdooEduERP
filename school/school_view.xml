@@ -1588,6 +1588,8 @@
                             <field name="work_email" widget="email"/>
                             <label for="work_phone" class="oe_edit_only"/>
                             <field name="work_phone"/>
+                           	<label for="hr_type" class="oe_edit_only"/>
+                           	<field name="hr_type" readonly="1"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
@@ -1608,9 +1610,6 @@
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -1660,12 +1659,10 @@
                     <field name="name"/>
                     <field name="work_phone"/>
                     <field name="work_email"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="school_id"/>
+                    <field name="school_id" />
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="parent_id"/>
-                    <field name="coach_id" invisible="1"/>
+                    <field name="hr_type"/>
                 </tree>
             </field>
         </record>
@@ -1676,6 +1673,8 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('hr_type', '=', 'teacher')]</field>
+            <field name="context">{'default_hr_type':'teacher'}</field>
         </record>
         <record id="tree_view_ref_teacher_details" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -1689,6 +1688,129 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_teacher_details_form"/>
             <field name="act_window_id" ref="view_teacher_details_action_view"/>
+        </record>
+        
+        
+        <!-- Librarian Personal Details Form View. -->
+		<record id="view_librarian_details_form" model="ir.ui.view">
+            <field name="name">view.librarian.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <form string="Librarian Information">
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="work_email" class="oe_edit_only"/>
+                            <field name="work_email" widget="email"/>
+                            <label for="work_phone" class="oe_edit_only"/>
+                            <field name="work_phone"/>
+                            <label for="hr_type" class="oe_edit_only"/>
+                           	<field name="hr_type" readonly="1"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
+                        <notebook colspan="4">
+                            <page string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="mobile_phone"/>
+                                        <field name="work_location"/>
+                                        <field name="school_id" />
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="job_id"/>
+                                        <field name="parent_id"/>
+                                        <field name="coach_id"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="bank_account_id"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
+                                        <field name="birthday"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Librarian Personal Details Tree View. -->
+		<record id="view_librarian_details_tree" model="ir.ui.view">
+            <field name="name">view.librarian.details.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Librarian Information">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="school_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="hr_type"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <!-- Librarian Personal Details Action View Form View. -->
+		<record id="view_librarian_details_action" model="ir.actions.act_window">
+            <field name="name">Librarian Information</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('hr_type', '=', 'librarian')]</field>
+            <field name="context">{'default_hr_type':'librarian'}</field>
+        </record>
+        <record id="tree_view_ref_librarian_details" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_librarian_details_tree"/>
+            <field name="act_window_id" ref="view_librarian_details_action"/>
+        </record>
+        
+		 <record id="form_view_ref_librarian_details" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_librarian_details_form"/>
+            <field name="act_window_id" ref="view_librarian_details_action"/>
         </record>
         
 		<!-- Student Information Form Action -->
@@ -2132,10 +2254,10 @@
 
 		<menuitem name="Configuration" parent="menu_ems" id="menu_configuration"
 			sequence="10" groups="group_school_administration"/>
-
+			
 		<menuitem name="Students Profile" parent="menu_ems"
-			id="menu_student_profile" sequence="2"/>
-
+			id="menu_student_profile" sequence="3"/>
+			
 		<menuitem name="School Config" parent="menu_configuration"
 			id="menu_school_config_form1" sequence="2"/>
 
@@ -2155,13 +2277,22 @@
 			action="action_student_cast_form_7"/>
 		
 		<!-- Teacher Personal Details Menu Item -->
-		<menuitem name="Teacher Config" parent="menu_configuration"
+		<menuitem name="Teacher" parent="menu_configuration"
 			id="menu_teacher_config_form1" sequence="1"
-			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
+			groups="school.group_school_administration"/>
 			
 		<!-- Teacher Personal Details Menu -->
 		<menuitem name="Teacher" parent="menu_teacher_config_form1" id="teacher_menuid"
 			action="view_teacher_details_action_view" sequence="10"/>
+			
+		<!-- Librarian Personal Details Menu Item -->
+		<menuitem name="Librarian" parent="menu_configuration"
+			id="menu_librarian_config_form1" sequence="1"
+			groups="school.group_school_administration"/>
+			
+		<!-- Librarian Personal Details Menu -->
+		<menuitem name="Librarian" parent="menu_librarian_config_form1" id="librarian_menuid"
+			action="view_librarian_details_action" sequence="10"/>
 			
 		<!-- new cast menu added in configure menu -->
 		<menuitem name="Cast" parent="menu_school_config_form1" id="menu_cast"

@@ -570,6 +570,8 @@ class hr_employee(models.Model):
     subject_ids = fields.Many2many('subject.subject','hr_employee_rel', compute='_compute_subject', string='Subjects')
     school_id =   fields.Many2one('school.school', 'School')
     address_id =  fields.Many2one('res.partner', 'Contect Address')
+    hr_type = fields.Selection([('teacher','Teacher'), ('librarian','Librarian')], 'Type')
+    
 class res_partner(models.Model):
     '''Defining a address information '''
     _inherit = 'res.partner'
