@@ -227,7 +227,32 @@ class exam_result(models.Model):
         val.update({'standard_id' : student_data.standard_id.id,
                     'roll_no_id' : student_data.roll_no})
         return {'value': val}
-
+    
+    @api.onchange('third_party')
+    def check_category_for_third_party(self):
+        domain = {'domain':{'leads_category':[('third_party','=',False)]}}
+        if self.third_party:
+            domain = {'domain':{'leads_category':[('third_party','=',True)]}}
+        return domain
+    
+    @api.onchange('s_exam_ids')
+    def onchange_exam(self):
+        student_lst = []
+        sub_list = []
+        sub_res = {}
+        for exam_obj in self:
+            for exam_standard_rec in exam_obj.s_exam_ids.standard_id.student_ids:
+                    student_lst.append(exam_standard_rec.id)
+        for exam_subject_rec in exam_obj.s_exam_ids.standard_id.subject_ids:
+            sub_val = {
+                       'subject_id' : exam_subject_rec.id,
+                       'maximum_marks' : exam_subject_rec.maximum_marks
+                       }
+            sub_list.append(sub_val)
+        exam_obj.result_ids = sub_list
+        return {'domain':{'student_id':[('id','in',student_lst)]}}
+        
+        
     s_exam_ids = fields.Many2one("exam.exam", "Examination",required = True)
     student_id = fields.Many2one("student.student", "Student Name", required = True)
     
@@ -321,7 +346,7 @@ class exam_result(models.Model):
     def result_re_evaluation(self):
         self.write({'state':'re-evaluation'})
         return True
-
+    
 class exam_grade_line(models.Model):
     _name = "exam.grade.line"
     _description = 'Exam Subject Information'

@@ -13,16 +13,60 @@
 								<table width="100%">
 									<center><h2 t-field="o and o[0].s_exam_ids.name"></h2></center>
 									<tr>
-										<td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
-											<b>Student Name</b>
-										</td>
-										<td width="1%">
-											<span>:</span>
-										</td>
-										<td width="80%" style="font-family: 'Helvetica';font-size: 18px;">
-											<span t-field="result.student_id.name"></span>
-										</td>
-									</tr>
+									<td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>Student Name</b>
+									</td>
+									<td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>:-</b>
+									</td>
+									<td width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+										<span t-field="result.student_id.name"></span>
+									</td>
+									<td width="20%"></td>
+									<td width="5%"></td>
+									<td width="25%"></td>
+								</tr>
+								<tr>
+									<td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>Roll No</b>
+									</td>
+									<td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>:-</b>
+									</td>
+									<td width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+										<span t-field="result.student_id.roll_no"></span>
+									</td>
+									<td align="left" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>Satndard</b>
+									</td>
+									<td align="left" width="5%"
+										style="font-family: 'Helvetica';font-size: 18px;">
+										<b>:-</b>
+									</td>
+									<td align="left" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+										<span t-field="result.standard_id"></span>
+									</td>
+								</tr>
+								<tr>
+								    <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>Medium</b>
+									</td>
+									<td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>:-</b>
+									</td>
+									<td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+										<span t-field="result.student_id.medium_id.name"></span>
+									</td>
+									<td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>Division</b>
+									</td>
+									<td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+										<b>:-</b>
+									</td>
+									<td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+										<span t-field="result.student_id.division_id.name"></span>
+									</td>
+								</tr>
 								</table>
 								<br />
 								<table width="100%">

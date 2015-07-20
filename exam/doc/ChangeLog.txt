@@ -2,6 +2,9 @@
  Version Change Log
  Module: exam
 ===============================================================================
+Version 2.2 on 2015-07-20 by Akash Patel
+    * To Select a Examination than student_id and subject_id will be display.
+
 Version 2.1 on 2015-07-16 by Akash Patel
     * To add facility for to select a student than a subject_id and roll_no should be display
     
