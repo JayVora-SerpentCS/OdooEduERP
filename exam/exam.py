@@ -195,22 +195,21 @@ class exam_result(models.Model):
 #                    res[sub_line.id] = 'Fail'
 #            return res
     
-    @api.one
+    @api.multi
     @api.depends('result_ids','student_id')
     def _compute_result(self):
         flag = False
         for result_obj in self:
             if result_obj.result_ids and result_obj.student_id:
-                for l in result_obj.result_ids:
-                    if result_obj.student_id.year.grade_id.grade_ids:
-                        for grades in result_obj.student_id.year.grade_id.grade_ids:
-                            if grades.grade:
-                                if not grades.fail:
-                                    result_obj.result = 'Pass'
-                                else:
-                                    flag=True
-                    else:
-                        raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
+                if result_obj.student_id.year.grade_id.grade_ids:
+                    for grades in result_obj.student_id.year.grade_id.grade_ids:
+                        if grades.grade:
+                            if not grades.fail:
+                                result_obj.result = 'Pass'
+                            else:
+                                flag=True
+                else:
+                    raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
             if flag:
                 result_obj.result = 'Fail'
     
@@ -228,18 +227,10 @@ class exam_result(models.Model):
                     'roll_no_id' : student_data.roll_no})
         return {'value': val}
     
-    @api.onchange('third_party')
-    def check_category_for_third_party(self):
-        domain = {'domain':{'leads_category':[('third_party','=',False)]}}
-        if self.third_party:
-            domain = {'domain':{'leads_category':[('third_party','=',True)]}}
-        return domain
-    
     @api.onchange('s_exam_ids')
     def onchange_exam(self):
         student_lst = []
         sub_list = []
-        sub_res = {}
         for exam_obj in self:
             for exam_standard_rec in exam_obj.s_exam_ids.standard_id.student_ids:
                     student_lst.append(exam_standard_rec.id)
@@ -346,7 +337,7 @@ class exam_result(models.Model):
     def result_re_evaluation(self):
         self.write({'state':'re-evaluation'})
         return True
-    
+
 class exam_grade_line(models.Model):
     _name = "exam.grade.line"
     _description = 'Exam Subject Information'
@@ -367,7 +358,7 @@ class exam_subject(models.Model):
             if marks_obj.obtain_marks > marks_obj.maximum_marks or marks_obj.minimum_marks > marks_obj.maximum_marks:
                 raise Warning(_('The obtained marks and minimum marks should not extend maximum marks.'))
     
-    @api.one
+    @api.multi
     @api.depends('exam_id','obtain_marks')
     def _get_grade(self):
         for grade_obj in self:
