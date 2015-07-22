@@ -582,12 +582,12 @@ class res_partner(models.Model):
     @api.multi
     def student_parent_view(self):
         cr,uid,context = self.env.args
-        data_obj = self.env['ir.model.data']
-        form_res = data_obj.get_object_reference('school', 'view_parent_form')
+#         data_obj = self.env['ir.model.data']
+        form_res = env.ref('school.view_parent_form')
         form_view_id = form_res and form_res[1] or False
-        tree_res = data_obj.get_object_reference('school', 'view_parent_tree')
+        tree_res = env.ref('school.view_parent_tree')
         tree_view_id = tree_res and tree_res[1] or False
-        kanban_res = data_obj.get_object_reference('base', 'res_partner_kanban_view')
+        kanban_res = env.ref('base.res_partner_kanban_view')
         kanban_view_id = kanban_res and kanban_res[1] or False
         user_rec = self.env['res.users'].browse(uid)
         parent_lst = []
