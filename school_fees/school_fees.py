@@ -151,30 +151,30 @@ class student_payslip(models.Model):
         student_fees_structure_obj = self.env['student.fees.structure']
         student_payslip_line_obj = self.env['student.payslip.line']
         for payslip_obj in self:
-                for student_payslip_datas in self.read(['fees_structure_id']):
-                    if not student_payslip_datas['fees_structure_id']:
-                        payslip_obj.write({'state' : 'paid'})   
-                        return True
-                    student_fees_structure_search_ids = student_fees_structure_obj.search([('name', '=', student_payslip_datas['fees_structure_id'][1])])
-                    for datas in student_fees_structure_search_ids:
-                        for data in datas.line_ids or []:
-                            student_payslip_line_vals = {
-                                    'slip_id':self.id,
-                                    'name':data.name,
-                                    'code':data.code,
-                                    'sequence':data.sequence,
-                                    'type':data.type,
-                                    'amount':data.amount,
-                            }
-                            student_payslip_line_obj.create(student_payslip_line_vals)
-                    amount = 0
-                    for datas in self.browse(self.ids):
-                        for data in datas.line_ids:
-                            amount = amount + data.amount
-                        student_payslip_vals = {'total':amount}
-                        datas.write(student_payslip_vals)
-                payslip_obj.write({'state' : 'confirm'})
-        return True
+            for student_payslip_datas in self.read(['fees_structure_id']):
+                if not student_payslip_datas['fees_structure_id']:
+                    payslip_obj.write({'state' : 'paid'})   
+                    return True
+                student_fees_structure_search_ids = student_fees_structure_obj.search([('name', '=', student_payslip_datas['fees_structure_id'][1])])
+                for datas in student_fees_structure_search_ids:
+                    for data in datas.line_ids or []:
+                        student_payslip_line_vals = {
+                                'slip_id':self.id,
+                                'name':data.name,
+                                'code':data.code,
+                                'sequence':data.sequence,
+                                'type':data.type,
+                                'amount':data.amount,
+                        }
+                        student_payslip_line_obj.create(student_payslip_line_vals)
+                amount = 0
+                for datas in self.browse(self.ids):
+                    for data in datas.line_ids:
+                        amount = amount + data.amount
+                    student_payslip_vals = {'total':amount}
+                    datas.write(student_payslip_vals)
+            payslip_obj.write({'state' : 'confirm'})
+            return True
 
     _name = 'student.payslip'
     _description = 'Student Payslip'
