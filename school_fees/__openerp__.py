@@ -22,7 +22,7 @@
 #
 ##############################################################################
 {
-    "name" : "Fees Management",
+    "name": "Fees Management",
     "version": "2.2",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",

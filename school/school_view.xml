@@ -731,6 +731,7 @@
 							<page string="Family Details">
 								<field name="family_con_ids" nolabel="1" colspan="4">
 									<tree string="Family  Contact Details">
+										<field name='rel_name'/>
 										<field name='stu_name' attrs="{'invisible':[('rel_name','!=','exist')]}"
 											string="Existing Student" />
 										<field name='name' attrs="{'invisible':[('rel_name','!=','new')]}"
@@ -742,7 +743,7 @@
 										<group col="4">
 											<group col="2">
 												<separator colspan="2"/>
-												<field name='rel_name' placeholder="Name"/>
+												<field name='rel_name'/>
 												<field name='stu_name' placeholder="Create or Select Name"
 													attrs="{'invisible':[('rel_name','!=','exist')]}"/>
 												<field name='name' placeholder="Name"
@@ -1859,7 +1860,7 @@
 			<field name="name">Admission Register</field>
 			<field name="res_model">student.student</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="view_student_student_form_2" />
+			<field name="view_id" ref="student_student_kanban_view" />
 			<field name="search_view_id" ref="view_student_student_search_2"/>
 			<field name="view_mode">tree,form,kanban</field>
 		</record>
@@ -1867,14 +1868,14 @@
 		<!-- Admission Register Information Tree Action -->
 		<record id="action_student_student_tree_2" model="ir.actions.act_window.view">
 			<field name="view_mode">tree</field>
-			<field eval="20" name="sequence"/>
+			<field eval="21" name="sequence"/>
 			<field name="view_id" ref="view_student_student_tree_2" />
 			<field name="act_window_id" ref="action_student_student_form_2"/>
 		</record>
 		
 		<record id="action_view_student_student_kanban_2" model="ir.actions.act_window.view">
 			<field name="view_mode">kanban</field>
-			<field eval="21" name="sequence" />
+			<field eval="20" name="sequence" />
 			<field name="view_id" ref="student_student_kanban_view" />
 			<field name="act_window_id" ref="action_student_student_form_2"/>
 		</record>

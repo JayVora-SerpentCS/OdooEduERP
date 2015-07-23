@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -21,40 +23,40 @@
 ##############################################################################
 
 {
-    "name" : "Library Management",
-    "version" : "2.3",
-    "author" : "Serpent Consulting Services Pvt. Ltd.",
+    "name": "Library Management",
+    "version": "2.3",
+    "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
-    "website" : "http://www.serpentcs.com",
+    "website": "http://www.serpentcs.com",
     "complexity": "easy",
-    "description" : """Module to manage library.
+    "description": """Module to manage library.
         Books Information,
         Publisher and Author Information,
         Book Rack Tracking etc...""",
-    "depends" : [
+    "depends": [
         "report_intrastat",
         "mrp",
         "delivery",
         "school"
     ],
-    "demo" : ["demo/library_demo.xml"],
-    "data" : [
-        "security/library_security.xml",
-        "security/ir.model.access.csv",
-        "library_category_data.xml",
-        "wizard/update_prices_view.xml",
-        "library_data.xml",
-        "library_view.xml",
-        "library_issue_workflow.xml",
-        "library_sequence.xml",
-        "library_workflow.xml",
-        "wizard/update_book_view.xml",
-        "wizard/book_issue_no_view.xml",
-        "wizard/card_no_view.xml",
-        "report_view.xml",
-        "view/qrcode_label.xml"
-    ],
-    "installable" : True,
+    "demo": ["demo/library_demo.xml"],
+    "data": [
+             "security/library_security.xml",
+             "security/ir.model.access.csv",
+             "library_category_data.xml",
+             "wizard/update_prices_view.xml",
+             "library_data.xml",
+             "library_view.xml",
+             "library_issue_workflow.xml",
+             "library_sequence.xml",
+             "library_workflow.xml",
+             "wizard/update_book_view.xml",
+             "wizard/book_issue_no_view.xml",
+            "wizard/card_no_view.xml",
+            "report_view.xml",
+            "view/qrcode_label.xml"
+            ],
+    "installable": True,
     "auto_install": False,
     "application": True,
 }

@@ -39,7 +39,7 @@
 
     "depends": ["school"],
     "data": [
-             "event_view.xml", 
+             "event_view.xml",
              "event_workflow.xml",
              "security/ir.model.access.csv",
              "views/participants.xml",
