@@ -23,11 +23,12 @@
 ##############################################################################
 from openerp import models, fields, api
 
+
 class subject_result_wiz(models.TransientModel):
 
     _name = "subject.result.wiz"
     _description = "Subject Wise Result"
-    
+
     result_ids = fields.Many2many("exam.subject", 'subject_result_wiz_rel',
                                   'result_id', "exam_id", "Exam Subjects",
                                   select=1)
@@ -37,9 +38,9 @@ class subject_result_wiz(models.TransientModel):
         data = self.read(cr, uid, ids)[0]
 
         datas = {
-                 'ids': context.get('active_ids',[]),
+                 'ids': context.get('active_ids', []),
                  'form': data,
-                 'model':'exam.result',
+                 'model': 'exam.result',
         }
         return self.pool['report'].get_action(cr, uid, [],
                                               'exam.exam_result_report',

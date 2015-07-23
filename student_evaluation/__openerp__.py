@@ -44,7 +44,7 @@
     ],
     "data": ['student_evaluation_view.xml',
              "security/ir.model.access.csv"
-              ],
+             ],
     "demo": [
              "demo/student_evaluation_demo.xml"
              ],

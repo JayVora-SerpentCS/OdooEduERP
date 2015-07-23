@@ -31,8 +31,10 @@
     "description": """A module to School Transport Management.
     A Module support the following functionalities:
 
-    1. In This Module we can define the Transport Root and Points with vehicles.
-    2. student can do Registration for any root with selected point for specific month.
+    1. In This Module we can define the Transport Root and Points with
+    vehicles.
+    2. student can do Registration for any root with selected point for
+    specific month.
     3. Vehicle information.
     4. Driver information.
 

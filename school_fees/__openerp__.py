@@ -40,7 +40,7 @@
         "account_voucher"
     ],
     "demo": [
-             "demo/school_fees_demo.xml"
+            "demo/school_fees_demo.xml"
              ],
     "data": [
         "security/ir.model.access.csv",

@@ -32,7 +32,7 @@ class time_table(models.Model):
     _description = 'Time Table'
     _name = 'time.table'
 
-    name = fields.Char('Description') 
+    name = fields.Char('Description')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
@@ -67,8 +67,8 @@ class time_table_line(models.Model):
         sub_id = self.env['subject.subject'].search([('name', 'like',
                                                       'Recess')])
         if not sub_id:
-             raise Warning(_('Warning!'),
-                           _("You must have a 'Recess' as a'' subject"))
+            raise Warning(_('Warning!'),
+                          _("You must have a 'Recess' as a'' subject"))
         recess.update({'value': {'subject_id': sub_id.id}})
         return recess
 
