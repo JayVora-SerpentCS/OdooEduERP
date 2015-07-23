@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -21,9 +23,9 @@
 ##############################################################################
 {
     "name" : "Fees Management",
-    "version" : "2.2",
-    "author" : "Serpent Consulting Services Pvt. Ltd.",
-    "website" : "http://www.serpentcs.com",
+    "version": "2.2",
+    "author": "Serpent Consulting Services Pvt. Ltd.",
+    "website": "http://www.serpentcs.com",
     "category": "School Management",
     "complexity": "easy",
     "description": """A module to School Fees Management System.
@@ -33,14 +35,14 @@
         3. Student Fees structure.
         4. Student Fees Register.
                     """,
-    "depends" : [
+    "depends": [
         "school",
         "account_voucher"
     ],
-    "demo" : [
-              "demo/school_fees_demo.xml"
-              ],
-    "data" : [
+    "demo": [
+             "demo/school_fees_demo.xml"
+             ],
+    "data": [
         "security/ir.model.access.csv",
         "school_fees_view.xml",
         "school_fees_sequence.xml",
@@ -50,7 +52,7 @@
         "view/student_fees_register.xml",
         "report_view.xml",
     ],
-  
+
     'test': [
         'test/school_fees_test.yml',
         'test/report_student_payslip_test.yml',

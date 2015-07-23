@@ -1598,15 +1598,15 @@
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                        <field name="address_id" required="1"
                                             context="{'show_address': 1, 'default_customer': False}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="mobile_phone"/>
+                                        <field name="mobile_phone" string="Mobile" required="1"/>
                                         <field name="work_location"/>
-                                        <field name="school_id" />
+                                        <field name="school_id" required="1"/>
                                     </group>
                                     <group string="Position">
-                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="department_id"/>
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
@@ -1618,7 +1618,7 @@
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="identification_id" required="1" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
@@ -1633,7 +1633,7 @@
                                         <field name="marital"/>
                                     </group>
                                     <group string="Birth">
-                                        <field name="birthday"/>
+                                        <field name="birthday" required="1"/>
                                     </group>
                                 </group>
                             </page>
@@ -1720,15 +1720,15 @@
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" on_change="onchange_address_id(address_id)"
+                                        <field name="address_id" required="1"
                                             context="{'show_address': 1, 'default_customer': False}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="mobile_phone"/>
+                                        <field name="mobile_phone" string="Mobile" required="1"/>
                                         <field name="work_location"/>
-                                        <field name="school_id" />
+                                        <field name="school_id" required="1"/>
                                     </group>
                                     <group string="Position">
-                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="department_id"/>
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
@@ -1740,7 +1740,7 @@
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="identification_id" groups="base.group_hr_user" required="1"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
@@ -1755,7 +1755,7 @@
                                         <field name="marital"/>
                                     </group>
                                     <group string="Birth">
-                                        <field name="birthday"/>
+                                        <field name="birthday" required="1"/>
                                     </group>
                                 </group>
                             </page>

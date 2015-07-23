@@ -3,9 +3,12 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2015 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2015 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -22,25 +25,26 @@
 ##############################################################################
 
 {
-    "name" : "Evaluation Management",
-    "version" : "2.0",
+    "name": "Evaluation Management",
+    "version": "2.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
-    "website" : "http://www.almisnadtechnology.com",
+    "website": "http://www.almisnadtechnology.com",
     "category": "School Management",
     "complexity": "easy",
     "description": """A module to Student Evaluation.
     A Module support the following functionalities:
-    
-    1. In This Module we can define the terms which we want to consider In Evaluation.
+
+    1. In This Module we can define the terms which we want to consider
+    In Evaluation.
     2. student and Faculty Both can Evaluate This.
     """,
-    "depends" : [
+    "depends": [
         "hr",
         "school"
     ],
-    "data" : ['student_evaluation_view.xml',
-              "security/ir.model.access.csv",
-     ],
+    "data": ['student_evaluation_view.xml',
+             "security/ir.model.access.csv"
+              ],
     "demo": [
              "demo/student_evaluation_demo.xml"
              ],

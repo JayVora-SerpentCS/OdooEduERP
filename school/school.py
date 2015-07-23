@@ -569,7 +569,7 @@ class hr_employee(models.Model):
 #    subject_ids = fields.function(_compute_subject, method=True, relation='subject.subject', type="many2many", string='Subjects')
     subject_ids = fields.Many2many('subject.subject','hr_employee_rel', compute='_compute_subject', string='Subjects')
     school_id =   fields.Many2one('school.school', 'School')
-    address_id =  fields.Many2one('res.partner', 'Contect Address')
+    address_id =  fields.Many2one('res.partner', 'Contact Address')
     hr_type = fields.Selection([('teacher','Teacher'), ('librarian','Librarian')], 'Type')
     
 class res_partner(models.Model):
@@ -583,12 +583,12 @@ class res_partner(models.Model):
     def student_parent_view(self):
         cr,uid,context = self.env.args
 #         data_obj = self.env['ir.model.data']
-        form_res = env.ref('school.view_parent_form')
-        form_view_id = form_res and form_res[1] or False
-        tree_res = env.ref('school.view_parent_tree')
-        tree_view_id = tree_res and tree_res[1] or False
-        kanban_res = env.ref('base.res_partner_kanban_view')
-        kanban_view_id = kanban_res and kanban_res[1] or False
+        form_res = self.env.ref('school.view_parent_form')
+        form_view_id = form_res and form_res.id or False
+        tree_res = self.env.ref('school.view_parent_tree')
+        tree_view_id = tree_res and tree_res.id or False
+        kanban_res = self.env.ref('base.res_partner_kanban_view')
+        kanban_view_id = kanban_res and kanban_res.id or False
         user_rec = self.env['res.users'].browse(uid)
         parent_lst = []
         student_recs = self.env['student.student'].search([])
@@ -652,8 +652,8 @@ class student_family_contact(models.Model):
     family_contact_id = fields.Many2one('student.student', string='Student')
     rel_name =          fields.Selection([('exist','Link to Existing Student'), ('new','Create New Relative Name')], 'Related Student', help="Select Name", required=True)
 #    stu_name =          fields.related('user_id','name',type='many2one',relation='student.student',string='Name',help="Select Student From Existing List")
-    user_id =           fields.Many2one('res.users', string='User ID', ondelete="cascade", select=True, required=True)
-    stu_name =          fields.Char(related='user_id.name',string='Name',help="Select Student From Existing List")
+    user_id =           fields.Many2one('res.users', string='User ID', ondelete="cascade", select=True)
+    stu_name =          fields.Char(related='family_contact_id.name',string='Name',help="Select Student From Existing List")
     name =              fields.Char('Name')
     relation =          fields.Many2one('student.relation.master',string='Relation', required=True)
     phone =             fields.Char('Phone', required=True)
