@@ -653,7 +653,7 @@ class student_family_contact(models.Model):
     rel_name =          fields.Selection([('select','Select'),('exist','Link to Existing Student'), ('new','Create New Relative Name')], 'Related Student', help="Select Name",default="select",required=True)
 #    stu_name =          fields.related('user_id','name',type='many2one',relation='student.student',string='Name',help="Select Student From Existing List")
     user_id =           fields.Many2one('res.users', string='User ID', ondelete="cascade", select=True)
-    stu_name =          fields.Char(related='family_contact_id.name',string='Name',help="Select Student From Existing List")
+    stu_name =          fields.Char(related='user_id.name',string='Name',help="Select Student From Existing List")
     name =              fields.Char('Name')
     relation =          fields.Many2one('student.relation.master',string='Relation', required=True)
     phone =             fields.Char('Phone', required=True)

@@ -29,7 +29,8 @@ class result_print(models.TransientModel):
     _name = 'result.print'
     _description = 'students result'
 
-    standard_id = fields.Many2one("school.standard", "Standard", required=True)
+    standard_id = fields.Many2one("school.standard", "Standard",
+                                  required=True)
     exam_id = fields.Many2one("exam.exam", "Exam")
     year_id = fields.Many2one('academic.year', 'Academic Year', required=True)
 

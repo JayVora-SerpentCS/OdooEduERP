@@ -146,8 +146,9 @@
 											<group col="2">
 												<separator colspan="2"/>
 												<field name='rel_name'/>
-												<field name='stu_name' placeholder="Create or Select Name"
-													attrs="{'invisible':[('rel_name','!=','exist')]}"/>
+												<!-- <field name='stu_name' placeholder="Create or Select Name"
+													attrs="{'invisible':[('rel_name','!=','exist')]}"/> -->
+												<field name="family_contact_id" attrs="{'invisible':[('rel_name','!=','exist')]}"/>
 												<field name='name' placeholder="Name"
 													attrs="{'invisible':[('rel_name','!=','new')]}"/>
 												<field name='relation' placeholder="Enter or select Relation"/>

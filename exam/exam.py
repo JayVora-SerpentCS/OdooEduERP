@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -23,33 +25,37 @@ from datetime import date, datetime
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 
+
 class extended_time_table(models.Model):
-    
+
     _inherit = 'time.table'
-    
-    timetable_type = fields.Selection([('exam', 'Exam'), ('regular', 'Regular')], "Time Table Type", required=True)
+
+    timetable_type = fields.Selection([('exam', 'Exam'),
+                                       ('regular', 'Regular')],
+                                      "Time Table Type", required=True)
     exam_id = fields.Many2one('exam.exam', 'Exam')
-    
+
 class extended_student_student(models.Model):
       
     _inherit = 'student.student'
-    
-    exam_results_ids = fields.One2many('exam.result','student_id','Exam History',readonly=True)
-    
+
+    exam_results_ids = fields.One2many('exam.result','student_id',
+                                       'Exam History',readonly=True)
+
 class extended_time_table_line(models.Model):
-    
+
     _inherit = 'time.table.line'
-    
+
     exm_date = fields.Date('Exam Date')
     day_of_week = fields.Char('Week Day')
-    
+
     @api.multi
     def on_change_date_day(self,exm_date):
         val = {}
         if exm_date:
             val['week_day'] = datetime.strptime(exm_date, "%Y-%m-%d").strftime("%A").lower()
         return {'value' : val}
-    
+
     @api.multi
     def _check_date(self):
         for line in self:
@@ -60,12 +66,12 @@ class extended_time_table_line(models.Model):
                 elif dt.__str__() < datetime.strptime(date.today().__str__(), "%Y-%m-%d").__str__():
                     raise except_orm(_('Invalid Date Error !'), _('Either you have selected wrong day for the date or you have selected invalid date.'))
         return True
-    
+
 class exam_exam(models.Model):
-   
+
     _name = 'exam.exam'
     _description = 'Exam Information'
-    
+
     name = fields.Char("Exam Name", required = True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('exam.exam'))
     standard_id = fields.Many2many('school.standard','school_standard_exam_rel','standard_id','event_id','Participant Standards')
@@ -75,26 +81,26 @@ class exam_exam(models.Model):
     write_date = fields.Date("Exam Update Date", help="Exam Update Date")
     exam_timetable_ids = fields.One2many('time.table', 'exam_id', 'Exam Schedule')
     state = fields.Selection([('draft','Draft'),('running','Running'),('finished','Finished'),('cancelled','Cancelled')], 'State', readonly=True,default='draft')
-    
+
     @api.multi
     def set_to_draft(self):
         self.write({'state' : 'draft'})
-    
+
     @api.multi
     def set_running(self):
         if self.exam_timetable_ids:
             self.write({'state' : 'running'})
         else:
             raise except_orm(_('Exam Schedule'), _('You must add one Exam Schedule'))
-    
+
     @api.multi
     def set_finish(self):
         self.write({'state' : 'finished'})
-    
+
     @api.multi
     def set_cancel(self):
         self.write({'state' : 'cancelled'})
-        
+
     @api.multi
     def _validate_date(self):
         for exm in self:
@@ -103,10 +109,10 @@ class exam_exam(models.Model):
         return True
 
 class additional_exam(models.Model):
-    
+
     _name = 'additional.exam'
     _description = 'additional Exam Information'
-    
+
     name = fields.Char("Additional Exam Name",required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
@@ -117,7 +123,7 @@ class additional_exam(models.Model):
     weightage = fields.Char("Weightage")
     create_date = fields.Date("Created Date", help="Exam Created Date")
     write_date = fields.Date("Updated date", help="Exam Updated Date")
-    
+
     @api.multi
     def on_change_stadard_name(self,standard_id):
         val = {}
@@ -130,7 +136,7 @@ class additional_exam(models.Model):
         return {'value': val}
 
 class exam_result(models.Model):
-    
+
     _name = 'exam.result'
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
@@ -149,7 +155,7 @@ class exam_result(models.Model):
                         obtain_marks = line.marks_access
                     total += obtain_marks
                 total_obj.total = total
-            
+
     @api.multi 
     def _compute_per(self):
         res={}
@@ -174,7 +180,7 @@ class exam_result(models.Model):
                         grd = grade_id.grade
                 res[result.id] = {'percentage':per,'grade':grd}
         return res
-    
+
 #    def _compute_result(self, cr, uid, ids, name, arg, context=None):
 #        if context is None:
 #            context = {}
@@ -194,7 +200,7 @@ class exam_result(models.Model):
 #                if flag:
 #                    res[sub_line.id] = 'Fail'
 #            return res
-    
+
     @api.multi
     @api.depends('result_ids','student_id')
     def _compute_result(self):
@@ -212,7 +218,6 @@ class exam_result(models.Model):
                     raise except_orm(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
             if flag:
                 result_obj.result = 'Fail'
-    
 
     @api.multi
     def on_change_student(self,student, exam_id, standard_id):
@@ -226,7 +231,7 @@ class exam_result(models.Model):
         val.update({'standard_id' : student_data.standard_id.id,
                     'roll_no_id' : student_data.roll_no})
         return {'value': val}
-    
+
     @api.onchange('s_exam_ids')
     def onchange_exam(self):
         student_lst = []
@@ -242,11 +247,10 @@ class exam_result(models.Model):
             sub_list.append(sub_val)
         exam_obj.result_ids = sub_list
         return {'domain':{'student_id':[('id','in',student_lst)]}}
-        
-        
+
     s_exam_ids = fields.Many2one("exam.exam", "Examination",required = True)
     student_id = fields.Many2one("student.student", "Student Name", required = True)
-    
+
     roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No", readonly=True)
     pid = fields.Char(related='student_id.pid', string="Student ID", readonly=True)
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
@@ -258,7 +262,7 @@ class exam_result(models.Model):
     grade = fields.Char("Grade", readonly=True)
     state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], 'State', readonly=True,default='draft')
     color = fields.Integer('Color')
-    
+
     @api.multi
     def result_confirm(self):
         vals = {}
