@@ -6,7 +6,15 @@
 			<field name="name">student.student.form.1</field>
 			<field name="model">student.student</field>
 			<field name="arch" type="xml">
-				<form string="Student Information">
+					<header>
+						<button name="set_terminate" string="Terminate" class="oe_highlight" type="object" state="terminate"
+							groups="school.group_school_administration,school.group_school_teacher"/>
+						<button name="set_alumni" string="Alumni" type="object" state="alumni" attrs="{'invisible':['|',('state','=','draft'),('state','=','terminate')]}"
+							groups="school.group_school_administration,school.group_school_teacher"/>
+						<button name="admission_done" type="object" string="Done" state="done" icon="gtk-jump-to" attrs="{'invisible':[('state','=','terminate')]}"/>
+						<field name="state" widget="statusbar"/>
+					</header>
+					<form string="Student Information">
 					<sheet style="width: 10%%,height:10%%">
 						<separator string="Personal Information" />
 						<field name="photo" widget='image' class="oe_avatar oe_left"
@@ -14,7 +22,7 @@
 						<div class="oe_title">
 							<field name="pid" invisible="1" />
 							<field name="reg_code" readonly="1" />
-							<!-- <field name="grn_number" placeholder="General Reg No." / -->
+							<field name="grn_number" placeholder="General Reg No."/>
 							<field name="name" placeholder="First Name" nolabel="1" />
 							<field name="middle" placeholder="Middle Name" nolabel="1"/>
 							<field name="last" placeholder="Last Name" nolabel="1"/>
@@ -27,7 +35,7 @@
 								<field name="student_code" readonly="1"/>
 								<field name="roll_no" help="Roll number of Student"/>
 								<field name="year" placeholder="Year" help="Academic year of Student"/>
-								<field name="school_id" widget="selection" help="School of Student"/>
+								<field name="school_id" widget="selection" help="School of Student" required="1"/>
 							</group>
 							<group col="2">
 								<separator string="Standard Information" colspan="4" />
@@ -249,7 +257,6 @@
 								</field>
 							</page>
 						</notebook>
-						<field name="state" invisible="1"/>
 					</sheet>
 				</form>
 			</field>
@@ -546,14 +553,14 @@
 				<form string="Admission Register" >
 					<header>
 						<button name="set_terminate" string="Terminate" type="object"
-							states="done" icon="gtk-cancel" class="oe_highlight"
-							groups="school.group_school_administration,school.group_school_teacher"/>
+							state="done" icon="gtk-cancel" class="oe_highlight"
+							/>
 						<button name="set_alumni" string="Alumni" type="object"
-							icon="gtk-execute" states="done"
-							groups="school.group_school_administration,school.group_school_teacher"/>
+							icon="gtk-execute" state="done"
+							/>
 						<button name="admission_done" type="object" string="Done"
-							states="draft,terminate" icon="gtk-jump-to"/>
-						<field name="state" widget="statusbar" nolabel="1"/>
+							state="draft,terminate" icon="gtk-jump-to"/>
+						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet style="width: 10%%,height:10%%">
 						<newline />
@@ -2187,7 +2194,14 @@
 		</record>
 		
 		<!-- Parent Information Action -->
-		<record id="action_student_parent" model="ir.actions.server">
+		<record model="ir.actions.act_window" id="action_student_parent">
+			<field name="name">Parent detail</field>
+			<field name="res_model">res.partner</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+		</record>
+		<!-- Parent Information Action -->
+		<!-- <record id="action_student_parent" model="ir.actions.server">
             <field name="sequence" eval="1"/>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
@@ -2195,7 +2209,7 @@
             <field name="code">action = pool.get('res.partner').student_parent_view(cr, uid, None, context)</field>
             <field name="condition">True</field>
             <field name="name">Create Parent</field>
-        </record>
+        </record> -->
         
 		<!--My Dashboard -->
 		<record model="ir.ui.view" id="board_my_dash_view">

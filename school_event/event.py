@@ -86,7 +86,7 @@ class school_event(models.Model):
                             ('close','Close'),('cancel','Cancel')],
                             string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant', 'event_participants_rel', 'participant_id', 'event_id', 'Participants', readonly=True, order_by='score')
-    code = fields.Many2one('school.school','Organiser School', help='Event Organised School')
+    code = fields.Many2one('school.school','Organiser School', help="Event Organised School")
     is_holiday = fields.Boolean('Is Holiday', help='Checked if the event is organised on holiday.')
     color = fields.Integer('Color Index', default=0)
     

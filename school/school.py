@@ -191,7 +191,7 @@ class school_standard(models.Model):
     subject_ids =   fields.Many2many('subject.subject', 'subject_standards_rel', 'subject_id', 'standard_id', 'Subject')
     user_id =       fields.Many2one('hr.employee', string='Class Teacher')
 #    student_ids =   fields.function(_compute_student, method=True, relation='student.student', type="one2many", string='Student In Class')
-    student_ids =   fields.One2many('student.student',compute='_compute_student',string='Student In Class')
+    student_ids =   fields.One2many('student.student', 'school_standard_id', string='Student In Class', compute='_compute_student')
     color =         fields.Integer('Color Index')
     passing =       fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
 #    cmp_id =        fields.related('school_id','company_id',relation="res.company", string="Company Name", type="many2one", store=True)
@@ -339,10 +339,11 @@ class student_student(models.Model):
     blood_pressure =    fields.Boolean('Blood Pressure')
     remark =            fields.Text('Remark', states={'done':[('readonly',True)]})
     school_id =         fields.Many2one('school.school', 'School', states={'done':[('readonly',True)]})
+    school_standard_id =fields.Many2one('school.standard', 'School Standard')
     state =             fields.Selection([('draft','Draft'),
-                                          ('done','Done'),
                                           ('terminate','Terminate'),
-                                          ('alumni','Alumni')],'State',readonly=True, default='draft')
+                                          ('alumni','Alumni'),
+                                          ('done','Done')], default='draft')
     history_ids =       fields.One2many('student.history', 'student_id', string='History')
     certificate_ids =   fields.One2many('student.certificate','student_id',string='Certificate')
  #   'attendance_ids' : fields.one2many('attendance.sheet.line','name','Attendance History',readonly=True)
@@ -384,30 +385,14 @@ class student_student(models.Model):
 
 
     @api.multi
-    def set_to_draft(self):
-        self.write({'state' : 'draft'})
-        return True
-    
+    def set_terminate(self):
+        for ter_rec in self:
+            ter_rec.state = 'terminate'
     @api.multi
     def set_alumni(self):
-        self.write({'state' : 'alumni'})
-        return True
+        for alumni_rec in self:
+            alumni_rec.state = 'alumni'
     
-    @api.multi
-    def set_terminate(self):
-        self.write({'state' : 'terminate'})
-        return True
-    
-    @api.multi
-    def set_done(self):
-        self.write({'state' : 'done'})
-        return True
-    
-    @api.multi
-    def admission_draft(self):
-        self.write({'state' : 'draft'})
-        return True
-
     @api.multi
     def admission_done(self):
         school_standard_obj = self.env['school.standard']
@@ -427,7 +412,6 @@ class student_student(models.Model):
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/') + str(student_data.year.code) + str('/') + str(stu_code)
         self.write({'state': 'done', 'admission_date': time.strftime('%Y-%m-%d'), 'student_code' : student_code, 'reg_code':registation_code})
-        return True
 
 class student_grn(models.Model):
     _name = "student.grn"
@@ -579,34 +563,34 @@ class res_partner(models.Model):
     
     student_id = fields.Many2one('student.student','Student')
     
-    @api.multi
-    def student_parent_view(self):
-        cr,uid,context = self.env.args
-#         data_obj = self.env['ir.model.data']
-        form_res = self.env.ref('school.view_parent_form')
-        form_view_id = form_res and form_res.id or False
-        tree_res = self.env.ref('school.view_parent_tree')
-        tree_view_id = tree_res and tree_res.id or False
-        kanban_res = self.env.ref('base.res_partner_kanban_view')
-        kanban_view_id = kanban_res and kanban_res.id or False
-        user_rec = self.env['res.users'].browse(uid)
-        parent_lst = []
-        student_recs = self.env['student.student'].search([])
-        for student_rec in student_recs:
-            parent_lst.append(student_rec.partner_id.id)
-        domain = [('id','=', user_rec.partner_id.id)]
-        if uid == 1:
-            domain = [('id','in',parent_lst)]
-        value = {
-            'domain': domain,
-            'name' : _('Parent Detail'),
-            'view_type': 'form',
-            'view_mode': 'kanban,tree,form',
-            'res_model': 'res.partner',
-            'type': 'ir.actions.act_window',
-            'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id, 'form')],
-        }
-        return value
+#     @api.multi
+#     def student_parent_view(self):
+#         cr,uid,context = self.env.args
+# #         data_obj = self.env['ir.model.data']
+#         form_res = self.env.ref('school.view_parent_form')
+#         form_view_id = form_res and form_res.id or False
+#         tree_res = self.env.ref('school.view_parent_tree')
+#         tree_view_id = tree_res and tree_res.id or False
+#         kanban_res = self.env.ref('base.res_partner_kanban_view')
+#         kanban_view_id = kanban_res and kanban_res.id or False
+#         user_rec = self.env['res.users'].browse(uid)
+#         parent_lst = []
+#         student_recs = self.env['student.student'].search([])
+#         for student_rec in student_recs:
+#             parent_lst.append(student_rec.partner_id.id)
+#         domain = [('id','=', user_rec.partner_id.id)]
+#         if uid == 1:
+#             domain = [('id','in',parent_lst)]
+#         value = {
+#             'domain': domain,
+#             'name' : _('Parent Detail'),
+#             'view_type': 'form',
+#             'view_mode': 'kanban,tree,form',
+#             'res_model': 'res.partner',
+#             'type': 'ir.actions.act_window',
+#             'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id, 'form')],
+#         }
+#         return value
 
 class student_reference(models.Model):
     ''' Defining a student reference information '''
