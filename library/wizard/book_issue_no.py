@@ -5,7 +5,8 @@
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #    Copyright (C) 2011-2012 Serpent Consulting Services
 #    (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,24 +21,27 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
+from openerp import models, fields, api
+
 
 class book_name(models.TransientModel):
-    
-    _name="book.name"
-    _description="Book Name"
-    
+
+    _name = "book.name"
+    _description = "Book Name"
+
     name = fields.Many2one('product.product', 'Book Name', required=True)
     card_id = fields.Many2one("library.card", "Card No", required=True)
-    
+
 #     _columns={
-#                 'name': fields.many2one('product.product', 'Book Name', required=True),
-#                 'card_id': fields.many2one("library.card", "Card No", required=True), 
+#                 'name': fields.many2one('product.product', 'Book Name',
+#                                            required=True),
+#                 'card_id': fields.many2one("library.card", "Card No",
+#                                               required=True),
 #               }
     @api.multi
     def create_new_books(self):
         for rec in self:
-            rec.create({'name':rec.name.id, 'card_id':rec.card_id.id})
+            rec.create({'name': rec.name.id, 'card_id': rec.card_id.id})
         return {}
-   
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

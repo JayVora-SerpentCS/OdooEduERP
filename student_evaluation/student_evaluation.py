@@ -40,7 +40,7 @@ class student_evaluation(models.Model):
         eval_list = []
         for stu_eval_rec in self.browse(self.ids):
             if stu_eval_rec.eval_line:
-                self._cr.execute('delete from student_evaluation_line where'\
+                self._cr.execute('delete from student_evaluation_line where'
                                  'eval_id=%s', (stu_eval_rec.id,))
             type = stu_eval_rec.type
             eval_temp_rec_browse = eval_temp_obj.search([('type', '=', type)])
@@ -98,7 +98,7 @@ class student_evaluation(models.Model):
 
     @api.multi
     def set_cancel(self):
-        self.write({'state': 'cancelled'}) 
+        self.write({'state': 'cancelled'})
         return True
 
     @api.multi
@@ -120,7 +120,7 @@ class student_evaluation_line(models.Model):
     eval_id = fields.Many2one('student.evaluation', 'eval id')
     stu_eval_id = fields.Many2one('student.evaluation.template', 'Question')
     point_id = fields.Many2one('rating.rating','Rating',
-                               domain="[('rating_id','=',stu_eval_id)]")
+                               domain= "[('rating_id', '=', stu_eval_id)]")
     rating = fields.Char('Remarks')
 
     _sql_constraints = [
@@ -149,4 +149,4 @@ class rating_rating(models.Model):
     point = fields.Integer('Rating in points', required=True)
     rating = fields.Char('Remarks', required=True)
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:                
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

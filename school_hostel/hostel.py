@@ -35,7 +35,7 @@ class hostel_type(models.Model):
     name = fields.Char('Hostel Name', required=True)
     type = fields.Selection([('boys', 'Boys'), ('girls', 'Girls'),
                              ('common', 'Common')], 'Hostel Type',
-                            required=True,default='common')
+                            required=True, default='common')
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('res.partner', 'Rector')
     room_ids = fields.One2many('hostel.room', 'name', 'Room')
@@ -55,28 +55,27 @@ class hostel_room(models.Model):
                 count += 1
             room_availability = data.student_per_room - count
             if room_availability < 0:
-                raise except_orm(_("You can not assign room more"/ 
+                raise except_orm(_("You can not assign room more" /
                                    "than %s student" % data.student_per_room))
             else:
                 data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'Hostel')
-    floor_no = fields.Integer('Floor No.',default=1)
-    room_no = fields.Char('Room No.',required=True)
+    floor_no = fields.Integer('Floor No.', default=1)
+    room_no = fields.Char('Room No.', required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
     availability = fields.Float(compute='_check_availability',
                                 string="Availability")
-    student_ids = fields.One2many('hostel.student','hostel_room_id',
+    student_ids = fields.One2many('hostel.student', 'hostel_room_id',
                                   'Student')
     telephone = fields.Boolean('Telephone access')
     ac = fields.Boolean('Air Conditioning')
-    private_bathroom = fields.Boolean ('Private Bathroom')
-    guest_sofa = fields.Boolean ('Guest sofa-bed')
-    tv = fields.Boolean ('Television')
-    internet = fields.Boolean ('Internet Access')
-    refrigerator = fields.Boolean ('Refrigerator')
-    microwave = fields.Boolean ('Microwave')
-
+    private_bathroom = fields.Boolean('Private Bathroom')
+    guest_sofa = fields.Boolean('Guest sofa-bed')
+    tv = fields.Boolean('Television')
+    internet = fields.Boolean('Internet Access')
+    refrigerator = fields.Boolean('Refrigerator')
+    microwave = fields.Boolean('Microwave')
 
     _sql_constraints = [('room_no_unique',
                          'unique(room_no)',
@@ -94,14 +93,13 @@ class hostel_student(models.Model):
     _name = 'hostel.student'
 
     @api.one
-    @api.depends('room_rent','paid_amount')
+    @api.depends('room_rent', 'paid_amount')
     def _get_remaining_fee_amt(self):
         for get_fee in self:
             if get_fee.room_rent and get_fee.paid_amount:
                 get_fee.remaining_amount = get_fee.room_rent - get_fee.paid_amount
             else:
                 get_fee.remaining_amount = 0.0
-
 
     @api.multi
     def print_fee_receipt(self):
@@ -117,7 +115,7 @@ class hostel_student(models.Model):
 
     hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
     hostel_id = fields.Char('Hostel ID', readonly=True,
-                            default=lambda obj:obj.env['ir.sequence'].
+                            default=lambda obj: obj.env['ir.sequence'].
                             get('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
@@ -132,10 +130,10 @@ class hostel_student(models.Model):
                                ('reservation', 'Reservation'),
                                ('confirm', 'Confirm')],
                               'Status', default='draft')
-    
+
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
-                         'Error ! Discharge Date cannot be set before'\
+                         'Error ! Discharge Date cannot be set before'
                          'Admission Date.')]
 
     @api.multi
@@ -164,9 +162,9 @@ class hostel_student(models.Model):
 class bed_type(models.Model):
 
     _name = 'bed.type'
-    _description='Type of Bed in Hostel'
+    _description = 'Type of Bed in Hostel'
 
-    name = fields.Char('Name',required=True)
+    name = fields.Char('Name', required=True)
     description = fields.Text('Description')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=
