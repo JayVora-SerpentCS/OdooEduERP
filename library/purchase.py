@@ -62,7 +62,7 @@ class purchase_order(models.Model):
             for order_line in order.order_line:
                 if not order_line.product_id:
                     continue
-                if order_line.product_id.product_tmpl_id.type in ('product', 
+                if order_line.product_id.product_tmpl_id.type in ('product',
                                                                   'consu'):
                     dest = order.location_id.id
                     move_obj.create({
@@ -102,7 +102,7 @@ class purchase_order(models.Model):
                 l_id += 1
                 production_lot_dict = {
                     'product_id': line.product_id.id,
-                    'name': line.order_id and (str(line.order_id.name)+
+                    'name': line.order_id and (str(line.order_id.name) +
                                                '/Line'+str(l_id)) or False,
                 }
                 production_lot_id = production_obj.create(production_lot_dict)
@@ -111,7 +111,7 @@ class purchase_order(models.Model):
         return True
 
     @api.model
-    def default_get(self,fields_list):
+    def default_get(self, fields_list):
         res = super(purchase_order, self).default_get(fields_list)
         res.update({'invoice_method': 'picking'})
         return res
