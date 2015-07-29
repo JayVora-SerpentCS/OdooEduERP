@@ -19,8 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp import models, api, _
+from openerp.exceptions import except_orm
 
 class exam_create_result(models.TransientModel):
 
@@ -38,11 +38,18 @@ class exam_create_result(models.TransientModel):
             for exam in exam_obj.browse(self._context.get('active_ids')):
                 if exam.standard_id:
                     for school_std_rec in exam.standard_id:
-                        student_ids = student_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
-                                                          ('division_id', '=', school_std_rec.division_id.id),
-                                                          ('medium_id', '=', school_std_rec.medium_id.id)])
+                        student_ids = student_obj.search([('standard_id', '=',
+                                                           school_std_rec.
+                                                           standard_id.id),
+                                                          ('division_id', '=',
+                                                           school_std_rec.
+                                                           division_id.id),
+                                                          ('medium_id', '=',
+                                                           school_std_rec.
+                                                           medium_id.id)])
                         for student in student_ids:
-                            result_exists = result_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
+                            result_exists = result_obj.search([('standard_id',
+                                                                '=', school_std_rec.standard_id.id),
                                                                ('student_id.division_id', '=', school_std_rec.division_id.id),
                                                                ('student_id.medium_id', '=', school_std_rec.medium_id.id),
                                                                ('student_id','=', student.id)])
@@ -53,7 +60,7 @@ class exam_create_result(models.TransientModel):
                                                                'division_id': school_std_rec.division_id.id,
                                                                'medium_id': school_std_rec.medium_id.id})
                                 for line in exam.standard_id:
-#                                    for line in school_std_rec.timetable_ids:
+                                    # for line in school_std_rec.timetable_ids:
                                     result_subject_obj.create({'exam_id': result_id.id,
                                                                'subject_id': line.standard_id.subject_id and line.subject_id.id or False,
                                                                'minimum_marks': line.subject_id and line.subject_id.minimum_marks or 0.0,

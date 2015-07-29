@@ -157,12 +157,13 @@ class school_standard(models.Model):
     _description ='School Standards'
     _rec_name ="school_id"
 
-    @api.one
-    @api.depends('standard_id')
-    def _compute_student(self):
-        self.student_ids = False
-        if self.standard_id:
-            self.student_ids = self.env['student.student'].search([('standard_id', '=', self.standard_id.id)])
+#     @api.one
+#     @api.depends('standard_id')
+#     def _compute_student(self):
+#         print"i am call",self
+#         self.student_ids = False
+#         if self.standard_id:
+#             self.student_ids = self.env['student.student'].search([('standard_id', '=', self.standard_id.id)])
             
 #    def import_subject(self, cr, uid, ids,context=None):
 #        ''' This function will automatically placed previous standard subject'''
@@ -191,7 +192,7 @@ class school_standard(models.Model):
     subject_ids =   fields.Many2many('subject.subject', 'subject_standards_rel', 'subject_id', 'standard_id', 'Subject')
     user_id =       fields.Many2one('hr.employee', string='Class Teacher')
 #    student_ids =   fields.function(_compute_student, method=True, relation='student.student', type="one2many", string='Student In Class')
-    student_ids =   fields.One2many('student.student', 'school_standard_id', string='Student In Class', compute='_compute_student')
+#     student_ids =   fields.One2many('student.student', 'school_standard_id', string='Student In Class', compute='_compute_student')
     color =         fields.Integer('Color Index')
     passing =       fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
 #    cmp_id =        fields.related('school_id','company_id',relation="res.company", string="Company Name", type="many2one", store=True)

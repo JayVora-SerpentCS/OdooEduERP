@@ -30,7 +30,7 @@ class update_books(models.TransientModel):
     _description = "Update Books"
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
-    
+
 #     _columns={
 #                'name': fields.many2one('product.product', 'Book Name',
 #                                        required=True),
@@ -42,7 +42,7 @@ class update_books(models.TransientModel):
         for rec in self:
             if self._context.get('active_ids'):
                 for active_id in self._context.get('active_ids'):
-                    lib_book_obj.browse(active_id).write({'name':rec.name.id})
+                    lib_book_obj.browse(active_id).write({'name': rec.name.id})
         return {}
-    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

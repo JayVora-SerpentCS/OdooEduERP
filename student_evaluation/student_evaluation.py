@@ -119,8 +119,8 @@ class student_evaluation_line(models.Model):
 
     eval_id = fields.Many2one('student.evaluation', 'eval id')
     stu_eval_id = fields.Many2one('student.evaluation.template', 'Question')
-    point_id = fields.Many2one('rating.rating','Rating',
-                               domain= "[('rating_id', '=', stu_eval_id)]")
+    point_id = fields.Many2one('rating.rating', 'Rating',
+                               domain="[('rating_id', '=', stu_eval_id)]")
     rating = fields.Char('Remarks')
 
     _sql_constraints = [

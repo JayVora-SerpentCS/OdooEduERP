@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,13 +22,15 @@
 #
 ##############################################################################
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm
+
 
 class move_standards(models.TransientModel):
 
     _name = 'move.standards'
 
-    academic_year_id = fields.Many2one('academic.year', 'Academic Year', required=True)
+    academic_year_id = fields.Many2one('academic.year', 'Academic Year',
+                                       required=True)
 
 
 #    def move_start(self, cr, uid, ids, context=None):
@@ -41,16 +45,29 @@ class move_standards(models.TransientModel):
 #        student_obj = self.pool.get('student.student')
 #        student_history_obj = self.pool.get("student.history")
 #        for data in self.browse(cr, uid, ids, context):
-#            for standards in school_standard_obj.browse(cr, uid, context.get('active_ids'), context):
+#            for standards in school_standard_obj.browse(cr, uid, context.get
+#                                                    ('active_ids'), context):
 #                for student in standards.student_ids:
-#                    stud_year_ids = student_history_obj.search(cr, uid, [('academice_year_id', '=', data.academic_year_id.id), ('student_id', '=', student.id)])
-#                    year_id = academic_obj.next_year(cr, uid,  student.year.sequence, context)
+#                    stud_year_ids = student_history_obj.search(cr, uid,
+#                                    [('academice_year_id', '=', data.
+#                                    academic_year_id.id), ('student_id', '=',
+#                                    student.id)])
+#                    year_id = academic_obj.next_year(cr, uid,
+#                                student.year.sequence, context)
 #                    if year_id and year_id != data.academic_year_id.id:
 #                        continue
 #                    if stud_year_ids:
-#                        raise osv.except_osv(_('Warning !'), _('Please Select Next Academic year.'))
+#                        raise osv.except_osv(_('Warning !'),
+#                            _('Please Select Next Academic year.'))
 #                    else:
-#                        result_exists = result_obj.search(cr, uid, [('standard_id', '=', student.standard_id.id), ('standard_id.division_id', '=', student.division_id.id), ('standard_id.medium_id', '=', student.medium_id.id), ('student_id','=', student.id)])
+#                        result_exists = result_obj.search(cr, uid,
+#                                         [('standard_id', '=', student.
+#                                         standard_id.id), ('standard_id.
+#                                         division_id', '='
+#                                         student.division_id.id),
+#                                         ('standard_id.medium_id', '=',
+#                                         student.medium_id.id),
+#                                         ('student_id','=', student.id)])
 #                        if result_exists:
 #                            result_data = result_obj.browse(cr, uid, result_exists[0], context)
 #                            if result_data.result == "Pass":

@@ -41,7 +41,8 @@ class student_meeting(models.TransientModel):
 #        attendee_ids = []
 #        flag = False
 #        error_student=''
-#        for student in student_obj.browse(cr, uid, context['active_ids'], context):
+#        for student in student_obj.browse(cr, uid,
+#                                    context['active_ids'], context):
 #            if not student.user_email:
 #                flag=True
 #                error_student += student.pid+" : "+student.name +" "+
@@ -79,7 +80,7 @@ class student_meeting(models.TransientModel):
                                             'email': student.email}))
         if flag:
             raise except_orm(_('Error !'), _("Following Student don't have"
-                                             "Email ID.\n\n"+error_student+
+                                             "Email ID.\n\n" + error_student+
                                              "\nMeeting cannot be scheduled."
                                              ))
         new_id = cal_event_obj.create({

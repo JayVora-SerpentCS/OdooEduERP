@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -29,12 +31,15 @@ from openerp.report import report_sxw
 from openerp.tools import ustr
 
 one_day = relativedelta(days=1)
-month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
+month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun',
+              'July', 'August', 'September', 'October', 'November',
+              'December']
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
+
 
 class report_custom(report_rml):
 
@@ -59,7 +64,9 @@ class report_custom(report_rml):
                 today, tomor = month, month + one_day
                 while today.month == month.month:
                     day = today.day
-                    attendance_sheet_domain = [('standard_id','=',student['standard_id'][0]), ('month_id','=',today.month)]
+                    attendance_sheet_domain = [('standard_id', '=',
+                                                student['standard_id'][0]),
+                                               ('month_id', '=', today.month)]
                     attendance_sheet_search_ids = attendance_sheet_obj.search(cr, uid, attendance_sheet_domain, context=context)
                     if not attendance_sheet_search_ids:
                         var = 'A'
@@ -103,7 +110,7 @@ class report_custom(report_rml):
                                     elif day == 16:
                                         att = line.one_6
                                     elif day == 17:
-                                        att =  line.one_7
+                                        att = line.one_7
                                     elif day == 18:
                                         att = line.one_8
                                     elif day == 19:
@@ -132,7 +139,7 @@ class report_custom(report_rml):
                                         att = line.two_0
                                     else:
                                         att = line.three_1
-                                    
+                            
                                     if att == True:
                                         var = 'P'
                                     else:

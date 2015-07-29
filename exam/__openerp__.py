@@ -35,7 +35,7 @@
 """,
     "depends": [
                 "timetable"
-                ],
+            ],
     "data": [
             "exam_view.xml",
             "exam_sequence.xml",
@@ -47,15 +47,15 @@
             "views/additional_exam_report.xml",
             "views/result_information_report.xml",
             "report_view.xml",
-             ],
+            ],
     "installable": True,
     "application": True,
     'demo': [
             "demo/exam_demo.xml"
-             ],
+            ],
     'test': [
             "test/exam_test.yml"
-            ],
+        ],
     "auto_install": False,
 }
 
