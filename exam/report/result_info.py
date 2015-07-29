@@ -29,15 +29,15 @@ class result(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'get_lines': self.get_lines,
-            'get_exam_data':self.get_exam_data,
-            'get_grade':self.get_grade,
+            'get_exam_data': self.get_exam_data,
+            'get_grade': self.get_grade,
         })
-        
-    def get_grade(self,result_id, student):
-        list=[]
-        value={}
+
+    def get_grade(self, result_id, student):
+        list = []
+        value = {}
         for stu_res in student.year.grade_id.grade_ids:
-            value.update({'fail':stu_res.fail})
+            value.update({'fail': stu_res.fail})
             flag=stu_res.fail
         list.append(value)
         return list

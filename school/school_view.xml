@@ -6,15 +6,15 @@
 			<field name="name">student.student.form.1</field>
 			<field name="model">student.student</field>
 			<field name="arch" type="xml">
-					<header>
-						<button name="set_terminate" string="Terminate" class="oe_highlight" type="object" state="terminate"
-							groups="school.group_school_administration,school.group_school_teacher"/>
-						<button name="set_alumni" string="Alumni" type="object" state="alumni" attrs="{'invisible':['|',('state','=','draft'),('state','=','terminate')]}"
-							groups="school.group_school_administration,school.group_school_teacher"/>
-						<button name="admission_done" type="object" string="Done" state="done" icon="gtk-jump-to" attrs="{'invisible':[('state','=','terminate')]}"/>
-						<field name="state" widget="statusbar"/>
-					</header>
-					<form string="Student Information">
+			<form string="Student Information">
+				<header>
+					<button name="set_terminate" string="Terminate" class="oe_highlight" type="object" state="terminate"
+						groups="school.group_school_administration,school.group_school_teacher"/>
+					<button name="set_alumni" string="Alumni" type="object" state="alumni"
+						groups="school.group_school_administration,school.group_school_teacher"/>
+					<button name="admission_done" type="object" string="Done" state="done" icon="gtk-jump-to"/>
+					<field name="state" widget="statusbar"/>
+				</header>
 					<sheet style="width: 10%%,height:10%%">
 						<separator string="Personal Information" />
 						<field name="photo" widget='image' class="oe_avatar oe_left"
@@ -38,7 +38,7 @@
 								<field name="school_id" widget="selection" help="School of Student" required="1"/>
 							</group>
 							<group col="2">
-								<separator string="Standard Information" colspan="4" />
+								<separator string="Standard Information" colspan="4"/>
 								<field name="standard_id" placeholder="Standard" widget="selection"/>
 								<field name="division_id" placeholder="Division" widget="selection"/>
 								<field name="medium_id" placeholder="Medium" widget="selection"/>
@@ -162,7 +162,7 @@
 												<field name='relation' placeholder="Enter or select Relation"/>
 											</group>
 											<group col="2">
-												<separator colspan="2" />
+												<separator colspan="2"/>
 												<field name='phone' placeholder="Phone Number"/>
 												<field name='email' placeholder="Email ID"/>
 											</group>
@@ -191,7 +191,7 @@
 									</group>
 								</group>
 								<separator string="Does the applicant have any Disabilities?"
-									colspan="4" />
+									colspan="4"/>
 								<group col="6" colspan="4">
 									<field name="eye"/>
 									<field name="ear"/>
@@ -257,6 +257,7 @@
 								</field>
 							</page>
 						</notebook>
+						<!-- <field name="state" invisible="1"/> -->
 					</sheet>
 				</form>
 			</field>
