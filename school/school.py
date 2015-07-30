@@ -556,6 +556,7 @@ class hr_employee(models.Model):
     school_id =   fields.Many2one('school.school', 'School')
     address_id =  fields.Many2one('res.partner', 'Contact Address')
     hr_type = fields.Selection([('teacher','Teacher'), ('librarian','Librarian')], 'Type')
+    bank_account_id = fields.Char('Bank Account Number')
     
 class res_partner(models.Model):
     '''Defining a address information '''
@@ -563,35 +564,44 @@ class res_partner(models.Model):
     _description = 'Address Information'
     
     student_id = fields.Many2one('student.student','Student')
+    stu_parent_name = fields.Char('Parent Name')
+    student_reg_no = fields.Many2one('student.grn',"GRN number")
     
-#     @api.multi
-#     def student_parent_view(self):
-#         cr,uid,context = self.env.args
-# #         data_obj = self.env['ir.model.data']
-#         form_res = self.env.ref('school.view_parent_form')
-#         form_view_id = form_res and form_res.id or False
-#         tree_res = self.env.ref('school.view_parent_tree')
-#         tree_view_id = tree_res and tree_res.id or False
-#         kanban_res = self.env.ref('base.res_partner_kanban_view')
-#         kanban_view_id = kanban_res and kanban_res.id or False
-#         user_rec = self.env['res.users'].browse(uid)
-#         parent_lst = []
-#         student_recs = self.env['student.student'].search([])
-#         for student_rec in student_recs:
-#             parent_lst.append(student_rec.partner_id.id)
-#         domain = [('id','=', user_rec.partner_id.id)]
-#         if uid == 1:
-#             domain = [('id','in',parent_lst)]
-#         value = {
-#             'domain': domain,
-#             'name' : _('Parent Detail'),
-#             'view_type': 'form',
-#             'view_mode': 'kanban,tree,form',
-#             'res_model': 'res.partner',
-#             'type': 'ir.actions.act_window',
-#             'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id, 'form')],
-#         }
-#         return value
+    @api.onchange('student_reg_no')
+    def gr_student_select(self):
+        print '/nnnnnnnnnnn =============',self.student_reg_no, self.student_reg_no.grn_no
+        stu_rec = self.env['student.student'].search([('grn_number','=',self.student_reg_no.id)])
+        print '/n/n//n dsdsdssssssss',stu_rec
+        self.student_id = stu_rec.id
+    
+    @api.multi
+    def student_parent_view(self):
+         cr,uid,context = self.env.args
+         data_obj = self.env['ir.model.data']
+         form_res = self.env.ref('school.view_parent_form')
+         form_view_id = form_res and form_res.id or False
+         tree_res = self.env.ref('school.view_parent_tree')
+         tree_view_id = tree_res and tree_res.id or False
+         kanban_res = self.env.ref('base.res_partner_kanban_view')
+         kanban_view_id = kanban_res and kanban_res.id or False
+         user_rec = self.env['res.users'].browse(uid)
+         parent_lst = []
+         student_recs = self.env['student.student'].search([])
+         for student_rec in student_recs:
+              parent_lst.append(student_rec.partner_id.id)
+         domain = [('id','=', user_rec.partner_id.id)]
+         if uid == 1:
+             domain = [('id','in',parent_lst)]
+         value = {
+             'domain': domain,
+             'name' : _('Parent Detail'),
+             'view_type': 'form',
+             'view_mode': 'kanban,tree,form',
+             'res_model': 'res.partner',
+             'type': 'ir.actions.act_window',
+             'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id, 'form')],
+         }
+         return value
 
 class student_reference(models.Model):
     ''' Defining a student reference information '''

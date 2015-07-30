@@ -59,10 +59,17 @@ class monthly_attendance_sheet(models.TransientModel):
         models_data = self.env['ir.model.data']
         #         atten_sheet_line_created = 0
         # Get opportunity views
-        dummy, form_view = models_data.get_object_reference
-        ('school_attendance', 'view_attendance_sheet_form')
-        dummy, tree_view = models_data.get_object_reference
-        ('school_attendance', 'view_attendance_sheet_tree')
+        
+        form_res = self.env.ref('school_attendance.view_attendance_sheet_form')
+        form_view_id = form_res and form_res.id or False
+        tree_res = self.env.ref('school_attendance.view_attendance_sheet_tree')
+        tree_view_id = tree_res and tree_res.id or False
+        
+        
+#         dummy, form_view = models_data.get_object_reference
+#         ('school_attendance', 'view_attendance_sheet_form')
+#         dummy, tree_view = models_data.get_object_reference
+#         ('school_attendance', 'view_attendance_sheet_tree')
         print "\n data ::::::::::::", data
         return {
             'view_type': 'form',
@@ -72,7 +79,7 @@ class monthly_attendance_sheet(models.TransientModel):
             'domain': [('standard_id', '=', data['standard_id'][0]),
                        ('month_id', '=', data['month_id'][0]),
                        ('year_id', '=', data['year_id'][0])],
-            'views': [(tree_view or False, 'tree'), (form_view or False,
+            'views': [(tree_view_id or False, 'tree'), (form_view_id or False,
                                                      'form')],
             'type': 'ir.actions.act_window',
         }

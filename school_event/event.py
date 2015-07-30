@@ -117,8 +117,8 @@ class school_event(models.Model):
     @api.multi
     def event_open(self):
         for event_open_obj in self:
-            if event_obj.part_ids and event_obj.part_ids[0].id:
-                event_obj.write({'state' : 'open'})
+            if event_open_obj.part_ids and event_open_obj.part_ids[0].id:
+                event_open_obj.write({'state' : 'open'})
             else:
                 raise except_orm(_('No Participants !'), _('No Participants to open the Event.'))
 

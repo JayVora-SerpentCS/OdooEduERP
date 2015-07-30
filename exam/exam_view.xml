@@ -272,13 +272,14 @@
                             <field name="s_exam_ids" placeholder="Select or Create Examination"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="student_id" placeholder="Select or Create Student" on_change="on_change_student(student_id, s_exam_ids, standard_id)" context="{'exam':s_exam_ids}"/>
+                            <field name="standard_id" placeholder="Select or Create Standard" domain="[('standard_id','=',s_exam_ids)]"/>
                             <field name="roll_no_id" />
-                            <field name="standard_id" placeholder="Select or Create Standard"/>
+                            <field name="student_id" placeholder="Select or Create Student" on_change="on_change_student(student_id, s_exam_ids, standard_id)" context="{'exam':s_exam_ids}"/>
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
                             <tree string="Subjects" editable="bottom" >
                                 <field name="subject_id" placeholder="Select or Create Subject"/>
+                                <field name="present"/>
                                 <field name="maximum_marks"/>
                                 <field name="minimum_marks"/>
                                 <field name="obtain_marks"/>

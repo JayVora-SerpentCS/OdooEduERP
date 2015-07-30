@@ -220,33 +220,45 @@ class exam_result(models.Model):
                 result_obj.result = 'Fail'
 
     @api.multi
-    def on_change_student(self,student, exam_id, standard_id):
-        val = {}
-        if not student:
-            return {}
-        if not exam_id:
-            raise except_orm(_('Input Error !'), _('First Select Exam.'))
-        student_obj = self.env['student.student']
-        student_data = student_obj.browse(student)
-        val.update({'standard_id' : student_data.standard_id.id,
-                    'roll_no_id' : student_data.roll_no})
-        return {'value': val}
+    def on_change_student(self, student, exam_id, standard_id):
+        for val in self:
+            val = {}
+            if not student:
+                return {}
+            if not exam_id:
+                raise except_orm(_('Input Error !'), _('First Select Exam.'))
+            student_obj = self.env['student.student']
+            student_data = student_obj.browse(student)
+            val.update({'standard_id' : student_data.standard_id.id,
+                        'roll_no_id' : student_data.roll_no})
+            return {'value': val}
 
     @api.onchange('s_exam_ids')
     def onchange_exam(self):
-        student_lst = []
         sub_list = []
+        standard_lst = []
+        sub_res = {}
         for exam_obj in self:
-            for exam_standard_rec in exam_obj.s_exam_ids.standard_id.student_ids:
-                    student_lst.append(exam_standard_rec.id)
-        for exam_subject_rec in exam_obj.s_exam_ids.standard_id.subject_ids:
-            sub_val = {
+            for rec in exam_obj.s_exam_ids.standard_id:
+                standard_lst.append(rec.id)
+                for exam_subject_rec in rec.subject_ids:
+                    sub_val = {
                        'subject_id' : exam_subject_rec.id,
                        'maximum_marks' : exam_subject_rec.maximum_marks
-                       }
-            sub_list.append(sub_val)
+                    }
+                    sub_list.append(sub_val)
         exam_obj.result_ids = sub_list
+        return {'domain':{'standard_id':[('id','in',standard_lst)]}}
+    @api.onchange('standard_id')
+    def onchange_standard(self):
+        student_lst = []
+        for standard_obj in self:
+            for rec in standard_obj.standard_id:
+                for exam_standard_rec in rec.student_ids:
+                    student_lst.append(exam_standard_rec.id)
+        print 'student------------------',student_lst
         return {'domain':{'student_id':[('id','in',student_lst)]}}
+        
 
     s_exam_ids = fields.Many2one("exam.exam", "Examination",required = True)
     student_id = fields.Many2one("student.student", "Student Name", required = True)
@@ -374,6 +386,7 @@ class exam_subject(models.Model):
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], related='exam_id.state',string="State")
     subject_id = fields.Many2one("subject.subject","Subject Name")
+    present = fields.Boolean("Present")
     obtain_marks = fields.Float("Obtain Marks", group_operator="avg")
     minimum_marks = fields.Float("Minimum Marks")
     maximum_marks = fields.Float("Maximum Marks")
