@@ -41,23 +41,6 @@ class student_attendance_by_month(models.TransientModel):
     attendance_type = fields.Selection([('daily', 'FullDay'),
                                         ('lecture', 'Lecture Wise')], 'Type')
 
-#     _columns = {
-#         'month': fields.selection([(1, 'January'), (2, 'February'),
-#                                    (3, 'March'), (4, 'April'), (5, 'May'),
-#                                    (6, 'June'), (7, 'July'), (8, 'August'),
-#                                    (9, 'September'), (10, 'October'),
-#                                    (11, 'November'), (12, 'December')],
-#                                    'Month', required=True),
-#         'year': fields.integer('Year', required=True),
-#         'attendance_type':fields.selection([('daily','FullDay'),
-#                                            ('lecture','Lecture Wise')],
-#                                            'Type'),
-#     }
-#     _defaults = {
-#          'month': lambda *a: time.gmtime()[1],
-#          'year': lambda *a: time.gmtime()[0],
-#     }
-
     @api.multi
     def print_report(self):
         ''' This method prints report

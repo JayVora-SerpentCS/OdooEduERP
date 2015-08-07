@@ -79,7 +79,8 @@ class exam_exam(models.Model):
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
     create_date = fields.Date("Exam Created Date", help="Exam Created Date")
     write_date = fields.Date("Exam Update Date", help="Exam Update Date")
-    exam_timetable_ids = fields.One2many('time.table', 'exam_id', 'Exam Schedule')
+#     exam_timetable_ids = fields.One2many('time.table', 'exam_id', 'Exam Schedule')
+    timetable_ids = fields.One2many('time.table.line', 'tables_id', 'TimeTable')
     state = fields.Selection([('draft','Draft'),('running','Running'),('finished','Finished'),('cancelled','Cancelled')], 'State', readonly=True,default='draft')
 
     @api.multi
@@ -123,6 +124,8 @@ class additional_exam(models.Model):
     weightage = fields.Char("Weightage")
     create_date = fields.Date("Created Date", help="Exam Created Date")
     write_date = fields.Date("Updated date", help="Exam Updated Date")
+    
+    
 
     @api.multi
     def on_change_stadard_name(self,standard_id):
@@ -155,7 +158,7 @@ class exam_result(models.Model):
                         obtain_marks = line.marks_access
                     total += obtain_marks
                 total_obj.total = total
-
+                
     @api.multi 
     def _compute_per(self):
         res={}
@@ -181,26 +184,6 @@ class exam_result(models.Model):
                 res[result.id] = {'percentage':per,'grade':grd}
         return res
 
-#    def _compute_result(self, cr, uid, ids, name, arg, context=None):
-#        if context is None:
-#            context = {}
-#        res={}
-#        flag = False
-#        for sub_line in self.browse(cr, uid, ids, context=context) or []:
-#            for l in sub_line.result_ids:
-#                if sub_line.student_id.year.grade_id.grade_ids:
-#                    for grades in sub_line.student_id.year.grade_id.grade_ids:
-#                        if grades.grade:
-#                            if not grades.fail:
-#                                res[sub_line.id] = 'Pass'
-#                            else:
-#                                flag=True
-#                else:
-#                        raise osv.except_osv(_('Configuration Error !'), _('First Select Grade System in Student->year->.'))
-#                if flag:
-#                    res[sub_line.id] = 'Fail'
-#            return res
-
     @api.multi
     @api.depends('result_ids','student_id')
     def _compute_result(self):
@@ -220,43 +203,47 @@ class exam_result(models.Model):
                 result_obj.result = 'Fail'
 
     @api.multi
-    def on_change_student(self, student, exam_id, standard_id):
-        for val in self:
-            val = {}
-            if not student:
-                return {}
-            if not exam_id:
-                raise except_orm(_('Input Error !'), _('First Select Exam.'))
-            student_obj = self.env['student.student']
-            student_data = student_obj.browse(student)
-            val.update({'standard_id' : student_data.standard_id.id,
-                        'roll_no_id' : student_data.roll_no})
-            return {'value': val}
+    @api.onchange('student_id')
+    def on_change_student(self):
+        student_lst = []
+        attendence_lst = []
+        attendence_line_obj = self.env['daily.attendance.line']
+        tt_line_obj = self.env['time.table.line']
+        for rec in self:
+            student_id = rec.student_id.id
+            for line in rec.result_ids:
+                tt_lines = tt_line_obj.search([('subject_id', '=', line.subject_id.id), ('tables_id', '=', rec.s_exam_ids.id)])
+                if tt_lines:
+                    exam_date = tt_lines[0].sub_exam_date
+                    attendace_lines = attendence_line_obj.search([('stud_id','=',rec.student_id.id),
+                                                                  ('standard_id.date','=',exam_date)])
+                    if attendace_lines:
+                        line.absent = attendace_lines[0].is_absent
 
     @api.onchange('s_exam_ids')
     def onchange_exam(self):
-        sub_list = []
         standard_lst = []
         sub_res = {}
         for exam_obj in self:
             for rec in exam_obj.s_exam_ids.standard_id:
                 standard_lst.append(rec.id)
+        return {'domain':{'standard_id':[('id','in',standard_lst)]}}
+    
+    @api.onchange('standard_id')
+    def onchange_standard(self):
+        student_lst = []
+        sub_list = []
+        for standard_obj in self:
+            for rec in standard_obj.standard_id:
+                for exam_standard_rec in rec.student_ids:
+                    student_lst.append(exam_standard_rec.id)
                 for exam_subject_rec in rec.subject_ids:
                     sub_val = {
                        'subject_id' : exam_subject_rec.id,
                        'maximum_marks' : exam_subject_rec.maximum_marks
                     }
                     sub_list.append(sub_val)
-        exam_obj.result_ids = sub_list
-        return {'domain':{'standard_id':[('id','in',standard_lst)]}}
-    @api.onchange('standard_id')
-    def onchange_standard(self):
-        student_lst = []
-        for standard_obj in self:
-            for rec in standard_obj.standard_id:
-                for exam_standard_rec in rec.student_ids:
-                    student_lst.append(exam_standard_rec.id)
-        print 'student------------------',student_lst
+        standard_obj.result_ids = sub_list
         return {'domain':{'student_id':[('id','in',student_lst)]}}
         
 
@@ -383,10 +370,11 @@ class exam_subject(models.Model):
                     if grade_obj.obtain_marks >= grade_id.from_mark and grade_obj.obtain_marks <= grade_id.to_mark:
                         grade_obj.grade = grade_id.grade
                         
+                        
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], related='exam_id.state',string="State")
     subject_id = fields.Many2one("subject.subject","Subject Name")
-    present = fields.Boolean("Present")
+    absent = fields.Boolean("Absent")
     obtain_marks = fields.Float("Obtain Marks", group_operator="avg")
     minimum_marks = fields.Float("Minimum Marks")
     maximum_marks = fields.Float("Maximum Marks")
@@ -441,6 +429,17 @@ class additional_exam_result(models.Model):
                 self.result = 'Pass'
             else:
                 self.result = 'Fail'
+                
+    @api.onchange('a_exam_id')
+    def onchange_exam(self):
+        standard_lst = []
+        student_lst = []
+        sub_res = {}
+        for exam_obj in self:
+            for rec in exam_obj.a_exam_id.standard_id:
+                for student_obj in rec.student_ids:
+                    student_lst.append(student_obj.id)
+        return {'domain':{'student_id':[('id','in',student_lst)]}}   
     
     @api.multi
     def on_change_student(self,student):

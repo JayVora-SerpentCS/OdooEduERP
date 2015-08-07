@@ -297,7 +297,7 @@ class library_book_issue(models.Model):
     standard_id = fields.Many2one('standard.standard', 'Standard') 
     roll_no = fields.Integer('Roll No')
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
-    date_issue = fields.Datetime('Release Date', required=True, help="Release(Issue) date of the book", default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
+    date_issue = fields.Datetime('Issue Date', required=True, help="Release(Issue) date of the book", default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date", string ='Return Date', method=True, store=True, help="Book To Be Return On This Date") 
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True, help="Actual Return Date of Book")
     penalty = fields.Float(compute="_calc_penalty", string ='Penalty', method=True, help='It show the late book return penalty')

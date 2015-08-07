@@ -22,7 +22,8 @@
 						<div class="oe_title">
 							<field name="pid" invisible="1" />
 							<field name="reg_code" readonly="1" />
-							<field name="grn_number" placeholder="General Reg No."/>
+							<field name="grn_number" placeholder="General Reg No." invisible="1"/>
+							<field name="gr_no"/> 
 							<field name="name" placeholder="First Name" nolabel="1" />
 							<field name="middle" placeholder="Middle Name" nolabel="1"/>
 							<field name="last" placeholder="Last Name" nolabel="1"/>
@@ -156,7 +157,7 @@
 												<field name='rel_name'/>
 												<!-- <field name='stu_name' placeholder="Create or Select Name"
 													attrs="{'invisible':[('rel_name','!=','exist')]}"/> -->
-												<field name="family_contact_id" attrs="{'invisible':[('rel_name','!=','exist')]}"/>
+												<field name='family_contact_id' attrs="{'invisible':[('rel_name','!=','exist')]}"/>
 												<field name='name' placeholder="Name"
 													attrs="{'invisible':[('rel_name','!=','new')]}"/>
 												<field name='relation' placeholder="Enter or select Relation"/>
@@ -169,9 +170,10 @@
 										</group>
 									</form>
 									<tree string="Family Contact Details">
-										<field name='stu_name' string="Existing Student"/>
+										<field name='family_contact_id' string="Existing Student"/>
 										<field name='name' string="New Name"/>
 										<field name="relation"/>
+										<field name="family_contact_id"/>
 										<field name="phone"/>
 									</tree>
 								</field>
@@ -739,33 +741,31 @@
 							</page>
 							<page string="Family Details">
 								<field name="family_con_ids" nolabel="1" colspan="4">
-									<tree string="Family  Contact Details">
-										<field name='rel_name'/>
-										<field name='stu_name' attrs="{'invisible':[('rel_name','!=','exist')]}"
-											string="Existing Student" />
-										<field name='name' attrs="{'invisible':[('rel_name','!=','new')]}"
-											string="New Name"/>
-										<field name="relation"/>
-										<field name="phone"/>
-									</tree>
 									<form string="Family Contact Details">
 										<group col="4">
 											<group col="2">
 												<separator colspan="2"/>
 												<field name='rel_name'/>
-												<field name='stu_name' placeholder="Create or Select Name"
-													attrs="{'invisible':[('rel_name','!=','exist')]}"/>
+												<!-- <field name='stu_name' placeholder="Create or Select Name"
+													attrs="{'invisible':[('rel_name','!=','exist')]}"/> -->
+												<field name="family_contact_id" attrs="{'invisible':[('rel_name','!=','exist')]}"/>
 												<field name='name' placeholder="Name"
 													attrs="{'invisible':[('rel_name','!=','new')]}"/>
 												<field name='relation' placeholder="Enter or select Relation"/>
 											</group>
 											<group col="2">
-												<separator colspan="2" />
+												<separator colspan="2"/>
 												<field name='phone' placeholder="Phone Number"/>
-												<field name='email' placeholder="Email Address"/>
+												<field name='email' placeholder="Email ID"/>
 											</group>
 										</group>
 									</form>
+									<tree string="Family Contact Details">
+										<field name='stu_name' string="Existing Student"/>
+										<field name='name' string="New Name"/>
+										<field name="relation"/>
+										<field name="phone"/>
+									</tree>
 								</field>
 							</page>
 							<page string="Remarks">
@@ -2136,9 +2136,9 @@
 							<newline />
 							<group colspan="2" col="4">
 								<separator string="Postal Address" colspan="4" col="4"/>
-								<field name="student_reg_no"/>
 								<field name="student_id"/>
-								<field name="stu_parent_name"/>	
+								<field name="student_reg_no" readonly="1"/>
+								<field name="stu_parent_name"/>
 								<field name="type" string="Type" colspan="2" placeholder="Address Type"/>
 								<field name="street" placeholder="Street"/>
 								<field name="street2" placeholder="Street2"/>
@@ -2152,7 +2152,7 @@
 								<separator string="Communication" colspan="2" col="2"/>
 								<group colspan="4" col="4">
 									<field name="phone" placeholder="Phone Number"/>
-									<field name="mobile" placeholder="Mobile Number"/>
+									<field name="mobile" placeholder="Mobile Number" required="1"/>
 									<field name="fax" placeholder="Fax"/>
 									<field name="email" widget="email"/>
 								</group>

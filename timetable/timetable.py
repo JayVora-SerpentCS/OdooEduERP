@@ -25,7 +25,7 @@
 ##############################################################################
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-
+import datetime
 
 class time_table(models.Model):
 
@@ -71,20 +71,31 @@ class time_table_line(models.Model):
                           _("You must have a 'Recess' as a'' subject"))
         recess.update({'value': {'subject_id': sub_id.id}})
         return recess
+    
+    @api.onchange('sub_exam_date')
+    def _get_day(self):
+        if self.sub_exam_date:
+            date1 = self.sub_exam_date
+            new_date = datetime.datetime.strptime(date1, '%Y-%m-%d')
+            self.week_day = new_date.strftime("%A")
 
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
                                  required=True)
     table_id = fields.Many2one('time.table', 'TimeTable')
+    tables_id = fields.Many2one('exam.exam', 'TimeTable')
+    
     start_time = fields.Float('Start Time', required=True)
     end_time = fields.Float('End Time', required=True)
     is_break = fields.Boolean('Is Break')
-    week_day = fields.Selection([('monday', 'Monday'), ('tuesday', 'Tuesday'),
-                                 ('wednesday', 'Wednesday'),
-                                 ('thursday', 'Thursday'),
-                                 ('friday', 'Friday'),
-                                 ('saturday', 'Saturday'),
-                                 ('sunday', 'Sunday')], "Week day",)
+#     week_day = fields.Selection([('monday', 'Monday'), ('tuesday', 'Tuesday'),
+#                                  ('wednesday', 'Wednesday'),
+#                                  ('thursday', 'Thursday'),
+#                                  ('friday', 'Friday'),
+#                                  ('saturday', 'Saturday'),
+#                                  ('sunday', 'Sunday')], "Week day",)
+    week_day = fields.Char('Day' , readonly=True)
+    sub_exam_date = fields.Date('Subject Exam Date')
 
 
 class subject_subject(models.Model):

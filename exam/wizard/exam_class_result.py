@@ -36,18 +36,25 @@ class result_print(models.TransientModel):
 
     @api.multi
     def get_result(self):
-        domain = []
-        for result_line in self:
-            domain = [('standard_id', '=', result_line.standard_id.id),
-                      ('s_exam_ids', '=', result_line.exam_id.id)]
-            return {
-                    'name': _('Result Info'),
-                    'view_type': 'form',
-                    "view_mode": 'tree,form',
-                    'res_model': 'exam.result',
-                    'type': 'ir.actions.act_window',
-                    'domain': domain,
-                    }
-        return True
+         cr,uid,context = self.env.args
+         data_obj = self.env['ir.model.data']
+         form_res = self.env.ref('exam.view_exam_result_form_report')
+         form_view_id = form_res and form_res.id or False
+         tree_res = self.env.ref('exam.view_exam_result_tree_report')
+         tree_view_id = tree_res and tree_res.id or False
+         domain = []
+         for result_line in self:
+                domain = [('standard_id', '=', result_line.standard_id.id),
+                          ('s_exam_ids', '=', result_line.exam_id.id)]
+                return {
+                        'name': _('Result Info'),
+                        'view_type': 'form',
+                        "view_mode": 'tree,form',
+                        'res_model': 'exam.result',
+                        'type': 'ir.actions.act_window',
+                        'domain': domain,
+                        'views': [(tree_view_id,'tree'),(form_view_id,'form')]
+                        }
+                return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

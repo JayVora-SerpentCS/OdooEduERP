@@ -157,26 +157,6 @@ class school_standard(models.Model):
     _description ='School Standards'
     _rec_name ="school_id"
 
-#     @api.one
-#     @api.depends('standard_id')
-#     def _compute_student(self):
-#         print"i am call",self
-#         self.student_ids = False
-#         if self.standard_id:
-#             self.student_ids = self.env['student.student'].search([('standard_id', '=', self.standard_id.id)])
-            
-#    def import_subject(self, cr, uid, ids,context=None):
-#        ''' This function will automatically placed previous standard subject'''
-#        import_rec = self.browse(cr, uid, ids, context=context)
-#        for im_ob in import_rec:
-#            import_sub_id = self.search(cr, uid,[('standard_id', '=', int(im_ob.standard_id)-1)])
-#            val = []
-#            for import_sub_obj in self.browse(cr, uid, import_sub_id, context=context):
-#                for last in import_sub_obj.subject_ids: 
-#                    val.append(last.id)
-#                    self.write(cr, uid, ids, {'subject_ids': [(6, 0, val)]}, context=context)
-#        return True
-
     @api.multi
     def import_subject(self):
         for im_ob in self:
@@ -191,15 +171,12 @@ class school_standard(models.Model):
     medium_id =     fields.Many2one('standard.medium', 'Medium', required=True)
     subject_ids =   fields.Many2many('subject.subject', 'subject_standards_rel', 'subject_id', 'standard_id', 'Subject')
     user_id =       fields.Many2one('hr.employee', string='Class Teacher')
-#    student_ids =   fields.function(_compute_student, method=True, relation='student.student', type="one2many", string='Student In Class')
-#     student_ids =   fields.One2many('student.student', 'school_standard_id', string='Student In Class', compute='_compute_student')
     color =         fields.Integer('Color Index')
     passing =       fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
-#    cmp_id =        fields.related('school_id','company_id',relation="res.company", string="Company Name", type="many2one", store=True)
     cmp_id =        fields.Many2one('res.company',related='school_id.company_id',string="Company Name", store=True)
 
 
-    @api.multi
+    @api.multi  
     def name_get(self):
         res = []
         for standard in self:
@@ -347,43 +324,36 @@ class student_student(models.Model):
                                           ('done','Done')], default='draft')
     history_ids =       fields.One2many('student.history', 'student_id', string='History')
     certificate_ids =   fields.One2many('student.certificate','student_id',string='Certificate')
- #   'attendance_ids' : fields.one2many('attendance.sheet.line','name','Attendance History',readonly=True)
- #   'exam_results_ids' : fields.one2many('exam.result','student_id','Exam History',readonly=True)
-#    'student_attachment_line' : fields.one2many('student.attachment','student_id','Attachment')
     student_discipline_line=fields.One2many('student.descipline','student_id',string='Descipline')
     address_ids =           fields.One2many('res.partner','student_id',string='Contacts')
     document =              fields.One2many('student.document','doc_id',string='Documents')
     description =           fields.One2many('student.description','des_id',string='Description')
     student_id =            fields.Many2one('student.student','name')
-#    contact_phone =         fields.related('student_id','phone',type='char',relation='student.student',string='Phone No')
     contact_phone =         fields.Char(related='student_id.phone',string='Phone No')
-#    contact_mobile =        fields.related('student_id','mobile',type='char',relation='student.student',string='Mobile No')
     contact_mobile =        fields.Char(related='student_id.mobile',string='Mobile No')
     student_id =            fields.Many2one('student.student','Name')
-#    contact_phone =         fields.related('student_id','phone',type='char',relation='student.student',string='Phone No',readonly=True)
-#    contact_mobile =        fields.related('student_id','mobile',type='char',relation='student.student',string='Mobile No',readonly=True)
-#    contact_email =         fields.related('student_id','email',type='char',relation='student.student',string='Email',readonly=True)
-#    contact_website =       fields.related('student_id','website',type='char',relation='student.student',string='Website',readonly=True)
     contact_phone =         fields.Char(related='student_id.phone',string='Phone No',readonly=True)
     contact_mobile =        fields.Char(related='student_id.mobile',string='Mobile No',readonly=True)
     contact_email =         fields.Char(related='student_id.email',string='Email',readonly=True)
     contact_website =       fields.Char(related='student_id.website',string='Website',readonly=True)
     award_list =            fields.One2many('student.award','award_list_id',string='Award List')
-#    student_status =        fields.related('state',type='char',relation='student.student',string='Status',help="Show the Status Of Student",readonly=True)
-#    stu_name =              fields.related('user_id','name',type='char',relation='student.student',string='First Name',readonly=True)
-#    Acadamic_year =         fields.related('year','name',type='char',relation='student.student',string='Academic Year',help="Academic Year",readonly=True)
     student_status =        fields.Selection(related='student_id.state',string='Status',help="Show the Status Of Student",readonly=True)
     stu_name =              fields.Char(related='user_id.name',string='First Name',readonly=True)
     Acadamic_year =         fields.Char(related='year.name',string='Academic Year',help="Academic Year",readonly=True)
     grn_number =            fields.Many2one('student.grn','GR No.',help="General reg number")
+    gr_no =                 fields.Char('student_no')
     standard_id =           fields.Many2one('standard.standard', 'Class')
     division_id =           fields.Many2one('standard.division', 'Division')
     medium_id =             fields.Many2one('standard.medium', 'Medium')
-#    cmp_id =                fields.related('school_id','company_id',relation="res.company", string="Company Name", type="many2one", store=True)
     cmp_id =                fields.Many2one('res.company',string="Company Name",related='school_id.company_id',store=True)
     
-    _sql_constraints = [('grn_unique', 'unique(grn_number)', 'GRN Number must be unique!')]
+    @api.model
+    def default_get(self, fields):
 
+        res = super(student_student, self).default_get(fields)
+        next_seq_number  = self.env['ir.sequence'].get('student.student')
+        res.update({'gr_no':next_seq_number})
+        return res
 
     @api.multi
     def set_terminate(self):
@@ -446,7 +416,7 @@ class student_grn(models.Model):
             self.grn_no = grn_no2
     
     grn =               fields.Char('GR no', help='General Reg Number',readonly=True,default=lambda obj:obj.env['ir.sequence'].get('student.grn'))
-    name =              fields.Char('GRN Format Name',required=True)
+    name =              fields.Char('GRN Format Name')
     prefix =            fields.Selection([('school','School Name'),
                                           ('year','Year'),('month','Month'),
                                           ('static','Static String')],'Prefix')
@@ -563,16 +533,10 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
     _description = 'Address Information'
     
-    student_id = fields.Many2one('student.student','Student')
-    stu_parent_name = fields.Char('Parent Name')
-    student_reg_no = fields.Many2one('student.grn',"GRN number")
     
-    @api.onchange('student_reg_no')
-    def gr_student_select(self):
-        print '/nnnnnnnnnnn =============',self.student_reg_no, self.student_reg_no.grn_no
-        stu_rec = self.env['student.student'].search([('grn_number','=',self.student_reg_no.id)])
-        print '/n/n//n dsdsdssssssss',stu_rec
-        self.student_id = stu_rec.id
+    student_id = fields.Many2one('student.student','Student')
+    student_reg_no = fields.Char(related="student_id.gr_no",string='registration no')
+    stu_parent_name = fields.Char('Parent Name')
     
     @api.multi
     def student_parent_view(self):
@@ -599,7 +563,7 @@ class res_partner(models.Model):
              'view_mode': 'kanban,tree,form',
              'res_model': 'res.partner',
              'type': 'ir.actions.act_window',
-             'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id, 'form')],
+             'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id,'form')],
          }
          return value
 
@@ -646,7 +610,6 @@ class student_family_contact(models.Model):
     
     family_contact_id = fields.Many2one('student.student', string='Student')
     rel_name =          fields.Selection([('select','Select'),('exist','Link to Existing Student'), ('new','Create New Relative Name')], 'Related Student', help="Select Name",default="select",required=True)
-#    stu_name =          fields.related('user_id','name',type='many2one',relation='student.student',string='Name',help="Select Student From Existing List")
     user_id =           fields.Many2one('res.users', string='User ID', ondelete="cascade", select=True)
     stu_name =          fields.Char(related='user_id.name',string='Name',help="Select Student From Existing List")
     name =              fields.Char('Name')
@@ -691,54 +654,6 @@ class student_news(models.Model):
     color =         fields.Integer('Color Index', default=0)
     
     
-#    @api.v7
-#    def news_update(self, cr, uid, ids, context = None):
-#        emp_obj = self.pool.get("hr.employee")
-#        obj_mail_server = self.pool.get('ir.mail_server')
-#        mail_server_ids = obj_mail_server.search(cr, uid, [], context=context)
-#        if not mail_server_ids:
-#            raise osv.except_osv(_('Mail Error'), _('No mail outgoing mail server specified!'))
-#        mail_server_record = obj_mail_server.browse(cr, uid, mail_server_ids[0])
-#        email_list = []
-#        for news in self.browse(cr, uid, ids, context):
-#            if news.user_ids:
-#                for user in news.user_ids:
-#                    if user.email:
-#                        email_list.append(user.email)
-#                if not email_list:
-#                    raise osv.except_osv(_('User Email Configuration '), _("Email not found in users !"))
-#            else:
-#                emp_ids = emp_obj.search(cr, uid, [], context = context)
-#                for employee in emp_obj.browse(cr, uid,emp_ids, context=context ):
-#                    if employee.work_email:
-#                        email_list.append(employee.work_email)
-#                    elif employee.user_id and employee.user_id.email:
-#                        email_list.append(employee.user_id.email)
-#                if not email_list:
-#                    raise osv.except_osv(_('Mail Error' ), _("Email not defined!")) 
-#            rec_date = fields.Datetime.context_timestamp(cr, uid, datetime.strptime(news.date, DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-#            body =  'Hi,<br/><br/> \
-#                This is a news update from <b>%s</b> posted at %s<br/><br/>\
-#                %s <br/><br/>\
-#                Thank you.' % (cr.dbname, rec_date.strftime('%d-%m-%Y %H:%M:%S'), news.description )
-#            message  = obj_mail_server.build_email(
-#                            email_from=mail_server_record.smtp_user, 
-#                            email_to=email_list, 
-#                            subject='Notification for news update.', 
-#                            body=body, 
-#                            body_alternative=body, 
-#                            email_cc=None, 
-#                            email_bcc=None, 
-#                            reply_to=mail_server_record.smtp_user, 
-#                            attachments=None, 
-#                            references = None, 
-#                            object_id=None, 
-#                            subtype='html', #It can be plain or html
-#                            subtype_alternative=None, 
-#                            headers=None)
-#            obj_mail_server.send_email(cr, uid, message=message, mail_server_id=mail_server_ids[0], context=context)
-#        return True
-    
     @api.multi
     def news_update(self):
         emp_obj = self.env['hr.employee']
@@ -763,7 +678,6 @@ class student_news(models.Model):
                         email_list.append(employee.user_id.email)
                 if not email_list:
                     raise except_orm(_('Mail Error' ), _("Email not defined!")) 
-#            rec_date = fields.datetime.context_timestamp(datetime.strptime(news.date, DEFAULT_SERVER_DATETIME_FORMAT))
             t= datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body =  'Hi,<br/><br/> \
                 This is a news update from <b>%s</b> posted at %s<br/><br/>\
