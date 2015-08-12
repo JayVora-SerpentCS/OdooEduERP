@@ -22,7 +22,7 @@
 {
     "name" : "School_Event",
     "version" : "3.0",
-    "author" : "Serpent Consulting Services",
+    "author" : "Serpent Consulting Services Pvt. Ltd.",
     "website" : "http://www.serpentcs.com", 
     "category": "School Management",
     "complexity": "easy",
