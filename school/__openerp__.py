@@ -40,7 +40,7 @@
                     """,
     "depends": ["hr", "email_template", "crm", "report"],
     "data": [
-             "wizard/wiz_send_email_view.xml",
+            "wizard/wiz_send_email_view.xml",
              "security/school_security.xml",
              "school_view.xml",
              "security/ir.model.access.csv",
@@ -54,7 +54,7 @@
              "email_templet.xml"
              ],
     'demo': [
-             'demo/school_demo.xml',
+            'demo/school_demo.xml',
              ],
 
     'test': [

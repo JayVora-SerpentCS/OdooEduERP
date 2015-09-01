@@ -55,7 +55,7 @@ class school_teacher_assignment(models.Model):
 		assignment_obj = self.env['school.student.assignment']
 		std_ids = []
 		self._cr.execute("""select id from student_student where
-						standard_id=%s""",(self.standard_id.id,))
+						standard_id=%s""", (self.standard_id.id,))
 		student = self._cr.fetchall()
 		if student:
 			for stu in student:
@@ -76,7 +76,7 @@ class school_teacher_assignment(models.Model):
 				if self.attached_homework:
 					data_attach = {
 								'name': 'test',
-								'datas':str(self.attached_homework),
+								'datas': str(self.attached_homework),
 								'description': 'Assignment attachment',
 								'res_model': 'school.student.assignment',
 								'res_id': assignment_id.id,
@@ -95,7 +95,7 @@ class school_student_assignment(models.Model):
 	subject_id = fields.Many2one("subject.subject", "Subject", required=True)
 	standard_id = fields.Many2one("school.standard", "Standard", required=True)
 	teacher_id = fields.Many2one("hr.employee", "Teacher", required=True)
-	assign_date = fields.Date("Assign Date" ,required=True)
+	assign_date = fields.Date("Assign Date", required=True)
 	due_date = fields.Date("Due Date", required=True)
 	state = fields.Selection([('draft', 'Draft'), ('active', 'Active'),
 							('done', 'done')], "Status", readonly=True)
@@ -108,4 +108,3 @@ class school_student_assignment(models.Model):
 		return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
