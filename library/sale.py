@@ -107,13 +107,9 @@ class sale_order(models.Model):
         @param context : standard Dictionary
         @return :True
         '''
-
-#         if context is None:
-#             context = {}
         picking_obj = self.env['stock.picking']
         move_obj = self.env['stock.move']
         procurment_obj = self.env['procurement.order']
-#         order_line_obj = self.env['sale.order.line']
         picking_id = False
         for order in self:
             output_id = order.warehouse_id.wh_output_stock_loc_id.id
@@ -148,7 +144,6 @@ class sale_order(models.Model):
                         'origin_ref':order.name,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
-                       # 'product_qty': line.product_qty,
                         'product_uom_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
                         'product_uos': line.product_uos.id,
@@ -160,7 +155,6 @@ class sale_order(models.Model):
                         'sale_line_id': line.id,
                         'tracking_id': False,
                         'state': 'waiting',
-#                        'note': line.notes,
                         'prodlot_id': line.production_lot_id.id,
                         'customer_ref': line.customer_ref,
                     })
@@ -207,7 +201,6 @@ class sale_order(models.Model):
                 workflow.trg_validate(self._uid, 'stock.picking',
                                       picking_id.id, 'button_confirm',
                                       self._cr)
-                # val = {'picking_ids':[(6,0,[picking_id])]}
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'

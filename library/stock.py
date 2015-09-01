@@ -31,8 +31,6 @@ class stock_move(models.Model):
 
     customer_ref = fields.Char('Customer reference')
     origin_ref = fields.Char('Origin')
-#    procurement_ids = fields.one2many('procurement.order','move_id',
-#                                      string='Procurements')
 
     # New function to manage the update of the quantities
     @api.multi
@@ -94,10 +92,5 @@ class stock_picking(models.Model):
                                   ondelete='set null', readonly=True,
                                   select=True, default=False)
     date_done = fields.Datetime('Picking date', readonly=True)
-
-#     _defaults = {
-#         'sale_id': lambda *a: False,
-#         'purchase_id': lambda *a: False,
-#     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

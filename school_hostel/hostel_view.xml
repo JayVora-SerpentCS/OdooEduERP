@@ -53,8 +53,9 @@
                                             <separator string="Student Detail"/>
                                             <group col="4">
                                                 <field name="hostel_id"/>
-		                                        <field name="student_id"/>
-		                                        <field name="school_id"/>
+		                                        <field name="student_id" context="{'stu_gr_no':True}"/>
+		                                        <field name="student_name"/>
+		                                        <field name="school_id" invisible="1"/>
 		                                        <field name="bed_type"  widget="selection"/>
 		                                        <field name="admission_date"/>
 		                                        <field name="discharge_date"/>
@@ -160,14 +161,17 @@
                     <sheet>
                         <separator string="Hostel student"/>
                         <group col="4" colspan="4">
-                            <field name="student_id" />
-                            <field name="hostel_id" /> 
+                            <field name="student_id" context="{'stu_gr_no':True}" required="1"/>
+                            <field name="student_name" required="1"/>
+                            <field name="hostel_id"/> 
                             <field name="admission_date" />
                             <field name="discharge_date" />
                             <field name="room_rent" />
                             <field name="bed_type"  widget="selection"/>
                             <field name="paid_amount" />
                             <field name="remaining_amount" />
+                            <field name="part_id" invisible="1"/>
+                            <field name="gr_no" invisible="1"/>
                        </group>
                     </sheet>
                 </form>
@@ -179,13 +183,16 @@
             <field name="arch" type="xml">
                 <tree string="Hostel student" >
                     <field name="hostel_id" />
-                    <field name="student_id" />
+                     <field name="gr_no"/>
+                    <!-- <field name="student_id" /> -->
                     <field name="admission_date" />
                     <field name="discharge_date" />
                     <field name="room_rent" />
                     <field name="paid_amount" />
                     <field name="remaining_amount" />
                     <field name="status" />
+                    <field name="student_id" invisible="1"/>
+                    <field name="part_id" invisible="1"/>
                 </tree>
             </field>
         </record>

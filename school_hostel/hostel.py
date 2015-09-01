@@ -117,7 +117,8 @@ class hostel_student(models.Model):
     hostel_id = fields.Char('Hostel ID', readonly=True,
                             default=lambda obj: obj.env['ir.sequence'].
                             get('hostel.student'))
-    student_id = fields.Many2one('student.student', 'Student')
+    student_id = fields.Many2one('student.student', 'Student Id')
+    student_name = fields.Char(related="student_id.name",string='Student Name')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', required=True)
     bed_type = fields.Many2one('bed.type', 'Bed Type')
@@ -130,6 +131,14 @@ class hostel_student(models.Model):
                                ('reservation', 'Reservation'),
                                ('confirm', 'Confirm')],
                               'Status', default='draft')
+    part_id = fields.Integer('Part Id')
+    gr_no = fields.Char('Participant Id')
+    
+    @api.multi
+    @api.onchange('student_id')
+    def part_onchage(self):
+        self.part_id = self.student_id.id
+        self.gr_no = self.student_id.gr_no
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
@@ -158,6 +167,15 @@ class hostel_student(models.Model):
         for on in self:
             on.status = 'reservation'
 
+    @api.multi
+    def read(recs, fields=None, load='_classic_read'):
+        res_list = []
+        res = super(hostel_student, recs).read(fields=fields, load=load)
+        for res_update in res:
+            res_update.update({'student_id' : res_update.get('part_id')})
+            res_list.append(res_update)
+        return res_list
+    
 
 class bed_type(models.Model):
 

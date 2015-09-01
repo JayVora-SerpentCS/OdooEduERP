@@ -50,7 +50,8 @@ class extended_time_table_line(models.Model):
     day_of_week = fields.Char('Week Day')
 
     @api.multi
-    def on_change_date_day(self,exm_date):
+    @api.onchange('exm_date')
+    def on_change_date_day(self):
         val = {}
         if exm_date:
             val['week_day'] = datetime.strptime(exm_date, "%Y-%m-%d").strftime("%A").lower()
@@ -79,7 +80,6 @@ class exam_exam(models.Model):
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
     create_date = fields.Date("Exam Created Date", help="Exam Created Date")
     write_date = fields.Date("Exam Update Date", help="Exam Update Date")
-#     exam_timetable_ids = fields.One2many('time.table', 'exam_id', 'Exam Schedule')
     timetable_ids = fields.One2many('time.table.line', 'tables_id', 'TimeTable')
     state = fields.Selection([('draft','Draft'),('running','Running'),('finished','Finished'),('cancelled','Cancelled')], 'State', readonly=True,default='draft')
 
@@ -126,18 +126,29 @@ class additional_exam(models.Model):
     write_date = fields.Date("Updated date", help="Exam Updated Date")
     
     
-
+    
+#     @api.multi
+#     def on_change_stadard_name(self,standard_id):
+#         val = {}
+#         school_standard_obj = self.env['school.standard']
+#         school_line = school_standard_obj.browse(standard_id)
+#         if school_line.medium_id.id:
+#             val['medium_id'] = school_line.medium_id.id
+#         if school_line.division_id.id:
+#             val['division_id'] = school_line.division_id.id
+#         return {'value': val}
+    
     @api.multi
-    def on_change_stadard_name(self,standard_id):
-        val = {}
-        school_standard_obj = self.env['school.standard']
-        school_line = school_standard_obj.browse(standard_id)
-        if school_line.medium_id.id:
-            val['medium_id'] = school_line.medium_id.id
-        if school_line.division_id.id:
-            val['division_id'] = school_line.division_id.id
-        return {'value': val}
-
+    @api.onchange('standard_id')
+    def onchange_ad_standard(self):
+        sub_list = []
+        for exam_obj in self:
+             for time_table in exam_obj.standard_id:
+                 print"asasasasasasasasasas",time_table
+                 for sub_id in time_table.subject_ids:
+                     sub_list.append(sub_id.id)
+        return {'domain':{'subject_id':[('id','in',sub_list)]}}
+       
 class exam_result(models.Model):
 
     _name = 'exam.result'
@@ -234,15 +245,15 @@ class exam_result(models.Model):
         student_lst = []
         sub_list = []
         for standard_obj in self:
-            for rec in standard_obj.standard_id:
-                for exam_standard_rec in rec.student_ids:
-                    student_lst.append(exam_standard_rec.id)
-                for exam_subject_rec in rec.subject_ids:
-                    sub_val = {
-                       'subject_id' : exam_subject_rec.id,
-                       'maximum_marks' : exam_subject_rec.maximum_marks
-                    }
-                    sub_list.append(sub_val)
+            for exam_student_rec in standard_obj.standard_id.student_ids:
+                student_lst.append(exam_student_rec.id)
+            for time_table in standard_obj.s_exam_ids.timetable_ids:
+                if time_table.standard_id.id == standard_obj.standard_id.id:
+                    for sub_id in time_table.subject_id:
+                        sub_val = {
+                                   'subject_id' : sub_id.id 
+                                }
+                        sub_list.append(sub_val)
         standard_obj.result_ids = sub_list
         return {'domain':{'student_id':[('id','in',student_lst)]}}
         

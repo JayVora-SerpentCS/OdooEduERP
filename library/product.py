@@ -42,8 +42,6 @@ class many2manysym(fields.Many2many):
 
     @api.multi
     def get(self, offset=0):
-        #    if context is None:
-        #    context
         res = {}
         if not self.ids:
             return res
@@ -66,13 +64,11 @@ class product_template(models.Model):
     _inherit = "product.template"
 
     name = fields.Char('Name', required=True, select=True)
-#     _columns = {
-#         'name': fields.char('Name', size=256, required=True, select=True),
-#     }
-@api.multi
-def _state_get(self):
-    self._cr.execute('select name, name from product_state order by name')
-    return self._cr.fetchall()
+
+    @api.multi
+    def _state_get(self):
+        self._cr.execute('select name, name from product_state order by name')
+        return self._cr.fetchall()
 
 class product_lang(models.Model):
 
@@ -269,12 +265,10 @@ class product_product(models.Model):
                 l_date = r_date + relativedelta(days=date_rec.
                                                 day_to_return_book.day)
                 date_rec.date_retour = l_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
-#     'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
     isbn = fields.Char('Isbn code', unique=True,
                        help="It show the International Standard Book Number")
     catalog_num = fields.Char('Catalog number',
                               help="It show the Identification number of books")
-#     'author_om_ids': fields.one2many('author.book.rel', 'product_id', 'Authors'),
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
@@ -319,53 +313,6 @@ class product_product(models.Model):
                                          "Book return Days")
     attchment_ids = fields.One2many("book.attachment", "product_id",
                                     "Book Attachments")
-
-
-#     _columns = {
-# #        'author_ids': fields.many2many('library.author', 'author_book_rel', 'product_id', 'author_id', 'Authors'),
-#         'isbn': fields.char('Isbn code', size=64, unique=True, help ="It show the International Standard Book Number"),
-#         'catalog_num': fields.char('Catalog number', size=64, help ="It show the Identification number of books"),
-# #        'author_om_ids': fields.one2many('author.book.rel', 'product_id', 'Authors'),
-#         'lang': fields.many2one('product.lang','Language'),
-#         'editor': fields.many2one('res.partner', 'Editor', change_default=True),
-#         'author': fields.many2one('library.author','Author',size=30),
-#         'code': fields.function(_product_code, method=True, type='char', string='Acronym',store=True),
-#         'catalog_num': fields.char('Catalog number', size=64 , help="The reference number of the book"),
-#         'date_parution': fields.date('Release date', help="Release(Issue) date of the book"),
-#         'creation_date': fields.datetime('Creation date', readonly=True, help="Record creation date"),
-#         'date_retour': fields.date('Return Date',readonly=True, help='Book Return date'),
-#         'tome': fields.char('Tome', size=8, help = "It will store the information of work in serveral volume"),
-#         'nbpage': fields.integer('Number of pages', size=8),
-#         'rack': fields.many2one('library.rack', 'Rack', size=16, help="it will be show the position of book"),
-#         'availability': fields.selection([('available','Available'),('notavailable','Not Available')], 'Book Availability'),
-#         'link_ids': many2manysym('product.product', 'book_book_rel', 'product_id1', 'product_id2', 'Related Books'),
-#         'back': fields.selection([('hard', 'Hardback'), ('paper', 'Paperback')], 'Reliure',help="It show the books binding type"),
-#         'collection': fields.many2one('library.collection', 'Collection',help="It show the collection in which book is resides"),
-#         'pocket': fields.char('Pocket', size=32),
-#         'num_pocket': fields.char('Collection Num.', size=32,
-#              help="It show the collection number in which book is resides"),
-#         'num_edition': fields.integer('Num. edition',
-#                            help="Edition number of book"),
-#         'format': fields.char('Format', size=128,
-#                        help="The general physical appearance of a book"),
-#         'price_cat': fields.many2one('library.price.category',
-#                                      "Price category"),
-#         'day_to_return_book': fields.many2one("library.book.returnday",
-#                                                "Book return Days"),
-#         "attchment_ids" : fields.one2many("book.attachment", "product_id",
-#                                            "Book Attachments"),
-#     }
-
-#     _defaults = {
-#         'creation_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-#         'back': lambda *a: 'paper',
-#         #'procure_method': lambda *a: 'make_to_order',
-#         'date_retour': lambda *a: str(int(time.strftime("%Y"))) + 
-#                                        time.strftime("-%m-%d"),
-#         'availability': 'available',
-#                     'categ_id': lambda self,cr,uid:self.pool.get
-#                        ('product.category').browse(cr,uid).categ_id.name[1],
-#     }
 
     _sql_constraints = [
         ('unique_ean13', 'unique(ean13)',

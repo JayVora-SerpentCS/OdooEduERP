@@ -26,6 +26,7 @@ import openerp
 import datetime
 from datetime import date
 from datetime import datetime
+import arrow
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, image_colorize, image_resize_image_big
 from openerp.exceptions import except_orm, Warning, RedirectWarning
@@ -79,7 +80,28 @@ class academic_year(models.Model):
     def _check_duration(self):
         if self.date_stop and self.date_start and self.date_stop < self.date_start:
             raise Warning(_('Error! The duration of the academic year is invalid.'))
+        
+    @api.multi
+    def create_month(self):
+        lst =[]
+        sub_list = []
+        for rec in self:
+            if rec.date_start:
+                start = datetime.strptime(rec.date_start, DEFAULT_SERVER_DATE_FORMAT)
+                end = datetime.strptime(rec.date_stop, DEFAULT_SERVER_DATE_FORMAT)
+                for m in arrow.Arrow.range('month', start, end):
+                    sub_list.append({'name' : m.format('MMMM')})
+        rec.month_ids = [(0,0,tmp) for tmp in sub_list]
+        return True
+#                     for line in rec.month_ids:
+#                         for new_line in line.name:
+#                             mon = {
+#                                    'name':lst
 
+#                                    }
+#                             
+#         rec.month_ids = mon_list
+#         print"sdaaaaaaa",rec.month_ids
 
 class academic_month(models.Model):
     ''' Defining a month of an academic year '''
@@ -88,10 +110,10 @@ class academic_month(models.Model):
     _order = "date_start"
     
     name =          fields.Char('Name', required=True, help='Name of Academic month')
-    code =          fields.Char('Code', required=True, help='Code of Academic month')
-    date_start =    fields.Date('Start of Period', required=True, help='Starting of Academic month')
-    date_stop =     fields.Date('End of Period', required=True,help='Ending of Academic month')
-    year_id =       fields.Many2one('academic.year', 'Academic Year', required=True, help="Related Academic year ")
+    code =          fields.Char('Code', help='Code of Academic month')
+    date_start =    fields.Date('Start of Period', help='Starting of Academic month')
+    date_stop =     fields.Date('End of Period',help='Ending of Academic month')
+    year_id =       fields.Many2one('academic.year', 'Academic Year',help="Related Academic year ")
     description=    fields.Text('Description')
 
     @api.constrains('date_start','date_stop')
@@ -157,6 +179,14 @@ class school_standard(models.Model):
     _description ='School Standards'
     _rec_name ="school_id"
 
+
+    @api.one
+    @api.depends('standard_id')
+    def _compute_student(self):
+        self.student_ids = False
+        if self.standard_id:
+            self.student_ids = self.env['student.student'].search([('standard_id', '=', self.standard_id.id)])
+
     @api.multi
     def import_subject(self):
         for im_ob in self:
@@ -164,6 +194,15 @@ class school_standard(models.Model):
             val = [last.id for sub in import_sub_ids for last in sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
         return True
+        
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        l2=[]
+        if self._context.get('standard_ids', False):
+            args += [('id', 'in', self._context['standard_ids'][0][2])]
+            recs = self.search(args)
+            return recs.name_get()
+        return super(school_standard, self).name_search(name, args=args)
 
     school_id =     fields.Many2one('school.school', 'School', required=True)
     standard_id =   fields.Many2one('standard.standard', 'Class', required=True)
@@ -175,7 +214,6 @@ class school_standard(models.Model):
     passing =       fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id =        fields.Many2one('res.company',related='school_id.company_id',string="Company Name", store=True)
 
-
     @api.multi  
     def name_get(self):
         res = []
@@ -183,7 +221,7 @@ class school_standard(models.Model):
             name = standard.standard_id.name+"[" + standard.division_id.name + "]" 
             res.append((standard.id,name))
         return res
-
+    
 class school_school(models.Model):
     ''' Defining School Information '''
     _name = 'school.school'
@@ -268,7 +306,6 @@ class student_student(models.Model):
         result = super(student_student, self).create(vals)
         return result
     
-    
     @api.model
     def _get_default_image(self, is_company, colorize=False):
         image = image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
@@ -347,14 +384,36 @@ class student_student(models.Model):
     medium_id =             fields.Many2one('standard.medium', 'Medium')
     cmp_id =                fields.Many2one('res.company',string="Company Name",related='school_id.company_id',store=True)
     
+    @api.multi
+    @api.onchange('school_id')
+    def onchange_school_id(self):
+        standard_lst = []
+        for school in self:
+            for rec in school.school_id.standards:
+                for new_rec in rec.standard_id:
+                    standard_lst.append(new_rec.id)
+        return {'domain':{'standard_id':[('id','in',standard_lst)]}}
+    
     @api.model
     def default_get(self, fields):
-
         res = super(student_student, self).default_get(fields)
         next_seq_number  = self.env['ir.sequence'].get('student.student')
         res.update({'gr_no':next_seq_number})
         return res
-
+    
+    @api.multi
+    def name_get(self):
+        ctx = dict(self._context)
+        if ctx is None:
+            ctx = {}
+        if ctx.get('stu_gr_no', False):
+            res = []
+            for rec in self:
+                student = rec.gr_no
+                res.append((rec.id, student))
+            return res
+        return super(student_student, self).name_get()
+    
     @api.multi
     def set_terminate(self):
         for ter_rec in self:
@@ -452,7 +511,7 @@ class attendance_type(models.Model):
 class student_document(models.Model):
     _name = 'student.document'
     _rec_name="doc_type"
-    
+
     doc_id =        fields.Many2one('student.student', 'Student')
     file_no =       fields.Char('File No',readonly="1",default=lambda obj:obj.env['ir.sequence'].get('student.document'))
     submited_date = fields.Date('Submitted Date')
@@ -521,7 +580,6 @@ class hr_employee(models.Model):
             sub_list.append(sub_rec.id)
         self.subject_ids = sub_list
 
-#    subject_ids = fields.function(_compute_subject, method=True, relation='subject.subject', type="many2many", string='Subjects')
     subject_ids = fields.Many2many('subject.subject','hr_employee_rel', compute='_compute_subject', string='Subjects')
     school_id =   fields.Many2one('school.school', 'School')
     address_id =  fields.Many2one('res.partner', 'Contact Address')
@@ -533,10 +591,17 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
     _description = 'Address Information'
     
-    
-    student_id = fields.Many2one('student.student','Student')
-    student_reg_no = fields.Char(related="student_id.gr_no",string='registration no')
+    student_id =  fields.Many2one('student.student','Student Id', required=True)
+    student_name =  fields.Char(related="student_id.name",string='Student Name')
     stu_parent_name = fields.Char('Parent Name')
+    part_id = fields.Integer('Part Id')
+    gr_no = fields.Char('Participant Id')
+    
+    @api.multi
+    @api.onchange('student_id')
+    def part_onchage(self):
+        self.part_id = self.student_id.id
+        self.gr_no = self.student_id.gr_no
     
     @api.multi
     def student_parent_view(self):
@@ -566,6 +631,16 @@ class res_partner(models.Model):
              'views': [(kanban_view_id,'kanban'),(tree_view_id,'tree'),(form_view_id,'form')],
          }
          return value
+     
+    @api.multi
+    def read(recs, fields=None, load='_classic_read'):
+        res_list = []
+        res = super(res_partner, recs).read(fields=fields, load=load)
+        for res_update in res:
+            res_update.update({'student_id' : res_update.get('part_id')})
+            res_list.append(res_update)
+        return res_list
+    
 
 class student_reference(models.Model):
     ''' Defining a student reference information '''
@@ -705,12 +780,26 @@ class student_news(models.Model):
 class student_reminder(models.Model):
     _name = 'student.reminder'
     
-    stu_id =        fields.Many2one('student.student',' Student Name',required = True)
+    stu_id =        fields.Many2one('student.student',' Student Id',required = True)
+    stu_name = fields.Char(related="stu_id.name",string='Student Name')
     name =          fields.Char('Title')
     date =          fields.Date('Date')
     description =   fields.Text('Description')
     color =         fields.Integer('Color Index', default=0)
-
+    
+    @api.multi
+    def send_email(self):
+        print"hi I am Calld"
+        parent = self.env['res.partner'].search([])
+        print 'parent======================',parent
+#         for parent_obj in parent:
+#             pare = parent.search[('stu_name','=',parent_obj.student_name)]
+#             print"sdaaaaaaaaaaaa",pare
+        for rec in self:
+            ir_model_data = self.env['ir.model.data']
+            manager_template_id = ir_model_data.get_object_reference('school', 'email_template_parent')[1]
+            manager_template_rec = self.env['email.template'].browse(manager_template_id)
+            manager_template_rec.send_mail(travel_rec.id,force_send=True)
 class student_cast(models.Model):
     _name = "student.cast"
     

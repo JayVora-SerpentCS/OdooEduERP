@@ -93,7 +93,6 @@ class purchase_order(models.Model):
     @api.multi
     def wkf_confirm_order(self):
         production_obj = self.env['stock.production.lot']
-#         order_line_obj = self.env['purchase.order.line']
         for order in self:
             l_id = 0
             for line in order.order_line:

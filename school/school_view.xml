@@ -21,9 +21,9 @@
 							options='{"size": [110, 110]}'/>
 						<div class="oe_title">
 							<field name="pid" invisible="1" />
-							<field name="reg_code" readonly="1" />
+							<field name="reg_code" readonly="1" invisible="1"/>
 							<field name="grn_number" placeholder="General Reg No." invisible="1"/>
-							<field name="gr_no"/> 
+							<field name="gr_no" readonly="1"/> 
 							<field name="name" placeholder="First Name" nolabel="1" />
 							<field name="middle" placeholder="Middle Name" nolabel="1"/>
 							<field name="last" placeholder="Last Name" nolabel="1"/>
@@ -431,11 +431,14 @@
 					<sheet>
 						<separator string="Reminder"/>
 						<group col="4" colspan="4">
-							<field name="stu_id" widget="selection" placeholder="Student"/>
+							<field name="stu_id"  placeholder="Student" context="{'stu_gr_no':True}"/>
+							<field name="stu_name"/>
 							<field name="date" placeholder="Select Date"/>
 							<field name="name" placeholder="Reminder Title"/>
 							<newline />
 							<field name="description" colspan="4"/>
+							<button name="send_email" string="Send Email"
+                                    type="object" class="oe_highlight"/>
 						</group>
 					</sheet>
 				</form>
@@ -905,7 +908,7 @@
 						</group>
 						<notebook colspan="4">
 							<page string="Standards">
-								<field name="standards" nolabel="1" colspan="4"/>
+								<field name="standards" nolabel="1" colspan="4"  readonly="1"/>
 							</page>
 						</notebook>
 					</sheet>
@@ -1200,6 +1203,7 @@
 	                        <field name="date_start" placeholder="Start Date"/>
 	                        <field name="date_stop" placeholder="Stop Date"/>
 	                        <field name="grade_id" placeholder="Grade System"/>
+	                        <button name="create_month" type="object" string="Create Month"/>
 	                    </group>
 	                    <notebook colspan="4">
 	                        <page string="Months">
@@ -1829,7 +1833,7 @@
 			<field name="domain">[('state', '!=', 'draft')]</field>
 			<field name="res_model">student.student</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="view_student_student_form_1"/>
+			<field name="view_id" ref="view_student_student_form_2"/>
 			<field name="search_view_id" ref="view_student_student_search_1"/>
 			<field name="view_mode">tree,form,kanban</field>
 		</record>
@@ -2130,14 +2134,14 @@
 			<field name="name">res.partner.parent.form</field>
 			<field name="model">res.partner</field>
 			<field name="arch" type="xml">
-				<form string="Partners" col='1' >
+				<form string="Partners" col='1' create="false">
 					<sheet>
 						<form string="Partner Contacts">
 							<newline />
 							<group colspan="2" col="4">
 								<separator string="Postal Address" colspan="4" col="4"/>
-								<field name="student_id"/>
-								<field name="student_reg_no" readonly="1"/>
+								<field name="student_id" context="{'stu_gr_no':True}"/>
+								<field name="student_name"/>
 								<field name="stu_parent_name"/>
 								<field name="type" string="Type" colspan="2" placeholder="Address Type"/>
 								<field name="street" placeholder="Street"/>
@@ -2146,7 +2150,9 @@
 								<field name="city" placeholder="City"/>
 								<field name="country_id" completion="1" placeholder="Country"/>
 								<field name="state_id" placeholder="State"/>
-								<field name="name" placeholder="Name" string="Student Name" invisible="1"/>
+								<field name="name" invisibal="1"/>
+								<field name="part_id" invisible="1"/>
+                                <field name="gr_no" invisible="1"/>
 							</group>
 							<group colspan="2" col="2">
 								<separator string="Communication" colspan="2" col="2"/>
@@ -2154,7 +2160,7 @@
 									<field name="phone" placeholder="Phone Number"/>
 									<field name="mobile" placeholder="Mobile Number" required="1"/>
 									<field name="fax" placeholder="Fax"/>
-									<field name="email" widget="email"/>
+									<field name="email" widget="email" required="1"/>
 								</group>
 							</group>
 						</form>
@@ -2175,7 +2181,7 @@
 			<field name="arch" type="xml">
 				<search string="Search Partner">
 					<group col='10' colspan='4'>
-						<field name="name" select="1"/>
+						<field name="name" select="1" invisible="1"/>
 						<field name="country_id" select="1"/>
 					</group>
 				</search>
@@ -2187,23 +2193,19 @@
 			<field name="model">res.partner</field>
 			<field eval="8" name="priority" />
 			<field name="arch" type="xml">
-				<tree string="Partners">
-					<field name="name"/>
+				<tree string="Partners" create="false">
+				     <field name="gr_no"/>
+					<field name="student_name"/>
 					<field name="phone"/>
 					<field name="email"/>
 					<field name="city"/>
 					<field name="country_id"/>
+					<field name="student_id" invisible="1"/>
+                    <field name="part_id" invisible="1"/>
 				</tree>
 			</field>
 		</record>
 		
-		<!-- Parent Information Action -->
-		<!-- <record model="ir.actions.act_window" id="action_student_parent">
-			<field name="name">Parent detail</field>
-			<field name="res_model">res.partner</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
-		</record> -->
 		<!-- Parent Information Action -->
 		<record id="action_student_parent" model="ir.actions.server">
             <field name="sequence" eval="1"/>
@@ -2353,8 +2355,8 @@
 		<menuitem name="Years" parent="menu_academic_year_form" id="menu_academic_year_sub_form"
 			action="action_academic_year_form"/>
 
-		<menuitem name="Months" parent="menu_academic_year_form" id="menu_academic_month_form"
-			action="action_academic_month_form"/>
+		<!-- <menuitem name="Months" parent="menu_academic_year_form" id="menu_academic_month_form"
+			action="action_academic_month_form"/> -->
 
 		<menuitem name="Standards" parent="menu_configuration" id="menu_school_standard_form"/>
 

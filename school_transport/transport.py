@@ -215,7 +215,8 @@ class transport_registration(models.Model):
     _description = 'Transport Registration'
     
     name = fields.Many2one('student.transport', 'Transport Root Name', domain=[('state', '=', 'open')], required=True)
-    part_name = fields.Many2one('student.student', 'Participant Name', required=True)
+    student_name_id = fields.Many2one('student.student', 'Student Id', required=True)
+    student_name = fields.Char(related="student_name_id.name",string='Student Name')
     reg_date = fields.Date('Registration Date', readonly=True,default=lambda * a: time.strftime("%Y-%m-%d %H:%M:%S"))
     reg_end_date = fields.Date('Registration End Date', readonly=True)
     for_month = fields.Integer('Registration For Months')
@@ -227,6 +228,15 @@ class transport_registration(models.Model):
     point_id = fields.Many2one('transport.point', 'Point', widget='selection', required=True)
     m_amount = fields.Float('Monthly Amount', readonly=True)
     amount = fields.Float('Final Amount', readonly=True)
+    
+    part_id = fields.Integer('Part Id')
+    gr_no = fields.Char('Participant Id')
+    
+    @api.multi
+    @api.onchange('student_name_id')
+    def part_onchage(self):
+        self.part_id = self.student_name_id.id
+        self.gr_no = self.student_name_id.gr_no
 
     @api.model
     def create(self,vals):
@@ -337,5 +347,14 @@ class transport_registration(models.Model):
             stu_tran_id = trans_obj.browse(reg_data.name.id)
             stu_tran_id.write({'trans_participants_ids':[(6, 0, list1)]})
         return True
+    
+    @api.multi
+    def read(recs, fields=None, load='_classic_read'):
+        res_list = []
+        res = super(transport_registration, recs).read(fields=fields, load=load)
+        for res_update in res:
+            res_update.update({'student_name_id' : res_update.get('part_id')})
+            res_list.append(res_update)
+        return res_list
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -86,7 +86,7 @@ class school_event(models.Model):
                             ('close','Close'),('cancel','Cancel')],
                             string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant', 'event_participants_rel', 'participant_id', 'event_id', 'Participants', readonly=True, order_by='score')
-    code = fields.Many2one('school.school','Organiser School', help="Event Organised School")
+    code = fields.Char('Organiser School', help="Event Organised School")
     is_holiday = fields.Boolean('Is Holiday', help='Checked if the event is organised on holiday.')
     color = fields.Integer('Color Index', default=0)
     
@@ -144,13 +144,22 @@ class school_event_registration(models.Model):
     _description = 'Event Registration'
     
     name =          fields.Many2one('school.event','Event Name', domain=[('state','=','draft')], required=True)
-    part_name_id =  fields.Many2one('student.student','Participant Name', required=True)
+    part_name_id =  fields.Many2one('student.student','Participant Id', required=True)
+    part_name =     fields.Char(related="part_name_id.name",string='participant name')
     reg_date =      fields.Date('Registration Date', readonly=True, default=lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"))
     state =         fields.Selection([('draft','Draft'),
                                   ('confirm','Confirm'),
                                   ('cancel','Cancel')
                                  ], 'State', readonly=True, default='draft')
     is_holiday = fields.Boolean('Is Holiday',help = 'Checked if the event is organised on holiday.')
+    part_id = fields.Integer('Part Id')
+    gr_no = fields.Char('Participant Id')
+    
+    @api.multi
+    @api.onchange('part_name_id')
+    def part_onchage(self):
+        self.part_id = self.part_name_id.id
+        self.gr_no = self.part_name_id.gr_no
     
     @api.multi
     def regi_cancel(self):
@@ -255,6 +264,16 @@ class school_event_registration(models.Model):
             evnt_reg_id = event_obj.browse(reg_data.name.id)
             evnt_reg_id.write({'part_ids':[(6,0,list1)]})
         return True
+    
+    @api.multi
+    def read(recs, fields=None, load='_classic_read'):
+        res_list = []
+        res = super(school_event_registration, recs).read(fields=fields, load=load)
+        for res_update in res:
+            res_update.update({'part_name_id' : res_update.get('part_id')})
+            res_list.append(res_update)
+        return res_list
+    
 
 class student_student(models.Model):
     

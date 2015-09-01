@@ -128,13 +128,13 @@
               <field name="date_start">02/01/2012</field>
               <field name="date_stop">02/29/2012</field>
        </record>
-       <record id="demo_academic_month_5" model="academic.month">
+      <!--  <record id="demo_academic_month_5" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
                 <field name="year_id" ref="school.demo_academic_year_3"/>
                 <field name="date_start">01/01/2013</field>
                 <field name="date_stop">12/31/2013</field>
-       </record>
+       </record> -->
        <record id="demo_academic_month_6" model="academic.month">
               <field name="name">February</field>
               <field name="code">FEB</field>

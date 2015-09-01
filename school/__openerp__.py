@@ -51,6 +51,7 @@
              "wizard/wiz_meeting_view.xml",
              "report_view.xml",
              "views/identity_card.xml",
+             "email_templet.xml"
              ],
     'demo': [
              'demo/school_demo.xml',

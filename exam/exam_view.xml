@@ -96,10 +96,11 @@
 								<field name="standard_id" nolabel="1" colspan="4"/>
 							</page>
 							<page string="TimeTable">
-								<field name="timetable_ids" nolabel="1" colspan="4">
+								<field name="timetable_ids"  nolabel="1" colspan="4">
 									<tree string="TimeTable">
 										<field name="sub_exam_date"/>
 										<field name="week_day"/>
+										<field name="standard_id"/>
 										<field name="start_time"/>
 										<field name="end_time"/>
 										<field name="teacher_id"/>
@@ -108,7 +109,8 @@
 									<form string="TimeTable">
 										<group col="4" colspan="4">
 											<field name="sub_exam_date"/>
-											<field name="week_day"/>
+											<field name="week_day"/>	
+											<field name="standard_id" context="{'standard_ids':parent.standard_id}"/>
 											<field name="start_time"/>
 											<field name="end_time"/>
 											<field name="subject_id" attrs="{'invisible':[('is_break','=',True)]}"
@@ -213,7 +215,7 @@
 						<group col="4" string="Additional Exam Information" colspan="6">
 							<field name="addtional_exam_code" />
 							<field name="name"  placeholder="Exam Name"/>
-							<field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
+							<field name="standard_id" placeholder="Select or Create Standard"/>
 							<field name="subject_id" placeholder="Select or Create Subject"/>
 						</group>
 						<group col="4" string="Examination Dates" colspan="4">
@@ -314,18 +316,18 @@
                             <field name="s_exam_ids" placeholder="Select or Create Examination"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="standard_id" placeholder="Select or Create Standard" domain="[('standard_id','=',s_exam_ids)]"/>
+                            <field name="standard_id" placeholder="Select or Create Standard" domain="[('standard_id','=',s_exam_ids)]" />
                             <field name="roll_no_id" />
                             <field name="student_id" placeholder="Select or Create Student" domain="[('standard_id','=',standard_id.id)]"/>
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
                             <tree string="Subjects" editable="bottom" >
                                 <field name="subject_id" placeholder="Select or Create Subject"/>
-                                <field name="absent"/>
-                                <field name="maximum_marks" attrs="{'invisible':[('absent','not in',False)]}"/>
-                                <field name="minimum_marks"/>
-                                <field name="obtain_marks"/>
-                                <field name="grade"/>  
+                                <field name="absent" attrs="{'readonly':[('absent','not in',False)]}"/>
+                                <field name="maximum_marks" attrs="{'readonly':[('absent','not in',False)]}"/>
+                                <field name="minimum_marks" attrs="{'readonly':[('absent','=',True)]}"/>
+                                <field name="obtain_marks" attrs="{'readonly':[('absent','=',True)]}"/>
+                                <field name="grade" attrs="{'readonly':[('absent','=',True)]}"/>  
                                 <field name="state" invisible="1"/>
                                 <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/>
                                 <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
