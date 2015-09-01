@@ -27,6 +27,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 import datetime
 
+
 class time_table(models.Model):
 
     _description = 'Time Table'
@@ -71,8 +72,7 @@ class time_table_line(models.Model):
                           _("You must have a 'Recess' as a'' subject"))
         recess.update({'value': {'subject_id': sub_id.id}})
         return recess
-    
-    
+
     @api.onchange('sub_exam_date')
     def _get_day(self):
         if self.sub_exam_date:
@@ -80,19 +80,18 @@ class time_table_line(models.Model):
             new_date = datetime.datetime.strptime(date1, '%Y-%m-%d')
             self.week_day = new_date.strftime("%A")
 
-    
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
                                  required=True)
     table_id = fields.Many2one('time.table', 'TimeTable')
-    tables_id = fields.Many2one('exam.exam', 'TimeTable')   
+    tables_id = fields.Many2one('exam.exam', 'TimeTable')
     start_time = fields.Float('Start Time', required=True)
     end_time = fields.Float('End Time', required=True)
     is_break = fields.Boolean('Is Break')
     week_day = fields.Char('Day')
     sub_exam_date = fields.Date('Subject Exam Date')
     standard_id = fields.Many2one("school.standard", "Standard")
-    
+
     @api.constrains('sub_exam_date', 'tables_id.end_date')
     def _check_sub_exam_date(self):
         if self.sub_exam_date > self.tables_id.end_date:
@@ -104,18 +103,18 @@ class time_table_line(models.Model):
         if self.sub_exam_date < self.tables_id.start_date:
                 raise Warning(_('Please Check The Subject Exam Date'))
         return True
-    
+
     @api.multi
     @api.onchange('standard_id')
     def onchange_ad_standard(self):
         sub_list = []
         for exam_obj in self:
-             for time_table in exam_obj.standard_id:
+            for time_table in exam_obj.standard_id:
                  print"asasasasasasasasasas",time_table
                  for sub_id in time_table.subject_ids:
                      sub_list.append(sub_id.id)
-        return {'domain':{'subject_id':[('id','in',sub_list)]}}
-       
+        return {'domain': {'subject_id': [('id', 'in', sub_list)]}}
+
 
 class subject_subject(models.Model):
 

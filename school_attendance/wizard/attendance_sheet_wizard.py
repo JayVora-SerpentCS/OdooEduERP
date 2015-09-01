@@ -22,9 +22,8 @@
 #
 ##############################################################################
 from openerp import models, fields, api
-from openerp.tools.translate import _
 
-    
+
 class monthly_attendance_sheet(models.TransientModel):
     """
     For Monthly Attendance Sheet
@@ -59,13 +58,11 @@ class monthly_attendance_sheet(models.TransientModel):
         models_data = self.env['ir.model.data']
         #         atten_sheet_line_created = 0
         # Get opportunity views
-        
+
         form_res = self.env.ref('school_attendance.view_attendance_sheet_form')
         form_view_id = form_res and form_res.id or False
         tree_res = self.env.ref('school_attendance.view_attendance_sheet_tree')
         tree_view_id = tree_res and tree_res.id or False
-        
-        
 #         dummy, form_view = models_data.get_object_reference
 #         ('school_attendance', 'view_attendance_sheet_form')
 #         dummy, tree_view = models_data.get_object_reference
