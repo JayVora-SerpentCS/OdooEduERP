@@ -28,32 +28,32 @@ from datetime import date
 from datetime import datetime
 import arrow
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, image_colorize, image_resize_image_big
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
+from openerp.exceptions import except_orm, Warning
 
 class academic_year(models.Model):
     ''' Defining an academic year '''
-    
+
     _name = "academic.year"
     _description = "Academic Year"
     _order = "sequence"
-    
+
     sequence = fields.Integer('Sequence', required=True, help="In which sequence order you want to see this year.")
-    name = fields.Char('Name', required=True, select=1,help='Name of  academic year')
-    code = fields.Char('Code', required=True, select=1,help='Code of academic year')
-    date_start = fields.Date('Start Date', required=True,help='Starting date of academic year')
-    date_stop = fields.Date('End Date', required=True,help='Ending of academic year')
-    month_ids = fields.One2many('academic.month', 'year_id', string='Months',help="related Academic months")
+    name = fields.Char('Name', required=True, select=1, help='Name of  academic year')
+    code = fields.Char('Code', required=True, select=1, help='Code of academic year')
+    date_start = fields.Date('Start Date', required=True, help='Starting date of academic year')
+    date_stop = fields.Date('End Date', required=True, help='Ending of academic year')
+    month_ids = fields.One2many('academic.month', 'year_id', string='Months', help="related Academic months")
     grade_id = fields.Many2one('grade.master',"Grade")
     description = fields.Text('Description')
 
     @api.model
     def next_year(self, sequence):
-        year_ids = self.search([('sequence', '>', sequence)],order='id ASC', limit=1)
+        year_ids = self.search([('sequence', '>', sequence)], order='id ASC', limit=1)
         if year_ids:
             return year_ids.id
         return False
-    
+
     @api.multi
     def name_get(self):
         res = []
@@ -62,7 +62,7 @@ class academic_year(models.Model):
             res.append((acd_year_rec['id'], name))
         return res
 
-    @api.constrains('date_start','date_stop')
+    @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
         obj_academic_ids = self.search([])
         academic_list = []
@@ -73,25 +73,25 @@ class academic_year(models.Model):
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop or \
-                    old_ac.date_start <= self.date_stop <= old_ac.date_stop:
+                old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                     raise Warning(_('Error! You cannot define overlapping academic years.'))
 
-    @api.constrains('date_start','date_stop')
+    @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start and self.date_stop < self.date_start:
             raise Warning(_('Error! The duration of the academic year is invalid.'))
-        
+
     @api.multi
     def create_month(self):
-        lst =[]
+        lst = []
         sub_list = []
         for rec in self:
             if rec.date_start:
                 start = datetime.strptime(rec.date_start, DEFAULT_SERVER_DATE_FORMAT)
                 end = datetime.strptime(rec.date_stop, DEFAULT_SERVER_DATE_FORMAT)
                 for m in arrow.Arrow.range('month', start, end):
-                    sub_list.append({'name' : m.format('MMMM')})
-        rec.month_ids = [(0,0,tmp) for tmp in sub_list]
+                    sub_list.append({'name': m.format('MMMM')})
+        rec.month_ids = [(0, 0, tmp) for tmp in sub_list]
         return True
 #                     for line in rec.month_ids:
 #                         for new_line in line.name:
@@ -108,20 +108,20 @@ class academic_month(models.Model):
     _name = "academic.month"
     _description = "Academic Month"
     _order = "date_start"
-    
-    name =          fields.Char('Name', required=True, help='Name of Academic month')
-    code =          fields.Char('Code', help='Code of Academic month')
-    date_start =    fields.Date('Start of Period', help='Starting of Academic month')
-    date_stop =     fields.Date('End of Period',help='Ending of Academic month')
-    year_id =       fields.Many2one('academic.year', 'Academic Year',help="Related Academic year ")
-    description=    fields.Text('Description')
 
-    @api.constrains('date_start','date_stop')
+    name = fields.Char('Name', required=True, help='Name of Academic month')
+    code = fields.Char('Code', help='Code of Academic month')
+    date_start = fields.Date('Start of Period', help='Starting of Academic month')
+    date_stop = fields.Date('End of Period',help='Ending of Academic month')
+    year_id = fields.Many2one('academic.year', 'Academic Year',help= "Related Academic year ")
+    description = fields.Text('Description')
+
+    @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start and self.date_stop < self.date_start:
             raise Warning(_('Error ! The duration of the Month(s) is/are invalid.'))
 
-    @api.constrains('year_id','date_start','date_stop')
+    @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
             if self.year_id.date_stop < self.date_stop or \
@@ -135,11 +135,11 @@ class standard_medium(models.Model):
     _name = "standard.medium"
     _description = "Standard Medium"
     _order = "sequence"
-    
-    sequence =      fields.Integer('Sequence', required=True)
-    name =          fields.Char('Name', required=True)
-    code =          fields.Char('Code', required=True)
-    description =   fields.Text('Description')
+
+    sequence = fields.Integer('Sequence', required=True)
+    name = fields.Char('Name', required=True)
+    code = fields.Char('Code', required=True)
+    description = fields.Text('Description')
 
 
 class standard_division(models.Model):
@@ -787,29 +787,16 @@ class student_reminder(models.Model):
     description =   fields.Text('Description')
     color =         fields.Integer('Color Index', default=0)
     
-    @api.multi
-    def send_email(self):
-        print"hi I am Calld"
-        parent = self.env['res.partner'].search([])
-        print 'parent======================',parent
-#         for parent_obj in parent:
-#             pare = parent.search[('stu_name','=',parent_obj.student_name)]
-#             print"sdaaaaaaaaaaaa",pare
-        for rec in self:
-            ir_model_data = self.env['ir.model.data']
-            manager_template_id = ir_model_data.get_object_reference('school', 'email_template_parent')[1]
-            manager_template_rec = self.env['email.template'].browse(manager_template_id)
-            manager_template_rec.send_mail(travel_rec.id,force_send=True)
 class student_cast(models.Model):
     _name = "student.cast"
-    
-    name = fields.Char("Name",required=True)
+
+    name = fields.Char("Name", required=True)
 
 class res_users(models.Model):
     _inherit = 'res.users'
-    
+
     @api.model
-    def create(self,vals):
-        vals.update({'employee_ids':False})
+    def create(self, vals):
+        vals.update({'employee_ids': False})
         res = super(res_users, self).create(vals)
         return res

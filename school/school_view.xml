@@ -437,8 +437,7 @@
 							<field name="name" placeholder="Reminder Title"/>
 							<newline />
 							<field name="description" colspan="4"/>
-							<button name="send_email" string="Send Email"
-                                    type="object" class="oe_highlight"/>
+							
 						</group>
 					</sheet>
 				</form>
