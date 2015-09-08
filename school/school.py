@@ -30,8 +30,8 @@ from datetime import date
 from datetime import datetime
 import arrow
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, \
-image_colorize, image_resize_image_big
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import image_colorize, image_resize_image_big
 from openerp.exceptions import except_orm, Warning
 
 
@@ -85,8 +85,9 @@ class academic_year(models.Model):
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop or\
-                    old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                        raise Warning(_('Error! You cannot define overlapping'
+                    old_ac.date_start <= self.date_stop <=\
+                    old_ac.date_stop:
+                    raise Warning(_('Error! You cannot define overlapping'
                                     'academic years.'))
 
     @api.constrains('date_start', 'date_stop')
@@ -98,7 +99,7 @@ class academic_year(models.Model):
 
     @api.multi
     def create_month(self):
-#         lst = []
+        # lst = []
         sub_list = []
         for rec in self:
             if rec.date_start:
