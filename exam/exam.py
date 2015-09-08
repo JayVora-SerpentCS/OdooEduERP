@@ -23,7 +23,7 @@
 ##############################################################################
 from datetime import date, datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm, Warning
 
 
 class extended_time_table(models.Model):
@@ -36,11 +36,11 @@ class extended_time_table(models.Model):
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 class extended_student_student(models.Model):
-      
+
     _inherit = 'student.student'
 
-    exam_results_ids = fields.One2many('exam.result','student_id',
-                                       'Exam History',readonly=True)
+    exam_results_ids = fields.One2many('exam.result', 'student_id',
+                                       'Exam History', readonly=True)
 
 class extended_time_table_line(models.Model):
 
@@ -55,7 +55,7 @@ class extended_time_table_line(models.Model):
         val = {}
         if exm_date:
             val['week_day'] = datetime.strptime(exm_date, "%Y-%m-%d").strftime("%A").lower()
-        return {'value' : val}
+        return {'value': val}
 
     @api.multi
     def _check_date(self):
@@ -73,15 +73,15 @@ class exam_exam(models.Model):
     _name = 'exam.exam'
     _description = 'Exam Information'
 
-    name = fields.Char("Exam Name", required = True)
-    exam_code = fields.Char('Exam Code', required=True, readonly=True,default=lambda obj:obj.env['ir.sequence'].get('exam.exam'))
-    standard_id = fields.Many2many('school.standard','school_standard_exam_rel','standard_id','event_id','Participant Standards')
-    start_date = fields.Date("Exam Start Date",help="Exam will start from this date")
+    name = fields.Char("Exam Name", required=True)
+    exam_code = fields.Char('Exam Code', required=True, readonly=True, default=lambda obj: obj.env['ir.sequence'].get('exam.exam'))
+    standard_id = fields.Many2many('school.standard', 'school_standard_exam_rel', 'standard_id', 'event_id', 'Participant Standards')
+    start_date = fields.Date("Exam Start Date", help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
     create_date = fields.Date("Exam Created Date", help="Exam Created Date")
     write_date = fields.Date("Exam Update Date", help="Exam Update Date")
     timetable_ids = fields.One2many('time.table.line', 'tables_id', 'TimeTable')
-    state = fields.Selection([('draft','Draft'),('running','Running'),('finished','Finished'),('cancelled','Cancelled')], 'State', readonly=True,default='draft')
+    state = fields.Selection([('draft', 'Draft'), ('running', 'Running'), ('finished', 'Finished'), ('cancelled','Cancelled')], 'State', readonly=True, default='draft')
 
     @api.multi
     def set_to_draft(self):
