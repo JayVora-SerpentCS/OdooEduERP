@@ -23,7 +23,7 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
-from openerp import models, fields,api, _
+from openerp import osv
 
 
 class add_exam_result(report_sxw.rml_parse):
@@ -47,12 +47,12 @@ class add_exam_result(report_sxw.rml_parse):
         for subject in sub_obj.browse(self.cr, self.uid,
                                       subject_exam_ids):
                 result_data.append({
-                    'subject': subject.subject_id and \
-                                subject.subject_id.name or '',
+                    'subject': subject.subject_id and
+                    subject.subject_id.name or '',
                     'max_mark': subject.maximum_marks or '',
                     'mini_marks': subject.minimum_marks or '',
                     'obt_marks': subject.obtain_marks or '',
-                 })
+                    })
         return result_data
 
 

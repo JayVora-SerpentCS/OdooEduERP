@@ -35,7 +35,7 @@
 """,
     "depends": [
                 "timetable"
-                ],
+            ],
     "data": [
             "exam_view.xml",
             "exam_sequence.xml",

@@ -52,7 +52,7 @@ class sale_order_line(models.Model):
                 continue
             l_id += 1
             production_lot_dico = {
-                'name': line.order_id and (str(line.order_id.name)+('/%02d' %
+                'name': line.order_id and (str(line.order_id.name) + ('/%02d' %
                                                                     (l_id,)))
                                    or False,
                 'product_id': line.product_id and line.product_id.id or False
@@ -64,7 +64,8 @@ class sale_order_line(models.Model):
 
     @api.model
     def copy(self, default=None):
-        ''' This method Duplicate record with given id updating it with default values
+        ''' This method Duplicate record with given id updating it with
+        default values
         @param self : Object Pointer
         @param cr : Database Cursor
         @param uid : Current Logged in User
@@ -120,7 +121,8 @@ class sale_order(models.Model):
                                 (days=line.delay or 0.0)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
-                if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if line.product_id and line.product_id.product_tmpl_id.type in\
+                ('product', 'consu'):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         picking_id = picking_obj.create({
@@ -141,7 +143,7 @@ class sale_order(models.Model):
                     move_id = move_obj.create({
                         'name': 'SO:' + order.name or '',
                         'picking_id': picking_id.id,
-                        'origin_ref':order.name,
+                        'origin_ref': order.name,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
                         'product_uom_qty': line.product_uom_qty,
@@ -175,7 +177,8 @@ class sale_order(models.Model):
                                           proc_id.id, 'button_confirm',
                                           self._cr)
                     line.write({'procurement_id': proc_id.id})
-                elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
+                elif line.product_id and line.product_id.product_tmpl_id.type\
+                == 'service':
                     proc_id = procurment_obj.create({
                         'name': line.name,
                         'origin': order.name,

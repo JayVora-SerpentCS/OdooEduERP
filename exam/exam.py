@@ -23,7 +23,7 @@
 ##############################################################################
 from datetime import date, datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import Warning
 
 
 class extended_time_table(models.Model):
@@ -72,7 +72,7 @@ class extended_time_table_line(models.Model):
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
-                    raise except_orm(_('Invalid Date Error !'),
+                    raise Warning(_('Invalid Date Error !'),
                                      _('Either you''have selected wrong day'
                                        'for the date or you have selected'
                                        'invalid date.'))
@@ -112,7 +112,7 @@ class exam_exam(models.Model):
         if self.exam_timetable_ids:
             self.write({'state': 'running'})
         else:
-            raise except_orm(_('Exam Schedule'), _('You must add one'
+            raise Warning(_('Exam Schedule'), _('You must add one'
                                                    'Exam Schedule'))
 
     @api.multi
@@ -223,7 +223,7 @@ class exam_result(models.Model):
                             else:
                                 flag = True
                 else:
-                    raise except_orm(_('Configuration Error !'),
+                    raise Warning(_('Configuration Error !'),
                                      _('First Select Grade System'
                                        'in Student->year->.'))
             if flag:
@@ -312,7 +312,7 @@ class exam_result(models.Model):
         vals = {}
         res = self._compute_per()
         if not res:
-            raise except_orm(_('Warning!'), _('Please Enter the'
+            raise Warning(_('Warning!'), _('Please Enter the'
                                               'students Marks.'))
         vals.update({'grade': res[self.id]['grade'], 'percentage':
                      res[self.id]['percentage'], 'state': 'confirm'})
@@ -329,7 +329,7 @@ class exam_result(models.Model):
         for result in self.browse(self.ids):
             opt_marks = []
             acc_mark = []
-            sum = 0.0
+            sum1 = 0.0
             total = 0.0
 #             obtained_total = 0.0
 #             obtain_marks = 0.0
@@ -342,15 +342,15 @@ class exam_result(models.Model):
                 if acc_mark[i] != 0.0:
                     opt_marks[i] = acc_mark[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                sum1 = sum1 + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum / total) * 100
+                per = (sum1 / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res.update({'grade': grd, 'percentage': per,
-                            'state': 're-access_confirm', 're_total': sum})
+                            'state': 're-access_confirm', 're_total': sum1})
             self.write(res)
         return True
 
@@ -360,7 +360,7 @@ class exam_result(models.Model):
         for result in self.browse(self.ids):
             opt_marks = []
             eve_marks = []
-            sum = 0.0
+            sum1 = 0.0
             total = 0.0
 #             obtained_total = 0.0
 #             obtain_marks = 0.0
@@ -373,16 +373,16 @@ class exam_result(models.Model):
                 if eve_marks[i] != 0.0:
                     opt_marks[i] = eve_marks[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                sum1 = sum + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum / total) * 100
+                per = (sum1 / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res.update({'grade': grd, 'percentage': per,
                             'state': 're-evaluation_confirm',
-                            're_total': sum})
+                            're_total': sum1})
             self.write(res)
         return True
 

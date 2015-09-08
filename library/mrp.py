@@ -22,7 +22,6 @@
 #
 ##############################################################################
 from openerp.osv import osv, fields
-import time
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -30,7 +29,8 @@ class procurement_order(osv.Model):
 
     _inherit = "procurement.order"
     _columns = {
-        'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
+        'production_lot_id': fields.many2one('stock.production.lot',
+                                             'Production Lot'),
         'customer_ref': fields.char('Customer reference'),
     }
 
@@ -47,7 +47,8 @@ class procurement_order(osv.Model):
         res = {}
         if context is None:
             context = {}
-        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+        company = self.pool.get('res.users').browse(cr, uid, uid,
+                                                    context=context).company_id
         partner_obj = self.pool.get('res.partner')
         uom_obj = self.pool.get('product.uom')
         pricelist_obj = self.pool.get('product.pricelist')
@@ -79,7 +80,7 @@ class procurement_order(osv.Model):
             price = pricelist_obj.price_get(cr, uid, [pricelist_id],
                                             procurement.product_id.id,
                                             qty, partner_id,
-                                            {'uom': uom_id})[pricelist_id]  
+                                            {'uom': uom_id})[pricelist_id]
 
             schedule_date = self._get_purchase_schedule_date(cr, uid,
                                                              procurement,
@@ -136,7 +137,10 @@ class procurement_order(osv.Model):
                                     partner.property_account_position.id
                                     or False
             }
-            res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
+            res[procurement.id] = self.\
+            create_procurement_purchase_order(cr, uid, procurement,
+                                              po_vals, line_vals,
+                                              context=context)
             self.write(cr, uid, [procurement.id],
                        {'state': 'running',
                         'purchase_id': res[procurement.id]})

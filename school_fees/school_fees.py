@@ -24,7 +24,7 @@
 import time
 from openerp import workflow
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
+from openerp.exceptions import Warning
 
 
 class student_fees_register(models.Model):
@@ -316,7 +316,7 @@ class student_payslip(models.Model):
         move_line_obj = self.env['account.move.line']
         for fees in self.browse(self.ids):
             if not fees.journal_id.sequence_id:
-                raise except_orm(_('Error !'), _('Please define sequence on'
+                raise Warning(_('Error !'), _('Please define sequence on'
                                                  'the journal related to this'
                                                  'invoice.'))
             if fees.move_id:
@@ -341,7 +341,7 @@ class student_payslip(models.Model):
                 comapny_ac_id = fees.company_id.\
                 partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
-                raise except_orm(_('UserError'),
+                raise Warning(_('UserError'),
                         _('You cannot create an invoice on a centralised'
                           'journal. Uncheck the centralised counterpart box'
                           'in the related journal from the configuration'

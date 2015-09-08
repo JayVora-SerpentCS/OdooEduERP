@@ -42,16 +42,6 @@ class library_editor_supplier(models.Model):
                                                   self.ids]),
                        method=True, string=" ", type="text")
 
-#     _columns = {
-#         'name': fields.many2one('res.partner', 'Editor'),
-#         'supplier_id': fields.many2one('res.partner', 'Supplier'),
-#         'sequence': fields.integer('Sequence'),
-#         'delay': fields.integer('Customer Lead Time'),
-#         'min_qty': fields.float('Minimal Quantity'),
-#         'junk': fields.function(lambda self, cr, uid, ids, name, attr, context: dict([(idn, '') for idn in ids]),
-#                 method=True, string=" ", type="text"),
-#     }
-
     @api.v7
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, self._table)
@@ -88,12 +78,11 @@ class library_editor_supplier(models.Model):
         select = """select product_tmpl_id\n"""\
                  """from product_product\n"""\
                  """where editor = %s\n"""\
-                 """  and id not in (select product_tmpl_id from product_supplierinfo"
+                 """  and id not in (select product_tmpl_id from
+                 product_supplierinfo"
                  "where name = %s)""" % (vals['name'], vals['supplier_id'])
         self._cr.execute(select)
         if not self._cr.rowcount:
-            # raise osv.except_osv(_("Error"), _("No book to apply this 
-            #    relation"))
             raise Warning(_("Error ! No book to apply this relation"))
 
         sup_info = self.env['product.supplierinfo']
@@ -119,11 +108,11 @@ class library_editor_supplier(models.Model):
                 continue
             # search for the equivalent ids in product_supplierinfo
             #    (unpack the group)
-            self._cr.execute("""select si.id\n"""/
-                             """from product_supplierinfo si\n"""/
-                             """join product_product pp\n"""/
-                             """  on (si.product_id = pp.product_tmpl_id )\n"""/
-                             """where pp.editor = %s and si.name = %s""" % 
+            self._cr.execute("""select si.id\n"""
+                             """from product_supplierinfo si\n"""
+                             """join product_product pp\n"""
+                             """  on (si.product_id = pp.product_tmpl_id )\n"""
+                             """where pp.editor = %s and si.name = %s""" %
                              (rel.name.id, rel.supplier_id.id))
 
             ids = [x[0] for x in self._cr.fetchall()]
@@ -143,8 +132,6 @@ class library_editor_supplier(models.Model):
             #   cannot change supplier here. Must create a new relation:
             original_supplier_id = rel.supplier_id.id
             if not original_supplier_id:
-                # raise osv.except_osv(_("Warning"), _("Cannot set supplier in
-                #    this form. Please create a new relation."))
                 raise Warning(_("Warning ! Cannot set supplier in this form."
                                 "Please create a new relation."))
 
@@ -153,8 +140,6 @@ class library_editor_supplier(models.Model):
                                                         (original_supplier_id
                                                          != new_supplier_id))
             if supplier_change:
-                # raise osv.except_osv(_("Warning"), _("Cannot set supplier in
-                #    this form. Please create a new relation."))
                 raise Warning(_("Warning ! Cannot set supplier in this form."
                                 "Please create a new relation."))
             else:

@@ -25,7 +25,7 @@
 # from openerp.tools.translate import _
 
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
+from openerp.exceptions import Warning
 
 
 class hostel_type(models.Model):
@@ -55,7 +55,7 @@ class hostel_room(models.Model):
                 count += 1
             room_availability = data.student_per_room - count
             if room_availability < 0:
-                raise except_orm(_("You can not assign room more" /
+                raise Warning(_("You can not assign room more" /
                                    "than %s student" % data.student_per_room))
             else:
                 data.availability = room_availability

@@ -32,7 +32,7 @@ import arrow
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools import image_colorize, image_resize_image_big
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import Warning
 
 
 class academic_year(models.Model):
@@ -345,7 +345,7 @@ class student_student(models.Model):
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
         else:
-            raise except_orm(_('Error!'), _('PID not valid, so record'
+            raise Warning(_('Error!'), _('PID not valid, so record'
                                             'will not save.'))
         result = super(student_student, self).create(vals)
         return result
@@ -518,15 +518,14 @@ class student_student(models.Model):
         school_standard_obj = self.env['school.standard']
         for student_data in self:
             if student_data.age <= 5:
-                raise except_orm(_('Warning'),
+                raise Warning(_('Warning'),
                                  _('The student is not eligible.'
                                    'Age is not valid.'))
 
-            school_standard_search_ids = school_standard_obj.search\
-                                        ([('standard_id', '=',
-                                           student_data.standard_id.id)])
+            school_standard_search_ids = school_standard_obj.search
+            ([('standard_id', '=', student_data.standard_id.id)])
             if not school_standard_search_ids:
-                raise except_orm(_('Warning'), _('The standard is not'
+                raise Warning(_('Warning'), _('The standard is not'
                                                  'defined in a school'))
             student_search_ids = self.search([('standard_id', '=',
                                                student_data.standard_id.id)])
@@ -895,7 +894,7 @@ class student_news(models.Model):
         obj_mail_server = self.env['ir.mail_server']
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
-            raise except_orm(_('Mail Error'),
+            raise Warning(_('Mail Error'),
                               _('No mail outgoing mail server specified!'))
         mail_server_record = mail_server_ids[0]
         email_list = []
@@ -905,7 +904,7 @@ class student_news(models.Model):
                     if user.email:
                         email_list.append(user.email)
                 if not email_list:
-                    raise except_orm(_('User Email Configuration '),
+                    raise Warning(_('User Email Configuration '),
                                      _("Email not found in users !"))
             else:
                 for employee in emp_obj.search([]):
@@ -914,8 +913,7 @@ class student_news(models.Model):
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise except_orm(_('Mail Error')
-                                     , _("Email not defined!"))
+                    raise Warning(_('Mail Error'), _("Email not defined!"))
             t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body = 'Hi,<br/><br/> \
                 This is a news update from <b>%s</b> posted at %s<br/><br/>\
@@ -924,24 +922,20 @@ class student_news(models.Model):
                                t.strftime('%d-%m-%Y %H:%M:%S'),
                                news.description)
             message = obj_mail_server.build_email(
-                                                   email_from=mail_server_record.
-                                                   smtp_user,
-                                                   email_to=email_list,
-                                                   subject='Notification for'
-                                                   'news update.',
-                                                   body=body,
-                                                   body_alternative=body,
-                                                   email_cc=None,
-                                                   email_bcc=None,
-                                                   reply_to=mail_server_record.
-                                                   smtp_user,
-                                                   attachments=None,
-                                                   references=None,
-                                                   object_id=None,
-                                                   subtype='html',
+                                                email_from=mail_server_record.
+                                                smtp_user, email_to=email_list,
+                                                subject='Notification for'
+                                                'news update.',
+                                                body=body,
+                                                body_alternative=body,
+                                                email_cc=None, email_bcc=None,
+                                                reply_to=mail_server_record.
+                                                smtp_user, attachments=None,
+                                                references=None,
+                                                object_id=None, subtype='html',
                                                    # It can be plain or html
-                                                   subtype_alternative=None,
-                                                   headers=None)
+                                                subtype_alternative=None,
+                                                headers=None)
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True

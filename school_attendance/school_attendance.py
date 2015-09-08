@@ -444,12 +444,14 @@ class daily_attendance(models.Model):
                                                                     False
                 if not attendance_sheet_id:
                     attendance_sheet_id = attendance_sheet_obj.create({
-                                                                       'name':
-                                                                       'Month' + month_data.name +"-Year" + str(year),
-                                                                       'standard_id': line.standard_id.id,
-                                                                       'user_id': line.user_id.id,
-                                                                       'month_id': month_data.id,
-                                                                       'year_id': year_ids and year_ids.id or False})
+                                           'name':
+                                           'Month' + month_data.name +
+                                           "-Year" + str(year),
+                                           'standard_id': line.standard_id.id,
+                                           'user_id': line.user_id.id,
+                                           'month_id': month_data.id,
+                                           'year_id': year_ids and year_ids.id
+                                           or False})
                     for student_id in line.student_ids:
                         attendance_sheet_line_obj.create({
                                                           'roll_no':

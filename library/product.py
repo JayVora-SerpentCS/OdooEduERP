@@ -46,18 +46,19 @@ class many2manysym(fields.Many2many):
         if not self.ids:
             return res
         ids_s = ','.join(map(str, self.ids))
-        for id in self.ids:
-            res[id] = []
+        for ids in self.ids:
+            res[ids] = []
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         for (self._id2, self._id1) in [(self._id2, self._id1),
                                        (self._id1, self._id2)]:
-            self._cr.execute('select '+self._id2+','+self._id1+
-                             ' from '+self._rel+' where '+self._id1+
-                             ' in ('+ids_s+')'+limit_str+
+            self._cr.execute('select ' + self._id2 + ',' + self._id1 +
+                             ' from ' + self._rel + ' where ' + self._id1 +
+                             ' in (' + ids_s + ')' + limit_str +
                              ' offset %s', (offset,))
             for r in self._cr.fetchall():
                 res[r[1]].append(r[0])
         return res
+
 
 class product_template(models.Model):
 
@@ -69,6 +70,7 @@ class product_template(models.Model):
     def _state_get(self):
         self._cr.execute('select name, name from product_state order by name')
         return self._cr.fetchall()
+
 
 class product_lang(models.Model):
 
@@ -82,13 +84,15 @@ class product_lang(models.Model):
                          'The name of the product must be unique !')
                         ]
 
+
 class product_product(models.Model):
     """Book variant of product"""
     _inherit = "product.product"
 
     @api.multi
     def name_get(self):
-        ''' This method Returns the preferred display value (text representation)
+        ''' This method Returns the preferred display value
+        (text representation)
         for the records with the given ids.
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -100,10 +104,8 @@ class product_product(models.Model):
          '''
 
         if isinstance(self.ids, (int, long)):
-            ids = [self.ids]
-
-        if not len(self.ids):
-            return []
+            if not len(self.ids):
+                return []
 
         def _name_get(d):
             name = d.get('name', '')
@@ -200,12 +202,14 @@ class product_product(models.Model):
 
     @api.model
     def copy(self, default=None):
-        ''' This method Duplicate record with given id updating it with default values
+        ''' This method Duplicate record with given id updating it with
+        default values
         @param self : Object Pointer
         @param cr : Database Cursor
         @param uid : Current Logged in User
         @param id : id of the record to copy
-        @param default : dictionary of field values to override in the original values of the copied record
+        @param default : dictionary of field values to override in the
+        original values of the copied record
         @param context : standard Dictionary
         @return : id of the newly created record
         '''
@@ -264,11 +268,13 @@ class product_product(models.Model):
                                            DEFAULT_SERVER_DATE_FORMAT)
                 l_date = r_date + relativedelta(days=date_rec.
                                                 day_to_return_book.day)
-                date_rec.date_retour = l_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                date_rec.date_retour = l_date.strftime
+                (DEFAULT_SERVER_DATE_FORMAT)
     isbn = fields.Char('Isbn code', unique=True,
                        help="It show the International Standard Book Number")
     catalog_num = fields.Char('Catalog number',
-                              help="It show the Identification number of books")
+                              help="It show the Identification"
+                              "number of books")
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
@@ -283,7 +289,8 @@ class product_product(models.Model):
                                     default=lambda *a: time.strftime
                                     ('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Date('Return Date', help='Book Return date',
-                              default=lambda *a: str(int(time.strftime("%Y"))) +
+                              default=lambda *a:
+                              str(int(time.strftime("%Y"))) +
                               time.strftime("-%m-%d"))
     tome = fields.Char('Tome', help="It will store the information of work"
                        "in serveral volume")
@@ -339,6 +346,7 @@ class library_author(models.Model):
 
     _inherit = 'library.author'
 
-    book_ids = fields.Many2many('product.product', 'author_book_rel', 'author_id', 'product_id', 'Books', select=1)
+    book_ids = fields.Many2many('product.product', 'author_book_rel',
+                                'author_id', 'product_id', 'Books', select=1)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
