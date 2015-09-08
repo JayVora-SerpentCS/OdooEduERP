@@ -52,7 +52,7 @@ _patterns = {
              '$': ('CbAaAa', 39), '/': ('AaBaCa', 40), '+': ('AaCaBa', 41),
              '%': ('BaAaCa', 42), '#': ('AbAbBa', 43), '!': ('CaBaAa', 44),
              '=': ('CaAaBa', 45), '&': ('AbBbAa', 46),
-             'start': ('AaAaDa', -1),  'stop' : ('AaAaDaA', -2)
+             'start': ('AaAaDa', -1),  'stop': ('AaAaDaA', -2)
              }
 
 _charsbyval = {}
@@ -91,24 +91,24 @@ def _encode93(str):
     s.reverse()
 
     # compute 'C' checksum
-    i = 0;
-    v = 1;
+    i = 0
+    v = 1
     c = 0
     while i < len(s):
         c = c + v * _patterns[s[i]][1]
-        i = i + 1;
+        i = i + 1
         v = v + 1
         if v > 20:
             v = 1
     s.insert(0, _charsbyval[c % 47])
 
     # compute 'K' checksum
-    i = 0;
-    v = 1;
+    i = 0
+    v = 1
     c = 0
     while i < len(s):
         c = c + v * _patterns[s[i]][1]
-        i = i + 1;
+        i = i + 1
         v = v + 1
         if v > 15:
             v = 1
@@ -129,7 +129,7 @@ class _Code93Base(MultiWidthBarcode):
 
         if type(value) is type(1):
             value = str(value)
-            
+
         for (k, v) in args.items():
             setattr(self, k, v)
 
@@ -155,16 +155,16 @@ class Standard93(_Code93Base):
     Code 93 is a Uppercase alphanumeric symbology with some punctuation.
     See Extended Code 93 for a variant that can represent the entire
     128 characrter ASCII set.
-    
+
     Options that may be passed to constructor:
 
         value (int, or numeric string. required.):
             The value to encode.
-   
+
         xdim (float, default .0075):
             X-Dimension, or width of the smallest element
             Minumum is .0075 inch (7.5 mils).
-            
+
         height (float, see default below):
             Height of the symbol.  Default is the height of the two
             bearer bars (if they exist) plus the greater of .25 inch
@@ -172,11 +172,11 @@ class Standard93(_Code93Base):
 
         quiet (bool, default 1):
             Wether to include quiet zones in the symbol.
-            
+
         lquiet (float, see default below):
             Quiet zone size to left of code, if quiet is true.
             Default is the greater of .25 inch, or 10 xdim
-            
+
         rquiet (float, defaults as above):
             Quiet zone size to right left of code, if quiet is true.
 
@@ -194,7 +194,7 @@ class Standard93(_Code93Base):
         for c in self.value:
             if c in string.lowercase:
                 c = string.upper(c)
-            if not _patterns.has_key(c):
+            if not _patterns.has_key in c:
                 self.valid = 0
                 continue
             vval = vval + c
@@ -211,15 +211,15 @@ class Extended93(_Code93Base):
     Extended Code 93 is a convention for encoding the entire 128 character
     set using pairs of characters to represent the characters missing in
     Standard Code 93. It is very much like Extended Code 39 in that way.
-    
+
     See Standard93 for arguments.
-    """    
+    """
 
     def validate(self):
         vval = ""
         self.valid = 1
         for c in self.value:
-            if not _patterns.has_key(c) and not _extended.has_key(c):
+            if not _patterns.has_key in c and not _extended.has_key in c:
                 self.valid = 0
                 continue
             vval = vval + c
@@ -229,9 +229,9 @@ class Extended93(_Code93Base):
     def encode(self):
         self.encoded = ""
         for c in self.validated:
-            if _patterns.has_key(c):
+            if _patterns.has_key in c:
                 self.encoded = self.encoded + c
-            elif _extended.has_key(c):
+            elif _extended.has_key in c:
                 self.encoded = self.encoded + _extended[c]
             else:
                 raise ValueError
