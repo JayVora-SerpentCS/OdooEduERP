@@ -24,7 +24,7 @@
 import time
 from openerp import workflow
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm
 
 
 class student_fees_register(models.Model):
@@ -192,18 +192,18 @@ class student_payslip(models.Model):
                     payslip_obj.write({'state': 'paid'})
                     return True
                 student_fees_structure_search_ids = student_fees_structure_obj\
-                .search([('name', '=', student_payslip_datas
+                    .search([('name', '=', student_payslip_datas
                           ['fees_structure_id'][1])])
                 for datas in student_fees_structure_search_ids:
                     for data in datas.line_ids or []:
                         student_payslip_line_vals = {
-                                'slip_id': self.id,
-                                'name': data.name,
-                                'code': data.code,
-                                'sequence': data.sequence,
-                                'type': data.type,
-                                'amount': data.amount,
-                        }
+                                                    'slip_id': self.id,
+                                                    'name': data.name,
+                                                    'code': data.code,
+                                                    'sequence': data.sequence,
+                                                    'type': data.type,
+                                                    'amount': data.amount,
+                                                    }
                         student_payslip_line_obj.create
                         (student_payslip_line_vals)
                 amount = 0
@@ -259,7 +259,7 @@ class student_payslip(models.Model):
         ('out_refund', 'Customer Refund'),
         ('in_refund', 'Supplier Refund'),
         ], 'Type', required=True, select=True, change_default=True,
-                            default='out_invoice')
+                                default='out_invoice')
     period_id = fields.Many2one('account.period', 'Force Period',
                                 required=True,
                                 domain=[('state', '<>', 'done')],
@@ -302,10 +302,10 @@ class student_payslip(models.Model):
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
             currency_id = journal.currency and journal.currency.id or \
-            journal.company_id.currency_id.id
+                journal.company_id.currency_id.id
             result = {'value': {
-                    'currency_id': currency_id,
-                    }
+                                'currency_id': currency_id,
+                                }
                 }
         return result
 
@@ -383,9 +383,9 @@ class student_payslip(models.Model):
                 'journal_id': fees.journal_id.id,
                 'parent_id': fees.student_id.parent_id.id,
                 'period_id': fees.period_id.id,
-                'currency_id': diff_currency_p and  current_currency or False,
+                'currency_id': diff_currency_p and current_currency or False,
                 'amount_currency': diff_currency_p and sign * fees.total or \
-                                    0.0,
+                                                        0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
             }
             move_line_obj.create(move_line)
@@ -398,9 +398,9 @@ class student_payslip(models.Model):
                 'journal_id': fees.journal_id.id,
                 'parent_id': fees.student_id.parent_id.id,
                 'period_id': fees.period_id.id,
-                'currency_id': diff_currency_p and  current_currency or False,
+                'currency_id': diff_currency_p and current_currency or False,
                 'amount_currency': diff_currency_p and sign * fees.total or \
-                                    0.0,
+                                                        0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
             }
             move_line_obj.create(move_line)
