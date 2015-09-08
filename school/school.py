@@ -84,7 +84,7 @@ class academic_year(models.Model):
             academic_list.remove(current_academic_yr.id)
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
-                if old_ac.date_start <= self.date_start <= old_ac.date_stop or \
+                if old_ac.date_start <= self.date_start <= old_ac.date_stop or\
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                         raise Warning(_('Error! You cannot define overlapping'
                                     'academic years.'))
@@ -98,7 +98,7 @@ class academic_year(models.Model):
 
     @api.multi
     def create_month(self):
-        lst = []
+#         lst = []
         sub_list = []
         for rec in self:
             if rec.date_start:
@@ -196,7 +196,6 @@ class school_standard(models.Model):
     _description = 'School Standards'
     _rec_name = "school_id"
 
-
     @api.one
     @api.depends('standard_id')
     def _compute_student(self):
@@ -209,7 +208,7 @@ class school_standard(models.Model):
     def import_subject(self):
         for im_ob in self:
             import_sub_ids = self.search([('standard_id', '=',
-                                           int(im_ob.standard_id)-1)])
+                                           int(im_ob.standard_id) - 1)])
             val = [last.id for sub in import_sub_ids for last in\
                    sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
@@ -217,7 +216,7 @@ class school_standard(models.Model):
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-        l2 = []
+#         l2 = []
         if self._context.get('standard_ids', False):
             args += [('id', 'in', self._context['standard_ids'][0][2])]
             recs = self.search(args)
@@ -234,14 +233,14 @@ class school_standard(models.Model):
     user_id = fields.Many2one('hr.employee', string='Class Teacher')
     color = fields.Integer('Color Index')
     passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
-    cmp_id = fields.Many2one('res.company' ,related='school_id.company_id',
+    cmp_id = fields.Many2one('res.company', related='school_id.company_id',
                              string="Company Name", store=True)
 
     @api.multi
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name+"[" + \
+            name = standard.standard_id.name + "[" + \
             standard.division_id.name + "]"
             res.append((standard.id, name))
         return res
@@ -252,7 +251,7 @@ class school_school(models.Model):
     _name = 'school.school'
     _inherits = {'res.company': 'company_id'}
     _description = 'School Information'
-    _rec_name= "com_name"
+    _rec_name = "com_name"
 
     @api.model
     def _lang_get(self):
@@ -283,7 +282,7 @@ class subject_subject(models.Model):
     maximum_marks = fields.Integer("Maximum marks")
     minimum_marks = fields.Integer("Minimum marks")
     weightage = fields.Integer("Weightage")
-    teacher_ids = fields.Many2many('hr.employee','subject_teacher_rel',
+    teacher_ids = fields.Many2many('hr.employee', 'subject_teacher_rel',
                                    'subject_id', 'teacher_id', 'Teachers')
     standard_ids = fields.Many2many('school.standard',
                                     'subject_standards_rel', 'standard_id',
@@ -352,7 +351,9 @@ class student_student(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
+        image = image_colorize(open(openerp.modules.get_module_resource
+                                    ('base', 'static/src/img',
+                                     'avatar.png')).read())
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', string='User ID',
@@ -369,7 +370,9 @@ class student_student(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self: self._get_default_image(self._context.get('default_is_company', False)))
+    photo = fields.Binary('Photo', default=lambda self: self.
+                          _get_default_image(self._context.get
+                                             ('default_is_company', False)))
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
                            states={'done': [('readonly', True)]})
     cast_id = fields.Many2one('student.cast', 'Religion')
@@ -378,15 +381,15 @@ class student_student(models.Model):
                          states={'done': [('readonly', True)]})
     last = fields.Char('Surname', required=True,
                        states={'done': [('readonly', True)]})
-    gender = fields.Selection([('male', 'Male'), 
-                                          ('female', 'Female')], 'Gender', 
+    gender = fields.Selection([('male', 'Male'),
+                                          ('female', 'Female')], 'Gender',
                               states={'done': [('readonly', True)]})
     date_of_birth = fields.Date('Birthdate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
     age = fields.Integer(compute='_calc_age', string='Age', readonly=True)
-    maritual_status = fields.Selection([('unmarried', 'Unmarried'), 
-                                          ('married', 'Married')], 
+    maritual_status = fields.Selection([('unmarried', 'Unmarried'),
+                                          ('married', 'Married')],
                                          'Maritual Status',
                                          states={'done': [('readonly', True)]})
     reference_ids = fields.One2many('student.reference', 'reference_id',
@@ -395,12 +398,13 @@ class student_student(models.Model):
     previous_school_ids = fields.One2many('student.previous.school',
                                           'previous_school_id',
                                           string='Previous School Detail',
-                                          states={'done': [('readonly', True)]})
+                                          states={'done':
+                                                  [('readonly', True)]})
     family_con_ids = fields.One2many('student.family.contact',
                                      'family_contact_id',
                                      string='Family Contact Detail',
                                      states={'done': [('readonly', True)]})
-    doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]} )
+    doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
     blood_group = fields.Char('Blood Group',)
@@ -428,7 +432,8 @@ class student_student(models.Model):
     certificate_ids = fields.One2many('student.certificate', 'student_id',
                                       string='Certificate')
     student_discipline_line = fields.One2many('student.descipline',
-                                              'student_id', string='Descipline')
+                                              'student_id',
+                                              string='Descipline')
     address_ids = fields.One2many('res.partner', 'student_id',
                                   string='Contacts')
     document = fields.One2many('student.document', 'doc_id',
@@ -446,8 +451,8 @@ class student_student(models.Model):
                                  string='Mobile No', readonly=True)
     contact_email = fields.Char(related='student_id.email', string='Email',
                                 readonly=True)
-    contact_website = fields.Char(related='student_id.website', string='Website',
-                                  readonly=True)
+    contact_website = fields.Char(related='student_id.website',
+                                  string='Website', readonly=True)
     award_list = fields.One2many('student.award', 'award_list_id',
                                  string='Award List')
     student_status = fields.Selection(related='student_id.state',
@@ -458,7 +463,7 @@ class student_student(models.Model):
                            readonly=True)
     Acadamic_year = fields.Char(related='year.name', string='Academic Year',
                                 help="Academic Year", readonly=True)
-    grn_number = fields.Many2one('student.grn','GR No.',
+    grn_number = fields.Many2one('student.grn', 'GR No.',
                                  help="General reg number")
     gr_no = fields.Char('student_no')
     standard_id = fields.Many2one('standard.standard', 'Class')
@@ -501,6 +506,7 @@ class student_student(models.Model):
     def set_terminate(self):
         for ter_rec in self:
             ter_rec.state = 'terminate'
+
     @api.multi
     def set_alumni(self):
         for alumni_rec in self:
@@ -511,9 +517,11 @@ class student_student(models.Model):
         school_standard_obj = self.env['school.standard']
         for student_data in self:
             if student_data.age <= 5:
-                raise except_orm(_('Warning'), _('The student is not'
-                                                 'eligible. Age is not valid.'))
-            school_standard_search_ids = school_standard_obj.search \
+                raise except_orm(_('Warning'),
+                                 _('The student is not eligible.'
+                                   'Age is not valid.'))
+
+            school_standard_search_ids = school_standard_obj.search\
                                         ([('standard_id', '=',
                                            student_data.standard_id.id)])
             if not school_standard_search_ids:
@@ -733,8 +741,8 @@ class res_partner(models.Model):
 
     @api.multi
     def student_parent_view(self):
-        cr, uid, context = self.env.args
-        data_obj = self.env['ir.model.data']
+        uid = self.env.args
+#         data_obj = self.env['ir.model.data']
         form_res = self.env.ref('school.view_parent_form')
         form_view_id = form_res and form_res.id or False
         tree_res = self.env.ref('school.view_parent_tree')
@@ -751,18 +759,18 @@ class res_partner(models.Model):
             domain = [('id', 'in', parent_lst)]
         value = {
            'domain': domain,
-           'name' :_('Parent Detail'),
+           'name': _('Parent Detail'),
            'view_type': 'form',
            'view_mode': 'kanban,tree,form',
            'res_model': 'res.partner',
            'type': 'ir.actions.act_window',
-           'views': [(kanban_view_id,'kanban'), (tree_view_id, 'tree'),
+           'views': [(kanban_view_id, 'kanban'), (tree_view_id, 'tree'),
                      (form_view_id, 'form')],
          }
         return value
 
     @api.multi
-    def read(recs, fields=None, load='_classic_read'):
+    def read(self, recs, fields=None, load='_classic_read'):
         res_list = []
         res = super(res_partner, recs).read(fields=fields, load=load)
         for res_update in res:
@@ -790,7 +798,7 @@ class student_previous_school(models.Model):
     ''' Defining a student previous school information '''
     _name = "student.previous.school"
     _description = "Student Previous School"
-    
+
     previous_school_id = fields.Many2one('student.student', 'Student')
     name = fields.Char('Name', required=True)
     registration_no = fields.Char('Registration No.', required=True)
@@ -905,7 +913,8 @@ class student_news(models.Model):
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise except_orm(_('Mail Error' ), _("Email not defined!"))
+                    raise except_orm(_('Mail Error')
+                                     , _("Email not defined!"))
             t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body = 'Hi,<br/><br/> \
                 This is a news update from <b>%s</b> posted at %s<br/><br/>\
@@ -923,10 +932,10 @@ class student_news(models.Model):
                                                    body_alternative=body,
                                                    email_cc=None,
                                                    email_bcc=None,
-                                                   reply_to=
-                                                   mail_server_record.smtp_user,
+                                                   reply_to=mail_server_record.
+                                                   smtp_user,
                                                    attachments=None,
-                                                   references = None,
+                                                   references=None,
                                                    object_id=None,
                                                    subtype='html',
                                                    # It can be plain or html

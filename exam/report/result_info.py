@@ -41,7 +41,7 @@ class result(report_sxw.rml_parse):
         value = {}
         for stu_res in student.year.grade_id.grade_ids:
             value.update({'fail': stu_res.fail})
-            flag = stu_res.fail
+#             flag = stu_res.fail
         list.append(value)
         return list
 
@@ -62,22 +62,22 @@ class result(report_sxw.rml_parse):
                 })
         return list
 
-    def get_exam_data(self,result_id, student):
+    def get_exam_data(self, result_id, student):
         list = []
         value = {}
         final_total = 0
         count = 0
         per = 0.0
         for res in result_id:
-            for sub in res.result_ids:
-                count += 1
-                per = float(res.total / count)
+#             for sub in res.result_ids:
+            count += 1
+            per = float(res.total / count)
             final_total = final_total + res.total
             value.update({
-                              'result': res.result,
-                              'percentage': per,
-                              'total': final_total,
-                })
+                          'result': res.result,
+                          'percentage': per,
+                          'total': final_total,
+                          })
 
         list.append(value)
         return list

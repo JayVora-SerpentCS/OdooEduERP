@@ -199,7 +199,7 @@ class library_book_issue(models.Model):
                     diff = start_day - end_day
                     duration = float(diff.days) * 24 + (float(diff.seconds)
                                                         / 3600)
-                    day = duration/24
+                    day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
 
@@ -240,7 +240,7 @@ class library_book_issue(models.Model):
             card_ids = self.search([('card_id', '=', self.card_id.id),
                                     ('state', 'in', ['issue', 'reissue'])])
             if self.state == 'issue' or self.state == 'reissue':
-                if self.card_id.book_limit > len(card_ids)-1:
+                if self.card_id.book_limit > len(card_ids) - 1:
                     return True
                 else:
                     raise Warning(_('Book issue limit  is over on this card'))

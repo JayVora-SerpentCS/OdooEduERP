@@ -41,13 +41,14 @@ class add_exam_result(report_sxw.rml_parse):
         sub_obj = self.pool.get('exam.subject')
         subject_exam_ids = sub_obj.search(self.cr, self.uid, [('id', 'in',
                                                                sub_list),
-                                                              ('exam_id','=',
+                                                              ('exam_id', '=',
                                                                result.id)])
         result_data = []
         for subject in sub_obj.browse(self.cr, self.uid,
                                       subject_exam_ids):
                 result_data.append({
-                    'subject': subject.subject_id and subject.subject_id.name or '',
+                    'subject': subject.subject_id and \
+                                subject.subject_id.name or '',
                     'max_mark': subject.maximum_marks or '',
                     'mini_marks': subject.minimum_marks or '',
                     'obt_marks': subject.obtain_marks or '',
