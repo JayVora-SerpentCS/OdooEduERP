@@ -110,9 +110,8 @@ class time_table_line(models.Model):
         sub_list = []
         for exam_obj in self:
             for time_table in exam_obj.standard_id:
-                 print"asasasasasasasasasas",time_table
-                 for sub_id in time_table.subject_ids:
-                     sub_list.append(sub_id.id)
+                for sub_id in time_table.subject_ids:
+                    sub_list.append(sub_id.id)
         return {'domain': {'subject_id': [('id', 'in', sub_list)]}}
 
 

@@ -37,20 +37,19 @@ class result(report_sxw.rml_parse):
         })
 
     def get_grade(self, result_id, student):
-        list = []
+        list1 = []
         value = {}
         for stu_res in student.year.grade_id.grade_ids:
             value.update({'fail': stu_res.fail})
 #             flag = stu_res.fail
-        list.append(value)
-        return list
+        list1.append(value)
+        return list1
 
     def get_lines(self, result_id, student):
-        list = []
+        list1 = []
         for sub_id in result_id:
-            # value={}
             for sub in sub_id.result_ids:
-                list.append
+                list1.append
                 ({
                   'standard_id': sub_id.standard_id.standard_id.name,
                   'name': sub.subject_id.name,
@@ -60,10 +59,10 @@ class result(report_sxw.rml_parse):
                   'obtain_marks': sub.obtain_marks,
                   's_exam_ids': sub_id.s_exam_ids.name
                 })
-        return list
+        return list1
 
     def get_exam_data(self, result_id, student):
-        list = []
+        list1 = []
         value = {}
         final_total = 0
         count = 0
@@ -79,8 +78,8 @@ class result(report_sxw.rml_parse):
                           'total': final_total,
                           })
 
-        list.append(value)
-        return list
+        list1.append(value)
+        return list1
 
 
 class report_result_info(osv.AbstractModel):

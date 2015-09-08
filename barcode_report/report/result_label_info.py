@@ -26,7 +26,7 @@ from openerp import models
 
 
 class result_label_info(report_sxw.rml_parse):
-	
+
 	def __init__(self, cr, uid, name, context=None):
 		super(result_label_info, self).__init__(cr, uid, name,
 											context=context)

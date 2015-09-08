@@ -97,11 +97,11 @@ class FIM(Barcode):
     """
 
     def __init__(self, value='', **args):
-        self.barwidth = inch * (1.0/32.0)
-        self.barspace = inch * (1.0/16.0)
-        self.height = inch * (5.0/8.0)
+        self.barwidth = inch * (1.0 / 32.0)
+        self.barspace = inch * (1.0 / 16.0)
+        self.height = inch * (5.0 / 8.0)
         self.rquiet = inch * (0.25)
-        self.lquiet = inch * (15.0/32.0)
+        self.lquiet = inch * (15.0 / 32.0)
         self.quiet = 0
 
         for (k, v) in args.items():
@@ -204,7 +204,7 @@ class POSTNET(Barcode):
             else:
                 raise ValueError, "Invalid character in input"
         check = (10 - (check % 10)) % 10
-        self.encoded = self.encoded + `check` + 'S'
+        self.encoded = self.encoded + (check) + 'S'
         return self.encoded
 
     def decompose(self):

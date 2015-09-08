@@ -23,7 +23,7 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp import models, fields,api, _
 
 
 class add_exam_result(report_sxw.rml_parse):
