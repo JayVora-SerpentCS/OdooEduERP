@@ -261,16 +261,27 @@ class exam_result(models.Model):
     s_exam_ids = fields.Many2one("exam.exam", "Examination",required = True)
     student_id = fields.Many2one("student.student", "Student Name", required = True)
 
-    roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No", readonly=True)
-    pid = fields.Char(related='student_id.pid', string="Student ID", readonly=True)
-    standard_id = fields.Many2one("school.standard", "Standard", required=True)
+    roll_no_id = fields.Integer(related='student_id.roll_no',
+                                string="Roll No", readonly=True)
+    pid = fields.Char(related='student_id.pid', string="Student ID",
+                      readonly=True)
+    standard_id = fields.Many2one("school.standard", "Standard",
+                                  required=True)
     result_ids = fields.One2many("exam.subject","exam_id","Exam Subjects")
-    total = fields.Float(compute='_compute_total', string ='Obtain Total', method=True,store=True)
+    total = fields.Float(compute='_compute_total', string ='Obtain Total',
+                         method=True,store=True)
     re_total = fields.Float('Re-access Obtain Total', readonly=True)
     percentage = fields.Float("Percentage", readonly=True )
-    result = fields.Char(compute='_compute_result', string ='Result', readonly=True, method=True, store=True)
+    result = fields.Char(compute='_compute_result', string ='Result',
+                         readonly=True, method=True, store=True)
     grade = fields.Char("Grade", readonly=True)
-    state = fields.Selection([('draft','Draft'), ('confirm','Confirm'), ('re-access','Re-Access'),('re-access_confirm','Re-Access-Confirm'), ('re-evaluation','Re-Evaluation'),('re-evaluation_confirm','Re-Evaluation Confirm')], 'State', readonly=True,default='draft')
+    state = fields.Selection([('draft','Draft'), ('confirm','Confirm'),
+                              ('re-access','Re-Access'),
+                              ('re-access_confirm','Re-Access-Confirm'),
+                              ('re-evaluation','Re-Evaluation'),
+                              ('re-evaluation_confirm',
+                               'Re-Evaluation Confirm')],
+                             'State', readonly=True, default='draft')
     color = fields.Integer('Color')
 
     @api.multi
