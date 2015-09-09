@@ -42,8 +42,8 @@ class student_evaluation(models.Model):
             if stu_eval_rec.eval_line:
                 self._cr.execute('delete from student_evaluation_line where'
                                  'eval_id=%s', (stu_eval_rec.id,))
-            type = stu_eval_rec.type
-            eval_temp_rec_browse = eval_temp_obj.search([('type', '=', type)])
+            types = stu_eval_rec.type
+            eval_temp_rec_browse = eval_temp_obj.search([('type', '=', types)])
             for eval_temp_rec in eval_temp_rec_browse:
                 eval_list.append(eval_temp_rec.id)
             for i in range(0, len(eval_list)):
@@ -57,12 +57,12 @@ class student_evaluation(models.Model):
         for rate_line in self:
             total = 0
             if self.eval_line:
-                for line in self.eval_line:
+                for line in rate_line.eval_line:
                     if line.point_id.point:
                         total += line.point_id.point
-                self.total = total
+                rate_line.total = total
             else:
-                self.total = total
+                rate_line.total = total
 
     @api.model
     def get_user(self):

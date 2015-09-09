@@ -45,7 +45,7 @@ class student_fees_register(report_sxw.rml_parse):
 
     def get_month(self, indate):
         new_date = datetime.strptime(indate, '%Y-%m-%d')
-        out_date = new_date.strftime('%B')+'-'+new_date.strftime('%Y')
+        out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
         return out_date
 
 

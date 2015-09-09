@@ -85,8 +85,7 @@ class academic_year(models.Model):
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop or\
-                    old_ac.date_start <= self.date_stop <=\
-                    old_ac.date_stop:
+                    old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                     raise Warning(_('Error! You cannot define overlapping'
                                     'academic years.'))
 
@@ -95,7 +94,7 @@ class academic_year(models.Model):
         if self.date_stop and self.date_start and  \
             self.date_stop < self.date_start:
             raise Warning(_('Error! The duration of the academic'
-                            'year is invalid.'))
+                                'year is invalid.'))
 
     @api.multi
     def create_month(self):
@@ -133,7 +132,7 @@ class academic_month(models.Model):
         if self.date_stop and self.date_start and \
             self.date_stop < self.date_start:
             raise Warning(_('Error ! The duration of the Month(s)'
-                            'is/are invalid.'))
+                                'is/are invalid.'))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
@@ -210,14 +209,14 @@ class school_standard(models.Model):
         for im_ob in self:
             import_sub_ids = self.search([('standard_id', '=',
                                            int(im_ob.standard_id) - 1)])
-            val = [last.id for sub in import_sub_ids for last in\
+            val = [last.id for sub in import_sub_ids for last in
                    sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
         return True
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
-#         l2 = []
+        #   l2 = []
         if self._context.get('standard_ids', False):
             args += [('id', 'in', self._context['standard_ids'][0][2])]
             recs = self.search(args)
@@ -346,7 +345,7 @@ class student_student(models.Model):
             vals['password'] = vals['pid']
         else:
             raise Warning(_('Error!'), _('PID not valid, so record'
-                                            'will not save.'))
+                                        'will not save.'))
         result = super(student_student, self).create(vals)
         return result
 

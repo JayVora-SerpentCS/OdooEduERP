@@ -60,7 +60,7 @@ class timetable(report_sxw.rml_parse):
                         time_detail[data['week_day']] = data['name']
                     else:
                         time_detail[data['week_day']] = data['name']\
-                            + '\n(' + data['teacher']+')'
+                            + '\n(' + data['teacher'] + ')'
             timetable_detail.append(time_detail)
         return timetable_detail
 

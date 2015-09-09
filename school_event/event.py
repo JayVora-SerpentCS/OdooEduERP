@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -96,7 +98,8 @@ class school_event(models.Model):
                                    help="Parameters of the Event"
                                    "like (Goal, Point)")
     maximum_participants = fields.Integer('Maximum Participants',
-                                          help='Maximum Participant of the Event')
+                                          help='Maximum Participant'
+                                          'of the Event')
     participants = fields.Integer(compute='_participants',
                                   string='Participants', readonly=True)
     part_standard_ids = fields.Many2many('school.standard',
@@ -114,7 +117,7 @@ class school_event(models.Model):
                                 'event_id', 'Participants', readonly=True,
                                 order_by='score')
     code = fields.Char('Organiser School', help="Event Organised School")
-    is_holiday = fields.Boolean('Is Holiday',help='Checked if the event'
+    is_holiday = fields.Boolean('Is Holiday', help='Checked if the event'
                                 'is organised on holiday.')
     color = fields.Integer('Color Index', default=0)
 
@@ -126,14 +129,16 @@ class school_event(models.Model):
                 raise Warning(_('Error! Event start-date must be lower then'
                                 'Event end-date.'))
 
-    @api.constrains('start_date', 'end_date', 'start_reg_date', 'last_reg_date')
+    @api.constrains('start_date', 'end_date', 'start_reg_date',
+                    'last_reg_date')
     def _check_all_dates(self):
         for all_date_obj in self:
             if all_date_obj.start_date and all_date_obj.end_date and\
             all_date_obj.start_reg_date and all_date_obj.last_reg_date:
                 if all_date_obj.start_reg_date > all_date_obj.last_reg_date:
                     raise Warning(_('Error! Event Registration start-date must'
-                                    'be lower than Event Registration end-date.'))
+                                    'be lower than Event Registration'
+                                    'end-date.'))
                 elif all_date_obj.last_reg_date >= all_date_obj.start_date:
                     raise Warning(_('Error! Event Registration last-date must'
                                     'be lower than Event start-date.'))
@@ -155,8 +160,8 @@ class school_event(models.Model):
             if event_open_obj.part_ids and event_open_obj.part_ids[0].id:
                 event_open_obj.write({'state': 'open'})
             else:
-                raise except_orm(_('No Participants !'), _('No Participants'
-                                                           'to open the Event.'))
+                raise except_orm(_('No Participants !'), _('No Participants to'
+                                                           'open the Event.'))
 
     @api.multi
     def event_close(self):
@@ -187,7 +192,8 @@ class school_event_registration(models.Model):
     part_name = fields.Char(related="part_name_id.name",
                             string='participant name')
     reg_date = fields.Date('Registration Date', readonly=True,
-                           default=lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"))
+                           default=lambda *a: time.strftime
+                           ("%Y-%m-%d %H:%M:%S"))
     state = fields.Selection([('draft', 'Draft'),
                                   ('confirm', 'Confirm'),
                                   ('cancel', 'Cancel')
@@ -312,11 +318,11 @@ class school_event_registration(models.Model):
             if flag:
                 list1.append(temp.id)
             evnt_reg_id = event_obj.browse(reg_data.name.id)
-            evnt_reg_id.write({'part_ids': [(6,0,list1)]})
+            evnt_reg_id.write({'part_ids': [(6, 0, list1)]})
         return True
 
     @api.multi
-    def read(recs, fields=None, load='_classic_read'):
+    def read(self, recs, fields=None, load='_classic_read'):
         res_list = []
         res = super(school_event_registration, recs).read(fields=fields,
                                                           load=load)
