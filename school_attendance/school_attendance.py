@@ -60,11 +60,9 @@ class attendance_sheet(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', context=None,
                         toolbar=False, submenu=False):
-        res = super(attendance_sheet, self).fields_view_get(view_id=view_id,
-                                                        view_type=view_type,
-                                                        context=context,
-                                                        toolbar=toolbar,
-                                                        submenu=submenu)
+        res = super(attendance_sheet, self).\
+        fields_view_get(view_id=view_id, view_type=view_type, context=context,
+                        toolbar=toolbar, submenu=submenu)
         if context is None:
             context = {}
         if context.get('month_id', False):

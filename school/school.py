@@ -390,8 +390,8 @@ class student_student(models.Model):
     age = fields.Integer(compute='_calc_age', string='Age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
-                                        'Maritual Status',
-                                         states={'done': [('readonly', True)]})
+                                       'Maritual Status',
+                                       states={'done': [('readonly', True)]})
     reference_ids = fields.One2many('student.reference', 'reference_id',
                                     string='References',
                                     states={'done': [('readonly', True)]})
@@ -519,7 +519,7 @@ class student_student(models.Model):
             if student_data.age <= 5:
                 raise Warning(_('Warning'),
                               _('The student is not eligible.'
-                                   'Age is not valid.'))
+                                'Age is not valid.'))
 
             school_standard_search_ids = school_standard_obj.search
             ([('standard_id', '=', student_data.standard_id.id)])
@@ -534,13 +534,13 @@ class student_student(models.Model):
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = str(student_data.school_id.state_id.name) + \
-                            str('/') + str(student_data.school_id.city) \
-                            + str('/') + str(student_data.school_id.name) \
-                            + str('/') + str(reg_code)
+            str('/') + str(student_data.school_id.city) \
+            + str('/') + str(student_data.school_id.name) \
+            + str('/') + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/') + \
-                        str(student_data.year.code) + str('/') + \
-                        str(stu_code)
+            str(student_data.year.code) + str('/') + \
+            str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -755,15 +755,15 @@ class res_partner(models.Model):
         if uid == 1:
             domain = [('id', 'in', parent_lst)]
         value = {
-           'domain': domain,
-           'name': _('Parent Detail'),
-           'view_type': 'form',
-           'view_mode': 'kanban,tree,form',
-           'res_model': 'res.partner',
-           'type': 'ir.actions.act_window',
-           'views': [(kanban_view_id, 'kanban'), (tree_view_id, 'tree'),
+                 'domain': domain,
+                 'name': _('Parent Detail'),
+                 'view_type': 'form',
+                 'view_mode': 'kanban,tree,form',
+                 'res_model': 'res.partner',
+                 'type': 'ir.actions.act_window',
+                 'views': [(kanban_view_id, 'kanban'), (tree_view_id, 'tree'),
                      (form_view_id, 'form')],
-         }
+                 }
         return value
 
     @api.multi
@@ -892,7 +892,7 @@ class student_news(models.Model):
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
             raise Warning(_('Mail Error'),
-                              _('No mail outgoing mail server specified!'))
+                          _('No mail outgoing mail server specified!'))
         mail_server_record = mail_server_ids[0]
         email_list = []
         for news in self:
@@ -902,7 +902,7 @@ class student_news(models.Model):
                         email_list.append(user.email)
                 if not email_list:
                     raise Warning(_('User Email Configuration '),
-                                     _("Email not found in users !"))
+                                  _("Email not found in users !"))
             else:
                 for employee in emp_obj.search([]):
                     if employee.work_email:
@@ -918,21 +918,15 @@ class student_news(models.Model):
                 Thank you.' % (self._cr.dbname,
                                t.strftime('%d-%m-%Y %H:%M:%S'),
                                news.description)
-            message = obj_mail_server.build_email(
-                                                email_from=mail_server_record.
-                                                smtp_user, email_to=email_list,
-                                                subject='Notification for'
-                                                'news update.',
-                                                body=body,
-                                                body_alternative=body,
-                                                email_cc=None, email_bcc=None,
-                                                reply_to=mail_server_record.
-                                                smtp_user, attachments=None,
-                                                references=None,
-                                                object_id=None, subtype='html',
-                                                   # It can be plain or html
-                                                subtype_alternative=None,
-                                                headers=None)
+            message = obj_mail_server.\
+            build_email(email_from=mail_server_record.smtp_user,
+                        email_to=email_list,
+                        subject='Notification for news update.',
+                        body=body, body_alternative=body,
+                        email_cc=None, email_bcc=None,
+                        reply_to=mail_server_record.smtp_user,
+                        attachments=None, references=None, object_id=None,
+                        subtype='html', subtype_alternative=None, headers=None)
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
