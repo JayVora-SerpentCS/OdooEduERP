@@ -462,7 +462,7 @@ class daily_attendance(models.Model):
                                                           student_name
                                                           })
                         for student_id in line.student_ids:
-                            dict = attendance_sheet_line_obj.read([student_id.
+                            dict1 = attendance_sheet_line_obj.read([student_id.
                                                                    roll_no])
                             search_id = attendance_sheet_line_obj.search
                             ([('roll_no', '=', student_id.roll_no)])
@@ -719,20 +719,20 @@ class daily_attendance(models.Model):
 
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
-                        dict = attendance_sheet_line_obj.read\
+                        dict1 = attendance_sheet_line_obj.read\
                                 ([student_id.roll_no])
                         search_id = attendance_sheet_line_obj.\
                                     search([('roll_no', '=',
                                              student_id.roll_no),
                                             ('standard_id', '=',
                                              attendance_sheet_id.id)])
-                        if date.day == 1 and student_id.is_absent == True:
+                        if date.day == 1 and student_id.is_absent is True:
                             val = {'one': False}
 
-                        elif date.day == 1 and student_id.is_absent == False:
+                        elif date.day == 1 and student_id.is_absent is False:
                             val = {'one': True}
 
-                        elif date.day == 2 and student_id.is_absent == True:
+                        elif date.day == 2 and student_id.is_absent is True:
                             val = {'two': False}
 
                         elif date.day == 2 and student_id.is_absent == False:

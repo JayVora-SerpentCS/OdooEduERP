@@ -48,9 +48,7 @@ class Barcode(Flowable):
 
         self.validate()
         self.encode()
-        #print self.encoded
         self.decompose()
-        #print self.decomposed
         self.computeSize()
 
     def validate(self):
@@ -67,7 +65,7 @@ class Barcode(Flowable):
         xdim = self.xdim
         wx = xdim * self.ratio
 
-        if self.gap == None:
+        if self.gap is None:
             self.gap = xdim
 
         w = 0.0
@@ -113,10 +111,10 @@ class Barcode(Flowable):
                 self.rect(left, bb, wx, tb)
                 left = left + wx
         if self.bearers:
-            self.rect(self.lquiet, 0.0, \
-                self.width - (self.lquiet + self.rquiet), b)
-            self.rect(self.lquiet, self.height - b, \
-                self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, 0.0,
+                      self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, self.height - b,
+                      self.width - (self.lquiet + self.rquiet), b)
 
     def rect(self, x, y, w, h):
         self.canv.rect(x, y, w, h, stroke=0, fill=1)
@@ -246,7 +244,7 @@ class I2of5(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if type(value) == isinstance(1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -277,7 +275,7 @@ class I2of5(Barcode):
 
         # make sure result will be a multiple of 2 digits long,
         # checksum included
-        if ((len(self.validated) % 2 == 0) and self.checksum) \
+        if ((len(self.validated) % 2 == 0) and self.checksum)\
         or ((len(self.validated) % 2 == 1) and not self.checksum):
             s = '0' + s
 
@@ -373,7 +371,7 @@ class MSI(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if type(value) == isinstance(1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -507,7 +505,7 @@ class Codabar(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if type(value) == isinstance(1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -631,7 +629,7 @@ class Code11(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if type(value) == isinstance(1):
             value = str(value)
 
         for (k, v) in args.items():

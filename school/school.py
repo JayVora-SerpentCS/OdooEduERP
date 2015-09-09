@@ -539,8 +539,7 @@ class student_student(models.Model):
             + str('/') + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/') + \
-            str(student_data.year.code) + str('/') + \
-            str(stu_code)
+            str(student_data.year.code) + str('/') + str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -762,7 +761,7 @@ class res_partner(models.Model):
                  'res_model': 'res.partner',
                  'type': 'ir.actions.act_window',
                  'views': [(kanban_view_id, 'kanban'), (tree_view_id, 'tree'),
-                     (form_view_id, 'form')],
+                           (form_view_id, 'form')],
                  }
         return value
 
