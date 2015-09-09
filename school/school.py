@@ -85,16 +85,16 @@ class academic_year(models.Model):
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop or\
-                    old_ac.date_start <= self.date_stop <= old_ac.date_stop:
+                old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                     raise Warning(_('Error! You cannot define overlapping'
                                     'academic years.'))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if self.date_stop and self.date_start and  \
-            self.date_stop < self.date_start:
+        if self.date_stop and self.date_start and\
+        self.date_stop < self.date_start:
             raise Warning(_('Error! The duration of the academic'
-                                'year is invalid.'))
+                            'year is invalid.'))
 
     @api.multi
     def create_month(self):
@@ -130,9 +130,9 @@ class academic_month(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start and \
-            self.date_stop < self.date_start:
+        self.date_stop < self.date_start:
             raise Warning(_('Error ! The duration of the Month(s)'
-                                'is/are invalid.'))
+                            'is/are invalid.'))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
@@ -241,7 +241,7 @@ class school_standard(models.Model):
         res = []
         for standard in self:
             name = standard.standard_id.name + "[" + \
-            standard.division_id.name + "]"
+                standard.division_id.name + "]"
             res.append((standard.id, name))
         return res
 
@@ -345,7 +345,7 @@ class student_student(models.Model):
             vals['password'] = vals['pid']
         else:
             raise Warning(_('Error!'), _('PID not valid, so record'
-                                        'will not save.'))
+                                         'will not save.'))
         result = super(student_student, self).create(vals)
         return result
 
@@ -382,15 +382,15 @@ class student_student(models.Model):
     last = fields.Char('Surname', required=True,
                        states={'done': [('readonly', True)]})
     gender = fields.Selection([('male', 'Male'),
-                                          ('female', 'Female')], 'Gender',
+                               ('female', 'Female')], 'Gender',
                               states={'done': [('readonly', True)]})
     date_of_birth = fields.Date('Birthdate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
     age = fields.Integer(compute='_calc_age', string='Age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
-                                          ('married', 'Married')],
-                                         'Maritual Status',
+                                        ('married', 'Married')],
+                                        'Maritual Status',
                                          states={'done': [('readonly', True)]})
     reference_ids = fields.One2many('student.reference', 'reference_id',
                                     string='References',
@@ -518,14 +518,14 @@ class student_student(models.Model):
         for student_data in self:
             if student_data.age <= 5:
                 raise Warning(_('Warning'),
-                                 _('The student is not eligible.'
+                              _('The student is not eligible.'
                                    'Age is not valid.'))
 
             school_standard_search_ids = school_standard_obj.search
             ([('standard_id', '=', student_data.standard_id.id)])
             if not school_standard_search_ids:
                 raise Warning(_('Warning'), _('The standard is not'
-                                                 'defined in a school'))
+                                              'defined in a school'))
             student_search_ids = self.search([('standard_id', '=',
                                                student_data.standard_id.id)])
             number = 1
@@ -534,13 +534,13 @@ class student_student(models.Model):
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = str(student_data.school_id.state_id.name) + \
-                                str('/') + str(student_data.school_id.city) \
-                                + str('/') + str(student_data.school_id.name) \
-                                + str('/') + str(reg_code)
+                            str('/') + str(student_data.school_id.city) \
+                            + str('/') + str(student_data.school_id.name) \
+                            + str('/') + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/') + \
-                            str(student_data.year.code) + str('/') + \
-                            str(stu_code)
+                        str(student_data.year.code) + str('/') + \
+                        str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -592,10 +592,8 @@ class student_grn(models.Model):
     schoolpostfix_id = fields.Many2one('school.school',
                                        'School Name for Suffix')
     postfix = fields.Selection([('school', 'School Name'),
-                                          ('year', 'Year'), ('month',
-                                                             'Month'),
-                                          ('static', 'Static String')],
-                                                            'Suffix')
+                                ('year', 'Year'), ('month', 'Month'),
+                                ('static', 'Static String')], 'Suffix')
     static_prefix = fields.Char('Static String for Prefix',)
     static_postfix = fields.Char('Static String for Suffix')
     grn_no = fields.Char(compute='_grn_no', string='Generated GR No')
