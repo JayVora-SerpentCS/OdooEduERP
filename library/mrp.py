@@ -111,17 +111,17 @@ class procurement_order(osv.Model):
                 'product_uom': uom_id,
                 'price_unit': price or 0.0,
                 'date_planned': schedule_date.strftime
-                        (DEFAULT_SERVER_DATETIME_FORMAT),
+                (DEFAULT_SERVER_DATETIME_FORMAT),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
                 'taxes_id': [(6, 0, taxes)],
                 'production_lot_id': procurement.production_lot_id and
-                                procurement.production_lot_id.id or False,
+                procurement.production_lot_id.id or False,
                 'customer_ref': procurement.customer_ref,
             }
             name = seq_obj.get(cr, uid,
                                'purchase.order') or('PO:'
-                            '%s') % procurement.name
+                        '%s') % procurement.name
             po_vals = {
                 'name': name,
                 'origin': procurement.origin,
@@ -131,11 +131,11 @@ class procurement_order(osv.Model):
                 'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
                 'date_order': purchase_date.strftime
-                        (DEFAULT_SERVER_DATETIME_FORMAT),
+                (DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and
-                            partner.property_account_position.id
-                            or False
+                partner.property_account_position.id
+                or False
             }
             res[procurement.id] = self.\
             create_procurement_purchase_order(cr, uid, procurement,

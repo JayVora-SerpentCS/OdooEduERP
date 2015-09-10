@@ -84,14 +84,14 @@ class academic_year(models.Model):
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop or\
-                old_ac.date_start <= self.date_stop <= old_ac.date_stop:
+                   old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                     raise Warning(_('Error! You cannot define overlapping'
                                     'academic years.'))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start and\
-        self.date_stop < self.date_start:
+           self.date_stop < self.date_start:
             raise Warning(_('Error! The duration of the academic'
                             'year is invalid.'))
 

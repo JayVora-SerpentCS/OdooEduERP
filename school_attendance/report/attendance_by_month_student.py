@@ -74,16 +74,15 @@ class report_custom(report_rml):
                                                ('month_id', '=', today.month)]
                     attendance_sheet_search_ids =\
                     attendance_sheet_obj.search(cr, uid,
-                                                attendance_sheet_domain,
-                                                context=context)
+                    attendance_sheet_domain, context=context)
                     if not attendance_sheet_search_ids:
                         var = 'A'
                     else:
 
                         for attendance_sheet_data in\
                         attendance_sheet_obj.browse(cr, uid,
-                                                attendance_sheet_search_ids,
-                                                context=context):
+                        attendance_sheet_search_ids,
+                        context=context):
                             for line in attendance_sheet_data.attendance_ids:
                                 if line.name == student['name']:
                                     if day == 1:
@@ -149,7 +148,7 @@ class report_custom(report_rml):
                                     else:
                                         att = line.three_1
 
-                                    if att == True:
+                                    if att is True:
                                         var = 'P'
                                     else:
                                         var = 'A'
@@ -222,7 +221,7 @@ class report_custom(report_rml):
                                  (x, som1.replace(day=x).strftime('%a'),
                                   cell + x) for x in range(1, lengthmonth
                                                            (year, i + month)
-                                                            + 1)]
+                                                        + 1)]
                     i = i + 1
                     j = j + 1
                     month_dict[j] = som1.strftime('%B')
