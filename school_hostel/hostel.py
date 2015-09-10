@@ -53,7 +53,7 @@ class hostel_room(models.Model):
             room_availability = data.student_per_room - count
             if room_availability < 0:
                 raise Warning(_("You can not assign room more" /
-                                   "than %s student" % data.student_per_room))
+                                "than %s student" % data.student_per_room))
             else:
                 data.availability = room_availability
 

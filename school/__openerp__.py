@@ -40,22 +40,22 @@
                     """,
     "depends": ["hr", "email_template", "crm", "report"],
     "data": [
-            "wizard/wiz_send_email_view.xml",
-             "security/school_security.xml",
-             "school_view.xml",
-             "security/ir.model.access.csv",
-             "admission_workflow.xml",
-             "student_sequence.xml",
-             "wizard/assign_roll_no_wizard.xml",
-             "wizard/move_standards_view.xml",
-             "wizard/wiz_meeting_view.xml",
-             "report_view.xml",
-             "views/identity_card.xml",
-             "email_templet.xml"
-             ],
+        "wizard/wiz_send_email_view.xml",
+         "security/school_security.xml",
+         "school_view.xml",
+         "security/ir.model.access.csv",
+         "admission_workflow.xml",
+         "student_sequence.xml",
+         "wizard/assign_roll_no_wizard.xml",
+         "wizard/move_standards_view.xml",
+         "wizard/wiz_meeting_view.xml",
+         "report_view.xml",
+         "views/identity_card.xml",
+         "email_templet.xml"
+    ],
     'demo': [
-            'demo/school_demo.xml',
-             ],
+        'demo/school_demo.xml',
+    ],
 
     'test': [
         'test/school_test.yml',

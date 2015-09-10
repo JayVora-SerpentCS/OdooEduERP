@@ -114,6 +114,6 @@ class school_student_assignment(models.Model):
     @api.multi
     def done_assignment(self):
             self.write({'state': 'done'})
-    return True
+            return True
 
     # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
