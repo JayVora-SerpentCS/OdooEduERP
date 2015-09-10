@@ -129,7 +129,7 @@ class academic_month(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start and \
-        self.date_stop < self.date_start:
+           self.date_stop < self.date_start:
             raise Warning(_('Error ! The duration of the Month(s)'
                             'is/are invalid.'))
 

@@ -344,7 +344,7 @@ class daily_attendance(models.Model):
                                        ('month_id', '=', month_search_ids.id),
                                        ('year_id', '=', year_search_ids.id)]
         search_attendance_sheet_ids = attendance_sheet_obj.\
-                                        search(attendance_sheet_domain)
+        search(attendance_sheet_domain)
         if search_attendance_sheet_ids:
             for attendance_sheet_datas in search_attendance_sheet_ids:
                 for attendance_id in attendance_sheet_datas.attendance_ids:
@@ -435,21 +435,18 @@ class daily_attendance(models.Model):
             if month_ids:
                 month_data = month_ids
                 att_sheet_ids = attendance_sheet_obj.search([('month_id', 'in',
-                                                               month_ids.ids),
+                                                              month_ids.ids),
                                                              ('year_id', 'in',
                                                               year_ids.ids)])
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0] or \
-                                                                    False
+                False
                 if not attendance_sheet_id:
-                    attendance_sheet_id = attendance_sheet_obj.create({
-                                           'name':
-                                           'Month' + month_data.name +
-                                           "-Year" + str(year),
-                                           'standard_id': line.standard_id.id,
-                                           'user_id': line.user_id.id,
-                                           'month_id': month_data.id,
-                                           'year_id': year_ids and year_ids.id
-                                           or False})
+                    attendance_sheet_id = attendance_sheet_obj.\
+                    create({'name': 'Month' + month_data.name + "-Year" +
+                            str(year), 'standard_id': line.standard_id.id,
+                            'user_id': line.user_id.id,
+                            'month_id': month_data.id,
+                            'year_id': year_ids and year_ids.id or False})
                     for student_id in line.student_ids:
                         attendance_sheet_line_obj.create({
                                                           'roll_no':
@@ -474,51 +471,51 @@ class daily_attendance(models.Model):
                                 val = {'one': True}
 
                             elif date.day == 2 and \
-                            student_id.is_absent is True:
+                                 student_id.is_absent is True:
                                 val = {'two': False}
 
-                            elif date.day == 2 and \
-                            student_id.is_absent is False:
+                            elif date.day == 2 and\
+                                 student_id.is_absent is False:
                                 val = {'two': True}
 
                             elif date.day == 3 and \
-                            student_id.is_absent is True:
+                                 student_id.is_absent is True:
                                 val = {'three': False}
 
                             elif date.day == 3 and \
-                            student_id.is_absent is False:
+                                 student_id.is_absent is False:
                                 val = {'three': True}
 
                             elif date.day == 4 and \
-                            student_id.is_absent is True:
+                                 student_id.is_absent is True:
                                 val = {'four': False}
 
                             elif date.day == 4 and \
-                            student_id.is_absent is False:
+                                 student_id.is_absent is False:
                                 val = {'four': True}
 
                             elif date.day == 5 and \
-                            student_id.is_absent is True:
+                                 student_id.is_absent is True:
                                 val = {'five': False}
 
                             elif date.day == 5 and \
-                            student_id.is_absent is False:
+                                 student_id.is_absent is False:
                                 val = {'five': True}
 
                             elif date.day == 6 and \
-                            student_id.is_absent is True:
+                                 student_id.is_absent is True:
                                 val = {'six': False}
 
                             elif date.day == 6 and \
-                            student_id.is_absent is False:
+                                 student_id.is_absent is False:
                                 val = {'six': True}
 
                             elif date.day == 7 and \
-                            student_id.is_absent is True:
+                                 student_id.is_absent is True:
                                 val = {'seven': False}
 
                             elif date.day == 7 and \
-                            student_id.is_absent is False:
+                                student_id.is_absent is False:
                                 val = {'seven': True}
 
                             elif date.day == 8 and \
