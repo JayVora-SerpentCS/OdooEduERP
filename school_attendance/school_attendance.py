@@ -124,67 +124,67 @@ class attendance_sheet_line(models.Model):
         for attendance_sheet_data in self:
             att_count = 0
             percentage = 0.0
-            if attendance_sheet_data.one == True:
+            if attendance_sheet_data.one is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two == True:
+            if attendance_sheet_data.two is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.three == True:
+            if attendance_sheet_data.three is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.four == True:
+            if attendance_sheet_data.four is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.five == True:
+            if attendance_sheet_data.five is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.six == True:
+            if attendance_sheet_data.six is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.seven == True:
+            if attendance_sheet_data.seven is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.eight == True:
+            if attendance_sheet_data.eight is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.nine == True:
+            if attendance_sheet_data.nine is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.ten == True:
+            if attendance_sheet_data.ten is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_1 == True:
+            if attendance_sheet_data.one_1 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_2 == True:
+            if attendance_sheet_data.one_2 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_3 == True:
+            if attendance_sheet_data.one_3 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_4 == True:
+            if attendance_sheet_data.one_4 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_5 == True:
+            if attendance_sheet_data.one_5 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_6 == True:
+            if attendance_sheet_data.one_6 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_7 == True:
+            if attendance_sheet_data.one_7 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_8 == True:
+            if attendance_sheet_data.one_8 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_9 == True:
+            if attendance_sheet_data.one_9 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.one_0 == True:
+            if attendance_sheet_data.one_0 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_1 == True:
+            if attendance_sheet_data.two_1 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_2 == True:
+            if attendance_sheet_data.two_2 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_3 == True:
+            if attendance_sheet_data.two_3 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_4 == True:
+            if attendance_sheet_data.two_4 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_5 == True:
+            if attendance_sheet_data.two_5 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_6 == True:
+            if attendance_sheet_data.two_6 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_7 == True:
+            if attendance_sheet_data.two_7 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_8 == True:
+            if attendance_sheet_data.two_8 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_9 == True:
+            if attendance_sheet_data.two_9 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.two_0 == True:
+            if attendance_sheet_data.two_0 is True:
                 att_count = att_count + 1
-            if attendance_sheet_data.three_1 == True:
+            if attendance_sheet_data.three_1 is True:
                 att_count = att_count + 1
             percentage = (float(att_count / 31.00)) * 100
             res[attendance_sheet_data.id] = percentage
@@ -257,7 +257,7 @@ class daily_attendance(models.Model):
         count = 0
         if self.student_ids:
             for att in self.student_ids:
-                if att.is_present == True:
+                if att.is_present is True:
                     count += 1
             self.total_presence = count
         else:
@@ -269,7 +269,7 @@ class daily_attendance(models.Model):
         count_fail = 0
         if self.student_ids:
             for att in self.student_ids:
-                if att.is_absent == True:
+                if att.is_absent is True:
                     count_fail += 1
             self.total_absent = count_fail
         else:
@@ -466,251 +466,251 @@ class daily_attendance(models.Model):
                                                                    roll_no])
                             search_id = attendance_sheet_line_obj.search
                             ([('roll_no', '=', student_id.roll_no)])
-                            if date.day == 1 and student_id.is_absent == True:
+                            if date.day == 1 and student_id.is_absent is True:
                                 val = {'one': False}
 
                             elif date.day == 1 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one': True}
 
                             elif date.day == 2 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two': False}
 
                             elif date.day == 2 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two': True}
 
                             elif date.day == 3 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'three': False}
 
                             elif date.day == 3 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'three': True}
 
                             elif date.day == 4 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'four': False}
 
                             elif date.day == 4 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'four': True}
 
                             elif date.day == 5 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'five': False}
 
                             elif date.day == 5 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'five': True}
 
                             elif date.day == 6 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'six': False}
 
                             elif date.day == 6 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'six': True}
 
                             elif date.day == 7 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'seven': False}
 
                             elif date.day == 7 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'seven': True}
 
                             elif date.day == 8 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'eight': False}
 
                             elif date.day == 8 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'eight': True}
 
                             elif date.day == 9 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'nine': False}
 
                             elif date.day == 9 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'nine': True}
 
                             elif date.day == 10 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'ten': False}
 
                             elif date.day == 10 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'ten': True}
 
                             elif date.day == 11 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_1': False}
 
                             elif date.day == 11 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_1': True}
 
                             elif date.day == 12 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_2': False}
 
                             elif date.day == 12 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_2': True}
 
                             elif date.day == 13 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_3': False}
 
                             elif date.day == 13 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_3': True}
 
                             elif date.day == 14 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_4': False}
 
                             elif date.day == 14 and \
-                            student_id.is_absent == False:
-                                val = {'one_4':True}
+                            student_id.is_absent is False:
+                                val = {'one_4': True}
 
                             elif date.day == 15 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_5': False}
 
                             elif date.day == 15 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_5': True}
 
                             elif date.day == 16 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_6': False}
 
                             elif date.day == 16 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_6': True}
 
                             elif date.day == 17 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_7': False}
 
                             elif date.day == 17 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_7': True}
 
                             elif date.day == 18 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_8': False}
 
                             elif date.day == 18 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_8': True}
 
                             elif date.day == 19 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_9': False}
 
                             elif date.day == 19 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_9': True}
 
                             elif date.day == 20 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'one_0': False}
 
                             elif date.day == 20 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'one_0': True}
 
                             elif date.day == 21 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_1': False}
 
                             elif date.day == 21 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_1': True}
 
                             elif date.day == 22 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_2': False}
 
                             elif date.day == 22 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_2': True}
 
                             elif date.day == 23 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_3': False}
 
                             elif date.day == 23 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_3': True}
 
                             elif date.day == 24 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_4': False}
 
                             elif date.day == 24 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_4': True}
 
                             elif date.day == 25 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_5': False}
 
                             elif date.day == 25 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_5': True}
 
                             elif date.day == 26 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_6': False}
 
                             elif date.day == 26 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_6': True}
 
                             elif date.day == 27 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_7': False}
 
                             elif date.day == 27 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_7': True}
 
                             elif date.day == 28 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_8': False}
 
                             elif date.day == 28 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_8': True}
 
                             elif date.day == 29 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_9': False}
 
                             elif date.day == 29 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_9': True}
 
                             elif date.day == 30 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'two_0': False}
 
                             elif date.day == 30 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'two_0': True}
 
                             elif date.day == 31 and \
-                            student_id.is_absent == True:
+                            student_id.is_absent is True:
                                 val = {'three_1': False}
 
                             elif date.day == 31 and \
-                            student_id.is_absent == False:
+                            student_id.is_absent is False:
                                 val = {'three_1': True}
                             else:
                                 val = {}
@@ -735,181 +735,181 @@ class daily_attendance(models.Model):
                         elif date.day == 2 and student_id.is_absent is True:
                             val = {'two': False}
 
-                        elif date.day == 2 and student_id.is_absent == False:
+                        elif date.day == 2 and student_id.is_absent is False:
                             val = {'two': True}
 
-                        elif date.day == 3 and student_id.is_absent == True:
+                        elif date.day == 3 and student_id.is_absent is True:
                             val = {'three': False}
 
-                        elif date.day == 3 and student_id.is_absent == False:
+                        elif date.day == 3 and student_id.is_absent is False:
                             val = {'three': True}
 
-                        elif date.day == 4 and student_id.is_absent == True:
+                        elif date.day == 4 and student_id.is_absent is True:
                             val = {'four': False}
 
-                        elif date.day == 4 and student_id.is_absent == False:
+                        elif date.day == 4 and student_id.is_absent is False:
                             val = {'four': True}
 
-                        elif date.day == 5 and student_id.is_absent == True:
+                        elif date.day == 5 and student_id.is_absent is True:
                             val = {'five': False}
 
-                        elif date.day == 5 and student_id.is_absent == False:
+                        elif date.day == 5 and student_id.is_absent is False:
                             val = {'five': True}
 
-                        elif date.day == 6 and student_id.is_absent == True:
+                        elif date.day == 6 and student_id.is_absent is True:
                             val = {'six': False}
 
-                        elif date.day == 6 and student_id.is_absent == False:
+                        elif date.day == 6 and student_id.is_absent is False:
                             val = {'six': True}
 
-                        elif date.day == 7 and student_id.is_absent == True:
+                        elif date.day == 7 and student_id.is_absent is True:
                             val = {'seven': False}
 
-                        elif date.day == 7 and student_id.is_absent == False:
+                        elif date.day == 7 and student_id.is_absent is False:
                             val = {'seven': True}
 
-                        elif date.day == 8 and student_id.is_absent == True:
+                        elif date.day == 8 and student_id.is_absent is True:
                             val = {'eight': False}
 
-                        elif date.day == 8 and student_id.is_absent == False:
+                        elif date.day == 8 and student_id.is_absent is False:
                             val = {'eight': True}
 
-                        elif date.day == 9 and student_id.is_absent == True:
+                        elif date.day == 9 and student_id.is_absent is True:
                             val = {'nine': False}
 
-                        elif date.day == 9 and student_id.is_absent == False:
+                        elif date.day == 9 and student_id.is_absent is False:
                             val = {'nine': True}
 
-                        elif date.day == 10 and student_id.is_absent == True:
+                        elif date.day == 10 and student_id.is_absent is True:
                             val = {'ten': False}
 
-                        elif date.day == 10 and student_id.is_absent == False:
+                        elif date.day == 10 and student_id.is_absent is False:
                             val = {'ten': True}
 
-                        elif date.day == 11 and student_id.is_absent == True:
+                        elif date.day == 11 and student_id.is_absent is True:
                             val = {'one_1': False}
 
-                        elif date.day == 11 and student_id.is_absent == False:
+                        elif date.day == 11 and student_id.is_absent is False:
                             val = {'one_1': True}
 
-                        elif date.day == 12 and student_id.is_absent == True:
+                        elif date.day == 12 and student_id.is_absent is True:
                             val = {'one_2': False}
 
-                        elif date.day == 12 and student_id.is_absent == False:
+                        elif date.day == 12 and student_id.is_absent is False:
                             val = {'one_2': True}
 
-                        elif date.day == 13 and student_id.is_absent == True:
+                        elif date.day == 13 and student_id.is_absent is True:
                             val = {'one_3': False}
 
-                        elif date.day == 13 and student_id.is_absent == False:
+                        elif date.day == 13 and student_id.is_absent is False:
                             val = {'one_3': True}
 
-                        elif date.day == 14 and student_id.is_absent == True:
+                        elif date.day == 14 and student_id.is_absent is True:
                             val = {'one_4': False}
 
-                        elif date.day == 14 and student_id.is_absent == False:
+                        elif date.day == 14 and student_id.is_absent is False:
                             val = {'one_4': True}
 
-                        elif date.day == 15 and student_id.is_absent == True:
+                        elif date.day == 15 and student_id.is_absent is True:
                             val = {'one_5': False}
 
-                        elif date.day == 15 and student_id.is_absent == False:
+                        elif date.day == 15 and student_id.is_absent is False:
                             val = {'one_5': True}
 
-                        elif date.day == 16 and student_id.is_absent == True:
+                        elif date.day == 16 and student_id.is_absent is True:
                             val = {'one_6': False}
 
-                        elif date.day == 16 and student_id.is_absent == False:
+                        elif date.day == 16 and student_id.is_absent is False:
                             val = {'one_6': True}
 
-                        elif date.day == 17 and student_id.is_absent == True:
+                        elif date.day == 17 and student_id.is_absent is True:
                             val = {'one_7': False}
 
-                        elif date.day == 17 and student_id.is_absent == False:
+                        elif date.day == 17 and student_id.is_absent is False:
                             val = {'one_7': True}
 
-                        elif date.day == 18 and student_id.is_absent == True:
+                        elif date.day == 18 and student_id.is_absent is True:
                             val = {'one_8': False}
 
-                        elif date.day == 18 and student_id.is_absent == False:
+                        elif date.day == 18 and student_id.is_absent is False:
                             val = {'one_8': True}
 
-                        elif date.day == 19 and student_id.is_absent == True:
+                        elif date.day == 19 and student_id.is_absent is True:
                             val = {'one_9': False}
 
-                        elif date.day == 19 and student_id.is_absent == False:
+                        elif date.day == 19 and student_id.is_absent is False:
                             val = {'one_9': True}
 
-                        elif date.day == 20 and student_id.is_absent == True:
+                        elif date.day == 20 and student_id.is_absent is True:
                             val = {'one_0': False}
 
-                        elif date.day == 20 and student_id.is_absent == False:
+                        elif date.day == 20 and student_id.is_absent is False:
                             val = {'one_0': True}
 
-                        elif date.day == 21 and student_id.is_absent == True:
+                        elif date.day == 21 and student_id.is_absent is True:
                             val = {'two_1': False}
 
-                        elif date.day == 21 and student_id.is_absent == False:
+                        elif date.day == 21 and student_id.is_absent is False:
                             val = {'two_1': True}
 
-                        elif date.day == 22 and student_id.is_absent == True:
+                        elif date.day == 22 and student_id.is_absent is True:
                             val = {'two_2': False}
 
-                        elif date.day == 22 and student_id.is_absent == False:
+                        elif date.day == 22 and student_id.is_absent is False:
                             val = {'two_2': True}
 
-                        elif date.day == 23 and student_id.is_absent == True:
+                        elif date.day == 23 and student_id.is_absent is True:
                             val = {'two_3': False}
 
-                        elif date.day == 23 and student_id.is_absent == False:
+                        elif date.day == 23 and student_id.is_absent is False:
                             val = {'two_3': True}
 
-                        elif date.day == 24 and student_id.is_absent == True:
+                        elif date.day == 24 and student_id.is_absent is True:
                             val = {'two_4': False}
 
-                        elif date.day == 24 and student_id.is_absent == False:
+                        elif date.day == 24 and student_id.is_absent is False:
                             val = {'two_4': True}
 
-                        elif date.day == 25 and student_id.is_absent == True:
+                        elif date.day == 25 and student_id.is_absent is True:
                             val = {'two_5': False}
 
-                        elif date.day == 25 and student_id.is_absent == False:
+                        elif date.day == 25 and student_id.is_absent is False:
                             val = {'two_5': True}
 
-                        elif date.day == 26 and student_id.is_absent == True:
+                        elif date.day == 26 and student_id.is_absent is True:
                             val = {'two_6': False}
 
-                        elif date.day == 26 and student_id.is_absent == False:
+                        elif date.day == 26 and student_id.is_absent is False:
                             val = {'two_6': True}
 
-                        elif date.day == 27 and student_id.is_absent == True:
+                        elif date.day == 27 and student_id.is_absent is True:
                             val = {'two_7': False}
 
-                        elif date.day == 27 and student_id.is_absent == False:
+                        elif date.day == 27 and student_id.is_absent is False:
                             val = {'two_7': True}
 
-                        elif date.day == 28 and student_id.is_absent == True:
+                        elif date.day == 28 and student_id.is_absent is True:
                             val = {'two_8': False}
 
-                        elif date.day == 28 and student_id.is_absent == False:
+                        elif date.day == 28 and student_id.is_absent is False:
                             val = {'two_8': True}
 
-                        elif date.day == 29 and student_id.is_absent == True:
+                        elif date.day == 29 and student_id.is_absent is True:
                             val = {'two_9': False}
 
-                        elif date.day == 29 and student_id.is_absent == False:
+                        elif date.day == 29 and student_id.is_absent is False:
                             val = {'two_9': True}
 
-                        elif date.day == 30 and student_id.is_absent == True:
+                        elif date.day == 30 and student_id.is_absent is True:
                             val = {'two_0': False}
 
-                        elif date.day == 30 and student_id.is_absent == False:
+                        elif date.day == 30 and student_id.is_absent is False:
                             val = {'two_0': True}
 
-                        elif date.day == 31 and student_id.is_absent == True:
+                        elif date.day == 31 and student_id.is_absent is True:
                             val = {'three_1': False}
 
-                        elif date.day == 31 and student_id.is_absent == False:
+                        elif date.day == 31 and student_id.is_absent is False:
                             val = {'three_1': True}
                         else:
                             val = {}
