@@ -471,55 +471,55 @@ class daily_attendance(models.Model):
                                 val = {'one': False}
 
                             elif date.day == 1 and \
-                            student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'one': True}
 
                             elif date.day == 2 and \
-                                 student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'two': False}
 
                             elif date.day == 2 and\
-                                 student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'two': True}
 
                             elif date.day == 3 and \
-                                 student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'three': False}
 
                             elif date.day == 3 and \
-                                 student_id.is_absent is False:
+                                    student_id.is_absent is False:
                                 val = {'three': True}
 
                             elif date.day == 4 and \
-                                 student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'four': False}
 
                             elif date.day == 4 and \
-                                 student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'four': True}
 
                             elif date.day == 5 and \
-                                 student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'five': False}
 
                             elif date.day == 5 and \
-                                 student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'five': True}
 
                             elif date.day == 6 and \
-                                 student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'six': False}
 
                             elif date.day == 6 and \
-                                 student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'six': True}
 
                             elif date.day == 7 and \
-                                 student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'seven': False}
 
                             elif date.day == 7 and \
-                                student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'seven': True}
 
                             elif date.day == 8 and \
@@ -707,11 +707,11 @@ class daily_attendance(models.Model):
                                 val = {'two_0': True}
 
                             elif date.day == 31 and \
-                                            student_id.is_absent is True:
+                                        student_id.is_absent is True:
                                 val = {'three_1': False}
 
                             elif date.day == 31 and \
-                                            student_id.is_absent is False:
+                                        student_id.is_absent is False:
                                 val = {'three_1': True}
                             else:
                                 val = {}
@@ -720,7 +720,7 @@ class daily_attendance(models.Model):
 
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
-                        dict1 = attendance_sheet_line_obj.read\
+                        dict1 = attendance_sheet_line_obj.read
                         ([student_id.roll_no])
                         search_id = attendance_sheet_line_obj.\
                         search([('roll_no', '=', student_id.roll_no),
