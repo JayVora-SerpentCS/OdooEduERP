@@ -67,7 +67,6 @@ class monthly_attendance_sheet(models.TransientModel):
 #         ('school_attendance', 'view_attendance_sheet_form')
 #         dummy, tree_view = models_data.get_object_reference
 #         ('school_attendance', 'view_attendance_sheet_tree')
-        print "\n data ::::::::::::", data
         return {
             'view_type': 'form',
             'view_mode': 'tree, form',

@@ -47,8 +47,8 @@ class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_student = pooler.get_pool(cr.dbname).get('student.student')
-        attendance_sheet_obj = pooler.get_pool(cr.dbname).get
-        ('attendance.sheet')
+        attendance_sheet_obj = pooler.get_pool
+        (cr.dbname).get('attendance.sheet')
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
