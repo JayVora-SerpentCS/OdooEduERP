@@ -25,7 +25,7 @@
 from datetime import datetime
 import time
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import Warning
 from dateutil.relativedelta import relativedelta
 
 
@@ -44,7 +44,6 @@ class hr_employee(models.Model):
     licence_no = fields.Char('Licence No')
 
 
-#class for points on root
 class transport_point(models.Model):
 
     _name = 'transport.point'
@@ -65,7 +64,6 @@ class transport_point(models.Model):
                                                    order, count=count)
 
 
-#class for vehicle detail
 class transport_vehicle(models.Model):
 
     @api.one
@@ -105,7 +103,6 @@ class transport_vehicle(models.Model):
                                                      order, count=count)
 
 
-#class for participants
 class transport_participant(models.Model):
 
     _name = 'transport.participant'
@@ -124,8 +121,8 @@ class transport_participant(models.Model):
     vehicle_id = fields.Many2one('transport.vehicle', 'Vehicle No')
     point_id = fields.Many2one('transport.point', 'Point Name')
     state = fields.Selection([('running', 'Running'),
-                                     ('over', 'Over'), ],
-                                     'State', readonly=True, defalt='running')
+                              ('over', 'Over'), ],
+                             'State', readonly=True, defalt='running')
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -139,7 +136,6 @@ class transport_participant(models.Model):
                                                          order, count=count)
 
 
-#class for root detail
 class student_transports(models.Model):
 
     _name = 'student.transport'
@@ -176,9 +172,8 @@ class student_transports(models.Model):
                                        'transport_point_rel', 'point_id',
                                        'root_id', ' Points')
     state = fields.Selection([('draft', 'Draft'),
-                                    ('open', 'Open'),
-                                    ('close', 'Close')],
-                                    'State', readonly=True, default='draft')
+                              ('open', 'Open'), ('close', 'Close')],
+                             'State', readonly=True, default='draft')
 
     @api.multi
     def transport_open(self):
@@ -247,7 +242,6 @@ class student_student(models.Model):
                                      readonly=True)
 
 
-#class for registration
 class transport_registration(models.Model):
 
     _name = 'transport.registration'
@@ -264,10 +258,8 @@ class transport_registration(models.Model):
                            ("%Y-%m-%d %H:%M:%S"))
     reg_end_date = fields.Date('Registration End Date', readonly=True)
     for_month = fields.Integer('Registration For Months')
-    state = fields.Selection([('draft', 'Draft'),
-                                      ('confirm', 'Confirm'),
-                                      ('cancel', 'Cancel')
-                                     ], 'State', readonly=True,
+    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
+                              ('cancel', 'Cancel')], 'State', readonly=True,
                              default='draft')
     vehicle_id = fields.Many2one('transport.vehicle', 'Vehicle No',
                                  required=True)
@@ -347,7 +339,7 @@ class transport_registration(models.Model):
                 raise Warning(_('Error !'),
                               _('There is No More vacancy on this vehicle.'))
 
-            #calculate amount and Registration End date
+            #  calculate amount and Registration End date
             amount = reg_data.point_id.amount * reg_data.for_month
 
             tr_start_date = (reg_data.reg_date)
@@ -373,7 +365,7 @@ class transport_registration(models.Model):
                                         'point_id': reg_data.point_id.id,
                                         'vehicle_id': reg_data.vehicle_id.id,
                                         })
-            #make entry in Transport vehicle.
+            #  make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:
                 list1.append(prt.id)
