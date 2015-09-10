@@ -56,9 +56,8 @@ class extended_time_table_line(models.Model):
     def on_change_date_day(self):
         val = {}
         if self.exm_date:
-            val['week_day'] = datetime.strptime(self.exm_date,
-                                                "%Y-%m-%d").strftime("%A").\
-                                                lower()
+            val['week_day'] = datetime.strptime
+            (self.exm_date, "%Y-%m-%d").strftime("%A").lower()
         return {'value': val}
 
     @api.multi
@@ -232,12 +231,12 @@ class exam_result(models.Model):
     @api.multi
     @api.onchange('student_id')
     def on_change_student(self):
-#         student_lst = []
-#         attendence_lst = []
+        #         student_lst = []
+        #         attendence_lst = []
         attendence_line_obj = self.env['daily.attendance.line']
         tt_line_obj = self.env['time.table.line']
         for rec in self:
-#             student_id = rec.student_id.id
+            #             student_id = rec.student_id.id
             for line in rec.result_ids:
                 tt_lines = tt_line_obj.search([('subject_id', '=',
                                                 line.subject_id.id),
@@ -256,7 +255,7 @@ class exam_result(models.Model):
     @api.onchange('s_exam_ids')
     def onchange_exam(self):
         standard_lst = []
-#         sub_res = {}
+        #         sub_res = {}
         for exam_obj in self:
             for rec in exam_obj.s_exam_ids.standard_id:
                 standard_lst.append(rec.id)
@@ -500,9 +499,9 @@ class additional_exam_result(models.Model):
 
     @api.onchange('a_exam_id')
     def onchange_exam(self):
-#         standard_lst = []
+        #         standard_lst = []
         student_lst = []
-#         sub_res = {}
+        #         sub_res = {}
         for exam_obj in self:
             for rec in exam_obj.a_exam_id.standard_id:
                 for student_obj in rec.student_ids:

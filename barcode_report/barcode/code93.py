@@ -34,6 +34,7 @@
 from reportlab.lib.units import inch
 from common import MultiWidthBarcode
 import string
+from twisted.persisted.aot import Instance
 
 _patterns = {
              '0': ('AcAaAb', 0),  '1': ('AaAbAc', 1),  '2': ('AaAcAb', 2),
@@ -127,7 +128,7 @@ class _Code93Base(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if type(value) is type(1):
+        if type(value) is Instance(1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -194,7 +195,7 @@ class Standard93(_Code93Base):
         for c in self.value:
             if c in string.lowercase:
                 c = string.upper(c)
-            if not _patterns.has_key in c:
+            if _patterns.has_key not in c:
                 self.valid = 0
                 continue
             vval = vval + c
@@ -219,7 +220,7 @@ class Extended93(_Code93Base):
         vval = ""
         self.valid = 1
         for c in self.value:
-            if not _patterns.has_key in c and not _extended.has_key in c:
+            if _patterns.has_key not in c and _extended.has_key not in c:
                 self.valid = 0
                 continue
             vval = vval + c

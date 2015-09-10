@@ -220,7 +220,7 @@ class POSTNET(Barcode):
         self.xo = 0.0
 
     def draw(self):
-        sdown = self.fbarheight - self.sbarheight
+        #  sdown = self.fbarheight - self.sbarheight
         left = self.xo
 
         for c in self.decomposed:

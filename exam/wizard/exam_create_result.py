@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -50,7 +52,7 @@ class exam_create_result(models.TransientModel):
                                                            medium_id.id)])
                         for student in student_ids:
                             result_exists = result_obj.search([('standard_id',
-                                            '=',
+                                                                '=',
                                             school_std_rec.standard_id.id),
                                            ('student_id.division_id', '=',
                                             school_std_rec.division_id.id),
@@ -72,8 +74,8 @@ class exam_create_result(models.TransientModel):
                                     result_subject_obj.create({
                                        'exam_id': result_id.id,
                                        'subject_id':
-                                        line.standard_id.subject_id and
-                                        line.subject_id.id or False,
+                                       line.standard_id.subject_id and
+                                       line.subject_id.id or False,
                                        'minimum_marks': line.subject_id and
                                        line.subject_id.minimum_marks or 0.0,
                                        'maximum_marks': line.subject_id and

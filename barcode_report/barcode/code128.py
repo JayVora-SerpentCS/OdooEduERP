@@ -34,6 +34,7 @@
 from reportlab.lib.units import inch
 from common import MultiWidthBarcode
 from string import digits
+from twisted.persisted.aot import Instance
 
 _patterns = {
     0: 'BaBbBb',    1: 'BbBaBb',    2: 'BbBbBa',
@@ -222,7 +223,7 @@ class Code128(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if type(value) is type(1):
+        if type(value) is Instance(1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -260,7 +261,7 @@ class Code128(MultiWidthBarcode):
                 rl.insert(0, '\xf1')
                 continue
             elif len(l[i]) == 1 and l[i] in digits \
-             and len(l[i - 1]) == 1 and l[i - 1] in digits:
+            and len(l[i - 1]) == 1 and l[i - 1] in digits:
                 c = c + 2
                 savings = savings + 1
                 rl.insert(0, l[i - 1] + l[i])
@@ -277,7 +278,7 @@ class Code128(MultiWidthBarcode):
         s = self.validated
         l = ['START_B']
         for c in s:
-            if not setb.has_key in c:
+            if setb.has_key not in c:
                 l = l + ['TO_A', c, 'TO_B']
             else:
                 l.append(c)

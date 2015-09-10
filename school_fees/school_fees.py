@@ -384,7 +384,7 @@ class student_payslip(models.Model):
                 'parent_id': fees.student_id.parent_id.id,
                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
-                'amount_currency': diff_currency_p and sign * fees.total or \
+                'amount_currency': diff_currency_p and sign * fees.total or
                                                         0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
             }
@@ -399,7 +399,7 @@ class student_payslip(models.Model):
                 'parent_id': fees.student_id.parent_id.id,
                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
-                'amount_currency': diff_currency_p and sign * fees.total or \
+                'amount_currency': diff_currency_p and sign * fees.total or
                                                         0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
             }

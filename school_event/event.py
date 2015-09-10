@@ -195,9 +195,9 @@ class school_event_registration(models.Model):
                            default=lambda *a: time.strftime
                            ("%Y-%m-%d %H:%M:%S"))
     state = fields.Selection([('draft', 'Draft'),
-                                  ('confirm', 'Confirm'),
-                                  ('cancel', 'Cancel')
-                                  ], 'State', readonly=True, default='draft')
+                              ('confirm', 'Confirm'),
+                              ('cancel', 'Cancel')
+                              ], 'State', readonly=True, default='draft')
     is_holiday = fields.Boolean('Is Holiday', help='Checked if the event is'
                                 'organised on holiday.')
     part_id = fields.Integer('Part Id')
@@ -236,7 +236,7 @@ class school_event_registration(models.Model):
                 data = event_part_obj.browse(part)
                 if data.event_id.id == reg_data.name.id:
                     flag = False
-            if flag == False:
+            if flag is False:
                 list1.remove(part)
             stu_part_id = student_obj.browse(reg_data.part_name_id.id)
             stu_part_id.write({'event_ids': [(6, 0, list1)]})
@@ -252,7 +252,7 @@ class school_event_registration(models.Model):
                 if data.name.id == reg_data.part_name_id.id:
                     parii = par
                     flag = False
-            if flag == False:
+            if flag is False:
                 list1.remove(parii)
             participants = int(event_data.participants) - 1
             event_reg_id = event_obj.browse(reg_data.name.id)
