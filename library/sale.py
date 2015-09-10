@@ -52,9 +52,8 @@ class sale_order_line(models.Model):
                 continue
             l_id += 1
             production_lot_dico = {
-                'name': line.order_id and (str(line.order_id.name) + ('/%02d' %
-                                                                    (l_id,)))
-                                   or False,
+                'name': line.order_id and (str(line.order_id.name) +
+                                           ('/%02d' % (l_id,))) or False,
                 'product_id': line.product_id and line.product_id.id or False
             }
             production_lot_id = production_obj.create(production_lot_dico)
@@ -92,10 +91,8 @@ class sale_order(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(sale_order, self).default_get(fields_list)
-        res.update({
-                    'picking_policy': 'direct',
-                    'order_policy': 'picking'
-        })
+        res.update({'picking_policy': 'direct',
+                    'order_policy': 'picking'})
         return res
 
     @api.multi
@@ -179,16 +176,15 @@ class sale_order(models.Model):
                     line.write({'procurement_id': proc_id.id})
                 elif line.product_id and line.product_id.product_tmpl_id.type\
                 == 'service':
-                    proc_id = procurment_obj.create({
-                        'name': line.name,
-                        'origin': order.name,
-                        'date_planned': date_planned,
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'location_id': order.warehouse_id.lot_stock_id.id,
-                        'procure_method': line.type,
-                    })
+                    proc_id = procurment_obj.\
+                    create({'name': line.name, 'origin': order.name,
+                            'date_planned': date_planned,
+                            'product_id': line.product_id.id,
+                            'product_qty': line.product_uom_qty,
+                            'product_uom': line.product_uom.id,
+                            'location_id': order.warehouse_id.lot_stock_id.id,
+                            'procure_method': line.type,
+                            })
                     workflow.trg_validate(self._uid, 'procurement.order',
                                           proc_id.id, 'button_confirm',
                                           self._cr)

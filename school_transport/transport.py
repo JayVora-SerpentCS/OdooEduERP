@@ -328,7 +328,7 @@ class transport_registration(models.Model):
         stu_prt_obj = self.env['transport.participant']
         vehi_obj = self.env['transport.vehicle']
         for reg_data in self:
-            #registration months must one or more then one
+            #  registration months must one or more then one
             if reg_data.for_month <= 0:
                 raise Warning(_('Error !'),
                               _('Sorry Registration months must one or'
@@ -354,17 +354,17 @@ class transport_registration(models.Model):
                                 'date is Early.'))
             # make entry in Transport
             temp = stu_prt_obj.create({
-                                        'stu_pid_id': str
-                                        (reg_data.part_name.pid),
-                                        'amount': amount,
-                                        'transport_id': reg_data.name.id,
-                                        'tr_end_date': tr_end_date,
-                                        'name': reg_data.part_name.id,
-                                        'months': reg_data.for_month,
-                                        'tr_reg_date': reg_data.reg_date,
-                                        'point_id': reg_data.point_id.id,
-                                        'vehicle_id': reg_data.vehicle_id.id,
-                                        })
+                                       'stu_pid_id': str
+                                       (reg_data.part_name.pid),
+                                       'amount': amount,
+                                       'transport_id': reg_data.name.id,
+                                       'tr_end_date': tr_end_date,
+                                       'name': reg_data.part_name.id,
+                                       'months': reg_data.for_month,
+                                       'tr_reg_date': reg_data.reg_date,
+                                       'point_id': reg_data.point_id.id,
+                                       'vehicle_id': reg_data.vehicle_id.id,
+                                       })
             #  make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:

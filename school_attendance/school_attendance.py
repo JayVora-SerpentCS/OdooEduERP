@@ -442,7 +442,7 @@ class daily_attendance(models.Model):
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0] or \
                 False
                 if not attendance_sheet_id:
-                    attendance_sheet_id = attendance_sheet_obj. \
+                    attendance_sheet_id = attendance_sheet_obj.\
                     create({'name': 'Month' + month_data.name + "-Year" +
                             str(year), 'standard_id': line.standard_id.id,
                             'user_id': line.user_id.id,

@@ -193,17 +193,17 @@ class student_payslip(models.Model):
                     return True
                 student_fees_structure_search_ids = student_fees_structure_obj\
                     .search([('name', '=', student_payslip_datas
-                          ['fees_structure_id'][1])])
+                              ['fees_structure_id'][1])])
                 for datas in student_fees_structure_search_ids:
                     for data in datas.line_ids or []:
                         student_payslip_line_vals = {
-                                                    'slip_id': self.id,
-                                                    'name': data.name,
-                                                    'code': data.code,
-                                                    'sequence': data.sequence,
-                                                    'type': data.type,
-                                                    'amount': data.amount,
-                                                    }
+                                                     'slip_id': self.id,
+                                                     'name': data.name,
+                                                     'code': data.code,
+                                                     'sequence': data.sequence,
+                                                     'type': data.type,
+                                                     'amount': data.amount,
+                                                     }
                         student_payslip_line_obj.create
                         (student_payslip_line_vals)
                 amount = 0
@@ -259,7 +259,7 @@ class student_payslip(models.Model):
         ('out_refund', 'Customer Refund'),
         ('in_refund', 'Supplier Refund'),
         ], 'Type', required=True, select=True, change_default=True,
-                                default='out_invoice')
+                            default='out_invoice')
     period_id = fields.Many2one('account.period', 'Force Period',
                                 required=True,
                                 domain=[('state', '<>', 'done')],
@@ -303,10 +303,7 @@ class student_payslip(models.Model):
             journal = self.env['account.journal'].browse(journal_id)
             currency_id = journal.currency and journal.currency.id or \
                 journal.company_id.currency_id.id
-            result = {'value': {
-                                'currency_id': currency_id,
-                                }
-                }
+            result = {'value': {'currency_id': currency_id}}
         return result
 
     @api.multi
@@ -317,8 +314,8 @@ class student_payslip(models.Model):
         for fees in self.browse(self.ids):
             if not fees.journal_id.sequence_id:
                 raise Warning(_('Error !'), _('Please define sequence on'
-                                                 'the journal related to this'
-                                                 'invoice.'))
+                                              'the journal related to this'
+                                              'invoice.'))
             if fees.move_id:
                 continue
             ctx = self._context.copy()
