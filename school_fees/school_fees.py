@@ -204,8 +204,8 @@ class student_payslip(models.Model):
                                                      'type': data.type,
                                                      'amount': data.amount,
                                                      }
-                        student_payslip_line_obj.create
-                        (student_payslip_line_vals)
+                        student_payslip_line_obj.\
+                        create(student_payslip_line_vals)
                 amount = 0
                 for datas in self.browse(self.ids):
                     for data in datas.line_ids:
