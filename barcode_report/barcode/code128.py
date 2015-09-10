@@ -32,7 +32,7 @@
 #
 
 from reportlab.lib.units import inch
-from common import MultiWidthBarcode
+from . common import MultiWidthBarcode
 from string import digits
 from twisted.persisted.aot import Instance
 

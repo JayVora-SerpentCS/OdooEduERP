@@ -21,9 +21,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import update_prices
-import update_book
-import book_issue_no
-import card_no
+from . import update_prices
+from . import update_book
+from . import book_issue_no
+from . import card_no
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

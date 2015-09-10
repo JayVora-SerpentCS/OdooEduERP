@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python
-from common import *
-from code39 import *
-from code93 import *
-from code128 import *
-from usps import *
+from . common import *
+from . code39 import *
+from . code93 import *
+from . code128 import *
+from . usps import *
 
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
