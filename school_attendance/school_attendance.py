@@ -247,9 +247,9 @@ class daily_attendance(models.Model):
         if self.student_ids:
             for att in self.student_ids:
                     count += 1
-            self.total_student = count
+            att.total_student = count
         else:
-            self.total_student = count
+            att.total_student = count
 
     @api.one
     @api.depends('student_ids')
@@ -435,19 +435,18 @@ class daily_attendance(models.Model):
                                                    year_ids.ids)])
             if month_ids:
                 month_data = month_ids
-                att_sheet_ids = attendance_sheet_obj.search([('month_id', 'in',
+                att_ids = attendance_sheet_obj.search([('month_id', 'in',
                                                               month_ids.ids),
                                                              ('year_id', 'in',
                                                               year_ids.ids)])
-                attendance_sheet_id = att_sheet_ids and att_sheet_ids[0] or \
-                False
+                attendance_sheet_id = att_ids and att_ids[0] or False
                 if not attendance_sheet_id:
-                    attendance_sheet_id = attendance_sheet_obj.\
-                    create({'name': 'Month' + month_data.name + "-Year" +
-                            str(year), 'standard_id': line.standard_id.id,
-                            'user_id': line.user_id.id,
-                            'month_id': month_data.id,
-                            'year_id': year_ids and year_ids.id or False})
+                    attendance_sheet_id = attendance_sheet_obj.create
+                    ({'name': 'Month' + month_data.name + "-Year" +
+                      str(year), 'standard_id': line.standard_id.id,
+                      'user_id': line.user_id.id,
+                      'month_id': month_data.id,
+                      'year_id': year_ids and year_ids.id or False})
                     for student_id in line.student_ids:
                         attendance_sheet_line_obj.create({
                                                         'roll_no':

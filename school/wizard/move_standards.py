@@ -35,7 +35,7 @@ class move_standards(models.TransientModel):
     @api.multi
     def move_start(self):
         if self._context is None:
-            context = {}
+            self._context = {}
         if not self._context.get('active_ids'):
             return {}
         academic_obj = self.env['academic.year']
@@ -48,10 +48,9 @@ class move_standards(models.TransientModel):
             for standards in school_standard_obj.browse(self._context.get
                                                         ('active_ids')):
                 for student in standards.student_ids:
-                    stud_year_ids = student_history_obj.\
-                                    search([('academice_year_id', '=',
-                                             data.academic_year_id.id),
-                                            ('student_id', '=', student.id)])
+                    stud_year_ids = student_history_obj.search
+                    ([('academice_year_id', '=', data.academic_year_id.id),
+                      ('student_id', '=', student.id)])
                     year_id = academic_obj.next_year(student.year.sequence)
                     if year_id and year_id != data.academic_year_id.id:
                         continue
