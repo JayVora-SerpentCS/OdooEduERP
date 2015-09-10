@@ -50,15 +50,14 @@ class result(report_sxw.rml_parse):
         for sub_id in result_id:
             for sub in sub_id.result_ids:
                 list1.append
-                ({
-                'standard_id': sub_id.standard_id.standard_id.name,
-                'name': sub.subject_id.name,
-                'code': sub.subject_id.code,
-                'maximum_marks': sub.maximum_marks,
-                'minimum_marks': sub.minimum_marks,
-                'obtain_marks': sub.obtain_marks,
-                's_exam_ids': sub_id.s_exam_ids.name
-                })
+                ({'standard_id': sub_id.standard_id.standard_id.name,
+                  'name': sub.subject_id.name,
+                  'code': sub.subject_id.code,
+                  'maximum_marks': sub.maximum_marks,
+                  'minimum_marks': sub.minimum_marks,
+                  'obtain_marks': sub.obtain_marks,
+                  's_exam_ids': sub_id.s_exam_ids.name
+                  })
         return list1
 
     def get_exam_data(self, result_id, student):
@@ -73,10 +72,10 @@ class result(report_sxw.rml_parse):
             per = float(res.total / count)
             final_total = final_total + res.total
             value.update({
-                        'result': res.result,
-                        'percentage': per,
-                        'total': final_total,
-                        })
+                          'result': res.result,
+                          'percentage': per,
+                          'total': final_total,
+                          })
 
         list1.append(value)
         return list1

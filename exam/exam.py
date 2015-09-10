@@ -72,9 +72,9 @@ class extended_time_table_line(models.Model):
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
                     raise Warning(_('Invalid Date Error !'),
-                                     _('Either you''have selected wrong day'
-                                       'for the date or you have selected'
-                                       'invalid date.'))
+                                  _('Either you''have selected wrong day'
+                                    'for the date or you have selected'
+                                    'invalid date.'))
         return True
 
 
@@ -112,7 +112,7 @@ class exam_exam(models.Model):
             self.write({'state': 'running'})
         else:
             raise Warning(_('Exam Schedule'), _('You must add one'
-                                                   'Exam Schedule'))
+                                                'Exam Schedule'))
 
     @api.multi
     def set_finish(self):
@@ -214,8 +214,8 @@ class exam_result(models.Model):
         for result_obj in self:
             if result_obj.result_ids and result_obj.student_id:
                 if result_obj.student_id.year.grade_id.grade_ids:
-                    for grades in result_obj.student_id.year.grade_id.\
-                        grade_ids:
+                    for grades in result_obj.student_id.year.grade_id\
+                        .grade_ids:
                         if grades.grade:
                             if not grades.fail:
                                 result_obj.result = 'Pass'
@@ -223,8 +223,8 @@ class exam_result(models.Model):
                                 flag = True
                 else:
                     raise Warning(_('Configuration Error !'),
-                                     _('First Select Grade System'
-                                       'in Student->year->.'))
+                                  _('First Select Grade System'
+                                    'in Student->year->.'))
             if flag:
                 result_obj.result = 'Fail'
 
@@ -244,11 +244,9 @@ class exam_result(models.Model):
                                                 rec.s_exam_ids.id)])
                 if tt_lines:
                     exam_date = tt_lines[0].sub_exam_date
-                    attendace_lines = attendence_line_obj. \
-                                        search([('stud_id', '=',
-                                                 rec.student_id.id),
-                                                ('standard_id.date', '=',
-                                                 exam_date)])
+                    attendace_lines = attendence_line_obj.search
+                    ([('stud_id', '=', rec.student_id.id),
+                      ('standard_id.date', '=', exam_date)])
                     if attendace_lines:
                         line.absent = attendace_lines[0].is_absent
 
@@ -273,7 +271,7 @@ class exam_result(models.Model):
                     for sub_id in time_table.subject_id:
                         sub_val = {
                                    'subject_id': sub_id.id
-                                }
+                                   }
                         sub_list.append(sub_val)
         standard_obj.result_ids = sub_list
         return {'domain': {'student_id': [('id', 'in', student_lst)]}}

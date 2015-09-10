@@ -200,8 +200,8 @@ class school_standard(models.Model):
     def _compute_student(self):
         self.student_ids = False
         if self.standard_id:
-            self.student_ids = self.env['student.student'].\
-            search([('standard_id', '=', self.standard_id.id)])
+            self.student_ids = self.env['student.student'].search
+            ([('standard_id', '=', self.standard_id.id)])
 
     @api.multi
     def import_subject(self):
@@ -520,8 +520,8 @@ class student_student(models.Model):
                               _('The student is not eligible.'
                                 'Age is not valid.'))
 
-            school_standard_search_ids = school_standard_obj.\
-            search([('standard_id', '=', student_data.standard_id.id)])
+            school_standard_search_ids = school_standard_obj.search
+            ([('standard_id', '=', student_data.standard_id.id)])
             if not school_standard_search_ids:
                 raise Warning(_('Warning'), _('The standard is not'
                                               'defined in a school'))
@@ -532,8 +532,8 @@ class student_student(models.Model):
                 self.write({'roll_no': number})
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
-            registation_code = str(student_data.school_id.state_id.name) + \
-            str('/') + str(student_data.school_id.city) \
+            registation_code = str(student_data.school_id.state_id.name) +\
+            str('/') + str(student_data.school_id.city)\
             + str('/') + str(student_data.school_id.name) \
             + str('/') + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
