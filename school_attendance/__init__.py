@@ -25,8 +25,8 @@
 # ----------------------------------------------------------
 # A Module to School Attendance System
 # ----------------------------------------------------------
-import school_attendance
-import wizard
-import report
+from . import school_attendance
+from . import wizard
+from . import report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
