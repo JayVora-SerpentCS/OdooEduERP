@@ -259,7 +259,7 @@ class student_payslip(models.Model):
         ('out_refund', 'Customer Refund'),
         ('in_refund', 'Supplier Refund'),
         ], 'Type', required=True, select=True, change_default=True,
-                            default='out_invoice')
+                             default='out_invoice')
     period_id = fields.Many2one('account.period', 'Force Period',
                                 required=True,
                                 domain=[('state', '<>', 'done')],
@@ -332,17 +332,17 @@ class student_payslip(models.Model):
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
                 comapny_ac_id = fees.company_id.partner_id.\
-                property_account_receivable.id
+                                property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
                 comapny_ac_id = fees.company_id.\
-                partner_id.property_account_payable.id
+                                partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
                 raise Warning(_('UserError'),
-                        _('You cannot create an invoice on a centralised'
-                          'journal. Uncheck the centralised counterpart box'
-                          'in the related journal from the configuration'
-                          'menu.'))
+                              _('You cannot create an invoice on a centralised'
+                                'journal. Uncheck the centralised counterpart'
+                                'box in the related journal from the'
+                                'configuration menu.'))
             move = {
                 'ref': fees.name,
                 'journal_id': fees.journal_id.id,
@@ -382,7 +382,7 @@ class student_payslip(models.Model):
                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
                 'amount_currency': diff_currency_p and sign * fees.total or
-                                                        0.0,
+                0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
             }
             move_line_obj.create(move_line)
@@ -397,7 +397,7 @@ class student_payslip(models.Model):
                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
                 'amount_currency': diff_currency_p and sign * fees.total or
-                                                        0.0,
+                                    0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
             }
             move_line_obj.create(move_line)
@@ -413,25 +413,26 @@ class student_payslip(models.Model):
                 return []
             fees = student_obj.browse(student_obj.id)
             return {
-            'name': _("Pay Fees"),
-                'view_mode': 'form',
-                'view_id': False,
-                'view_type': 'form',
-                'res_model': 'account.voucher',
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'current',
-                'domain': '[]',
-                'context': {
-                    'default_partner_id': fees.student_id.partner_id.id,
-                    'default_amount': fees.total,
-                    'default_name': fees.name,
-                    'close_after_process': True,
-                    'invoice_type': 'out_invoice',
-                    'default_type': 'receipt',
-                    'type': 'receipt'
-                }
-        }
+                    'name': _("Pay Fees"),
+                    'view_mode': 'form',
+                    'view_id': False,
+                    'view_type': 'form',
+                    'res_model': 'account.voucher',
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'current',
+                    'domain': '[]',
+                    'context': {
+                                'default_partner_id':
+                                fees.student_id.partner_id.id,
+                                'default_amount': fees.total,
+                                'default_name': fees.name,
+                                'close_after_process': True,
+                                'invoice_type': 'out_invoice',
+                                'default_type': 'receipt',
+                                'type': 'receipt'
+                                }
+                    }
 
 
 class student_payslip_line_line(models.Model):
