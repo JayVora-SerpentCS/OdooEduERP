@@ -49,8 +49,8 @@ class email_template(models.TransientModel):
             self._context = {}
         ret = super(email_template, self).generate_email(template_id, res_id)
         if self._context.get('body_text', False) or\
-        self._context.get('subject', False) or\
-        self._context.get('email_to', False):
+           self._context.get('subject', False) or\
+           self._context.get('email_to', False):
             ret['body_text'] = self._context['body_text']
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']

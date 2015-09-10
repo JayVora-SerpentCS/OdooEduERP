@@ -22,7 +22,6 @@
 #
 ##############################################################################
 from openerp import models, fields, api
-from openerp.exceptions import ValidationError
 
 
 class school_teacher_assignment(models.Model):
