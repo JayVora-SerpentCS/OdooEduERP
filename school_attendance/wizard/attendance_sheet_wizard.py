@@ -55,7 +55,7 @@ class monthly_attendance_sheet(models.TransientModel):
 #         if context is None:
 #             context = {}
         data = self.read([])[0]
-        models_data = self.env['ir.model.data']
+        #  models_data = self.env['ir.model.data']
         #         atten_sheet_line_created = 0
         # Get opportunity views
 
@@ -75,8 +75,8 @@ class monthly_attendance_sheet(models.TransientModel):
             'domain': [('standard_id', '=', data['standard_id'][0]),
                        ('month_id', '=', data['month_id'][0]),
                        ('year_id', '=', data['year_id'][0])],
-            'views': [(tree_view_id or False, 'tree'), (form_view_id or False,
-                                                     'form')],
+            'views': [(tree_view_id or False, 'tree'),
+                      (form_view_id or False, 'form')],
             'type': 'ir.actions.act_window',
         }
 

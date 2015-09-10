@@ -37,7 +37,7 @@ class result_print(models.TransientModel):
     @api.multi
     def get_result(self):
         cr, uid, context = self.env.args
-        data_obj = self.env['ir.model.data']
+        #  data_obj = self.env['ir.model.data']
         form_res = self.env.ref('exam.view_exam_result_form_report')
         form_view_id = form_res and form_res.id or False
         tree_res = self.env.ref('exam.view_exam_result_tree_report')

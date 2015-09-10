@@ -23,7 +23,7 @@
 ##############################################################################
 
 from openerp import models, fields, api
-import email
+# import email
 
 
 class email_template(models.TransientModel):
@@ -46,10 +46,11 @@ class email_template(models.TransientModel):
     @api.multi
     def generate_email(self, template_id, res_id):
         if self._context is None:
-            context = {}
+            self._context = {}
         ret = super(email_template, self).generate_email(template_id, res_id)
-        if self._context.get('body_text', False) or self._context.get\
-        ('subject', False) or self._context.get('email_to', False):
+        if self._context.get('body_text', False) or\
+        self._context.get('subject', False) or\
+        self._context.get('email_to', False):
             ret['body_text'] = self._context['body_text']
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']
