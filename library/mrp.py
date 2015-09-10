@@ -121,7 +121,7 @@ class procurement_order(osv.Model):
             }
             name = seq_obj.get(cr, uid,
                                'purchase.order') or('PO:'
-                        '%s') % procurement.name
+                                                    '%s') % procurement.name
             po_vals = {
                 'name': name,
                 'origin': procurement.origin,
