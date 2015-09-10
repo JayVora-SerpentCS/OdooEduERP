@@ -35,7 +35,7 @@
     "depends": ["school"],
     "demo": [
             "demo/school_hostel_demo.xml"
-             ],
+    ],
     "data": [
         "security/hostel_security.xml",
         "security/ir.model.access.csv",

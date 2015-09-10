@@ -44,8 +44,8 @@
         "school"
     ],
     "demo": [
-             "demo/transport_demo.xml"
-             ],
+        "demo/transport_demo.xml"
+    ],
     "data": [
         "transport_view.xml",
         "report_view.xml",

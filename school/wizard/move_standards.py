@@ -48,9 +48,10 @@ class move_standards(models.TransientModel):
             for standards in school_standard_obj.browse(self._context.get
                                                         ('active_ids')):
                 for student in standards.student_ids:
-                    stud_year_ids = student_history_obj.search
-                    ([('academice_year_id', '=', data.academic_year_id.id),
-                      ('student_id', '=', student.id)])
+                    stud_year_ids = student_history_obj.\
+                    search([('academice_year_id', '=',
+                             data.academic_year_id.id),
+                            ('student_id', '=', student.id)])
                     year_id = academic_obj.next_year(student.year.sequence)
                     if year_id and year_id != data.academic_year_id.id:
                         continue
@@ -75,22 +76,27 @@ class move_standards(models.TransientModel):
                         if result_exists:
                             result_data = result_obj.browse(result_exists.id)
                             if result_data.result == "Pass":
-                                next_class_id = standard_obj.next_standard
-                                (standards.standard_id.sequence)
+                                next_class_id = standard_obj.\
+                                next_standard(standards.standard_id.sequence)
                                 if next_class_id:
                                     student_id = student_obj.browse(student.id)
                                     student_id.write
                                     ({'year': data.academic_year_id.id,
                                       'standard_id': next_class_id,
                                         })
-                                    student_history_obj.create
-                                    ({'student_id': student.id,
-                                      'academice_year_id': student.year.id,
-                                      'standard_id': standards.standard_id.id,
-                                      'division_id': standards.division_id.id,
-                                      'medium_id': standards.medium_id.id,
-                                      'result': result_data.result,
-                                      'percentage': result_data.percentage
+                                    student_history_obj.\
+                                    create({'student_id': student.id,
+                                            'academice_year_id':
+                                            student.year.id,
+                                            'standard_id':
+                                            standards.standard_id.id,
+                                            'division_id':
+                                            standards.division_id.id,
+                                            'medium_id':
+                                            standards.medium_id.id,
+                                            'result': result_data.result,
+                                            'percentage':
+                                            result_data.percentage
                                 })
                             else:
                                 raise except_orm(_("Error!"),

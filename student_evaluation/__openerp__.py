@@ -46,8 +46,8 @@
              "security/ir.model.access.csv"
              ],
     "demo": [
-             "demo/student_evaluation_demo.xml"
-             ],
+        "demo/student_evaluation_demo.xml"
+    ],
 
     "installable": True,
     "auto_install": False,
