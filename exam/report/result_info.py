@@ -49,7 +49,6 @@ class result(report_sxw.rml_parse):
         list1 = []
         for sub_id in result_id:
             for sub in sub_id.result_ids:
-                list1.append
                 ({'standard_id': sub_id.standard_id.standard_id.name,
                   'name': sub.subject_id.name,
                   'code': sub.subject_id.code,
@@ -58,6 +57,7 @@ class result(report_sxw.rml_parse):
                   'obtain_marks': sub.obtain_marks,
                   's_exam_ids': sub_id.s_exam_ids.name
                   })
+                list1.append
         return list1
 
     def get_exam_data(self, result_id, student):

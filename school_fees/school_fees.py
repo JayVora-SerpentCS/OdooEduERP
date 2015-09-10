@@ -259,7 +259,7 @@ class student_payslip(models.Model):
         ('out_refund', 'Customer Refund'),
         ('in_refund', 'Supplier Refund'),
         ], 'Type', required=True, select=True, change_default=True,
-                             default='out_invoice')
+                            default='out_invoice')
     period_id = fields.Many2one('account.period', 'Force Period',
                                 required=True,
                                 domain=[('state', '<>', 'done')],
@@ -326,13 +326,13 @@ class student_payslip(models.Model):
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = fees.currency_id and fees.currency_id.id or \
-            company_currency
+                                company_currency
             account_id = False
             comapny_ac_id = False
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
                 comapny_ac_id = fees.company_id.partner_id.\
-                                property_account_receivable.id
+                                 property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
                 comapny_ac_id = fees.company_id.\

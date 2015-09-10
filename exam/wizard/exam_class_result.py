@@ -55,6 +55,5 @@ class result_print(models.TransientModel):
                     'domain': domain,
                     'views': [(tree_view_id, 'tree'), (form_view_id, 'form')]
                     }
-                return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

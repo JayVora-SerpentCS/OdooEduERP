@@ -244,9 +244,9 @@ class exam_result(models.Model):
                                                 rec.s_exam_ids.id)])
                 if tt_lines:
                     exam_date = tt_lines[0].sub_exam_date
-                    attendace_lines = attendence_line_obj.search
-                    ([('stud_id', '=', rec.student_id.id),
-                      ('standard_id.date', '=', exam_date)])
+                    attendace_lines = attendence_line_obj\
+                    .search([('stud_id', '=', rec.student_id.id),
+                             ('standard_id.date', '=', exam_date)])
                     if attendace_lines:
                         line.absent = attendace_lines[0].is_absent
 

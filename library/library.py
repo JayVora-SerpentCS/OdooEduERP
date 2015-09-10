@@ -114,9 +114,9 @@ class library_card(models.Model):
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
         val = {
-            'standard_id': student_data.standard_id.id,
-            'roll_no': student_data.roll_no,
-             }
+               'standard_id': student_data.standard_id.id,
+               'roll_no': student_data.roll_no,
+               }
         return {'value': val}
 
     @api.one
@@ -170,9 +170,9 @@ class library_book_issue(models.Model):
         if self.date_issue and self.day_to_return_book:
             ret_date = datetime.strptime(self.date_issue,
                                          "%Y-%m-%d %H:%M:%S") + \
-                                        relativedelta(days=self.
+                                         relativedelta(days=self.
                                                       day_to_return_book.day
-                                                    or 0.0)
+                                                       or 0.0)
             self.date_return = ret_date
 
     @api.one
@@ -312,11 +312,11 @@ class library_book_issue(models.Model):
         val = {'user': str(card_data.user.title())}
         if card_data.user.title() == 'Student':
             val.update({
-                    'student_id': card_data.student_id.id,
-                    'standard_id': card_data.standard_id.id,
-                    'roll_no': card_data.roll_no,
-                    'gt_name': card_data.gt_name
-                    })
+                        'student_id': card_data.student_id.id,
+                        'standard_id': card_data.standard_id.id,
+                        'roll_no': card_data.roll_no,
+                        'gt_name': card_data.gt_name
+                        })
         else:
             val.update({'teacher_id': card_data.teacher_id.id,
                         'gt_name': card_data.gt_name
@@ -511,8 +511,8 @@ class library_book_request(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                    self.env['ir.sequence'].get('library.book.request')
-                    or '/')
+                         self.env['ir.sequence'].get('library.book.request')
+                         or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
