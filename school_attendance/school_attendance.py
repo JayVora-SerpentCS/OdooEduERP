@@ -75,10 +75,10 @@ class attendance_sheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        abc = res['fields']['attendance_ids']['views']['tree']
-                        abc['fields']['three_1']
-                        abc.update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['three_1'].update({'invisible': 1})
 
             elif no_of_days == 29:
                 if 'attendance_ids' in res['fields']:
@@ -342,7 +342,7 @@ class daily_attendance(models.Model):
                                        ('month_id', '=', month_search_ids.id),
                                        ('year_id', '=', year_search_ids.id)]
         search_attendance_sheet_ids = attendance_sheet_obj. \
-        search(attendance_sheet_domain)
+                                      search(attendance_sheet_domain)
 
         if search_attendance_sheet_ids:
             for attendance_sheet_datas in search_attendance_sheet_ids:
@@ -434,9 +434,9 @@ class daily_attendance(models.Model):
             if month_ids:
                 month_data = month_ids
                 att_ids = attendance_sheet_obj.search([('month_id', 'in',
-                                                              month_ids.ids),
-                                                             ('year_id', 'in',
-                                                              year_ids.ids)])
+                                                        month_ids.ids),
+                                                       ('year_id', 'in',
+                                                        year_ids.ids)])
                 attendance_sheet_id = att_ids and att_ids[0] or False
                 if not attendance_sheet_id:
                     attendance_sheet_id = attendance_sheet_obj.create
@@ -446,21 +446,21 @@ class daily_attendance(models.Model):
                       'month_id': month_data.id,
                       'year_id': year_ids and year_ids.id or False})
                     for student_id in line.student_ids:
-                        attendance_sheet_line_obj.create({
-                                                        'roll_no':
-                                                        student_id.roll_no,
-                                                        'standard_id':
-                                                        attendance_sheet_id.
-                                                        id,
-                                                        'name':
-                                                        student_id.stud_id.
-                                                        student_name})
+                        attendance_sheet_line_obj.create({'roll_no':
+                                                          student_id.roll_no,
+                                                          'standard_id':
+                                                          attendance_sheet_id.
+                                                          id,
+                                                          'name':
+                                                          student_id.stud_id.
+                                                          student_name})
                         for student_id in line.student_ids:
                             #  dict1 = attendance_sheet_line_obj.read
                             #  ([student_id.
                             #  roll_no])
                             search_id = attendance_sheet_line_obj. \
-                            search([('roll_no', '=', student_id.roll_no)])
+                                        search([('roll_no', '=',
+                                                 student_id.roll_no)])
                             if date.day == 1 and student_id.is_absent is True:
                                 val = {'one': False}
 
@@ -717,8 +717,10 @@ class daily_attendance(models.Model):
                         #  dict1 = attendance_sheet_line_obj.read
                         #  ([student_id.roll_no])
                         search_id = attendance_sheet_line_obj. \
-                        search([('roll_no', '=', student_id.roll_no),
-                                ('standard_id', '=', attendance_sheet_id.id)])
+                                    search([('roll_no', '=',
+                                             student_id.roll_no),
+                                            ('standard_id', '=',
+                                             attendance_sheet_id.id)])
                         if date.day == 1 and student_id.is_absent is True:
                             val = {'one': False}
 
