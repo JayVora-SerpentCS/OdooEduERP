@@ -342,7 +342,7 @@ class daily_attendance(models.Model):
                                        ('month_id', '=', month_search_ids.id),
                                        ('year_id', '=', year_search_ids.id)]
         search_attendance_sheet_ids = attendance_sheet_obj. \
-                                      search(attendance_sheet_domain)
+                                        search(attendance_sheet_domain)
 
         if search_attendance_sheet_ids:
             for attendance_sheet_datas in search_attendance_sheet_ids:
@@ -459,7 +459,7 @@ class daily_attendance(models.Model):
                             #  ([student_id.
                             #  roll_no])
                             search_id = attendance_sheet_line_obj. \
-                                        search([('roll_no', '=',
+                                            search([('roll_no', '=',
                                                  student_id.roll_no)])
                             if date.day == 1 and student_id.is_absent is True:
                                 val = {'one': False}
@@ -717,7 +717,7 @@ class daily_attendance(models.Model):
                         #  dict1 = attendance_sheet_line_obj.read
                         #  ([student_id.roll_no])
                         search_id = attendance_sheet_line_obj. \
-                                    search([('roll_no', '=',
+                                        search([('roll_no', '=',
                                              student_id.roll_no),
                                             ('standard_id', '=',
                                              attendance_sheet_id.id)])

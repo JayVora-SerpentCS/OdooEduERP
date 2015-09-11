@@ -215,7 +215,7 @@ class exam_result(models.Model):
             if result_obj.result_ids and result_obj.student_id:
                 if result_obj.student_id.year.grade_id.grade_ids:
                     for grades in result_obj.student_id.year.grade_id \
-                        .grade_ids:
+                            .grade_ids:
                         if grades.grade:
                             if not grades.fail:
                                 result_obj.result = 'Pass'
