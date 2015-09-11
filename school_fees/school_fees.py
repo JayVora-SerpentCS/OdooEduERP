@@ -325,17 +325,17 @@ class student_payslip(models.Model):
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = fees.currency_id and fees.currency_id.id or \
-                                company_currency
+            company_currency
             account_id = False
             comapny_ac_id = False
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
-                comapny_ac_id = fees.company_id.partner_id.\
-                                 property_account_receivable.id
+                comapny_ac_id = fees.company_id.partner_id. \
+                property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
-                comapny_ac_id = fees.company_id.\
-                                partner_id.property_account_payable.id
+                comapny_ac_id = fees.company_id. \
+                partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
                 raise Warning(_('UserError'),
                               _('You cannot create an invoice on a centralised'
@@ -396,7 +396,7 @@ class student_payslip(models.Model):
                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
                 'amount_currency': diff_currency_p and sign * fees.total or
-                                    0.0,
+                0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
                 }
             move_line_obj.create(move_line)
@@ -411,15 +411,11 @@ class student_payslip(models.Model):
             if not self.ids:
                 return []
             fees = student_obj.browse(student_obj.id)
-            return {
-                    'name': _("Pay Fees"),
-                    'view_mode': 'form',
-                    'view_id': False,
-                    'view_type': 'form',
+            return {'name': _("Pay Fees"), 'view_mode': 'form',
+                    'view_id': False, 'view_type': 'form',
                     'res_model': 'account.voucher',
                     'type': 'ir.actions.act_window',
-                    'nodestroy': True,
-                    'target': 'current',
+                    'nodestroy': True, 'target': 'current',
                     'domain': '[]',
                     'context': {
                                 'default_partner_id':

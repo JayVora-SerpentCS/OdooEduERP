@@ -118,8 +118,8 @@ class sale_order(models.Model):
                                 (days=line.delay or 0.0)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
-                if line.product_id and line.product_id.product_tmpl_id.type in\
-                                        ('product', 'consu'):
+                if line.product_id and line.product_id.product_tmpl_id.type \
+                in ('product', 'consu'):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         picking_id = picking_obj.create({
@@ -148,7 +148,7 @@ class sale_order(models.Model):
                         'product_uos': line.product_uos.id,
                         'product_packaging': line.product_packaging.id,
                         'address_id': line.address_allotment_id.id or
-                                        order.partner_shipping_id.id,
+                        order.partner_shipping_id.id,
                         'location_id': location_id,
                         'location_dest_id': output_id,
                         'sale_line_id': line.id,
@@ -174,19 +174,23 @@ class sale_order(models.Model):
                                           proc_id.id, 'button_confirm',
                                           self._cr)
                     line.write({'procurement_id': proc_id.id})
-                elif line.product_id and line.product_id.product_tmpl_id.type\
-                                            == 'service':
-                    proc_id = procurment_obj.\
-                                create({'name': line.name,
-                                        'origin': order.name,
-                                        'date_planned': date_planned,
-                                        'product_id': line.product_id.id,
-                                        'product_qty': line.product_uom_qty,
-                                        'product_uom': line.product_uom.id,
-                                        'location_id':
-                                        order.warehouse_id.lot_stock_id.id,
-                                        'procure_method': line.type,
-                                        })
+                elif line.product_id and line.product_id.product_tmpl_id.type \
+                == 'service':
+                    proc_id = procurment_obj.create({'name': line.name,
+                                                     'origin': order.name,
+                                                     'date_planned':
+                date_planned,
+                                                     'product_id':
+                line.product_id.id,
+                                                     'product_qty':
+                line.product_uom_qty,
+                                                     'product_uom':
+                line.product_uom.id,
+                                                     'location_id':
+                order.warehouse_id.lot_stock_id.id,
+                                                     'procure_method':
+                line.type,
+                })
                     workflow.trg_validate(self._uid, 'procurement.order',
                                           proc_id.id, 'button_confirm',
                                           self._cr)

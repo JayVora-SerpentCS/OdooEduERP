@@ -113,8 +113,7 @@ class library_card(models.Model):
         if not student_id:
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
-        val = {
-               'standard_id': student_data.standard_id.id,
+        val = {'standard_id': student_data.standard_id.id,
                'roll_no': student_data.roll_no,
                }
         return {'value': val}
@@ -171,7 +170,7 @@ class library_book_issue(models.Model):
             ret_date = datetime.strptime(self.date_issue,
                                          "%Y-%m-%d %H:%M:%S") + \
                                          relativedelta(days=self.
-                                                      day_to_return_book.day
+                                                       day_to_return_book.day
                                                        or 0.0)
             self.date_return = ret_date
 
@@ -311,8 +310,7 @@ class library_book_issue(models.Model):
         card_data = self.env['library.card'].browse(card_id)
         val = {'user': str(card_data.user.title())}
         if card_data.user.title() == 'Student':
-            val.update({
-                        'student_id': card_data.student_id.id,
+            val.update({'student_id': card_data.student_id.id,
                         'standard_id': card_data.standard_id.id,
                         'roll_no': card_data.roll_no,
                         'gt_name': card_data.gt_name
