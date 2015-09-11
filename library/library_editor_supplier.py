@@ -123,9 +123,9 @@ class library_editor_supplier(models.Model):
     def write(self, vals):
         res = {}
         update_sequence = "update product_supplierinfo set sequence = %s"\
-        "where name = %s"
+                          "where name = %s"
         update_delay = "update product_supplierinfo set delay = %s"\
-        "where name = %s"
+                       "where name = %s"
 #         relations = self.browse(cr, user, ids)
 #         for rel, idn in zip(relations, ids):
         for rel, idn in zip(self, self.ids):

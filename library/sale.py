@@ -179,18 +179,19 @@ class sale_order(models.Model):
                     proc_id = procurment_obj.create({'name': line.name,
                                                      'origin': order.name,
                                                      'date_planned':
-                    date_planned,
+                                                     date_planned,
                                                      'product_id':
-                    line.product_id.id,
+                                                     line.product_id.id,
                                                      'product_qty':
-                    line.product_uom_qty,
+                                                     line.product_uom_qty,
                                                      'product_uom':
-                    line.product_uom.id,
+                                                     line.product_uom.id,
                                                      'location_id':
-                    order.warehouse_id.lot_stock_id.id,
+                                                     order.warehouse_id.
+                                                     lot_stock_id.id,
                                                      'procure_method':
-                    line.type,
-                    })
+                                                     line.type,
+                                                     })
                     workflow.trg_validate(self._uid, 'procurement.order',
                                           proc_id.id, 'button_confirm',
                                           self._cr)

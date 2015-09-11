@@ -353,9 +353,8 @@ class transport_registration(models.Model):
                                 'not Possibal because Root end'
                                 'date is Early.'))
             # make entry in Transport
-            temp = stu_prt_obj.create({
-                                       'stu_pid_id': str
-                                       (reg_data.part_name.pid),
+            temp = stu_prt_obj.create({'stu_pid_id':
+                                       str(reg_data.part_name.pid),
                                        'amount': amount,
                                        'transport_id': reg_data.name.id,
                                        'tr_end_date': tr_end_date,

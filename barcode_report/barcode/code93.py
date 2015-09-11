@@ -36,8 +36,7 @@ from . common import MultiWidthBarcode
 import string
 from twisted.persisted.aot import Instance
 
-_patterns = {
-             '0': ('AcAaAb', 0),  '1': ('AaAbAc', 1),  '2': ('AaAcAb', 2),
+_patterns = {'0': ('AcAaAb', 0),  '1': ('AaAbAc', 1),  '2': ('AaAcAb', 2),
              '3': ('AaAdAa', 3),  '4': ('AbAaAc', 4),  '5': ('AbAbAb', 5),
              '6': ('AbAcAa', 6),  '7': ('AaAaAd', 7),  '8': ('AcAbAa', 8),
              '9': ('AdAaAa', 9),  'A': ('BaAaAc', 10), 'B': ('BaAbAb', 11),

@@ -82,19 +82,19 @@ class move_standards(models.TransientModel):
                                                       next_class_id,
                                                       })
                                     student_history_obj.\
-                                    create({'student_id': student.id,
-                                            'academice_year_id':
-                                            student.year.id,
-                                            'standard_id':
-                                            standards.standard_id.id,
-                                            'division_id':
-                                            standards.division_id.id,
-                                            'medium_id':
-                                            standards.medium_id.id,
-                                            'result': result_data.result,
-                                            'percentage':
-                                            result_data.percentage
-                                            })
+                                        create({'student_id': student.id,
+                                                'academice_year_id':
+                                                student.year.id,
+                                                'standard_id':
+                                                standards.standard_id.id,
+                                                'division_id':
+                                                standards.division_id.id,
+                                                'medium_id':
+                                                standards.medium_id.id,
+                                                'result': result_data.result,
+                                                'percentage':
+                                                result_data.percentage
+                                                })
                             else:
                                 raise except_orm(_("Error!"),
                                                  _("Student is not eligible"

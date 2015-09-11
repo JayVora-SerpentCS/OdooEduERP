@@ -269,7 +269,7 @@ class product_product(models.Model):
                 l_date = r_date + relativedelta(days=date_rec.
                                                 day_to_return_book.day)
                 date_rec.date_retour = l_date. \
-                strftime(DEFAULT_SERVER_DATE_FORMAT)
+                    strftime(DEFAULT_SERVER_DATE_FORMAT)
     isbn = fields.Char('Isbn code', unique=True,
                        help="It show the International Standard Book Number")
     catalog_num = fields.Char('Catalog number',
