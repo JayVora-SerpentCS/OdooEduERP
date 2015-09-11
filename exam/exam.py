@@ -67,7 +67,7 @@ class extended_time_table_line(models.Model):
                 dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
                 if line.week_day != datetime.strptime(line.exm_date,
                                                       "%Y-%m-%d"). \
-                                                      strftime("%A").lower():
+                                                        strftime("%A").lower():
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
@@ -245,8 +245,8 @@ class exam_result(models.Model):
                 if tt_lines:
                     exam_date = tt_lines[0].sub_exam_date
                     attendace_lines = attendence_line_obj \
-                    .search([('stud_id', '=', rec.student_id.id),
-                             ('standard_id.date', '=', exam_date)])
+                        .search([('stud_id', '=', rec.student_id.id),
+                                 ('standard_id.date', '=', exam_date)])
                     if attendace_lines:
                         line.absent = attendace_lines[0].is_absent
 
@@ -269,8 +269,7 @@ class exam_result(models.Model):
             for time_table in standard_obj.s_exam_ids.timetable_ids:
                 if time_table.standard_id.id == standard_obj.standard_id.id:
                     for sub_id in time_table.subject_id:
-                        sub_val = {
-                                   'subject_id': sub_id.id
+                        sub_val = {'subject_id': sub_id.id
                                    }
                         sub_list.append(sub_val)
         standard_obj.result_ids = sub_list
@@ -311,8 +310,9 @@ class exam_result(models.Model):
         if not res:
             raise Warning(_('Warning!'), _('Please Enter the'
                                               'students Marks.'))
-        vals.update({'grade': res[self.id]['grade'], 'percentage':
-                     res[self.id]['percentage'], 'state': 'confirm'})
+        vals.update({'grade': res[self.id]['grade'],
+                     'percentage': res[self.id]['percentage'],
+                     'state': 'confirm'})
         self.write(vals)
         return True
 
@@ -408,7 +408,7 @@ class exam_subject(models.Model):
     def _validate_marks(self):
         for marks_obj in self:
             if marks_obj.obtain_marks > marks_obj.maximum_marks or \
-            marks_obj.minimum_marks > marks_obj.maximum_marks:
+                    marks_obj.minimum_marks > marks_obj.maximum_marks:
                 raise Warning(_('The obtained marks and minimum marks'
                                 'should not extend maximum marks.'))
 
@@ -419,9 +419,9 @@ class exam_subject(models.Model):
             if grade_obj.exam_id and grade_obj.exam_id.student_id and \
                grade_obj.exam_id.student_id.year.grade_id.grade_ids:
                 for grade_id in grade_obj.exam_id.student_id.year.\
-                grade_id.grade_ids:
+                        grade_id.grade_ids:
                     if grade_obj.obtain_marks >= grade_id.from_mark and \
-                        grade_obj.obtain_marks <= grade_id.to_mark:
+                            grade_obj.obtain_marks <= grade_id.to_mark:
                         grade_obj.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
@@ -471,7 +471,7 @@ class exam_result_batchwise(models.Model):
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
                         if divi >= grade_id.from_mark and \
-                        divi <= grade_id.to_mark:
+                                        divi <= grade_id.to_mark:
                             self.grade = grade_id.grade
 
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
@@ -489,7 +489,7 @@ class additional_exam_result(models.Model):
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
         if self.a_exam_id and self.a_exam_id.subject_id and \
-        self.a_exam_id.subject_id.minimum_marks:
+                self.a_exam_id.subject_id.minimum_marks:
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
