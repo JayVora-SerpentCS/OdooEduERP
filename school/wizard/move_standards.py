@@ -48,7 +48,7 @@ class move_standards(models.TransientModel):
             for standards in school_standard_obj.browse(self._context.get
                                                         ('active_ids')):
                 for student in standards.student_ids:
-                    stud_year_ids = student_history_obj\
+                    stud_year_ids = student_history_obj \
                     .search([('academice_year_id', '=',
                               data.academic_year_id.id),
                              ('student_id', '=', student.id)])
@@ -60,19 +60,13 @@ class move_standards(models.TransientModel):
                                          _('Please Select Next Academic'
                                            'year.'))
                     else:
-                        result_exists = result_obj.search([('standard_id', '=',
-                                                            student.
-                                                            standard_id.id),
-                                                           ('standard_id.'
-                                                            'division_id', '=',
-                                                            student.division_id.
-                                                            id),
-                                                           ('standard_id.'
-                                                            'medium_id', '=',
-                                                            student.medium_id.
-                                                            id),
-                                                           ('student_id', '=',
-                                                            student.id)])
+                        result_exists = result_obj. \
+                        search([('standard_id', '=', student.standard_id.id),
+                                ('standard_id.division_id', '=',
+                                 student.division_id.id),
+                                ('standard_id.medium_id', '=',
+                                 student.medium_id.id),
+                                ('student_id', '=', student.id)])
                         if result_exists:
                             result_data = result_obj.browse(result_exists.id)
                             if result_data.result == "Pass":
@@ -83,7 +77,7 @@ class move_standards(models.TransientModel):
                                     student_id.write({'year':
                                                       data.academic_year_id.id,
                                                       'standard_id':
-                                                      next_class_id,
+                                    next_class_id,
                                                       })
                                     student_history_obj.\
                                     create({'student_id': student.id,
@@ -92,7 +86,7 @@ class move_standards(models.TransientModel):
                                             'standard_id':
                                             standards.standard_id.id,
                                             'division_id':
-                                            standards.division_id.id,
+                                    standards.division_id.id,
                                             'medium_id':
                                             standards.medium_id.id,
                                             'result': result_data.result,

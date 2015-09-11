@@ -65,23 +65,14 @@ class school_teacher_assignment(models.Model):
                 std_ids.append(stu[0])
         if std_ids:
             for std in std_ids:
-                assignment_id = assignment_obj.create({
-                                                       'name': self.name,
-                                                       'subject_id':
-                                                       self.subject_id.id,
-                                                       'standard_id':
-                                                       self.standard_id.id,
-                                                       'assign_date':
-                                                       self.assign_date,
-                                                       'due_date':
-                                                       self.due_date,
-                                                       'state': 'active',
-                                                       'attached_homework':
-                                                       self.attached_homework,
-                                                       'teacher_id':
-                                                       self.teacher_id.id,
-                                                       'student_id': std
-                                                       })
+                assignment_id = assignment_obj. \
+                create({'name': self.name, 'subject_id': self.subject_id.id,
+                        'standard_id': self.standard_id.id,
+                        'assign_date': self.assign_date,
+                        'due_date': self.due_date, 'state': 'active',
+                        'attached_homework': self.attached_homework,
+                        'teacher_id': self.teacher_id.id, 'student_id': std
+                        })
                 if self.attached_homework:
                     data_attach = {
                                    'name': 'test',
