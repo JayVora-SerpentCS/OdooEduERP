@@ -22,7 +22,7 @@
 #
 ##############################################################################
 from openerp import models, fields, api
-from mx import DateTime
+from datetime import datetime
 from openerp import workflow
 
 
@@ -114,7 +114,7 @@ class sale_order(models.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = (DateTime.now() + DateTime.RelativeDateTime
+                date_planned = (datetime.now() + datetime.Relativedatetime
                                 (days=line.delay or 0.0)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
