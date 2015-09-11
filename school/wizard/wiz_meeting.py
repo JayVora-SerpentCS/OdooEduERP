@@ -54,13 +54,13 @@ class student_meeting(models.TransientModel):
                                              "Email ID.\n\n" + error_student +
                                              "\nMeeting cannot be scheduled."
                                              ))
-        new_id = cal_event_obj.create({
-            'name': cur_rec.name,
-            'start': cur_rec.meeting_date,
-            'stop': cur_rec.deadline,
-            'description': cur_rec.description,
-            'attendee_ids': attendee_ids
-        })
+        new_id = cal_event_obj.create({'name': cur_rec.name,
+                                       'start': cur_rec.meeting_date,
+                                       'stop': cur_rec.deadline,
+                                       'description': cur_rec.description,
+                                       'attendee_ids': attendee_ids
+                                       })
+        attendee_ids.append(new_id)
         return {'type': 'ir.actions.act_window_close'}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

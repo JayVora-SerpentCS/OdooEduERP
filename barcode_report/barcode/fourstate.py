@@ -31,9 +31,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-from reportlab.lib.units import inch
-from . common import Barcode
-import string
+# from reportlab.lib.units import inch
+# from . common import Barcode
+# import string
 
 # . 3 T Tracker
 # , 2 D Descender
