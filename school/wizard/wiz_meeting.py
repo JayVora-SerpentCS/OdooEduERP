@@ -44,7 +44,7 @@ class student_meeting(models.TransientModel):
         for student in student_obj.browse(self._context['active_ids']):
             if not student.email:
                 flag = True
-                error_student += student.pid + ": " + student.name + " " +\
+                error_student += student.pid + ": " + student.name + " " + \
                 student.middle + " " + student.last + "\n"
             else:
                 attendee_ids.append((0, 0, {'user_id': student.user_id.id,

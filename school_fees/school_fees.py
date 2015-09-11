@@ -204,7 +204,7 @@ class student_payslip(models.Model):
                                                      'type': data.type,
                                                      'amount': data.amount,
                                                      }
-                        student_payslip_line_obj.\
+                        student_payslip_line_obj. \
                         create(student_payslip_line_vals)
                 amount = 0
                 for datas in self.browse(self.ids):
@@ -253,13 +253,12 @@ class student_payslip(models.Model):
                                states={'draft': [('readonly', False)]},
                                select=True,
                                help="Keep empty to use the current date")
-    type = fields.Selection([
-        ('out_invoice', 'Customer Invoice'),
-        ('in_invoice', 'Supplier Invoice'),
-        ('out_refund', 'Customer Refund'),
-        ('in_refund', 'Supplier Refund'),
-        ], 'Type', required=True, select=True, change_default=True,
-                            default='out_invoice')
+    type = fields.Selection([('out_invoice', 'Customer Invoice'),
+                             ('in_invoice', 'Supplier Invoice'),
+                             ('out_refund', 'Customer Refund'),
+                             ('in_refund', 'Supplier Refund'),
+                             ], 'Type', required=True, select=True,
+                            change_default=True, default='out_invoice')
     period_id = fields.Many2one('account.period', 'Force Period',
                                 required=True,
                                 domain=[('state', '<>', 'done')],
@@ -384,7 +383,7 @@ class student_payslip(models.Model):
                 'amount_currency': diff_currency_p and sign * fees.total or
                 0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
-            }
+                }
             move_line_obj.create(move_line)
             move_line = {
                 'name': fees.name or '/',
@@ -399,7 +398,7 @@ class student_payslip(models.Model):
                 'amount_currency': diff_currency_p and sign * fees.total or
                                     0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
-            }
+                }
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
@@ -424,7 +423,7 @@ class student_payslip(models.Model):
                     'domain': '[]',
                     'context': {
                                 'default_partner_id':
-                                fees.student_id.partner_id.id,
+            fees.student_id.partner_id.id,
                                 'default_amount': fees.total,
                                 'default_name': fees.name,
                                 'close_after_process': True,

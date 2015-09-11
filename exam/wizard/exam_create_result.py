@@ -51,35 +51,39 @@ class exam_create_result(models.TransientModel):
                                                            school_std_rec.
                                                            medium_id.id)])
                         for student in student_ids:
-                            result_exists = result_obj.search([('standard_id',
-                                                                '=',
-                                            school_std_rec.standard_id.id),
-                                           ('student_id.division_id', '=',
-                                            school_std_rec.division_id.id),
-                                           ('student_id.medium_id', '=',
-                                            school_std_rec.medium_id.id),
-                                           ('student_id', '=', student.id)])
+                            result_exists = result_obj. \
+                            search([('standard_id', '=',
+                                     school_std_rec.standard_id.id),
+                                    ('student_id.division_id', '=',
+                                     school_std_rec.division_id.id),
+                                    ('student_id.medium_id', '=',
+                                     school_std_rec.medium_id.id),
+                                    ('student_id', '=', student.id)])
                             if not result_exists:
-                                result_id = result_obj.create({
-                                            's_exam_ids': exam.id,
-                                           'student_id': student.id,
-                                           'standard_id':
-                                            school_std_rec.standard_id.id,
-                                           'division_id':
-                                            school_std_rec.division_id.id,
-                                           'medium_id':
-                                            school_std_rec.medium_id.id})
+                                result_id = result_obj. \
+                                create({'s_exam_ids': exam.id,
+                                        'student_id': student.id,
+                                        'standard_id':
+                                        school_std_rec.standard_id.id,
+                                        'division_id':
+                                        school_std_rec.division_id.id,
+                                        'medium_id':
+                                        school_std_rec.medium_id.id})
                                 for line in exam.standard_id:
                                     # for line in school_std_rec.timetable_ids:
-                                    result_subject_obj.create({
-                                       'exam_id': result_id.id,
-                                       'subject_id':
-                                       line.standard_id.subject_id and
-                                       line.subject_id.id or False,
-                                       'minimum_marks': line.subject_id and
-                                       line.subject_id.minimum_marks or 0.0,
-                                       'maximum_marks': line.subject_id and
-                                       line.subject_id.maximum_marks or 0.0})
+                                    result_subject_obj. \
+                                    create({'exam_id': result_id.id,
+                                            'subject_id':
+                                            line.standard_id.subject_id and
+                                            line.subject_id.id or False,
+                                            'minimum_marks': line.subject_id
+                                            and
+                                            line.subject_id.minimum_marks or
+                                            0.0,
+                                            'maximum_marks': line.subject_id
+                                            and
+                                            line.subject_id.maximum_marks or
+                                            0.0})
                 else:
                     raise Warning(_('Error !'), _('Please Select'
                                                   'Standard Id.'))
