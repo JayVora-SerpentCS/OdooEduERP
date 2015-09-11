@@ -121,7 +121,7 @@ class FIM(Barcode):
                 self.valid = 0
 
         if len(self.validated) != 1:
-            raise ValueError, "Input must be exactly one character"
+            raise ValueError("Input must be exactly one character")
 
         return self.validated
 
@@ -202,7 +202,7 @@ class POSTNET(Barcode):
             elif c == '-':
                 pass
             else:
-                raise ValueError, "Invalid character in input"
+                raise ValueError("Invalid character in input")
         check = (10 - (check % 10)) % 10
         self.encoded = self.encoded + (check) + 'S'
         return self.encoded

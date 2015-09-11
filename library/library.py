@@ -167,11 +167,8 @@ class library_book_issue(models.Model):
 
         '''
         if self.date_issue and self.day_to_return_book:
-            ret_date = datetime.strptime(self.date_issue,
-                                         "%Y-%m-%d %H:%M:%S") + \
-                                         relativedelta(days=self.
-                                                       day_to_return_book.
-                                                       day or 0.0)
+            ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
+                + relativedelta(days=self.day_to_return_book.day or 0.0)
             self.date_return = ret_date
 
     @api.one
