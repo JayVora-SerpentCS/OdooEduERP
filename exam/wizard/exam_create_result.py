@@ -55,10 +55,10 @@ class exam_create_result(models.TransientModel):
                                 search([('standard_id', '=',
                                          school_std_rec.standard_id.id),
                                         ('student_id.division_id', '=',
-                                     school_std_rec.division_id.id),
-                                    ('student_id.medium_id', '=',
-                                     school_std_rec.medium_id.id),
-                                    ('student_id', '=', student.id)])
+                                         school_std_rec.division_id.id),
+                                        ('student_id.medium_id', '=',
+                                         school_std_rec.medium_id.id),
+                                        ('student_id', '=', student.id)])
                             if not result_exists:
                                 result_id = result_obj. \
                                     create({'s_exam_ids': exam.id,

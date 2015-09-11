@@ -261,7 +261,7 @@ class Code128(MultiWidthBarcode):
                 rl.insert(0, '\xf1')
                 continue
             elif len(l[i]) == 1 and l[i] in digits \
-            and len(l[i - 1]) == 1 and l[i - 1] in digits:
+                and len(l[i - 1]) == 1 and l[i - 1] in digits:
                 c = c + 2
                 savings = savings + 1
                 rl.insert(0, l[i - 1] + l[i])
