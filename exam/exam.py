@@ -472,7 +472,7 @@ class exam_result_batchwise(models.Model):
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
                         if divi >= grade_id.from_mark and \
-                            divi <= grade_id.to_mark:
+                                divi <= grade_id.to_mark:
                                 self.grade = grade_id.grade
 
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
