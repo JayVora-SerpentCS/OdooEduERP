@@ -42,6 +42,7 @@
               ],
     "data" : [
         "security/ir.model.access.csv",
+        'wizard/fee_pay_wizard_view.xml',
         "school_fees_view.xml",
         "school_fees_sequence.xml",
         "student_fees_register_workflow.xml",

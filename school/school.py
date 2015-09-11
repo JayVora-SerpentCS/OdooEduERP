@@ -269,6 +269,7 @@ class student_student(models.Model):
     _table = "student_student"
     _description = 'Student Information'
     _inherits = {'res.users': 'user_id'}
+    _rec_name= 'pid'
 
     @api.one
     @api.depends('date_of_birth')

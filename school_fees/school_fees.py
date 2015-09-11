@@ -24,6 +24,11 @@ from openerp import workflow
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 
+class standard_standard(models.Model):
+    _inherit = "standard.standard"
+
+    fee_struct_id = fields.Many2one('student.fees.structure', 'Fee Structure')
+
 class student_fees_register(models.Model):
     """
     Student fees Register
@@ -31,16 +36,86 @@ class student_fees_register(models.Model):
     _name = 'student.fees.register'
     _description = 'Student fees Register'
 
-    name  = fields.Char('Name',required=True, states={'confirm':[('readonly', True)]})
-    date = fields.Date('Date', required=True, states={'confirm':[('readonly', True)]},default=lambda * a: time.strftime('%Y-%m-%d'))
-    number = fields.Char('Number',readonly=True,default=lambda obj:obj.env['ir.sequence'].get('student.fees.register'))
+    student_id = fields.Many2one('student.student', 'Student', required=True)
+    class_id = fields.Many2one('standard.standard', string='Class', related='student_id.standard_id', readonly=True)
+    division_id = fields.Many2one('standard.division', string='Division', related='student_id.division_id', readonly=True)
+    year_id = fields.Many2one('academic.year', string='Academic Year', related='student_id.year', readonly=True)
+    name  = fields.Char('Name')
+    date = fields.Date('Date', default=lambda * a: time.strftime('%Y-%m-%d'))
+    number = fields.Char('Number',readonly=True, default=lambda obj:obj.env['ir.sequence'].get('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id', 'Payslips', states={'confirm':[('readonly', True)]})
+    fee_receipt_ids = fields.One2many('student.fee.receipt', 'fees_register_id', 'Receipts')
     total_amount = fields.Float("Total", readonly=True)
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')], 'State', readonly=True,default='draft')
-    journal_id = fields.Many2one('account.journal', 'Journal', required=True, states={'confirm':[('readonly', True)]})
-    period_id = fields.Many2one('account.period', 'Force Period', required=True, domain=[('state', '<>', 'done')],states={'confirm':[('readonly', True)]}, help="Keep empty to use the period of the validation(invoice) date.")
-    company_id = fields.Many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly', False)]},default=lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id)
-    
+    state = fields.Selection([
+                              ('draft', 'Draft'), 
+                              ('confirm', 'Confirm'),
+                              ('open', 'Open'),
+                              ('paid', 'Paid')
+                              ], 'State', readonly=True,default='draft')
+    journal_id = fields.Many2one('account.journal', 'Journal', states={'confirm':[('readonly', True)]})
+    period_id = fields.Many2one('account.period', 'Force Period', domain=[('state', '<>', 'done')])
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+                                 
+    fee_struct_id =  fields.Many2one('student.fees.structure', 'Fee Structure')
+    fee_lines = fields.One2many('student.fees.structure.line', 'fee_register_id', 'Fees')
+    paid_amount = fields.Float('Paid Amount')
+    remain_amount = fields.Float('Remain Amount')
+    amount_total = fields.Float('Total Amount')
+    change_amount = fields.Float('Change Amount')
+    currency_id = fields.Many2one('res.currency', 'Currency')
+
+    @api.multi
+    def fee_payment(self):
+        amount_total = 0.00
+        view_id = self.env['ir.model.data'].get_object_reference('school_fees', 'fee_pay_wizard_form')
+        context = self._context
+        if self.paid_amount > 0.00:
+            amount_total  = self.amount_total - self.paid_amount
+        else:
+            amount_total = self.amount_total
+        return {
+            'name':_("Pay Fees"),
+            'view_mode': 'form',
+            'view_id': view_id[1],
+            'view_type': 'form',
+            'res_model': 'fee.pay.wizard',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'default_student_id': self.student_id.id,
+                'default_amount_pay': amount_total,
+                'close_after_process': True,
+                'amount_total': amount_total,
+            }
+        }
+
+    @api.onchange('student_id')
+    def onchange_student(self):
+        if self.student_id:
+            self.name = self.student_id.name + ' ' + self.student_id.middle + ' ' + self.student_id.last
+            self.class_id = self.student_id.standard_id and self.student_id.standard_id.id
+            self.division_id = self.student_id.division_id and self.student_id.division_id.id
+            self.year_id = self.student_id.year and self.student_id.year.id
+            if self.class_id:
+                self.fee_struct_id = self.student_id.standard_id.fee_struct_id and self.student_id.standard_id.fee_struct_id.id
+
+    @api.onchange('fee_struct_id')
+    def onchange_fee_structure(self):
+        line_list = []
+        amount_total = 0
+        if self.fee_struct_id:
+            for line in self.fee_struct_id.line_ids:
+                vals = {'name':line.name, 'code': line.code, 'type': line.type, 'amount': line.amount}
+                amount_total += line.amount 
+                line_list.append((0, 0, vals))
+                self.fee_lines = line_list
+                self.amount_total = amount_total
+                self.paid_amount = 0.00
+                self.remain_amount = 0.00
+                self.change_amount = 0.00
+
     @api.multi
     def fees_register_draft(self):
         self.write({'state' : 'draft'})
@@ -48,37 +123,59 @@ class student_fees_register(models.Model):
     
     @api.multi
     def fees_register_confirm(self):
-        
-        student_pool = self.env['student.student']
-        slip_pool = self.env['student.payslip']
-        student_ids = student_pool.search([])
-        for vals in self.browse(self.ids):
-            for stu in student_ids:
-                old_slips = slip_pool.search([('student_id', '=', stu.id), ('date', '=', vals.date)])
-                if old_slips:
-                    old_slips.write({'register_id':vals.id})
-                    for sid in old_slips:
-                        workflow.trg_validate(self._uid, 'student.payslip', sid, 'payslip_confirm', self._cr)
-                else:
-                    res = {
-                        'student_id':stu.id,
-                        'register_id':vals.id,
-                        'name':vals.name,
-                        'date':vals.date,
-                        'journal_id': vals.journal_id.id,
-                        'period_id': vals.period_id.id,
-                        'company_id': vals.company_id.id
-                    }
-                    slip_id = slip_pool.create(res)
-                    workflow.trg_validate(self._uid, 'student.payslip', slip_id, 'payslip_confirm', self._cr)
-            amount = 0
-            for datas in self.browse(self.ids):
-                for data in datas.line_ids:
-                    amount = amount + data.total
-                student_fees_register_vals = {'total_amount':amount}
-                datas.write(student_fees_register_vals)
+#        student_pool = self.env['student.student']
+#        slip_pool = self.env['student.payslip']
+#        student_ids = student_pool.search([])
+#        for vals in self.browse(self.ids):
+#            for stu in student_ids:
+#                old_slips = slip_pool.search([('student_id', '=', stu.id), ('date', '=', vals.date)])
+#                if old_slips:
+#                    old_slips.write({'register_id':vals.id})
+#                    for sid in old_slips:
+#                        print "SSSSSs",sid
+#                        workflow.trg_validate(self._uid, 'student.payslip', sid, 'payslip_confirm', self._cr)
+#                else:
+#                    res = {
+#                        'student_id':stu.id,
+#                        'register_id':vals.id,
+#                        'name':vals.name,
+#                        'date':vals.date,
+#                        'journal_id': vals.journal_id.id,
+#                        'period_id': vals.period_id.id,
+#                        'company_id': vals.company_id.id
+#                    }
+#                    slip_id = slip_pool.create(res)
+#                    print "SSSSS",slip_id
+#                    workflow.trg_validate(self._uid, 'student.payslip', slip_id, 'payslip_confirm', self._cr)
+#            amount = 0
+#            for datas in self.browse(self.ids):
+#                for data in datas.line_ids:
+#                    amount = amount + data.total
+#                student_fees_register_vals = {'total_amount':amount}
+#                datas.write(student_fees_register_vals)
         self.write({'state' : 'confirm'})
         return True
+
+class student_fee_receipt(models.Model):
+    _name = 'student.fee.receipt'
+    _description = 'Student Fee Receipt'
+
+    fees_register_id = fields.Many2one('student.fees.register', 'Fee Register')
+    student_id = fields.Many2one('student.student', 'Student')
+    class_id = fields.Many2one('standard.standard', string='Class')
+    division_id = fields.Many2one('standard.division', string='Division')
+    year_id = fields.Many2one('academic.year', string='Academic Year')
+    name  = fields.Char('Name')
+    date = fields.Date('Date', default=lambda * a: time.strftime('%Y-%m-%d'))
+    receipt_no = fields.Char('Number',readonly=True, default=lambda obj:obj.env['ir.sequence'].get('student.fee.receipt'))
+    journal_id = fields.Many2one('account.journal', 'Journal')
+    period_id = fields.Many2one('account.period', 'Force Period', domain=[('state', '<>', 'done')])
+    company_id = fields.Many2one('res.company', string='Company', related='fees_register_id.company_id') 
+    paid_amount = fields.Float('Paid Amount')
+    remain_amount = fields.Float('Remain Amount')
+    amount_total = fields.Float('Total Amount')
+    change_amount = fields.Float('Change Amount')
+    currency_id = fields.Many2one('res.currency', string='Currency', related='fees_register_id.currency_id')
 
 class student_payslip_line(models.Model):
     '''
@@ -117,6 +214,7 @@ class student_fees_structure_line(models.Model):
     amount = fields.Float('Amount', digits=(16, 4))
     sequence = fields.Integer('Sequence')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline1_id', 'Calculations')
+    fee_register_id = fields.Many2one('student.fees.register', 'Fee Register')
 
 class student_fees_structure(models.Model):
     """
@@ -128,6 +226,7 @@ class student_fees_structure(models.Model):
     name = fields.Char('Name',required=True)
     code = fields.Char('Code',required=True)
     line_ids = fields.Many2many('student.fees.structure.line', 'fees_structure_payslip_rel', 'fees_id', 'slip_id', 'Fees Structure')
+    class_ids = fields.One2many('standard.standard', 'fee_struct_id', 'Classes')
     
     _sql_constraints = [
         ('code_uniq','unique(code)', 'The code of the Fees Structure must be unique !')

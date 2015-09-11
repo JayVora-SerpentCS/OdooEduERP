@@ -126,35 +126,40 @@
 		
 		<!--Student fees Registration -->
 		 <record id="demo_student_fees_registration_1" model="student.fees.register">
-            <field name="name" ref= "school.demo_student_student_1"/>
+            <field name="name">Mary Daniel Richardson</field>
+            <field name="student_id" ref="school.demo_student_student_1"/>
             <field name="date">2012-05-25</field>
             <field name="journal_id" ref= "account.bank_journal"/> 
             <field name="period_id" ref="account.period_1"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_2" model="student.fees.register">
-            <field name="name" ref= "school.demo_student_student_2"/>
+            <field name="name">William Joseph Lee</field>
+            <field name="student_id" ref="school.demo_student_student_2"/>
             <field name="date">2012-01-15</field>
             <field name="journal_id" ref= "account.bank_journal"/> 
             <field name="period_id" ref="account.period_1"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_3" model="student.fees.register">
-            <field name="name" ref= "school.demo_student_student_3"/>
+            <field name="name">Jacob Caleb Clark</field>
+            <field name="student_id" ref="school.demo_student_student_3"/>
             <field name="date">2011-04-09</field>
             <field name="journal_id" ref= "account.bank_journal"/> 
             <field name="period_id" ref="account.period_1"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_4" model="student.fees.register">
-            <field name="name" ref= "school.demo_student_student_4"/>
+            <field name="name">Maria Samuel Snell</field>
+            <field name="student_id" ref="school.demo_student_student_4"/>
             <field name="date">2012-03-05</field>
             <field name="journal_id" ref= "account.bank_journal"/> 
             <field name="period_id" ref="account.period_1"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_1" model="student.fees.register">
-            <field name="name" ref= "school.demo_student_student_1"/>
+            <field name="name">John William Smith</field>
+            <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="date">2012-10-10</field>
             <field name="journal_id" ref= "account.bank_journal"/> 
             <field name="period_id" ref="account.period_1"/>
