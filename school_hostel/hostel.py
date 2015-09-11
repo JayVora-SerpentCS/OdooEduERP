@@ -95,7 +95,7 @@ class hostel_student(models.Model):
         for get_fee in self:
             if get_fee.room_rent and get_fee.paid_amount:
                 get_fee.remaining_amount = get_fee.room_rent -\
-                get_fee.paid_amount
+                    get_fee.paid_amount
             else:
                 get_fee.remaining_amount = 0.0
 

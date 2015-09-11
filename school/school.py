@@ -535,12 +535,12 @@ class student_student(models.Model):
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = str(student_data.school_id.state_id.name) + \
-                            str('/') + str(student_data.school_id.city) \
-                            + str('/') + str(student_data.school_id.name) \
-                            + str('/') + str(reg_code)
+                str('/') + str(student_data.school_id.city) \
+                + str('/') + str(student_data.school_id.name) \
+                + str('/') + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/') + \
-                        str(student_data.year.code) + str('/') + str(stu_code)
+                str(student_data.year.code) + str('/') + str(stu_code)
             self.write({'state': 'done',
                         'admission_date': time.strftime('%Y-%m-%d'),
                         'student_code': student_code,
@@ -918,16 +918,16 @@ class student_news(models.Model):
                                t.strftime('%d-%m-%Y %H:%M:%S'),
                                news.description)
             message = obj_mail_server.\
-                    build_email(email_from=mail_server_record.smtp_user,
-                                email_to=email_list,
-                                subject='Notification for news update.',
-                                body=body, body_alternative=body,
-                                email_cc=None, email_bcc=None,
-                                reply_to=mail_server_record.smtp_user,
-                                attachments=None, references=None,
-                                object_id=None,
-                                subtype='html', subtype_alternative=None,
-                                headers=None)
+                build_email(email_from=mail_server_record.smtp_user,
+                            email_to=email_list,
+                            subject='Notification for news update.',
+                            body=body, body_alternative=body,
+                            email_cc=None, email_bcc=None,
+                            reply_to=mail_server_record.smtp_user,
+                            attachments=None, references=None,
+                            object_id=None,
+                            subtype='html', subtype_alternative=None,
+                            headers=None)
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
