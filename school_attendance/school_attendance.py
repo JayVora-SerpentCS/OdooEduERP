@@ -75,22 +75,22 @@ class attendance_sheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']
+                        att['views']['tree']
                         ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
+                        att['views']['form']
                         ['fields']['three_1'].update({'invisible': 1})
 
             elif no_of_days == 29:
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']
+                        att['views']['tree']
                         ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
+                        att['views']['form']
                         ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']
+                        att['views']['tree']
                         ['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
+                        att['views']['form']
                         ['fields']['two_0'].update({'invisible': 1})
             else:
 
@@ -98,17 +98,17 @@ class attendance_sheet(models.Model):
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
 
-                        res['fields']['attendance_ids']['views']['tree']
+                        att['views']['tree']
                         ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
+                        att['views']['form']
                         ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']
+                        att['views']['tree']
                         ['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
+                        att['views']['form']
                         ['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']
+                        att['views']['tree']
                         ['fields']['two_9'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
+                        att['views']['form']
                         ['fields']['two_9'].update({'invisible': 1})
 
         return res
@@ -343,8 +343,8 @@ class daily_attendance(models.Model):
                                         daily_attendance_data.standard_id.id),
                                        ('month_id', '=', month_search_ids.id),
                                        ('year_id', '=', year_search_ids.id)]
-        search_attendance_sheet_ids = attendance_sheet_obj.search
-        (attendance_sheet_domain)
+        search_attendance_sheet_ids = attendance_sheet_obj. \
+        search(attendance_sheet_domain)
 
         if search_attendance_sheet_ids:
             for attendance_sheet_datas in search_attendance_sheet_ids:
@@ -461,8 +461,8 @@ class daily_attendance(models.Model):
                             #  dict1 = attendance_sheet_line_obj.read
                             #  ([student_id.
                             #  roll_no])
-                            search_id = attendance_sheet_line_obj.search
-                            ([('roll_no', '=', student_id.roll_no)])
+                            search_id = attendance_sheet_line_obj. \
+                            search([('roll_no', '=', student_id.roll_no)])
                             if date.day == 1 and student_id.is_absent is True:
                                 val = {'one': False}
 
