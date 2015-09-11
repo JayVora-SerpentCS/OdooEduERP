@@ -22,7 +22,7 @@
 #
 ##############################################################################
 from openerp import models, fields, api
-from mx import DateTime
+from datetime import DateTime
 from openerp import workflow
 
 
