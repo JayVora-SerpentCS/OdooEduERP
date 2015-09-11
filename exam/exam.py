@@ -66,9 +66,9 @@ class extended_time_table_line(models.Model):
             if line.exm_date:
                 dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
                 if line.week_day != datetime.strptime(line.exm_date,
-                                                      "%Y-%m-%d")\
-                                                            .strftime("%A").\
-                                                                lower():
+                                                      "%Y-%m-%d").\
+                                                      strftime("%A").\
+                                                      lower():
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
@@ -472,7 +472,7 @@ class exam_result_batchwise(models.Model):
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
                         if divi >= grade_id.from_mark and \
-                                        divi <= grade_id.to_mark:
+                            divi <= grade_id.to_mark:
                             self.grade = grade_id.grade
 
     standard_id = fields.Many2one("school.standard", "Standard", required=True)

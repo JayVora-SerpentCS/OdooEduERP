@@ -73,8 +73,7 @@ class result(report_sxw.rml_parse):
             count += 1
             per = float(res.total / count)
             final_total = final_total + res.total
-            value.update({
-                          'result': res.result,
+            value.update({'result': res.result,
                           'percentage': per,
                           'total': final_total,
                           })

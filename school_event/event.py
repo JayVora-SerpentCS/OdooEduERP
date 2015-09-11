@@ -111,7 +111,7 @@ class school_event(models.Model):
     state = fields.Selection([
                             ('draft', 'Draft'), ('open', 'Running'),
                             ('close', 'Close'), ('cancel', 'Cancel')],
-                            string='State', readonly=True, default='draft')
+                             string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant',
                                 'event_participants_rel', 'participant_id',
                                 'event_id', 'Participants', readonly=True,
@@ -125,7 +125,7 @@ class school_event(models.Model):
     def _check_dates(self):
         for date_obj in self:
             if date_obj.start_date and date_obj.end_date and\
-            date_obj.start_date > date_obj.end_date:
+                date_obj.start_date > date_obj.end_date:
                 raise Warning(_('Error! Event start-date must be lower then'
                                 'Event end-date.'))
 
@@ -134,7 +134,7 @@ class school_event(models.Model):
     def _check_all_dates(self):
         for all_date_obj in self:
             if all_date_obj.start_date and all_date_obj.end_date and\
-            all_date_obj.start_reg_date and all_date_obj.last_reg_date:
+                all_date_obj.start_reg_date and all_date_obj.last_reg_date:
                 if all_date_obj.start_reg_date > all_date_obj.last_reg_date:
                     raise Warning(_('Error! Event Registration start-date must'
                                     'be lower than Event Registration'

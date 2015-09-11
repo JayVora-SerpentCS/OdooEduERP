@@ -99,7 +99,7 @@ class procurement_order(osv.Model):
             product = prod_obj.browse(cr, uid, procurement.product_id.id,
                                       context=context)
             taxes_ids = procurement.product_id.product_tmpl_id. \
-                        supplier_taxes_id
+                supplier_taxes_id
             taxes = acc_pos_obj.map_tax(cr, uid,
                                         partner.property_account_position,
                                         taxes_ids)
@@ -138,7 +138,7 @@ class procurement_order(osv.Model):
                 or False
             }
             res[procurement.id] = self. \
-            create_procurement_purchase_order(cr, uid, procurement,
+                create_procurement_purchase_order(cr, uid, procurement,
                                               po_vals, line_vals,
                                               context=context)
             self.write(cr, uid, [procurement.id],

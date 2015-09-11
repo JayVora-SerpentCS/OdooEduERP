@@ -82,9 +82,9 @@ class report_custom(report_rml):
 
                         for attendance_sheet_data in \
                                 attendance_sheet_obj. \
-                                    browse(cr, uid,
-                                           attendance_sheet_search_ids,
-                                           context=context):
+                                browse(cr, uid,
+                                       attendance_sheet_search_ids,
+                                       context=context):
                             for line in attendance_sheet_data.attendance_ids:
                                 if line.name == student['name']:
                                     if day == 1:
@@ -223,7 +223,7 @@ class report_custom(report_rml):
                                  (x, som1.replace(day=x).strftime('%a'),
                                     cell + x) for x in range(1, lengthmonth
                                                             (year, i + month)
-                                                                + 1)]
+                                                            + 1)]
                     i = i + 1
                     j = j + 1
                     month_dict[j] = som1.strftime('%B')
