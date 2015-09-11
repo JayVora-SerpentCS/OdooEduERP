@@ -75,10 +75,12 @@ class attendance_sheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['three_1'].update({'invisible': 1})
+                        abc = res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['three_1']
+                        abc.update({'invisible': 1})
+                        abc = res['fields']['attendance_ids']['views']['form']
+                        ['fields']['three_1']
+                        abc.update({'invisible': 1})
 
             elif no_of_days == 29:
                 if 'attendance_ids' in res['fields']:
