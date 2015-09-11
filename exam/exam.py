@@ -66,7 +66,7 @@ class extended_time_table_line(models.Model):
             if line.exm_date:
                 dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
                 if line.week_day != datetime.strptime(line.exm_date,
-                                                      "%Y-%m-%d").\
+                                                      "%Y-%m-%d"). \
                                                       strftime("%A").lower():
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
@@ -214,7 +214,7 @@ class exam_result(models.Model):
         for result_obj in self:
             if result_obj.result_ids and result_obj.student_id:
                 if result_obj.student_id.year.grade_id.grade_ids:
-                    for grades in result_obj.student_id.year.grade_id\
+                    for grades in result_obj.student_id.year.grade_id \
                         .grade_ids:
                         if grades.grade:
                             if not grades.fail:
@@ -244,7 +244,7 @@ class exam_result(models.Model):
                                                 rec.s_exam_ids.id)])
                 if tt_lines:
                     exam_date = tt_lines[0].sub_exam_date
-                    attendace_lines = attendence_line_obj\
+                    attendace_lines = attendence_line_obj \
                     .search([('stud_id', '=', rec.student_id.id),
                              ('standard_id.date', '=', exam_date)])
                     if attendace_lines:
@@ -408,7 +408,7 @@ class exam_subject(models.Model):
     def _validate_marks(self):
         for marks_obj in self:
             if marks_obj.obtain_marks > marks_obj.maximum_marks or \
-                marks_obj.minimum_marks > marks_obj.maximum_marks:
+            marks_obj.minimum_marks > marks_obj.maximum_marks:
                 raise Warning(_('The obtained marks and minimum marks'
                                 'should not extend maximum marks.'))
 
@@ -417,9 +417,9 @@ class exam_subject(models.Model):
     def _get_grade(self):
         for grade_obj in self:
             if grade_obj.exam_id and grade_obj.exam_id.student_id and \
-                grade_obj.exam_id.student_id.year.grade_id.grade_ids:
+               grade_obj.exam_id.student_id.year.grade_id.grade_ids:
                 for grade_id in grade_obj.exam_id.student_id.year.\
-                    grade_id.grade_ids:
+                grade_id.grade_ids:
                     if grade_obj.obtain_marks >= grade_id.from_mark and \
                         grade_obj.obtain_marks <= grade_id.to_mark:
                         grade_obj.grade = grade_id.grade
@@ -471,7 +471,7 @@ class exam_result_batchwise(models.Model):
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
                         if divi >= grade_id.from_mark and \
-                            divi <= grade_id.to_mark:
+                        divi <= grade_id.to_mark:
                             self.grade = grade_id.grade
 
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
@@ -489,7 +489,7 @@ class additional_exam_result(models.Model):
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
         if self.a_exam_id and self.a_exam_id.subject_id and \
-            self.a_exam_id.subject_id.minimum_marks:
+        self.a_exam_id.subject_id.minimum_marks:
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
