@@ -201,8 +201,8 @@ class school_standard(models.Model):
         self.student_ids = False
         if self.standard_id:
             self.student_ids = self.env['student.student']\
-                            .search([('standard_id', '=',
-                                      self.standard_id.id)])
+                .search([('standard_id', '=',
+                          self.standard_id.id)])
 
     @api.multi
     def import_subject(self):
@@ -522,8 +522,8 @@ class student_student(models.Model):
                                 'Age is not valid.'))
 
             school_standard_search_ids = school_standard_obj \
-                                    .search([('standard_id', '=',
-                                              student_data.standard_id.id)])
+                .search([('standard_id', '=',
+                          student_data.standard_id.id)])
             if not school_standard_search_ids:
                 raise Warning(_('Warning'), _('The standard is not'
                                               'defined in a school'))
