@@ -23,7 +23,7 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
-from openerp import osv
+from openerp import models
 
 
 class add_exam_result(report_sxw.rml_parse):
@@ -56,7 +56,7 @@ class add_exam_result(report_sxw.rml_parse):
         return result_data
 
 
-class report_add_exam_result(osv.AbstractModel):
+class report_add_exam_result(models.TransientModel):
     _name = 'report.exam.exam_result_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.exam_result_report'
