@@ -73,16 +73,18 @@ class report_custom(report_rml):
                                                 student['standard_id'][0]),
                                                ('month_id', '=', today.month)]
                     attendance_sheet_search_ids =\
-                    attendance_sheet_obj.search(cr, uid,
-                    attendance_sheet_domain, context=context)
+                        attendance_sheet_obj.search(cr, uid,
+                                                    attendance_sheet_domain,
+                                                    context=context)
                     if not attendance_sheet_search_ids:
                         var = 'A'
                     else:
 
-                        for attendance_sheet_data in\
-                        attendance_sheet_obj.browse(cr, uid,
-                        attendance_sheet_search_ids,
-                        context=context):
+                        for attendance_sheet_data in \
+                                attendance_sheet_obj. \
+                                    browse(cr, uid,
+                                           attendance_sheet_search_ids,
+                                           context=context):
                             for line in attendance_sheet_data.attendance_ids:
                                 if line.name == student['name']:
                                     if day == 1:
@@ -155,7 +157,7 @@ class report_custom(report_rml):
                     # Week xml representation
 #                    wh = hour2str(wh)
                     today_xml = '<day num="%s"><wh>%s</wh></day>' %\
-                    ((today - month).days + 1, var)
+                        ((today - month).days + 1, var)
                     dy = (today - month).days + 1
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
@@ -219,9 +221,9 @@ class report_custom(report_rml):
                     som1 = datetime.date(year, month + i, 1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                                  (x, som1.replace(day=x).strftime('%a'),
-                                  cell + x) for x in range(1, lengthmonth
-                                                           (year, i + month)
-                                                        + 1)]
+                                    cell + x) for x in range(1, lengthmonth
+                                                            (year, i + month)
+                                                                + 1)]
                     i = i + 1
                     j = j + 1
                     month_dict[j] = som1.strftime('%B')
