@@ -722,8 +722,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
     _description = 'Address Information'
 
-    student_id = fields.Many2one('student.student', 'Student Id',
-                                 required=True)
+    student_id = fields.Many2one('student.student', 'Student Id')
     student_name = fields.Char(related="student_id.name",
                                string='Student Name')
     stu_parent_name = fields.Char('Parent Name')
