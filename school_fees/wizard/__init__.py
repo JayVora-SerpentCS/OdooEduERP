@@ -20,15 +20,6 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# A Module to School Fees Management System
-#----------------------------------------------------------
-import school_fees
-import report
-import wizard
+import fee_pay_wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
-
-

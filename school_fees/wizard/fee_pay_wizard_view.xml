@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="fee_pay_wizard_form">
+            <field name="name">fee.pay.wizard.form</field>
+            <field name="model">fee.pay.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet string="Payment Wizard">
+                        <group col="4">
+                            <field name="student_id"/>
+                            <field name="date"/>
+                            <field name="amount_pay" />
+                            <field name="period_id" />
+                            <field name="journal_id" widget="selection" domain="[('type','in',['bank', 'cash'])]"/>
+                            <field name="difference_amount" readonly="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="fee_pay" string="Pay" type="object"
+                            class="oe_highlight" />
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_fees_pay" model="ir.actions.act_window">
+            <field name="name">Fee Payment Wizard</field>
+            <field name="res_model">fee.pay.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

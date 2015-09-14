@@ -28,5 +28,17 @@
             <field name="padding">3</field>
         </record>
         
+        <!-- Sequences for student.fee.receipt -->
+        <record id="seq_type_student_fees_receipt" model="ir.sequence.type">
+            <field name="name">Student Fees Receipt</field>
+            <field name="code">student.fee.receipt</field>
+        </record>
+        
+        <record id="seq_student_fees_receipt" model="ir.sequence">
+            <field name="name">Student Fees Receipt</field>
+            <field name="code">student.fee.receipt</field>
+            <field name="prefix">REC/</field>
+            <field name="padding">3</field>
+        </record>
     </data>
 </openerp>

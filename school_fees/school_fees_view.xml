@@ -2,7 +2,13 @@
 <openerp>
     <data>
 
-		<!--  Student Payslip Line Information Search View  -->
+        <!-- memu Items for Fees -->
+    <menuitem
+        name="Fees" parent="school.menu_ems"
+        id="menu_fees"
+        sequence="9"/>
+    
+        <!--  Student Payslip Line Information Search View  -->
         <record model="ir.ui.view" id="view_student_payslip_line_search">
             <field name="name">student.payslip.line.search</field>
             <field name="model">student.payslip.line</field>
@@ -27,7 +33,7 @@
                         <filter string="Code" icon="terp-flag" name="code" context="{'group_by':'code'}"/>
                         <filter string="Structure Name" icon="terp-flag" name="name" context="{'group_by':'name'}"/>
                    </group>
-              		     <separator orientation="vertical"/>
+                         <separator orientation="vertical"/>
                    <group colspan="6" col="4">
                            <field name="name"/>
                            <field name="code"/>
@@ -43,16 +49,19 @@
             <field name="arch" type="xml">
                 <form string="Student Fees Structure">
                     <sheet>
-	                   <group col="6" colspan="4">
-	                       <field name="name" placeholder="Name"/>
-	                       <field name="code" placeholder="Code"/>
-	                   </group>
-	                   <notebook colspan="4">
-	                       <page string="Fees Structure">
-	                           <field name="line_ids" nolabel="1" colspan="4"/>
-	                       </page>
-	                   </notebook>
-	               </sheet>
+                       <group col="6" colspan="4">
+                           <field name="name" placeholder="Name"/>
+                           <field name="code" placeholder="Code"/>
+                       </group>
+                       <notebook colspan="4">
+                           <page string="Fees Structure">
+                               <field name="line_ids" nolabel="1" colspan="4"/>
+                           </page>
+                           <page string="Classes">
+                               <field name="class_ids" nolabel="1" colspan="4"/>
+                           </page>
+                       </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -76,33 +85,33 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip Line">
                     <sheet>
-	                    <group col="4" colspan="4">
-	                        <field name="name" placeholder="Name"/>
-	                        <field name="code" placeholder="Code"/>
-	                    </group>
-	                    <separator string="Calculations" colspan="4"/>
-	                        <group col="4" colspan="4">
-	                            <field name="type"/>
-	                            <field name="amount"/>
-	                        </group>
-	                        <group col="4" colspan="4" attrs="{'invisible':[('type','=','range')]}">
-	                        	<separator string="Description" colspan="4"/>
-	                        	<field name="description" />
-	                        </group>
-	                    <notebook colspan="4"  attrs="{'invisible':[('type','!=','range')]}">
-	                        <page string="Function">
-	                            <field name="line_ids" colspan="4" nolabel="1">
-	                                <tree string="Function Arguments" >
-	                                    <field name="from_month" placeholder="Month (From)"/>
-	                                    <field name="to_month" placeholder="Month (To)"/>
-	                                </tree>
-	                                <form string="Function Arguments" >
-	                                    <field name="from_month" placeholder="Month (From)"/>
-	                                    <field name="to_month" placeholder="Month (To)"/>
-	                                </form>
-	                            </field>
-	                        </page>
-	                    </notebook>
+                        <group col="4" colspan="4">
+                            <field name="name" placeholder="Name"/>
+                            <field name="code" placeholder="Code"/>
+                        </group>
+                        <separator string="Calculations" colspan="4"/>
+                            <group col="4" colspan="4">
+                                <field name="type"/>
+                                <field name="amount"/>
+                            </group>
+                            <group col="4" colspan="4" attrs="{'invisible':[('type','=','range')]}">
+                                <separator string="Description" colspan="4"/>
+                                <field name="description" />
+                            </group>
+                        <notebook colspan="4"  attrs="{'invisible':[('type','!=','range')]}">
+                            <page string="Function">
+                                <field name="line_ids" colspan="4" nolabel="1">
+                                    <tree string="Function Arguments" >
+                                        <field name="from_month" placeholder="Month (From)"/>
+                                        <field name="to_month" placeholder="Month (To)"/>
+                                    </tree>
+                                    <form string="Function Arguments" >
+                                        <field name="from_month" placeholder="Month (From)"/>
+                                        <field name="to_month" placeholder="Month (To)"/>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -178,51 +187,51 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip">
                     <header>
-	                    <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="workflow" groups="school.group_school_administration"/>
-	                    <button name="student_pay_fees" string="Payment" states="confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
-	                    <field name="state" widget="statusbar" readonly="1"/>
+                        <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="workflow" groups="school.group_school_administration"/>
+                        <button name="student_pay_fees" string="Payment" states="confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
                         <group col="4">
                             <group col="2">
-                            	<separator string="Information" colspan="2"/>
-		                    	<field name="name" placeholder="Description"/>
-		                    	<field name="number" />
-		                    	<field name="date"/>
-		                    </group>
-		                    <group col="2">
+                                <separator string="Information" colspan="2"/>
+                                <field name="name" placeholder="Description"/>
+                                <field name="number" />
+                                <field name="date"/>
+                            </group>
+                            <group col="2">
                                 <separator string="Standard Information" colspan="2"/>
                                 <field name="standard_id" placeholder="Standard" widget="selection"/>
                                 <field name="division_id" placeholder="Division" widget="selection"/>
                                 <field name="medium_id" placeholder="Medium" widget="selection"/>
                             </group>
                            </group>
-		                    <group col="4">
-		                    <field name="student_id" placeholder="Student Name" colspan="4"/>		                    
-		                    <separator string="Fees Structure" colspan="4"/>
-		                    <field name="fees_structure_id" required="1" placeholder="Fee Structure"/>
-		                    <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" placeholder="Journal"/>
-		                    <notebook colspan="4">
-		                        <page string="Fees Structure">
-		                            <field name="line_ids" colspan="4" nolabel="1"/>
-		                            <separator string="" colspan="4"/>
-		                            <group col="8" colspan="4">
-		                                 <field name="total"/>
-		                            </group>
-		                        </page>
-		                        <page string="Other Information">
-		                            <group col="4" colspan="4">
-			                            <field name="type"  placeholder="Type"/>
-			                            <field name="period_id" placeholder="Force Period"/>
-			                            <field name="currency_id" placeholder="Currency"/>
-			                            <field name="move_id" />
-			                            <field name="payment_date" placeholder="Payment Date"/>
-			                            <field name="company_id" string = "School" placeholder="School Name"/>
-		                            </group>
-		                        </page>
-		                    </notebook>
-		                  </group>
-	               </sheet>
+                            <group col="4">
+                            <field name="student_id" placeholder="Student Name" colspan="4"/>                           
+                            <separator string="Fees Structure" colspan="4"/>
+                            <field name="fees_structure_id" required="1" placeholder="Fee Structure"/>
+                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" placeholder="Journal"/>
+                            <notebook colspan="4">
+                                <page string="Fees Structure">
+                                    <field name="line_ids" colspan="4" nolabel="1"/>
+                                    <separator string="" colspan="4"/>
+                                    <group col="8" colspan="4">
+                                         <field name="total"/>
+                                    </group>
+                                </page>
+                                <page string="Other Information">
+                                    <group col="4" colspan="4">
+                                        <field name="type"  placeholder="Type"/>
+                                        <field name="period_id" placeholder="Force Period"/>
+                                        <field name="currency_id" placeholder="Currency"/>
+                                        <field name="move_id" />
+                                        <field name="payment_date" placeholder="Payment Date"/>
+                                        <field name="company_id" string = "School" placeholder="School Name"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                          </group>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -270,6 +279,101 @@
             </field>
         </record>
 
+        <record model="ir.ui.view"  id="view_standard_standard_fee_form">
+            <field name="name">standard.standard.fee.form</field>
+            <field name="model">standard.standard</field>
+            <field name="inherit_id" ref="school.view_standard_standard_form"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="fee_struct_id"/>
+                </field>
+            </field>
+        </record>
+
+        <!--  student fee receipt -->
+        <record model="ir.ui.view" id="view_student_fees_receipt_form">
+            <field name="name">student.fee.receipt.form</field>
+            <field name="model">student.fee.receipt</field>
+            <field name="arch" type="xml">
+                <form string="Student Fees Receipt" create="false" edit="false">
+                    <sheet>
+                        <group><h1><field name="receipt_no"/></h1></group>
+                        <group string="Student Information" col="4">
+                            <field name="student_id" />
+                            <field name="name" />
+                            <field name="class_id"/>
+                            <field name="division_id" />
+                            <field name="year_id" />
+                        </group>
+                        <group string="Payment Details">
+                            <field name="date" />
+                            <field name="journal_id" />
+                            <field name="period_id" />
+                            <field name="company_id" />
+                        </group>
+                        <notebook colspan="4">
+                            <page string="payment  Details">
+                                <group class="oe_subtotal_footer oe_left">
+                                    <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                    <field name="remain_amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                    <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                    <field name="change_amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                </group>
+                                <div class="oe_clear" />
+                            </page>
+                        </notebook>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view"  id="view_student_fees_receipt_tree">
+            <field name="name">student.fees.receipt.tree</field>
+            <field name="model">student.fee.receipt</field>
+            <field name="arch" type="xml">
+                <tree string="Student Fees Receipts" create="false" edit="false">
+                    <field name="receipt_no"></field>
+                    <field name="student_id" />
+                    <field name="date" />
+                    <field name="class_id"/>
+                    <field name="year_id" />
+                    <field name="journal_id" />
+                    <field name="paid_amount" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view"  id="view_student_fees_receipt_search">
+            <field name="name">student.fees.receipt.search</field>
+            <field name="model">student.fee.receipt</field>
+            <field name="arch" type="xml">
+                <search string="Fees Register">
+                    <group col="10" colspan="4">
+                        <field name="receipt_no"/>
+                        <field name="date"/>
+                        <field name="class_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter string="Student" name="student" context="{'group_by':'student_id'}"/>
+                        <filter string="Class" name="class_id" context="{'group_by':'class_id'}"/>
+                        <filter string="Division" name="division_id" context="{'group_by':'division_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_student_fees_receipt">
+            <field name="name">Fees Receipts</field>
+            <field name="res_model">student.fee.receipt</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_student_fees_receipt_tree"/>
+            <field name="search_view_id" ref="view_student_fees_receipt_search"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_student_fees_receipt" parent="menu_fees" id="student_fees_receipt"/>
+        
     <!-- Student Fees Register Information Form View-->
         <record model="ir.ui.view"  id="view_student_fees_register_form">
             <field name="name">student.fees.register.form</field>
@@ -277,57 +381,51 @@
             <field name="arch" type="xml">
                 <form string="Student Fees Register">
                     <header>
-	                     <button name="fees_register_confirm" string="Confirm" states="draft" icon="gtk-execute" groups="school.group_school_administration"/>
-	                     <field name="state" widget="statusbar" readonly="1"/>
+                         <button name="fees_register_confirm" string="Confirm" states="draft" icon="gtk-execute" groups="school.group_school_administration"/>
+                         <button name="fee_payment" string="Payment" states="confirm,open" class="oe_highlight" type="object"/>
+                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-	                    <group string="Information" col="4" colspan="4">
-	                        <field name="name" placeholder="Name"/>
-	                        <field name="number"/>
-	                        <field name="date"/>
-	                        <field name="journal_id" placeholder="Journal"/>
-	                        <field name="period_id" placeholder="Force Period"/>
-	                        <field name="company_id" string = "School" placeholder="School Name"/>
-	                    </group>
-	                    <notebook colspan="4">
-	                        <page string="Student Payslip">
-	                            <field name="line_ids" colspan="4" nolabel="1" >
-	                                <tree string="Student Payslip" >
-	                                    <field name="name"/>
-	                                    <field name="number"/>
-	                                    <field name="student_id"/>
-	                                    <field name="total"/>
-	                                    <field name="state"/>
-	                                </tree>
-	                                <form string="Student Payslip">
-	                                    <header>
-	                                       <field name="state" widget="statusbar" readonly="1"/>
-	                                    </header>
-	                                    <sheet>
-	                                        <group col="4" colspan="4">
-			                                    <field name="name" placeholder="Name"/>
-			                                    <field name="number"/>
-			                                    <field name="student_id" placeholder="Student Name"/>
-			                                    <field name="total"/>
-			                                    <field name="journal_id" placeholder="Journal"/> 
-			                                    <field name="period_id" placeholder="Period"/>
-			                                    <field name="company_id" placeholder="School Name"/>
-		                                    </group>
-	                                    </sheet>
-	                                </form>
-	                            </field>
-	                            <separator string="" colspan="4"/>
-	                                <group col="8" colspan="8">
-	                                     <field name="total_amount" colspan="8"/>
-	                                </group>
-	                        </page>
-	                    </notebook>
-	               </sheet>
+                        <group><h1><field name="number"/></h1></group>
+                        <group col="4">
+                            <field name="student_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                        <group string="Information" col="4" colspan="4">
+                            <field name="name" />
+                            <field name="class_id"/>
+                            <field name="division_id" />
+                            <field name="year_id" />
+                            <field name="fee_struct_id" attrs="{'readonly': [('state', '!=', 'draft')]}" domain="[('class_ids', '=', class_id)]"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Fees Details">
+                                <field name="fee_lines" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                    <tree string="Fees" editable="bottom">
+                                        <field name="code"/>
+                                        <field name="name"/>
+                                        <field name="type"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="remain_amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="change_amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                </group>
+                                <div class="oe_clear" />
+                            </page>
+                            <page string="Student Fee Receipts">
+                                <field name="fee_receipt_ids" colspan="4" create="false" edit="false"/>
+                            </page>
+                        </notebook>
+                   </sheet>
                 </form>
             </field>
         </record>
 
-    	<!-- Student Fees Register Information Tree View-->
+        <!-- Student Fees Register Information Tree View-->
         <record model="ir.ui.view" id="view_student_fees_register_tree">
             <field name="name">student.fees.register.tree</field>
             <field name="model">student.fees.register</field>
@@ -341,7 +439,7 @@
             </field>
         </record>
 
-    	<!-- Student Fees Register Information Search View -->
+        <!-- Student Fees Register Information Search View -->
         <record model="ir.ui.view" id="view_student_fees_register_search">
             <field name="name">student.fees.register.search</field>
             <field name="model">student.fees.register</field>
@@ -363,7 +461,7 @@
             </field>
         </record>
 
-     	<!-- Student Fees Structure Information Action -->
+        <!-- Student Fees Structure Information Action -->
         <record model="ir.actions.act_window" id="action_student_fees_structure_form">
             <field name="name">Fees Structure</field>
             <field name="res_model">student.fees.structure</field>
@@ -371,7 +469,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-   		 <!-- Student Payslip Line Information Action -->
+         <!-- Student Payslip Line Information Action -->
         <record model="ir.actions.act_window" id="action_student_payslip_line_form">
             <field name="name">Fees Head</field>
             <field name="res_model">student.payslip.line</field>
@@ -379,7 +477,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-    	<!-- Student Payslip Information Action -->
+        <!-- Student Payslip Information Action -->
         <record model="ir.actions.act_window" id="action_student_payslip_form">
             <field name="name">Fees Receipt</field>
             <field name="res_model">student.payslip</field>
@@ -395,7 +493,7 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
          </record>
 
-    	<!-- Student Fees Register Information Action -->
+        <!-- Student Fees Register Information Action -->
         <record model="ir.actions.act_window" id="action_student_fees_register_form">
             <field name="name">Fees Register</field>
             <field name="res_model">student.fees.register</field>
@@ -413,13 +511,7 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
          </record>
 
-    <!-- memu Items for Fees -->
-    <menuitem
-        name="Fees" parent="school.menu_ems"
-        id="menu_fees"
-        sequence="9"/>
-
-    <menuitem name="Fees Receipts" parent="menu_fees" id="menu_student_payslip" action="action_student_payslip_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+<!--    <menuitem name="Fees Receipts" parent="menu_fees" id="menu_student_payslip" action="action_student_payslip_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/-->
 
     <menuitem name="Fees Registers" parent="menu_fees" id="menu_student_fees_register" action="action_student_fees_register_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
     <menuitem
@@ -437,8 +529,8 @@
         action="action_student_payslip_line_form"
         sequence="2"/>
 
-	<!-- Student view's fees button -->
-		<record model="ir.actions.act_window" id="action_stu_fees_form">
+    <!-- Student view's fees button -->
+        <record model="ir.actions.act_window" id="action_stu_fees_form">
             <field name="name">Fees Register</field>
             <field name="res_model">student.payslip</field>
             <field name="view_type">form</field>
