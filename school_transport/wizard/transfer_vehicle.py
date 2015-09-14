@@ -22,8 +22,8 @@
 #
 ##############################################################################
 from openerp import models, fields, api, _
-from openerp.tools.translate import _
 from openerp.exceptions import except_orm
+from openerp.tools.translate import _
 
 
 class transfer_vehicle(models.TransientModel):

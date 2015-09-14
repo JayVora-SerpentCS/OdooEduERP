@@ -21,11 +21,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning
-import time
 from calendar import monthrange
 from datetime import datetime
+import time
+
+from openerp import models, fields, api, _
+from openerp.exceptions import Warning
 
 
 class attendance_sheet(models.Model):

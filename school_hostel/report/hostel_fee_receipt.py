@@ -21,8 +21,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.report import report_sxw
 from openerp import models
+from openerp.report import report_sxw
 
 
 class hostel_fee_receipt(report_sxw.rml_parse):

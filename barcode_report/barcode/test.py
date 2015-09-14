@@ -6,8 +6,8 @@ from . code93 import Standard93, Extended93
 from . code128 import Code128
 from . usps import inch, FIM, POSTNET
 
-from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Paragraph, Frame
 from reportlab.platypus.flowables import XBox
 

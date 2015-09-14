@@ -23,9 +23,9 @@
 ##############################################################################
 
 from openerp import models, fields, api
+
+
 # import email
-
-
 class email_template(models.Model):
     _inherit = "email.template"
 

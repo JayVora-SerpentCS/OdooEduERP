@@ -24,8 +24,9 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api
 import time
+
+from openerp import models, fields, api
 
 
 class student_evaluation(models.Model):

@@ -22,8 +22,9 @@
 #
 ##############################################################################
 import time
-from openerp.report import report_sxw
+
 from openerp.osv import osv
+from openerp.report import report_sxw
 
 
 class timetable(report_sxw.rml_parse):

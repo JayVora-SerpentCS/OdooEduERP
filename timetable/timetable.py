@@ -23,9 +23,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-import datetime
 
 
 class time_table(models.Model):

@@ -22,16 +22,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
-import time
-import openerp
+import arrow
 from datetime import date
 from datetime import datetime
-import arrow
-from openerp.tools.translate import _
+import time
+
+from openerp import models, fields, api, _
+import openerp
+from openerp.exceptions import Warning
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools import image_colorize, image_resize_image_big
-from openerp.exceptions import Warning
+from openerp.tools.translate import _
 
 
 class academic_year(models.Model):

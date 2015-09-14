@@ -21,12 +21,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-from openerp.report import report_sxw
-import qrcode
 import base64
+import qrcode
 import tempfile
+import time
+
 from openerp.osv import osv
+from openerp.report import report_sxw
 
 
 class qr_code_label(report_sxw.rml_parse):

@@ -21,11 +21,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import time
+
 from openerp import models, fields, api
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from dateutil.relativedelta import relativedelta
-from datetime import datetime
-import time
 
 
 class product_state(models.Model):

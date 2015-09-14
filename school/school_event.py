@@ -1,12 +1,12 @@
 from openerp.osv import fields, osv
+
+
 # import time
 # import openerp
 # from datetime import datetime
 # from openerp.tools.translate import _
 # from openerp.tools import DEFAULT_SERVER_DATE_FORMAT,
 # DEFAULT_SERVER_DATETIME_FORMAT, image_colorize, image_resize_image_big
-
-
 class school_standard(osv.Model):
     ''' Defining a standard related to school '''
     _inherit = 'school.standard'

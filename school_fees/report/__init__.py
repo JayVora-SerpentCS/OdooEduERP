@@ -24,4 +24,5 @@
 from . import report_student_fees_register
 from . import report_student_payslip
 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

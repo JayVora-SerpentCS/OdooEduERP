@@ -23,10 +23,11 @@
 ##############################################################################
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
+
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-from dateutil.relativedelta import relativedelta
 
 
 class student_transport(models.Model):
