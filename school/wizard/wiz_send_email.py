@@ -26,7 +26,7 @@ from openerp import models, fields, api
 # import email
 
 
-class email_template(models.Model):
+class email_template(models.TransientModel):
     _inherit = "email.template"
 
     @api.multi
