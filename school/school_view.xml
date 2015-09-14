@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-
 		<!-- Student Form View1 -->
 		<record model="ir.ui.view" id="view_student_student_form_1">
 			<field name="name">student.student.form.1</field>
 			<field name="model">student.student</field>
 			<field name="arch" type="xml">
-				<form string="Student Information">
+			<form string="Student Information">
+				<header>
+					<button name="set_terminate" string="Terminate" class="oe_highlight" type="object" state="terminate"
+						groups="school.group_school_administration,school.group_school_teacher"/>
+					<button name="set_alumni" string="Alumni" type="object" state="alumni"
+						groups="school.group_school_administration,school.group_school_teacher"/>
+					<button name="admission_done" type="object" string="Done" state="done" icon="gtk-jump-to"/>
+					<field name="state" widget="statusbar"/>
+				</header>
 					<sheet style="width: 10%%,height:10%%">
 						<separator string="Personal Information" />
 						<field name="photo" widget='image' class="oe_avatar oe_left"
 							options='{"size": [110, 110]}'/>
 						<div class="oe_title">
 							<field name="pid" invisible="1" />
-							<field name="reg_code" readonly="1" />
-							<!-- <field name="grn_number" placeholder="General Reg No." / -->
+							<field name="reg_code" readonly="1" invisible="1"/>
+							<field name="grn_number" placeholder="General Reg No." invisible="1"/>
+							<field name="gr_no" readonly="1"/> 
 							<field name="name" placeholder="First Name" nolabel="1" />
 							<field name="middle" placeholder="Middle Name" nolabel="1"/>
 							<field name="last" placeholder="Last Name" nolabel="1"/>
@@ -28,10 +36,10 @@
 								<field name="student_code" readonly="1"/>
 								<field name="roll_no" help="Roll number of Student"/>
 								<field name="year" placeholder="Year" help="Academic year of Student"/>
-								<field name="school_id" widget="selection" help="School of Student"/>
+								<field name="school_id" widget="selection" help="School of Student" required="1"/>
 							</group>
 							<group col="2">
-								<separator string="Standard Information" colspan="4" />
+								<separator string="Standard Information" colspan="4"/>
 								<field name="standard_id" placeholder="Standard" widget="selection"/>
 								<field name="division_id" placeholder="Division" widget="selection"/>
 								<field name="medium_id" placeholder="Medium" widget="selection"/>
@@ -147,23 +155,25 @@
 											<group col="2">
 												<separator colspan="2"/>
 												<field name='rel_name'/>
-												<field name='stu_name' placeholder="Create or Select Name"
-													attrs="{'invisible':[('rel_name','!=','exist')]}"/>
+												<!-- <field name='stu_name' placeholder="Create or Select Name"
+													attrs="{'invisible':[('rel_name','!=','exist')]}"/> -->
+												<field name='family_contact_id' attrs="{'invisible':[('rel_name','!=','exist')]}"/>
 												<field name='name' placeholder="Name"
 													attrs="{'invisible':[('rel_name','!=','new')]}"/>
 												<field name='relation' placeholder="Enter or select Relation"/>
 											</group>
 											<group col="2">
-												<separator colspan="2" />
+												<separator colspan="2"/>
 												<field name='phone' placeholder="Phone Number"/>
 												<field name='email' placeholder="Email ID"/>
 											</group>
 										</group>
 									</form>
 									<tree string="Family Contact Details">
-										<field name='stu_name' string="Existing Student"/>
+										<field name='family_contact_id' string="Existing Student"/>
 										<field name='name' string="New Name"/>
 										<field name="relation"/>
+										<field name="family_contact_id"/>
 										<field name="phone"/>
 									</tree>
 								</field>
@@ -183,7 +193,7 @@
 									</group>
 								</group>
 								<separator string="Does the applicant have any Disabilities?"
-									colspan="4" />
+									colspan="4"/>
 								<group col="6" colspan="4">
 									<field name="eye"/>
 									<field name="ear"/>
@@ -249,7 +259,7 @@
 								</field>
 							</page>
 						</notebook>
-						<field name="state" invisible="1"/>
+						<!-- <field name="state" invisible="1"/> -->
 					</sheet>
 				</form>
 			</field>
@@ -421,11 +431,13 @@
 					<sheet>
 						<separator string="Reminder"/>
 						<group col="4" colspan="4">
-							<field name="stu_id" widget="selection" placeholder="Student"/>
+							<field name="stu_id"  placeholder="Student" context="{'stu_gr_no':True}"/>
+							<field name="stu_name"/>
 							<field name="date" placeholder="Select Date"/>
 							<field name="name" placeholder="Reminder Title"/>
 							<newline />
 							<field name="description" colspan="4"/>
+							
 						</group>
 					</sheet>
 				</form>
@@ -546,14 +558,14 @@
 				<form string="Admission Register" >
 					<header>
 						<button name="set_terminate" string="Terminate" type="object"
-							states="done" icon="gtk-cancel" class="oe_highlight"
-							groups="school.group_school_administration,school.group_school_teacher"/>
+							state="done" icon="gtk-cancel" class="oe_highlight"
+							/>
 						<button name="set_alumni" string="Alumni" type="object"
-							icon="gtk-execute" states="done"
-							groups="school.group_school_administration,school.group_school_teacher"/>
+							icon="gtk-execute" state="done"
+							/>
 						<button name="admission_done" type="object" string="Done"
-							states="draft,terminate" icon="gtk-jump-to"/>
-						<field name="state" widget="statusbar" nolabel="1"/>
+							state="draft,terminate" icon="gtk-jump-to"/>
+						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet style="width: 10%%,height:10%%">
 						<newline />
@@ -731,32 +743,31 @@
 							</page>
 							<page string="Family Details">
 								<field name="family_con_ids" nolabel="1" colspan="4">
-									<tree string="Family  Contact Details">
-										<field name='stu_name' attrs="{'invisible':[('rel_name','!=','exist')]}"
-											string="Existing Student" />
-										<field name='name' attrs="{'invisible':[('rel_name','!=','new')]}"
-											string="New Name"/>
-										<field name="relation"/>
-										<field name="phone"/>
-									</tree>
 									<form string="Family Contact Details">
 										<group col="4">
 											<group col="2">
 												<separator colspan="2"/>
-												<field name='rel_name' placeholder="Name"/>
-												<field name='stu_name' placeholder="Create or Select Name"
-													attrs="{'invisible':[('rel_name','!=','exist')]}"/>
+												<field name='rel_name'/>
+												<!-- <field name='stu_name' placeholder="Create or Select Name"
+													attrs="{'invisible':[('rel_name','!=','exist')]}"/> -->
+												<field name="family_contact_id" attrs="{'invisible':[('rel_name','!=','exist')]}"/>
 												<field name='name' placeholder="Name"
 													attrs="{'invisible':[('rel_name','!=','new')]}"/>
 												<field name='relation' placeholder="Enter or select Relation"/>
 											</group>
 											<group col="2">
-												<separator colspan="2" />
+												<separator colspan="2"/>
 												<field name='phone' placeholder="Phone Number"/>
-												<field name='email' placeholder="Email Address"/>
+												<field name='email' placeholder="Email ID"/>
 											</group>
 										</group>
 									</form>
+									<tree string="Family Contact Details">
+										<field name='stu_name' string="Existing Student"/>
+										<field name='name' string="New Name"/>
+										<field name="relation"/>
+										<field name="phone"/>
+									</tree>
 								</field>
 							</page>
 							<page string="Remarks">
@@ -896,7 +907,7 @@
 						</group>
 						<notebook colspan="4">
 							<page string="Standards">
-								<field name="standards" nolabel="1" colspan="4"/>
+								<field name="standards" nolabel="1" colspan="4"  readonly="1"/>
 							</page>
 						</notebook>
 					</sheet>
@@ -1191,6 +1202,7 @@
 	                        <field name="date_start" placeholder="Start Date"/>
 	                        <field name="date_stop" placeholder="Stop Date"/>
 	                        <field name="grade_id" placeholder="Grade System"/>
+	                        <button name="create_month" type="object" string="Create Month"/>
 	                    </group>
 	                    <notebook colspan="4">
 	                        <page string="Months">
@@ -1555,7 +1567,7 @@
 
 		<!-- Teacher Information Form View -->
 		<record model="ir.ui.view" id="view_teacher_teacher_form">
-			<field name="name">hr.employee.form</field>
+			<field name="name">view.teacher.teacher.form</field>
 			<field name="model">hr.employee</field>
 			<field name="inherit_id" ref="hr.view_employee_form" />
 			<field name="arch" type="xml">
@@ -1569,14 +1581,258 @@
 				</data>
 			</field>
 		</record>
-
+		
+		<!-- Teacher Personal Details Form View. -->
+		<record id="view_teacher_details_form" model="ir.ui.view">
+            <field name="name">view.teacher.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <form string="Teacher Information">
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="work_email" class="oe_edit_only"/>
+                            <field name="work_email" widget="email"/>
+                            <label for="work_phone" class="oe_edit_only"/>
+                            <field name="work_phone"/>
+                           	<label for="hr_type" class="oe_edit_only"/>
+                           	<field name="hr_type" readonly="1"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
+                        <notebook colspan="4">
+                            <page string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="address_id" required="1"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="mobile_phone" string="Mobile" required="1"/>
+                                        <field name="work_location"/>
+                                        <field name="school_id" required="1"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id"/>
+                                        <field name="job_id"/>
+                                        <field name="parent_id"/>
+                                        <field name="coach_id"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" required="1" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                       
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
+                                        <field name="birthday" required="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+		
+		<!-- Teacher Personal Details Tree View. -->
+		<record id="view_teacher_details_tree" model="ir.ui.view">
+            <field name="name">view.teacher.details.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Teacher Information">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="school_id" />
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="hr_type"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Teacher Personal Details Action View Form View. -->
+		<record id="view_teacher_details_action_view" model="ir.actions.act_window">
+            <field name="name">Teacher Information</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('hr_type', '=', 'teacher')]</field>
+            <field name="context">{'default_hr_type':'teacher'}</field>
+        </record>
+        <record id="tree_view_ref_teacher_details" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_teacher_details_tree"/>
+            <field name="act_window_id" ref="view_teacher_details_action_view"/>
+        </record>
+        
+		 <record id="form_view_ref_teacher_details" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_teacher_details_form"/>
+            <field name="act_window_id" ref="view_teacher_details_action_view"/>
+        </record>
+        
+        
+        <!-- Librarian Personal Details Form View. -->
+		<record id="view_librarian_details_form" model="ir.ui.view">
+            <field name="name">view.librarian.details.form</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <form string="Librarian Information">
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="work_email" class="oe_edit_only"/>
+                            <field name="work_email" widget="email"/>
+                            <label for="work_phone" class="oe_edit_only"/>
+                            <field name="work_phone"/>
+                            <label for="hr_type" class="oe_edit_only"/>
+                           	<field name="hr_type" readonly="1"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                            <!-- Put here related buttons -->
+                        </div>
+                        <notebook colspan="4">
+                            <page string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="address_id" required="1"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="mobile_phone" string="Mobile" required="1"/>
+                                        <field name="work_location"/>
+                                        <field name="school_id" required="1"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id"/>
+                                        <field name="job_id"/>
+                                        <field name="parent_id"/>
+                                        <field name="coach_id"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" groups="base.group_hr_user" required="1"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                   
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1, 'default_customer': False}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
+                                        <field name="birthday" required="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Librarian Personal Details Tree View. -->
+		<record id="view_librarian_details_tree" model="ir.ui.view">
+            <field name="name">view.librarian.details.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Librarian Information">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="school_id"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="hr_type"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <!-- Librarian Personal Details Action View Form View. -->
+		<record id="view_librarian_details_action" model="ir.actions.act_window">
+            <field name="name">Librarian Information</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('hr_type', '=', 'librarian')]</field>
+            <field name="context">{'default_hr_type':'librarian'}</field>
+        </record>
+        <record id="tree_view_ref_librarian_details" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_librarian_details_tree"/>
+            <field name="act_window_id" ref="view_librarian_details_action"/>
+        </record>
+        
+		 <record id="form_view_ref_librarian_details" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_librarian_details_form"/>
+            <field name="act_window_id" ref="view_librarian_details_action"/>
+        </record>
+        
 		<!-- Student Information Form Action -->
 		<record model="ir.actions.act_window" id="action_student_student_form_12">
 			<field name="name">Students</field>
 			<field name="domain">[('state', '!=', 'draft')]</field>
 			<field name="res_model">student.student</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="view_student_student_form_1"/>
+			<field name="view_id" ref="view_student_student_form_2"/>
 			<field name="search_view_id" ref="view_student_student_search_1"/>
 			<field name="view_mode">tree,form,kanban</field>
 		</record>
@@ -1584,20 +1840,21 @@
 		<!-- Student Information Tree Action View -->
 		<record id="action_view_student_student_tree_1" model="ir.actions.act_window.view">
 			<field name="view_mode">tree</field>
-			<field eval="20" name="sequence"/>
+			<field eval="30" name="sequence"/>
 			<field name="view_id" ref="view_student_student_tree_1"/>
 			<field name="act_window_id" ref="action_student_student_form_12"/>
 		</record>
+		
 		<record id="action_view_student_student_form_1" model="ir.actions.act_window.view">
 			<field name="view_mode">form</field>
-			<field eval="30" name="sequence"/>
+			<field eval="31" name="sequence"/>
 			<field name="view_id" ref="view_student_student_form_1"/>
 			<field name="act_window_id" ref="action_student_student_form_12"/>
 		</record>
 
 		<record id="action_view_student_student_kanban_1" model="ir.actions.act_window.view">
 			<field name="view_mode">kanban</field>
-			<field eval="31" name="sequence"/>
+			<field eval="20" name="sequence"/>
 			<field name="view_id" ref="student_student_kanban_view"/>
 			<field name="act_window_id" ref="action_student_student_form_12"/>
 		</record>
@@ -1615,7 +1872,7 @@
 			<field name="name">Admission Register</field>
 			<field name="res_model">student.student</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="view_student_student_form_2" />
+			<field name="view_id" ref="student_student_kanban_view" />
 			<field name="search_view_id" ref="view_student_student_search_2"/>
 			<field name="view_mode">tree,form,kanban</field>
 		</record>
@@ -1623,24 +1880,16 @@
 		<!-- Admission Register Information Tree Action -->
 		<record id="action_student_student_tree_2" model="ir.actions.act_window.view">
 			<field name="view_mode">tree</field>
-			<field eval="20" name="sequence"/>
+			<field eval="21" name="sequence"/>
 			<field name="view_id" ref="view_student_student_tree_2" />
 			<field name="act_window_id" ref="action_student_student_form_2"/>
 		</record>
 		
 		<record id="action_view_student_student_kanban_2" model="ir.actions.act_window.view">
 			<field name="view_mode">kanban</field>
-			<field eval="21" name="sequence" />
+			<field eval="20" name="sequence" />
 			<field name="view_id" ref="student_student_kanban_view" />
 			<field name="act_window_id" ref="action_student_student_form_2"/>
-		</record>
-
-		<!-- Teacher Information Action -->
-		<record model="ir.actions.act_window" id="action_teacher_teacher_form_1">
-			<field name="name">Teachers</field>
-			<field name="res_model">hr.employee</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
 		</record>
 
 		<!-- School Information Action -->
@@ -1884,13 +2133,15 @@
 			<field name="name">res.partner.parent.form</field>
 			<field name="model">res.partner</field>
 			<field name="arch" type="xml">
-				<form string="Partners" col='1' >
+				<form string="Partners" col='1' create="false">
 					<sheet>
 						<form string="Partner Contacts">
 							<newline />
 							<group colspan="2" col="4">
 								<separator string="Postal Address" colspan="4" col="4"/>
-								<field name="name" placeholder="Name"/>
+								<field name="student_id" context="{'stu_gr_no':True}"/>
+								<field name="student_name"/>
+								<field name="stu_parent_name"/>
 								<field name="type" string="Type" colspan="2" placeholder="Address Type"/>
 								<field name="street" placeholder="Street"/>
 								<field name="street2" placeholder="Street2"/>
@@ -1898,14 +2149,17 @@
 								<field name="city" placeholder="City"/>
 								<field name="country_id" completion="1" placeholder="Country"/>
 								<field name="state_id" placeholder="State"/>
+								<field name="name" invisibal="1"/>
+								<field name="part_id" invisible="1"/>
+                                <field name="gr_no" invisible="1"/>
 							</group>
 							<group colspan="2" col="2">
 								<separator string="Communication" colspan="2" col="2"/>
 								<group colspan="4" col="4">
 									<field name="phone" placeholder="Phone Number"/>
-									<field name="mobile" placeholder="Mobile Number"/>
+									<field name="mobile" placeholder="Mobile Number" required="1"/>
 									<field name="fax" placeholder="Fax"/>
-									<field name="email" widget="email"/>
+									<field name="email" widget="email" required="1"/>
 								</group>
 							</group>
 						</form>
@@ -1926,7 +2180,7 @@
 			<field name="arch" type="xml">
 				<search string="Search Partner">
 					<group col='10' colspan='4'>
-						<field name="name" select="1"/>
+						<field name="name" select="1" invisible="1"/>
 						<field name="country_id" select="1"/>
 					</group>
 				</search>
@@ -1938,39 +2192,30 @@
 			<field name="model">res.partner</field>
 			<field eval="8" name="priority" />
 			<field name="arch" type="xml">
-				<tree string="Partners">
-					<field name="name"/>
+				<tree string="Partners" create="false">
+				     <field name="gr_no"/>
+					<field name="student_name"/>
 					<field name="phone"/>
 					<field name="email"/>
 					<field name="city"/>
 					<field name="country_id"/>
+					<field name="student_id" invisible="1"/>
+                    <field name="part_id" invisible="1"/>
 				</tree>
 			</field>
 		</record>
-
+		
 		<!-- Parent Information Action -->
-		<record model="ir.actions.act_window" id="action_parent_form">
-			<field name="name">Parents</field>
-			<field name="res_model">res.partner</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree,kanban</field>
-			<field name="search_view_id" ref="view_res_partner_parent_filter"/>
-		</record>
-
-		<record id="action_partner_form_view1" model="ir.actions.act_window.view">
-			<field eval="10" name="sequence"/>
-			<field name="view_mode">tree</field>
-			<field name="view_id" ref="view_parent_tree"/>
-			<field name="act_window_id" ref="action_parent_form"/>
-		</record>
-
-		<record id="action_parent_form_view2" model="ir.actions.act_window.view">
-			<field eval="20" name="sequence"/>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="view_parent_form"/>
-			<field name="act_window_id" ref="action_parent_form"/>
-		</record>
-
+		<record id="action_student_parent" model="ir.actions.server">
+            <field name="sequence" eval="1"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="code">action = pool.get('res.partner').student_parent_view(cr, uid, None, context)</field>
+            <field name="condition">True</field>
+            <field name="name">Create Parent</field>
+        </record>
+        
 		<!--My Dashboard -->
 		<record model="ir.ui.view" id="board_my_dash_view">
 			<field name="name">My Dashboard</field>
@@ -2030,12 +2275,12 @@
 
 		<menuitem name="Configuration" parent="menu_ems" id="menu_configuration"
 			sequence="10" groups="group_school_administration"/>
-
+			
 		<menuitem name="Students Profile" parent="menu_ems"
-			id="menu_student_profile" sequence="2"/>
-
+			id="menu_student_profile" sequence="3"/>
+			
 		<menuitem name="School Config" parent="menu_configuration"
-			id="menu_school_config_form1" sequence="1"/>
+			id="menu_school_config_form1" sequence="2"/>
 
 		<menuitem name="GR No." parent="menu_school_config_form1" id="grn_menuid"
 			action="action_student_grn_form" sequence="10"/>
@@ -2051,7 +2296,25 @@
 
 		<menuitem name="Cast" parent="menu_casts" id="menu_cast"
 			action="action_student_cast_form_7"/>
-
+		
+		<!-- Teacher Personal Details Menu Item -->
+		<menuitem name="Teacher" parent="menu_configuration"
+			id="menu_teacher_config_form1" sequence="1"
+			groups="school.group_school_administration"/>
+			
+		<!-- Teacher Personal Details Menu -->
+		<menuitem name="Teacher" parent="menu_teacher_config_form1" id="teacher_menuid"
+			action="view_teacher_details_action_view" sequence="10"/>
+			
+		<!-- Librarian Personal Details Menu Item -->
+		<menuitem name="Librarian" parent="menu_configuration"
+			id="menu_librarian_config_form1" sequence="1"
+			groups="school.group_school_administration"/>
+			
+		<!-- Librarian Personal Details Menu -->
+		<menuitem name="Librarian" parent="menu_librarian_config_form1" id="librarian_menuid"
+			action="view_librarian_details_action" sequence="10"/>
+			
 		<!-- new cast menu added in configure menu -->
 		<menuitem name="Cast" parent="menu_school_config_form1" id="menu_cast"
 			action="action_student_cast_form_7"/>
@@ -2068,7 +2331,7 @@
 
 		<!-- new -->
 		<menuitem name="Parents Details" parent="menu_student_profile"
-			id="menu_res_partner_form" action="action_parent_form"
+			id="menu_res_partner_form" action="action_student_parent"
 			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
 
 		<menuitem name="Admission Register" parent="menu_ems"
@@ -2091,8 +2354,8 @@
 		<menuitem name="Years" parent="menu_academic_year_form" id="menu_academic_year_sub_form"
 			action="action_academic_year_form"/>
 
-		<menuitem name="Months" parent="menu_academic_year_form" id="menu_academic_month_form"
-			action="action_academic_month_form"/>
+		<!-- <menuitem name="Months" parent="menu_academic_year_form" id="menu_academic_month_form"
+			action="action_academic_month_form"/> -->
 
 		<menuitem name="Standards" parent="menu_configuration" id="menu_school_standard_form"/>
 

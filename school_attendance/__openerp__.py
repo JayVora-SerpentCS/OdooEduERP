@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -21,10 +23,10 @@
 ##############################################################################
 
 {
-    "name" : "Attendance Management",
-    "version" : "3.0",
-    "author" : "Serpent Consulting Services",
-    "website" : "http://www.serpentcs.com",
+    "name": "Attendance Management",
+    "version": "3.0",
+    "author": "Serpent Consulting Services",
+    "website": "http://www.serpentcs.com",
     "category": "School Management",
     "complexity": "easy",
     "description": """A module to Student Attendance System.
@@ -32,10 +34,10 @@
             1. Class-wise Daily Attendance Sheet.
             2. Class-wise Monthly Attendance Sheet.
                     """,
-    "depends" : [
-        "school","hr"
+    "depends": [
+        "school", "hr"
     ],
-    "data" : [
+    "data": [
         "security/ir.model.access.csv",
         "school_attendance_view.xml",
         "attendance_workflow.xml",
@@ -43,9 +45,9 @@
         "wizard/student_attendance_by_month_view.xml",
     ],
     'demo': [
-             "demo/school_attendance_demo.xml"
+        "demo/school_attendance_demo.xml"
     ],
-    
+
     "installable": True,
     "auto_install": False,
     "application": True,

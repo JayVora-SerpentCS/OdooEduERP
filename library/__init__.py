@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -19,15 +21,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import library
-import product
-import sale
-import mrp
-import purchase
-import report
-import wizard
-import stock
-import library_editor_supplier
-import account
+from . import library
+from . import product
+from . import sale
+from . import mrp
+from . import purchase
+from . import report
+from . import wizard
+from . import stock
+from . import library_editor_supplier
+from . import account
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

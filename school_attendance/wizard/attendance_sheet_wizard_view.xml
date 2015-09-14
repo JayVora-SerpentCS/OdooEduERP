@@ -10,7 +10,7 @@
                     <sheet>
                     <separator string="Standard Information" colspan="4"/>
                         <group col="4" colspan="2">
-                            <field name="standard_id"  widget="selection"  />
+                            <field name="standard_id"  />
                      </group>
                     <separator string="Academic Year Information" colspan="4"/>
                         <group col="4" colspan="2">

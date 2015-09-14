@@ -30,6 +30,7 @@
             <field name="view_id" ref="view_result_print"/>
             <field name="target">new</field>
             <field name="context">{'model': 'exam.result'}</field>
+            	
         </record>
 
         <menuitem name="Result Report"

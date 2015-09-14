@@ -3,8 +3,10 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-2012 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
+#    Copyright (C) 2013-2014 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -24,6 +26,7 @@ from datetime import datetime
 from openerp.report import report_sxw
 from openerp.osv import osv
 
+
 class student_payslip(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
@@ -34,20 +37,22 @@ class student_payslip(report_sxw.rml_parse):
             'get_month': self.get_month,
             'get_no': self.get_no,
         })
-        self.no = 0   
-        
+        self.no = 0
+
     def get_no(self):
         self.no += 1
         return self.no
+
     def get_month(self, indate):
         new_date = datetime.strptime(indate, '%Y-%m-%d')
-        out_date = new_date.strftime('%B')+'-'+new_date.strftime('%Y')
+        out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
         return out_date
+
 
 class report_student_payslip(osv.AbstractModel):
     _name = 'report.school_fees.student_payslip'
     _inherit = 'report.abstract_report'
     _template = 'school_fees.student_payslip'
-    _wrapped_report_class = student_payslip    
+    _wrapped_report_class = student_payslip
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

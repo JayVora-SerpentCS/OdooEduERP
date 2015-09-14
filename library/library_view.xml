@@ -169,10 +169,10 @@
 								<group col="4" colspan="2">
 									<field name="availability"/>
 									<field name="nbpage" placeholder="No of Page in books"/>
-									<field name="day_to_return_book" placeholder="Days of Returnning"/>
+									<!-- <field name="date_parution" placeholder="Book Release Date"/> -->
+									<!-- <field name="day_to_return_book" placeholder="Days of Returnning"/> -->
 									<field name="creation_date"/>
-									<field name="date_parution" placeholder="Book Release Date"/>
-									<field name="date_retour"/>
+									<!-- <field name="date_retour"/> -->
 									<field name="tome"/>
 									<field name="format" placeholder="Format of Book"/>
 									<field name="weight"/>
@@ -261,16 +261,16 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_product_book_30days">
-			<field name="name">Books to return before 30 days</field>
+			<field name="name">List Of Books</field>
 			<field name="res_model">product.product</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_id" ref="view_product_book_tree"/>
-			<field name="domain">[('categ_id.name', '=', 'Books')]</field>
+			<field name="domain">['|',('categ_id.name', '=', 'Books'),('categ_id.parent_id.name','=','Books')]</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
 		</record>
 
-		<menuitem name="Books to return before 30 days" id="menu_action_book_30days"
+		<menuitem name="List Of Books" id="menu_action_book_30days"
 			action="action_product_book_30days" parent="menu_library" sequence="1"
 			groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
@@ -334,7 +334,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_purchase_order_tree" />
 		</record>
-		<menuitem name="Orders of the day" id="purchase_order_day"
+		<menuitem name=" Purchase Orders of the day" id="purchase_order_day"
 			action="action_purchase_order_today_tree" sequence="2" parent="menu_library"
 			groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
@@ -566,19 +566,18 @@
 						<group col="4" colspan="4"
 							attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
 							<separator string="Student Details" colspan="4" col="4"/>
-							<field name="student_id" readonly="1"/>
-							<field name="roll_no" readonly="1"/>
-							<field name="standard_id" readonly="1"/>
+							<field name="student_id"/>
+							<field name="roll_no"/>
+							<field name="standard_id"/>
 						</group>
 						<group col="2" colspan="4"
 							attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
 							<separator string="Teacher Details" colspan="4" col="4"/>
 							<field name="teacher_id" readonly="1"/>
 						</group>
-						<group col="4" colspan="4"
-							attrs="{'invisible':[('state','=','draft')], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
+						<group col="4" colspan="4">
 							<separator string="Issue Date" colspan="4" col="4" />
-							<field name="day_to_return_book" attrs="{'required':[('state','=','issue')]}"/>
+							<field name="day_to_return_book" attrs="{'required':[('state','=','draft')]}"/>
 							<field name="date_issue"/>
 							<field name="date_return"/>
 							<field name="actual_return_date"/>
@@ -610,7 +609,7 @@
 							<t t-set="color"
 								t-value="kanban_color(record.color.raw_value || record.name.value)"/>
 							<div
-								t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+								t-attf-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '') oe_kanban_global_click">
 								<div class="oe_kanban_box oe_kanban_color_border">
 									<div
 										class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
@@ -708,7 +707,9 @@
 			<field name="res_model">library.book.issue</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,kanban</field>
+			<field name="view_id" ref="library_book_issue_kanban_view"/>
+			<field name="search_view_id" ref="view_book_issue_search"/>
+			<field name="view_mode">kanban,tree,form</field>
 		</record>
 
 		<!--menu of library view -->
