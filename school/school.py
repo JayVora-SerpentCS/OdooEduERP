@@ -738,7 +738,7 @@ class res_partner(models.Model):
     @api.multi
     def student_parent_view(self):
         uid = self.env.args
-        data_obj = self.env['ir.model.data']
+#         data_obj = self.env['ir.model.data']
         form_res = self.env.ref('school.view_parent_form')
         form_view_id = form_res and form_res.id or False
         tree_res = self.env.ref('school.view_parent_tree')
