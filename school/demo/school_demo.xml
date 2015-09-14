@@ -4,16 +4,19 @@
         
         <!--  School Information -->
         <record id="demo_school_1" model="school.school">
+            <field name="studen_id">12</field>
             <field name="name">West High School</field>
             <field name="code">0672</field>
             <field name="city">melbourne</field>
         </record>
         <record id="demo_school_2" model="school.school">
+            <field name="student_id">13</field>
             <field name="name">East High School</field>
             <field name="code">0786</field>
             <field name="city">Ontario</field>
         </record>
         <record id="demo_school_3" model="school.school">
+            <field name="student_id">15</field>
             <field name="name">Everwood High School</field>
             <field name="code">0895</field>
             <field name="city">London</field>
