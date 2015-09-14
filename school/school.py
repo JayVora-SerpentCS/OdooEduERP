@@ -714,7 +714,6 @@ class hr_employee(models.Model):
     address_id = fields.Many2one('res.partner', 'Contact Address')
     hr_type = fields.Selection([('teacher', 'Teacher'),
                                 ('librarian', 'Librarian')], 'Type')
-    bank_account_id = fields.Char('Bank Account Number')
 
 
 class res_partner(models.Model):
