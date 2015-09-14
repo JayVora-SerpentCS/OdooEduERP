@@ -41,7 +41,7 @@ class student_fees_register(models.Model):
     division_id = fields.Many2one('standard.division', string='Division', related='student_id.division_id', readonly=True)
     year_id = fields.Many2one('academic.year', string='Academic Year', related='student_id.year', readonly=True)
     name  = fields.Char('Name')
-    date = fields.Date('Date', default=lambda * a: time.strftime('%Y-%m-%d'))
+    date = fields.Date('Date', default=lambda * a: time.strftime('%Y-%m-%d'), required=True)
     number = fields.Char('Number',readonly=True, default=lambda obj:obj.env['ir.sequence'].get('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id', 'Payslips', states={'confirm':[('readonly', True)]})
     fee_receipt_ids = fields.One2many('student.fee.receipt', 'fees_register_id', 'Receipts')
