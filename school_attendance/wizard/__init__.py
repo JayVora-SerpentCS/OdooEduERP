@@ -21,8 +21,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import attendance_sheet_wizard
-from . import student_attendance_by_month
+import attendance_sheet_wizard
+import student_attendance_by_month
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,10 +22,10 @@
 #
 ##############################################################################
 
-from . import assign_roll_no
-from . import move_standards
-from . import wiz_meeting
-from . import wiz_send_email
+import assign_roll_no
+import move_standards
+import wiz_meeting
+import wiz_send_email
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
