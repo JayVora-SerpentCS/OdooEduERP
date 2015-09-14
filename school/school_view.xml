@@ -1633,7 +1633,7 @@
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id" required="1" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
-                                        <field name="bank_account_id"/>
+                                       
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
@@ -1755,7 +1755,7 @@
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id" groups="base.group_hr_user" required="1"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
-                                        <field name="bank_account_id"/>
+                                   
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
