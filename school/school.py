@@ -26,7 +26,6 @@ import arrow
 from datetime import date
 from datetime import datetime
 import time
-
 from openerp import models, fields, api, _
 import openerp
 from openerp.exceptions import Warning

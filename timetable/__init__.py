@@ -27,7 +27,7 @@
 # ----------------------------------------------------------
 # A Module to Schoool Timetable Management
 # ----------------------------------------------------------
-import report
+from . import report
 
 from . import timetable
 
