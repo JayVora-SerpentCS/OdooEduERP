@@ -1,9 +1,10 @@
 from openerp.osv import fields, osv
-import time
-import openerp
-from datetime import datetime
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, image_colorize, image_resize_image_big
+# import time
+# import openerp
+# from datetime import datetime
+# from openerp.tools.translate import _
+# from openerp.tools import DEFAULT_SERVER_DATE_FORMAT,
+# DEFAULT_SERVER_DATETIME_FORMAT, image_colorize, image_resize_image_big
 
 
 class school_standard(osv.Model):
@@ -23,8 +24,7 @@ class school_standard(osv.Model):
             result[standard_data.id] = student_ids
         return result
 
-    _columns = {
-                'student_ids': fields.function(_compute_student, method=True,
+    _columns = {'student_ids': fields.function(_compute_student, method=True,
                                                relation='student.student',
                                                type="one2many",
                                                string='Student In Class'),
