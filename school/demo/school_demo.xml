@@ -4,7 +4,7 @@
         
         <!--  School Information -->
         <record id="demo_school_1" model="school.school">
-            <field name="name">West High School</field>
+            <field name="name">West High School1</field>
             <field name="code">0672</field>
             <field name="city">melbourne</field>
         </record>

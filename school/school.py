@@ -738,7 +738,7 @@ class res_partner(models.Model):
     @api.multi
     def student_parent_view(self):
         uid = self.env.args
-#         data_obj = self.env['ir.model.data']
+        data_obj = self.env['ir.model.data']
         form_res = self.env.ref('school.view_parent_form')
         form_view_id = form_res and form_res.id or False
         tree_res = self.env.ref('school.view_parent_tree')
@@ -764,14 +764,14 @@ class res_partner(models.Model):
                  }
         return value
 
-    #     @api.multi
-    #     def read(self, fields=None, load='_classic_read'):
-    #         res_list = []
-    #         res = super(res_partner, self).read(fields=fields, load=load)
-    #         for res_update in res:
-    #             res_update.update({'student_id': res_update.get('part_id')})
-    #             res_list.append(res_update)
-    #         return res_list
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        res_list = []
+        res = super(res_partner, self).read(fields=fields, load=load)
+        for res_update in res:
+            res_update.update({'student_id': res_update.get('part_id')})
+            res_list.append(res_update)
+        return res_list
 
 
 class student_reference(models.Model):
