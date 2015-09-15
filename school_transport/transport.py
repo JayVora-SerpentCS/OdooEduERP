@@ -249,7 +249,7 @@ class transport_registration(models.Model):
     _description = 'Transport Registration'
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
-                           domain=[('state', '=', 'open')], required=True)
+                           domain=[('state', '=', 'open')])
     student_name_id = fields.Many2one('student.student', 'Student Id',
                                       required=True)
     student_name = fields.Char(related="student_name_id.name",
