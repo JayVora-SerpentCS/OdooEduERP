@@ -58,7 +58,22 @@
                                <field name="line_ids" nolabel="1" colspan="4"/>
                            </page>
                            <page string="Classes">
-                               <field name="class_ids" nolabel="1" colspan="4"/>
+                               <field name="class_ids" nolabel="1" colspan="4" >
+                                   <tree string="Classes" editable="bottom">
+                                       <field name="sequence"/>
+                                       <field name="name"/>
+                                       <field name="code"/>
+                                       <field name="description"/>
+                                   </tree>
+                                   <from string="Class">
+                                       <group col="4">
+                                           <field name="sequence"/>
+                                           <field name="name"/>
+                                           <field name="code"/>
+                                           <field name="description"/>
+                                       </group>
+                                   </from>
+                               </field>
                            </page>
                        </notebook>
                    </sheet>
@@ -279,7 +294,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view"  id="view_standard_standard_fee_form">
+     <!--   <record model="ir.ui.view"  id="view_standard_standard_fee_form">
             <field name="name">standard.standard.fee.form</field>
             <field name="model">standard.standard</field>
             <field name="inherit_id" ref="school.view_standard_standard_form"/>
@@ -288,7 +303,7 @@
                     <field name="fee_struct_id"/>
                 </field>
             </field>
-        </record>
+        </record> -->
 
         <!--  student fee receipt -->
         <record model="ir.ui.view" id="view_student_fees_receipt_form">
