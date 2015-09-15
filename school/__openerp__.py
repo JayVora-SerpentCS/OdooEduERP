@@ -42,16 +42,16 @@
     "data": [
         "wizard/wiz_send_email_view.xml",
         "security/school_security.xml",
-        "views/school_view.xml",
+        "school_view.xml",
         "security/ir.model.access.csv",
-        "views/admission_workflow.xml",
-        "views/student_sequence.xml",
+        "admission_workflow.xml",
+        "student_sequence.xml",
         "wizard/assign_roll_no_wizard.xml",
         "wizard/move_standards_view.xml",
         "wizard/wiz_meeting_view.xml",
-        "views/report_view.xml",
+        "report_view.xml",
         "views/identity_card.xml",
-        "views/email_templet.xml"
+        "email_templet.xml"
     ],
     'demo': [
         'demo/school_demo.xml',
