@@ -39,7 +39,7 @@ class email_template(models.TransientModel):
 #        else:
 #            return ret
         
-    @api.multi
+    @api.model
     def generate_email(self, template_id, res_id):
         if self._context is None:
             context = {}

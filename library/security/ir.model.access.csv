@@ -71,3 +71,6 @@
 "access_library_book_request_student","library.book.request","model_library_book_request","school.group_school_student",1,1,1,0
 "access_library_card_student","library.card","model_library_card","school.group_school_student",1,0,0,0
 "access_library_book_issue_student","library.book.issue","model_library_book_issue","school.group_school_student",1,0,0,0
+
+"access_email_template_userian","ir_email_template_userian","email_template.model_email_template","library.group_userian",1,1,1,0
+"access_ir_mail_server_userian","ir_mail_server_userian","base.model_ir_mail_server","library.group_userian",1,1,1,0
