@@ -6,6 +6,7 @@
     code: 2011
     date_start: 2012-01-01
     date_stop: 2012-12-31
+    sequence: 1
 -
   I check '_check_year_limit' and '_check_duration' constraint
 -
