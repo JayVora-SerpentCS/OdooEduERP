@@ -25,7 +25,8 @@
 # ----------------------------------------------------------
 # A Module to School Management System
 # ----------------------------------------------------------
-from . import models
+from . import school
+from . import school_event
 from . import wizard
 
 

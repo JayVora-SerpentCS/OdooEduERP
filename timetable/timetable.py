@@ -27,6 +27,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 import datetime
 
+
 class time_table(models.Model):
 
     _description = 'Time Table'
