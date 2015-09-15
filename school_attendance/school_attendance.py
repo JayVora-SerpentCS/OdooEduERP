@@ -247,8 +247,6 @@ class daily_attendance(models.Model):
             for att in self.student_ids:
                     count += 1
             att.total_student = count
-        else:
-            att.total_student = count
 
     @api.one
     @api.depends('student_ids')
