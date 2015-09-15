@@ -23,11 +23,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import datetime
-
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-
+import datetime
 
 class time_table(models.Model):
 
@@ -93,13 +91,13 @@ class time_table_line(models.Model):
     sub_exam_date = fields.Date('Subject Exam Date')
     standard_id = fields.Many2one("school.standard", "Standard")
 
-    @api.constrains('sub_exam_date', 'tables_id.end_date')
+    @api.constrains('sub_exam_date', 'tables_id')
     def _check_sub_exam_date(self):
         if self.sub_exam_date > self.tables_id.end_date:
                 raise Warning(_('Please Check The Subject Exam Date'))
         return True
 
-    @api.constrains('sub_exam_date', 'tables_id.start_date')
+    @api.constrains('sub_exam_date', 'tables_id')
     def _check_sub_exam_start_date(self):
         if self.sub_exam_date < self.tables_id.start_date:
                 raise Warning(_('Please Check The Subject Exam Date'))

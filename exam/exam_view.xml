@@ -96,7 +96,7 @@
 								<field name="standard_id" nolabel="1" colspan="4"/>
 							</page>
 							<page string="TimeTable">
-								<field name="timetable_ids"  nolabel="1" colspan="4">
+								<field name="timetables_ids"  nolabel="1" colspan="4">
 									<tree string="TimeTable">
 										<field name="sub_exam_date"/>
 										<field name="week_day"/>
@@ -686,7 +686,7 @@
             <field name="name">Personal Exam Schedule Record</field>
             <field ref="model_exam_exam" name="model_id"/>
             <field eval="1" name="global"/>
-            <field name="domain_force">[('exam_timetable_ids.standard_id.student_ids.user_id','=',user.id)]</field>
+            <field name="domain_force">[('exam_timetables_ids.standard_id.student_ids.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
          </record>
 

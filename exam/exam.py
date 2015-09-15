@@ -96,7 +96,7 @@ class exam_exam(models.Model):
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
     create_date = fields.Date("Exam Created Date", help="Exam Created Date")
     write_date = fields.Date("Exam Update Date", help="Exam Update Date")
-    timetable_ids = fields.One2many('time.table.line', 'tables_id',
+    timetables_ids = fields.One2many('time.table.line', 'tables_id',
                                     'TimeTable')
     state = fields.Selection([('draft', 'Draft'), ('running', 'Running'),
                               ('finished', 'Finished'),
