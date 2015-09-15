@@ -72,7 +72,6 @@
 -
     !record {model: 'transport.registration', id: transport_registration_0}:
         name: transport_root_0
-        part_name: school.demo_student_student_1
         reg_date: '2011-08-13'
         reg_end_date: '2011-12-13'
         for_month: 4
