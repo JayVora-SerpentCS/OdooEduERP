@@ -1,0 +1,18 @@
+<openerp>
+	<data>
+		<!--A email templet for employee will return asset-->
+		<record id="email_template_parent" model="email.template">
+				<field name="name">Mail TO Parent</field>
+				<field name="email_from">${object.stu_id.email}</field>
+				<field name="subject">Mail TO Parent</field>
+				<field name="email_to">${object.stu_id.email}</field>
+				<field name="model_id" ref="model_student_reminder"/>
+				<field name="auto_delete" eval="True"/>
+				<field name="body_html"><![CDATA[<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+				<p>Thank you</p>
+					</div>
+			]]>
+			</field>
+		</record>
+	</data>
+</openerp>
