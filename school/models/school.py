@@ -48,9 +48,9 @@ class academic_year(models.Model):
                        help='Name of  academic year')
     code = fields.Char('Code', required=True, select=1,
                        help='Code of academic year')
-    date_start = fields.Date('Start Date', required=True,
+    date_start = fields.Date('Start Date',
                              help='Starting date of academic year')
-    date_stop = fields.Date('End Date', required=True,
+    date_stop = fields.Date('End Date',
                             help='Ending of academic year')
     month_ids = fields.One2many('academic.month', 'year_id', string='Months',
                                 help="related Academic months")
