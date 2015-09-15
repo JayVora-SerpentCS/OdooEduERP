@@ -37,7 +37,6 @@ class library_editor_supplier(models.Model):
     sequence = fields.Integer('Sequence')
     delay = fields.Integer('Customer Lead Time')
     min_qty = fields.Float('Minimal Quantity')
-#     junk = fields.Text(compute="get_junk", method=True, string=" ", )
     junk = fields.Text(compute=lambda self: dict([(idn, '') for idn in
                                                   self.ids]),
                        method=True, string=" ", type="text")
