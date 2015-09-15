@@ -25,10 +25,7 @@
 # ----------------------------------------------------------
 # A Module to School Management System
 # ----------------------------------------------------------
-from . import school
-from . import school_event
-
+from . import models
 from . import wizard
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
