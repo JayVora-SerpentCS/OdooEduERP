@@ -25,8 +25,8 @@
 # ----------------------------------------------------------
 # A Module to School Fees Management System
 # ----------------------------------------------------------
-import report
-import school_fees
+from . import report
+from . import school_fees
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

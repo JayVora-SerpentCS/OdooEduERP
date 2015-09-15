@@ -21,16 +21,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import account
-import library
-import library_editor_supplier
-import mrp
-import product
-import purchase
-import report
-import sale
-import stock
-import wizard
+from . import account
+from . import library
+from . import library_editor_supplier
+from . import mrp
+from . import product
+from . import purchase
+from . import report
+from . import sale
+from . import stock
+from . import wizard
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

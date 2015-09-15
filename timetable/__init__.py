@@ -27,9 +27,9 @@
 # ----------------------------------------------------------
 # A Module to Schoool Timetable Management
 # ----------------------------------------------------------
-import report
+from . import report
 
-import timetable
+from . import timetable
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
