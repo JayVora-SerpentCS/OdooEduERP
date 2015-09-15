@@ -6,7 +6,6 @@
     code: TBNK1
     type: bank
     company_id: base.main_company
-    view_id: account.account_journal_bank_view
 -
   I create Fiscal Year
 -
