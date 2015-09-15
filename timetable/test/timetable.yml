@@ -2,7 +2,7 @@
   I create an time table line
 -
   !record {model: time.table.line, id: time_line_01}:
-    teacher_id: hr.employee1
+    teacher_id: demo_time_table_line_0
     subject_id: school.demo_subject_subject_7
     tables_id: time_table_firsts0
     start_time: '9.0'
