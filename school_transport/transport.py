@@ -310,8 +310,9 @@ class transport_registration(models.Model):
         if not month:
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
-        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')
-        + relativedelta(months=+ month)
+        tr_end_date = datetime.strptime \
+                        (tr_start_date,
+                         '%Y-%m-%d') + relativedelta(months=+ month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 

@@ -4,7 +4,7 @@
   !record {model: time.table.line, id: time_line_01}:
     teacher_id: hr.employee1
     subject_id: school.demo_subject_subject_7
-    table_id: time_table_firsts0
+    tables_id: time_table_firsts0
     start_time: '9.0'
     end_time: '10.0'
     week_day: 'monday'
