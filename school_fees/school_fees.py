@@ -71,6 +71,7 @@ class student_fees_register(models.Model):
 
     @api.multi
     def fees_register_confirm(self):
+        cr, uid = self.env.args
         student_pool = self.env['student.student']
         slip_pool = self.env['student.payslip']
         student_ids = student_pool.search([])
