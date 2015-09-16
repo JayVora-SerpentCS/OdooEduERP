@@ -403,7 +403,7 @@ class transport_registration(models.Model):
     @api.multi
     def read(self, recs, fields=None, load='_classic_read'):
         res_list = []
-        res = super(transport_registration, recs).read(fields=fields,
+        res = super(transport_registration, self).read(fields=fields,
                                                        load=load)
         for res_update in res:
             res_update.update({'student_name_id': res_update.get('part_id')})
