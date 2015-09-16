@@ -58,11 +58,13 @@ class library_editor_supplier(models.Model):
     #                     ps.delay as delay,
     #                     ps.min_qty as min_qty
     #                 from
-    #                     product_supplierinfo ps full outer join product_product pp
+    #                     product_supplierinfo ps full outer
+    #                      join product_product pp
     #                     on (ps.name = pp.product_tmpl_id)
     #                 where
     #                     ((pp.editor is not null) or (ps.name is not null))
-    #                 group by pp.editor, ps.name, ps.sequence, ps.delay, ps.min_qty
+    #                 group by pp.editor, ps.name, ps.sequence,
+    #                        ps.delay, ps.min_qty
     #             )""")
 
     @api.model
