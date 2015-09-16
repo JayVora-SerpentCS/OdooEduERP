@@ -39,8 +39,7 @@
     #     'demo': [
     #             "demo/assignment_demo.xml"
     #              ],
-    "test": ['test/assignment.yml'],
-
+    'test': [],
     "installable": True,
     'auto_install': False,
 }

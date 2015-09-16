@@ -55,10 +55,7 @@
         "views/participants.xml",
     ],
 
-    'test': [
-        "test/transport.yml",
-        "test/transport_report.yml",
-    ],
+    'test': [],
     "installable": True,
     "auto_install": False,
     "application": True,
