@@ -22,6 +22,7 @@
 #
 ##############################################################################
 from openerp import models, fields, api, _
+from openerp import tools
 from openerp.exceptions import Warning
 
 
