@@ -345,8 +345,9 @@ class transport_registration(models.Model):
 
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
-            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')
-            + relativedelta(months=+ month)
+            tr_end_date = datetime.strptime(tr_start_date,
+                                            '%Y-%m-%d') + relativedelta(months
+                                                                        =+ month)
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise Warning(_('Error !'),
