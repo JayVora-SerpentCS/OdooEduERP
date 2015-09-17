@@ -764,9 +764,9 @@ class res_partner(models.Model):
         return value
 
     @api.multi
-    def read(self, fields=None, load='_classic_read'):
+    def read(recs, fields=None, load='_classic_read'):
         res_list = []
-        res = super(res_partner, self).read(fields=fields, load=load)
+        res = super(res_partner, recs).read(fields=fields, load=load)
         for res_update in res:
             res_update.update({'student_id': res_update.get('part_id')})
             res_list.append(res_update)

@@ -267,7 +267,7 @@ class exam_result(models.Model):
         for standard_obj in self:
             for exam_student_rec in standard_obj.standard_id.student_ids:
                 student_lst.append(exam_student_rec.id)
-            for time_table in standard_obj.s_exam_ids.timetable_ids:
+            for time_table in standard_obj.s_exam_ids.timetables_ids:
                 if time_table.standard_id.id == standard_obj.standard_id.id:
                     for sub_id in time_table.subject_id:
                         sub_val = {'subject_id': sub_id.id

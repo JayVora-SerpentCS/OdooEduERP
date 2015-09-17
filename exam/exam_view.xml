@@ -117,7 +117,7 @@
 												placeholder="Create Or Select Subject"/>
 											<field name="teacher_id" context="{'subject_id':subject_id}"
 												attrs="{'invisible':[('is_break','=',True)]}" placeholder="Create Or Select Supervisior" />
-											<field name="is_break" on_change="onchange_recess(is_break)"/>		
+											<field name="is_break"/>		
 										</group>
 									</form>
 								</field>
