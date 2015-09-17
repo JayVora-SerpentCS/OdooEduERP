@@ -49,10 +49,10 @@ class library_editor_supplier(models.Model):
                 select
                     case when min(ps.id) is null then - min(pp.id)
                     else min(ps.id) end as id,
-                    case when pp.editor is null then 1 else pp.
-                    editor end as name,
-                    case when ps.name is null then 1 else ps.
-                    name end as supplier_id,
+                    case when pp.editor is null then 1
+                    else pp.editor end as name,
+                    case when ps.name is null then 1
+                    else ps.name end as supplier_id,
                     case when ps.sequence is null then 0 else ps.
                     sequence end as sequence,
                     ps.delay as delay,
