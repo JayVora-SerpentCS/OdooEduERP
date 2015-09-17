@@ -64,6 +64,7 @@ class library_editor_supplier(models.Model):
                     ((pp.editor is not null) or (ps.name is not null))
                 group by pp.editor, ps.name, ps.sequence, ps.delay, ps.min_qty
             )""")
+
     @api.model
     @api.returns('self', lambda value: value)
     def create(self, vals):
