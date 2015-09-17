@@ -193,7 +193,7 @@
         <!--transport.registration-->
          <record id="transport_registration_1" model="transport.registration">
             <field name="name" ref="student_transport_1"/>
-            <field name="student_name_id">201107001</field>
+           <!--  <field name="student_name_id">201107001</field> -->
             <field name="part_name" ref="school.demo_student_student_1"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
             <field name="vehicle_id" ref="transport_vehicle_1"/>
@@ -204,7 +204,7 @@
 
         <record id="transport_registration_2" model="transport.registration">
             <field name="name" ref="student_transport_2"/>
-            <field name="student_name_id">201107002</field>
+           <!--  <field name="student_name_id">201107002</field> -->
             <field name="part_name" ref="school.demo_student_student_2"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
             <field name="vehicle_id" ref="transport_vehicle_2"/>
@@ -215,7 +215,7 @@
 
         <record id="transport_registration_3" model="transport.registration">
             <field name="name" ref="student_transport_3"/>
-            <field name="student_name_id">201107003</field>
+            <!-- <field name="student_name_id">201107003</field> -->
             <field name="part_name" ref="school.demo_student_student_3"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
             <field name="vehicle_id" ref="transport_vehicle_3"/>
@@ -226,7 +226,7 @@
 
         <record id="transport_registration_4" model="transport.registration">
             <field name="name" ref="student_transport_4"/>
-            <field name="student_name_id">201107004</field>
+            <!-- <field name="student_name_id">201107004</field> -->
             <field name="part_name" ref="school.demo_student_student_4"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
             <field name="vehicle_id" ref="transport_vehicle_4"/>

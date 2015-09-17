@@ -250,7 +250,7 @@ class transport_registration(models.Model):
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
                            domain=[('state', '=', 'open')])
-    student_name_id = fields.Many2one('student.student', 'Student Id',)
+    student_name_id = fields.Many2one('student.student', 'Student Id')
     student_name = fields.Char(related="student_name_id.name",
                                string='Student Name')
     reg_date = fields.Date('Registration Date', readonly=True,
