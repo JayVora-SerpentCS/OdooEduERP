@@ -22,7 +22,7 @@
 #
 ##############################################################################
 from openerp import models, fields, api, _
-from openerp import tools
+# from openerp import tools
 from openerp.exceptions import Warning
 
 
@@ -37,34 +37,35 @@ class library_editor_supplier(models.Model):
     sequence = fields.Integer('Sequence')
     delay = fields.Integer('Customer Lead Time')
     min_qty = fields.Float('Minimal Quantity')
-#     junk = fields.Text(compute="get_junk", method=True, string=" ", )
     junk = fields.Text(compute=lambda self: dict([(idn, '') for idn in
                                                   self.ids]),
                        method=True, string=" ", type="text")
 
-    @api.v7
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, self._table)
-        cr.execute("""
-            create view library_editor_supplier as (
-                select
-                    case when min(ps.id) is null then - min(pp.id)
-                    else min(ps.id) end as id,
-                    case when pp.editor is null then 1 else pp.
-                    editor end as name,
-                    case when ps.name is null then 1 else ps.
-                    name end as supplier_id,
-                    case when ps.sequence is null then 0 else ps.
-                    sequence end as sequence,
-                    ps.delay as delay,
-                    ps.min_qty as min_qty
-                from
-                    product_supplierinfo ps full outer join product_product pp
-                    on (ps.name = pp.product_tmpl_id)
-                where
-                    ((pp.editor is not null) or (ps.name is not null))
-                group by pp.editor, ps.name, ps.sequence, ps.delay, ps.min_qty
-            )""")
+    #     @api.v7
+    #     def init(self, cr):
+    #         tools.sql.drop_view_if_exists(cr, self._table)
+    #         cr.execute("""
+    #             create view library_editor_supplier as (
+    #                 select
+    #                     case when min(ps.id) is null then - min(pp.id)
+    #                     else min(ps.id) end as id,
+    #                     case when pp.editor is null then 1
+    #                     else pp.editor end as name,
+    #                     case when ps.name is null then 1
+    #                     else ps.name end as supplier_id,
+    #                     case when ps.sequence is null then 0 else ps.
+    #                     sequence end as sequence,
+    #                     ps.delay as delay,
+    #                     ps.min_qty as min_qty
+    #                 from
+    #                     product_supplierinfo ps full outer
+    #                    join product_product pp
+    #                     on (ps.name = pp.product_tmpl_id)
+    #                 where
+    #                     ((pp.editor is not null) or (ps.name is not null))
+    #                 group by pp.editor, ps.name, ps.sequence,
+    #                    ps.delay, ps.min_qty
+    #             )""")
 
     @api.model
     @api.returns('self', lambda value: value)

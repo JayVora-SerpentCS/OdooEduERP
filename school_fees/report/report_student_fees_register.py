@@ -21,10 +21,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 from datetime import datetime
-from openerp.report import report_sxw
+import time
+
 from openerp.osv import osv
+from openerp.report import report_sxw
 
 
 class student_fees_register(report_sxw.rml_parse):

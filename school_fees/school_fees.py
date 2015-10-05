@@ -22,8 +22,9 @@
 #
 ##############################################################################
 import time
-from openerp import workflow
+
 from openerp import models, fields, api, _
+from openerp import workflow
 from openerp.exceptions import Warning
 
 

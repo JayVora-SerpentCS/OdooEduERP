@@ -21,8 +21,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import hostel
-from . import report
+
+# ----------------------------------------------------------
+# A Module to School Management System
+# ----------------------------------------------------------
+from . import school
+from . import school_event
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

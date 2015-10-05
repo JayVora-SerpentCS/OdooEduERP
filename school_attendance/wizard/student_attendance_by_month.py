@@ -21,8 +21,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api
 import time
+
+from openerp import models, fields, api
 
 
 class student_attendance_by_month(models.TransientModel):

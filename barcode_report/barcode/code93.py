@@ -32,9 +32,11 @@
 #
 
 from reportlab.lib.units import inch
-from . common import MultiWidthBarcode
 import string
 from twisted.persisted.aot import Instance
+
+
+from . common import MultiWidthBarcode
 
 _patterns = {'0': ('AcAaAb', 0),  '1': ('AaAbAc', 1),  '2': ('AaAcAb', 2),
              '3': ('AaAdAa', 3),  '4': ('AbAaAc', 4),  '5': ('AbAbAb', 5),

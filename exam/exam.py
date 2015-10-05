@@ -22,6 +22,7 @@
 #
 ##############################################################################
 from datetime import date, datetime
+
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
@@ -95,8 +96,8 @@ class exam_exam(models.Model):
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
     create_date = fields.Date("Exam Created Date", help="Exam Created Date")
     write_date = fields.Date("Exam Update Date", help="Exam Update Date")
-    timetable_ids = fields.One2many('time.table.line', 'tables_id',
-                                    'TimeTable')
+    timetables_ids = fields.One2many('time.table.line', 'tables_id',
+                                     'TimeTable')
     state = fields.Selection([('draft', 'Draft'), ('running', 'Running'),
                               ('finished', 'Finished'),
                               ('cancelled', 'Cancelled')], 'State',
@@ -266,7 +267,7 @@ class exam_result(models.Model):
         for standard_obj in self:
             for exam_student_rec in standard_obj.standard_id.student_ids:
                 student_lst.append(exam_student_rec.id)
-            for time_table in standard_obj.s_exam_ids.timetable_ids:
+            for time_table in standard_obj.s_exam_ids.timetables_ids:
                 if time_table.standard_id.id == standard_obj.standard_id.id:
                     for sub_id in time_table.subject_id:
                         sub_val = {'subject_id': sub_id.id

@@ -24,7 +24,8 @@
 
 from . import assign_roll_no
 from . import move_standards
-from . import wiz_send_email
 from . import wiz_meeting
+from . import wiz_send_email
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

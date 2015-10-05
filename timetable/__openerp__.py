@@ -40,9 +40,7 @@
         "security/ir.model.access.csv",
         "views/timetable.xml",
     ],
-    'test': [
-        "test/timetable.yml"
-    ],
+    'test': [],
     "installable": True,
     "auto_install": False,
     "application": True,

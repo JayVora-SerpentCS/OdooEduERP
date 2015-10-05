@@ -53,11 +53,7 @@
         "report_view.xml",
     ],
 
-    'test': [
-        'test/school_fees_test.yml',
-        'test/report_student_payslip_test.yml',
-        'test/report_student_fees_register_test.yml',
-    ],
+    'test': [],
     "installable": True,
     "auto_install": False,
     "application": True,

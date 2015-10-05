@@ -21,14 +21,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+import time
+
 from openerp import pooler
+from openerp.report import report_sxw
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
-from openerp.report import report_sxw
 from openerp.tools import ustr
+
 
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun',

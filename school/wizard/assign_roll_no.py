@@ -24,9 +24,8 @@
 
 from openerp import models, fields, api
 
+
 # This wizard is designed for assigning the roll number to a student.
-
-
 class assign_roll_no(models.TransientModel):
 
     _name = 'assign.roll.no'

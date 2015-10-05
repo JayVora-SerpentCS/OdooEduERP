@@ -23,25 +23,11 @@
 ##############################################################################
 
 from openerp import models, fields, api
+
+
 # import email
-
-
-class email_template(models.TransientModel):
+class email_template(models.Model):
     _inherit = "email.template"
-
-#    def generate_email(self, cr, uid, template_id, res_id, context=None):
-#        if context is None:
-#            context = {}
-#        ret = super(email_template, self).generate_email(cr, uid,
-#                                    template_id, res_id, context=context)
-#        if context.get('body_text', False) or context.get('subject', False)
-#                                           or context.get('email_to', False):
-#            ret['body_text'] = context['body_text']
-#            ret['subject'] = context['subject']
-#            ret['email_to'] = context['email_to']
-#            return ret
-#        else:
-#            return ret
 
     @api.multi
     def generate_email(self, template_id, res_id):
@@ -63,21 +49,6 @@ class send_email(models.TransientModel):
     _name = "send.email"
 
     note = fields.Text('Text')
-
-#    def send_email(self, cr, uid, ids, context=None):
-#        subject = 'Emergency mail'
-#        body = ''
-#        email_template = self.pool.get('email.template')
-#        template_id = email_template.search(cr, uid, [('model', '='
-#                                    'student.student')], context=context)
-#        if template_id:
-#            email_template_brw = email_template.browse(cr, uid,
-#                                                       template_id[0])
-#            for i in self.browse(cr, uid, ids):
-#                body += '\n' + i.note
-#            email_template.send_mail(cr, uid , template_id[0], context.
-#                                        get('active_id'), force_send=True)
-#        return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
     def send_email(self):

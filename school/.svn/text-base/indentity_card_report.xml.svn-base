@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
-        <report auto="True" id="report_student_student" model="student.student" name="Student Indentity Card" rml="school/report/indentity_card.rml" string="Indentity Card" header="False"/>
-
-    </data>
-</openerp>
-

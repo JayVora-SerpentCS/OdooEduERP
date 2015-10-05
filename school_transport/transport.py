@@ -23,10 +23,11 @@
 ##############################################################################
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
+
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-from dateutil.relativedelta import relativedelta
 
 
 class student_transport(models.Model):
@@ -248,9 +249,8 @@ class transport_registration(models.Model):
     _description = 'Transport Registration'
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
-                           domain=[('state', '=', 'open')], required=True)
-    student_name_id = fields.Many2one('student.student', 'Student Id',
-                                      required=True)
+                           domain=[('state', '=', 'open')])
+    student_name_id = fields.Many2one('student.student', 'Student Id')
     student_name = fields.Char(related="student_name_id.name",
                                string='Student Name')
     reg_date = fields.Date('Registration Date', readonly=True,
@@ -310,8 +310,9 @@ class transport_registration(models.Model):
         if not month:
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
-        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')
-        + relativedelta(months=+ month)
+        tr_end_date = datetime.strptime(tr_start_date,
+                                        '%Y-%m-%d') + relativedelta(months=+
+                                                                    month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 
@@ -402,7 +403,7 @@ class transport_registration(models.Model):
     @api.multi
     def read(self, recs, fields=None, load='_classic_read'):
         res_list = []
-        res = super(transport_registration, recs).read(fields=fields,
+        res = super(transport_registration, self).read(fields=fields,
                                                        load=load)
         for res_update in res:
             res_update.update({'student_name_id': res_update.get('part_id')})

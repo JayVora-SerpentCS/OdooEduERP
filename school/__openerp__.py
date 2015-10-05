@@ -57,11 +57,7 @@
         'demo/school_demo.xml',
     ],
 
-    'test': [
-        'test/school_test.yml',
-        'test/assign_roll_no_test.yml',
-        ],
-
+    'test': [],
     "installable": True,
     "auto_install": False,
     "application": True,

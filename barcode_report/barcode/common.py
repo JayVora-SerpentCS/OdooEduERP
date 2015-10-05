@@ -31,8 +31,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-from reportlab.platypus.flowables import Flowable
 from reportlab.lib.units import inch
+from reportlab.platypus.flowables import Flowable
 import string
 
 

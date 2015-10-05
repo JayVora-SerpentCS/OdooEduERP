@@ -1,9 +1,0 @@
--
-  In order to test the PDF reports defined on event
--
-  !python {model: school.event}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.school.event').create(cr, uid, [ref('school_event.event_cricket_0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'school_event-school_event.'+format), 'wb+').write(data)
--

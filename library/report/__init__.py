@@ -23,4 +23,5 @@
 ##############################################################################
 from . import qr_code_label
 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=

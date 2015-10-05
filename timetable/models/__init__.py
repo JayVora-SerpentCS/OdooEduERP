@@ -7,6 +7,8 @@
 #    (<http://www.serpentcs.com>)
 #    Copyright (C) 2013-2014 Serpent Consulting Services
 #    (<http://www.serpentcs.com>)
+#    Copyright (C) 2015 Serpent Consulting Services
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -21,8 +23,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from . import hostel
-from . import report
+
+# ----------------------------------------------------------
+# A Module to Schoool Timetable Management
+# ----------------------------------------------------------
+from . import timetable
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

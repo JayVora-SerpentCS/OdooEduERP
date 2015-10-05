@@ -21,8 +21,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.report import report_sxw
 from openerp import models
+from openerp.report import report_sxw
 
 
 class result_label(report_sxw.rml_parse):

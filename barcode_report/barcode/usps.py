@@ -32,8 +32,10 @@
 #
 
 from reportlab.lib.units import inch
-from . common import Barcode
 import string
+
+
+from . common import Barcode
 
 _fim_patterns = {
     'A': "||  |  ||",
