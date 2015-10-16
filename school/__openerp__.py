@@ -52,7 +52,7 @@
     ],
   'demo': [
            'demo/school_demo.xml',
-            ],
+        ],
 
     'test': [
         'test/school_test.yml',
