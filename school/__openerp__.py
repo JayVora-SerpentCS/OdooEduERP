@@ -50,15 +50,13 @@
             "report_view.xml",
             "views/identity_card.xml",
     ],
-  'demo': [
+    "demo": [
            'demo/school_demo.xml',
-        ],
-
-    'test': [
+            ],
+    "test": [
         'test/school_test.yml',
         'test/assign_roll_no_test.yml',
         ],
-
     "installable": True,
     "auto_install": False,
     "application": True,
