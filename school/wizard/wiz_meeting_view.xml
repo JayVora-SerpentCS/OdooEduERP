@@ -3,6 +3,7 @@
     <data>
 
         <!-- Student Meeting Wizard Form View  -->
+
         <record id="view_student_meeting_form" model="ir.ui.view">
             <field name="name">student.meeting.form</field>
             <field name="model">student.meeting</field>
@@ -26,7 +27,7 @@
                </form>
             </field>
         </record>
-		
+
         <act_window id="action_student_meeting_form"
             key2="client_action_multi"
             name="Student Meeting"
@@ -35,6 +36,6 @@
             view_mode="form"
             target="new"
             view_type="form"/>
-		
+
     </data>
 </openerp>

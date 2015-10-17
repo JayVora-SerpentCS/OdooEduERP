@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <!--  School Information -->
+
         <record id="demo_school_1" model="school.school">
             <field name="name">West High School</field>
             <field name="code">0672</field>
             <field name="city">melbourne</field>
         </record>
+
         <record id="demo_school_2" model="school.school">
             <field name="name">East High School</field>
             <field name="code">0786</field>
             <field name="city">Ontario</field>
         </record>
+
         <record id="demo_school_3" model="school.school">
             <field name="name">Everwood High School</field>
             <field name="code">0895</field>
             <field name="city">London</field>
         </record>
-        
-<!-- Student Grade Master -->
+
+		<!-- Student Grade Master -->
+
 		<record id="demo_student_grade_1" model="grade.master">
 			<field name="name">Grade System for Finals</field>
 		</record>
+
 		<record id="demo_student_grade_line_1" model="grade.line">
 			<field name="sequence">1</field>
 			<field name="grade">A+</field>
@@ -30,6 +35,7 @@
 			<field name="to_mark">100</field>
 			<field name="grade_id" ref="demo_student_grade_1"/>
 		</record>
+
 		<record id="demo_student_grade_line_2" model="grade.line">
 			<field name="sequence">2</field>
 			<field name="grade">A</field>
@@ -37,6 +43,7 @@
 			<field name="to_mark">89</field>
 			<field name="grade_id" ref="demo_student_grade_1"/>
 		</record>
+
 		<record id="demo_student_grade_line_3" model="grade.line">
 			<field name="sequence">3</field>
 			<field name="grade">A-</field>
@@ -44,6 +51,7 @@
 			<field name="to_mark">79</field>
 			<field name="grade_id" ref="demo_student_grade_1"/>
 		</record>
+
 		<record id="demo_student_grade_line_4" model="grade.line">
 			<field name="sequence">4</field>
 			<field name="grade">B+</field>
@@ -51,6 +59,7 @@
 			<field name="to_mark">69</field>
 			<field name="grade_id" ref="demo_student_grade_1"/>
 		</record>
+
 		<record id="demo_student_grade_line_5" model="grade.line">
 			<field name="sequence">5</field>
 			<field name="grade">B</field>
@@ -58,6 +67,7 @@
 			<field name="to_mark">59</field>
 			<field name="grade_id" ref="demo_student_grade_1"/>
 		</record>
+
 		<record id="demo_student_grade_line_6" model="grade.line">
 			<field name="sequence">6</field>
 			<field name="grade">B-</field>
@@ -65,6 +75,7 @@
 			<field name="to_mark">49</field>
 			<field name="grade_id" ref="demo_student_grade_1"/>
 		</record>
+
 		<record id="demo_student_grade_line_7" model="grade.line">
 			<field name="sequence">1</field>
 			<field name="grade">F</field>
@@ -74,6 +85,7 @@
 		</record>
 
         <!--Academic Year  Information-->
+
         <record id="demo_academic_year_1" model="academic.year">
                 <field name="name">Academic Year 2011</field>
                 <field name="code">2011</field>
@@ -82,6 +94,7 @@
                 <field name="date_start">01/01/2011</field>
                 <field name="date_stop">12/31/2011</field>
         </record>
+
         <record id="demo_academic_year_2" model="academic.year">
                <field name="name">Academic Year 2012</field>
                <field name="code">2012</field>
@@ -90,6 +103,7 @@
                <field name="date_start">01/01/2012</field>
                <field name="date_stop">12/31/2012</field>
         </record>
+
         <record id="demo_academic_year_3" model="academic.year">
                <field name="name">Academic Year 2013</field>
                <field name="code">2013</field>
@@ -100,6 +114,7 @@
         </record>
 
         <!-- Acadamic Month -->
+
         <record id="demo_academic_month_1" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
@@ -107,6 +122,7 @@
                 <field name="date_start">01/01/2011</field>
                 <field name="date_stop">12/31/2011</field>
        </record>
+
        <record id="demo_academic_month_3" model="academic.month">
               <field name="name">February</field>
               <field name="code">FEB</field>
@@ -114,6 +130,7 @@
               <field name="date_start">02/01/2011</field>
               <field name="date_stop">02/28/2011</field>
        </record>
+
        <record id="demo_academic_month_4" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
@@ -121,6 +138,7 @@
                 <field name="date_start">01/01/2012</field>
                 <field name="date_stop">01/31/2012</field>
        </record>
+
        <record id="demo_academic_month_2" model="academic.month">
               <field name="name">February</field>
               <field name="code">FEB</field>
@@ -128,6 +146,7 @@
               <field name="date_start">02/01/2012</field>
               <field name="date_stop">02/29/2012</field>
        </record>
+
        <record id="demo_academic_month_5" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
@@ -135,6 +154,7 @@
                 <field name="date_start">01/01/2013</field>
                 <field name="date_stop">12/31/2013</field>
        </record>
+
        <record id="demo_academic_month_6" model="academic.month">
               <field name="name">February</field>
               <field name="code">FEB</field>
@@ -144,16 +164,19 @@
        </record>
 
        <!--Standard Information-->
+
        <record id="demo_standard_standard_1" model="standard.standard">
               <field name="name">10th</field>
               <field name="code">FRT</field>
               <field name="sequence">1</field>
        </record>
+
        <record id="demo_standard_standard_2" model="standard.standard">
               <field name="name">11th</field>
               <field name="code">SCN</field>
               <field name="sequence">2</field>
        </record>
+
        <record id="demo_standard_standard_3" model="standard.standard">
               <field name="name">12th</field>
               <field name="code">THR</field>
@@ -161,7 +184,7 @@
         </record>
 
 		<!--Standard Medium Information-->
-		
+
 		<record id="demo_standard_medium_1" model="standard.medium">
 			<field name="name">English</field>
 			<field name="code">ENG</field>
@@ -181,7 +204,7 @@
 		</record>
 
 		<!--Standard Division Information-->
-		
+
 		<record id="demo_standard_division_1" model="standard.division">
 			<field name="name">A</field>
 			<field name="code">A</field>
@@ -195,29 +218,30 @@
 		</record>
 
 		<!-- School Standard -->
+
 		<record id="demo_school_standard_1" model="school.standard">
 			<field name="standard_id" ref="demo_standard_standard_1"/>
 			<field name="division_id" ref="demo_standard_division_1"/>
 			<field name="medium_id" ref="demo_standard_medium_1"/>
 			<field name="school_id" ref="demo_school_1"/>
 		</record>
+
 		<record id="demo_school_standard_2" model="school.standard">
 			<field name="standard_id" ref="demo_standard_standard_2"/>
 			<field name="division_id" ref="demo_standard_division_2"/>
 			<field name="medium_id" ref="demo_standard_medium_2"/>
 			<field name="school_id" ref="demo_school_2"/>
 		</record>
+
 		<record id="demo_school_standard_3" model="school.standard">
 			<field name="standard_id" ref="demo_standard_standard_3"/>
 			<field name="division_id" ref="demo_standard_division_1"/>
 			<field name="medium_id" ref="demo_standard_medium_3"/>
 			<field name="school_id" ref="demo_school_3"/>
 		</record>
-					
-		
 
 		<!--Subject Information-->
-		
+
 		<record id="demo_subject_subject_1" model="subject.subject">
 			<field name="name">Maths</field>
 			<field name="code">MAT</field>
@@ -255,21 +279,25 @@
 		</record>
 
 		<!--  Subject elective -->
+
 		<record id="demo_elective_subject_1" model="subject.elective">
 			<field name="name">Sanskrit</field>
 		</record>
+
 		<record id="demo_elective_subject_2" model="subject.elective">
 			<field name="name">Computer</field>
 		</record>
+
 		<record id="demo_elective_subject_3" model="subject.elective">
 			<field name="name">Sport</field>
 		</record>
+
 		<record id="demo_elective_subject_4" model="subject.elective">
 			<field name="name">Music</field>
 		</record>
-		
+
         <!-- Student Informations -->
-  
+
 	      <record id="demo_student_student_1" model="student.student">
 			<field name="name">Mary</field>
 			<field name="middle">Daniel</field>
@@ -285,6 +313,7 @@
 			<field name="division_id" ref="demo_standard_division_1"/>
 			<field name="medium_id" ref="demo_standard_medium_1"/>
 		</record>
+
         <record id="demo_student_student_2" model="student.student">
 			<field name="name">William</field>
 			<field name="middle">Joseph</field>
@@ -300,6 +329,7 @@
 			<field name="division_id" ref="demo_standard_division_2"/>
 			<field name="medium_id" ref="demo_standard_medium_2"/>
 		</record>
+
         <record id="demo_student_student_3" model="student.student">
 			<field name="name">Jacob</field>
 			<field name="middle">Caleb</field>
@@ -315,6 +345,7 @@
 			<field name="division_id" ref="demo_standard_division_2"/>
 			<field name="medium_id" ref="demo_standard_medium_3"/>
 		</record>
+
 		<record id="demo_student_student_4" model="student.student">
 			<field name="name">Maria</field>
 			<field name="middle">Samuel</field>
@@ -330,6 +361,7 @@
 			<field name="division_id" ref="demo_standard_division_1"/>
 			<field name="medium_id" ref="demo_standard_medium_1"/>
 		</record>
+
 		<record id="demo_student_student_5" model="student.student">
 			<field name="name">John</field>
 			<field name="middle">William</field>
@@ -345,6 +377,7 @@
 			<field name="division_id" ref="demo_standard_division_2"/>
 			<field name="medium_id" ref="demo_standard_medium_2"/>
 		</record>
+
         <record id="demo_student_student_6" model="student.student">
 			<field name="name">Alexander</field>
 			<field name="middle">Robert</field>
@@ -360,6 +393,7 @@
 			<field name="division_id" ref="demo_standard_division_1"/>
 			<field name="medium_id" ref="demo_standard_medium_3"/>
 		</record>
+
         <record id="demo_student_student_7" model="student.student">
 			<field name="name">Sarah</field>
 			<field name="middle">Isaac</field>
@@ -375,6 +409,7 @@
 			<field name="division_id" ref="demo_standard_division_1"/>
 			<field name="medium_id" ref="demo_standard_medium_1"/>
 		</record>
+
         <record id="demo_student_student_8" model="student.student">
 			<field name="name">Lucy</field>
 			<field name="middle">William</field>
@@ -390,49 +425,61 @@
 			<field name="division_id" ref="demo_standard_division_2"/>
 			<field name="medium_id" ref="demo_standard_medium_2"/>
 		</record>
-								
-		
+
 		<!-- Student cast -->
+
 		<record id="demo_student_cast_1" model="student.cast">
 			<field name="name">Hindu</field>
 		</record>
+
 		<record id="demo_student_cast_2" model="student.cast">
 			<field name="name">Muslim</field>
 		</record>
+
 		<record id="demo_student_cast_3" model="student.cast">
 			<field name="name">Christian</field>
 		</record>
+
 		<record id="demo_student_cast_4" model="student.cast">
 			<field name="name">Panjabi</field>
 		</record>
+
 		<record id="demo_student_cast_5" model="student.cast">
 			<field name="name">Parsi</field>
 		</record>
-		 
+
 		<!-- Student Document Type --> 
+
 		<record id="demo_student_document_1" model="document.type">
 			<field name="doc_type">SSC Marksheet</field>
 		</record>
+
 		<record id="demo_student_document_2" model="document.type">
 			<field name="doc_type">HSC Marksheet</field>
 		</record>
+
 		<record id="demo_student_document_3" model="document.type">
 			<field name="doc_type">Gradution Marksheet</field>
 		</record>
+
 		<record id="demo_student_document_4" model="document.type">
 			<field name="doc_type">Degree certificate</field>
 		</record>
+
 		<record id="demo_student_document_5" model="document.type">
 			<field name="doc_type">Leving Certificate</field>
 		</record>
+
 		<record id="demo_student_document_6" model="document.type">
 			<field name="doc_type">Cast certificate</field>
 		</record>
+
 		<record id="demo_student_document_7" model="document.type">
 			<field name="doc_type">Other certificate</field>
 		</record>
-		
+
 		<!-- student.news -->
+
   		<record id="demo_student_news_desc_1" model="student.news">
 			<field name="subject">Education Information</field>
 			<field name="date">2013-07-15</field>
