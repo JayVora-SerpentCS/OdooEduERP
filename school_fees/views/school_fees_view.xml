@@ -2,7 +2,8 @@
 <openerp>
     <data>
 
-		<!--  Student Payslip Line Information Search View  -->
+		<!--  Student PaySlip Line Information Search View  -->
+
         <record model="ir.ui.view" id="view_student_payslip_line_search">
             <field name="name">student.payslip.line.search</field>
             <field name="model">student.payslip.line</field>
@@ -18,6 +19,7 @@
         </record>
 
     <!-- Student Fees Structure Information Search View -->
+
      <record model="ir.ui.view" id="view_fees_structure_search">
             <field name="name">student.fees.structure.search</field>
             <field name="model">student.fees.structure</field>
@@ -36,7 +38,8 @@
             </field>
         </record>
 
-    <!-- Student Fees Structure Information From View -->
+        <!-- Student Fees Structure Information From View -->
+
         <record model="ir.ui.view" id="view_student_fees_structure_form">
             <field name="name">student.fees.structure.form</field>
             <field name="model">student.fees.structure</field>
@@ -57,7 +60,8 @@
             </field>
         </record>
 
-     <!-- Student Fees Structure Information Tree View-->
+        <!-- Student Fees Structure Information Tree View-->
+
         <record model="ir.ui.view" id="view_student_fees_structre_tree">
             <field name="name">student.fees.structure.tree</field>
             <field name="model">student.fees.structure</field>
@@ -69,7 +73,8 @@
             </field>
         </record>
 
-    <!-- Student Payslip Line Information Form View-->
+        <!-- Student PaySlip Line Information Form View-->
+
         <record model="ir.ui.view"  id="view_student_payslip_line_form">
             <field name="name">student.payslip.line.form</field>
             <field name="model">student.payslip.line</field>
@@ -108,7 +113,8 @@
             </field>
         </record>
 
-      <!-- Student Payslip Line Information Tree View-->
+      <!-- Student PaySlip Line Information Tree View-->
+
         <record model="ir.ui.view" id="view_student_payslip_line_tree">
             <field name="name">student.payslip.line.tree</field>
             <field name="model">student.payslip.line</field>
@@ -122,7 +128,8 @@
             </field>
         </record>
 
-        <!-- Student Payslip Line Information Form View-->
+        <!-- Student PaySlip Line Information Form View-->
+
         <record model="ir.ui.view"  id="view_student_fees_structure_line_form">
             <field name="name">student.fees.structure.line.form</field>
             <field name="model">student.fees.structure.line</field>
@@ -156,7 +163,8 @@
             </field>
         </record>
 
-      <!-- Student Payslip Line Information Tree View-->
+      <!-- Student PaySlip Line Information Tree View-->
+
         <record model="ir.ui.view" id="view_student_fees_structure_line_tree">
             <field name="name">student.fees.structure.line.tree</field>
             <field name="model">student.fees.structure.line</field>
@@ -171,7 +179,8 @@
             </field>
         </record>
 
-    <!-- Student Payslip Information Form View-->
+        <!-- Student PaySlip Information Form View-->
+
         <record model="ir.ui.view"  id="view_student_payslip_form">
             <field name="name">student.payslip.form</field>
             <field name="model">student.payslip</field>
@@ -198,7 +207,7 @@
                             </group>
                            </group>
 		                    <group col="4">
-		                    <field name="student_id" placeholder="Student Name" colspan="4"/>		                    
+		                    <field name="student_id" placeholder="Student Name" colspan="4"/>
 		                    <separator string="Fees Structure" colspan="4"/>
 		                    <field name="fees_structure_id" required="1" placeholder="Fee Structure"/>
 		                    <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" placeholder="Journal"/>
@@ -213,7 +222,7 @@
 		                        <page string="Other Information">
 		                            <group col="4" colspan="4">
 			                            <field name="type"  placeholder="Type"/>
-			                            <field name="period_id" placeholder="Force Period"/>
+			                            <!-- <field name="period_id" placeholder="Force Period"/> -->
 			                            <field name="currency_id" placeholder="Currency"/>
 			                            <field name="move_id" />
 			                            <field name="payment_date" placeholder="Payment Date"/>
@@ -227,7 +236,8 @@
             </field>
         </record>
 
-    <!-- Student Payslip Information Tree View-->
+        <!-- Student PaySlip Information Tree View-->
+
         <record model="ir.ui.view" id="view_student_payslip_tree">
             <field name="name">student.payslip.tree</field>
             <field name="model">student.payslip</field>
@@ -243,7 +253,8 @@
             </field>
         </record>
 
-    <!-- Student Payslip Information Search View -->
+        <!-- Student PaySlip Information Search View -->
+
         <record model="ir.ui.view" id="view_student_payslip_search">
             <field name="name">student.payslip.search</field>
             <field name="model">student.payslip</field>
@@ -270,7 +281,8 @@
             </field>
         </record>
 
-    <!-- Student Fees Register Information Form View-->
+        <!-- Student Fees Register Information Form View-->
+
         <record model="ir.ui.view"  id="view_student_fees_register_form">
             <field name="name">student.fees.register.form</field>
             <field name="model">student.fees.register</field>
@@ -286,7 +298,7 @@
 	                        <field name="number"/>
 	                        <field name="date"/>
 	                        <field name="journal_id" placeholder="Journal"/>
-	                        <field name="period_id" placeholder="Force Period"/>
+	                        <!-- <field name="period_id" placeholder="Force Period"/> -->
 	                        <field name="company_id" string = "School" placeholder="School Name"/>
 	                    </group>
 	                    <notebook colspan="4">
@@ -310,7 +322,7 @@
 			                                    <field name="student_id" placeholder="Student Name"/>
 			                                    <field name="total"/>
 			                                    <field name="journal_id" placeholder="Journal"/> 
-			                                    <field name="period_id" placeholder="Period"/>
+			                                    <!-- <field name="period_id" placeholder="Period"/> -->
 			                                    <field name="company_id" placeholder="School Name"/>
 		                                    </group>
 	                                    </sheet>
@@ -327,7 +339,8 @@
             </field>
         </record>
 
-    	<!-- Student Fees Register Information Tree View-->
+        <!-- Student Fees Register Information Tree View-->
+
         <record model="ir.ui.view" id="view_student_fees_register_tree">
             <field name="name">student.fees.register.tree</field>
             <field name="model">student.fees.register</field>
@@ -341,7 +354,8 @@
             </field>
         </record>
 
-    	<!-- Student Fees Register Information Search View -->
+        <!-- Student Fees Register Information Search View -->
+
         <record model="ir.ui.view" id="view_student_fees_register_search">
             <field name="name">student.fees.register.search</field>
             <field name="model">student.fees.register</field>
@@ -363,7 +377,8 @@
             </field>
         </record>
 
-     	<!-- Student Fees Structure Information Action -->
+        <!-- Student Fees Structure Information Action -->
+
         <record model="ir.actions.act_window" id="action_student_fees_structure_form">
             <field name="name">Fees Structure</field>
             <field name="res_model">student.fees.structure</field>
@@ -371,7 +386,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-   		 <!-- Student Payslip Line Information Action -->
+        <!-- Student PaySlip Line Information Action -->
+
         <record model="ir.actions.act_window" id="action_student_payslip_line_form">
             <field name="name">Fees Head</field>
             <field name="res_model">student.payslip.line</field>
@@ -379,7 +395,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-    	<!-- Student Payslip Information Action -->
+        <!-- Student PaySlip Information Action -->
+
         <record model="ir.actions.act_window" id="action_student_payslip_form">
             <field name="name">Fees Receipt</field>
             <field name="res_model">student.payslip</field>
@@ -395,7 +412,8 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
          </record>
 
-    	<!-- Student Fees Register Information Action -->
+        <!-- Student Fees Register Information Action -->
+
         <record model="ir.actions.act_window" id="action_student_fees_register_form">
             <field name="name">Fees Register</field>
             <field name="res_model">student.fees.register</field>
@@ -411,33 +429,37 @@
             <field eval="1" name="global"/>
             <field name="domain_force">[('line_ids.student_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-         </record>
+        </record>
 
-    <!-- memu Items for Fees -->
-    <menuitem
-        name="Fees" parent="school.menu_ems"
-        id="menu_fees"
-        sequence="9"/>
+	    <!-- memu Items for Fees -->
 
-    <menuitem name="Fees Receipts" parent="menu_fees" id="menu_student_payslip" action="action_student_payslip_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+	    <menuitem
+	        name="Fees" parent="school.menu_ems"
+	        id="menu_fees"
+	        sequence="9"/>
+	
+	    <menuitem name="Fees Receipts" parent="menu_fees" id="menu_student_payslip" action="action_student_payslip_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+	
+	    <menuitem name="Fees Registers" parent="menu_fees" id="menu_student_fees_register" action="action_student_fees_register_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
-    <menuitem name="Fees Registers" parent="menu_fees" id="menu_student_fees_register" action="action_student_fees_register_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
-    <menuitem
-        name="Fees" parent="school.menu_configuration"
-        id="menu_student_fees_structure_form"/>
-    <menuitem
-        name="Fees Structure" parent="menu_student_fees_structure_form"
-        id="menu_student_fees_structure_sub_form"
-        action="action_student_fees_structure_form"
-        sequence="1"/>
+	    <menuitem
+	        name="Fees" parent="school.menu_configuration"
+	        id="menu_student_fees_structure_form"/>
 
-    <menuitem
-        name="Fees Head" parent="menu_student_fees_structure_form"
-        id="menu_student_payslip_line_form"
-        action="action_student_payslip_line_form"
-        sequence="2"/>
+	    <menuitem
+	        name="Fees Structure" parent="menu_student_fees_structure_form"
+	        id="menu_student_fees_structure_sub_form"
+	        action="action_student_fees_structure_form"
+	        sequence="1"/>
+	
+	    <menuitem
+	        name="Fees Head" parent="menu_student_fees_structure_form"
+	        id="menu_student_payslip_line_form"
+	        action="action_student_payslip_line_form"
+	        sequence="2"/>
 
-	<!-- Student view's fees button -->
+        <!-- Student view's fees button -->
+
 		<record model="ir.actions.act_window" id="action_stu_fees_form">
             <field name="name">Fees Register</field>
             <field name="res_model">student.payslip</field>
@@ -445,6 +467,8 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_student_id': active_id}</field>
         </record>
+
+		<!-- Inherited View Of Student Form -->
 
         <record model="ir.ui.view" id="view_student_student_form2">
             <field name="name">student.student.form</field>
@@ -461,5 +485,6 @@
                 </data>
             </field>
         </record>
+
     </data>
 </openerp>

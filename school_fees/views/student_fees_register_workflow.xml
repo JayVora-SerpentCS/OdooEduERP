@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+	    <!-- General Structure Of A WorkFlow XML File -->
+	
+	    <record model="workflow" id="wkf_event_3">
+	        <field name="name">workflow.event.3</field>
+	        <field name="osv">student.fees.register</field>
+	        <field name="on_create">True</field>
+	    </record>
+	
+	    <!-- Student Fees Register Procedure WorkFlow Activities -->
+	
+	    <record model="workflow.activity" id="act_draft_1">
+	        <field name="wkf_id" ref="wkf_event_3" />
+	        <field name="name">activity.draft.3</field>
+	        <field name="flow_start">True</field>
+	        <field name="kind">function</field>
+	        <field name="action">fees_register_draft()</field>
+	    </record>
+	
+	    <record model="workflow.activity" id="act_confirm_1">
+	        <field name="wkf_id" ref="wkf_event_3" />
+	        <field name="name">activity.confirm.3</field>
+	        <field name="flow_stop">True</field>
+	        <field name="kind">function</field>
+	        <field name="action">fees_register_confirm()</field>
+	    </record>
+	
+	    <!-- Student Fees Register Procedure WorkFlow Transitions -->
+	
+	    <record model="workflow.transition" id="trans_draft_1_confirm_1">
+	        <field name="act_from" ref="act_draft_1" />
+	        <field name="act_to" ref="act_confirm_1" />
+	        <field name="signal">fees_register_confirm</field>
+	    </record>
+
+	</data>
+</openerp>
