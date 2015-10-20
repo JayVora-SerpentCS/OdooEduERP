@@ -15,6 +15,6 @@
 				report_type = "qweb-pdf"
 				file="school_fees.student_fees_register"
 				name="school_fees.student_fees_register" />
-        	
+
     </data>
 </openerp>

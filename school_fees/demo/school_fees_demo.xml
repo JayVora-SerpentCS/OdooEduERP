@@ -3,10 +3,10 @@
     <data noupdate="1">
 
         <!--Fees Head Information-->
+
         <record id="demo_school_fees_1" model="student.payslip.line">
             <field name="name">Educational Fees</field>
             <field name="code">01</field>
-            <field name="sequence">01</field>
             <field name="type">month</field>
             <field name="amount">4000.00</field>
         </record>
@@ -14,7 +14,6 @@
         <record id="demo_school_fees_2" model="student.payslip.line">
             <field name="name">Library Fees</field>
             <field name="code">02</field>
-            <field name="sequence">02</field>
             <field name="type">month</field>
             <field name="amount">2000.00</field>
         </record>
@@ -22,7 +21,6 @@
         <record id="demo_school_fees_3" model="student.payslip.line">
             <field name="name">Laboratory Fees</field>
             <field name="code">03</field>
-            <field name="sequence">03</field>
             <field name="type">month</field>
             <field name="amount">3000.00</field>
         </record>
@@ -30,7 +28,6 @@
         <record id="demo_school_fees_4" model="student.payslip.line">
             <field name="name">Transportation Fees</field>
             <field name="code">04</field>
-            <field name="sequence">04</field>
             <field name="type">month</field>
             <field name="amount">4000.00</field>
         </record>
@@ -38,7 +35,6 @@
         <record id="demo_school_fees_5" model="student.payslip.line">
             <field name="name">ICard Fees</field>
             <field name="code">05</field>
-            <field name="sequence">05</field>
             <field name="type">month</field>
             <field name="amount">20.00</field>
         </record>
@@ -46,7 +42,6 @@
         <record id="demo_school_fees_6" model="student.payslip.line">
             <field name="name">Sport Fees</field>
             <field name="code">06</field>
-            <field name="sequence">06</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>
         </record>
@@ -54,7 +49,6 @@
         <record id="demo_school_fees_7" model="student.payslip.line">
             <field name="name">Exam Fees</field>
             <field name="code">07</field>
-            <field name="sequence">07</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>
         </record>
@@ -62,7 +56,6 @@
         <record id="demo_school_fees_8" model="student.payslip.line">
             <field name="name">Cultural Fees</field>
             <field name="code">08</field>
-            <field name="sequence">08</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>
         </record>
@@ -70,12 +63,12 @@
         <record id="demo_school_fees_9" model="student.payslip.line">
             <field name="name">Tuition Fees</field>
             <field name="code">09</field>
-            <field name="sequence">09</field>
             <field name="type">month</field>
             <field name="amount">2000.00</field>
         </record>
 
 		<!--Student Fees Structure Line-->
+
         <record id="demo_student_fees_structure_line_1" model="student.fees.structure.line">
             <field name="name">Educational Fees</field>
             <field name="code">01</field>
@@ -99,13 +92,15 @@
             <field name="type">month</field>
             <field name="amount">3000.00</field>
         </record>
-		
+
 		<!-- Fees Structure Information -->
+
         <record id="demo_student_fees_structure_1" model="student.fees.structure">
             <field name="name">Student Fees Structure</field>
             <field name="code">SFS</field>
-            <field eval="[(6,0,[ref('demo_student_fees_structure_line_1'), ref('demo_student_fees_structure_line_2'), ref('demo_student_fees_structure_line_3')])]" name="line_ids"/>
+            <field eval="[(6,0,[ref('demo_student_fees_structure_line_1'), ref('demo_student_fees_structure_line_2'), ref('demo_student_fees_structure_line_3')])]" name="line_ids" />
         </record>
+
         <record id="demo_student_fees_structure_2" model="student.fees.structure">
             <field name="name">External Student Fees Structure</field>
             <field name="code">ESFS</field>
@@ -113,53 +108,73 @@
         </record>
 
         <!--Student Fees Receipt Information-->
+
+		<record id="bnk" model="account.account">
+            <field name="code">X1014</field>
+            <field name="name">Bank Current Account - (test)</field>
+            <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        </record>
+
+		<record id="bank_journal" model="account.journal">
+            <field name="name">Bank - Test</field>
+            <field name="code">TBNK</field>
+            <field name="type">bank</field>
+            <field name="default_debit_account_id" ref="bnk"/>
+            <field name="default_credit_account_id" ref="bnk"/>
+        </record>
+
         <record id="demo_student_payslip_1" model="student.payslip">
             <field name="name">Fees Receipt-1</field>
             <field name="number">SLIP/001</field>
             <field name="student_id" ref= 'school.demo_student_student_1'/>
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
             <field name="fees_structure_id" ref= 'demo_student_fees_structure_1'/>
-            <field name="journal_id" ref="account.bank_journal"/>
-            <field name="period_id" ref="account.period_1"/>
+            <field name="journal_id" ref="bank_journal"/>
+            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
         </record>
-		
+
 		<!--Student fees Registration -->
+
 		 <record id="demo_student_fees_registration_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>
             <field name="date">2012-05-25</field>
-            <field name="journal_id" ref= "account.bank_journal"/> 
-            <field name="period_id" ref="account.period_1"/>
+            <field name="journal_id" ref= "bank_journal"/> 
+            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
+
          <record id="demo_student_fees_registration_2" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_2"/>
             <field name="date">2012-01-15</field>
-            <field name="journal_id" ref= "account.bank_journal"/> 
-            <field name="period_id" ref="account.period_1"/>
+            <field name="journal_id" ref="bank_journal"/> 
+            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
+
          <record id="demo_student_fees_registration_3" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_3"/>
             <field name="date">2011-04-09</field>
-            <field name="journal_id" ref= "account.bank_journal"/> 
-            <field name="period_id" ref="account.period_1"/>
+            <field name="journal_id" ref="bank_journal"/> 
+            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
+
          <record id="demo_student_fees_registration_4" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_4"/>
             <field name="date">2012-03-05</field>
-            <field name="journal_id" ref= "account.bank_journal"/> 
-            <field name="period_id" ref="account.period_1"/>
+            <field name="journal_id" ref="bank_journal"/> 
+            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
+
          <record id="demo_student_fees_registration_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>
             <field name="date">2012-10-10</field>
-            <field name="journal_id" ref= "account.bank_journal"/> 
-            <field name="period_id" ref="account.period_1"/>
+            <field name="journal_id" ref="bank_journal"/> 
+            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
-		
+
     </data>
 </openerp>
