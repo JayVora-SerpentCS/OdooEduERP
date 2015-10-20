@@ -3,6 +3,7 @@
 <data>
 
 	<!-- General structure of a workflow XML file -->
+
 	<record model="workflow" id="wkf_event_2">
 		<field name="name">workflow.event.2</field>
 		<field name="osv">daily.attendance</field>
@@ -10,6 +11,7 @@
 	</record>
 
 	<!-- Attendance Procedure Workflow Activities -->
+
 	<record model="workflow.activity" id="act_draft_2">
     	<field name="wkf_id" ref="wkf_event_2" />
 		<field name="name">activity.draft.2</field>
@@ -26,6 +28,7 @@
 	</record>
 
 	<!-- Attendance Procedure Workflow Transitions -->
+
 	<record model="workflow.transition" id="trans_draft_2_validate_2">
 		<field name="act_from" ref="act_draft_2" />
 		<field name="act_to" ref="act_validate_2" />

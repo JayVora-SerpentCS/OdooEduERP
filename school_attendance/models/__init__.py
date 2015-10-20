@@ -20,4 +20,4 @@
 #
 ##############################################################################
 
-from . import attendance_by_month_student
+from . import school_attendance

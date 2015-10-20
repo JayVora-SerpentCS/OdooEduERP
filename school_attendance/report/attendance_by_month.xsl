@@ -10,7 +10,6 @@
         <xsl:call-template name="rml" />
     </xsl:template>
 
-
 	<xsl:template name="stylesheet">
 				<paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="14.0" leading="17" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
 				<paraStyle name="name" fontName="Helvetica" textColor="green" fontSize="7"/>
@@ -55,7 +54,6 @@
     </xsl:template>
 
     <xsl:template match="user">
-<!--		<tr></tr>-->
 		<tr>
 			<td>
 				<para style="name"><xsl:value-of select="name" /></para>
@@ -65,9 +63,5 @@
 			</xsl:for-each>
 		</tr>
 
-<!--		<tr>-->
-<!--			<td>Worked</td>-->
-<!--			-->
-<!--		</tr>-->
     </xsl:template>
 </xsl:stylesheet>
