@@ -2,6 +2,13 @@
 <openerp>
 	<data>
 
+		<template id="assets_backend" name="school assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/school/static/src/less/school_dashboard.less"/>
+                <script type="text/javascript" src="/school/static/src/js/school_dashboard.js"></script>
+            </xpath>
+        </template>
+
 		<!-- Student Form View1 -->
 
 		<record model="ir.ui.view" id="view_student_student_form_1">
@@ -456,21 +463,17 @@
 					<field name="color" />
 					<templates>
 						<t t-name="kanban-box">
-							<div
-								t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+							<div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
+												oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}
+												oe_kanban_global_click_edit oe_semantic_html_override">
 								<div class="oe_dropdown_toggle oe_dropdown_kanban">
-									<span class="oe_e">í</span>
 									<ul class="oe_dropdown_menu">
-										<t t-if="widget.view.is_action_enabled('edit')">
 											<li>
 												<a type="edit">Edit...</a>
 											</li>
-										</t>
-										<t t-if="widget.view.is_action_enabled('delete')">
 											<li>
 												<a type="delete">Delete</a>
 											</li>
-										</t>
 										<li>
 											<ul class="oe_kanban_colorpicker" data-field="color"/>
 										</li>
@@ -491,6 +494,7 @@
 											</td>
 										</tr>
 									</table>
+									<br />
 								</div>
 								<div
 									class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
@@ -527,9 +531,10 @@
 										</tr>
 									</table>
 								</div>
-								<div
-									class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-									<div class="oe_kanban_left">
+								<div class="oe_kanban_buttons_set oe_kanban_color_border
+											oe_kanban_color_bglight oe_kanban_box_show_onclick">
+									<div class="oe_kanban_left" style="margin-left:10px;">
+										<br />
 										<a string="Edit" icon="gtk-edit" type="edit" />
 										<a string="Change Color" icon="color-picker" type="color"
 											name="color"/>
@@ -1842,7 +1847,7 @@
 
 		<!-- Dashboard Event Kanban View -->
 
-		<record model="ir.ui.view" id="student_student_news_kanban_view">
+		<!-- <record model="ir.ui.view" id="student_student_news_kanban_view">
 			<field name="name">Student News</field>
 			<field name="model">student.news</field>
 			<field name="arch" type="xml">
@@ -1852,22 +1857,17 @@
 					<field name="color"/>
 					<templates>
 						<t t-name="kanban-box">
-							<!-- <div class="oe_kanban_box oe_kanban_color_border"> -->
-							<div
-								t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+							<div t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+											   oe_kanban_global_click_edit oe_semantic_html_override
+											   oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
 								<div class="oe_dropdown_toggle oe_dropdown_kanban">
-									<span class="oe_e">í</span>
 									<ul class="oe_dropdown_menu">
-										<t t-if="widget.view.is_action_enabled('edit')">
-											<li>
-												<a type="edit">Edit...</a>
-											</li>
-										</t>
-										<t t-if="widget.view.is_action_enabled('delete')">
-											<li>
-												<a type="delete">Delete</a>
-											</li>
-										</t>
+										<li>
+											<a type="edit">Edit...</a>
+										</li>
+										<li>
+											<a type="delete">Delete</a>
+										</li>
 										<li>
 											<ul class="oe_kanban_colorpicker" data-field="color"/>
 										</li>
@@ -1935,7 +1935,7 @@
 					</templates>
 				</kanban>
 			</field>
-		</record>
+		</record> -->
 
 		<!-- Student News Action -->
 
@@ -2080,8 +2080,9 @@
 			<field name="res_model">board.board</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
+			<field name="context">{}</field>
 			<field name="usage">menu</field>
-			<field name="view_id" ref="board_my_dash_view"/>
+			<field name="view_id" ref="school.board_my_dash_view"/>
 			<field name="help" type="html">
 				<div class="oe_empty_custom_dashboard">
 					<p>
@@ -2106,49 +2107,55 @@
 
 		<!-- School's Menu -->
 
-		<menuitem icon="terp-project" id="menu_ems" name="EMS"
-			sequence="4" web_icon_hover="images/hover.png"
-			action="open_board_my_dash_action"/>
+		<menuitem name="EMS" id="menu_ems" />
+
+		<!-- Dashboard -->
+
+		<menuitem name="Dashboard" icon="terp-project"
+				sequence="1" id="menu_dashboard"
+				parent="menu_ems" action="open_board_my_dash_action"
+				web_icon_hover="images/hover.png" />
+
+		<!-- Students -->
+
+		<menuitem name="Students" sequence="2" parent="menu_ems" id="menu_students" />
+
+		<menuitem name="Students Profiles" parent="menu_students"
+			id="menu_student_profile" action="action_student_student_form_12" />
+
+		<menuitem name="Admission Register" parent="menu_students"
+			id="menu_admission_form" action="action_student_student_form_2" />
 
 		<menuitem name="Configuration" parent="menu_ems" id="menu_configuration"
-			sequence="10" groups="group_school_administration"/>
-
-		<menuitem name="Students Profile" parent="menu_ems"
-			id="menu_student_profile" sequence="2"/>
+			sequence="10" groups="group_school_administration" />
 
 		<menuitem name="School Config" parent="menu_configuration"
-			id="menu_school_config_form1" sequence="1"/>
+			id="menu_school_config_form1" sequence="1" />
 
 		<menuitem name="GR No." parent="menu_school_config_form1" id="grn_menuid"
-			action="action_student_grn_form" sequence="10"/>
+			action="action_student_grn_form" sequence="10" />
 
 		<menuitem name="Reminders" parent="menu_ems" id="menu_reminders"
-			sequence="8" />
-
-		<menuitem name="Reminder" parent="menu_reminders" id="menu_reminder"
-			action="action_student_reminder"/>
+			sequence="8" action="action_student_reminder" />
 
 		<menuitem name="Casts" parent="menu_ems" id="menu_casts"
-			sequence="7"/>
+			sequence="7" />
 
 		<menuitem name="Cast" parent="menu_casts" id="menu_cast"
-			action="action_student_cast_form_7"/>
+			action="action_student_cast_form_7" />
 
 		<!-- new cast menu added in configure menu -->
 
 		<menuitem name="Cast" parent="menu_school_config_form1" id="menu_cast"
-			action="action_student_cast_form_7"/>
-
-		<menuitem name="Student Profiles" parent="menu_student_profile"
-			id="menu_sub_sub_student" action="action_student_student_form_12"/>
+			action="action_student_cast_form_7" />
 
 		<menuitem name="Document Type" parent="menu_school_config_form1"
-			id="menu_sub_doc_type_sub_form" action="action_document_type_form"/>
+			id="menu_sub_doc_type_sub_form" action="action_document_type_form" />
 
 		<!-- new -->
 
 		<menuitem name="Grade" parent="menu_school_config_form1" id="submenu_sub_grade"
-			action="action_grade_master_form"/>
+			action="action_grade_master_form" />
 
 		<!-- new -->
 
@@ -2156,55 +2163,49 @@
 			id="menu_res_partner_form" action="action_parent_form"
 			groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
 
-		<menuitem name="Admission Register" parent="menu_ems"
-			id="menu_admission_form" sequence="1"/>
-
 		<!-- new -->
 
 		<menuitem name="News / Update" parent="menu_school_config_form1"
-			id="submenu_sub_news" action="view_student_news"/>
-
-		<menuitem name="Admission Registers" parent="menu_admission_form"
-			id="menu_admission_register_sub_sub_form" action="action_student_student_form_2"/>
+			id="submenu_sub_news" action="view_student_news" />
 
 		<!-- new -->
 
 		<menuitem name="School" parent="menu_school_config_form1" id="menu_school_school_sub_form"
-			action="action_school_school_form" sequence="1"/>
+			action="action_school_school_form" sequence="1" />
 
 		<menuitem name="Academic Years" parent="menu_configuration"
-			id="menu_academic_year_form"/>
+			id="menu_academic_year_form" />
 
 		<menuitem name="Years" parent="menu_academic_year_form" id="menu_academic_year_sub_form"
-			action="action_academic_year_form"/>
+			action="action_academic_year_form" />
 
 		<menuitem name="Months" parent="menu_academic_year_form" id="menu_academic_month_form"
-			action="action_academic_month_form"/>
+			action="action_academic_month_form" />
 
-		<menuitem name="Standards" parent="menu_configuration" id="menu_school_standard_form"/>
+		<menuitem name="Standards" parent="menu_configuration" id="menu_school_standard_form" />
 
 		<menuitem name="Standard" parent="menu_school_standard_form"
-			id="menu_sub_school_standard_form" action="action_school_standard_form"/>
+			id="menu_sub_school_standard_form" action="action_school_standard_form" />
 
 		<menuitem name="Classes" parent="menu_school_standard_form"
-			id="menu_standard_standard_form" action="action_standard_standard_form"/>
+			id="menu_standard_standard_form" action="action_standard_standard_form" />
 
 		<menuitem name="Divisions" parent="menu_school_standard_form"
-			id="menu_standard_division_form" action="action_standard_division_form"/>
+			id="menu_standard_division_form" action="action_standard_division_form" />
 
 		<menuitem name="Mediums" parent="menu_school_standard_form"
-			id="menu_standard_medium_form" action="action_standard_medium_form"/>
+			id="menu_standard_medium_form" action="action_standard_medium_form" />
 
 		<menuitem name="Subject" parent="menu_configuration" id="menu_subject_subject_form"
-			sequence="10"/>
+			sequence="10" />
 
 		<menuitem name="Elective Subject" parent="menu_subject_subject_form"
 			id="menu_subject_elective_form" action="action_elective_subject_form"
-			sequence="2"/>
+			sequence="2" />
 
 		<menuitem name="Subjects" parent="menu_subject_subject_form"
 			id="menu_subject_subject_sub_form" action="action_subject_subject_form"
-			sequence="1"/>
+			sequence="1" />
 
 		<!-- Inherit Company form view -->
 

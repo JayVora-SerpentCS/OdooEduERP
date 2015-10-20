@@ -1,8 +1,9 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: UTF-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD. (<http://www.serpentcs.com>)
+#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -38,6 +39,7 @@
                     """,
     "depends": ["hr", "mail", "crm", "report", "board"],
     "data": [
+#             "views/school_dashboard.xml",
             "wizard/wiz_send_email_view.xml",
             "security/school_security.xml",
             "views/school_view.xml",

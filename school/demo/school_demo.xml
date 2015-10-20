@@ -394,7 +394,7 @@
 			<field name="medium_id" ref="demo_standard_medium_3"/>
 		</record>
 
-        <record id="demo_student_student_7" model="student.student">
+		<record id="demo_student_student_7" model="student.student">
 			<field name="name">Sarah</field>
 			<field name="middle">Isaac</field>
 			<field name="last">Elmer</field>

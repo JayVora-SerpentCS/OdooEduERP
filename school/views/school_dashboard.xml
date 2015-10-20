@@ -1,0 +1,94 @@
+<odoo>
+
+	<!-- DashBoard Event KanBan View -->
+
+	<record model="ir.ui.view" id="student_student_news_kanban_view">
+		<field name="name">Student News</field>
+		<field name="model">student.news</field>
+		<field name="arch" type="xml">
+			<school_dashboard class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0">
+				<field name="date"/>
+				<field name="subject"/>
+				<field name="color"/>
+				<templates>
+					<t t-name="kanban-box">
+						<div t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+										   oe_kanban_global_click_edit oe_semantic_html_override
+										   oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+							<div class="oe_dropdown_toggle oe_dropdown_kanban">
+								<ul class="oe_dropdown_menu">
+									<li>
+										<a type="edit">Edit...</a>
+									</li>
+									<li>
+										<a type="delete">Delete</a>
+									</li>
+									<li>
+										<ul class="oe_kanban_colorpicker" data-field="color"/>
+									</li>
+								</ul>
+							</div>
+							<div
+								class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+								<table class="oe_kanban_table">
+									<tr>
+										<td class="oe_kanban_title1" align="left" valign="middle"
+											style="padding-left:10px;">
+											<h4>
+												<a type="open">
+													<field name="date"/>
+													<field name="subject"/>
+												</a>
+											</h4>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div
+								class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+								<table class="oe_kanban_table">
+									<tr width="300">
+										<td valign="top" align="left" style="padding-left:10px;">
+											<table>
+												<tr>
+													<t
+														t-if="record.date.raw_value and record.date.raw_value lt (new Date())"
+														t-set="red">oe_kanban_text_red</t>
+													<span t-attf-class="#{red || ''}">
+														<td>Date :</td>
+														<td style="padding-left:10px;">
+															<b>
+																<field name="date"/>
+															</b>
+														</td>
+													</span>
+												</tr>
+												<tr>
+													<td>Subject : </td>
+													<td style="padding-left:10px;">
+														<b>
+															<field name="subject"/>
+														</b>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div
+								class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+								<div class="oe_kanban_left">
+									<a string="Edit" icon="gtk-edit" type="edit" />
+									<a string="Change Color" icon="color-picker" type="color"
+										name="color" />
+								</div>
+								<br class="oe_kanban_clear"/>
+							</div>
+						</div>
+					</t>
+				</templates>
+			</school_dashboard>
+		</field>
+	</record>
+</odoo>

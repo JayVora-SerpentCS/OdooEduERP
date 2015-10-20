@@ -1,8 +1,9 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: UTF-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD. (<http://www.serpentcs.com>)
+#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,7 +23,7 @@
 import time
 import openerp
 import datetime
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 from datetime import date, datetime
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
