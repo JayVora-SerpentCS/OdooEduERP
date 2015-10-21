@@ -2,6 +2,7 @@
 
 <openerp>
 	<data>
+
 		<template id="hostel_fee_reciept">
 			<t t-call="report.html_container">
 				<t t-foreach="docs" t-as="hostel">
@@ -173,5 +174,6 @@
 				</t>
 			</t>
 		</template>
+
 	</data>
 </openerp>
