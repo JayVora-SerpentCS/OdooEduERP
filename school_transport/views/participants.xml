@@ -2,6 +2,7 @@
 
 <openerp>
 	<data>
+
 		<template id="participants">
 			<t t-call="report.html_container">
 				<t t-foreach="docs" t-as="transport">
@@ -153,11 +154,11 @@
 										</td>
 										<td align="center" width="20%"
 											style="font-family: 'Helvetica';font-size: 18px;">
-											<b>Vehical No</b>
+											<b>Vehicle No</b>
 										</td>
 										<td align="center" width="20%"
 											style="font-family: 'Helvetica';font-size: 18px;">
-											<b>Reg. End date</b>
+											<b>Registration End date</b>
 										</td>
 									</tr>
 								</thead>
