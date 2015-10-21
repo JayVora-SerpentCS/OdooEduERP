@@ -2,6 +2,7 @@
 
 <openerp>
 	<data>
+
 		<template id="vehicle">
 			<t t-call="report.html_container">
 				<t t-foreach="docs" t-as="vehicle">
@@ -81,11 +82,11 @@
 										</td>
 										<td align="center" width="20%"
 											style="font-family: 'Helvetica';font-size: 18px;">
-											<b>Reg. date</b>
+											<b>Registration date</b>
 										</td>
 										<td align="center" width="20%"
 											style="font-family: 'Helvetica';font-size: 18px;">
-											<b>Reg. End date</b>
+											<b>Registration End date</b>
 										</td>
 									</tr>
 								</thead>
@@ -125,5 +126,6 @@
 				</t>
 			</t>
 		</template>
+
 	</data>
 </openerp>
