@@ -1,0 +1,631 @@
+<?xml version="1.0"?>
+
+<openerp>
+    <data>
+
+        <!-- Actions Of Form & Tree Views Of Student Result -->
+
+        <record model="ir.actions.act_window" id="action_stu_result_form">
+            <field name="name">Result</field>
+            <field name="res_model">exam.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_student_id': active_id}</field>
+        </record>
+
+        <!-- Inherited Form View Of Student -->
+
+        <record model="ir.ui.view" id="view_student_student_form2">
+            <field name="name">student.student.form</field>
+            <field name="model">student.student</field>
+            <field name="inherit_id" ref="school.view_student_student_form_1"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='buttons']" position="inside">
+                        <button name="%(action_stu_result_form)d" class="oe_inline oe_stat_button" type="action">
+                            <img src="/exam/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
+                            <lable style="">Result</lable>
+                        </button>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Tree View Of Exam Information -->
+
+        <record model="ir.ui.view" id="view_exam_exam_tree">
+            <field name="name">exam.exam.tree</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <tree string="Exam Information">
+                    <field name="name" select="1"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="write_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Exam Information -->
+
+        <record model="ir.ui.view" id="view_exam_exam_search">
+            <field name="name">exam.exam.search</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <search string="Exam Information Search">
+                    <field name="exam_code" string="Exam Code"/>
+                    <field name="name" string="Name"/>
+                    <field name="start_date" string="Start Date"/>
+                    <field name="end_date" string="End Date"/>
+                    <newline />
+                    <filter string="Running" domain="[('state','=','running')]" help="Exam is Running"/>
+                    <filter string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-project" string="Date" help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
+                        <filter icon="terp-stock_symbol-selection" string="State"
+                                help="By State" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Form View Of Exam Information -->
+
+        <record model="ir.ui.view" id="view_exam_exam_form">
+            <field name="name">exam.exam.form</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <form string="Exam Information">
+                    <header>
+                        <button name="set_to_draft" string="Set to Draft" type="object" states="cancelled" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_running" string="Start" type="object" states="draft" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_finish" string="Finish" type="object" states="running" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_cancel" string="Cancel" type="object" states="draft,running" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <field name="state" nolabel="1" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <separator string="Exam Detail"/>
+                        <group col="4" colspan="6" attrs="{'readonly': [('state','!=','draft')]}">
+                            <separator colspan="4" col="4" />
+                            <field name="exam_code"/>
+                            <field name="name" placeholder="Exam Name"/>
+                        </group>
+                        <group col="4" colspan="2">
+                            <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
+                            <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
+                            <notebook colspan="4" >
+                                <page string="Exam Schedule">
+                                    <field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                </page>
+                                <page string="Standard">
+                                    <field name="standard_id" nolabel="1" colspan="4"/>
+                                </page>
+                            </notebook>
+                        </group>
+                        <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
+                            <field name="create_date" placeholder="Created Date"/>
+                            <field name="write_date" placeholder="Last Update Date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Calendar view Of Exam Information -->
+
+        <record id="view_exam_exam_calendar" model="ir.ui.view">
+            <field name="name">exam.exam.calendar</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <calendar string="Exam Information Calendar" color="name" date_start="start_date">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Exam's TimeTable -->
+
+        <record id="extended_exam_time_table_form" model="ir.ui.view">
+            <field name="name">extended.exam.time.table.form</field>
+            <field name="model">time.table</field>
+            <field name="inherit_id" ref="timetable.view_time_table_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
+                    <field name="timetable_type" placeholder= "Select Time Table Type"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Actions Of Form, Tree & Calendar Views Of Exam Information -->
+
+        <record model="ir.actions.act_window" id="action_exam_exam_form">
+            <field name="name">Regular Exam</field>
+            <field name="res_model">exam.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+        </record>
+
+        <!-- Actions Of Form & Tree View Of Exam -->
+
+        <record model="ir.actions.act_window" id="action_exam_exam_tree">
+            <field name="name">Regular Exam</field>
+            <field name="res_model">exam.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Items Of Exam -->
+
+        <menuitem id="menu_exam" name="Exam" parent="school.menu_ems" sequence="4" />
+
+        <menuitem id="menu_exam_sub_form" name="Exams" parent="menu_exam" action="action_exam_exam_form" />
+
+        <!-- Calendar view Of Additional Exam Information -->
+
+        <record id="view_additional_exam_calendar" model="ir.ui.view">
+            <field name="name">additional.exam.calendar</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <calendar string="Additional Exam Information Calendar" color="name" date_start="exam_date">
+                    <field name="name"/>
+                    <field name="standard_id" />
+                    <field name="subject_id" />
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Tree View Of Additional Exam Information -->
+
+        <record model="ir.ui.view" id="view_additional_exam_tree">
+            <field name="name">additional.exam.tree</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <tree string="Additional Exam Information">
+                    <field name="name" select="1" />
+                    <field name="standard_id" />
+                    <field name="subject_id" select="1" />
+                    <field name="exam_date" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View Of Additional Exam Information -->
+
+        <record model="ir.ui.view" id="view_additional_exam_form">
+            <field name="name">additional.exam.form</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <form string="Additional Exam Information">
+                    <sheet>
+                        <group col="4" string="Additional Exam Information" colspan="6">
+                            <field name="addtional_exam_code" />
+                            <field name="name"  placeholder="Exam Name"/>
+                            <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
+                            <field name="subject_id" placeholder="Select or Create Subject"/>
+                        </group>
+                        <group col="4" string="Examination Dates" colspan="4">
+                            <field name="exam_date" placeholder="Exam Date"/>
+                            <newline/>
+                            <field name="create_date" placeholder="Created Date" />
+                            <field name="write_date" placeholder="Last Updated Date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View Of Additional Exam -->
+
+        <record model="ir.ui.view" id="view_additional_exam_search">
+            <field name="name">additional.exam.search</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="standard_id"/>
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Standard"
+                                help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-personal" string="Subject" help="By Subject Name" domain="[]"
+                                context="{'group_by':'subject_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions Of Form, Tree, Calendar Views Of Additional Exam Information -->
+
+        <record model="ir.actions.act_window" id="action_additional_exam_form">
+            <field name="name">Additional Exam</field>
+            <field name="res_model">additional.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Additional Exam -->
+
+        <menuitem id="menu_additional_exam_sub_form" name="Additional Exam" parent="menu_exam" action="action_additional_exam_form" />
+
+        <!-- Tree View Of Result Information -->
+
+        <record model="ir.ui.view" id="view_exam_result_tree">
+            <field name="name">exam.result.tree</field>
+            <field name="model">exam.result</field>
+            <field name="arch" type="xml">
+                <tree string="Results">
+                    <field name="student_id"/>
+                    <field name="standard_id"/>
+                    <field name="s_exam_ids"/>
+                    <field name="percentage"/>
+                    <field name="total"/>
+                    <field name="re_total"/>
+                    <field name="result"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View Of Result Information -->
+
+        <record model="ir.ui.view" id="view_exam_result_form">
+            <field name="name">exam.results.form</field>
+            <field name="model">exam.result</field>
+            <field name="arch" type="xml">
+                <form string="Results">
+                    <header>
+                        <button name="result_confirm" string="Confirm" states="draft" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="re_result_confirm" string="Compute Re-aceess" states="re-access" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_re_access" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_re_evaluation" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" icon="gtk-jump-to" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="re_evaluation_confirm" string="Compute Re-evaluation" states="re-evaluation" type="object" icon="gtk-execute"/>
+                        <field name="state" widget="statusbar" readonly="1" />
+                    </header>
+                    <sheet>
+                        <group col="4" string="Exam Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
+                            <field name="s_exam_ids" placeholder="Select or Create Examination"/>
+                        </group>
+                        <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
+                            <field name="student_id" placeholder="Select or Create Student" on_change="on_change_student(student_id, s_exam_ids, standard_id)" context="{'exam':s_exam_ids}"/>
+                            <field name="roll_no_id" />
+                            <field name="standard_id" placeholder="Select or Create Standard"/>
+                        </group>
+                        <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
+                            <tree string="Subjects" >
+                                <field name="subject_id" placeholder="Select or Create Subject"/>
+                                <field name="maximum_marks"/>
+                                <field name="minimum_marks"/>
+                                <field name="obtain_marks"/>
+                                <field name="grade"/>
+                                <field name="state" invisible="1"/>
+                                <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/>
+                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                            </tree>
+                            <form string="Subjects">
+                                <group col = "4">
+                                    <field name="subject_id"/>
+                                    <field name="maximum_marks"/>
+                                    <field name="minimum_marks"/>
+                                    <field name="obtain_marks"/>
+                                    <field name="marks_access" attrs="{'invisible':[('state','!=','re-access')]}"/>
+                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                    <field name="state" invisible="1"/>
+                                </group>
+                            </form>
+                        </field>
+                        <group col="4" colspan="4">
+                            <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
+                            <field name="grade"/>
+                            <field name="percentage"/>
+                            <field name="result"/>
+                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- KanBan View Of Exam Result -->
+
+        <record model="ir.ui.view" id="exam_result_kanban_view">
+            <field name="name">exam_result KANBAN</field>
+            <field name="model">exam.result</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="standard_id">
+                    <field name="color"/>
+                    <field name="student_id"/>
+                    <field name="roll_no_id"/>
+                    <field name="pid"/>
+                    <field name="standard_id"/>
+                    <field name="total"/>
+                    <field name="re_total"/>
+                    <field name="percentage"/>
+                    <field name="result"/>
+                    <field name="grade"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.student_id.raw_value)"/>
+                            <div t-att-class="color + (record.result.raw_value == 'Fail' ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td class="oe_kanban_title1" align="left" valign="middle">
+                                                    <field name="standard_id"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" align="left">
+                                                    <table class="oe_kanban_table">
+                                                        <tr>
+                                                            <td width="150">
+                                                                <div class="oe_kanban_title2">
+                                                                    <div>Student ID : 
+                                                                        <field name="pid"/>
+                                                                    </div>
+                                                                    <div>Student Name : 
+                                                                        <field name="student_id"/>
+                                                                    </div>
+                                                                    <div>Standard : 
+                                                                        <field name="standard_id"/>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="oe_kanban_title3">
+                                                                    <div>Result : 
+                                                                        <field name="result"/>
+                                                                    </div>
+                                                                    <div>Total :
+                                                                        <field name="total"/>
+                                                                    </div>
+                                                                    <div>Re-access Total :
+                                                                        <field name="re_total"/>
+                                                                    </div>
+                                                                    <div>Grade :
+                                                                        <field name="grade"/>
+                                                                    </div>
+                                                                    <div>Percentage :
+                                                                        <field name="percentage"/>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Search View Of Result -->
+
+        <record model="ir.ui.view" id="view_exam_result_search">
+            <field name="name">exam.result.search</field>
+            <field name="model">exam.result</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="student_id"  />
+                        <field name="standard_id"  />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Student" help="By Name" domain="[]"
+                                context="{'group_by':'student_id'}" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_symbol-selection" string="Standard" help="By Name" domain="[]"
+                                context="{'group_by':'standard_id'}" />
+                        <separator orientation="vertical" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Record Rule For Personal Exam Result -->
+
+        <record id="student_rule_exam_record" model="ir.rule">
+            <field name="name">Personal Exam Result Record</field>
+            <field ref="exam.model_exam_result" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+
+        <!-- Actions Of Form, Tree & Kanban Views Of Result Information -->
+
+        <record model="ir.actions.act_window" id="action_exam_result_form">
+            <field name="name">Result</field>
+            <field name="res_model">exam.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+        <!-- Result Menu -->
+
+        <menuitem id="menu_exam_result" name="Exam Results" parent="menu_exam" action="action_exam_result_form" />
+
+        <!-- Tree View Of Batchwise Result Information -->
+
+        <record model="ir.ui.view" id="view_exam_batch_result_tree">
+            <field name="name">exam.batchwise.result.tree</field>
+            <field name="model">exam.batchwise.result</field>
+            <field name="arch" type="xml">
+                <tree string="Resultss">
+                    <field name="standard_id"/>
+                    <field name="grade"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View Of Gradewise Result Information -->
+
+        <record model="ir.ui.view" id="view_exam_batch_result_form">
+            <field name="name">exam.batch.result.form</field>
+            <field name="model">exam.batchwise.result</field>
+            <field name="arch" type="xml">
+                <form string="Grade wise Results">
+                    <sheet>
+                        <separator string="Batchwise Avg Grade"/>
+                        <group col="4"  colspan="4">
+                            <field name="year"/>
+                            <field name="standard_id" widget="selection"/>
+                            <field name="grade" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Gradewise Result Information -->
+
+        <record model="ir.actions.act_window" id="action_batchwise_exam_result_form">
+            <field name="name">Batchwise Result</field>
+            <field name="res_model">exam.batchwise.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Batchwise Result -->
+
+        <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam" action="action_batchwise_exam_result_form" />
+
+        <!-- Tree View Of Additional Result Information -->
+
+        <record model="ir.ui.view" id="view_additional_exam_result_tree">
+            <field name="name">additional.exam.result.tree</field>
+            <field name="model">additional.exam.result</field>
+            <field name="arch" type="xml">
+                <tree string="Results">
+                    <field name="student_id" select="1"/>
+                    <field name="roll_no_id" select="1"/>
+                    <field name="a_exam_id"/>
+                    <field name="standard_id"/>
+                    <field name="obtain_marks"/>
+                    <field name="result"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View Of Additional Result Information -->
+
+        <record model="ir.ui.view" id="view_additional_exam_result_form">
+            <field name="name">additional.exam.result.form</field>
+            <field name="model">additional.exam.result</field>
+            <field name="arch" type="xml">
+                <form string="Results">
+                    <sheet>
+                        <group col="4" string="Result Information" colspan="4">
+                            <field name="a_exam_id"/>
+                        </group>
+                        <group col="4" string="Student Information" colspan="4">
+                            <field name="student_id" on_change="on_change_student(student_id)" />
+                            <field name="roll_no_id"/>
+                            <field name="standard_id"/>
+                        </group>
+                        <group col="4" string="Result Information" colspan="4">
+                            <field name="obtain_marks"/>
+                            <field name="result"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View Of Additional Result -->
+
+        <record model="ir.ui.view" id="view_additioanal_result_search">
+            <field name="name">additional.exam.resultsearch</field>
+            <field name="model">additional.exam.result</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="student_id" />
+                        <field name="standard_id" />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Student" help="By Name" domain="[]"
+                                context="{'group_by':'student_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-stock_symbol-selection" string="Standard" help="By Name" domain="[]"
+                                context="{'group_by':'standard_id'}"/>
+                        <separator orientation="vertical"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Additional Result Information -->
+
+        <record model="ir.actions.act_window" id="action_additional_exam_result_form01">
+            <field name="name">Additional Exam Results</field>
+            <field name="res_model">additional.exam.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Additional Exam Result -->
+
+        <menuitem id="menu_additional_exam_result" name="Additional Exam Results" parent="menu_exam"
+                  action="action_additional_exam_result_form01"/>
+
+        <!-- Result Information Tree View -->
+
+        <record id="view_exam_result_board_view_form" model="ir.ui.view">
+            <field name="name">exam.result.board.view</field>
+            <field name="model">board.board</field>
+            <field name="inherit_id" ref="school.board_my_dash_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/board/column" position="inside">
+                    <action colspan="4" name="%(action_exam_result_form)d" string="Student Exam Result" creatable="true" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent "/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherited Dash Board For Exam -->
+
+        <record id="inherit_dashboard_school_exam" model="ir.ui.view">
+            <field name="name">inherit.darshboard.school.exam</field>
+            <field name="model">board.board</field>
+            <field name="inherit_id" ref="school.board_my_dash_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/board/column[2]/action" position="after">
+                    <action name="%(action_exam_exam_tree)d" string="All Exam Information" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent "/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Record Rule for Exam Schedule For Student -->
+
+        <record id="student_rule_exam_schedule_record" model="ir.rule">
+            <field name="name">Personal Exam Schedule Record</field>
+            <field ref="model_exam_exam" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('exam_timetable_ids.standard_id.student_ids.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+
+    </data>
+</openerp>
