@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data noupdate="1">
+
 		<record id="school_teacher_assignment_firstexercise0" model="school.teacher.assignment">
 			<field name="division_id" ref="school.demo_standard_division_1"/>
 			<field name="teacher_id" ref="hr.employee_al"/>
@@ -11,7 +12,7 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="standard_id" ref="school.demo_standard_standard_1"/>
 		</record>
-	
+
 		<record id="school_teacher_assignment_secondpractice0" model="school.teacher.assignment">
 			<field name="division_id" ref="school.demo_standard_division_1"/>
 			<field name="teacher_id" ref="hr.employee_mit"/>
@@ -22,7 +23,7 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="standard_id" ref="school.demo_standard_standard_1"/>
 		</record>
-	
+
 		<record id="school_teacher_assignment_firstexercise1" model="school.teacher.assignment">
 			<field name="division_id" ref="school.demo_standard_division_1"/>
 			<field name="teacher_id" ref="hr.employee_mit"/>
@@ -33,7 +34,7 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="standard_id" ref="school.demo_standard_standard_1"/>
 		</record>
-	
+
 		<record id="school_teacher_assignment_secondexercise0" model="school.teacher.assignment">
 			<field name="division_id" ref="school.demo_standard_division_2"/>
 			<field name="teacher_id" ref="hr.employee_mit"/>
@@ -44,7 +45,7 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="standard_id" ref="school.demo_standard_standard_3"/>
 		</record>
-	
+
 		<record id="school_teacher_assignment_thirdexercise0" model="school.teacher.assignment">
 			<field name="division_id" ref="school.demo_standard_division_1"/>
 			<field name="teacher_id" ref="hr.employee_jth"/>
@@ -55,12 +56,12 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="standard_id" ref="school.demo_standard_standard_2"/>
 		</record>
-	
-	
-	<!--Student assignment -->  	
+
+		<!--Student assignment -->
+
 		<record id="school_Student_assignment_firstxercise0" model="school.student.assignment">
 			<field name="school_id" ref="school.demo_school_1"/>
-<!--			<field name="name">Mountcarmel</field-->
+			<!--<field name="name">MountCarmel</field-->
 			<field name="student_id" ref="school.demo_student_student_1"/>
 			<field name="teacher_id" ref="hr.employee_jth"/>
 			<field name="name">First Exercise</field>
@@ -69,10 +70,10 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
 		</record> 
-		
+
 		<record id="school_Student_assignment_secondexercise0" model="school.student.assignment">
 			<field name="school_id" ref="school.demo_school_2"/>
-<!--			<field name="name">Swaminarayan</field-->
+			<!--<field name="name">SwamiNarayan</field-->
 			<field name="student_id" ref="school.demo_student_student_2"/>
 			<field name="teacher_id" ref="hr.employee_jth"/>
 			<field name="name">Second Exercise</field>
@@ -81,10 +82,10 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
 		</record> 
-		
+
 		<record id="school_Student_assignment_thirdexercise0" model="school.student.assignment">
-		    <field name="school_id" ref="school.demo_school_3"/>
-<!--		    <field name="name">JayHind</field-->
+			<field name="school_id" ref="school.demo_school_3"/>
+			<!--<field name="name">JayHind</field-->
 			<field name="student_id" ref="school.demo_student_student_3"/>
 			<field name="teacher_id" ref="hr.employee_jth"/>
 			<field name="name">Third Exercise</field>
@@ -93,5 +94,6 @@
 			<field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
 			<field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
 		</record> 
+
 	</data>
 </openerp>
