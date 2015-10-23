@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data>
+
+        <!-- Form View Of Subject Result -->
 
         <record id="view_subject_result_form11" model="ir.ui.view">
             <field name="name">subject.result.form</field>
@@ -20,6 +23,8 @@
             </field>
         </record>
 
+        <!-- Action Of Form View Of Subject Result -->
+
         <record id="action_subject_result_wiz" model="ir.actions.act_window">
             <field name="name">Subject Results</field>
             <field name="res_model">subject.result.wiz</field>
@@ -27,6 +32,8 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+
+        <!-- Act Window For Action Of Subject Result -->
 
         <act_window id="action_subject_result_wiz"
             name="Subject Result"

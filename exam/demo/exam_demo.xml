@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
 
+<openerp>
     <data noupdate="1">
-    
+
         <!-- Exam Demo Data -->
+
         <record id="exam_exam_finalexam0" model="exam.exam">
             <field eval="30" name="weightage"/>
             <field name="exam_code" eval="time.strftime('%Y /%m')+'/003'"/>
@@ -15,16 +16,17 @@
             <field name="start_date" eval="time.strftime('%Y')+'/03/06'"/>
             <field eval="[(6,0,[])]" name="standard_id"/>
         </record>
+
         <record id="time_table_finalexamtimetable0" model="time.table">
             <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="name">Final Exam Timetable</field>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>
-<!--             <field name="class_id" ref="school.demo_school_standard_1"/> -->
-			<field name="standard_id" ref="school.demo_school_standard_1"/>
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="timetable_type">exam</field>
             <field name="year_id" ref="school.demo_academic_year_1"/>
             <field model="exam.exam" name="exam_id" search="[('name', '=', u'Final Exam')]"/>
         </record>
+
         <record id="time_table_line_0" model="time.table.line">
             <field name="teacher_id" ref="hr.employee_fp"/>
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
@@ -34,6 +36,7 @@
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
         </record>
+
         <record id="time_table_line_1" model="time.table.line">
             <field name="teacher_id" ref="hr.employee_mit"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
@@ -43,6 +46,7 @@
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
         </record>
+
         <record id="time_table_line_2" model="time.table.line">
             <field name="teacher_id" ref="hr.employee_jth"/>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
@@ -52,6 +56,7 @@
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
         </record>
+
         <record id="time_table_line_3" model="time.table.line">
             <field name="teacher_id" ref="hr.employee_stw"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
@@ -61,8 +66,9 @@
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
         </record>
-    
-    <!-- Exam Result Demo Data -->
+
+        <!-- Exam Result Demo Data -->
+
         <record id="exam_result_1" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
@@ -71,6 +77,7 @@
             <field eval="90.75" name="percentage"/>
             <field eval="363.0" name="total"/>
         </record>
+
         <record id="exam_result_2" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_2"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
@@ -79,6 +86,7 @@
             <field eval="80.75" name="percentage"/>
             <field eval="316.0" name="total"/>
         </record>
+
         <record id="exam_result_3" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_3"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
@@ -87,6 +95,7 @@
             <field eval="32.75" name="percentage"/>
             <field eval="103.0" name="total"/>
         </record>
+
         <record id="exam_result_4" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_4"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
@@ -95,6 +104,7 @@
             <field eval="60.75" name="percentage"/>
             <field eval="263.0" name="total"/>
         </record>
+
         <record id="exam_result_5" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
@@ -103,7 +113,7 @@
             <field eval="30.75" name="percentage"/>
             <field eval="96.0" name="total"/>
         </record>
-        
+
         <record id="exm_subject_0" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_1"/>
@@ -111,6 +121,7 @@
             <field eval="80.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
         </record>
+
         <record id="exm_subject_1" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_2"/>
@@ -118,6 +129,7 @@
             <field eval="98.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
         </record>
+
         <record id="exm_subject_2" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_3"/>
@@ -125,6 +137,7 @@
             <field eval="88.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
         </record>
+
         <record id="exm_subject_3" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_4"/>
@@ -132,6 +145,7 @@
             <field eval="97.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
+
         <record id="exm_subject_4" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_5"/>
@@ -139,6 +153,7 @@
             <field eval="50.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
         </record>
+
         <record id="exm_subject_5" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_1"/>
@@ -146,6 +161,7 @@
             <field eval="35.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
         </record>
+
         <record id="exm_subject_6" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_2"/>
@@ -153,6 +169,7 @@
             <field eval="48.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
         </record>
+
         <record id="exm_subject_7" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_3"/>
@@ -160,8 +177,9 @@
             <field eval="42.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
-    
-    <!-- Additional Exam Demo Data -->
+
+        <!-- Additional Exam Demo Data -->
+
         <record id="additional_exam_supplementaryexam0" model="additional.exam">
             <field name="weightage">30</field>
             <field name="addtional_exam_code" eval="time.strftime('%Y /%m')+'/003'"/>
@@ -173,7 +191,7 @@
             <field name="created_at" eval="time.strftime('%Y')+'/03/09'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
-        
+
         <record id="additional_exam_supplementaryexam1" model="additional.exam">
             <field name="weightage">30</field>
             <field name="addtional_exam_code" eval="time.strftime('%Y /%m')+'/004'"/>
@@ -186,48 +204,57 @@
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
 
-    <!-- Additional Exam Result Demo Data -->
+        <!-- Additional Exam Result Demo Data -->
+
         <record id="additional_exam_result_0" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
        	    <field eval="60.0" name="obtain_marks"/>
         </record>
-         <record id="additional_exam_result_1" model="additional.exam.result">
+
+        <record id="additional_exam_result_1" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_2"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
             <field eval="80.0" name="obtain_marks"/>
         </record>
-         <record id="additional_exam_result_2" model="additional.exam.result">
+
+        <record id="additional_exam_result_2" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_3"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
             <field eval="40.0" name="obtain_marks"/>
         </record>
-         <record id="additional_exam_result_3" model="additional.exam.result">
+
+        <record id="additional_exam_result_3" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_4"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
             <field eval="50.0" name="obtain_marks"/>
         </record>
-         <record id="additional_exam_result_4" model="additional.exam.result">
+
+        <record id="additional_exam_result_4" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_5"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
             <field eval="60.0" name="obtain_marks"/>
         </record>
-        
-    <!-- Bactchwise Exam Result -->  
-    	  <record id="batchwise_exam_result_1" model="exam.batchwise.result">
-    	     <field name="year" ref="school.demo_academic_year_1"/>
-    	  	 <field name="standard_id" ref="school.demo_school_standard_1"/>
-    	  	 <field name="grade">A</field>
-    	  </record>	 
-  		  <record id="batchwise_exam_result_2" model="exam.batchwise.result">
-    	     <field name="year" ref="school.demo_academic_year_2"/>
-    	  	 <field name="standard_id" ref="school.demo_school_standard_2"/>
-    	  	 <field name="grade">B</field>
-    	  </record>
-    	  <record id="batchwise_exam_result_3" model="exam.batchwise.result">
-    	     <field name="year" ref="school.demo_academic_year_3"/>
-    	  	 <field name="standard_id" ref="school.demo_school_standard_3"/>
-    	  	 <field name="grade">C</field>
-    	  </record>	
+
+        <!-- Bactchwise Exam Result -->
+
+        <record id="batchwise_exam_result_1" model="exam.batchwise.result">
+            <field name="year" ref="school.demo_academic_year_1"/>
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
+            <field name="grade">A</field>
+        </record>	 
+
+        <record id="batchwise_exam_result_2" model="exam.batchwise.result">
+            <field name="year" ref="school.demo_academic_year_2"/>
+            <field name="standard_id" ref="school.demo_school_standard_2"/>
+            <field name="grade">B</field>
+        </record>
+
+        <record id="batchwise_exam_result_3" model="exam.batchwise.result">
+            <field name="year" ref="school.demo_academic_year_3"/>
+            <field name="standard_id" ref="school.demo_school_standard_3"/>
+            <field name="grade">C</field>
+        </record>	
+
     </data>
 </openerp>
