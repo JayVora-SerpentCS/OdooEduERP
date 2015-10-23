@@ -2,7 +2,8 @@
 <openerp>
 	<data>
 
-		<!-- Time Table Information From View -->
+		<!-- Form View Of Time Table Information -->
+
 		<record model="ir.ui.view" id="view_time_table_form">
 			<field name="name">time.table.form</field>
 			<field name="model">time.table</field>
@@ -45,7 +46,8 @@
 			</field>
 		</record>
 
-		<!-- Time Table Information Tree View -->
+		<!-- Tree View Of Time Table Information -->
+
 		<record model="ir.ui.view" id="view_time_table_tree">
 			<field name="name">time.table.tree</field>
 			<field name="model">time.table</field>
@@ -58,7 +60,8 @@
 			</field>
 		</record>
 
-		<!-- Time Table Information serach View -->
+		<!-- Search View Time Table Information -->
+
 		<record model="ir.ui.view" id="timetable_search">
 			<field name="name">time.table.search</field>
 			<field name="model">time.table</field>
@@ -79,7 +82,8 @@
 			</field>
 		</record>
 
-		<!-- Time Table Information Action -->
+		<!-- Actions Of Form & Tree Views Of Time Table Information -->
+
 		<record model="ir.actions.act_window" id="action_time_table_form">
 			<field name="name">Time Table</field>
 			<field name="res_model">time.table</field>
@@ -88,18 +92,21 @@
 		</record>
 
 		<!-- Menu items of Timetable -->
+
 		<menuitem name="TimeTable" parent="school.menu_ems" id="menu_timetable_1"
 			sequence="9"/>
+
 		<menuitem name="TimeTable" parent="menu_timetable_1" id="menu_time_table"
 			action="action_time_table_form"/>
 
-		<!-- Inherit Dash Board for exam -->
+		<!-- Inherited Form View Of DashBoard School Timetable -->
+
 		<record id="inherit_dashboard_school_timetable" model="ir.ui.view">
 			<field name="name">inherit.darshboard.school.timetable</field>
 			<field name="model">board.board</field>
 			<field name="inherit_id" ref="school.board_my_dash_view" />
 			<field name="arch" type="xml">
-				<xpath expr="/form/board/column[1]/action[@string='News Update']"
+				<xpath expr="/form/board/column[1]/action[1]"
 					position="after">
 					<action name="%(action_time_table_form)d" string="Time Table"
 						groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
@@ -107,23 +114,23 @@
 			</field>
 		</record>
 
-		<!-- Timetable Record rule for all user -->
+		<!-- Record Rule Of TimeTable For All Users -->
+
 		<record id="student_rule_timetable_record" model="ir.rule">
 			<field name="name">TimeTable Record</field>
 			<field ref="model_time_table" name="model_id"/>
 			<field eval="1" name="global"/>
-			<field name="domain_force">[('standard_id.student_ids.user_id','=',user.id)]
-			</field>
+			<field name="domain_force">[('standard_id.student_ids.user_id','=',user.id)]</field>
 			<field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
 		</record>
 
-		<!-- Timetable Record rule for Teacher -->
+		<!-- Record rule Of Timetable For Teacher -->
+
 		<record id="student_rule_timetable_teacher_record" model="ir.rule">
 			<field name="name">TimeTable Record for Teacher</field>
 			<field ref="model_time_table" name="model_id"/>
 			<field eval="1" name="global"/>
-			<field name="domain_force">[('timetable_ids.teacher_id.user_id','=',user.id)]
-			</field>
+			<field name="domain_force">[('timetable_ids.teacher_id.user_id','=',user.id)]</field>
 			<field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
 		</record>
 

@@ -2,6 +2,7 @@
 
 <openerp>
 	<data>
+
 		<template id="timetable">
 			<t t-call="report.html_container">
 				<t t-foreach="docs" t-as="o">
@@ -122,5 +123,6 @@
 				</t>
 			</t>
 		</template>
+
 	</data>
 </openerp>
