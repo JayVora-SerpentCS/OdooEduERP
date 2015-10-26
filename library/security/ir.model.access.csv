@@ -27,8 +27,6 @@
 "access_standard_division_manager","standard.division","school.model_standard_division","library.group_librarian",1,0,0,0
 "access_account_invoice_manager","account.invoice","account.model_account_invoice","library.group_librarian",1,0,0,0
 "access_delivery_carrier_manager","delivery.carrier","delivery.model_delivery_carrier","library.group_librarian",1,0,0,0
-"access_delivery_grid_manager","delivery.grid","delivery.model_delivery_grid","library.group_librarian",1,0,0,0
-"access_delivery_grid_line_manager","delivery.grid.line","delivery.model_delivery_grid_line","library.group_librarian",1,0,0,0
 ,,,,,,,
 ,,,,,,,
 ,,,,,,,
@@ -58,8 +56,6 @@
 "access_res_partner_user","res.partner","base.model_res_partner","library.group_userian",1,0,0,0
 "access_product_pricelist_user","product.pricelist","product.model_product_pricelist","library.group_userian",1,0,0,0
 "access_delivery_carrier_user","delivery.carrier","delivery.model_delivery_carrier","library.group_userian",1,0,0,0
-"access_delivery_grid_user","delivery.grid","delivery.model_delivery_grid","library.group_userian",1,0,0,0
-"access_delivery_grid_line_user","delivery.grid.line","delivery.model_delivery_grid_line","library.group_userian",1,0,0,0
 "access_stock_warehouse_user","stock.warehouse","stock.model_stock_warehouse","library.group_userian",1,0,0,0
 "access_stock_location_user","stock.location","stock.model_stock_location","library.group_userian",1,0,0,0
 "access_product_uom_user","product.uom","product.model_product_uom","library.group_userian",1,0,0,0

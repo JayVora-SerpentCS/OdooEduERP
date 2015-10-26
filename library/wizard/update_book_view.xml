@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data>
 
-        <!-- Update Book Name Wizard Form View  -->
+        <!-- Form View Of Update Book Wizard -->
+
         <record id="view_update_books_form" model="ir.ui.view">
             <field name="name">update.books.form</field>
             <field name="model">update.books</field>
@@ -19,8 +21,9 @@
             </field>
         </record>
 
-        <!-- Update Book Name Wizard Action -->
-         <act_window id="action_update_books"
+        <!-- Action Of Form View Of Update Book Wizard -->
+
+        <act_window id="action_update_books"
             name="Update Books"
             res_model="update.books"
             src_model="library.book.issue"
