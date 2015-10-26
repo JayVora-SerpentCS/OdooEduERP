@@ -21,7 +21,7 @@
 ##############################################################################
 
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm
 
 
 class student_meeting(models.TransientModel):
@@ -43,12 +43,16 @@ class student_meeting(models.TransientModel):
         for student in student_obj.browse(self._context['active_ids']):
             if not student.email:
                 flag = True
-                error_student += student.pid + " : " + student.name + " " + student.middle + " " + student.last + "\n"
+                error_student += student.pid + " : " + student.name + " "\
+                                 + student.middle + " " + student.last + "\n"
             else:
-                attendee_ids.append((0, 0, {'user_id': student.user_id.id, 'email': student.email}))
+                attendee_ids.append((0, 0, {'user_id': student.user_id.id,
+                                            'email': student.email}))
         if flag:
-            raise except_orm(_('Error !'), _("Following Student don't have Email ID.\n\n" + error_student + "\nMeeting cannot be scheduled."))
-        new_id = cal_event_obj.create({
+            raise except_orm(_('Error !'), _("Following Student\
+                don't have Email ID.\n\n" + error_student\
+                + "\nMeeting cannot be scheduled."))
+        cal_event_obj.create({
             'name': cur_rec.name,
             'start': cur_rec.meeting_date,
             'stop': cur_rec.deadline,
