@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
-	<data>
+    <data>
 
-		<report id="report_student_student" 
-				string="Indentity Card"
-				model="student.student" 
-				report_type="qweb-pdf" 
-				file="school.identity_card"
-				name="school.identity_card" />
+        <report id="report_student_student"
+                string="Indentity Card"
+                model="student.student"
+                report_type="qweb-pdf"
+                file="school.identity_card"
+                name="school.identity_card"/>
 
-	</data>
+    </data>
 </openerp>
