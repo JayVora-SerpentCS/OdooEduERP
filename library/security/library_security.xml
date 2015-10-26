@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
-  <data noupdate="0">
-    <record model="ir.module.category" id="module_category_school">
+    <data noupdate="0">
+
+        <record model="ir.module.category" id="module_category_school">
             <field name="name">Library Management</field>
             <field name="sequence">29</field>
         </record>
-        
-    <record id="group_librarian" model="res.groups">
-        <field name="name">Librarian</field>
-        <field name="category_id" ref="module_category_school"/>
-    </record>
-    
-    <record id="group_userian" model="res.groups">
-        <field name="name">Userian</field>
-        <field name="category_id" ref="module_category_school"/>
-    </record>
-  </data>
 
+        <record id="group_librarian" model="res.groups">
+            <field name="name">Librarian</field>
+            <field name="category_id" ref="module_category_school"/>
+        </record>
+
+        <record id="group_userian" model="res.groups">
+            <field name="name">Userian</field>
+            <field name="category_id" ref="module_category_school"/>
+        </record>
+
+    </data>
 </openerp>

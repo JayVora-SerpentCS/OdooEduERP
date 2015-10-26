@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-###############################################################################
+##############################################################################
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,23 +18,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-###############################################################################
+##############################################################################
 
-from openerp import models, fields, api
-
-
-class update_books(models.TransientModel):
-
-    _name = "update.books"
-    _description = "Update Books"
-
-    name = fields.Many2one('product.product', 'Book Name', required=True)
-
-    @api.multi
-    def action_update_books(self):
-        lib_book_obj = self.env['library.book.issue']
-        for rec in self:
-            if self._context.get('active_ids'):
-                for active_id in self._context.get('active_ids'):
-                    lib_book_obj.browse(active_id).write({'name': rec.name.id})
-        return {}
+from . import account
+from . import library_editor_supplier
+from . import library
+from . import mrp
+from . import product
+from . import purchase
+from . import sale
+from . import stock
