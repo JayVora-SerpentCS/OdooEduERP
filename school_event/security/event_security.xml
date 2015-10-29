@@ -1,0 +1,31 @@
+<openerp>
+    <data>
+
+        <!-- Event Rule For Teacher -->
+
+        <record id="school_rule_event_teacher_record" model="ir.rule">
+            <field name="name">School Event For Teacher</field>
+            <field ref="model_school_event" name="model_id" />
+            <field eval="1" name="global" />
+            <field name="domain_force">["|",('contact_per_id.user_id','=',user.id) , ('supervisor_id.user_id','=',user.id) ]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+        </record>
+
+        <record id="student_rule_event_record" model="ir.rule">
+            <field name="name">Personal Event Record</field>
+            <field ref="model_school_event" name="model_id" />
+            <field eval="1" name="global" />
+            <field name="domain_force">[('part_standard_ids.student_ids.id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+        </record>
+
+        <record id="student_rule_event_regi_record" model="ir.rule">
+            <field name="name">Personal Event REgistation Record</field>
+            <field ref="model_school_event_registration" name="model_id" />
+            <field eval="1" name="global" />
+            <field name="domain_force">[('part_name_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+        </record>
+
+    </data>
+</openerp>
