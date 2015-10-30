@@ -49,12 +49,6 @@ class student_fees_register(models.Model):
     journal_id = fields.Many2one('account.journal', 'Journal',
                                  required=True,
                                  states={'confirm': [('readonly', True)]})
-#     period_id = fields.Many2one('account.period', 'Force Period',
-#                                 required=True,
-#                                 domain=[('state', '<>', 'done')],
-#                                 states={'confirm': [('readonly', True)]},
-#                                 help="Keep empty to use the period of the"
-#                                 "validation(invoice) date.")
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
                                  states={'draft': [('readonly', False)]},
@@ -68,7 +62,6 @@ class student_fees_register(models.Model):
 
     @api.multi
     def fees_register_confirm(self):
-        cr, uid = self.env.args
         student_pool = self.env['student.student']
         slip_pool = self.env['student.payslip']
         student_ids = student_pool.search([])
@@ -80,9 +73,9 @@ class student_fees_register(models.Model):
                     if old_slips:
                         old_slips.write({'register_id': vals.id})
                         for sid in old_slips:
-                            workflow.trg_validate(uid, 'student.fees.register',
+                            workflow.trg_validate(self._uid, 'student.fees.register',
                                                   sid.id, 'fees_register'
-                                                  '_confirm', cr)
+                                                  '_confirm', self._cr)
                     else:
                         res = {
                             'student_id': stu.id,
@@ -94,9 +87,9 @@ class student_fees_register(models.Model):
                             'company_id': vals.company_id.id
                         }
                         slip_id = slip_pool.create(res)
-                        workflow.trg_validate(uid, 'student.fees.register',
+                        workflow.trg_validate(self._uid, 'student.fees.register',
                                               slip_id.id, 'fees_register'
-                                              '_confirm', cr)
+                                              '_confirm', self._cr)
                 amount = 0
                 for datas in fees_obj.browse(self.ids):
                     for data in datas.line_ids:
@@ -255,11 +248,6 @@ class student_payslip(models.Model):
                              ('in_refund', 'Supplier Refund'),
                              ], 'Type', required=True, select=True,
                             change_default=True, default='out_invoice')
-#     period_id = fields.Many2one('account.period', 'Force Period',
-#                                 required=True,
-#                                 domain=[('state', '<>', 'done')],
-#                                 help="Keep empty to use the period of the"
-#                                 "validation(invoice) date.")
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
                                  states={'draft': [('readonly', False)]},
@@ -273,11 +261,9 @@ class student_payslip(models.Model):
 
     @api.onchange('student_id')
     def onchange_student(self):
-        for student_obj in self:
-            student_obj.standard_id = student_obj.student_id.standard_id
-            student_obj.division_id = student_obj.student_id.division_id
-            student_obj.medium_id = student_obj.student_id.medium_id
-            student_obj.school_id = student_obj.student_id.school_id
+        self.standard_id = self.student_id.standard_id.id
+        self.division_id = self.student_id.division_id
+        self.medium_id = self.student_id.medium_id
 
     @api.model
     def copy(self, default=None):
@@ -308,9 +294,9 @@ class student_payslip(models.Model):
         move_line_obj = self.env['account.move.line']
         for fees in self.browse(self.ids):
             if not fees.journal_id.sequence_id:
-                raise Warning(_('Error !'), _('Please define sequence on'
-                                              'the journal related to this'
-                                              'invoice.'))
+                raise Warning(_('Please define sequence on'
+                                'the journal related to this'
+                                'invoice.'))
             if fees.move_id:
                 continue
             ctx = self._context.copy()
@@ -320,21 +306,20 @@ class student_payslip(models.Model):
                                        ('%Y-%m-%d')})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
-            current_currency = fees.currency_id and fees.currency_id.id or \
-                company_currency
+            current_currency = fees.currency_id and fees.currency_id.id or\
+                               company_currency
             account_id = False
             comapny_ac_id = False
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
-                comapny_ac_id = fees.company_id.partner_id. \
-                    property_account_receivable.id
+                comapny_ac_id = fees.company_id.partner_id.\
+                                property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
-                comapny_ac_id = fees.company_id. \
+                comapny_ac_id = fees.company_id.\
                     partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
-                raise Warning(_('UserError'),
-                              _('You cannot create an invoice on a centralized'
+                raise Warning(_('You cannot create an invoice on a centralized'
                                 'journal. UnCheck the centralized counterpart'
                                 'box in the related journal from the'
                                 'configuration menu.'))

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data noupdate="1">
 
@@ -67,7 +68,7 @@
             <field name="amount">2000.00</field>
         </record>
 
-		<!--Student Fees Structure Line-->
+        <!--Student Fees Structure Line-->
 
         <record id="demo_student_fees_structure_line_1" model="student.fees.structure.line">
             <field name="name">Educational Fees</field>
@@ -93,7 +94,7 @@
             <field name="amount">3000.00</field>
         </record>
 
-		<!-- Fees Structure Information -->
+        <!-- Fees Structure Information -->
 
         <record id="demo_student_fees_structure_1" model="student.fees.structure">
             <field name="name">Student Fees Structure</field>
@@ -109,13 +110,13 @@
 
         <!--Student Fees Receipt Information-->
 
-		<record id="bnk" model="account.account">
+        <record id="bnk" model="account.account">
             <field name="code">X1014</field>
             <field name="name">Bank Current Account - (test)</field>
             <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         </record>
 
-		<record id="bank_journal" model="account.journal">
+        <record id="bank_journal" model="account.journal">
             <field name="name">Bank - Test</field>
             <field name="code">TBNK</field>
             <field name="type">bank</field>
@@ -130,17 +131,15 @@
             <field eval="time.strftime('%Y-%m-%d')" name="date"/>
             <field name="fees_structure_id" ref= 'demo_student_fees_structure_1'/>
             <field name="journal_id" ref="bank_journal"/>
-            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-		<!--Student fees Registration -->
+        <!--Student fees Registration -->
 
-		 <record id="demo_student_fees_registration_1" model="student.fees.register">
+        <record id="demo_student_fees_registration_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>
             <field name="date">2012-05-25</field>
             <field name="journal_id" ref= "bank_journal"/> 
-            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
 
@@ -148,7 +147,6 @@
             <field name="name" ref= "school.demo_student_student_2"/>
             <field name="date">2012-01-15</field>
             <field name="journal_id" ref="bank_journal"/> 
-            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
 
@@ -156,7 +154,6 @@
             <field name="name" ref= "school.demo_student_student_3"/>
             <field name="date">2011-04-09</field>
             <field name="journal_id" ref="bank_journal"/> 
-            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
 
@@ -164,7 +161,6 @@
             <field name="name" ref= "school.demo_student_student_4"/>
             <field name="date">2012-03-05</field>
             <field name="journal_id" ref="bank_journal"/> 
-            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
 
@@ -172,7 +168,6 @@
             <field name="name" ref= "school.demo_student_student_1"/>
             <field name="date">2012-10-10</field>
             <field name="journal_id" ref="bank_journal"/> 
-            <!-- <field name="period_id" ref="account.period_1"/> -->
             <field name="company_id" ref="base.main_company"/>
          </record>
 
