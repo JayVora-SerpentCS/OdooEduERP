@@ -3,16 +3,7 @@
 <openerp>
     <data>
 
-        <!-- Inherited Template Of Web Assets BackEnd -->
-
-        <template id="assets_backend" name="school assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/school/static/src/less/school_dashboard.less"/>
-                <script type="text/javascript" src="/school/static/src/js/school_dashboard.js"></script>
-            </xpath>
-        </template>
-
-        <!-- Form View 1 Of Student's Information -->
+        <!-- Form View 1 Of Student's Profiles -->
 
         <record id="view_student_student_form_1" model="ir.ui.view">
             <field name="name">student.student.form.1</field>
@@ -20,7 +11,7 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <sheet style="width: 10%%,height:10%%">
-                        <separator string="Personal Information" />
+                        <separator string="Personal Information"/>
                             <div class="col-md-2">
                                 <field name="photo" widget='image' class="oe_avatar oe_left" options='{"size": [110, 110]}'/>
                             </div>
@@ -66,6 +57,9 @@
                                 <field name="email" placeholder="Email Address" String="Email"/>
                                 <field name="website" widget="url" placeholder="e.g. www.serpentcs.com"/>
                             </group>
+                        </group>
+                        <group>
+                            <field name="parent_id" />
                         </group>
                         <notebook colspan="4">
                             <page string="General" name="general">
@@ -258,17 +252,7 @@
             </field>
         </record>
 
-        <!-- Record Rule for Personal Student Profile -->
-
-        <record id="student_rule_student_profile_record" model="ir.rule">
-            <field name="name">Personal Student Profile Record</field>
-            <field ref="model_student_student" name="model_id" />
-            <field eval="1" name="global" />
-            <field name="domain_force">[('user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
-        </record>
-
-        <!-- Tree View 1 Of Student's Information -->
+        <!-- Tree View 1 Of Student's Profiles -->
 
         <record id="view_student_student_tree_1" model="ir.ui.view">
             <field name="name">student.student.tree.1</field>
@@ -287,7 +271,7 @@
             </field>
         </record>
 
-        <!-- Search View 1 Of Student's Information -->
+        <!-- Search View 1 Of Student's Profiles -->
 
         <record id="view_student_student_search_1" model="ir.ui.view">
             <field name="name">student.student.search.1</field>
@@ -312,13 +296,13 @@
             </field>
         </record>
 
-        <!-- Kanban View Of Student's Information -->
+        <!-- Kanban View Of Student's Profiles -->
 
         <record id="student_student_kanban_view" model="ir.ui.view">
             <field name="name">Student KANBAN</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban default_group_by="standard_id">
                     <field name="color"/>
                     <field name="name"/>
                     <field name="email"/>
@@ -475,6 +459,9 @@
                                <field name="website" widget="url" placeholder="e.g. www.serpentcs.com"/>
                            </group>
                        </group>
+                       <group>
+                            <field name="parent_id" />
+                        </group>
                        <notebook colspan="4">
                            <page string="General">
                                <form string="General" >
@@ -1611,7 +1598,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_student_student_form_2" />
             <field name="search_view_id" ref="view_student_student_search_2"/>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <!-- Action View 2 Of Kanban View Of Student Information -->
@@ -1641,7 +1628,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_student_student_form_1"/>
             <field name="search_view_id" ref="view_student_student_search_1"/>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <!-- Action View 1 Of Tree View Of Student Information -->
@@ -1686,7 +1673,7 @@
             <field name="name">Standards</field>
             <field name="res_model">school.standard</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <!-- Action Of Form & Tree Views Of Elective Subject -->
@@ -1835,7 +1822,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">student.news</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
         <!-- Form View Of Partner -->
@@ -1848,6 +1835,10 @@
                     <sheet>
                         <form string="Partner Contacts">
                             <newline />
+                            <group>
+                                <field name="parent_school" />
+                                <field name="student_ids"/>
+                            </group>
                             <group colspan="2" col="4">
                                 <separator string="Postal Address" colspan="4" col="4"/>
                                 <field name="name" placeholder="Name"/>
@@ -1909,6 +1900,7 @@
                     <field name="email"/>
                     <field name="city"/>
                     <field name="country_id"/>
+                    <field name="parent_school" />
                 </tree>
             </field>
         </record>
@@ -1919,8 +1911,11 @@
             <field name="name">Parents</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_res_partner_parent_filter"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_parent_school': 1,'default_customer': 0,'default_supplier': 0, 'default_parent_school': 1}</field>
+            <field name="filter" eval="True"/>
         </record>
 
         <!-- Action Of Tree View Of Parent -->
@@ -1997,80 +1992,97 @@
 
         <!-- Menu Item Of EMS -->
 
-        <menuitem id="menu_ems" name="EMS"/>
+        <menuitem id="menu_ems" name="EMS" sequence="1"/>
 
         <!-- Menu Item Of Dashboard -->
 
-        <menuitem id="menu_dashboard" name="Dashboard" parent="menu_ems" action="open_board_my_dash_action" sequence="1"
-                  icon="terp-project" web_icon_hover="images/hover.png"/>
+        <!-- <menuitem id="menu_dashboard" name="Dashboard" parent="menu_ems" action="open_board_my_dash_action" sequence="1"
+                  icon="terp-project" web_icon_hover="images/hover.png"/> -->
 
-        <!-- Menu Ite Of Students -->
+        <!-- MenuItem Of Admission Register -->
 
-        <menuitem id="menu_students" name="Students" parent="menu_ems" sequence="2"/>
+        <menuitem id="admission_register" name="Admission Register" parent="menu_ems" sequence="1"/>
 
-        <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students" action="action_student_student_form_12"/>
+        <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register"
+                  action="action_student_student_form_2" sequence="1"/>
 
-        <menuitem id="menu_admission_form" name="Admission Register" parent="menu_students" action="action_student_student_form_2"/>
+        <!-- Menu Item Of Students & Parents -->
 
-        <menuitem id="menu_configuration" name="Configuration" parent="menu_ems" sequence="10" groups="group_school_administration"/>
+        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="2"/>
 
-        <menuitem id="menu_school_config_form1" name="School Config" parent="menu_configuration" sequence="1"/>
+        <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students_parents"
+                  action="action_student_student_form_12"/>
 
-        <menuitem id="grn_menuid" name="GR No." parent="menu_school_config_form1" action="action_student_grn_form" sequence="10"/>
-
-        <menuitem id="menu_reminders" name="Reminders" parent="menu_ems" action="action_student_reminder" sequence="8"/>
-
-        <menuitem id="menu_casts" name="Casts" parent="menu_ems" sequence="7"/>
-
-        <menuitem id="menu_cast" name="Cast" parent="menu_casts" action="action_student_cast_form_7"/>
-
-        <!-- new cast menu added in configure menu -->
-
-        <menuitem id="menu_cast" name="Cast" parent="menu_school_config_form1" action="action_student_cast_form_7"/>
-
-        <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1" action="action_document_type_form"/>
-
-        <!-- new -->
-
-        <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1" action="action_grade_master_form"/>
-
-        <!-- new -->
-
-        <menuitem id="menu_res_partner_form" name="Parents Details" parent="menu_student_profile" action="action_parent_form"
+        <menuitem id="menu_res_partner_form" name="Parents Profiles" parent="menu_students_parents" action="action_parent_form"
                   groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
 
-        <!-- new -->
+        <!-- MenuItem For Reminders -->
 
-        <menuitem id="submenu_sub_news" name="News / Update" parent="menu_school_config_form1" action="view_student_news"/>
+        <menuitem id="menu_reminders" name="Reminders" parent="menu_ems" action="action_student_reminder"
+                  sequence="8"/>
 
-        <!-- new -->
+        <!-- MenuItem For Configurations -->
 
-        <menuitem id="menu_school_school_sub_form" name="School" parent="menu_school_config_form1" action="action_school_school_form"
-                  sequence="1" />
+        <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="10"
+                  groups="group_school_administration"/>
+
+        <!-- MenuItem For Configurations->School Configurations -->
+
+        <menuitem id="menu_school_config_form1" name="School Configurations" parent="menu_configuration"/>
+
+        <menuitem id="menu_grno" name="GR No." parent="menu_school_config_form1"
+                  action="action_student_grn_form"/>
+
+        <menuitem id="menu_cast" name="Cast" parent="menu_school_config_form1"
+                  action="action_student_cast_form_7"/>
+
+        <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1"
+                  action="action_document_type_form"/>
+
+        <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1"
+                  action="action_grade_master_form"/>
+
+        <menuitem id="submenu_sub_news" name="News / Update" parent="menu_school_config_form1"
+                  action="view_student_news"/>
+
+        <menuitem id="menu_school_school_sub_form" name="School" parent="menu_school_config_form1"
+                  action="action_school_school_form"/>
+
+        <!-- MenuItem For Configurations->Academic Years -->
 
         <menuitem id="menu_academic_year_form" name="Academic Years" parent="menu_configuration"/>
 
-        <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form" action="action_academic_year_form"/>
+        <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form"
+                  action="action_academic_year_form"/>
 
-        <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form" action="action_academic_month_form"/>
+        <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form"
+                  action="action_academic_month_form"/>
+
+        <!-- MenuItem For Configurations->Standards -->
 
         <menuitem id="menu_school_standard_form" name="Standards" parent="menu_configuration"/>
 
-        <menuitem id="menu_sub_school_standard_form" name="Standard" parent="menu_school_standard_form" action="action_school_standard_form"/>
+        <menuitem id="menu_sub_school_standard_form" name="Standard" parent="menu_school_standard_form"
+                  action="action_school_standard_form"/>
 
-        <menuitem id="menu_standard_standard_form" name="Classes" parent="menu_school_standard_form" action="action_standard_standard_form"/>
+        <menuitem id="menu_standard_standard_form" name="Classes" parent="menu_school_standard_form"
+                  action="action_standard_standard_form"/>
 
-        <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_school_standard_form" action="action_standard_division_form" />
+        <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_school_standard_form"
+                  action="action_standard_division_form" />
 
-        <menuitem id="menu_standard_medium_form" name="Mediums" parent="menu_school_standard_form" action="action_standard_medium_form" />
+        <menuitem id="menu_standard_medium_form" name="Mediums" parent="menu_school_standard_form"
+                  action="action_standard_medium_form" />
 
-        <menuitem id="menu_subject_subject_form" name="Subject" parent="menu_configuration" sequence="10" />
+        <!-- MenuItem For Configurations->Subject -->
 
-        <menuitem id="menu_subject_elective_form" name="Elective Subject" parent="menu_subject_subject_form"
-                  action="action_elective_subject_form" sequence="2" />
+        <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
 
         <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form"
-                  action="action_subject_subject_form" sequence="1" />
+                  action="action_subject_subject_form"/>
+
+        <menuitem id="menu_subject_elective_form" name="Elective Subject(s)"
+                  parent="menu_subject_subject_form" action="action_elective_subject_form"/>
 
         <!-- Inherited Form View Of Company -->
 
