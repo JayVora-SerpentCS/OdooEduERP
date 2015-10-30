@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data noupdate="1">
 
@@ -307,7 +308,7 @@
                eval="[(6, 0,[ref('transport_participant_4')])]" />
       </record>
 
-      <record model="ir.cron" id="ir_cron_student_transport_every_day">
+      <record id="ir_cron_student_transport_every_day" model="ir.cron">
             <field name="name">student_transport</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field><!-- it s every day -->
