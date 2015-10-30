@@ -51,7 +51,8 @@ class hostel_room(models.Model):
                 count += 1
             room_availability = data.student_per_room - count
             if room_availability < 0:
-                raise except_orm(_("You can not assign room more than %s student" % data.student_per_room))
+                raise except_orm(_("You can not assign room\
+                more than %s student" % data.student_per_room))
             else:
                 self.availability = room_availability
 
@@ -116,7 +117,9 @@ class hostel_student(models.Model):
                 'datas': datas}
 
     hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
-    hostel_id = fields.Char('Hostel ID', readonly=True, default=lambda obj: obj.env['ir.sequence'].get('hostel.student'))
+    hostel_id = fields.Char('Hostel ID', readonly=True,
+                            default=lambda obj:
+                            obj.env['ir.sequence'].get('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', required=True)
@@ -133,7 +136,8 @@ class hostel_student(models.Model):
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
-                         'Error ! Discharge Date cannot be set before Admission Date.')]
+                         'Error ! Discharge Date cannot be set\
+                          before Admission Date.')]
 
 
 class bed_type(models.Model):
