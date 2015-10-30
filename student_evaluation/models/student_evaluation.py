@@ -36,9 +36,11 @@ class student_evaluation(models.Model):
         eval_list = []
         for stu_eval_rec in self.browse(self.ids):
             if stu_eval_rec.eval_line:
-                self._cr.execute('delete from student_evaluation_line where eval_id=%s', (stu_eval_rec.id,))
-            type = stu_eval_rec.type
-            eval_temp_rec_browse = eval_temp_obj.search([('type', '=', type)])
+                self._cr.execute('delete from student_evaluation_line\
+                                  where eval_id=%s', (stu_eval_rec.id,))
+            type_eval = stu_eval_rec.type
+            eval_temp_rec_browse = eval_temp_obj.search([
+                                   ('type', '=', type_eval)])
             for eval_temp_rec in eval_temp_rec_browse:
                 eval_list.append(eval_temp_rec.id)
             for i in range(0, len(eval_list)):
@@ -49,15 +51,14 @@ class student_evaluation(models.Model):
     @api.one
     @api.depends('eval_line')
     def _compute_total_points(self):
-        for rate_line in self:
-            total = 0
-            if self.eval_line:
-                for line in self.eval_line:
-                    if line.point_id.point:
-                        total += line.point_id.point
-                self.total = total
-            else:
-                self.total = total
+        total = 0
+        if self.eval_line:
+            for line in self.eval_line:
+                if line.point_id.point:
+                    total += line.point_id.point
+            self.total = total
+        else:
+            self.total = total
 
     @api.model
     def get_user(self):
@@ -72,8 +73,8 @@ class student_evaluation(models.Model):
     evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
     eval_line = fields.One2many('student.evaluation.line', 'eval_id',
                                 'Questionnaire')
-    total = fields.Float(compute='_compute_total_points', method=True,
-                         string="Total Points")
+    total = fields.Float('Total Points', compute='_compute_total_points',
+                         method=True)
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')

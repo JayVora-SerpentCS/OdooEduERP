@@ -30,7 +30,8 @@
     'description': ''''A module to Student Evaluation.
     A Module support the following functionalities:
 
-    1. In This Module we can define the terms which we want to consider In Evaluation.
+    1. In This Module we can define the terms which we want to consider\
+       In Evaluation.
     2. student and Faculty Both can Evaluate This.
     ''',
     'depends': ['hr', 'school'],
