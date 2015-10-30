@@ -35,7 +35,8 @@ month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
 
 
 def lengthmonth(year, month):
-    if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
+    if month == 2 and ((year % 4 == 0) and ((year % 100 != 0)
+                or (year % 400 == 0))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
@@ -44,16 +45,19 @@ class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_student = pooler.get_pool(cr.dbname).get('student.student')
-        attendance_sheet_obj = pooler.get_pool(cr.dbname).get('attendance.sheet')
+        attendance_sheet_obj = pooler.get_pool(cr.dbname).get(
+                                                        'attendance.sheet')
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
 #        stu_ids = context.get('active_ids', [])
         stu_ids = datas['form']['stud_ids']
-        user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
+        user_xml = ['<month>%s</month>' % month2name[month.month],
+                    '<year>%s</year>' % month.year]
         if stu_ids:
-            for student in obj_student.read(cr, uid, stu_ids, ['name', 'standard_id']):
-                stop, days_xml = False, []
+            for student in obj_student.read(cr, uid, stu_ids,
+                                            ['name', 'standard_id']):
+                days_xml = []
                 user_repr = '''
                 <user>
                   <name>%s</name>
@@ -63,13 +67,18 @@ class report_custom(report_rml):
                 today, tomor = month, month + one_day
                 while today.month == month.month:
                     day = today.day
-                    attendance_sheet_domain = [('standard_id', '=', student['standard_id'][0]), ('month_id', '=', today.month)]
-                    attendance_sheet_search_ids = attendance_sheet_obj.search(cr, uid, attendance_sheet_domain, context=context)
+                    attendance_sheet_domain = [
+                        ('standard_id', '=', student['standard_id'][0]),
+                        ('month_id', '=', today.month)]
+                    attendance_sheet_search_ids = attendance_sheet_obj.search(
+                        cr, uid, attendance_sheet_domain, context=context)
                     if not attendance_sheet_search_ids:
                         var = 'A'
                     else:
 
-                        for attendance_sheet_data in attendance_sheet_obj.browse(cr, uid, attendance_sheet_search_ids, context=context):
+                        for attendance_sheet_data in\
+                        attendance_sheet_obj.browse(cr, uid,
+                            attendance_sheet_search_ids, context=context):
                             for line in attendance_sheet_data.attendance_ids:
 
                                 if line.name == student['name']:
@@ -142,7 +151,8 @@ class report_custom(report_rml):
                                     else:
                                         var = 'A'
 
-                    today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days + 1, var)
+                    today_xml = '<day num="%s"><wh>%s</wh></day>'\
+                                % ((today - month).days + 1, var)
                     dy = (today - month).days + 1
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
@@ -155,7 +165,10 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True)) + ' ' + str(time.strftime("%H:%M")), pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id.name)
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))\
+            + ' ' + str(time.strftime("%H:%M")),
+            pooler.get_pool(cr.dbname).get('res.users').browse(
+                cr, uid, uid).company_id.name)
 
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
