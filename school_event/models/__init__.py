@@ -20,31 +20,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'School_Event',
-    'version': '3.0',
-    'author': 'Serpent Consulting Services PVT. LTD.',
-    'website': 'http://www.serpentcs.com',
-    'category': 'School Management',
-    'complexity': 'easy',
-    'description': '''A module to Event Management in School.
-    A Module support the following functionalities:
-    1. In This Module we can define the Event for specific class
-    so the students of particular class can only participate in that event.
-    2. student can do Registration for events.
-    ''',
-    'depends': ['school'],
-    'data': [
-       'views/event_view.xml',
-       'views/event_workflow.xml',
-       'security/event_security.xml',
-       'security/ir.model.access.csv',
-       'views/participants.xml',
-       'views/report_view.xml',
-    ],
-    'demo': ['demo/event_demo.xml'],
-    'test': [
-    ],
-    'installable': True,
-    'application': True,
-}
+from . import event
