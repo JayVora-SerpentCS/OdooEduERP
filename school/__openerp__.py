@@ -27,6 +27,7 @@
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'complexity': 'easy',
+    'Summary': 'A Module For School Management',
     'description': '''A module to School Management.
         A Module support the following functionalities:
         1. Admission Procedure

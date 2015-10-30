@@ -3,6 +3,8 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- Sequences For student.grn (Student GRN) -->
+
         <record id="sequence_grn" model="ir.sequence">
              <field name="name">GRN</field>
              <field name="code">student.grn</field>
@@ -13,7 +15,7 @@
              <field name="number_increment">1</field>
         </record>
 
-        <!-- Sequences for student.code (student code) -->
+        <!-- Sequences For student.code (Student Code) -->
 
         <record id="seq_student_code" model="ir.sequence">
             <field name="name">Student code</field>
@@ -21,7 +23,7 @@
             <field name="padding">3</field>
         </record>
 
-        <!-- Sequences for student.registration (Registration code) -->
+        <!-- Sequences For student.registration (Registration Code) -->
 
         <record id="seq_student_reg" model="ir.sequence">
             <field name="name">Student registration code</field>
@@ -29,7 +31,7 @@
             <field name="padding">3</field>
         </record>
 
-        <!-- Sequences for student.student (Personal Identification Number) -->
+        <!-- Sequences For student.student (Personal Identification Number) -->
 
         <record id="seq_student_student" model="ir.sequence">
             <field name="name">Student</field>
@@ -38,12 +40,16 @@
             <field name="padding">3</field>
         </record>
 
+        <!-- Sequences For student.document (Student Documents) -->
+
         <record id="seq_student_document" model="ir.sequence">
             <field name="name">Document</field>
             <field name="code">student.document</field>
             <field name="prefix">F</field>
             <field name="padding">3</field>
         </record>
+
+        <!-- Sequences For document.type (Document Type) -->
 
         <record id="seq_student_sequence" model="ir.sequence">
             <field name="name">sequence</field>

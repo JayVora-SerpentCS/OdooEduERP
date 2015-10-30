@@ -30,6 +30,7 @@ from openerp.exceptions import except_orm, Warning
 
 
 class board_board(models.Model):
+
     _inherit = "board.board"
 
 
@@ -446,6 +447,9 @@ class student_student(models.Model):
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
     standard_id = fields.Many2one('school.standard', 'Standard')
+    parent_id = fields.Many2many('res.partner', 'student_parent_rel',
+                                 'student_id', 'parent_id', 'Parent(s)',
+                                 states={'done': [('readonly', True)]})
 
     _sql_constraints = [('grn_unique', 'unique(grn_number)',
                          'GRN Number must be unique!')]
@@ -682,6 +686,9 @@ class res_partner(models.Model):
     _description = 'Address Information'
 
     student_id = fields.Many2one('student.student', 'Student')
+    parent_school = fields.Boolean('Is A Parent')
+    student_ids = fields.Many2many('student.student', 'res_partner_rel',
+                                   'parent_id', 'student_id', 'Children')
 
 
 class student_reference(models.Model):
