@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data noupdate="1">
 
-        <!-- Sequences for student.payslip -->
+        <!-- Sequences For student.payslip -->
 
         <record id="seq_student_payslip" model="ir.sequence">
             <field name="name">Student PaySlip</field>
@@ -11,7 +12,7 @@
             <field name="padding">3</field>
         </record>
 
-         <!-- Sequences for student.fees.register -->
+         <!-- Sequences For student.fees.register -->
 
         <record id="seq_student_fees_register" model="ir.sequence">
             <field name="name">Student Fees Register</field>
