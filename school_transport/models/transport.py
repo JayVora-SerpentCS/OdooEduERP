@@ -56,9 +56,11 @@ class transport_point(models.Model):
         if self._context.get('name'):
             transport_obj = self.env['student.transport']
             for transport_data in transport_obj.browse(self._context['name']):
-                point_ids = [point_id.id for point_id in transport_data.trans_point_ids]
+                point_ids = [point_id.id
+                             for point_id in transport_data.trans_point_ids]
                 args.append(('id', 'in', point_ids))
-        return super(transport_point, self).search(args, offset, limit, order, count=count)
+        return super(transport_point, self).search(
+                     args, offset, limit, order, count=count)
 
 
 class transport_vehicle(models.Model):
@@ -94,9 +96,11 @@ class transport_vehicle(models.Model):
         if self._context.get('name'):
             transport_obj = self.env['student.transport']
             transport_data = transport_obj.browse(self._context['name'])
-            vehicle_ids = [std_id.id for std_id in transport_data.trans_vehicle_ids]
+            vehicle_ids = [std_id.id
+                           for std_id in transport_data.trans_vehicle_ids]
             args.append(('id', 'in', vehicle_ids))
-        return super(transport_vehicle, self).search(args, offset, limit, order, count=count)
+        return super(transport_vehicle, self).search(args, offset, limit,
+                                                     order, count=count)
 
 
 class transport_participant(models.Model):
@@ -126,9 +130,11 @@ class transport_participant(models.Model):
         if self._context.get('name'):
             student_obj = self.env['student.student']
             for student_data in student_obj.browse(self._context['name']):
-                transport_ids = [transport_id.id for transport_id in student_data.transport_ids]
+                transport_ids = [transport_id.id
+                                for transport_id in student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
-        return super(transport_participant, self).search(args, offset, limit, order, count=count)
+        return super(transport_participant, self).search(
+                    args, offset, limit, order, count=count)
 
 
 class student_transports(models.Model):
@@ -214,7 +220,9 @@ class student_transports(models.Model):
                 prt_obj.write(cr, uid, prt_data.id, {'state': 'over'},
                               context=context)
             if participants:
-                self.write(cr, uid, trans.id, {'trans_participants_ids': [(6, 0, participants)]}, context=context)
+                self.write(cr, uid, trans.id, {
+                    'trans_participants_ids': [(6, 0, participants)]},
+                    context=context)
 
         for vehi in vehi_obj.browse(cr, uid, vehi_ids, context=context):
             stu_ids = [stu_id.id for stu_id in vehi.vehi_participants_ids]
@@ -222,7 +230,8 @@ class student_transports(models.Model):
             for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
                 if prt_data.state != 'over':
                     list1.append(prt_data.id)
-            vehi_obj.write(cr, uid, vehi.id, {'vehi_participants_ids': [(6, 0, list1)]}, context=context)
+            vehi_obj.write(cr, uid, vehi.id, {
+                'vehi_participants_ids': [(6, 0, list1)]}, context=context)
         return True
 
 
@@ -286,7 +295,8 @@ class transport_registration(models.Model):
         if not month:
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
-        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + relativedelta(months=+month)
+        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
+                      + relativedelta(months=+month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 
@@ -305,33 +315,34 @@ class transport_registration(models.Model):
         for reg_data in self:
             #registration months must one or more then one
             if reg_data.for_month <= 0:
-                raise Warning(_('Error !'),
-                    _('Sorry Registration months must one or more then one.'))
+                raise Warning(_('Error! Sorry Registration months must be one\
+                                 or more then one.'))
             # First Check Is there vacancy or not
             person = int(reg_data.vehicle_id.participant) + 1
             if reg_data.vehicle_id.capacity < person:
-                raise Warning(_('Error !'),
-                    _('There is No More vacancy on this vehicle.'))
+                raise Warning(_('There is No More vacancy on this vehicle.'))
 
             #calculate amount and Registration End date
             amount = reg_data.point_id.amount * reg_data.for_month
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
-            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + relativedelta(months=+month)
+            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
+                          + relativedelta(months=+month)
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
-                raise Warning(_('Error !'), _('For this much Months Registration is not Possibal because Root end date is Early.'))
+                raise Warning(_('For this much Months\
+                Registration is not Possible because Root end date is Early.'))
             # make entry in Transport
             temp = stu_prt_obj.create({
-                                        'stu_pid_id': str(reg_data.part_name.pid),
-                                        'amount': amount,
-                                        'transport_id': reg_data.name.id,
-                                        'tr_end_date': tr_end_date,
-                                        'name': reg_data.part_name.id,
-                                        'months': reg_data.for_month,
-                                        'tr_reg_date': reg_data.reg_date,
-                                        'point_id': reg_data.point_id.id,
-                                        'vehicle_id': reg_data.vehicle_id.id,
+                                    'stu_pid_id': str(reg_data.part_name.pid),
+                                    'amount': amount,
+                                    'transport_id': reg_data.name.id,
+                                    'tr_end_date': tr_end_date,
+                                    'name': reg_data.part_name.id,
+                                    'months': reg_data.for_month,
+                                    'tr_reg_date': reg_data.reg_date,
+                                    'point_id': reg_data.point_id.id,
+                                    'vehicle_id': reg_data.vehicle_id.id,
                                         })
             # make entry in Transport vehicle.
             list1 = []
