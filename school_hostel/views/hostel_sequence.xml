@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data noupdate="1">
 
         <record id="sequence_hos_stu" model="ir.sequence">
-            <field name="name">Hostel Student</field>
+            <field name="name">HOSTEL Student</field>
             <field name="code">hostel.student</field>
             <field name="padding">3</field>
             <field name="prefix">HOSTU</field>
