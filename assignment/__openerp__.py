@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# #############################################################################
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# #############################################################################
 
 {
     'name': 'Assignment Management',
@@ -26,13 +26,14 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'summary': 'A Module For Assignment Management In School',
     'complexity': 'easy',
     'description': '''A module to School Assignment Management.
                     which helps in school management to assign the assignment
                     to the student''',
     'depends': ['school'],
     'data': [
-            'homework_view.xml',
+            'views/homework_view.xml',
             'security/ir.model.access.csv',
         ],
     'demo': [

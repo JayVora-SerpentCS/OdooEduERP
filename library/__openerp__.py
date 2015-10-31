@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 {
     'name': 'Library Management',
@@ -26,6 +26,7 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
+    'summary': 'A Module For Library Management For School',
     'complexity': 'easy',
     'description': '''Module to manage library.
         Books Information,

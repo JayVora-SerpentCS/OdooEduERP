@@ -5,7 +5,7 @@
 
         <!-- Actions Of Form & Tree Views Of Student Result -->
 
-        <record model="ir.actions.act_window" id="action_stu_result_form">
+        <record id="action_stu_result_form" model="ir.actions.act_window">
             <field name="name">Result</field>
             <field name="res_model">exam.result</field>
             <field name="view_type">form</field>
@@ -15,7 +15,7 @@
 
         <!-- Inherited Form View Of Student -->
 
-        <record model="ir.ui.view" id="view_student_student_form2">
+        <record id="view_student_student_form2" model="ir.ui.view">
             <field name="name">student.student.form</field>
             <field name="model">student.student</field>
             <field name="inherit_id" ref="school.view_student_student_form_1"/>
@@ -33,7 +33,7 @@
 
         <!-- Tree View Of Exam Information -->
 
-        <record model="ir.ui.view" id="view_exam_exam_tree">
+        <record id="view_exam_exam_tree" model="ir.ui.view">
             <field name="name">exam.exam.tree</field>
             <field name="model">exam.exam</field>
             <field name="arch" type="xml">
@@ -49,7 +49,7 @@
 
         <!-- Search View Of Exam Information -->
 
-        <record model="ir.ui.view" id="view_exam_exam_search">
+        <record id="view_exam_exam_search" model="ir.ui.view">
             <field name="name">exam.exam.search</field>
             <field name="model">exam.exam</field>
             <field name="arch" type="xml">
@@ -73,7 +73,7 @@
 
         <!-- Form View Of Exam Information -->
 
-        <record model="ir.ui.view" id="view_exam_exam_form">
+        <record id="view_exam_exam_form" model="ir.ui.view">
             <field name="name">exam.exam.form</field>
             <field name="model">exam.exam</field>
             <field name="arch" type="xml">
@@ -140,7 +140,7 @@
 
         <!-- Actions Of Form, Tree & Calendar Views Of Exam Information -->
 
-        <record model="ir.actions.act_window" id="action_exam_exam_form">
+        <record id="action_exam_exam_form" model="ir.actions.act_window">
             <field name="name">Regular Exam</field>
             <field name="res_model">exam.exam</field>
             <field name="view_type">form</field>
@@ -149,7 +149,7 @@
 
         <!-- Actions Of Form & Tree View Of Exam -->
 
-        <record model="ir.actions.act_window" id="action_exam_exam_tree">
+        <record id="action_exam_exam_tree" model="ir.actions.act_window">
             <field name="name">Regular Exam</field>
             <field name="res_model">exam.exam</field>
             <field name="view_type">form</field>
@@ -178,7 +178,7 @@
 
         <!-- Tree View Of Additional Exam Information -->
 
-        <record model="ir.ui.view" id="view_additional_exam_tree">
+        <record id="view_additional_exam_tree" model="ir.ui.view">
             <field name="name">additional.exam.tree</field>
             <field name="model">additional.exam</field>
             <field name="arch" type="xml">
@@ -193,7 +193,7 @@
 
         <!-- Form View Of Additional Exam Information -->
 
-        <record model="ir.ui.view" id="view_additional_exam_form">
+        <record id="view_additional_exam_form" model="ir.ui.view">
             <field name="name">additional.exam.form</field>
             <field name="model">additional.exam</field>
             <field name="arch" type="xml">
@@ -218,7 +218,7 @@
 
         <!-- Search View Of Additional Exam -->
 
-        <record model="ir.ui.view" id="view_additional_exam_search">
+        <record id="view_additional_exam_search" model="ir.ui.view">
             <field name="name">additional.exam.search</field>
             <field name="model">additional.exam</field>
             <field name="arch" type="xml">
@@ -240,7 +240,7 @@
 
         <!-- Actions Of Form, Tree, Calendar Views Of Additional Exam Information -->
 
-        <record model="ir.actions.act_window" id="action_additional_exam_form">
+        <record id="action_additional_exam_form" model="ir.actions.act_window">
             <field name="name">Additional Exam</field>
             <field name="res_model">additional.exam</field>
             <field name="view_type">form</field>
@@ -253,7 +253,7 @@
 
         <!-- Tree View Of Result Information -->
 
-        <record model="ir.ui.view" id="view_exam_result_tree">
+        <record id="view_exam_result_tree" model="ir.ui.view">
             <field name="name">exam.result.tree</field>
             <field name="model">exam.result</field>
             <field name="arch" type="xml">
@@ -271,7 +271,7 @@
 
         <!-- Form View Of Result Information -->
 
-        <record model="ir.ui.view" id="view_exam_result_form">
+        <record id="view_exam_result_form" model="ir.ui.view">
             <field name="name">exam.results.form</field>
             <field name="model">exam.result</field>
             <field name="arch" type="xml">
@@ -331,7 +331,7 @@
 
         <!-- KanBan View Of Exam Result -->
 
-        <record model="ir.ui.view" id="exam_result_kanban_view">
+        <record id="exam_result_kanban_view" model="ir.ui.view">
             <field name="name">exam_result KANBAN</field>
             <field name="model">exam.result</field>
             <field name="arch" type="xml">
@@ -421,7 +421,7 @@
 
         <!-- Search View Of Result -->
 
-        <record model="ir.ui.view" id="view_exam_result_search">
+        <record id="view_exam_result_search" model="ir.ui.view">
             <field name="name">exam.result.search</field>
             <field name="model">exam.result</field>
             <field name="arch" type="xml">
@@ -443,32 +443,22 @@
             </field>
         </record>
 
-        <!-- Record Rule For Personal Exam Result -->
-
-        <record id="student_rule_exam_record" model="ir.rule">
-            <field name="name">Personal Exam Result Record</field>
-            <field ref="exam.model_exam_result" name="model_id"/>
-            <field eval="1" name="global"/>
-            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
-
         <!-- Actions Of Form, Tree & Kanban Views Of Result Information -->
 
-        <record model="ir.actions.act_window" id="action_exam_result_form">
+        <record id="action_exam_result_form" model="ir.actions.act_window">
             <field name="name">Result</field>
             <field name="res_model">exam.result</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <!-- Result Menu -->
+        <!-- Menu Item Of Result -->
 
         <menuitem id="menu_exam_result" name="Exam Results" parent="menu_exam" action="action_exam_result_form" />
 
         <!-- Tree View Of Batchwise Result Information -->
 
-        <record model="ir.ui.view" id="view_exam_batch_result_tree">
+        <record id="view_exam_batch_result_tree" model="ir.ui.view">
             <field name="name">exam.batchwise.result.tree</field>
             <field name="model">exam.batchwise.result</field>
             <field name="arch" type="xml">
@@ -481,7 +471,7 @@
 
         <!-- Form View Of Gradewise Result Information -->
 
-        <record model="ir.ui.view" id="view_exam_batch_result_form">
+        <record id="view_exam_batch_result_form" model="ir.ui.view">
             <field name="name">exam.batch.result.form</field>
             <field name="model">exam.batchwise.result</field>
             <field name="arch" type="xml">
@@ -500,7 +490,7 @@
 
         <!-- Action Of Form & Tree Views Of Gradewise Result Information -->
 
-        <record model="ir.actions.act_window" id="action_batchwise_exam_result_form">
+        <record id="action_batchwise_exam_result_form" model="ir.actions.act_window">
             <field name="name">Batchwise Result</field>
             <field name="res_model">exam.batchwise.result</field>
             <field name="view_type">form</field>
@@ -509,11 +499,12 @@
 
         <!-- Menu Item Of Batchwise Result -->
 
-        <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam" action="action_batchwise_exam_result_form" />
+        <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam"
+                  action="action_batchwise_exam_result_form" />
 
         <!-- Tree View Of Additional Result Information -->
 
-        <record model="ir.ui.view" id="view_additional_exam_result_tree">
+        <record id="view_additional_exam_result_tree" model="ir.ui.view">
             <field name="name">additional.exam.result.tree</field>
             <field name="model">additional.exam.result</field>
             <field name="arch" type="xml">
@@ -530,7 +521,7 @@
 
         <!-- Form View Of Additional Result Information -->
 
-        <record model="ir.ui.view" id="view_additional_exam_result_form">
+        <record id="view_additional_exam_result_form" model="ir.ui.view">
             <field name="name">additional.exam.result.form</field>
             <field name="model">additional.exam.result</field>
             <field name="arch" type="xml">
@@ -555,7 +546,7 @@
 
         <!-- Search View Of Additional Result -->
 
-        <record model="ir.ui.view" id="view_additioanal_result_search">
+        <record id="view_additioanal_result_search" model="ir.ui.view">
             <field name="name">additional.exam.resultsearch</field>
             <field name="model">additional.exam.result</field>
             <field name="arch" type="xml">
@@ -579,7 +570,7 @@
 
         <!-- Actions Of Form & Tree Views Of Additional Result Information -->
 
-        <record model="ir.actions.act_window" id="action_additional_exam_result_form01">
+        <record id="action_additional_exam_result_form01" model="ir.actions.act_window">
             <field name="name">Additional Exam Results</field>
             <field name="res_model">additional.exam.result</field>
             <field name="view_type">form</field>
@@ -615,16 +606,6 @@
                     <action name="%(action_exam_exam_tree)d" string="All Exam Information" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent "/>
                 </xpath>
             </field>
-        </record>
-
-        <!-- Record Rule for Exam Schedule For Student -->
-
-        <record id="student_rule_exam_schedule_record" model="ir.rule">
-            <field name="name">Personal Exam Schedule Record</field>
-            <field ref="model_exam_exam" name="model_id"/>
-            <field eval="1" name="global"/>
-            <field name="domain_force">[('exam_timetable_ids.standard_id.student_ids.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
 
     </data>

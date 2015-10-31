@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 {
     'name': 'Exam Management',
@@ -26,6 +26,7 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'summary': 'A Module For Exams Management Taken In School',
     'complexity': 'easy',
     'description': '''A module to manage the school examination:
         1. Define Exam Timetable

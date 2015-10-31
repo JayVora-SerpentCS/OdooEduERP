@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# #############################################################################
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# #############################################################################
 
 from openerp import models, fields, api
 
@@ -56,7 +56,8 @@ class school_teacher_assignment(models.Model):
         '''
         assignment_obj = self.env['school.student.assignment']
         std_ids = []
-        self._cr.execute('''select id from student_student where standard_id=%s''', (self.standard_id.id,))
+        self._cr.execute('''select id from student_student\
+                            where standard_id=%s''', (self.standard_id.id,))
         student = self._cr.fetchall()
         if student:
             for stu in student:
@@ -64,15 +65,15 @@ class school_teacher_assignment(models.Model):
         if std_ids:
             for std in std_ids:
                 assignment_id = assignment_obj.create({
-                                    'name': self.name,
-                                    'subject_id': self.subject_id.id,
-                                    'standard_id': self.standard_id.id,
-                                    'assign_date': self.assign_date,
-                                    'due_date': self.due_date,
-                                    'state': 'active',
-                                    'attached_homework': self.attached_homework,
-                                    'teacher_id': self.teacher_id.id,
-                                    'student_id': std
+                                'name': self.name,
+                                'subject_id': self.subject_id.id,
+                                'standard_id': self.standard_id.id,
+                                'assign_date': self.assign_date,
+                                'due_date': self.due_date,
+                                'state': 'active',
+                                'attached_homework': self.attached_homework,
+                                'teacher_id': self.teacher_id.id,
+                                'student_id': std
                                 })
                 if self.attached_homework:
                     data_attach = {

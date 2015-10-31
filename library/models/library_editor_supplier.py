@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 from openerp import models, fields, api, _
 from openerp import tools
@@ -39,30 +39,6 @@ class library_editor_supplier(models.Model):
     junk = fields.Text(compute=lambda self: dict([(idn, '')
                            for idn in self.ids]),
                        method=True, string=" ", type="text")
-
-    @api.v7
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, self._table)
-        cr.execute("""
-            create view library_editor_supplier as (
-                select
-                    case when min(ps.id) is null then - min(pp.id)
-                        else min(ps.id) end as id,
-                    case when pp.editor is null then 1
-                        else pp.editor end as name,
-                    case when ps.name is null then 1
-                        else ps.name end as supplier_id,
-                    case when ps.sequence is null then 0
-                        else ps.sequence end as sequence,
-                    ps.delay as delay,
-                    ps.min_qty as min_qty
-                from
-                    product_supplierinfo ps full outer join
-                    product_product pp on (ps.name = pp.product_tmpl_id)
-                where
-                    ((pp.editor is not null) or (ps.name is not null))
-                group by pp.editor, ps.name, ps.sequence, ps.delay, ps.min_qty
-            )""")
 
     @api.model
     @api.returns('self', lambda value: value)
@@ -95,24 +71,6 @@ class library_editor_supplier(models.Model):
             tmp_id = sup_info.create(params)
             last_id = last_id < tmp_id.id and last_id or tmp_id.id
         return last_id
-
-    @api.model
-    def unlink(self, ids):
-        supplier_obj = self.env['product.supplierinfo']
-        for rel in self:
-            if not (rel.name and rel.supplier_id):
-                continue
-            # search for the equivalent IDs in product_supplierinfo
-            # (unpack the group)
-            self._cr.execute("""select si.id\n"""\
-                       """from product_supplierinfo si\n"""\
-                       """join product_product pp\n"""\
-                       """  on (si.product_id = pp.product_tmpl_id )\n"""\
-                       """where pp.editor = %s and si.name = %s"""
-                       % (rel.name.id, rel.supplier_id.id))
-            ids = [x[0] for x in self._cr.fetchall()]
-            supplier_obj.unlink(ids)
-        return True
 
     @api.multi
     def write(self, vals):

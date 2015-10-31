@@ -130,7 +130,8 @@
 
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"/>
 
-        <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config" action="action_library_rack"
+        <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config"
+                  action="action_library_rack"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of Product Book -->
@@ -258,7 +259,8 @@
 
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" />
 
-        <menuitem id="menu_book_products" name="Books" parent="menu_library_config" action="action_product_book_list"
+        <menuitem id="menu_book_products" name="Books" parent="menu_library_config"
+                  action="action_product_book_list"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian" />
 
         <!-- Action Of Form View Of View Book -->
@@ -294,7 +296,7 @@
         <!-- Menu Item Of Books To Return Before 30 Days -->
 
         <menuitem id="menu_action_book_30days" name="Books to return before 30 days" parent="menu_library"
-                  action="action_product_book_30days" sequence="1"
+                  action="action_product_book_30days"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Sale Order -->
@@ -531,16 +533,6 @@
         <menuitem id="menu_card_main" parent="menu_library" action="action_card_info"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian" />
 
-        <!-- Record Rule For Personal library card -->
-
-        <record id="student_library_card_record" model="ir.rule">
-            <field name="name">Personal library card Record</field>
-            <field ref="library.model_library_card" name="model_id" />
-            <field eval="1" name="global" />
-            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
-
         <!-- Form View Of Library Book Issue -->
 
         <record id="view_book_library_form_1" model="ir.ui.view">
@@ -742,18 +734,9 @@
 
         <!--Menu Item Of Library Book Issue -->
 
-        <menuitem id="menu_book_issue_sub_form" name="Book Issues" parent="menu_library" action="action_library_book_list1" sequence="2"
+        <menuitem id="menu_book_issue_sub_form" name="Book Issues" parent="menu_library"
+                  action="action_library_book_list1" sequence="2"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
-
-        <!-- Record Rule For Personal Book Issues -->
-
-        <record id="student_book_issue_record" model="ir.rule">
-            <field name="name">Personal Book Issues Record</field>
-            <field ref="library.model_library_book_issue" name="model_id"/>
-            <field eval="1" name="global" />
-            <field name="domain_force">[('card_id.student_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
 
         <!-- Form View Of Library Book Request -->
 
@@ -825,16 +808,6 @@
 
         <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="4"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
-
-        <!-- Record Rule For Personal Book Request -->
-
-        <record id="student_book_request_record" model="ir.rule">
-            <field name="name">Personal Book Request Record</field>
-            <field ref="library.model_library_book_request" name="model_id"/>
-            <field eval="1" name="global" />
-            <field name="domain_force">[('card_id.student_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
 
         <!-- Form view Of Product Language -->
 
@@ -1195,7 +1168,7 @@
 
         <!-- Inherited Tree View Of Purchase Order Line -->
 
-        <record model="ir.ui.view" id="purchase_order_line_tree">
+        <record id="purchase_order_line_tree" model="ir.ui.view">
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
             <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
@@ -1298,7 +1271,7 @@
 
         <!-- Menu Item Of Author -->
 
-        <menuitem id="author_menu" name="Author" parent="menu_library_config" action="action_author_list" 
+        <menuitem id="author_menu" name="Author" parent="menu_library_config" action="action_author_list"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Overwritten Form View Of Stock Picking -->

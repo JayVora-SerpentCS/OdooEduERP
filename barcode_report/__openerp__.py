@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,13 +18,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 {
     'name': 'School BarCode',
     'version': '3.0',
     'author': 'Serpent Consulting Services PVT. LTD.',
     'category': 'School Management',
+    'summary': 'A Module For BarCode System For School',
     'depends': ['timetable'],
     'description': '''Print results with BarCode.''',
     'data': [
