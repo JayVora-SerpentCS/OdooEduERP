@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <!-- General Structure Of A WorkFlow XML File -->
+
+        <record id="wkf_event_1" model="workflow">
+            <field name="name">workflow.event.1</field>
+            <field name="osv">student.payslip</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Student PaySlip Procedure WorkFlow Activities -->
+
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_event_1" />
+            <field name="name">activity.draft</field>
+            <field name="flow_start">True</field>
+            <field name="kind">function</field>
+            <field name="action">payslip_draft()</field>
+        </record>
+
+        <record id="act_confirm" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_event_1" />
+            <field name="name">activity.confirm</field>
+            <field name="kind">function</field>
+            <field name="action">payslip_confirm()</field>
+        </record>
+
+        <record id="act_paid" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_event_1" />
+            <field name="name">activity.paid</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">student_pay_fees()</field>
+        </record>
+
+        <!-- Student PaySlip Procedure WorkFlow Transitions -->
+
+        <record id="trans_draft_confirm" model="workflow.transition">
+            <field name="act_from" ref="act_draft" />
+            <field name="act_to" ref="act_confirm" />
+            <field name="signal">payslip_confirm</field>
+        </record>
+
+        <record id="trans_confirm_paid" model="workflow.transition">
+            <field name="act_from" ref="act_confirm" />
+            <field name="act_to" ref="act_paid" />
+            <field name="signal">student_pay_fees</field>
+        </record>
+
+    </data>
+</openerp>

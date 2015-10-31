@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
-##############################################################################
+# -*- coding: UTF-8 -*-
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD. (<http://www.serpentcs.com>)
+#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,9 +18,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
 
 class assign_roll_no(models.TransientModel):
@@ -30,16 +31,18 @@ class assign_roll_no(models.TransientModel):
 
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
-    division_id = fields.Many2one('standard.division', 'Division', required=True)
+    division_id = fields.Many2one('standard.division', 'Division',
+                                  required=True)
 
     @api.multi
     def assign_rollno(self):
         res = {}
         student_obj = self.env['student.student']
         for student_data in self:
-            search_student_ids = student_obj.search([('standard_id', '=', student_data.standard_id.id),
-                                                    ('medium_id', '=', student_data.medium_id.id),
-                                                    ('division_id', '=', student_data.division_id.id)])
+            search_student_ids = student_obj.search([
+                ('standard_id', '=', student_data.standard_id.id),
+                ('medium_id', '=', student_data.medium_id.id),
+                ('division_id', '=', student_data.division_id.id)])
         number = 1
         for student in search_student_ids:
             student.write({'roll_no': number})

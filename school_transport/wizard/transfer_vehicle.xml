@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data>
+
+        <!-- Form View Of Transfer Vehicle -->
 
         <record id="transfer_vehicle_1" model="ir.ui.view">
             <field name="name">transfer.vehicle</field>
@@ -25,15 +28,17 @@
             </field>
         </record>
 
+        <!-- Action Of Transfer Vehicle -->
+
         <act_window id="act_transfer_vehicle"
+            name="Transfer Vehicle"
             multi="True"
             key2="client_action_multi" 
-            name="Transfer Vehicle"
             res_model="transfer.vehicle" 
             src_model="student.student"
             view_mode="form" 
             target="new" 
-            view_type="form" />
+            view_type="form"/>
 
     </data>
-</openerp>  
+</openerp>

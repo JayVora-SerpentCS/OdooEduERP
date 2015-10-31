@@ -1,55 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data noupdate="1">
 
- 	<!-- Daily Attendance Information-->
- 		
-     	<record id="demo_daily_attendance_1" model="daily.attendance">
-			<field name="date">2011-08-11</field>
-			<field name="student_ids" eval="[]"/>
-			<field name="class_id" ref="school.demo_standard_standard_1"/>
-			<field name="medium_id" ref="school.demo_standard_medium_1"/>
-			<field name="division_id" ref="school.demo_standard_division_1"/>
-			<field name="standard_id" ref="school.demo_school_standard_1" />
-			<field name="state">draft</field>
-		</record>
+        <!-- Daily Attendance Information-->
 
-	<!-- Daily Attendance Line Information-->
- 	
-    	<record id="demo_daily_attendance_line_1" model="daily.attendance.line">
-			<field name="roll_no">2</field>
-			<field name="is_present" eval="True"/>
-			<field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
-			<field name="stud_id" ref="school.demo_student_student_1"/>
-		</record>
-	 		
-		<record id="demo_daily_attendance_line_2" model="daily.attendance.line">
-			<field name="roll_no">4</field>
-			<field name="is_present" eval="True"/>
-			<field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
-			<field name="stud_id" ref="school.demo_student_student_2"/>
-		</record>
+        <record id="demo_daily_attendance_1" model="daily.attendance">
+            <field name="date">2011-08-11</field>
+            <field name="student_ids" eval="[]"/>
+            <field name="class_id" ref="school.demo_standard_standard_1"/>
+            <field name="medium_id" ref="school.demo_standard_medium_1"/>
+            <field name="division_id" ref="school.demo_standard_division_1"/>
+            <field name="standard_id" ref="school.demo_school_standard_1" />
+            <field name="state">draft</field>
+        </record>
 
-		<record id="demo_daily_attendance_line_3" model="daily.attendance.line">
-			<field name="roll_no">3</field>
-			<field name="is_present" eval="True"/>
-			<field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
-			<field name="stud_id" ref="school.demo_student_student_3"/>
-		</record>
+        <!-- Daily Attendance Line Information-->
 
-		<record id="demo_daily_attendance_line_4" model="daily.attendance.line">
-			<field name="roll_no">5</field>
-			<field name="is_present" eval="True"/>
-			<field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
-			<field name="stud_id" ref="school.demo_student_student_4"/>
-		</record>
+        <record id="demo_daily_attendance_line_1" model="daily.attendance.line">
+            <field name="roll_no">2</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_1"/>
+        </record>
 
-		<record id="demo_daily_attendance_line_5" model="daily.attendance.line">
-			<field name="roll_no">1</field>
-			<field name="is_present" eval="True"/>			
-			<field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
-			<field name="stud_id" ref="school.demo_student_student_5"/>
-		</record>
+        <record id="demo_daily_attendance_line_2" model="daily.attendance.line">
+            <field name="roll_no">4</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_2"/>
+        </record>
+
+        <record id="demo_daily_attendance_line_3" model="daily.attendance.line">
+            <field name="roll_no">3</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_3"/>
+        </record>
+
+        <record id="demo_daily_attendance_line_4" model="daily.attendance.line">
+            <field name="roll_no">5</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_4"/>
+        </record>
+
+        <record id="demo_daily_attendance_line_5" model="daily.attendance.line">
+            <field name="roll_no">1</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_5"/>
+        </record>
 
     </data>
 </openerp>

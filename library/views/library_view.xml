@@ -1,0 +1,1479 @@
+<?xml version="1.0"?>
+
+<openerp>
+    <data>
+
+        <!-- Form View Of Library Author -->
+
+        <record id="author_form" model="ir.ui.view">
+            <field name="name">library.author.form</field>
+            <field name="model">library.author</field>
+            <field name="arch" type="xml">
+                <form string="Authors">
+                    <sheet>
+                        <notebook>
+                            <page string="General Information">
+                                <group>
+                                    <field name="name" placeholder="Author Name"/>
+                                </group>
+                                <separator string="Books" colspan="4"/>
+                                <field name="book_ids" nolabel="1" colspan="4"/>
+                            </page>
+                            <page string="More Information">
+                                <separator string="Editors" colspan="4"/>
+                                <field name="editor_ids" nolabel="1" colspan="4"/>
+                                <separator string="Notes" colspan="4"/>
+                                <field name="note" nolabel="1" colspan="4"/>
+                                <separator string="Biography" colspan="4"/>
+                                <field name="biography" nolabel="1" colspan="4"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Author -->
+
+        <record id="author_tree" model="ir.ui.view">
+            <field name="name">library.author.tree</field>
+            <field name="model">library.author</field>
+            <field name="arch" type="xml">
+                <tree string="Authors">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Author -->
+
+        <record id="author_search" model="ir.ui.view">
+            <field name="name">library.author.search</field>
+            <field name="model">library.author</field>
+            <field name="arch" type="xml">
+                <search string="Authors">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Author -->
+
+        <record id="action_author_list" model="ir.actions.act_window">
+            <field name="name">Authors</field>
+            <field name="res_model">library.author</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="author_search"/>
+        </record>
+
+        <!-- Form View Of Library Rack -->
+
+        <record id="rack_form" model="ir.ui.view">
+            <field name="name">Library Rack</field>
+            <field name="model">library.rack</field>
+            <field name="arch" type="xml">
+                <form string="Authors">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Rack -->
+
+        <record id="rack_tree" model="ir.ui.view">
+            <field name="name">Library Rack Tree</field>
+            <field name="model">library.rack</field>
+            <field name="arch" type="xml">
+                <tree string="Authors">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Rack -->
+
+        <record id="rack_search" model="ir.ui.view">
+            <field name="name">Library Rack Search</field>
+            <field name="model">library.rack</field>
+            <field name="arch" type="xml">
+                <search string="Authors">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="active"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Library Rack -->
+
+        <record id="action_library_rack" model="ir.actions.act_window">
+            <field name="name">Library Rack</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">library.rack</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Items Of Library -->
+
+        <menuitem id="menu_library" name="Library" parent="school.menu_ems" sequence="5"/>
+
+        <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"/>
+
+        <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config"
+                  action="action_library_rack"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Form View Of Product Book -->
+
+        <record id="view_product_book_form" model="ir.ui.view">
+            <field name="name">product.book.form.view</field>
+            <field name="model">product.product</field>
+            <field name="priority" eval="1" />
+            <field name="arch" type="xml">
+                <form string="Books">
+                    <sheet>
+                        <separator string="Book Information"/>
+                        <group col="4" colspan="2">
+                            <field name="name" placeholder="Enter Book Name"/>
+                            <field name="default_code" placeholder="Enter Book Default code"/>
+                            <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
+                            <field name="catalog_num" placeholder="Enter Catalog No"/>
+                            <field name="isbn" placeholder="International Standard Book Number"/>
+                            <field name="rack" placeholder="Position of book"/>
+                            <field name="categ_id" placeholder="Select or Create Book"/>
+                            <field name="editor" placeholder="Editor" required="1"
+                                   context="{'form_view_ref':'library.view_partner_form_11'}"/>
+                            <field name="author" placeholder="Name of Author"/>
+                            <field name="collection" placeholder="Collection Name"/>
+                            <field name="virtual_available"/>
+                        </group>
+                        <notebook>
+                            <page string="Details">
+                                <group col="4" colspan="2">
+                                    <field name="availability"/>
+                                    <field name="nbpage" placeholder="No of Page in books"/>
+                                    <field name="day_to_return_book" placeholder="Days of Returnning"/>
+                                    <field name="creation_date"/>
+                                    <field name="date_parution" placeholder="Book Release Date"/>
+                                    <field name="date_retour"/>
+                                    <field name="tome"/>
+                                    <field name="format" placeholder="Format of Book"/>
+                                    <field name="weight"/>
+                                    <field name="back"/>
+                                    <field name="num_edition" placeholder="No of Addition of Book"/>
+                                    <field name="intrastat_id"/>
+                                    <field name="price_cat" placeholder="Select or Create Price Category"/>
+                                    <field name="lang" placeholder="Language of Book"/>
+                                </group>
+                                <newline/>
+                                <group colspan="2" col="2">
+                                    <separator string="Customer Taxes" colspan="2"/>
+                                    <field name="taxes_id" colspan="2" nolabel="1"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Supplier Taxes" colspan="2"/>
+                                    <field name="supplier_taxes_id" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Descriptions">
+                                <separator string="Description"/>
+                                <field name="description" colspan="4" nolabel="1" placeholder="Enter Description About Book"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Product Book -->
+
+        <record id="view_product_book_tree" model="ir.ui.view">
+            <field name="name">product.book.tree.view</field>
+            <field name="model">product.product</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="Books">
+                    <field name="name"/>
+                    <field name="uom_id"/>
+                    <field name="categ_id"/>
+                    <field name="barcode"/>
+                    <field name="catalog_num"/>
+                    <field name="virtual_available"/>
+                    <field name="date_retour"/>
+                    <field name="availability"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View Of Book Attachment -->
+
+        <record id="attachment_form_id" model="ir.ui.view">
+            <field name="name">attachement.form</field>
+            <field name="model">book.attachment</field>
+            <field name="arch" type="xml">
+                <form string="Attachment">
+                    <field name="name"/>
+                    <!-- <field name="product_id"/> -->
+                    <field name="date" />
+                    <field name="attachment" widget="image"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Book Attachment -->
+
+        <record id="attachment_tree_id" model="ir.ui.view">
+            <field name="name">attachement.tree</field>
+            <field name="model">book.attachment</field>
+            <field name="arch" type="xml">
+                <tree string="Attachemnt">
+                    <field name="name"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action Of Product Book List -->
+
+        <record id="action_product_book_list" model="ir.actions.act_window">
+            <field name="name">Books</field>
+            <field name="res_model">product.product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_book':1}</field>
+        </record>
+
+        <!-- Menu Items Of Library Books -->
+
+        <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" />
+
+        <menuitem id="menu_book_products" name="Books" parent="menu_library_config"
+                  action="action_product_book_list"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian" />
+
+        <!-- Action Of Form View Of View Book -->
+
+        <record id="action_view_book" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2" />
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_product_book_form"/>
+            <field name="act_window_id" ref="action_product_book_list"/>
+        </record>
+
+        <!-- Action Of Tree View Of View Book -->
+
+        <record id="action_view_book2" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1" />
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_product_book_tree"/>
+            <field name="act_window_id" ref="action_product_book_list"/>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Product Book 30 Days -->
+
+        <record id="action_product_book_30days" model="ir.actions.act_window">
+            <field name="name">Books to return before 30 days</field>
+            <field name="res_model">product.product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_product_book_tree"/>
+            <field name="domain">[('categ_id.name', '=', 'Books')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <!-- Menu Item Of Books To Return Before 30 Days -->
+
+        <menuitem id="menu_action_book_30days" name="Books to return before 30 days" parent="menu_library"
+                  action="action_product_book_30days"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Tree View Of Sale Order -->
+
+        <record id="view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Orders">
+                    <field name="date_order"/>
+                    <field name="name"/>
+                    <field name="state" invisible="1"/>
+                    <field name="partner_id"/>
+                    <field name="partner_shipping_id"/>
+                    <field name="invoice_status"/>
+                    <field name="amount_untaxed"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Sale Order -->
+
+        <record id="action_order_today_tree" model="ir.actions.act_window">
+            <field name="name">Orders of the day</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_order_tree"/>
+        </record>
+
+        <!-- Menu Item For Orders Of The Day -->
+
+        <menuitem id="sale_order_day" name="Orders of the day" parent="menu_library" action="action_order_today_tree"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Tree View Of Purchase Order -->
+
+        <record id="view_purchase_order_tree" model="ir.ui.view">
+            <field name="name">purchase.order.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Orders">
+                    <field name="message_unread" invisible="1" />
+                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
+                    <field name="origin"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/>
+                    <field name="amount_total" sum="Total amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Actions Of Tree View Of Purchase Order Today -->
+
+        <record id="action_purchase_order_today_tree" model="ir.actions.act_window">
+            <field name="name">Purchase Orders of the day</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_purchase_order_tree" />
+        </record>
+
+        <!-- Menu Item For Orders Of The Day -->
+
+        <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
+                  sequence="2"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Tree View Of Account Invoice -->
+
+        <record id="invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="Invoice" colors="grey:state=='draft'">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="number"/>
+                    <field name="date_invoice"/>
+                    <field name="date_due"/>
+                    <field name="partner_id"/>
+                    <field name="amount_untaxed"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Tree View Of Stock Picking -->
+
+        <record id="vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="1" />
+            <field name="arch" type="xml">
+                <tree string="Picking List">
+                    <field name="name" colspan="3"/>
+                    <field name="date"/>
+                    <field name="origin"/>
+                    <!-- <field name="address_id" /> -->
+                    <field name="state" readonly="1"/>
+                    <field name="date_done"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View Of Library Price Category -->
+
+        <record id="library_price_category_form" model="ir.ui.view">
+            <field name="name">library.price.category</field>
+            <field name="model">library.price.category</field>
+            <field name="arch" type="xml">
+                <form string="Price Category">
+                    <sheet>
+                        <group>
+                            <field name="name" select="1" placeholder="Category Name"/>
+                            <field name="price" select="1"/>
+                        </group>
+                        <separator string="Product" colspan="4"/>
+                        <field name="product_ids" select="1" nolabel="1" colspan="4"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Price Category -->
+
+        <record id="library_price_category_tree" model="ir.ui.view">
+            <field name="name">library.price.category</field>
+            <field name="model">library.price.category</field>
+            <field name="arch" type="xml">
+                <tree string="Price Categories">
+                    <field name="name"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Library Price Category -->
+
+        <record id="action_price_category" model="ir.actions.act_window">
+            <field name="name">Price Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">library.price.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Price Category In Library -->
+
+        <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"/>
+
+        <menuitem id="menu_price_category" name="Price Category" parent="menu_library_config" action="action_price_category"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Form View Of Library Card Details -->
+
+        <record id="product_card_form_view" model="ir.ui.view">
+            <field name="name">library.card.form</field>
+            <field name="model">library.card</field>
+            <field name="arch" type="xml">
+                <form string="Card Details">
+                    <sheet>
+                        <separator string="Card Details" colspan="4" col="4"/>
+                        <group col="2" colspan="4">
+                            <field name="code" placeholder="Code"/>
+                            <field name="user"/>
+                            <field name="book_limit"/>
+                            <field name="gt_name" invisible="True"/>
+                        </group>
+                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
+                            <separator colspan="4" col="4" />
+                            <field name="student_id" on_change="on_change_student(student_id)"/>
+                            <field name="roll_no" />
+                            <field name="standard_id"/>
+                        </group>
+                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','teacher')]}">
+                            <separator colspan="4" col="4"/>
+                            <field name="teacher_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Card Details -->
+
+        <record id="product_card_tree_view" model="ir.ui.view">
+            <field name="name">library.card.tree</field>
+            <field name="model">library.card</field>
+            <field name="arch" type="xml">
+                <tree string="Card Details">
+                    <field name="code"/>
+                    <field name="user"/>
+                    <field name="book_limit"/>
+                    <field name="gt_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Card Details -->
+
+        <record id="product_card_search_view" model="ir.ui.view">
+            <field name="name">library.card.search</field>
+            <field name="model">library.card</field>
+            <field name="arch" type="xml">
+                <search string="Card Details">
+                    <field name="code"/>
+                    <field name="user"/>
+                    <field name="gt_name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Library Card Details -->
+
+        <record id="action_card_info" model="ir.actions.act_window">
+            <field name="name">Card Details</field>
+            <field name="res_model">library.card</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Library Card -->
+
+        <menuitem id="menu_card_main" parent="menu_library" action="action_card_info"
+                  groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian" />
+
+        <!-- Form View Of Library Book Issue -->
+
+        <record id="view_book_library_form_1" model="ir.ui.view">
+            <field name="name">library.book.issue.form</field>
+            <field name="model">library.book.issue</field>
+            <field name="arch" type="xml">
+                <form string="Student Information">
+                    <header>
+                        <button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl" states="issue,reissue"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <button name="issue_book" string="Book Issue" icon="terp-gtk-jump-to-ltr" states="draft"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <button name="reissue_book" string="Book Reissue" icon="terp-gtk-jump-to-ltr" states="issue"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <button name="cancel_book" string="Cancel" icon="gtk-cancel" states="draft,issue"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <button name="draft_book" string="Draft" icon="terp-document-new" states="cancel"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!" states="return,lost"
+                                attrs="{'invisible':[('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
+                                groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+                        <field name="state" widget="statusbar" align="right" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <separator string="Book Issue" colspan="4" col="4"/>
+                        <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                            <field name="issue_code" />
+                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]"/>
+                        </group>
+                        <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                            <field name="card_id" on_change="on_change_card_issue(card_id)"/>
+                            <field name="user"/>
+                            <field name="gt_name" invisible="True"/>
+                        </group>
+                        <group col="4" colspan="4"
+                               attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                            <separator string="Student Details" colspan="4" col="4"/>
+                            <field name="student_id" readonly="1"/>
+                            <field name="roll_no" readonly="1"/>
+                            <field name="standard_id" readonly="1"/>
+                        </group>
+                        <group col="2" colspan="4"
+                               attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                            <separator string="Teacher Details" colspan="4" col="4"/>
+                            <field name="teacher_id" readonly="1"/>
+                        </group>
+                        <group col="4" colspan="4"
+                               attrs="{'invisible':[('state','=','draft')], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
+                            <separator string="Issue Date" colspan="4" col="4" />
+                            <field name="day_to_return_book" attrs="{'required':[('state','=','issue')]}"/>
+                            <field name="date_issue"/>
+                            <field name="date_return"/>
+                            <field name="actual_return_date"/>
+                            <field name="penalty" attrs="{'invisible':[('penalty','&lt;',1.0)]}"/>
+                            <field name="lost_penalty" attrs="{'invisible':[('lost_penalty','&lt;',1.0)]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Book Issue -->
+
+        <record id="view_library_book_tree" model="ir.ui.view">
+            <field name="name">library.book.issue.tree</field>
+            <field name="model">library.book.issue</field>
+            <field name="arch" type="xml">
+                <tree string="Books Issue" colors="blue:state in ('issue','reissue');red:(lost_penalty&gt;0.1);red:(penalty&gt;0.1);">
+                    <field name="issue_code"/>
+                    <field name="name"/>
+                    <field name="user"/>
+                    <field name="gt_name"/>
+                    <field name="date_issue"/>
+                    <field name="date_return"/>
+                    <field name="state"/>
+                    <field name="actual_return_date"/>
+                    <field name="penalty"/>
+                    <field name="lost_penalty"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Kanban View Of Library Book Issue -->
+
+        <record id="library_book_issue_kanban_view" model="ir.ui.view">
+            <field name="name">library.book.issue.kanban</field>
+            <field name="model">library.book.issue</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="gt_name">
+                    <field name="color"/>
+                    <field name="name"/>
+                    <field name="card_id"/>
+                    <field name="gt_name"/>
+                    <field name="standard_id" attrs="{'invisible':[('user','!=','Student')]}"/>
+                    <field name="roll_no" attrs="{'invisible':[('user','!=','Student')]}"/>
+                    <field name="date_issue"/>
+                    <field name="date_return"/>
+                    <field name="day_to_return_book"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td class="oe_kanban_title1" align="left" valign="middle">
+                                                    <field name="name"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" align="left">
+                                                    <div class="oe_kanban_title2">
+                                                        <div>
+                                                            Card No :-
+                                                            <field name="card_id"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <div>
+                                                            User :-
+                                                            <field name="gt_name"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <div>
+                                                            Date Issue :-
+                                                            <field name="date_issue"/>
+                                                        </div>
+                                                        <div>
+                                                            Date Return :-
+                                                            <field name="date_return"/>
+                                                        </div>
+                                                        <div>
+                                                            Day To Return Book :-
+                                                            <field name="day_to_return_book"/>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Delete" icon="gtk-delete" type="delete"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Book Issue -->
+
+        <record id="view_book_issue_search" model="ir.ui.view">
+            <field name="name">library.book.issue.search</field>
+            <field name="model">library.book.issue</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <filter icon="terp-document-new" string="Issue" domain="[('state','=','issue')]" />
+                    <filter icon="terp-check" string="Return" domain="[('state','=','return')]"/>
+                    <filter icon="gtk-cancel" string="Lost" domain="[('state','=','lost')]"/>
+                    <field name="name"/>
+                    <field name="user"/>
+                    <field name="gt_name"/>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="State" help="By State" context="{'group_by':'state'}" />
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-personal" string="Name of book" help="By Book Name" context="{'group_by':'name'}"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-personal" string="User" help="User" context="{'group_by':'user'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Of Form, Tree & Kanban Views Of Library Book Issue -->
+
+        <record id="action_library_book_list1" model="ir.actions.act_window">
+            <field name="name">Book Issue</field>
+            <field name="res_model">library.book.issue</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <!--Menu Item Of Library Book Issue -->
+
+        <menuitem id="menu_book_issue_sub_form" name="Book Issues" parent="menu_library"
+                  action="action_library_book_list1" sequence="2"
+                  groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
+
+        <!-- Form View Of Library Book Request -->
+
+        <record id="view_book_library_req_form" model="ir.ui.view">
+            <field name="name">library.book.req.form</field>
+            <field name="model">library.book.request</field>
+            <field name="arch" type="xml">
+                <form string="Book Request Form">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <separator string="Book Request" colspan="4" col="4"/>
+                            <field name="req_id"/>
+                            <field name="card_id" placeholder="Card Id"/>
+                            <field name="type"/>
+                            <field name="bk_nm" invisible="True"/>
+                            <field name="name" attrs="{'invisible':[('type','!=','existing')]}"/>
+                            <field name="new1" attrs="{'invisible':[('type','!=','new')]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Book Request -->
+
+        <record id="view_library_req_tree" model="ir.ui.view">
+            <field name="name">library.book.req.tree</field>
+            <field name="model">library.book.request</field>
+            <field name="arch" type="xml">
+                <tree string="Books Request">
+                    <field name="req_id"/>
+                    <field name="card_id"/>
+                    <field name="type"/>
+                    <field name="bk_nm"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Book Request -->
+
+        <record id="view_book_library_req_search" model="ir.ui.view">
+            <field name="name">library.book.req.search</field>
+            <field name="model">library.book.request</field>
+            <field name="arch" type="xml">
+                <search string="Book Request Search">
+                    <group colspan="6" col="4">
+                        <field name="req_id"/>
+                        <field name="card_id"/>
+                    </group>
+                    <separator orientation="vertical"/>
+                    <newline />
+                    <group expand="0" string="Group By..." colspan="6" col="4">
+                        <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Library Book Request -->
+
+        <record id="action_lib_book_req" model="ir.actions.act_window">
+            <field name="name">Book Requests</field>
+            <field name="res_model">library.book.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Library Book Request -->
+
+        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="4"
+                  groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
+
+        <!-- Form view Of Product Language -->
+
+        <record id="product_lang_form_view" model="ir.ui.view">
+            <field name="name">product.lang.form</field>
+            <field name="model">product.lang</field>
+            <field name="arch" type="xml">
+                <form string="Product Languages">
+                    <sheet>
+                        <separator string="Languages"/>
+                        <group col="4" colspan="2">
+                            <field name="code" placeholder="Language Code"/>
+                            <field name="name" placeholder="Language Name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree view Of Product Language -->
+
+        <record id="product_lang_tree_view" model="ir.ui.view">
+            <field name="name">product.lang.tree</field>
+            <field name="model">product.lang</field>
+            <field name="arch" type="xml">
+                <tree string="Product Languages">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Product Language -->
+
+        <record id="action_lang" model="ir.actions.act_window">
+            <field name="name">Languages</field>
+            <field name="res_model">product.lang</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Product Language -->
+
+        <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" />
+
+        <menuitem id="menu_lang" parent="menu_library_config" action="action_lang"
+                  groups="school.group_school_administration,library.group_librarian"/>
+
+        <!-- Form view Of Book Return Day -->
+
+        <record id="product_book_return_form_view" model="ir.ui.view">
+            <field name="name">library.book.returnday.form</field>
+            <field name="model">library.book.returnday</field>
+            <field name="arch" type="xml">
+                <form string="Book Return day">
+                    <sheet>
+                        <separator string="Book Return Days"/>
+                        <group colspan="2" col="4">
+                            <field name="code" placeholder="Books Code"/>
+                            <field name="day" placeholder="Return Day/s"/>
+                            <field name="fine_amt"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree view Of Book Return Day -->
+
+        <record id="product_book_return_tree_view" model="ir.ui.view">
+            <field name="name">library.book.returnday.tree</field>
+            <field name="model">library.book.returnday</field>
+            <field name="arch" type="xml">
+                <tree string="Book Return day">
+                    <field name="code"/>
+                    <field name="day"/>
+                    <field name="fine_amt"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search view Of Book Return Day -->
+
+        <record id="product_book_return_search_view" model="ir.ui.view">
+            <field name="name">library.book.returnday.search</field>
+            <field name="model">library.book.returnday</field>
+            <field name="arch" type="xml">
+                <search string="Book Return day">
+                    <field name="code"/>
+                    <field name="day"/>
+                    <field name="fine_amt"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action of Form & Tree Views Of Book Return Day -->
+
+        <record id="action_lang_book_day" model="ir.actions.act_window">
+            <field name="name">Book Return days</field>
+            <field name="res_model">library.book.returnday</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Items Of Book Return Day -->
+
+        <menuitem id="menu_book_returnday" parent="menu_library_config" action="action_lang_book_day"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Form View Of Res Partner -->
+
+        <record id="view_partner_form_11" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field eval="1" name="priority" />
+            <field name="arch" type="xml">
+                <form string="Partners">
+                    <sheet>
+                        <field name="image" widget='image' class="oe_left oe_avatar"
+                               options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                                (
+                                <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/>
+                                <label for="is_company" string="Is a Company?"/>
+                                )
+                            </div>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name"/>
+                            </h1>
+                            <field name="parent_id" placeholder="Company"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
+                                attrs="{'invisible': [('is_company','=', True)]}" on_change="onchange_address(use_parent_address, parent_id)" />
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons"></div>
+                        <group>
+                            <group>
+                                <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                                <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
+                                    <field class="oe_inline" name="type"/>
+                                    <label for="use_parent_address" class="oe_edit_only"/>
+                                    <field name="use_parent_address" class="oe_edit_only oe_inline"
+                                           on_change="onchange_address(use_parent_address, parent_id)"/>
+                                </div>
+                                <label for="street" string="Address"/>
+                                <div>
+                                    <field name="street" placeholder="Street..."/>
+                                    <field name="street2" />
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" class="oe_no_button" placeholder="State"
+                                               style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 20%%"/>
+                                    </div>
+                                    <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                </div>
+                                <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
+                            </group>
+                            <group>
+                                <field name="function" placeholder="e.g. Sales Director"
+                                       attrs="{'invisible': [('is_company','=', True)]}"/>
+                                <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
+                                <field name="mobile"/>
+                                <field name="fax"/>
+                                <field name="email" widget="email"/>
+                                <field name="title" domain="[('domain', '=', 'contact')]" groups="base.group_no_one"
+                                       options='{"no_open": True}'
+                                       attrs="{'invisible': [('is_company','=', True)]}"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Contacts" attrs="{'invisible': [('is_company','=',False)]}">
+                                <field name="child_ids" context="{'default_parent_id': active_id}" mode="kanban">
+                                    <kanban>
+                                        <field name="color"/>
+                                        <field name="name"/>
+                                        <field name="title"/>
+                                        <field name="email"/>
+                                        <field name="parent_id"/>
+                                        <field name="is_company"/>
+                                        <field name="function"/>
+                                        <field name="phone"/>
+                                        <field name="street"/>
+                                        <field name="street2"/>
+                                        <field name="image"/>
+                                        <field name="zip"/>
+                                        <field name="city"/>
+                                        <field name="country_id"/>
+                                        <field name="mobile"/>
+                                        <field name="state_id"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                                <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')"
+                                                     style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete"
+                                                       style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                        <a type="open">
+                                                            <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})"
+                                                                 class="oe_avatar oe_kanban_avatar_smallbox" />
+                                                        </a>
+                                                        <div class="oe_module_desc">
+                                                            <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
+                                                                <table class="oe_kanban_table">
+                                                                    <tr>
+                                                                        <td class="oe_kanban_title1" align="left" valign="middle">
+                                                                            <h4>
+                                                                                <a type="open">
+                                                                                    <field name="name" />
+                                                                                </a>
+                                                                            </h4>
+                                                                            <i>
+                                                                                <div t-if="record.function.raw_value">
+                                                                                    <field name="function" />
+                                                                                </div>
+                                                                            </i>
+                                                                            <div>
+                                                                                <a t-if="record.email.raw_value" title="Mail"
+                                                                                   t-att-href="'mailto:'+record.email.value">
+                                                                                    <field name="email" />
+                                                                                </a>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                    <form string="Contact">
+                                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                                        <div class="oe_title">
+                                            <group>
+                                                <field name="name" />
+                                                <field name="category_id" widget="many2many_tags" placeholder="Tags..." />
+                                                <field name="function" placeholder="e.g. Sales Director"/>
+                                                <field name="email"/>
+                                                <field name="phone"/>
+                                                <field name="mobile"/>
+                                            </group>
+                                        </div>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Form View Of Library Editor Supplier -->
+
+        <record id="library_editor_supplier_form1" model="ir.ui.view">
+            <field name="name">library.editor.supplier</field>
+            <field name="model">library.editor.supplier</field>
+            <field name="arch" type="xml">
+                <form string="Editor and suppliers relations">
+                    <sheet>
+                        <group>
+                            <field name="name" required="1" context="{'form_view_ref':'library.view_partner_form_11'}"/>
+                            <field name="supplier_id" required="1"/>
+                            <field name="sequence"/>
+                            <field name="delay"/>
+                            <field name="min_qty"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Editor Supplier -->
+
+        <record id="library_editor_supplier_tree" model="ir.ui.view">
+            <field name="name">Editor - supplier realtions</field>
+            <field name="model">library.editor.supplier</field>
+            <field name="arch" type="xml">
+                <tree string="Editor and suppliers relations">
+                    <field name="name"/>
+                    <field name="supplier_id"/>
+                    <field name="sequence"/>
+                    <field name="delay"/>
+                    <field name="junk"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Editor Supplier -->
+
+        <record id="library_editor_supplier_search" model="ir.ui.view">
+            <field name="name">Editor - supplier realtions</field>
+            <field name="model">library.editor.supplier</field>
+            <field name="arch" type="xml">
+                <search string="Editor and suppliers relations">
+                    <field name="name"/>
+                    <field name="supplier_id"/>
+                    <field name="sequence"/>
+                    <field name="delay"/>
+                    <field name="junk"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Library Editor Supplier -->
+
+        <record id="action_editor_supplier" model="ir.actions.act_window">
+            <field name="name">Partner relations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">library.editor.supplier</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="library_editor_supplier_search" />
+        </record>
+
+        <!-- Menu Item Of Library Editor Supplier -->
+
+        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Form View Of MRP Procurement Order -->
+
+        <record id="mrp_procurement_form_view" model="ir.ui.view">
+            <field name="name">procurement.order.form</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="mrp.view_procurement_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="customer_ref"/>
+                    <field name="production_lot_id"/></field>
+            </field>
+        </record>
+
+        <!-- Overwritten Tree View Of Stock Move -->
+
+        <record id="stock.view_move_tree" model="ir.ui.view">
+            <field name="name">stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field name="priority" eval="6" />
+            <field name="arch" type="xml">
+                <tree string="Moves" editable="bottom">
+                    <field name="product_id"/>
+                    <field name="origin_ref"/>
+                    <field name="product_qty" on_change="onchange_qty(product_qty)"/>
+                    <field name="location_id"/>
+                    <field name="location_dest_id"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Inherited Tree View Of Purchase Order Line -->
+
+        <record id="purchase_order_line_tree" model="ir.ui.view">
+            <field name="name">purchase.order.line.tree</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="before">
+                    <field name="origin_ref"/></field>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Purchase Order Line -->
+
+        <record id="purchase_order_line_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.line.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="after">
+                    <field name="customer_ref"/>
+                    <field name="origin_ref"/>
+                    <field name="production_lot_id"/></field>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Sale Order -->
+
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="after">
+                    <field name="customer_ref"/>
+                    <field name="production_lot_id"/></field>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Sale Order Line -->
+
+        <!-- <record id="view_order_line_form2" model="ir.ui.view"><field name="name">Sale line</field><field name="model">sale.order.line</field><field name="inherit_id" ref="sale.view_order_line_form2"/><field name="arch" type="xml"><field name="product_id" position="after"><field name="customer_ref" select="1"/><field name="production_lot_id" select="1"/></field></field></record> -->
+
+        <!-- Inherited Tree View Of Sale Order Line -->
+
+        <record id="view_order_line_tree2" model="ir.ui.view">
+            <field name="name">Sale Lines</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="price_subtotal" position="after">
+                    <field name="customer_ref" select="1"/>
+                    <field name="production_lot_id" select="1"/></field>
+            </field>
+        </record>
+
+        <!-- Search View Of Product Book Search -->
+
+        <record id="view_product_book_search" model="ir.ui.view">
+            <field name="name">product.book.search.view</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="Assignment Information">
+                    <filter name="book" string="Books" domain="[('categ_id.name', '=', 'Books')]" icon="terp-camera_test" />
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Product Supplier Info -->
+
+        <record id="product_supplierinfo_form_view" model="ir.ui.view">
+            <field name="name">product.supplierinfo.form.view</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+            <field name="model">product.supplierinfo</field>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                    <field name="name" domain="[('supplier','=',True)]"/></field>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Account Invoice Line -->
+
+        <record id="view_invoice_line_form" model="ir.ui.view">
+            <field name="name">account.invoice.line.form</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="model">account.invoice.line</field>
+            <field name="arch" type="xml">
+                <field name="discount" position="after">
+                    <field name="customer_ref" select="1"/>
+                    <field name="production_lot_id" select="1"/></field>
+            </field>
+        </record>
+
+        <!-- Menu Item Of Packing List -->
+
+        <act_window id="act_sale_picking"
+                    name="Packing list"
+                    domain="[('sale_id', '=', active_id)]"
+                    res_model="stock.picking"
+                    src_model="sale.order"/>
+
+        <!-- Menu Item Of Author -->
+
+        <menuitem id="author_menu" name="Author" parent="menu_library_config" action="action_author_list"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <!-- Overwritten Form View Of Stock Picking -->
+
+        <record id="stock.view_picking_in_form" model="ir.ui.view">
+            <field name="name">stock.picking.in.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Internal Picking List">
+                    <group colspan="4" col="6">
+                        <field name="name" readonly="1"/>
+                        <field name="origin" />
+                        <!-- <field name="address_id" on_change="onchange_partner_in(address_id)" 
+                                    select="2" context="{'contact_display':'partner'}"/> -->
+                        <field name="min_date" select="2" readonly="1"/>
+                        <field name="backorder_id" select="2" readonly="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General Information">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"
+                                   default_get="{'move_line':move_lines, 'address_in_id': address_id}">
+                                <tree colors="grey:scrapped==True" string="Stock Moves">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom" string="UoM" />
+                                    <button name="%(stock.move_scrap)d" string="Scrap Products" type="action" icon="gtk-convert"
+                                            context="{'scrap': True}"
+                                            states="draft,waiting,confirmed,assigned" groups="base.group_extended"/>
+                                    <field name="scrapped" invisible="1"/>
+                                    <button name="setlast_tracking" string="Put in current pack"
+                                        type="object" groups="base.group_extended" icon="terp-stock_effects-object-colorize"
+                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        states="draft,assigned,confirmed"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="state"/>
+                                </tree>
+                                <form string="Stock Moves">
+                                    <group colspan="2" col="4">
+                                        <separator colspan="4" string="Move Information"/>
+                                        <field name="name" invisible="1" colspan="4"/>
+                                        <field name="product_id"
+                                            on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"
+                                            colspan="4"/>
+                                        <field name="product_qty"
+                                            on_change="onchange_quantity(product_id, product_qty, product_uom)"
+                                            colspan="3"/>
+                                        <button name="%(stock.move_scrap)d" string="Scrap"
+                                            type="action" groups="base.group_extended" icon="gtk-convert"
+                                            context="{'scrap': True}" states="draft,waiting,confirmed,assigned"
+                                            colspan="1"/>
+                                        <field name="product_uom" string="Unit Of Measure" colspan="4"/>
+                                        <field groups="base.group_extended" name="product_packaging"
+                                            domain="[('product_id','=',product_id)]" colspan="4"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <separator string="Dates" colspan="2"/>
+                                        <field name="create_date" invisible="1"/>
+                                        <field name="date"/>
+                                        <field name="date_expected"/>
+                                    </group>
+                                    <group colspan="2" col="4" groups="base.group_extended">
+                                        <separator string="Traceability" colspan="4" groups="base.group_extended"/>
+                                    </group>
+                                    <label string="" colspan="4"/>
+                                    <field name="state"/>
+                                    <group col="4" colspan="2">
+                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
+                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability"
+                                                type="object" icon="gtk-jump-to"/>
+                                        <button name="cancel_assign" states="assigned"
+                                                string="Cancel Availability" type="object" icon="gtk-find"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <group col="10" colspan="4">
+                                <field name="state" readonly="1"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
+                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
+                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                <group colspan="1" states="done">
+                                    <button name="%(stock.act_stock_return_picking)d" string="Return Products"
+                                            states="done" type="action" icon="gtk-execute"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </page>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!-- Overwritten Form View Of Stock Picking Out -->
+
+        <record id="stock.view_picking_out_form" model="ir.ui.view">
+            <field name="name">stock.picking.out.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Internal Picking List">
+                    <group col="6" colspan="4">
+                        <field name="min_date" select="2"/>
+                        <field name="name" select="1" readonly="1"/>
+                        <field name="backorder_id" select="2" readonly="1"/>
+                        <field name="origin" select="2" readonly="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Products">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"
+                                   default_get="{'move_line':move_lines, 'address_out_id': address_id}">
+                                <tree colors="grey:scrapped==True" string="Stock Moves">
+                                    <field name="product_id"/>
+                                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom)"/>
+                                    <field name="product_uom" string="UoM"/>
+                                    <button name="%(stock.move_scrap)d" string="Scrap Products" type="action" icon="gtk-convert"
+                                            context="{'scrap': True}" states="draft,waiting,confirmed,assigned"/>
+                                    <field name="scrapped" invisible="1"/>
+                                    <button name="setlast_tracking" string="Put in current pack"
+                                            type="object" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                            groups="base.group_extended" icon="terp-stock_effects-object-colorize"
+                                            states="draft,assigned,confirmed"/>
+                                    <field name="location_id"/>
+                                    <field name="date"/>
+                                    <field name="state"/>
+                                </tree>
+                                <form string="Stock Moves">
+                                    <group colspan="2" col="4">
+                                        <separator colspan="4" string="Move Information"/>
+                                        <field name="name" invisible="1" colspan="4"/>
+                                        <field name="product_id"
+                                            on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"
+                                            colspan="4"/>
+                                        <field name="product_qty"
+                                            on_change="onchange_quantity(product_id, product_qty, product_uom)" colspan="3"/>
+                                        <button name="%(stock.move_scrap)d" string="Scrap" type="action" icon="gtk-convert"
+                                            context="{'scrap': True}" states="draft,waiting,confirmed,assigned" colspan="1"
+                                            groups="base.group_extended" />
+                                        <field name="product_uom" string="Unit Of Measure"
+                                            colspan="4"/>
+                                        <field groups="base.group_extended" name="product_packaging"
+                                            domain="[('product_id','=',product_id)]" colspan="4"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <separator string="Locations" colspan="2"/>
+                                        <field name="location_id" domain="[('usage','=','internal')]"/>
+                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <separator string="Dates" colspan="2"/>
+                                        <field name="create_date" invisible="1"/>
+                                        <field name="date"/>
+                                        <field name="date_expected"/>
+                                    </group>
+                                    <label string="" colspan="4"/>
+                                    <field name="state" />
+                                    <group col="4" colspan="2">
+                                        <button name="action_cancel" states="assigned" string="Cancel"
+                                            type="object" icon="gtk-cancel"/>
+                                        <button name="action_confirm" states="draft" string="Confirm"
+                                            type="object" icon="gtk-apply"/>
+                                        <button name="force_assign" states="confirmed" string="Force Availability"
+                                            type="object" icon="gtk-jump-to"/>
+                                        <button name="cancel_assign" states="assigned"
+                                            string="Cancel Availability" type="object" icon="gtk-find"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <group col="12" colspan="4">
+                                <field name="state" readonly="1" />
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
+                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
+                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
+                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                <button name="%(stock.act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
+                            </group>
+                        </page>
+                        <page string="Additional info" groups="base.group_extended,base.group_multi_company">
+                            <field name="date_done" groups="base.group_extended"/>
+                            <field name="move_type" groups="base.group_extended"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </page>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

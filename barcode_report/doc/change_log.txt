@@ -1,0 +1,16 @@
+===============================================================================
+ Version Change Log
+ Module: barcode_report
+===============================================================================
+
+Version 1.0 on 2015-10-16 by Jal Vaishnav
+    * Migrated Module Into 9.0 as per API standard.
+
+Version 1.0 on 2015-10-27 by Jal Vaishnav
+    * Set Record Rules For Users For Security Issue.
+
+Version 1.0 on 2015-10-29 by Jal Vaishnav
+    * Improved Code As Per V9 Standard.
+
+Version 1.0 on 2015-10-30 by Jal Vaishnav
+    * Optimized Code As Per V9 API Standard.

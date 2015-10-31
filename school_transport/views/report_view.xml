@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <report id="report_transport_vehicle_qweb"
+                name="school_transport.vehicle"
+                string="Vehicle Detail"
+                model="transport.vehicle"
+                report_type = "qweb-pdf"
+                file="school_transport.vehicle"/>
+
+        <report id="report_student_transport_qweb"
+                name="school_transport.participants"
+                string="Transport Root Detail"
+                model="student.transport"
+                report_type = "qweb-pdf"
+                file="school_transport.participants"/>
+
+    </data>
+</openerp>

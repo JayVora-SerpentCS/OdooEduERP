@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data noupdate="1">
-    
+
         <!-- HR Department -->
+
         <record id="dep_school" model="hr.department">
             <field name="name">school</field>
             <field name="company_id" ref="base.main_company"/>
@@ -10,12 +12,14 @@
         </record>
 
         <!-- HR Jobs -->
+
         <record id="job_driver" model="hr.job">
             <field name="name">Driver</field>
             <field name="department_id" ref="dep_school"/>
         </record>
 
         <!--hr.employee-->
+
         <record id="hr_employee_driver_1" model="hr.employee">
             <field name="name">Driver-1</field>
             <field name="job_id" ref="job_driver"/>
@@ -41,6 +45,7 @@
         </record>
 
         <!--transport.point-->
+
         <record id="transport_point_1" model="transport.point">
             <field name="name">Transport Point-1</field>
             <field name="amount">1000</field>
@@ -72,6 +77,7 @@
         </record>
 
         <!--transport.vehicle-->
+
         <record id="transport_vehicle_1" model="transport.vehicle">
             <field name="vehicle"> GRN 1623</field>
             <field name="driver_id" ref="hr_employee_driver_1"/>
@@ -101,6 +107,7 @@
         </record>
 
          <!--student.transport-->
+
         <record id="student_transport_1" model="student.transport">
             <field name="name"> Transport Point-1 to Transport Point-4</field>
             <field name="start_date">2011-07-02 13:42:43</field>
@@ -116,7 +123,7 @@
             <field name="contact_per_id" ref="school.demo_student_student_2"/>
             <field name="state">open</field>
         </record>
-        
+
         <record id="student_transport_3" model="student.transport">
             <field name="name"> Transport Point-1 to Transport Point-2</field>
             <field name="start_date">2012-08-02 13:42:43</field>
@@ -124,7 +131,7 @@
             <field name="contact_per_id" ref="school.demo_student_student_3"/>
             <field name="state">open</field>
         </record>
-        
+
         <record id="student_transport_4" model="student.transport">
             <field name="name"> Transport Point-2 to Transport Point-4</field>
             <field name="start_date">2012-07-02 13:42:43</field>
@@ -132,7 +139,7 @@
             <field name="contact_per_id" ref="school.demo_student_student_4"/>
             <field name="state">open</field>
         </record>
-        
+
         <record id="student_transport_5" model="student.transport">
             <field name="name"> Transport Point-2 to Transport Point-3</field>
             <field name="start_date">2011-07-02 13:42:43</field>
@@ -142,6 +149,7 @@
         </record>
 
         <!--transport.participants-->
+
         <record id="transport_participant_1" model="transport.participant">
             <field name="name" ref="school.demo_student_student_1"/>
             <field name="stu_pid_id">2011/07/001</field>
@@ -191,6 +199,7 @@
         </record>
 
         <!--transport.registration-->
+
         <record id="transport_registration_1" model="transport.registration">
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_1"/>
@@ -232,6 +241,7 @@
         </record>
 
         <!--student.student-->
+
         <record id="school.demo_student_student_1" model="student.student">
             <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_1')])]" />
         </record>
@@ -249,6 +259,7 @@
         </record>
 
        <!--student.transport-->
+
        <record id="student_transport_1" model="student.transport">
             <field name="trans_vehicle_ids" 
                 eval="[(6, 0,[ref('transport_vehicle_1'),
@@ -276,6 +287,7 @@
        </record>
 
        <!--transport.vehicle-->
+
        <record id="transport_vehicle_1" model="transport.vehicle">
            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_1')])]" />
@@ -295,8 +307,8 @@
            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_4')])]" />
       </record>
-      
-      <record model="ir.cron" id="ir_cron_student_transport_every_day">
+
+      <record id="ir_cron_student_transport_every_day" model="ir.cron">
             <field name="name">student_transport</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field><!-- it s every day -->
