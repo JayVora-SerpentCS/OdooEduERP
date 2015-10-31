@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
@@ -43,13 +43,13 @@ class time_table(models.Model):
     @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
-        line_ids = self.env['time.table.line'
+        line_ids = self.env['time.table.line'\
                         ].search([('table_id', '=', self.ids)])
         for rec in line_ids:
             records = [rec_check.id for rec_check in line_ids
                       if (rec.week_day == rec_check.week_day)
                       and (rec.start_time == rec_check.start_time)
-                      and  (rec.end_time == rec_check.end_time)]
+                      and (rec.end_time == rec_check.end_time)]
             if len(records) > 1:
                 raise Warning(_("You can Not set lecture at same time\
                                  at same day..!!!"))
