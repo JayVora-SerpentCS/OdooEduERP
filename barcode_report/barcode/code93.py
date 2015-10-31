@@ -1,24 +1,5 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from reportlab.lib.units import inch
 from common import MultiWidthBarcode
@@ -41,7 +22,7 @@ _patterns = {'0': ('AcAaAb', 0), '1': ('AaAbAc', 1), '2': ('AaAcAb', 2),
              '%': ('BaAaCa', 42), '#': ('AbAbBa', 43), '!': ('CaBaAa', 44),
              '=': ('CaAaBa', 45), '&': ('AbBbAa', 46),
              'start': ('AaAaDa', -1), 'stop': ('AaAaDaA', -2)
-}
+            }
 
 _charsbyval = {}
 for k, v in _patterns.items():
@@ -70,25 +51,26 @@ _extended = {'\x00': '!U', '\x01': '#A', '\x02': '#B', '\x03': '#C',
              'w': '&W', 'x': '&X', 'y': '&Y', 'z': '&Z',
              '{': '!P', '|': '!Q', '}': '!R', '~': '!S',
              '\x7f': '!T'
-}
+            }
 
 
 def _encode93(str):
     s = map(None, str)
     s.reverse()
     # compute 'C' checksum
-    i = 0; v = 1; c = 0
+    i, v, c = 0, 1, 0
     while i < len(s):
         c = c + v * _patterns[s[i]][1]
-        i = i + 1; v = v + 1
+        i = i + 1
+        v = v + 1
         if v > 20:
             v = 1
     s.insert(0, _charsbyval[c % 47])
     # compute 'K' checksum
-    i = 0; v = 1; c = 0
     while i < len(s):
         c = c + v * _patterns[s[i]][1]
-        i = i + 1; v = v + 1
+        i = i + 1
+        v = v + 1
         if v > 15:
             v = 1
     s.insert(0, _charsbyval[c % 47])
@@ -173,7 +155,7 @@ class Standard93(_Code93Base):
         for c in self.value:
             if c in string.lowercase:
                 c = string.upper(c)
-            if not _patterns.has_key(c):
+            if not c in _patterns:
                 self.valid = 0
                 continue
             vval = vval + c
@@ -198,7 +180,7 @@ class Extended93(_Code93Base):
         vval = ""
         self.valid = 1
         for c in self.value:
-            if not _patterns.has_key(c) and not _extended.has_key(c):
+            if not c in _patterns and not c in _extended:
                 self.valid = 0
                 continue
             vval = vval + c
@@ -208,9 +190,9 @@ class Extended93(_Code93Base):
     def encode(self):
         self.encoded = ""
         for c in self.validated:
-            if _patterns.has_key(c):
+            if c in _patterns:
                 self.encoded = self.encoded + c
-            elif _extended.has_key(c):
+            elif c in _extended:
                 self.encoded = self.encoded + _extended[c]
             else:
                 raise ValueError

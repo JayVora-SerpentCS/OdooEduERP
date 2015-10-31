@@ -1,63 +1,44 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from reportlab.lib.units import inch
 from common import Barcode
 import string
 
 _patterns = {
-    '0': ("bsbSBsBsb", 0),    '1': ("BsbSbsbsB", 1),
- '2': ("bsBSbsbsB", 2),    '3': ("BsBSbsbsb", 3),
- '4': ("bsbSBsbsB", 4),    '5': ("BsbSBsbsb", 5),
- '6': ("bsBSBsbsb", 6),    '7': ("bsbSbsBsB", 7),
- '8': ("BsbSbsBsb", 8),    '9': ("bsBSbsBsb", 9),
- 'A': ("BsbsbSbsB", 10),   'B': ("bsBsbSbsB", 11),
- 'C': ("BsBsbSbsb", 12),   'D': ("bsbsBSbsB", 13),
- 'E': ("BsbsBSbsb", 14),   'F': ("bsBsBSbsb", 15),
- 'G': ("bsbsbSBsB", 16),   'H': ("BsbsbSBsb", 17),
- 'I': ("bsBsbSBsb", 18),   'J': ("bsbsBSBsb", 19),
- 'K': ("BsbsbsbSB", 20),   'L': ("bsBsbsbSB", 21),
- 'M': ("BsBsbsbSb", 22),   'N': ("bsbsBsbSB", 23),
- 'O': ("BsbsBsbSb", 24),   'P': ("bsBsBsbSb", 25),
- 'Q': ("bsbsbsBSB", 26),   'R': ("BsbsbsBSb", 27),
- 'S': ("bsBsbsBSb", 28),   'T': ("bsbsBsBSb", 29),
- 'U': ("BSbsbsbsB", 30),   'V': ("bSBsbsbsB", 31),
- 'W': ("BSBsbsbsb", 32),   'X': ("bSbsBsbsB", 33),
- 'Y': ("BSbsBsbsb", 34),   'Z': ("bSBsBsbsb", 35),
- '-': ("bSbsbsBsB", 36),   '.': ("BSbsbsBsb", 37),
- ' ': ("bSBsbsBsb", 38),   '*': ("bSbsBsBsb", 39),
- '$': ("bSbSbSbsb", 40),   '/': ("bSbSbsbSb", 41),
- '+': ("bSbsbSbSb", 42),   '%': ("bsbSbSbSb", 43)
-}
+             '0': ("bsbSBsBsb", 0), '1': ("BsbSbsbsB", 1),
+             '2': ("bsBSbsbsB", 2), '3': ("BsBSbsbsb", 3),
+             '4': ("bsbSBsbsB", 4), '5': ("BsbSBsbsb", 5),
+             '6': ("bsBSBsbsb", 6), '7': ("bsbSbsBsB", 7),
+             '8': ("BsbSbsBsb", 8), '9': ("bsBSbsBsb", 9),
+             'A': ("BsbsbSbsB", 10), 'B': ("bsBsbSbsB", 11),
+             'C': ("BsBsbSbsb", 12), 'D': ("bsbsBSbsB", 13),
+             'E': ("BsbsBSbsb", 14), 'F': ("bsBsBSbsb", 15),
+             'G': ("bsbsbSBsB", 16), 'H': ("BsbsbSBsb", 17),
+             'I': ("bsBsbSBsb", 18), 'J': ("bsbsBSBsb", 19),
+             'K': ("BsbsbsbSB", 20), 'L': ("bsBsbsbSB", 21),
+             'M': ("BsBsbsbSb", 22), 'N': ("bsbsBsbSB", 23),
+             'O': ("BsbsBsbSb", 24), 'P': ("bsBsBsbSb", 25),
+             'Q': ("bsbsbsBSB", 26), 'R': ("BsbsbsBSb", 27),
+             'S': ("bsBsbsBSb", 28), 'T': ("bsbsBsBSb", 29),
+             'U': ("BSbsbsbsB", 30), 'V': ("bSBsbsbsB", 31),
+             'W': ("BSBsbsbsb", 32), 'X': ("bSbsBsbsB", 33),
+             'Y': ("BSbsBsbsb", 34), 'Z': ("bSBsBsbsb", 35),
+             '-': ("bSbsbsBsB", 36), '.': ("BSbsbsBsb", 37),
+             ' ': ("bSBsbsBsb", 38), '*': ("bSbsBsBsb", 39),
+             '$': ("bSbSbSbsb", 40), '/': ("bSbSbsbSb", 41),
+             '+': ("bSbsbSbSb", 42), '%': ("bsbSbSbSb", 43)
+            }
 
 _valchars = [
- '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
- 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
- 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
- 'X', 'Y', 'Z', '-', '.', ' ', '*', '$', '/', '+', '%'
-]
+             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+             'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+             'X', 'Y', 'Z', '-', '.', ' ', '*', '$', '/', '+', '%'
+            ]
 
-_extended = {'\0':   "%U", '\01':  "$A", '\02':  "$B", '\03':  "$C",
-             '\04':  "$D", '\05':  "$E", '\06':  "$F", '\07':  "$G",
+_extended = {'\0': "%U", '\01': "$A", '\02': "$B", '\03': "$C",
+             '\04': "$D", '\05': "$E", '\06': "$F", '\07': "$G",
              '\010': "$H", '\011': "$I", '\012': "$J", '\013': "$K",
              '\014': "$L", '\015': "$M", '\016': "$N", '\017': "$O",
              '\020': "$P", '\021': "$Q", '\022': "$R", '\023': "$S",
@@ -65,7 +46,7 @@ _extended = {'\0':   "%U", '\01':  "$A", '\02':  "$B", '\03':  "$C",
              '\030': "$X", '\031': "$Y", '\032': "$Z", '\033': "%A",
              '\034': "%B", '\035': "%C", '\036': "%D", '\037': "%E",
              '!': "/A", '"': "/B", '#': "/C", '$': "/D",
-             '%': "/E", '&': "/F", '\'':   "/G", '(': "/H",
+             '%': "/E", '&': "/F", '\'': "/G", '(': "/H",
              ')': "/I", '*': "/J", '+': "/K", ',': "/L",
              '/': "/O", ':': "/Z", ';': "%F", '<': "%G",
              '=': "%H", '>': "%I", '?': "%J", '@': "%V",
@@ -79,7 +60,7 @@ _extended = {'\0':   "%U", '\01':  "$A", '\02':  "$B", '\03':  "$C",
              'w': "+W", 'x': "+X", 'y': "+Y", 'z': "+Z",
              '{': "%P", '|': "%Q", '}': "%R", '~': "%S",
              '\177': "%T"
-}
+            }
 
 _stdchrs = string.digits + string.uppercase + "-. *$/+%"
 _extchrs = _stdchrs + string.lowercase + \
@@ -231,7 +212,7 @@ class Extended39(_Code39Base):
     def encode(self):
         self.encoded = ""
         for c in self.validated:
-            if _extended.has_key(c):
+            if 'c' in _extended:
                 self.encoded = self.encoded + _extended[c]
             elif c in _stdchrs:
                 self.encoded = self.encoded + c
