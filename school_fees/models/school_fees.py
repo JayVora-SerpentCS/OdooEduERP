@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 import time
 from openerp import models, fields, api, _
@@ -73,7 +73,8 @@ class student_fees_register(models.Model):
                     if old_slips:
                         old_slips.write({'register_id': vals.id})
                         for sid in old_slips:
-                            workflow.trg_validate(self._uid, 'student.fees.register',
+                            workflow.trg_validate(self._uid,
+                                                  'student.fees.register',
                                                   sid.id, 'fees_register'
                                                   '_confirm', self._cr)
                     else:
@@ -87,7 +88,8 @@ class student_fees_register(models.Model):
                             'company_id': vals.company_id.id
                         }
                         slip_id = slip_pool.create(res)
-                        workflow.trg_validate(self._uid, 'student.fees.register',
+                        workflow.trg_validate(self._uid,
+                                              'student.fees.register',
                                               slip_id.id, 'fees_register'
                                               '_confirm', self._cr)
                 amount = 0

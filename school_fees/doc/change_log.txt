@@ -17,6 +17,4 @@ Version 1.0 on 2015-10-29 by Jal Vaishnav
 
 Version 1.0 on 2015-10-30 by Jal Vaishnav
     * Optimized Code As Per V9 API Standard.
-
-Version 1.0 on 2015-10-30 by Jal Vaishnav
     * removed self.env.args & improved cr, uid with self._cr & self._uid
