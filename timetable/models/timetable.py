@@ -24,6 +24,10 @@ from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
 
+class board_board(models.Model):
+    _inherit = 'board.board'
+
+
 class time_table(models.Model):
 
     _description = 'Time Table'
@@ -39,12 +43,16 @@ class time_table(models.Model):
     @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
-        line_ids = self.env['time.table.line'].search([('table_id', '=', self.ids)])
+        line_ids = self.env['time.table.line'].search([
+                   ('table_id', '=', self.ids)])
         for rec in line_ids:
-            records = [rec_check.id for rec_check in line_ids if (rec.week_day == rec_check.week_day) and (rec.start_time == rec_check.start_time) and  (rec.end_time == rec_check.end_time)]
+            records = [rec_check.id for rec_check in line_ids
+                      if (rec.week_day == rec_check.week_day)
+                      and (rec.start_time == rec_check.start_time)
+                      and  (rec.end_time == rec_check.end_time)]
             if len(records) > 1:
-                raise Warning(_('Warning!'),
-                    _("You can Not set lecture at same time at same day..!!!"))
+                raise Warning(_("You can Not set lecture at same time\
+                                 at same day..!!!"))
         return True
 
 
@@ -57,10 +65,10 @@ class time_table_line(models.Model):
     @api.multi
     def onchange_recess(self, recess):
         recess = {}
-        sub_id = self.env['subject.subject'].search([('name', 'like', 'Recess')])
+        sub_id = self.env['subject.subject'].search([
+                 ('name', 'like', 'Recess')])
         if not sub_id:
-            raise Warning(_('Warning!'),
-                _("You must have a 'Recess' as a subject"))
+            raise Warning(_("You must have a 'Recess' as a subject"))
         recess.update({'value': {'subject_id': sub_id.id}})
         return recess
 
@@ -87,6 +95,8 @@ class subject_subject(models.Model):
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self._context.get('teacher_id'):
-            for teacher_data in self.env['hr.employee'].browse(self._context['teacher_id']):
+            for teacher_data in self.env['hr.employee'].browse(
+                                self._context['teacher_id']):
                 args.append(('teacher_ids', 'in', [teacher_data.id]))
-        return super(subject_subject, self).search(args, offset, limit, order, count=count)
+        return super(subject_subject, self).search(args, offset, limit, order,
+                                                   count=count)

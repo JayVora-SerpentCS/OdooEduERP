@@ -2,12 +2,6 @@
 <openerp>
     <data>
 
-        <!-- <report auto="False"
-            id="report_time_table"
-            model="time.table" name="time.table"
-            rml="timetable/report/timetable.rml"
-            string="Timetable"/> -->
-
          <report id="report_time_table_qweb"
                 string="Timetable"
                 model="time.table"

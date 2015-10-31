@@ -27,6 +27,7 @@
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'complexity': 'easy',
+    'summary': 'A Module For Timetable Management In School',
     'description': 'A module to School Timetable Management.',
     'depends': ['school'],
     'data': [
@@ -35,6 +36,7 @@
         'views/report_view.xml',
         'views/timetable.xml',
     ],
+    'demo': ['demo/timetable_demo.xml'],
     'test': [
         'test/timetable.yml'
     ],
