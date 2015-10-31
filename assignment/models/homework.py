@@ -1,24 +1,5 @@
-# -*- encoding: UTF-8 -*-
-# #############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# #############################################################################
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api
 
@@ -64,26 +45,27 @@ class school_teacher_assignment(models.Model):
                 std_ids.append(stu[0])
         if std_ids:
             for std in std_ids:
-                assignment_id = assignment_obj.create({
-                                'name': self.name,
-                                'subject_id': self.subject_id.id,
-                                'standard_id': self.standard_id.id,
-                                'assign_date': self.assign_date,
-                                'due_date': self.due_date,
-                                'state': 'active',
-                                'attached_homework': self.attached_homework,
-                                'teacher_id': self.teacher_id.id,
-                                'student_id': std
-                                })
+                ass_dict = {
+                            'name': self.name,
+                            'subject_id': self.subject_id.id,
+                            'standard_id': self.standard_id.id,
+                            'assign_date': self.assign_date,
+                            'due_date': self.due_date,
+                            'state': 'active',
+                            'attached_homework': self.attached_homework,
+                            'teacher_id': self.teacher_id.id,
+                            'student_id': std
+                           }
+                assignment_id = assignment_obj.create(ass_dict)
                 if self.attached_homework:
-                    data_attach = {
-                            'name': 'test',
-                            'datas': str(self.attached_homework),
-                            'description': 'Assignment attachment',
-                            'res_model': 'school.student.assignment',
-                            'res_id': assignment_id.id,
-                        }
-                    self.env['ir.attachment'].create(data_attach)
+                    attach = {
+                              'name': 'test',
+                              'datas': str(self.attached_homework),
+                              'description': 'Assignment attachment',
+                              'res_model': 'school.student.assignment',
+                              'res_id': assignment_id.id,
+                             }
+                    self.env['ir.attachment'].create(attach)
                 self.write({'state': 'active'})
             return True
 
