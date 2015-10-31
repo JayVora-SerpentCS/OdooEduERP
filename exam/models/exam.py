@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,15 +18,18 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 from datetime import date, datetime
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning
 
 
-class extended_time_table(models.Model):
+class board_board(models.Model):
+    _inherit = 'board.board'
 
+
+class extended_time_table(models.Model):
     _inherit = 'time.table'
 
     timetable_type = fields.Selection([('exam', 'Exam'),
@@ -36,7 +39,6 @@ class extended_time_table(models.Model):
 
 
 class extended_student_student(models.Model):
-
     _inherit = 'student.student'
 
     exam_results_ids = fields.One2many('exam.result', 'student_id',
@@ -44,7 +46,6 @@ class extended_student_student(models.Model):
 
 
 class extended_time_table_line(models.Model):
-
     _inherit = 'time.table.line'
 
     exm_date = fields.Date('Exam Date')
@@ -76,7 +77,6 @@ class extended_time_table_line(models.Model):
 
 
 class exam_exam(models.Model):
-
     _name = 'exam.exam'
     _description = 'Exam Information'
 
@@ -129,7 +129,6 @@ class exam_exam(models.Model):
 
 
 class additional_exam(models.Model):
-
     _name = 'additional.exam'
     _description = 'additional Exam Information'
 
@@ -160,7 +159,6 @@ class additional_exam(models.Model):
 
 
 class exam_result(models.Model):
-
     _name = 'exam.result'
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
@@ -209,17 +207,16 @@ class exam_result(models.Model):
     def _compute_result(self):
         flag = False
         if self.result_ids and self.student_id:
-            for l in self.result_ids:
-                if self.student_id.year.grade_id.grade_ids:
-                    for grades in self.student_id.year.grade_id.grade_ids:
-                        if grades.grade:
-                            if not grades.fail:
-                                self.result = 'Pass'
-                            else:
-                                flag = True
-                else:
-                    raise except_orm(_('Configuration Error !'),
-                        _('First Select Grade System in Student->year->.'))
+            if self.student_id.year.grade_id.grade_ids:
+                for grades in self.student_id.year.grade_id.grade_ids:
+                    if grades.grade:
+                        if not grades.fail:
+                            self.result = 'Pass'
+                        else:
+                            flag = True
+            else:
+                raise except_orm(_('Configuration Error !'),
+                    _('First Select Grade System in Student->year->.'))
         if flag:
             self.result = 'Fail'
 
@@ -283,10 +280,7 @@ class exam_result(models.Model):
         res = {}
         opt_marks = []
         acc_mark = []
-        sum = 0.0
         total = 0.0
-        obtained_total = 0.0
-        obtain_marks = 0.0
         per = 0.0
         grd = 0.0
         for result in self.browse(self.ids):
@@ -316,7 +310,6 @@ class exam_result(models.Model):
         eve_marks = []
         sum = 0.0
         total = 0.0
-        obtained_total = 0.0
         obtain_marks = 0.0
         per = 0.0
         grd = 0.0
@@ -347,7 +340,6 @@ class exam_result(models.Model):
 
 
 class exam_grade_line(models.Model):
-
     _name = "exam.grade.line"
     _description = 'Exam Subject Information'
     _rec_name = 'standard_id'
@@ -397,7 +389,6 @@ class exam_subject(models.Model):
 
 
 class exam_result_batchwise(models.Model):
-
     _name = 'exam.batchwise.result'
     _rec_name = 'standard_id'
     _description = 'exam result Information by Batch wise'
@@ -433,7 +424,6 @@ class exam_result_batchwise(models.Model):
 
 
 class additional_exam_result(models.Model):
-
     _name = 'additional.exam.result'
     _description = 'subject result Information'
 
@@ -476,7 +466,6 @@ class additional_exam_result(models.Model):
 
 
 class student_student(models.Model):
-
     _name = 'student.student'
     _inherit = 'student.student'
     _description = 'Student Information'
