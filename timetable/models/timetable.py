@@ -43,8 +43,8 @@ class time_table(models.Model):
     @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
-        line_ids = self.env['time.table.line'].search([
-                   ('table_id', '=', self.ids)])
+        line_ids = self.env['time.table.line'
+                        ].search([('table_id', '=', self.ids)])
         for rec in line_ids:
             records = [rec_check.id for rec_check in line_ids
                       if (rec.week_day == rec_check.week_day)
