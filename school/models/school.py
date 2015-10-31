@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 import time
 import openerp
@@ -83,15 +83,14 @@ class academic_year(models.Model):
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop\
-                    or \
-                    old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                    raise Warning(_('Error! You cannot define\
-                                     overlapping academic years.'))
+                   or old_ac.date_start <= self.date_stop <= old_ac.date_stop:
+                        raise Warning(_('Error! You cannot define\
+                                         overlapping academic years.'))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if self.date_stop and self.date_start\
-            and self.date_stop < self.date_start:
+        if (self.date_stop and self.date_start
+                and self.date_stop < self.date_start):
             raise Warning(_('Error! The duration of the academic year\
                              is invalid.'))
 
@@ -115,20 +114,22 @@ class academic_month(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if self.date_stop and self.date_start\
-            and self.date_stop < self.date_start:
+        if (self.date_stop
+                and self.date_start
+                and self.date_stop < self.date_start):
             raise Warning(_('Error ! The duration of the Month(s)\
-                             is/are invalid.'))
+                                 is/are invalid.'))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
-            if self.year_id.date_stop < self.date_stop or \
-                self.year_id.date_stop < self.date_start or \
-                self.year_id.date_start > self.date_start or \
-                self.year_id.date_start > self.date_stop:
+            if (self.year_id.date_stop < self.date_stop
+                    or self.year_id.date_stop < self.date_start
+                    or self.year_id.date_start > self.date_start
+                    or self.year_id.date_start > self.date_stop):
                 raise Warning(_('Invalid Months ! Some months overlap or\
-                   the date period is not in the scope of the academic year.'))
+                                   the date period is not in the scope of the\
+                                   academic year.'))
 
 
 class standard_medium(models.Model):
@@ -172,7 +173,7 @@ class standard_standard(models.Model):
     @api.model
     def next_standard(self, sequence):
         stand_ids = self.search([('sequence', '>', sequence)],
-                                order='id ASC', limit=1)
+                                    order='id ASC', limit=1)
         if stand_ids:
             return stand_ids.id
         return False
@@ -189,15 +190,15 @@ class school_standard(models.Model):
     @api.depends('standard_id')
     def _compute_student(self):
         self.student_ids = False
+        domain = [('standard_id', '=', self.standard_id.id)]
         if self.standard_id:
-            self.student_ids = self.env['student.student'].search([
-                ('standard_id', '=', self.standard_id.id)])
+            self.student_ids = self.env['student.student'].search(domain)
 
     @api.multi
     def import_subject(self):
         for im_ob in self:
-            import_sub_ids = self.search([
-                            ('standard_id', '=', int(im_ob.standard_id) - 1)])
+            domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
+            import_sub_ids = self.search(domain)
             val = [last.id for sub in import_sub_ids
                    for last in sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
@@ -223,8 +224,9 @@ class school_standard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name + "["\
-                    + standard.division_id.name + "]"
+            name = standard.standard_id.name\
+                   + "[" + standard.division_id.name\
+                   + "]"
             res.append((standard.id, name))
         return res
 
@@ -354,8 +356,8 @@ class student_student(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self:
-                          self._get_default_image(self._context.get(
+    photo = fields.Binary('Photo', default=lambda self:\
+                                   self._get_default_image(self._context.get(
                             'default_is_company', False)))
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
                            states={'done': [('readonly', True)]})

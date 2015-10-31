@@ -1,5 +1,5 @@
 # -*- encoding: UTF-8 -*-
-##############################################################################
+# -----------------------------------------------------------------------------
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
-##############################################################################
+# -----------------------------------------------------------------------------
 
 {
     'name': 'School',
@@ -40,7 +40,6 @@
                     ''',
     'depends': ['hr', 'mail', 'crm', 'report', 'board'],
     'data': [
-#             'views/school_dashboard.xml',
             'wizard/wiz_send_email_view.xml',
             'security/school_security.xml',
             'views/school_view.xml',
@@ -53,15 +52,11 @@
             'views/report_view.xml',
             'views/identity_card.xml',
     ],
-  'demo': [
-           'demo/school_demo.xml',
-            ],
-
+    'demo': ['demo/school_demo.xml'],
     'test': [
-        'test/school_test.yml',
-        'test/assign_roll_no_test.yml',
+            'test/school_test.yml',
+            'test/assign_roll_no_test.yml',
         ],
-
     'installable': True,
     'application': True,
 }
