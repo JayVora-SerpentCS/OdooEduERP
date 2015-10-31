@@ -1,24 +1,5 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from openerp import models, fields, api, _
@@ -84,7 +65,6 @@ class student_fees_register(models.Model):
                             'name': vals.name,
                             'date': vals.date,
                             'journal_id': vals.journal_id.id,
-#                             'period_id': vals.period_id.id,
                             'company_id': vals.company_id.id
                         }
                         slip_id = slip_pool.create(res)
@@ -315,11 +295,11 @@ class student_payslip(models.Model):
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
                 comapny_ac_id = fees.company_id.partner_id.\
-                                property_account_receivable.id
+                                    property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
                 comapny_ac_id = fees.company_id.\
-                    partner_id.property_account_payable.id
+                                    partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
                 raise Warning(_('You cannot create an invoice on a centralized'
                                 'journal. UnCheck the centralized counterpart'
@@ -361,10 +341,9 @@ class student_payslip(models.Model):
                 'account_id': account_id,
                 'journal_id': fees.journal_id.id,
                 'parent_id': fees.student_id.parent_id.id,
-#                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
-                'amount_currency': diff_currency_p and sign * fees.total or
-                0.0,
+                'amount_currency': (diff_currency_p and sign * fees.total)
+                                        or 0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
                 }
             move_line_obj.create(move_line)
@@ -376,10 +355,9 @@ class student_payslip(models.Model):
                 'account_id': comapny_ac_id,
                 'journal_id': fees.journal_id.id,
                 'parent_id': fees.student_id.parent_id.id,
-#                 'period_id': fees.period_id.id,
                 'currency_id': diff_currency_p and current_currency or False,
-                'amount_currency': diff_currency_p and sign * fees.total or
-                0.0,
+                'amount_currency': (diff_currency_p and sign * fees.total)
+                                        or 0.0,
                 'date': fees.payment_date or time.strftime('%Y-%m-%d'),
                 }
             move_line_obj.create(move_line)
