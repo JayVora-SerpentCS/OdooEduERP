@@ -3,24 +3,33 @@
  Module: school
 ===============================================================================
 
-Version 1.0 On 2015-10-26 By Jal Vaishnav
+Version 1.0 On 2015-10-16 By Jal Vaishnav
     * Set Record Rules For Student, Teacher, Parent & Administrator
     * Added Many2many Field In Parents Form View (res.partner).
     * Added Many2many Field In Student Form View (student.student)
     * Set Kanban View Of Student Profile By Default Group By Standards.
 
-Version 1.0 On 2015-10-26 By Jal Vaishnav
+Version 1.0 On 2015-10-17 By Jal Vaishnav
     * Optimized Code For School Module.
 
-Version 1.0 On 2015-10-20 By Jal Vaishnav
+Version 1.0 On 2015-10-18 By Jal Vaishnav
     * Replaced email.template with mail.template object, Improved MenuItems and views.
 
 Version 1.0 On 2015-10-19 By Jal Vaishnav
     * Removed Unused Files.
 
-Version 1.0 on 2015-10-17 by Jal Vaishnav
+Version 1.0 on 2015-10-20 by Jal Vaishnav
     * Migrated Module Into V9 As Per API Standard.
 
-Version 1.0 on 2015-10-16 by Jal Vaishnav
+Version 1.0 on 2015-10-23 by Jal Vaishnav
     * Migrated Module Into V9 As Per API Standard.
-	* Optimized Code Structure As Per V9 Standard.
+    * Optimized Code Structure As Per V9 Standard.
+
+Version 1.0 on 2015-10-27 by Jal Vaishnav
+    * Reset Record Rules For Users For Security Issue.
+
+Version 1.0 on 2015-10-29 by Jal Vaishnav
+    * Improved Code As Per V9 Standard.
+
+Version 1.0 on 2015-10-30 by Jal Vaishnav
+    * Optimized Code As Per V9 API Standard.
