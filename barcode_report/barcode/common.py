@@ -17,9 +17,7 @@ class Barcode(Flowable):
             self.gap = None
         self.validate()
         self.encode()
-        #print self.encoded
         self.decompose()
-        #print self.decomposed
         self.computeSize()
 
     def validate(self):
@@ -36,7 +34,7 @@ class Barcode(Flowable):
         xdim = self.xdim
         wx = xdim * self.ratio
 
-        if self.gap == None:
+        if self.gap is None:
             self.gap = xdim
 
         w = 0.0
@@ -87,10 +85,10 @@ class Barcode(Flowable):
                 left = left + wx
 
         if self.bearers:
-            self.rect(self.lquiet, 0.0, \
-                self.width - (self.lquiet + self.rquiet), b)
-            self.rect(self.lquiet, self.height - b, \
-                self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, 0.0,
+                      self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, self.height - b,
+                      self.width - (self.lquiet + self.rquiet), b)
 
     def rect(self, x, y, w, h):
         self.canv.rect(x, y, w, h, stroke=0, fill=1)

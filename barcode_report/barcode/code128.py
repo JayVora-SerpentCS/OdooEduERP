@@ -40,8 +40,7 @@ _patterns = {0: 'BaBbBb', 1: 'BbBaBb', 2: 'BbBbBa',
              96: 'AaDcAa', 97: 'DaAaAc', 98: 'DaAcAa',
              99: 'AaCaDa', 100: 'AaDaCa', 101: 'CaAaDa',
              102: 'DaAaCa', 103: 'BaAdAb', 104: 'BaAbAd',
-             105: 'BaAbCb', 106: 'BcCaAaB'
-            }
+             105: 'BaAbCb', 106: 'BcCaAaB'}
 
 starta, startb, startc, stop = 103, 104, 105, 106
 
@@ -70,8 +69,7 @@ seta = {' ': 0, '!': 1, '"': 2, '#': 3,
         '\x18':  88, '\x19':  89, '\x1a':  90, '\x1b':  91,
         '\x1c':  92, '\x1d':  93, '\x1e':  94, '\x1f':  95,
         '\xf3':  96, '\xf2':  97, 'SHIFT':  98, 'TO_C':  99,
-        'TO_B': 100, '\xf4': 101, '\xf1': 102
-       }
+        'TO_B': 100, '\xf4': 101, '\xf1': 102}
 
 setb = {' ': 0, '!': 1, '"': 2, '#': 3,
         '$': 4, '%': 5, '&': 6, '\'': 7,
@@ -98,8 +96,7 @@ setb = {' ': 0, '!': 1, '"': 2, '#': 3,
         'x':  88, 'y':  89, 'z':  90, '{':  91,
         '|':  92, '}':  93, '~':  94, '\x7f':  95,
         '\xf3': 96, '\xf2': 97, 'SHIFT': 98, 'TO_C': 99,
-        '\xf4': 100, 'TO_A': 101, '\xf1': 102
-       }
+        '\xf4': 100, 'TO_A': 101, '\xf1': 102}
 
 setc = {'00': 0, '01': 1, '02': 2, '03': 3, '04': 4,
         '05': 5, '06': 6, '07': 7, '08': 8, '09': 9,
@@ -121,17 +118,14 @@ setc = {'00': 0, '01': 1, '02': 2, '03': 3, '04': 4,
         '85': 85, '86': 86, '87': 87, '88': 88, '89': 89,
         '90': 90, '91': 91, '92': 92, '93': 93, '94': 94,
         '95': 95, '96': 96, '97': 97, '98': 98, '99': 99,
-        'TO_B': 100, 'TO_A': 101, '\xf1': 102
-       }
+        'TO_B': 100, 'TO_A': 101, '\xf1': 102}
 
-setmap = {
-          'TO_A': (seta, setb),
+setmap = {'TO_A': (seta, setb),
           'TO_B': (setb, seta),
           'TO_C': (setc, None),
           'START_A': (starta, seta, setb),
           'START_B': (startb, setb, seta),
-          'START_C': (startc, setc, None),
-         }
+          'START_C': (startc, setc, None)}
 
 tos = setmap.keys()
 
@@ -243,7 +237,7 @@ class Code128(MultiWidthBarcode):
         s = self.validated
         l = ['START_B']
         for c in s:
-            if not 'c' in setb:
+            if c not in setb:
                 l = l + ['TO_A', c, 'TO_B']
             else:
                 l.append(c)

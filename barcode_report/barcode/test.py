@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from common import *
-from code39 import *
-from code93 import *
-from code128 import *
-from usps import *
+from barcode_report.barcode.common import I2of5, MSI, Codabar, Code11
+from barcode_report.barcode.code39 import Standard39, Extended39
+from barcode_report.barcode.code93 import Standard93, Extended93
+from barcode_report.barcode.code128 import Code128
+from barcode_report.barcode.usps import FIM, POSTNET, inch
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Frame
@@ -31,9 +31,9 @@ def run():
     story.append(Paragraph('Code93', styleN))
     story.append(Standard93("CODE 93"))
     story.append(Paragraph('Extended Code93', styleN))
-    story.append(Extended93("L@@K! Code 93 :-)"))  # , xdim = 0.005 * inch))
+    story.append(Extended93("L@@K! Code 93 :-)"))
     story.append(Paragraph('Code 128', styleN))
-    c = Code128("AB-12345678")  # , xdim=0.005 * inch)
+    c = Code128("AB-12345678")
     story.append(c)
     story.append(Paragraph('USPS FIM', styleN))
     story.append(FIM("A"))
