@@ -5,15 +5,15 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class student_transport(models.Model):
+class StudentTransport(models.Model):
     _name = 'student.transport'
     _description = 'Transport Information'
 
 
-class hr_employee(models.Model):
+class HrEmployee(models.Model):
     _name = 'hr.employee'
     _inherit = 'hr.employee'
     _description = 'Driver Information'
@@ -21,7 +21,7 @@ class hr_employee(models.Model):
     licence_no = fields.Char('License No')
 
 
-class transport_point(models.Model):
+class TransportPoint(models.Model):
     '''for points on root'''
     _name = 'transport.point'
     _description = 'Transport Point Information'
@@ -38,11 +38,11 @@ class transport_point(models.Model):
                 point_ids = [point_id.id
                              for point_id in transport_data.trans_point_ids]
                 args.append(('id', 'in', point_ids))
-        return super(transport_point, self).search(
+        return super(TransportPoint, self).search(
                      args, offset, limit, order, count=count)
 
 
-class transport_vehicle(models.Model):
+class TransportVehicle(models.Model):
     '''for vehicle detail'''
 
     @api.one
@@ -79,11 +79,11 @@ class transport_vehicle(models.Model):
             vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
             args.append(('id', 'in', vehicle_ids))
-        return super(transport_vehicle, self).search(args, offset, limit,
+        return super(TransportVehicle, self).search(args, offset, limit,
                                                      order, count=count)
 
 
-class transport_participant(models.Model):
+class TransportParticipant(models.Model):
     '''for participants'''
     _name = 'transport.participant'
     _rec_name = 'stu_pid_id'
@@ -113,11 +113,11 @@ class transport_participant(models.Model):
                 transport_ids = [transport_id.id
                                 for transport_id in student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
-        return super(transport_participant, self).search(
+        return super(TransportParticipant, self).search(
                     args, offset, limit, order, count=count)
 
 
-class student_transports(models.Model):
+class StudentTransports(models.Model):
     '''for root detail'''
     _name = 'student.transport'
     _description = 'Student Transport Information'
@@ -217,7 +217,7 @@ class student_transports(models.Model):
         return True
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     _inherit = 'student.student'
     _description = 'Student Information'
 
@@ -226,7 +226,7 @@ class student_student(models.Model):
                                      readonly=True)
 
 
-class transport_registration(models.Model):
+class TransportRegistration(models.Model):
     '''for registration'''
     _name = 'transport.registration'
     _description = 'Transport Registration'
@@ -254,7 +254,7 @@ class transport_registration(models.Model):
 
     @api.model
     def create(self, vals):
-        ret_val = super(transport_registration, self).create(vals)
+        ret_val = super(TransportRegistration, self).create(vals)
         m_amt = self.onchange_point_id(vals['point_id'])
         ex_dt = self.onchange_for_month(vals['for_month'])
         if ex_dt:
@@ -296,12 +296,12 @@ class transport_registration(models.Model):
         for reg_data in self:
             # registration months must one or more then one
             if reg_data.for_month <= 0:
-                raise Warning(_('Error! Sorry Registration months must be one\
+                raise UserError(_('Error! Sorry Registration months must be one\
                                  or more then one.'))
             # First Check Is there vacancy or not
             person = int(reg_data.vehicle_id.participant) + 1
             if reg_data.vehicle_id.capacity < person:
-                raise Warning(_('There is No More vacancy on this vehicle.'))
+                raise UserError(_('There is No More vacancy on this vehicle.'))
 
             # calculate amount and Registration End date
             amount = reg_data.point_id.amount * reg_data.for_month
@@ -311,7 +311,7 @@ class transport_registration(models.Model):
                           + relativedelta(months=+month)
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
-                raise Warning(_('For this much Months\
+                raise UserError(_('For this much Months\
                                 Registration is not Possible because\
                                 Root end date is Early.'))
             # make entry in Transport

@@ -6,7 +6,7 @@ from openerp.tools.translate import _
 from openerp.exceptions import except_orm
 
 
-class transfer_vehicle(models.TransientModel):
+class TransferVehicle(models.TransientModel):
     _name = "transfer.vehicle"
     _description = "transfer vehicle"
 
@@ -22,7 +22,7 @@ class transfer_vehicle(models.TransientModel):
     @api.model
     def default_get(self, fields):
         active_id = self._context.get('active_id')
-        result = super(transfer_vehicle, self).default_get(fields)
+        result = super(TransferVehicle, self).default_get(fields)
         if active_id:
             student = self.env['student.student'].browse(active_id)
             if 'name' in fields:
