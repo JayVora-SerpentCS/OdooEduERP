@@ -6,7 +6,6 @@ from openerp.exceptions import except_orm
 
 
 class move_standards(models.TransientModel):
-
     _name = 'move.standards'
 
     academic_year_id = fields.Many2one('academic.year', 'Academic Year',
@@ -37,7 +36,8 @@ class move_standards(models.TransientModel):
                         continue
                     if stud_year_ids:
                         raise except_orm(_('Warning !'),
-                            _('Please Select Next Academic year.'))
+                                         _('Please Select'
+                                           'Next Academic year.'))
                     else:
                         result_domain = [('standard_id', '=',
                                           student.standard_id.id),
@@ -59,16 +59,20 @@ class move_standards(models.TransientModel):
                                              'standard_id': next_class_id,
                                             }
                                     student_id.write(d_one)
-                                    stud_history_obj.create({
-                                    'student_id': student.id,
-                                    'academice_year_id': student.year.id,
-                                    'standard_id': standards.standard_id.id,
-                                    'division_id': standards.division_id.id,
-                                    'medium_id': standards.medium_id.id,
-                                    'result': result_data.result,
-                                    'percentage': result_data.percentage
-                                    })
+                                    std_id_id = standards.standard_id.id
+                                    div_id_id = standards.division_id.id
+                                    v = {
+                                         'student_id': student.id,
+                                         'academice_year_id': student.year.id,
+                                         'standard_id': std_id_id,
+                                         'division_id': div_id_id,
+                                         'medium_id': standards.medium_id.id,
+                                         'result': result_data.result,
+                                         'percentage': result_data.percentage
+                                        }
+                                    stud_history_obj.create(v)
                             else:
                                 raise except_orm(_("Error!"),
-                                _("Student isn't eligible for Next Standard."))
+                                                 _('Student is not eligible'
+                                                   'for Next Standard.'))
         return {}
