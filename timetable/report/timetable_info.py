@@ -6,9 +6,9 @@ from openerp.report import report_sxw
 from openerp.osv import osv
 
 
-class timetable(report_sxw.rml_parse):
+class TimeTable(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
-        super(timetable, self).__init__(cr, uid, name, context=context)
+        super(TimeTable, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({'time': time,
                                   'get_timetable': self._get_timetable,
                                  })
@@ -42,8 +42,8 @@ class timetable(report_sxw.rml_parse):
         return timetable_detail
 
 
-class report_timetable_info(osv.AbstractModel):
+class ReportTimetableInfo(osv.AbstractModel):
     _name = 'report.timetable.timetable'
     _inherit = 'report.abstract_report'
     _template = 'timetable.timetable'
-    _wrapped_report_class = timetable
+    _wrapped_report_class = TimeTable
