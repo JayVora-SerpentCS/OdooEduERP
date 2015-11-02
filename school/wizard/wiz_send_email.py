@@ -4,12 +4,12 @@
 from openerp import models, fields, api
 
 
-class mail_template(models.TransientModel):
+class MailTemplate(models.TransientModel):
     _inherit = "mail.template"
 
     @api.multi
     def generate_email(self, res_ids, fields=None):
-        ret = super(mail_template, self).generate_email(res_ids, fields=fields)
+        ret = super(MailTemplate, self).generate_email(res_ids, fields=fields)
 
         if self._context.get('body_html', False)\
                 or self._context.get('subject', False)\
@@ -22,7 +22,7 @@ class mail_template(models.TransientModel):
             return ret
 
 
-class send_email(models.TransientModel):
+class SendMail(models.TransientModel):
     _name = "send.email"
 
     note = fields.Text('Text')
@@ -30,7 +30,7 @@ class send_email(models.TransientModel):
     @api.multi
     def send_email(self):
         body = ''
-        email_template_obj = self.env['email.template']
+        email_template_obj = self.env['mail.template']
         domain = [('model', '=', 'student.student')]
         template_id = email_template_obj.search(domain, limit=1)
         if template_id:
