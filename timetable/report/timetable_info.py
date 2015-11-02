@@ -9,10 +9,9 @@ from openerp.osv import osv
 class timetable(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
         super(timetable, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'get_timetable': self._get_timetable,
-        })
+        self.localcontext.update({'time': time,
+                                  'get_timetable': self._get_timetable,
+                                 })
 
     def _get_timetable(self, timetable_id):
         timetable_detail = []
@@ -30,19 +29,20 @@ class timetable(report_sxw.rml_parse):
         time_data = self.cr.dictfetchall()
         for time_detail in time_data:
             for data in res:
-                if time_detail['start_time'] == data['start_time']\
-                    and time_detail['end_time'] == data['end_time']:
+                if (time_detail['start_time'] == data['start_time'])\
+                        and (time_detail['end_time'] == data['end_time']):
                     if (data['name'] == 'Recess'):
                         time_detail[data['week_day']] = data['name']
                     else:
                         time_detail[data['week_day']] = data['name']\
-                        + '\n(' + data['teacher'] + ')'
+                                                        + '\n('\
+                                                        + data['teacher']\
+                                                        + ')'
             timetable_detail.append(time_detail)
         return timetable_detail
 
 
 class report_timetable_info(osv.AbstractModel):
-
     _name = 'report.timetable.timetable'
     _inherit = 'report.abstract_report'
     _template = 'timetable.timetable'
