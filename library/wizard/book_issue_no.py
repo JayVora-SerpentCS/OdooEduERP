@@ -4,7 +4,7 @@
 from openerp import models, fields, api
 
 
-class book_name(models.TransientModel):
+class BookName(models.TransientModel):
 
     _name = "book.name"
     _description = "Book Name"

@@ -5,7 +5,7 @@ import time
 from openerp import models, fields, api
 
 
-class product_state(models.Model):
+class ProductState(models.Model):
     _name = "product.state"
     _description = "States of Books"
 
@@ -14,7 +14,7 @@ class product_state(models.Model):
     active = fields.Boolean('Active', select=2)
 
 
-class many2manysym(fields.Many2many):
+class Many2manySym(fields.Many2many):
 
     @api.multi
     def get(self, offset=0):
@@ -37,7 +37,7 @@ class many2manysym(fields.Many2many):
         return res
 
 
-class product_template(models.Model):
+class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     name = fields.Char('Name', required=True, select=True)
@@ -48,7 +48,7 @@ class product_template(models.Model):
         return self._cr.fetchall()
 
 
-class product_lang(models.Model):
+class ProductLang(models.Model):
     '''Book language'''
     _name = "product.lang"
 
@@ -61,7 +61,7 @@ class product_lang(models.Model):
                        ]
 
 
-class product_product(models.Model):
+class ProductProduct(models.Model):
     """Book variant of product"""
     _inherit = "product.product"
 
@@ -187,7 +187,7 @@ class product_product(models.Model):
         if default is None:
             default = {}
         default.update({'author_ids': []})
-        return super(product_product, self).copy(default)
+        return super(ProductProduct, self).copy(default)
 
     @api.model
     def create(self, vals):
@@ -231,7 +231,7 @@ class product_product(models.Model):
                     vals['seller_ids'] = [supplier]
                 else:
                     vals['seller_ids'].append(supplier)
-        return super(product_product, self).create(vals)
+        return super(ProductProduct, self).create(vals)
 
     isbn = fields.Char('ISBN Code', unique=True,
                        help="Shows International Standard Book Number")
@@ -263,9 +263,9 @@ class product_product(models.Model):
     availability = fields.Selection([('available', 'Available'),
                                      ('notavailable', 'Not Available')],
                                     'Book Availability', default='available')
-    link_ids = many2manysym('product.product', 'book_book_rel', 'product_id1',
+    link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
                             'product_id2', 'Related Books')
-    back = fields.Selection([('hard', 'Hardback'), ('paper', 'Paperback')],
+    back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",
                             default='paper')
     collection = fields.Many2one('library.collection', 'Collection',
@@ -291,7 +291,7 @@ class product_product(models.Model):
                        ]
 
 
-class book_attachment(models.Model):
+class BookAttachment(models.Model):
     _name = "book.attachment"
     _description = "Stores attachments of the book"
 
@@ -302,7 +302,7 @@ class book_attachment(models.Model):
     attachment = fields.Binary("Attachment")
 
 
-class library_author(models.Model):
+class LibraryAuthor(models.Model):
     _inherit = 'library.author'
 
     book_ids = fields.Many2many('product.product', 'author_book_rel',

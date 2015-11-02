@@ -6,7 +6,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
-class procurement_order(osv.Model):
+class ProcurementOrder(osv.Model):
     _inherit = "procurement.order"
     _columns = {
                 'production_lot_id': fields.many2one('stock.production.lot',

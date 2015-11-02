@@ -6,7 +6,7 @@ from openerp import models, fields, api
 from openerp import workflow
 
 
-class sale_order_line(models.Model):
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     production_lot_id = fields.Many2one('stock.production.lot',
@@ -38,7 +38,7 @@ class sale_order_line(models.Model):
                                   }
             production_lot_id = production_obj.create(production_lot_dico)
             line.write({'production_lot_id': production_lot_id.id})
-        super(sale_order_line, self).button_confirm()
+        super(SaleOrderLine, self).button_confirm()
         return True
 
     @api.model
@@ -60,16 +60,16 @@ class sale_order_line(models.Model):
                         'production_lot_id': False,
                         'customer_ref': ''
                        })
-        return super(sale_order_line, self).copy(default)
+        return super(SaleOrderLine, self).copy(default)
 
 
-class sale_order(models.Model):
+class SaleOrder(models.Model):
     _inherit = "sale.order"
     _order = "create_date desc"
 
     @api.model
     def default_get(self, fields_list):
-        res = super(sale_order, self).default_get(fields_list)
+        res = super(SaleOrder, self).default_get(fields_list)
         res.update({
                     'picking_policy': 'direct',
                     'order_policy': 'picking'

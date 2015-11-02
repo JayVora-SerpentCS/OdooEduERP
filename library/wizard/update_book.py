@@ -4,8 +4,7 @@
 from openerp import models, fields, api
 
 
-class update_books(models.TransientModel):
-
+class UpdateBooks(models.TransientModel):
     _name = "update.books"
     _description = "Update Books"
 
