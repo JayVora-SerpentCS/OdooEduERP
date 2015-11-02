@@ -9,9 +9,10 @@ class result_label_info(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context=None):
         super(result_label_info, self).__init__(cr, uid, name, context=context)
+        get_stud_info = self.get_student_info
         self.localcontext.update({
-            'get_student_all_info': self.get_student_info,
-    })
+                                  'get_student_all_info': get_stud_info,
+                                 })
 
     def get_student_info(self, standard_id, division_id, medium_id, year_id):
         student_obj = self.pool.get('student.student')

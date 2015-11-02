@@ -9,7 +9,6 @@ from openerp.exceptions import Warning
 
 class student_fees_register(models.Model):
     '''Student fees Register'''
-
     _name = 'student.fees.register'
     _description = 'Student fees Register'
 
@@ -60,13 +59,13 @@ class student_fees_register(models.Model):
                                                   '_confirm', self._cr)
                     else:
                         res = {
-                            'student_id': stu.id,
-                            'register_id': vals.id,
-                            'name': vals.name,
-                            'date': vals.date,
-                            'journal_id': vals.journal_id.id,
-                            'company_id': vals.company_id.id
-                        }
+                               'student_id': stu.id,
+                               'register_id': vals.id,
+                               'name': vals.name,
+                               'date': vals.date,
+                               'journal_id': vals.journal_id.id,
+                               'company_id': vals.company_id.id
+                              }
                         slip_id = slip_pool.create(res)
                         workflow.trg_validate(self._uid,
                                               'student.fees.register',
@@ -84,17 +83,15 @@ class student_fees_register(models.Model):
 
 class student_payslip_line(models.Model):
     '''Student PaySlip Line'''
-
     _name = 'student.payslip.line'
     _description = 'Student PaySlip Line'
 
     name = fields.Char('Name', required=True)
     code = fields.Char('Code', required=True)
-    type = fields.Selection([
-        ('month', 'Monthly'),
-        ('year', 'Yearly'),
-        ('range', 'Range'),
-    ], 'Duration', select=True, required=True)
+    type = fields.Selection([('month', 'Monthly'),
+                             ('year', 'Yearly'),
+                             ('range', 'Range')],
+                            'Duration', select=True, required=True)
     amount = fields.Float('Amount', digits=(16, 4))
     line_ids = fields.One2many('student.payslip.line.line', 'slipline_id',
                                'Calculations')
@@ -103,20 +100,17 @@ class student_payslip_line(models.Model):
 
 
 class student_fees_structure_line(models.Model):
-    '''
-    Student Fees Structure Line
-    '''
+    '''Student Fees Structure Line'''
     _name = 'student.fees.structure.line'
     _description = 'Student Fees Structure Line'
     _order = 'sequence'
 
     name = fields.Char('Name', required=True)
     code = fields.Char('Code', required=True)
-    type = fields.Selection([
-        ('month', 'Monthly'),
-        ('year', 'Yearly'),
-        ('range', 'Range'),
-    ], 'Duration', select=True, required=True)
+    type = fields.Selection([('month', 'Monthly'),
+                             ('year', 'Yearly'),
+                             ('range', 'Range')],
+                            'Duration', select=True, required=True)
     amount = fields.Float('Amount', digits=(16, 4))
     sequence = fields.Integer('Sequence')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline1_id',
@@ -124,9 +118,7 @@ class student_fees_structure_line(models.Model):
 
 
 class student_fees_structure(models.Model):
-    """
-    Fees structure
-    """
+    '''Fees structure'''
     _name = 'student.fees.structure'
     _description = 'Student Fees Structure'
 
@@ -136,10 +128,9 @@ class student_fees_structure(models.Model):
                                 'fees_structure_payslip_rel',
                                 'fees_id', 'slip_id', 'Fees Structure')
 
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)', 'The code of the Fees Structure must'
-         'be unique !')
-    ]
+    _sql_constraints = [('code_uniq', 'unique(code)',
+                         'The code of the Fees Structure must'
+                         'be unique !')]
 
 
 class student_payslip(models.Model):
@@ -156,27 +147,25 @@ class student_payslip(models.Model):
 
     @api.multi
     def payslip_confirm(self):
-        student_fees_structure_obj = self.env['student.fees.structure']
+        fees_structure_obj = self.env['student.fees.structure']
         student_payslip_line_obj = self.env['student.payslip.line']
         for payslip_obj in self:
-            for student_payslip_datas in self.read(['fees_structure_id']):
-                if not student_payslip_datas['fees_structure_id']:
+            for student_payslip_data in self.read(['fees_structure_id']):
+                fee_id = student_payslip_data['fees_structure_id'][1]
+                if not student_payslip_data['fees_structure_id']:
                     payslip_obj.write({'state': 'paid'})
                     return True
-                student_fees_structure_search_ids = student_fees_structure_obj\
-                    .search([('name', '=', student_payslip_datas
-                              ['fees_structure_id'][1])])
-                for datas in student_fees_structure_search_ids:
+                fees_ids = fees_structure_obj.search([('name', '=', fee_id)])
+                for datas in fees_ids:
                     for data in datas.line_ids or []:
-                        student_payslip_line_vals = {'slip_id': self.id,
-                                                     'name': data.name,
-                                                     'code': data.code,
-                                                     'sequence': data.sequence,
-                                                     'type': data.type,
-                                                     'amount': data.amount,
-                                                     }
-                        student_payslip_line_obj. \
-                            create(student_payslip_line_vals)
+                        line_vals = {'slip_id': self.id,
+                                     'name': data.name,
+                                     'code': data.code,
+                                     'sequence': data.sequence,
+                                     'type': data.type,
+                                     'amount': data.amount,
+                                    }
+                        student_payslip_line_obj.create(line_vals)
                 amount = 0
                 for datas in self.browse(self.ids):
                     for data in datas.line_ids:
@@ -218,12 +207,12 @@ class student_payslip(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
                               select=1, ondelete='restrict',
-                              help="Link to the automatically"
-                              "generated Journal Items.")
+                              help='Link to the automatically'
+                              'generated Journal Items.')
     payment_date = fields.Date('Payment Date', readonly=True,
                                states={'draft': [('readonly', False)]},
                                select=True,
-                               help="Keep empty to use the current date")
+                               help='Keep empty to use the current date')
     type = fields.Selection([('out_invoice', 'Customer Invoice'),
                              ('in_invoice', 'Supplier Invoice'),
                              ('out_refund', 'Customer Refund'),
@@ -251,12 +240,11 @@ class student_payslip(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        default.update({
-            'state': 'draft',
-            'number': False,
-            'move_id': False,
-            'line_ids': [],
-        })
+        default.update({'state': 'draft',
+                        'number': False,
+                        'move_id': False,
+                        'line_ids': []
+                       })
         return super(student_payslip, self).copy(default)
 
     @api.multi
@@ -264,8 +252,8 @@ class student_payslip(models.Model):
         result = {}
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
-            currency_id = journal.currency and journal.currency.id or \
-                journal.company_id.currency_id.id
+            currency_id = journal.currency and journal.currency.id\
+                            or journal.company_id.currency_id.id
             result = {'value': {'currency_id': currency_id}}
         return result
 
@@ -288,8 +276,8 @@ class student_payslip(models.Model):
                                        ('%Y-%m-%d')})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
-            current_currency = fees.currency_id and fees.currency_id.id or\
-                               company_currency
+            current_currency = fees.currency_id and fees.currency_id.id\
+                                or company_currency
             account_id = False
             comapny_ac_id = False
             if fees.type in ('in_invoice', 'out_refund'):
@@ -306,10 +294,10 @@ class student_payslip(models.Model):
                                 'box in the related journal from the'
                                 'configuration menu.'))
             move = {
-                'ref': fees.name,
-                'journal_id': fees.journal_id.id,
-                'date': fees.payment_date or time.strftime('%Y-%m-%d'),
-            }
+                    'ref': fees.name,
+                    'journal_id': fees.journal_id.id,
+                    'date': fees.payment_date or time.strftime('%Y-%m-%d'),
+                   }
             ctx.update({'company_id': fees.company_id.id})
             move_id = move_obj.create(move)
             context_multi_currency = self._context.copy()
@@ -334,32 +322,36 @@ class student_payslip(models.Model):
                 credit = 0.0
             sign = debit - credit < 0 and - 1 or 1
             move_line = {
-                'name': fees.name or '/',
-                'move_id': move_id,
-                'debit': debit,
-                'credit': credit,
-                'account_id': account_id,
-                'journal_id': fees.journal_id.id,
-                'parent_id': fees.student_id.parent_id.id,
-                'currency_id': diff_currency_p and current_currency or False,
-                'amount_currency': (diff_currency_p and sign * fees.total)
-                                        or 0.0,
-                'date': fees.payment_date or time.strftime('%Y-%m-%d'),
-                }
+                         'name': fees.name or '/',
+                         'move_id': move_id,
+                         'debit': debit,
+                         'credit': credit,
+                         'account_id': account_id,
+                         'journal_id': fees.journal_id.id,
+                         'parent_id': fees.student_id.parent_id.id,
+                         'currency_id': diff_currency_p and current_currency\
+                                            or False,
+                         'amount_currency': diff_currency_p\
+                                                and sign * fees.total or 0.0,
+                         'date': fees.payment_date\
+                                    or time.strftime('%Y-%m-%d'),
+                        }
             move_line_obj.create(move_line)
             move_line = {
-                'name': fees.name or '/',
-                'move_id': move_id,
-                'debit': credit,
-                'credit': debit,
-                'account_id': comapny_ac_id,
-                'journal_id': fees.journal_id.id,
-                'parent_id': fees.student_id.parent_id.id,
-                'currency_id': diff_currency_p and current_currency or False,
-                'amount_currency': (diff_currency_p and sign * fees.total)
-                                        or 0.0,
-                'date': fees.payment_date or time.strftime('%Y-%m-%d'),
-                }
+                         'name': fees.name or '/',
+                         'move_id': move_id,
+                         'debit': credit,
+                         'credit': debit,
+                         'account_id': comapny_ac_id,
+                         'journal_id': fees.journal_id.id,
+                         'parent_id': fees.student_id.parent_id.id,
+                         'currency_id': diff_currency_p and current_currency\
+                                         or False,
+                         'amount_currency': diff_currency_p\
+                                             and sign * fees.total or 0.0,
+                         'date': fees.payment_date\
+                                    or time.strftime('%Y-%m-%d'),
+                        }
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
@@ -386,17 +378,16 @@ class student_payslip(models.Model):
                                 'invoice_type': 'out_invoice',
                                 'default_type': 'receipt',
                                 'type': 'receipt'
-                                }
-                    }
+                               }
+                   }
 
 
 class student_payslip_line_line(models.Model):
-    '''
-    Function Line
-    '''
+    '''Function Line'''
     _name = 'student.payslip.line.line'
     _description = 'Function Line'
     _order = 'sequence'
+
     slipline_id = fields.Many2one('student.payslip.line', 'Slip Line')
     slipline1_id = fields.Many2one('student.fees.structure.line', 'Slip Line')
     sequence = fields.Integer('Sequence')

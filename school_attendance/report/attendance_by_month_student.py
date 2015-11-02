@@ -16,8 +16,10 @@ month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
 
 
 def lengthmonth(year, month):
-    if month == 2 and ((year % 4 == 0) and ((year % 100 != 0)
-                or (year % 400 == 0))):
+    if (month == 2)\
+            and ((year % 4 == 0)
+            and ((year % 100 != 0)
+            or (year % 400 == 0))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
@@ -31,7 +33,7 @@ class report_custom(report_rml):
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
-#        stu_ids = context.get('active_ids', [])
+        # stu_ids = context.get('active_ids', [])
         stu_ids = datas['form']['stud_ids']
         user_xml = ['<month>%s</month>' % month2name[month.month],
                     '<year>%s</year>' % month.year]
@@ -46,20 +48,24 @@ class report_custom(report_rml):
                 </user>
                 ''' % (ustr(toxml(student['name'])))
                 today, tomor = month, month + one_day
+
                 while today.month == month.month:
                     day = today.day
-                    attendance_sheet_domain = [
-                        ('standard_id', '=', student['standard_id'][0]),
-                        ('month_id', '=', today.month)]
-                    attendance_sheet_search_ids = attendance_sheet_obj.search(
-                        cr, uid, attendance_sheet_domain, context=context)
-                    if not attendance_sheet_search_ids:
+                    domain = [
+                              ('standard_id', '=', student['standard_id'][0]),
+                              ('month_id', '=', today.month)
+                             ]
+                    sheet_ids = attendance_sheet_obj.search(
+                        cr, uid, domain, context=context)
+
+                    if not sheet_ids:
                         var = 'A'
                     else:
 
                         for attendance_sheet_data in\
-                        attendance_sheet_obj.browse(cr, uid,
-                            attendance_sheet_search_ids, context=context):
+                        attendance_sheet_obj.browse(cr, uid, sheet_ids,
+                                                    context=context):
+
                             for line in attendance_sheet_data.attendance_ids:
 
                                 if line.name == student['name']:
@@ -147,7 +153,7 @@ class report_custom(report_rml):
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))\
-            + ' ' + str(time.strftime("%H:%M")),
+                   + ' ' + str(time.strftime("%H:%M")),
             pooler.get_pool(cr.dbname).get('res.users').browse(
                 cr, uid, uid).company_id.name)
 
@@ -245,12 +251,12 @@ class report_custom(report_rml):
         date_xml.append('</days>')
         date_xml.append('<cols>3.5cm%s</cols>\n' % (',0.74cm' * (int(dy))))
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
-        <report>
-        %s
-        %s
-        %s
-        </report>
-        ''' % (header_xml, '\n'.join(user_xml), date_xml)
+                 <report>
+                 %s
+                 %s
+                 %s
+                 </report>
+              ''' % (header_xml, '\n'.join(user_xml), date_xml)
         return xml
 
 report_custom('report.attendance.by.month.student', 'student.student', '',

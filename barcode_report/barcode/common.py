@@ -196,19 +196,19 @@ class I2of5(Barcode):
     """
 
     patterns = {
-        'start': 'bsbs',
-        'stop': 'Bsb',
-        'B0': 'bbBBb', 'S0': 'ssSSs',
-        'B1': 'BbbbB', 'S1': 'SsssS',
-        'B2': 'bBbbB', 'S2': 'sSssS',
-        'B3': 'BBbbb', 'S3': 'SSsss',
-        'B4': 'bbBbB', 'S4': 'ssSsS',
-        'B5': 'BbBbb', 'S5': 'SsSss',
-        'B6': 'bBBbb', 'S6': 'sSSss',
-        'B7': 'bbbBB', 'S7': 'sssSS',
-        'B8': 'BbbBb', 'S8': 'SssSs',
-        'B9': 'bBbBb', 'S9': 'sSsSs'
-    }
+                'start': 'bsbs',
+                'stop': 'Bsb',
+                'B0': 'bbBBb', 'S0': 'ssSSs',
+                'B1': 'BbbbB', 'S1': 'SsssS',
+                'B2': 'bBbbB', 'S2': 'sSssS',
+                'B3': 'BBbbb', 'S3': 'SSsss',
+                'B4': 'bbBbB', 'S4': 'ssSsS',
+                'B5': 'BbBbb', 'S5': 'SsSss',
+                'B6': 'bBBbb', 'S6': 'sSSss',
+                'B7': 'bbbBB', 'S7': 'sssSS',
+                'B8': 'BbbBb', 'S8': 'SssSs',
+                'B9': 'bBbBb', 'S9': 'sSsSs'
+               }
 
     def __init__(self, value='', **args):
         self.height = None
@@ -237,7 +237,9 @@ class I2of5(Barcode):
     def validate(self):
         vval = ""
         self.valid = 1
+
         for c in string.strip(self.value):
+
             if c not in string.digits:
                 self.valid = 0
                 continue
@@ -249,8 +251,9 @@ class I2of5(Barcode):
         s = self.validated
         # make sure result will be a multiple of 2 digits long,
         # checksum included
-        if ((len(self.validated) % 2 == 0) and self.checksum) \
-        or ((len(self.validated) % 2 == 1) and not self.checksum):
+
+        if (((len(self.validated) % 2 == 0) and self.checksum)
+                or ((len(self.validated) % 2 == 1) and not self.checksum)):
             s = '0' + s
 
         if self.checksum:
@@ -265,7 +268,7 @@ class I2of5(Barcode):
                     cm = 3
 
             d = 10 - (int(d) % 10)
-            s = s + `d`
+            s += repr(d)
         self.encoded = s
 
     def decompose(self):
@@ -326,13 +329,12 @@ class MSI(Barcode):
     """
 
     patterns = {'start': 'Bs', 'stop': 'bSb',
-
                 '0': 'bSbSbSbS', '1': 'bSbSbSBs',
                 '2': 'bSbSBsbS', '3': 'bSbSBsBs',
                 '4': 'bSBsbSbS', '5': 'bSBsbSBs',
                 '6': 'bSBsBsbS', '7': 'bSBsBsBs',
                 '8': 'BsbSbSbS', '9': 'BsbSbSBs'
-    }
+               }
 
     def __init__(self, value="", **args):
         self.height = None
@@ -456,13 +458,13 @@ class Codabar(Barcode):
                 ':': 'BsbsBsB', '/': 'BsBsbsB', '.': 'BsBsBsb',
                 '+': 'bsBsBsB', 'A': 'bsBSbSb', 'B': 'bSbSbsB',
                 'C': 'bsbSbSB', 'D': 'bsbSBSb'
-    }
+               }
 
     values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
               '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
               '-': 10, '$': 11, ':': 12, '/': 13, '.': 14,
               '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19
-    }
+             }
 
     chars = string.digits + "-$:/.+"
 
@@ -515,7 +517,7 @@ class Codabar(Barcode):
 
         if self.checksum:
             v = 0
-            for c in s:
+            if s:
                 v = v + self.values[v]
             v = 16 - (v % 16)
             s = s + self.chars[v]
@@ -581,12 +583,11 @@ class Code11(Barcode):
                 '3': 'BSbsb', '4': 'bsBsB', '5': 'BsBsb',
                 '6': 'bSBsb', '7': 'bsbSB', '8': 'BsbSb',
                 '9': 'Bsbsb', '-': 'bsBsb', 'S': 'bsBSb'  # Start/Stop
-    }
+               }
 
     values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-              '-': 10,
-    }
+              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '-': 10,
+             }
 
     def __init__(self, value='', **args):
         self.height = None
@@ -636,20 +637,22 @@ class Code11(Barcode):
 
         if self.checksum > 0:
             # compute first checksum
-            i = 0; v = 1; c = 0
+            i, v, c = 0, 1, 0
             while i < len(s):
                 c = c + v * string.index(self.chars, s[-(i + 1)])
-                i = i + 1; v = v + 1
+                i = i + 1
+                v = v + 1
                 if v > 10:
                     v = 1
             s = s + self.chars[c % 11]
 
         if self.checksum > 1:
             # compute second checksum
-            i = 0; v = 1; c = 0
+            i, v, c = 0, 1, 0
             while i < len(s):
-                c = c + v * string.index(self.chars, s[-(i+1)])
-                i = i + 1; v = v + 1
+                c = c + v * string.index(self.chars, s[-(i + 1)])
+                i = i + 1
+                v = v + 1
                 if v > 9:
                     v = 1
             s = s + self.chars[c % 10]

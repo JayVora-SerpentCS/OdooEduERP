@@ -5,7 +5,6 @@ from openerp import models, fields, api
 
 
 class school_teacher_assignment(models.Model):
-
     _name = 'school.teacher.assignment'
     _description = 'Teacher Assignment Information'
 
@@ -71,7 +70,6 @@ class school_teacher_assignment(models.Model):
 
 
 class school_student_assignment(models.Model):
-
     _name = 'school.student.assignment'
     _description = 'Student Assignment Information'
 

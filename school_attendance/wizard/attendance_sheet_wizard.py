@@ -6,7 +6,6 @@ from openerp import models, fields, api
 
 class monthly_attendance_sheet(models.TransientModel):
     '''For Monthly Attendance Sheet'''
-
     _name = "monthly.attendance.sheet"
     _description = "Monthly Attendance Sheet Wizard"
 
@@ -33,14 +32,14 @@ class monthly_attendance_sheet(models.TransientModel):
         dummy, tree_view = models_data.get_object_reference(
                             'school_attendance', 'view_attendance_sheet_tree')
         return {
-            'view_type': 'form',
-            'view_mode': 'tree, form',
-            'res_model': 'attendance.sheet',
-            'view_id': False,
-            'domain': [('standard_id', '=', data['standard_id'][0]),
-                       ('month_id', '=', data['month_id'][0]),
-                       ('year_id', '=', data['year_id'][0])],
-            'views': [(tree_view or False, 'tree'),
-                      (form_view or False, 'form')],
-            'type': 'ir.actions.act_window',
-        }
+                'view_type': 'form',
+                'view_mode': 'tree, form',
+                'res_model': 'attendance.sheet',
+                'view_id': False,
+                'domain': [('standard_id', '=', data['standard_id'][0]),
+                           ('month_id', '=', data['month_id'][0]),
+                           ('year_id', '=', data['year_id'][0])],
+                'views': [(tree_view or False, 'tree'),
+                          (form_view or False, 'form')],
+                'type': 'ir.actions.act_window',
+               }

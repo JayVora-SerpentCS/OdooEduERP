@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from reportlab.lib.units import inch
-from common import Barcode
+from barcode_report.barcode.common import Barcode
 import string
 
 _patterns = {

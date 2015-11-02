@@ -7,7 +7,6 @@ from openerp import workflow
 
 
 class sale_order_line(models.Model):
-
     _inherit = 'sale.order.line'
 
     production_lot_id = fields.Many2one('stock.production.lot',
@@ -24,18 +23,19 @@ class sale_order_line(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-
         l_id = 0
         production_obj = self.env['stock.production.lot']
         for line in self:
             if line.production_lot_id:
                 continue
             l_id += 1
+            name = line.order_id and (str(line.order_id.name)
+                                      + ('/%02d' % (l_id,))) or False
+            product_id = line.product_id and line.product_id.id or False
             production_lot_dico = {
-                'name': line.order_id and (str(line.order_id.name)
-                                           + ('/%02d' % (l_id,))) or False,
-                'product_id': line.product_id and line.product_id.id or False
-            }
+                                   'name': name,
+                                   'product_id': product_id,
+                                  }
             production_lot_id = production_obj.create(production_lot_dico)
             line.write({'production_lot_id': production_lot_id.id})
         super(sale_order_line, self).button_confirm()
@@ -57,14 +57,13 @@ class sale_order_line(models.Model):
         if default is None:
             default = {}
         default.update({
-            'production_lot_id': False,
-            'customer_ref': ''
-        })
+                        'production_lot_id': False,
+                        'customer_ref': ''
+                       })
         return super(sale_order_line, self).copy(default)
 
 
 class sale_order(models.Model):
-
     _inherit = "sale.order"
     _order = "create_date desc"
 
@@ -74,7 +73,7 @@ class sale_order(models.Model):
         res.update({
                     'picking_policy': 'direct',
                     'order_policy': 'picking'
-                })
+                   })
         return res
 
     @api.multi
@@ -87,11 +86,9 @@ class sale_order(models.Model):
         @param context : standard Dictionary
         @return :True
         '''
-
         picking_obj = self.env['stock.picking']
         move_obj = self.env['stock.move']
         procurment_obj = self.env['procurement.order']
-#         order_line_obj = self.env['sale.order.line']
         picking_id = False
         for order in self:
             output_id = order.warehouse_id.wh_output_stock_loc_id.id
@@ -99,81 +96,92 @@ class sale_order(models.Model):
             for line in order.order_line:
                 proc_id = False
                 date_planned = (DateTime.now()
-                    + DateTime.RelativeDateTime(days=line.delay or 0.0))\
-                    .strftime('%Y-%m-%d')
+                                + DateTime.RelativeDateTime(days=line.delay
+                                                            or 0.0)
+                               ).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
-                if line.product_id and line.product_id.product_tmpl_id.type\
-                    in ('product', 'consu'):
+                if (line.product_id
+                        and line.product_id.product_tmpl_id.type
+                        in ('product', 'consu')):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
-                        picking_id = picking_obj.create({
-                            'origin': order.name,
-                            'type': 'out',
-                            'state': 'draft',
-                            'move_type': order.picking_policy,
-                            'sale_id': order.id,
-                            'address_id': order.partner_shipping_id.id,
-                            'note': order.note,
-                            'invoice_state': (order.order_policy == 'picking'
-                                              and '2binvoiced') or 'none',
-                            'carrier_id': order.carrier_id.id,
-                            'picking_type_id': order.warehouse_id
-                                and order.warehouse_id.out_type_id
-                                and order.warehouse_id.out_type_id.id or False
-                        })
-                    move_id = move_obj.create({
-                        'name': 'SO:' + order.name or '',
-                        'picking_id': picking_id.id,
-                        'origin_ref': order.name,
-                        'product_id': line.product_id.id,
-                        'date_planned': date_planned,
-                       # 'product_qty': line.product_qty,
-                        'product_uom_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'product_uos': line.product_uos.id,
-                        'product_packaging': line.product_packaging.id,
-                        'address_id': line.address_allotment_id.id
-                            or order.partner_shipping_id.id,
-                        'location_id': location_id,
-                        'location_dest_id': output_id,
-                        'sale_line_id': line.id,
-                        'tracking_id': False,
-                        'state': 'waiting',
-#                        'note': line.notes,
-                        'prodlot_id': line.production_lot_id.id,
-                        'customer_ref': line.customer_ref,
-                    })
-                    proc_id = procurment_obj.create({
-                        'name': order.name,
-                        'origin': order.name,
-                        'date_planned': date_planned,
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'location_id': order.warehouse_id.lot_stock_id.id,
-                        'procure_method': 'make_to_order',
-                        'move_id': move_id,
-                        'production_lot_id': line.production_lot_id.id,
-                        'customer_ref': line.customer_ref,
-                    })
+                        address_id = order.partner_shipping_id.id
+                        pick_dict = {
+                                     'origin': order.name,
+                                     'type': 'out',
+                                     'state': 'draft',
+                                     'move_type': order.picking_policy,
+                                     'sale_id': order.id,
+                                     'address_id': address_id,
+                                     'note': order.note,
+                                     'invoice_state': (order.order_policy == 'picking'
+                                                       and '2binvoiced')
+                                                       or 'none',
+                                     'carrier_id': order.carrier_id.id,
+                                     'picking_type_id': order.warehouse_id
+                                         and order.warehouse_id.out_type_id
+                                         and order.warehouse_id.out_type_id.id
+                                         or False
+                                    }
+                        picking_id = picking_obj.create(pick_dict)
+                    mv_dict = {
+                               'name': 'SO:' + order.name or '',
+                               'picking_id': picking_id.id,
+                               'origin_ref': order.name,
+                               'product_id': line.product_id.id,
+                               'date_planned': date_planned,
+                               'product_uom_qty': line.product_uom_qty,
+                               'product_uom': line.product_uom.id,
+                               'product_uos': line.product_uos.id,
+                               'product_packaging': line.product_packaging.id,
+                               'address_id': line.address_allotment_id.id
+                                   or order.partner_shipping_id.id,
+                               'location_id': location_id,
+                               'location_dest_id': output_id,
+                               'sale_line_id': line.id,
+                               'tracking_id': False,
+                               'state': 'waiting',
+                               'prodlot_id': line.production_lot_id.id,
+                               'customer_ref': line.customer_ref,
+                              }
+                    move_id = move_obj.create(mv_dict)
+                    location_id = order.warehouse_id.lot_stock_id.id
+                    prc_dict = {
+                                'name': order.name,
+                                'origin': order.name,
+                                'date_planned': date_planned,
+                                'product_id': line.product_id.id,
+                                'product_qty': line.product_uom_qty,
+                                'product_uom': line.product_uom.id,
+                                'location_id': location_id,
+                                'procure_method': 'make_to_order',
+                                'move_id': move_id,
+                                'production_lot_id': line.production_lot_id.id,
+                                'customer_ref': line.customer_ref,
+                               }
+                    proc_id = procurment_obj.create(prc_dict)
                     workflow.trg_validate(self._uid, 'procurement.order',
-                                        proc_id.id, 'button_confirm', self._cr)
+                                          proc_id.id, 'button_confirm',
+                                          self._cr)
                     line.write({'procurement_id': proc_id.id})
-                elif line.product_id\
-                    and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = procurment_obj.create({
-                        'name': line.name,
-                        'origin': order.name,
-                        'date_planned': date_planned,
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'location_id': order.warehouse_id.lot_stock_id.id,
-                        'procure_method': line.type,
-                    })
+                elif (line.product_id
+                        and line.product_id.product_tmpl_id.type == 'service'):
+                    location_id = order.warehouse_id.lot_stock_id.id
+                    prc_dict = {
+                                'name': line.name,
+                                'origin': order.name,
+                                'date_planned': date_planned,
+                                'product_id': line.product_id.id,
+                                'product_qty': line.product_uom_qty,
+                                'product_uom': line.product_uom.id,
+                                'location_id': location_id,
+                                'procure_method': line.type,
+                               }
+                    proc_id = procurment_obj.create(prc_dict)
                     workflow.trg_validate(self._uid, 'procurement.order',
-                                        proc_id.id, 'button_confirm', self._cr)
+                                          proc_id.id, 'button_confirm',
+                                          self._cr)
                     line.write({'procurement_id': proc_id.id})
                 else:
                     # No procurement because no product in the sale.order.line.
@@ -181,7 +189,8 @@ class sale_order(models.Model):
             val = {}
             if picking_id:
                 workflow.trg_validate(self._uid, 'stock.picking',
-                                    picking_id.id, 'button_confirm', self._cr)
+                                      picking_id.id, 'button_confirm',
+                                      self._cr)
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'

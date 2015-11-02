@@ -5,4 +5,4 @@
 # A Module to BarCode Management System
 # ----------------------------------------------------------
 
-import report
+from . import report

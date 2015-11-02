@@ -5,15 +5,15 @@ from openerp import models, fields, api
 
 
 class mail_template(models.TransientModel):
-
     _inherit = "mail.template"
 
     @api.multi
     def generate_email(self, res_ids, fields=None):
         ret = super(mail_template, self).generate_email(res_ids, fields=fields)
+
         if self._context.get('body_html', False)\
-            or self._context.get('subject', False) or self._context.get(
-                                                            'email_to', False):
+                or self._context.get('subject', False)\
+                or self._context.get('email_to', False):
             ret['body_html'] = self._context['body_text']
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']
@@ -23,21 +23,20 @@ class mail_template(models.TransientModel):
 
 
 class send_email(models.TransientModel):
-
     _name = "send.email"
 
     note = fields.Text('Text')
 
     @api.multi
     def send_email(self):
-        subject = 'Emergency mail'
         body = ''
         email_template_obj = self.env['email.template']
-        template_id = email_template_obj.search([
-            ('model', '=', 'student.student')], limit=1)
+        domain = [('model', '=', 'student.student')]
+        template_id = email_template_obj.search(domain, limit=1)
         if template_id:
             for i in self:
                 body += '\n' + i.note
             email_template_obj.send_mail(template_id.id,
-                self._context.get('active_id'), force_send=True)
+                                         self._context.get('active_id'),
+                                         force_send=True)
         return {'type': 'ir.actions.act_window_close'}

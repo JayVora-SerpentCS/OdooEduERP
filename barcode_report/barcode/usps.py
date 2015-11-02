@@ -2,19 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 #
 from reportlab.lib.units import inch
-from common import Barcode
+from barcode_report.barcode.common import Barcode
 import string
 
 _fim_patterns = {'A': "||  |  ||",
                  'B': "| || || |",
                  'C': "|| | | ||",
                  'D': "||| | |||",
-}
+                }
 
 _postnet_patterns = {'1': "...||", '2': "..|.|", '3': "..||.", '4': ".|..|",
                      '5': ".|.|.", '6': ".||..", '7': "|...|", '8': "|..|.",
                      '9': "|.|..", '0': "||...", 'S': "|"
-}
+                    }
 
 
 class FIM(Barcode):
@@ -85,7 +85,7 @@ class FIM(Barcode):
                 self.valid = 0
 
         if len(self.validated) != 1:
-            raise ValueError, "Input must be exactly one character"
+            raise ValueError('Input must be exactly one character')
 
         return self.validated
 
@@ -165,9 +165,9 @@ class POSTNET(Barcode):
             elif c == '-':
                 pass
             else:
-                raise ValueError, "Invalid character in input"
+                raise ValueError('Invalid character in input')
         check = (10 - (check % 10)) % 10
-        self.encoded = self.encoded + `check` + 'S'
+        self.encoded = self.encoded + repr(check) + 'S'
         return self.encoded
 
     def decompose(self):
@@ -183,7 +183,6 @@ class POSTNET(Barcode):
         self.xo = 0.0
 
     def draw(self):
-        sdown = self.fbarheight - self.sbarheight
         left = self.xo
 
         for c in self.decomposed:

@@ -30,14 +30,16 @@ class student_meeting(models.TransientModel):
                 attendee_ids.append((0, 0, {'user_id': student.user_id.id,
                                             'email': student.email}))
         if flag:
-            raise except_orm(_('Error !'), _("Following Student\
-                don't have Email ID.\n\n" + error_student\
-                + "\nMeeting cannot be scheduled."))
+            raise except_orm(_('Error !'),
+                             _('Following Student'
+                               'does not have Email ID.\n\n'
+                               + error_student
+                               + '\nMeeting cannot be scheduled.'))
         cal_event_obj.create({
-            'name': cur_rec.name,
-            'start': cur_rec.meeting_date,
-            'stop': cur_rec.deadline,
-            'description': cur_rec.description,
-            'attendee_ids': attendee_ids
-        })
+                              'name': cur_rec.name,
+                              'start': cur_rec.meeting_date,
+                              'stop': cur_rec.deadline,
+                              'description': cur_rec.description,
+                              'attendee_ids': attendee_ids
+                             })
         return {'type': 'ir.actions.act_window_close'}
