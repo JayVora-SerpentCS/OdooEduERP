@@ -4,10 +4,10 @@
 import time
 from openerp import models, fields, api, _
 from openerp import workflow
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class student_fees_register(models.Model):
+class StudentFeesRegister(models.Model):
     '''Student fees Register'''
     _name = 'student.fees.register'
     _description = 'Student fees Register'
@@ -81,7 +81,7 @@ class student_fees_register(models.Model):
         return True
 
 
-class student_payslip_line(models.Model):
+class StudentPayslipLine(models.Model):
     '''Student PaySlip Line'''
     _name = 'student.payslip.line'
     _description = 'Student PaySlip Line'
@@ -99,7 +99,7 @@ class student_payslip_line(models.Model):
     description = fields.Text('Description')
 
 
-class student_fees_structure_line(models.Model):
+class StudentFeesStructureLine(models.Model):
     '''Student Fees Structure Line'''
     _name = 'student.fees.structure.line'
     _description = 'Student Fees Structure Line'
@@ -117,7 +117,7 @@ class student_fees_structure_line(models.Model):
                                'Calculations')
 
 
-class student_fees_structure(models.Model):
+class StudentFeesStructure(models.Model):
     '''Fees structure'''
     _name = 'student.fees.structure'
     _description = 'Student Fees Structure'
@@ -133,7 +133,7 @@ class student_fees_structure(models.Model):
                          'be unique !')]
 
 
-class student_payslip(models.Model):
+class StudentPayslip(models.Model):
 
     @api.multi
     def payslip_draft(self):
@@ -245,7 +245,7 @@ class student_payslip(models.Model):
                         'move_id': False,
                         'line_ids': []
                        })
-        return super(student_payslip, self).copy(default)
+        return super(StudentPayslip, self).copy(default)
 
     @api.multi
     def onchange_journal_id(self, journal_id=False):
@@ -264,7 +264,7 @@ class student_payslip(models.Model):
         move_line_obj = self.env['account.move.line']
         for fees in self.browse(self.ids):
             if not fees.journal_id.sequence_id:
-                raise Warning(_('Please define sequence on'
+                raise UserError(_('Please define sequence on'
                                 'the journal related to this'
                                 'invoice.'))
             if fees.move_id:
@@ -289,7 +289,7 @@ class student_payslip(models.Model):
                 comapny_ac_id = fees.company_id.\
                                     partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
-                raise Warning(_('You cannot create an invoice on a centralized'
+                raise UserError(_('You cannot create an invoice on a centralized'
                                 'journal. UnCheck the centralized counterpart'
                                 'box in the related journal from the'
                                 'configuration menu.'))
@@ -382,7 +382,7 @@ class student_payslip(models.Model):
                    }
 
 
-class student_payslip_line_line(models.Model):
+class StudentPayslipLineLine(models.Model):
     '''Function Line'''
     _name = 'student.payslip.line.line'
     _description = 'Function Line'

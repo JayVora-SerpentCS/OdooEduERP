@@ -7,15 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'license': '',
     'complexity': 'easy',
     'summary': 'A Module For Fees Management In School',
-    'description': '''A module to School Fees Management System.
-     A Module support the following functionalities:
-        1. Student Fees Management.
-        2. Student Fees Receipt.
-        3. Student Fees structure.
-        4. Student Fees Register.
-    ''',
     'depends': ['school', 'account_voucher'],
     'demo': ['demo/school_fees_demo.xml'],
     'data': [
