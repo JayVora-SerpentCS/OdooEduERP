@@ -7,14 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'license': '',
     'complexity': 'easy',
     'summary': 'A Module For Event Management In School',
-    'description': '''A module to Event Management in School.
-    A Module support the following functionalities:
-    1. In This Module we can define the Event for specific class
-    so the students of particular class can only participate in that event.
-    2. student can do Registration for events.
-    ''',
     'depends': ['school'],
     'data': [
              'views/event_view.xml',
