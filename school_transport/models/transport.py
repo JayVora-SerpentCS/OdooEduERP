@@ -9,13 +9,11 @@ from openerp.exceptions import Warning
 
 
 class student_transport(models.Model):
-
     _name = 'student.transport'
     _description = 'Transport Information'
 
 
 class hr_employee(models.Model):
-
     _name = 'hr.employee'
     _inherit = 'hr.employee'
     _description = 'Driver Information'
@@ -25,7 +23,6 @@ class hr_employee(models.Model):
 
 class transport_point(models.Model):
     '''for points on root'''
-
     _name = 'transport.point'
     _description = 'Transport Point Information'
 
@@ -34,9 +31,10 @@ class transport_point(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('name'):
+        name = self._context.get('name')
+        if name:
             transport_obj = self.env['student.transport']
-            for transport_data in transport_obj.browse(self._context['name']):
+            for transport_data in transport_obj.browse(name):
                 point_ids = [point_id.id
                              for point_id in transport_data.trans_point_ids]
                 args.append(('id', 'in', point_ids))
@@ -74,9 +72,10 @@ class transport_vehicle(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('name'):
+        name = self._context.get('name')
+        if name:
             transport_obj = self.env['student.transport']
-            transport_data = transport_obj.browse(self._context['name'])
+            transport_data = transport_obj.browse(name)
             vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
             args.append(('id', 'in', vehicle_ids))
@@ -86,7 +85,6 @@ class transport_vehicle(models.Model):
 
 class transport_participant(models.Model):
     '''for participants'''
-
     _name = 'transport.participant'
     _rec_name = 'stu_pid_id'
     _description = 'Transport Participant Information'
@@ -103,14 +101,15 @@ class transport_participant(models.Model):
     vehicle_id = fields.Many2one('transport.vehicle', 'Vehicle No')
     point_id = fields.Many2one('transport.point', 'Point Name')
     state = fields.Selection([('running', 'Running'),
-                                     ('over', 'Over'), ],
-                                     'State', readonly=True, defalt='running')
+                              ('over', 'Over')],
+                             'State', readonly=True, defalt='running')
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('name'):
+        name = self._context.get('name')
+        if name:
             student_obj = self.env['student.student']
-            for student_data in student_obj.browse(self._context['name']):
+            for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
                                 for transport_id in student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
@@ -120,7 +119,6 @@ class transport_participant(models.Model):
 
 class student_transports(models.Model):
     '''for root detail'''
-
     _name = 'student.transport'
     _description = 'Student Transport Information'
 
@@ -155,9 +153,9 @@ class student_transports(models.Model):
                                        'transport_point_rel',
                                        'point_id', 'root_id', ' Points')
     state = fields.Selection([('draft', 'Draft'),
-                                    ('open', 'Open'),
-                                    ('close', 'Close')],
-                                    'State', readonly=True, default='draft')
+                              ('open', 'Open'),
+                              ('close', 'Close')],
+                             'State', readonly=True, default='draft')
 
     @api.multi
     def transport_open(self):
@@ -181,7 +179,6 @@ class student_transports(models.Model):
         '''
         prt_obj = self.pool.get('transport.participant')
         vehi_obj = self.pool.get('transport.vehicle')
-
         trans_ids = self.search(cr, uid, [('state', '=', 'open')],
                                 context=context)
         vehi_ids = vehi_obj.search(cr, uid, [], context=context)
@@ -190,34 +187,37 @@ class student_transports(models.Model):
             stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
             participants = []
             trans_parti = []
+
             for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
                 date = time.strftime("%Y-%m-%d")
+
                 if date > prt_data.tr_end_date:
                     if prt_data.state != 'over':
                         trans_parti.append(prt_data.id)
                 else:
                     participants.append(prt_data.id)
+
             if trans_parti:
                 prt_obj.write(cr, uid, prt_data.id, {'state': 'over'},
                               context=context)
+
             if participants:
                 self.write(cr, uid, trans.id, {
                     'trans_participants_ids': [(6, 0, participants)]},
                     context=context)
 
-        for vehi in vehi_obj.browse(cr, uid, vehi_ids, context=context):
-            stu_ids = [stu_id.id for stu_id in vehi.vehi_participants_ids]
+        for vehicle in vehi_obj.browse(cr, uid, vehi_ids, context=context):
+            stu_ids = [stu_id.id for stu_id in vehicle.vehi_participants_ids]
             list1 = []
             for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
                 if prt_data.state != 'over':
                     list1.append(prt_data.id)
-            vehi_obj.write(cr, uid, vehi.id, {
+            vehi_obj.write(cr, uid, vehicle.id, {
                 'vehi_participants_ids': [(6, 0, list1)]}, context=context)
         return True
 
 
 class student_student(models.Model):
-
     _inherit = 'student.student'
     _description = 'Student Information'
 
@@ -228,7 +228,6 @@ class student_student(models.Model):
 
 class transport_registration(models.Model):
     '''for registration'''
-
     _name = 'transport.registration'
     _description = 'Transport Registration'
 
@@ -237,7 +236,8 @@ class transport_registration(models.Model):
     part_name = fields.Many2one('student.student', 'Participant Name',
                                 required=True)
     reg_date = fields.Date('Registration Date', readonly=True,
-                        default=lambda * a: time.strftime("%Y-%m-%d %H:%M:%S"))
+                           default=lambda * a:
+                            time.strftime("%Y-%m-%d %H:%M:%S"))
     reg_end_date = fields.Date('Registration End Date', readonly=True)
     for_month = fields.Integer('Registration For Months')
     state = fields.Selection([('draft', 'Draft'),
@@ -294,7 +294,7 @@ class transport_registration(models.Model):
         stu_prt_obj = self.env['transport.participant']
         vehi_obj = self.env['transport.vehicle']
         for reg_data in self:
-            #registration months must one or more then one
+            # registration months must one or more then one
             if reg_data.for_month <= 0:
                 raise Warning(_('Error! Sorry Registration months must be one\
                                  or more then one.'))
@@ -303,7 +303,7 @@ class transport_registration(models.Model):
             if reg_data.vehicle_id.capacity < person:
                 raise Warning(_('There is No More vacancy on this vehicle.'))
 
-            #calculate amount and Registration End date
+            # calculate amount and Registration End date
             amount = reg_data.point_id.amount * reg_data.for_month
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
@@ -312,19 +312,21 @@ class transport_registration(models.Model):
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise Warning(_('For this much Months\
-                Registration is not Possible because Root end date is Early.'))
+                                Registration is not Possible because\
+                                Root end date is Early.'))
             # make entry in Transport
-            temp = stu_prt_obj.create({
-                                    'stu_pid_id': str(reg_data.part_name.pid),
-                                    'amount': amount,
-                                    'transport_id': reg_data.name.id,
-                                    'tr_end_date': tr_end_date,
-                                    'name': reg_data.part_name.id,
-                                    'months': reg_data.for_month,
-                                    'tr_reg_date': reg_data.reg_date,
-                                    'point_id': reg_data.point_id.id,
-                                    'vehicle_id': reg_data.vehicle_id.id,
-                                        })
+            dict_prt = {
+                        'stu_pid_id': str(reg_data.part_name.pid),
+                        'amount': amount,
+                        'transport_id': reg_data.name.id,
+                        'tr_end_date': tr_end_date,
+                        'name': reg_data.part_name.id,
+                        'months': reg_data.for_month,
+                        'tr_reg_date': reg_data.reg_date,
+                        'point_id': reg_data.point_id.id,
+                        'vehicle_id': reg_data.vehicle_id.id,
+                       }
+            temp = stu_prt_obj.create(dict_prt)
             # make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:
@@ -338,14 +340,14 @@ class transport_registration(models.Model):
                 list1.append(temp.id)
             vehicle_id = vehi_obj.browse(reg_data.vehicle_id.id)
             vehicle_id.write({'vehi_participants_ids': [(6, 0, list1)]})
-            #make entry in student.
+            # make entry in student.
             list1 = []
             for root in reg_data.part_name.transport_ids:
                 list1.append(root.id)
             list1.append(temp.id)
             part_name_id = prt_obj.browse(reg_data.part_name.id)
             part_name_id.write({'transport_ids': [(6, 0, list1)]})
-            #make entry in transport.
+            # make entry in transport.
             list1 = []
             for prt in reg_data.name.trans_participants_ids:
                 list1.append(prt.id)

@@ -21,10 +21,10 @@ class transfer_vehicle(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
+        active_id = self._context.get('active_id')
         result = super(transfer_vehicle, self).default_get(fields)
-        if self._context.get('active_id'):
-            student = self.env['student.student'].browse(
-                        self._context.get('active_id'))
+        if active_id:
+            student = self.env['student.student'].browse(active_id)
             if 'name' in fields:
                 result.update({'name': student.id})
         return result
@@ -44,25 +44,27 @@ class transfer_vehicle(models.TransientModel):
         for new_data in self.browse(self.id):
             vehi_data = vehi_obj.browse(new_data.old_vehicle_id.id)
             vehi_new_data = vehi_obj.browse(new_data.new_vehicle_id.id)
-            #check for transfer in same vehicle
+            # check for transfer in same vehicle
             if new_data.old_vehicle_id.id == new_data.new_vehicle_id.id:
                 raise except_orm(_('Error !'),
-                    _('Sorry you can not transfer in same vehicle.'))
+                                 _('Sorry you can not transfer in\
+                                   same vehicle.'))
             # First Check Is there vacancy or not
             person = int(vehi_data.participant) + 1
             if vehi_data.capacity < person:
                 raise except_orm(_('Error !'),
-                    _('There is No More vacancy on this vehicle.'))
-            #remove entry of participant in old vehicle.
-            participants = [prt_id.id
-                            for prt_id in vehi_data.vehi_participants_ids]
+                                 _('There is No More vacancy on this\
+                                   vehicle.'))
+            # remove entry of participant in old vehicle.
+            participants = [prt_id.id for prt_id
+                                in vehi_data.vehi_participants_ids]
             if new_data.participation_id.id in participants:
                 participants.remove(new_data.participation_id.id)
             old_veh_id = vehi_obj.browse(new_data.old_vehicle_id.id)
             old_veh_id.write({'vehi_participants_ids': [(6, 0, participants)]})
-            #entry of participant in new vehicle.
-            participants = [prt_id.id
-                            for prt_id in vehi_new_data.vehi_participants_ids]
+            # entry of participant in new vehicle.
+            participants = [prt_id.id for prt_id
+                                in vehi_new_data.vehi_participants_ids]
             participants.append(new_data.participation_id.id)
             new_veh_id = vehi_obj.browse(new_data.new_vehicle_id.id)
             new_veh_id.write({'vehi_participants_ids': [(6, 0, participants)]})
