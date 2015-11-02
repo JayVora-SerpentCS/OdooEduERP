@@ -86,5 +86,9 @@ class school_student_assignment(models.Model):
 
     @api.multi
     def done_assignment(self):
+        ''' This method change state as done
+            for school student assignment
+        @return : True
+        '''
         self.write({'state': 'done'})
         return True
