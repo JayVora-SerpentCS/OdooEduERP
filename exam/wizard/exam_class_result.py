@@ -5,7 +5,6 @@ from openerp import models, fields, api, _
 
 
 class result_print(models.TransientModel):
-
     _name = 'result.print'
     _description = 'students result'
 
@@ -20,11 +19,11 @@ class result_print(models.TransientModel):
             domain = [('standard_id', '=', result_line.standard_id.id),
                       ('s_exam_ids', '=', result_line.exam_id.id)]
             return {
-            'name': _('Result Info'),
-            'view_type': 'form',
-            "view_mode": 'tree,form',
-            'res_model': 'exam.result',
-            'type': 'ir.actions.act_window',
-            'domain': domain,
-            }
+                    'name': _('Result Info'),
+                    'view_type': 'form',
+                    "view_mode": 'tree,form',
+                    'res_model': 'exam.result',
+                    'type': 'ir.actions.act_window',
+                    'domain': domain,
+                   }
         return True
