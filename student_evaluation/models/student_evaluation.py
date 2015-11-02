@@ -5,7 +5,7 @@ import time
 from openerp import models, fields, api
 
 
-class student_evaluation(models.Model):
+class StudentEvaluation(models.Model):
     _name = "student.evaluation"
     _rec_name = 'student_id'
 
@@ -82,7 +82,7 @@ class student_evaluation(models.Model):
         return True
 
 
-class student_evaluation_line(models.Model):
+class StudentEvaluationLine(models.Model):
     _name = 'student.evaluation.line'
 
     @api.multi
@@ -103,7 +103,7 @@ class student_evaluation_line(models.Model):
     ]
 
 
-class student_evaluation_template(models.Model):
+class StudentEvaluationTemplate(models.Model):
     _name = "student.evaluation.template"
     _rec_name = 'desc'
 
@@ -113,7 +113,7 @@ class student_evaluation_template(models.Model):
     rating_line = fields.One2many('rating.rating', 'rating_id', 'Rating')
 
 
-class rating_rating(models.Model):
+class RatingRating(models.Model):
     _name = 'rating.rating'
     _rec_name = 'point'
 

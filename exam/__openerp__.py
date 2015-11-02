@@ -7,13 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'license': '',
     'summary': 'A Module For Exams Management Taken In School',
     'complexity': 'easy',
-    'description': '''A module to manage the school examination:
-        1. Define Exam Timetable
-        2. Conduct Exams
-        3. Generate Results
-    ''',
     'depends': ['timetable'],
     'data': [
              'security/ir.model.access.csv',

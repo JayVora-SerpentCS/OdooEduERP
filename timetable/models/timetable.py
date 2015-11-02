@@ -2,14 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class board_board(models.Model):
+class BoardBoard(models.Model):
     _inherit = 'board.board'
 
 
-class time_table(models.Model):
+class TimeTable(models.Model):
     _description = 'Time Table'
     _name = 'time.table'
 
@@ -31,12 +31,12 @@ class time_table(models.Model):
                         and (rec.start_time == rec_check.start_time)
                         and (rec.end_time == rec_check.end_time)]
             if len(records) > 1:
-                raise Warning(_("You can Not set lecture at same time\
+                raise UserError(_("You can Not set lecture at same time\
                                  at same day..!!!"))
         return True
 
 
-class time_table_line(models.Model):
+class TimeTableLine(models.Model):
     _description = 'Time Table Line'
     _name = 'time.table.line'
     _rec_name = 'table_id'
@@ -47,7 +47,7 @@ class time_table_line(models.Model):
         domain = [('name', 'like', 'Recess')]
         sub_id = self.env['subject.subject'].search(domain)
         if not sub_id:
-            raise Warning(_("You must have a 'Recess' as a subject"))
+            raise UserError(_("You must have a 'Recess' as a subject"))
         recess.update({'value': {'subject_id': sub_id.id}})
         return recess
 
@@ -67,7 +67,7 @@ class time_table_line(models.Model):
                                  ('sunday', 'Sunday')], "Week day",)
 
 
-class subject_subject(models.Model):
+class SubjectSubject(models.Model):
     _inherit = "subject.subject"
 
     @api.model
@@ -76,5 +76,5 @@ class subject_subject(models.Model):
         if teacher_id:
             for teacher_data in self.env['hr.employee'].browse(teacher_id):
                 args.append(('teacher_ids', 'in', [teacher_data.id]))
-        return super(subject_subject, self).search(args, offset, limit, order,
-                                                   count=count)
+        return super(SubjectSubject, self).search(args, offset, limit, order,
+                                                  count=count)

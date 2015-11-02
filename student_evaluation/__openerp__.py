@@ -7,15 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.almisnadtechnology.com',
     'category': 'School Management',
+    'license': '',
     'complexity': 'easy',
     'summary': 'A Module For Evaluation Management In School',
-    'description': ''''A module to Student Evaluation.
-    A Module support the following functionalities:
-
-    1. In This Module we can define the terms which we want to consider\
-       In Evaluation.
-    2. student and Faculty Both can Evaluate This.
-    ''',
     'depends': ['hr', 'school'],
     'data': ['views/student_evaluation_view.xml',
              'security/ir.model.access.csv'],

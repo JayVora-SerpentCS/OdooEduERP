@@ -7,10 +7,10 @@ from openerp.osv import osv
 from openerp.report import report_sxw
 
 
-class student_fees_register(report_sxw.rml_parse):
+class StudentFeesRegister(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(student_fees_register, self).__init__(cr, uid, name, context)
+        super(StudentFeesRegister, self).__init__(cr, uid, name, context)
 
         self.localcontext.update({
             'time': time,
@@ -29,8 +29,8 @@ class student_fees_register(report_sxw.rml_parse):
         return out_date
 
 
-class report_student_fees_register(osv.AbstractModel):
+class ReportStudentFeesRegister(osv.AbstractModel):
     _name = 'report.school_fees.student_fees_register'
     _inherit = 'report.abstract_report'
     _template = 'school_fees.student_fees_register'
-    _wrapped_report_class = student_fees_register
+    _wrapped_report_class = StudentFeesRegister

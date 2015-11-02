@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class card_number(models.TransientModel):
+class CardNumber(models.TransientModel):
     _name = "card.number"
     _description = "Card Number"
 
@@ -18,7 +18,7 @@ class card_number(models.TransientModel):
             domain = [('card_id', '=', rec.card_id.id)]
             search_card_ids = lib_book_obj.search(domain)
             if not search_card_ids:
-                raise Warning(_('Invalid Card Number.'))
+                raise UserError(_('Invalid Card Number.'))
             else:
                 return {
                         'type': 'ir.actions.act_window',

@@ -6,9 +6,9 @@
     'version': '3.0',
     'author': 'Serpent Consulting Services PVT. LTD.',
     'category': 'School Management',
+    'license': '',
     'summary': 'A Module For BarCode System For School',
     'depends': ['timetable'],
-    'description': '''Print results with BarCode.''',
     'data': [
         'views/result_report.xml',
         'views/result_label.xml',

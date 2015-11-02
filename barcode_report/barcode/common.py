@@ -219,7 +219,7 @@ class I2of5(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -345,7 +345,7 @@ class MSI(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -477,7 +477,7 @@ class Codabar(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -598,7 +598,7 @@ class Code11(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():

@@ -5,20 +5,20 @@ from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 
 
-class hostel_type(models.Model):
+class HostelType(models.Model):
 
     _name = 'hostel.type'
 
-    name = fields.Char('Hostel Name', required=True)
+    name = fields.Char('HOSTEL Name', required=True)
     type = fields.Selection([('boys', 'Boys'), ('girls', 'Girls'),
-                             ('common', 'Common')], 'Hostel Type',
+                             ('common', 'Common')], 'HOSTEL Type',
                             required=True, default='common')
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('res.partner', 'Rector')
     room_ids = fields.One2many('hostel.room', 'name', 'Room')
 
 
-class hostel_room(models.Model):
+class HostelRoom(models.Model):
 
     _name = 'hostel.room'
 
@@ -28,7 +28,7 @@ class hostel_room(models.Model):
         room_availability = 0
         for data in self:
             count = 0
-            for student in self.student_ids:
+            if self.student_ids:
                 count += 1
             room_availability = data.student_per_room - count
             if room_availability < 0:
@@ -37,7 +37,7 @@ class hostel_room(models.Model):
             else:
                 self.availability = room_availability
 
-    name = fields.Many2one('hostel.type', 'Hostel')
+    name = fields.Many2one('hostel.type', 'HOSTEL')
     floor_no = fields.Integer('Floor No.', default=1)
     room_no = fields.Char('Room No.', required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
@@ -57,13 +57,13 @@ class hostel_room(models.Model):
     _sql_constraints = [('room_no_unique', 'unique(room_no)',
                          'Room number must be unique!')]
     _sql_constraints = [('floor_per_hostel', 'check(floor_no < 10)',
-                         'Error ! Floor per hostel should be less than 10.')]
+                         'Error ! Floor per HOSTEL should be less than 10.')]
     _sql_constraints = [('student_per_room_greater',
                          'check(student_per_room < 10)',
                          'Error ! Student per room should be less than 10.')]
 
 
-class hostel_student(models.Model):
+class HostelStudent(models.Model):
 
     _name = 'hostel.student'
 
@@ -97,8 +97,8 @@ class hostel_student(models.Model):
                 'report_name': 'school_hostel.hostel_fee_reciept',
                 'datas': datas}
 
-    hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
-    hostel_id = fields.Char('Hostel ID', readonly=True,
+    hostel_room_id = fields.Many2one('hostel.room', 'HOSTEL Room')
+    hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda obj:
                             obj.env['ir.sequence'].get('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
@@ -121,10 +121,10 @@ class hostel_student(models.Model):
                           before Admission Date.')]
 
 
-class bed_type(models.Model):
+class BedType(models.Model):
 
     _name = 'bed.type'
-    _description = 'Type of Bed in Hostel'
+    _description = 'Type of Bed in HOSTEL'
 
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')

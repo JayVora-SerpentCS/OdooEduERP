@@ -5,7 +5,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 
 
-class student_meeting(models.TransientModel):
+class StudentMeeting(models.TransientModel):
     _name = "student.meeting"
 
     name = fields.Char('Meeting Subject', size=128, required=True)

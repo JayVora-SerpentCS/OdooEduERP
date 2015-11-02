@@ -3,14 +3,14 @@
 
 import time
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import except_orm, Warning as UserError
 
 
-class board_board(models.Model):
+class BoardBoard(models.Model):
     _inherit = "board.board"
 
 
-class school_standard(models.Model):
+class SchoolStandard(models.Model):
     _name = 'school.standard'
     _inherit = 'school.standard'
     _rec_name = 'event_ids'
@@ -20,7 +20,7 @@ class school_standard(models.Model):
                                  readonly=True)
 
 
-class school_event_parameter(models.Model):
+class SchoolEventParameter(models.Model):
     '''for event parameter based on which score will given'''
     _name = 'school.event.parameter'
     _description = 'Event Parameter'
@@ -28,7 +28,7 @@ class school_event_parameter(models.Model):
     name = fields.Char('Parameter Name', required=True)
 
 
-class school_event_participant(models.Model):
+class SchoolEventParticipant(models.Model):
     '''for Participant which are participated in events'''
     _name = 'school.event.participant'
     _description = 'Participant Information'
@@ -46,7 +46,7 @@ class school_event_participant(models.Model):
                                Rank to the Participant", default=0)
 
 
-class school_event(models.Model):
+class SchoolEvent(models.Model):
     '''for events'''
     _name = 'school.event'
     _description = 'Event Information'
@@ -107,7 +107,7 @@ class school_event(models.Model):
 
         if self.start_date and self.end_date\
             and self.start_date > self.end_date:
-            raise Warning(_('Error! Event start-date must be lower\
+            raise UserError(_('Error! Event start-date must be lower\
                              then Event end-date.'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
@@ -118,10 +118,10 @@ class school_event(models.Model):
             and self.last_reg_date:
 
             if self.start_reg_date > self.last_reg_date:
-                raise Warning(_('Error! Event Registration start-date must be\
+                raise UserError(_('Error! Event Registration start-date must be\
                                  lower than Event Registration end-date.'))
             elif self.last_reg_date >= self.start_date:
-                raise Warning(_('Error! Event Registration last-date must be\
+                raise UserError(_('Error! Event Registration last-date must be\
                                  lower than Event start-date.'))
 
     @api.model
@@ -132,7 +132,7 @@ class school_event(models.Model):
             data = student_obj.browse(self._context.get('part_name_id'))
             args.append(('part_standard_ids', 'in',
                          [data.class_id.id]))
-        return super(school_event, self).search(args, offset, limit, order,
+        return super(SchoolEvent, self).search(args, offset, limit, order,
                                                 count=count)
 
     @api.multi
@@ -160,7 +160,7 @@ class school_event(models.Model):
         return True
 
 
-class school_event_registration(models.Model):
+class SchoolEventRegistration(models.Model):
     '''for registration by students for events'''
     _name = 'school.event.registration'
     _description = 'Event Registration'
@@ -209,7 +209,7 @@ class school_event_registration(models.Model):
                 if data.event_id.id == reg_data.name.id:
                     flag = False
 
-            if flag == False:
+            if not flag:
                 list1.remove(part)
             stu_part_id = student_obj.browse(reg_data.part_name_id.id)
             stu_part_id.write({'event_ids': [(6, 0, list1)]})
@@ -228,7 +228,7 @@ class school_event_registration(models.Model):
                     parii = par
                     flag = False
 
-            if flag == False:
+            if not flag:
                 list1.remove(parii)
             participants = int(event_data.participants) - 1
             event_reg_id = event_obj.browse(reg_data.name.id)
@@ -306,7 +306,7 @@ class school_event_registration(models.Model):
         return True
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     _name = 'student.student'
     _inherit = 'student.student'
     _description = 'Student Information'
@@ -322,5 +322,5 @@ class student_student(models.Model):
             event_data = event_obj.browse(self._context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
             args.append(('class_id', 'in', std_ids))
-        return super(student_student, self).search(args, offset, limit, order,
+        return super(StudentStudent, self).search(args, offset, limit, order,
                                                    count=count)

@@ -5,7 +5,7 @@ from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 
 
-class move_standards(models.TransientModel):
+class MoveStandards(models.TransientModel):
     _name = 'move.standards'
 
     academic_year_id = fields.Many2one('academic.year', 'Academic Year',

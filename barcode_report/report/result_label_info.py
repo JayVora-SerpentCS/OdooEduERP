@@ -5,10 +5,10 @@ from openerp.report import report_sxw
 from openerp import models
 
 
-class result_label_info(report_sxw.rml_parse):
+class ResultLabelInfo(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context=None):
-        super(result_label_info, self).__init__(cr, uid, name, context=context)
+        super(ResultLabelInfo, self).__init__(cr, uid, name, context=context)
         get_stud_info = self.get_student_info
         self.localcontext.update({
                                   'get_student_all_info': get_stud_info,
@@ -29,9 +29,9 @@ class result_label_info(report_sxw.rml_parse):
         return result
 
 
-class report_label_info(models.AbstractModel):
+class ReportLabelInfo(models.AbstractModel):
 
     _name = 'report.barcode_report.result_label_info'
     _inherit = 'report.abstract_report'
     _template = 'barcode_report.result_label_info'
-    _wrapped_report_class = result_label_info
+    _wrapped_report_class = ResultLabelInfo

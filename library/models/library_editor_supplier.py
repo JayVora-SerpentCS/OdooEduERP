@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api, _
-from openerp import tools
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class library_editor_supplier(models.Model):
+class LibraryEditorSupplier(models.Model):
     _name = "library.editor.supplier"
     _description = "Editor Relations"
     _auto = False
@@ -24,7 +23,7 @@ class library_editor_supplier(models.Model):
     @api.returns('self', lambda value: value)
     def create(self, vals):
         if not (vals['name'] and vals['supplier_id']):
-            raise Warning(_("Error ! Please provide proper Information"))
+            raise UserError(_("Error ! Please provide proper Information"))
         # search for books of these editor not already linked
         # with this supplier:
         select = """select product_tmpl_id\n"""\
@@ -35,7 +34,7 @@ class library_editor_supplier(models.Model):
                  % (vals['name'], vals['supplier_id'])
         self._cr.execute(select)
         if not self._cr.rowcount:
-            raise Warning(_("Error ! No book to apply this relation"))
+            raise UserError(_("Error ! No book to apply this relation"))
 
         sup_info = self.env['product.supplierinfo']
         last_id = 0
@@ -64,14 +63,14 @@ class library_editor_supplier(models.Model):
             original_supplier_id = rel.supplier_id.id
 
             if not original_supplier_id:
-                raise Warning(_('Warning ! Cannot set supplier in this form.'
+                raise UserError(_('Warning ! Cannot set supplier in this form.'
                                 'Please create a new relation.'))
             new_supplier_id = vals.get('supplier_id', 0)
             supplier_change = new_supplier_id != 0 and (idn < 0
                                 or (original_supplier_id != new_supplier_id))
 
             if supplier_change:
-                raise Warning(_('Warning ! Cannot set supplier in this form.'
+                raise UserError(_('Warning ! Cannot set supplier in this form.'
                                 'Please create a new relation.'))
             else:
 

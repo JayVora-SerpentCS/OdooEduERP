@@ -5,8 +5,7 @@ from openerp import models, fields, api
 from openerp import workflow
 
 
-class stock_move(models.Model):
-
+class StockMove(models.Model):
     _inherit = 'stock.move'
 
     customer_ref = fields.Char('Customer reference')
@@ -59,7 +58,7 @@ class stock_move(models.Model):
         return True
 
 
-class stock_picking(models.Model):
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
     _order = "create_date desc"
 

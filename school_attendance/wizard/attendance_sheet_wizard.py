@@ -4,7 +4,7 @@
 from openerp import models, fields, api
 
 
-class monthly_attendance_sheet(models.TransientModel):
+class MonthlyAttendanceSheet(models.TransientModel):
     '''For Monthly Attendance Sheet'''
     _name = "monthly.attendance.sheet"
     _description = "Monthly Attendance Sheet Wizard"

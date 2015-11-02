@@ -4,7 +4,7 @@
 from openerp import models, fields
 
 
-class account_invoice_line(models.Model):
+class AccountInvoiceLine(models.Model):
 
     _inherit = 'account.invoice.line'
 

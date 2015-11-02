@@ -5,10 +5,10 @@ import time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class library_price_category(models.Model):
+class LibraryPriceCategory(models.Model):
     _name = 'library.price.category'
     _description = 'Book Price Category'
 
@@ -17,7 +17,7 @@ class library_price_category(models.Model):
     product_ids = fields.One2many('product.product', 'price_cat', 'Books')
 
 
-class library_rack(models.Model):
+class LibraryRack(models.Model):
     _name = 'library.rack'
     _description = "Library Rack"
 
@@ -27,7 +27,7 @@ class library_rack(models.Model):
     active = fields.Boolean('Active', default='True')
 
 
-class library_collection(models.Model):
+class LibraryCollection(models.Model):
     _name = 'library.collection'
     _description = "Library Collection"
 
@@ -35,7 +35,7 @@ class library_collection(models.Model):
     code = fields.Char('Code')
 
 
-class library_book_returnday(models.Model):
+class LibraryBookReturnday(models.Model):
     _name = 'library.book.returnday'
     _description = "Library Collection"
     _rec_name = 'day'
@@ -47,7 +47,7 @@ class library_book_returnday(models.Model):
                             help="Fine amount after due of book return date")
 
 
-class library_author(models.Model):
+class LibraryAuthor(models.Model):
     _name = 'library.author'
     _description = "Author"
 
@@ -64,7 +64,7 @@ class library_author(models.Model):
                          'The name of the author must be unique !')]
 
 
-class library_card(models.Model):
+class LibraryCard(models.Model):
     _name = "library.card"
     _description = "Library Card information"
     _rec_name = "code"
@@ -113,7 +113,7 @@ class library_card(models.Model):
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
 
 
-class library_book_issue(models.Model):
+class LibraryBookIssue(models.Model):
     '''Book variant of product'''
     _name = "library.book.issue"
     _description = "Library information"
@@ -204,12 +204,12 @@ class library_book_issue(models.Model):
                 if self.card_id.book_limit > len(card_ids) - 1:
                     return True
                 else:
-                    raise Warning(_('Book issue limit  is over on this card'))
+                    raise UserError(_('Book issue limit  is over on this card'))
             else:
                 if self.card_id.book_limit > len(card_ids):
                     return True
                 else:
-                    raise Warning(_('Book issue limit  is over on this card'))
+                    raise UserError(_('Book issue limit  is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
@@ -391,13 +391,13 @@ class library_book_issue(models.Model):
             if record.user.title() == 'Student':
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
-                    raise Warning(_('Error !'
+                    raise UserError(_('Error !'
                                     'The Student must have a Home address.'))
                 addr = record.student_id.partner_id.contact_address
             else:
                 usr = record.teacher_id.id
                 if not record.teacher_id.address_home_id:
-                    raise Warning(_('Error !'
+                    raise UserError(_('Error !'
                                     'The Teacher must have a Home address.'))
                 addr = record.teacher_id.address_home_id\
                         and record.teacher_id.address_home_id.id
@@ -442,7 +442,7 @@ class library_book_issue(models.Model):
                }
 
 
-class library_book_request(models.Model):
+class LibraryBookRequest(models.Model):
     '''Request for Book'''
     _name = "library.book.request"
     _rec_name = 'req_id'

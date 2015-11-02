@@ -7,18 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'license': '',
     'complexity': 'easy',
     'Summary': 'A Module For School Management',
-    'description': '''A module to School Management.
-    A Module support the following functionalities:
-    1. Admission Procedure
-    2. Student Information
-    3. Parent Information
-    4. Teacher Information
-    5. School Information
-    6. Standard, Medium and Division Information
-    7. Subject Information
-    ''',
     'depends': ['hr', 'mail', 'crm', 'report', 'board'],
     'data': [
              'wizard/wiz_send_email_view.xml',

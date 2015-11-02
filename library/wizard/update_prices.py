@@ -4,7 +4,7 @@
 from openerp import models, api
 
 
-class update_prices(models.TransientModel):
+class UpdatePrices(models.TransientModel):
     _name = "update.prices"
 
     @api.multi

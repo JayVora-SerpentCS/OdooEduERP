@@ -5,7 +5,7 @@ import time
 from openerp import models, fields, api
 
 
-class student_attendance_by_month(models.TransientModel):
+class StudentAttendanceByMonth(models.TransientModel):
 
     _name = 'student.attendance.by.month'
     _description = 'Student Monthly Attendance Report'

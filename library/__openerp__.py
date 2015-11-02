@@ -7,12 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
+    'license': '',
     'summary': 'A Module For Library Management For School',
     'complexity': 'easy',
-    'description': '''Module to manage library.
-    Books Information,
-    Publisher and Author Information,
-    Book Rack Tracking etc...''',
     'depends': ['report_intrastat', 'mrp', 'delivery', 'school'],
     'demo': ['demo/library_demo.xml'],
     'data': [

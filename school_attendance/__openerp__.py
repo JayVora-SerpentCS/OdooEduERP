@@ -7,12 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
+    'license': '',
     'summary': 'A Module For Attendance Management In School',
     'complexity': 'easy',
-    'description': '''A module to Student Attendance System.
-    A Module support the following functionalities:
-        1. Class-wise Daily Attendance Sheet.
-        2. Class-wise Monthly Attendance Sheet.''',
     'depends': ['school', 'hr'],
     'data': [
              'security/ir.model.access.csv',

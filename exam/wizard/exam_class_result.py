@@ -4,7 +4,7 @@
 from openerp import models, fields, api, _
 
 
-class result_print(models.TransientModel):
+class ResultPrint(models.TransientModel):
     _name = 'result.print'
     _description = 'students result'
 

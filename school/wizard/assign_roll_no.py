@@ -4,7 +4,7 @@
 from openerp import models, fields, api
 
 
-class assign_roll_no(models.TransientModel):
+class AssignRollNo(models.TransientModel):
     '''designed for assigning roll number to a student'''
 
     _name = 'assign.roll.no'

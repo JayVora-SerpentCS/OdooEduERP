@@ -5,10 +5,10 @@ import time
 from calendar import monthrange
 from datetime import datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class attendance_sheet(models.Model):
+class AttendanceSheet(models.Model):
     ''' Defining Monthly Attendance sheet Information '''
     _description = 'Attendance Sheet'
     _name = 'attendance.sheet'
@@ -39,11 +39,11 @@ class attendance_sheet(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', context=None,
                         toolbar=False, submenu=False):
-        res = super(attendance_sheet, self).fields_view_get(view_id=view_id,
-                                                            view_type=view_type,
-                                                            context=context,
-                                                            toolbar=toolbar,
-                                                            submenu=submenu)
+        res = super(AttendanceSheet, self).fields_view_get(view_id=view_id,
+                                                           view_type=view_type,
+                                                           context=context,
+                                                           toolbar=toolbar,
+                                                           submenu=submenu)
         if context is None:
             context = {}
         if context.get('month_id', False):
@@ -84,7 +84,7 @@ class attendance_sheet(models.Model):
         return res
 
 
-class attendance_sheet_line(models.Model):
+class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
     @api.multi
@@ -206,7 +206,7 @@ class attendance_sheet_line(models.Model):
                               string='Attendance (%)', store=False)
 
 
-class daily_attendance(models.Model):
+class DailyAttendance(models.Model):
     ''' Defining Daily Attendance Information '''
     _description = 'Daily Attendance'
     _name = 'daily.attendance'
@@ -271,7 +271,7 @@ class daily_attendance(models.Model):
         if vals:
             if 'student_ids' in vals.keys():
                 child = vals.pop('student_ids')
-        ret_val = super(daily_attendance, self).create(vals)
+        ret_val = super(DailyAttendance, self).create(vals)
         if child != '':
             ret_val.write({'student_ids': child})
         return ret_val
@@ -300,7 +300,7 @@ class daily_attendance(models.Model):
 
         for daily_attendance_data in self:
             if not daily_attendance_data.date:
-                raise Warning(_('Please enter todays date.'))
+                raise UserError(_('Please enter todays date.'))
             date = datetime.strptime(daily_attendance_data.date, "%Y-%m-%d")
             domain_year = [('code', '=', date.year)]
             domain_month = [('code', '=', date.month)]
@@ -821,7 +821,7 @@ class daily_attendance(models.Model):
         return True
 
 
-class daily_attendance_line(models.Model):
+class DailyAttendanceLine(models.Model):
     ''' Defining Daily Attendance Sheet Line Information '''
     _description = 'Daily Attendance Line'
     _name = 'daily.attendance.line'

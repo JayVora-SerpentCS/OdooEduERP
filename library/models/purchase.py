@@ -5,7 +5,7 @@ from openerp import models, fields, api
 from openerp import workflow
 
 
-class purchase_order_line(models.Model):
+class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     origin = fields.Char('Origin')
@@ -15,7 +15,7 @@ class purchase_order_line(models.Model):
     origin_ref = fields.Char('Origin')
 
 
-class purchase_order(models.Model):
+class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
     _order = "create_date desc"
 
@@ -88,11 +88,11 @@ class purchase_order(models.Model):
                                       }
                 production_lot_id = production_obj.create(production_lot_dict)
                 line.write({'production_lot_id': production_lot_id.id})
-        super(purchase_order, self).wkf_confirm_order()
+        super(PurchaseOrder, self).wkf_confirm_order()
         return True
 
     @api.model
     def default_get(self, fields_list):
-        res = super(purchase_order, self).default_get(fields_list)
+        res = super(PurchaseOrder, self).default_get(fields_list)
         res.update({'invoice_method': 'picking'})
         return res

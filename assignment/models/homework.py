@@ -4,7 +4,7 @@
 from openerp import models, fields, api
 
 
-class school_teacher_assignment(models.Model):
+class SchoolTeacherAssignment(models.Model):
     _name = 'school.teacher.assignment'
     _description = 'Teacher Assignment Information'
 
@@ -24,7 +24,7 @@ class school_teacher_assignment(models.Model):
 
     @api.model
     def default_get(self, fields_list):
-        res = super(school_teacher_assignment, self).default_get(fields_list)
+        res = super(SchoolTeacherAssignment, self).default_get(fields_list)
         res.update({'state': 'draft'})
         return res
 
@@ -69,7 +69,7 @@ class school_teacher_assignment(models.Model):
             return True
 
 
-class school_student_assignment(models.Model):
+class SchoolStudentAssignment(models.Model):
     _name = 'school.student.assignment'
     _description = 'Student Assignment Information'
 

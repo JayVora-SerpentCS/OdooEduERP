@@ -4,7 +4,7 @@
 from openerp import models, fields, api
 
 
-class subject_result_wiz(models.TransientModel):
+class SubjectResultWiz(models.TransientModel):
     _name = 'subject.result.wiz'
     _description = 'Subject Wise Result'
 
