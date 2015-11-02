@@ -60,7 +60,6 @@ class stock_move(models.Model):
 
 
 class stock_picking(models.Model):
-
     _inherit = 'stock.picking'
     _order = "create_date desc"
 

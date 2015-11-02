@@ -6,7 +6,6 @@ from openerp import models, fields, api
 
 
 class product_state(models.Model):
-
     _name = "product.state"
     _description = "States of Books"
 
@@ -19,8 +18,6 @@ class many2manysym(fields.Many2many):
 
     @api.multi
     def get(self, offset=0):
-#         if context is None:
-#             context
         res = {}
         if not self.ids:
             return res
@@ -41,7 +38,6 @@ class many2manysym(fields.Many2many):
 
 
 class product_template(models.Model):
-
     _inherit = "product.template"
 
     name = fields.Char('Name', required=True, select=True)
@@ -53,8 +49,7 @@ class product_template(models.Model):
 
 
 class product_lang(models.Model):
-
-    """Book language"""
+    '''Book language'''
     _name = "product.lang"
 
     code = fields.Char('Code', required=True, select=True)
@@ -63,12 +58,11 @@ class product_lang(models.Model):
     _sql_constraints = [
                         ('name_uniq', 'unique (name)',
                          'The name of the product must be unique !')
-        ]
+                       ]
 
 
 class product_product(models.Model):
     """Book variant of product"""
-
     _inherit = "product.product"
 
     @api.multi
@@ -128,8 +122,8 @@ class product_product(models.Model):
         @param context : context arguments, like language, time zone
         @return : Dictionary
          '''
-
         res = {}
+
         for product in self:
             val = 0.0
             for c in self.env['account.tax'].compute(product.taxes_id,
@@ -170,11 +164,10 @@ class product_product(models.Model):
         @param context : context arguments, like language, time zone
         @return : Dictionary
          '''
-
         res = {}
+        parent_id = self._context.get('parent_id', None)
         for p in self:
-            res[p.id] = self._get_partner_code_name(p,
-                            self._context.get('parent_id', None))['code']
+            res[p.id] = self._get_partner_code_name(p, parent_id)['code']
         return res
 
     @api.model
@@ -217,19 +210,23 @@ class product_product(models.Model):
         if 'editor' in vals:
             editor_id = vals['editor']
             supplier_model = self.env['library.editor.supplier']
-            supplier_ids = [idn.id for idn in supplier_model.search([
-                            ('name', '=', editor_id)]) if idn.id > 0]
+            domain = [('name', '=', editor_id)]
+            supplier_ids = [idn.id for idn
+                            in supplier_model.search(domain)
+                            if idn.id > 0]
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
                 supplier = [
-                    0, 0, {'pricelist_ids': [],
-                           'name': obj.supplier_id.id,
-                           'sequence': obj.sequence,
-                           'qty': 0,
-                           'delay': 1,
-                           'product_code': False,
-                           'product_name': False}
-                ]
+                            0, 0,
+                            {'pricelist_ids': [],
+                             'name': obj.supplier_id.id,
+                             'sequence': obj.sequence,
+                             'qty': 0,
+                             'delay': 1,
+                             'product_code': False,
+                             'product_name': False
+                            }
+                           ]
                 if 'seller_ids' not in vals:
                     vals['seller_ids'] = [supplier]
                 else:
@@ -275,7 +272,8 @@ class product_product(models.Model):
                             help="Show collection in which book is resides")
     pocket = fields.Char('Pocket')
     num_pocket = fields.Char('Collection No.',
-                    help="Shows collection number in which book is resides")
+                             help='Shows collection number in which'
+                                  'book resides')
     num_edition = fields.Integer('No. edition', help="Edition number of book")
     format = fields.Char('Format',
                          help="The general physical appearance of a book")
@@ -286,17 +284,15 @@ class product_product(models.Model):
                                     'Book Attachments')
 
     _sql_constraints = [
-        ('unique_ean13', 'unique(ean13)',
-         'ean13 field must be unique across all the products'),
-        ('code_uniq', 'unique (code)',
-         'Code of the product must be unique !')
-    ]
+                        ('unique_ean13', 'unique(ean13)',
+                         'ean13 field must be unique across all the products'),
+                        ('code_uniq', 'unique (code)',
+                         'Code of the product must be unique !')
+                       ]
 
 
 class book_attachment(models.Model):
-
     _name = "book.attachment"
-
     _description = "Stores attachments of the book"
 
     name = fields.Char("Description", required=True)
@@ -307,7 +303,6 @@ class book_attachment(models.Model):
 
 
 class library_author(models.Model):
-
     _inherit = 'library.author'
 
     book_ids = fields.Many2many('product.product', 'author_book_rel',

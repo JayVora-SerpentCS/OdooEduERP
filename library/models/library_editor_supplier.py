@@ -7,7 +7,6 @@ from openerp.exceptions import Warning
 
 
 class library_editor_supplier(models.Model):
-
     _name = "library.editor.supplier"
     _description = "Editor Relations"
     _auto = False
@@ -42,13 +41,12 @@ class library_editor_supplier(models.Model):
         last_id = 0
         for book_id in self._cr.fetchall():
             params = {
-                'name': vals['supplier_id'],
-#                 'product_id': book_id[0],
-                'product_tmpl_id': book_id[0],
-                'sequence': vals['sequence'],
-                'delay': vals['delay'],
-                'min_qty': vals['min_qty'],
-            }
+                      'name': vals['supplier_id'],
+                      'product_tmpl_id': book_id[0],
+                      'sequence': vals['sequence'],
+                      'delay': vals['delay'],
+                      'min_qty': vals['min_qty'],
+                     }
             tmp_id = sup_info.create(params)
             last_id = last_id < tmp_id.id and last_id or tmp_id.id
         return last_id
@@ -60,25 +58,29 @@ class library_editor_supplier(models.Model):
                            set sequence = %s where name = %s"
         update_delay = "update product_supplierinfo\
                         set delay = %s where name = %s"
+
         for rel, idn in zip(self, self.ids):
             # cannot change supplier here. Must create a new relation:
             original_supplier_id = rel.supplier_id.id
+
             if not original_supplier_id:
-                raise Warning(_("Warning ! Cannot set supplier in this form.\
-                                 Please create a new relation."))
+                raise Warning(_('Warning ! Cannot set supplier in this form.'
+                                'Please create a new relation.'))
             new_supplier_id = vals.get('supplier_id', 0)
             supplier_change = new_supplier_id != 0 and (idn < 0
                                 or (original_supplier_id != new_supplier_id))
+
             if supplier_change:
-                raise Warning(_("Warning ! Cannot set supplier in this form.\
-                                 Please create a new relation."))
+                raise Warning(_('Warning ! Cannot set supplier in this form.'
+                                'Please create a new relation.'))
             else:
+
                 if 'sequence' in vals:
                     params = [vals.get('sequence', 0), original_supplier_id]
                     self._cr.execute(update_sequence, params)
+
                 if 'delay' in vals:
                     params = [vals.get('delay', 0), original_supplier_id]
                     self._cr.execute(update_delay, params)
-
                 res[str(idn)] = {}
         return res
