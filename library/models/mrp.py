@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
-class ProcurementOrder(osv.Model):
+class ProcurementOrder(models.Model):
     _inherit = "procurement.order"
     _columns = {
                 'production_lot_id': fields.many2one('stock.production.lot',
@@ -14,6 +14,7 @@ class ProcurementOrder(osv.Model):
                 'customer_ref': fields.char('Customer reference'),
                }
 
+    @api.v7
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @param self : Object Pointer
