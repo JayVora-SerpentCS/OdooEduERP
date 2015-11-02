@@ -17,16 +17,14 @@
     ''',
     'depends': ['school'],
     'data': [
-       'views/event_view.xml',
-       'views/event_workflow.xml',
-       'security/event_security.xml',
-       'security/ir.model.access.csv',
-       'views/participants.xml',
-       'views/report_view.xml',
-    ],
+             'views/event_view.xml',
+             'views/event_workflow.xml',
+             'security/event_security.xml',
+             'security/ir.model.access.csv',
+             'views/participants.xml',
+             'views/report_view.xml',
+            ],
     'demo': ['demo/event_demo.xml'],
-    'test': [
-    ],
     'installable': True,
     'application': True,
 }
