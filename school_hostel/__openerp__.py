@@ -7,12 +7,9 @@
     'author': 'Serpent Consulting Services PVT. LTD.',
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
+    'license': '',
     'complexity': 'easy',
     'summary': 'Module For HOSTEL Management In School',
-    'description': '''Module to Manage HOSTEL.
-        Rooms Information,
-        Allocation of Rooms Details
-        Discharge of Room Details etc.''',
     'depends': ['school'],
     'demo': ['demo/school_hostel_demo.xml'],
     'data': [
