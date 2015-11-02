@@ -24,7 +24,7 @@ def lengthmonth(year, month):
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
 
-class report_custom(report_rml):
+class ReportCustom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_student = pooler.get_pool(cr.dbname).get('student.student')
@@ -259,5 +259,5 @@ class report_custom(report_rml):
               ''' % (header_xml, '\n'.join(user_xml), date_xml)
         return xml
 
-report_custom('report.attendance.by.month.student', 'student.student', '',
+ReportCustom('report.attendance.by.month.student', 'student.student', '',
               'addons/school_attendance/report/attendance_by_month.xsl')
