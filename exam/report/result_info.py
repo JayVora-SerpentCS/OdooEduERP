@@ -6,10 +6,10 @@ from openerp.report import report_sxw
 from openerp.osv import osv
 
 
-class result(report_sxw.rml_parse):
+class Result(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context=None):
-        super(result, self).__init__(cr, uid, name, context=context)
+        super(Result, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
                                   'time': time,
                                   'get_lines': self.get_lines,
@@ -61,8 +61,8 @@ class result(report_sxw.rml_parse):
         return list_exam
 
 
-class report_result_info(osv.AbstractModel):
+class ReportResultInfo(osv.AbstractModel):
     _name = 'report.exam.result_information_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.result_information_report'
-    _wrapped_report_class = result
+    _wrapped_report_class = Result
