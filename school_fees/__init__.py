@@ -5,5 +5,5 @@
 # A Module to School Fees Management System
 # ----------------------------------------------------------
 
-import report
-import models
+import school_fees.report
+import school_fees.models

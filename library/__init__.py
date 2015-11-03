@@ -5,6 +5,6 @@
 # A Module to School Library Management System
 # ----------------------------------------------------------
 
-import models
-import report
-import wizard
+import library.models
+import library.report
+import library.wizard

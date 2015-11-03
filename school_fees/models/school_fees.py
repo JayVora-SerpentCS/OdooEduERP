@@ -236,7 +236,7 @@ class StudentPayslip(models.Model):
         self.division_id = self.student_id.division_id
         self.medium_id = self.student_id.medium_id
 
-    @api.model
+    @api.multi
     def copy(self, default=None):
         if default is None:
             default = {}

@@ -5,5 +5,5 @@
 # A Module to School Transport Management
 # ----------------------------------------------------------
 
-import models
-import wizard
+import school_transport.models
+import school_transport.wizard

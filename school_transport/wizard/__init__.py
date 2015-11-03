@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import transfer_vehicle
+import school_transport.wizard.transfer_vehicle

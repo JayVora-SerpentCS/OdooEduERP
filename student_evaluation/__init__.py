@@ -5,4 +5,4 @@
 # A Module to School Evaluation Management System
 # ----------------------------------------------------------
 
-import models
+import student_evaluation.models

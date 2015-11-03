@@ -170,7 +170,7 @@ class ProductProduct(models.Model):
             res[p.id] = self._get_partner_code_name(p, parent_id)['code']
         return res
 
-    @api.model
+    @api.multi
     def copy(self, default=None):
         ''' This method Duplicate record
             with given id updating it with default values
