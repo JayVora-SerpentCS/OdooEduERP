@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import assign_roll_no
-from . import move_standards
-from . import wiz_send_email
-from . import wiz_meeting
+import assign_roll_no
+import move_standards
+import wiz_send_email
+import wiz_meeting

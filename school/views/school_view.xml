@@ -1308,7 +1308,7 @@
 
         <!-- Tree View Of Student Document Type -->
 
-        <record id="view_standard_division_tree" model="ir.ui.view">
+        <record id="view_student_doctype_tree" model="ir.ui.view">
             <field name="name">document.type.tree</field>
             <field name="model">document.type</field>
             <field name="arch" type="xml">
