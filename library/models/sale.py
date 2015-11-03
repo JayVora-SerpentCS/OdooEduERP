@@ -41,7 +41,7 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self).button_confirm()
         return True
 
-    @api.model
+    @api.multi
     def copy(self, default=None):
         ''' This method Duplicate record with given id
             updating it with default values
