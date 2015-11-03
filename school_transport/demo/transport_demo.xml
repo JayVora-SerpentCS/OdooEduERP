@@ -84,6 +84,16 @@
             <field name="end_date">2012-07-02 13:42:43</field>
             <field name="contact_per_id" ref="school.demo_student_student_1"/>
             <field name="state">open</field>
+            <field name="trans_vehicle_ids" 
+                eval="[(6, 0,[ref('transport_vehicle_1'),
+                ref('transport_vehicle_2')])]" />
+            <field name="trans_participants_ids" 
+                eval="[(6, 0,[ref('transport_participant_1'),
+                ref('transport_participant_2')])]" />
+            <field name="trans_point_ids" 
+                eval="[(6, 0,[ref('transport_point_1'),
+                ref('transport_point_2'),
+                ref('transport_point_3')])]" />
         </record>
 
         <record id="student_transport_2" model="student.transport">
@@ -92,6 +102,16 @@
             <field name="end_date">2012-07-02 13:42:43</field>
             <field name="contact_per_id" ref="school.demo_student_student_2"/>
             <field name="state">open</field>
+            <field name="trans_vehicle_ids" 
+                eval="[(6, 0,[ref('transport_vehicle_3'),
+                ref('transport_vehicle_4')])]" />
+            <field name="trans_participants_ids" 
+                eval="[(6, 0,[ref('transport_participant_3'),
+                ref('transport_participant_4')])]" />
+            <field name="trans_point_ids" 
+                eval="[(6, 0,[ref('transport_point_4'),
+                ref('transport_point_5'),
+                ref('transport_point_6')])]" />
         </record>
 
         <record id="student_transport_3" model="student.transport">
@@ -124,7 +144,6 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_1"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <!-- <field name="vehicle_id" ref="transport_vehicle_1"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_1"/>
             <field name="for_month">5</field>
@@ -134,7 +153,6 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_2"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <!-- <field name="vehicle_id" ref="transport_vehicle_2"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_2"/>
             <field name="for_month">4</field>
@@ -144,7 +162,6 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_3"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <!-- <field name="vehicle_id" ref="transport_vehicle_3"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_3"/>
             <field name="for_month">3</field>
@@ -154,7 +171,6 @@
             <field name="name" ref="student_transport_2"/>
             <field name="part_name" ref="school.demo_student_student_4"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <!-- <field name="vehicle_id" ref="transport_vehicle_4"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_4"/>
             <field name="for_month">2</field> 
@@ -178,41 +194,12 @@
             <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_4')])]" />
         </record>
 
-       <!--student.transport-->
-
-       <record id="student_transport_1" model="student.transport">
-            <field name="trans_vehicle_ids" 
-                eval="[(6, 0,[ref('transport_vehicle_1'),
-                ref('transport_vehicle_2')])]" />
-            <field name="trans_participants_ids" 
-                eval="[(6, 0,[ref('transport_participant_1'),
-                ref('transport_participant_2')])]" />
-            <field name="trans_point_ids" 
-                eval="[(6, 0,[ref('transport_point_1'),
-                ref('transport_point_2'),
-                ref('transport_point_3')])]" />
-       </record> 
-
-       <record id="student_transport_2" model="student.transport">
-            <field name="trans_vehicle_ids" 
-                eval="[(6, 0,[ref('transport_vehicle_3'),
-                ref('transport_vehicle_4')])]" />
-            <field name="trans_participants_ids" 
-                eval="[(6, 0,[ref('transport_participant_3'),
-                ref('transport_participant_4')])]" />
-            <field name="trans_point_ids" 
-                eval="[(6, 0,[ref('transport_point_4'),
-                ref('transport_point_5'),
-                ref('transport_point_6')])]" />
-       </record>
-
         <!--transport.participants-->
 
         <record id="transport_participant_1" model="transport.participant">
             <field name="name" ref="school.demo_student_student_1"/>
             <field name="stu_pid_id">2011/07/001</field>
             <field name="transport_id" ref="student_transport_1"/>
-<!--             <field name="vehicle_id" ref="transport_vehicle_1"/> -->
             <field name="tr_reg_date">2011-07-05 13:42:43</field>
             <field name="tr_end_date">2011-09-05 13:42:43</field>
             <field name="point_id" ref="transport_point_1"/>
@@ -224,7 +211,6 @@
             <field name="name" ref="school.demo_student_student_2"/>
             <field name="stu_pid_id">2011/07/002</field>
             <field name="transport_id" ref="student_transport_2"/>
-<!--             <field name="vehicle_id" ref="transport_vehicle_2"/> -->
             <field name="point_id" ref="transport_point_2"/>
             <field name="tr_reg_date">2011-07-05 13:42:43</field>
             <field name="tr_end_date">2011-09-05 13:42:43</field>
@@ -237,7 +223,6 @@
             <field name="stu_pid_id">2011/07/003</field>
             <field name="transport_id" ref="student_transport_3"/>
             <field name="point_id" ref="transport_point_4"/>
-<!--             <field name="vehicle_id" ref="transport_vehicle_3"/> -->
             <field name="tr_reg_date">2011-07-05 13:42:43</field>
             <field name="tr_end_date">2011-10-05 13:42:43</field>
             <field name="months">3</field>
@@ -249,7 +234,6 @@
             <field name="stu_pid_id">2011/07/004</field>
             <field name="transport_id" ref="student_transport_4"/>
             <field name="point_id" ref="transport_point_5"/>
-<!--             <field name="vehicle_id" ref="transport_vehicle_4"/> -->
             <field name="tr_reg_date">2011-07-05 13:42:43</field>
             <field name="tr_end_date">2011-10-05 13:42:43</field>
             <field name="months">3</field>
