@@ -11,12 +11,6 @@
             <field name="book_limit">02</field>
         </record>
 
-        <record id="demo_library_card_1" model="library.card">
-            <field name="code">A1</field>
-            <field name="user">student</field>
-            <field name="book_limit">02</field>
-        </record>
-
         <record id="demo_library_card_2" model="library.card">
             <field name="code">F1</field>
             <field name="user">teacher</field>

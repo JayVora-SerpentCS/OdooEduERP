@@ -6,11 +6,12 @@ import qrcode
 import base64
 import tempfile
 from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp import models, api
 
 
 class QrCodeLabel(report_sxw.rml_parse):
 
+    @api.v7
     def __init__(self, cr, uid, name, context):
         super(QrCodeLabel, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -18,6 +19,7 @@ class QrCodeLabel(report_sxw.rml_parse):
             'get_qr_code': self.get_qr_code,
         })
 
+    @api.v7
     def get_qr_code(self, number):
         qr_img = qrcode.make(number)
         filename = str(tempfile.gettempdir()) + '/Book_QRCode.png'
@@ -25,7 +27,7 @@ class QrCodeLabel(report_sxw.rml_parse):
         return base64.encodestring(file(filename, 'rb').read())
 
 
-class ReportQrcodeLable(osv.AbstractModel):
+class ReportQrcodeLable(models.AbstractModel):
 
     _name = 'report.library.qrcode_label'
     _inherit = 'report.abstract_report'

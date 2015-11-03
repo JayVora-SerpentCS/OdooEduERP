@@ -7,12 +7,11 @@ from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class ProcurementOrder(models.Model):
-    _inherit = "procurement.order"
-    _columns = {
-                'production_lot_id': fields.many2one('stock.production.lot',
-                                                     'Production Lot'),
-                'customer_ref': fields.char('Customer reference'),
-               }
+    _inherit = 'procurement.order'
+
+    production_lot_id = fields.Many2one('stock.production.lot',
+                                        'Production Lot')
+    customer_ref = fields.Char('Customer reference')
 
     @api.v7
     def make_po(self, cr, uid, ids, context=None):
