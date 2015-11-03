@@ -35,7 +35,7 @@
             <field name="action">issue_book()</field>
         </record>
 
-        <record id="act_reissue" model="workflow.activity">
+        <record id="act_reissue_2" model="workflow.activity">
             <field name="wkf_id" ref="wkf_library_2"/>
             <field name="name">Reissue</field>
             <field name="kind">function</field>
@@ -92,18 +92,18 @@
 
         <record id="trans_reissue_2" model="workflow.transition">
             <field name="act_from" ref="act_issue_2"/>
-            <field name="act_to" ref="act_reissue"/>
+            <field name="act_to" ref="act_reissue_2"/>
             <field name="signal">reissue_book</field>
         </record>
 
         <record id="trans_reissue2_2" model="workflow.transition">
-            <field name="act_from" ref="act_reissue"/>
+            <field name="act_from" ref="act_reissue_2"/>
             <field name="act_to" ref="act_return_2"/>
             <field name="signal">return_book</field>
         </record>
 
         <record id="trans_reissue3_2" model="workflow.transition">
-            <field name="act_from" ref="act_reissue"/>
+            <field name="act_from" ref="act_reissue_2"/>
             <field name="act_to" ref="act_lost_2"/>
             <field name="signal">lost_book</field>
         </record>
