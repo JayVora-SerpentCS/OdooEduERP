@@ -33,13 +33,9 @@ class StudentAttendanceByMonth(models.TransientModel):
         '''
         data = self.read([])[0]
         data.update({'stud_ids': self._context.get('active_ids', [])})
-        datas = {
-                 'ids': [],
+        datas = {'ids': [],
                  'model': 'student.student',
-                 'form': data,
-                }
-        return {
-                'type': 'ir.actions.report.xml',
+                 'form': data}
+        return {'type': 'ir.actions.report.xml',
                 'report_name': 'attendance.by.month.student',
-                'datas': datas,
-               }
+                'datas': datas}
