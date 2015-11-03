@@ -193,8 +193,7 @@ class I2of5(Barcode):
     http://www.aimglobal.org/aimstore/
     """
 
-    patterns = {
-                'start': 'bsbs',
+    patterns = {'start': 'bsbs',
                 'stop': 'Bsb',
                 'B0': 'bbBBb', 'S0': 'ssSSs',
                 'B1': 'BbbbB', 'S1': 'SsssS',
@@ -205,8 +204,7 @@ class I2of5(Barcode):
                 'B6': 'bBBbb', 'S6': 'sSSss',
                 'B7': 'bbbBB', 'S7': 'sssSS',
                 'B8': 'BbbBb', 'S8': 'SssSs',
-                'B9': 'bBbBb', 'S9': 'sSsSs'
-               }
+                'B9': 'bBbBb', 'S9': 'sSsSs'}
 
     def __init__(self, value='', **args):
         self.height = None
@@ -455,14 +453,12 @@ class Codabar(Barcode):
                 '9': 'BsbSbsb', '-': 'bsbSBsb', '$': 'bsBSbsb',
                 ':': 'BsbsBsB', '/': 'BsBsbsB', '.': 'BsBsBsb',
                 '+': 'bsBsBsB', 'A': 'bsBSbSb', 'B': 'bSbSbsB',
-                'C': 'bsbSbSB', 'D': 'bsbSBSb'
-               }
+                'C': 'bsbSbSB', 'D': 'bsbSBSb'}
 
     values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
               '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
               '-': 10, '$': 11, ':': 12, '/': 13, '.': 14,
-              '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19
-             }
+              '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19}
 
     chars = string.digits + "-$:/.+"
 
@@ -580,12 +576,10 @@ class Code11(Barcode):
     patterns = {'0': 'bsbsB', '1': 'BsbsB', '2': 'bSbsB',
                 '3': 'BSbsb', '4': 'bsBsB', '5': 'BsBsb',
                 '6': 'bSBsb', '7': 'bsbSB', '8': 'BsbSb',
-                '9': 'Bsbsb', '-': 'bsBsb', 'S': 'bsBSb'  # Start/Stop
-               }
+                '9': 'Bsbsb', '-': 'bsBsb', 'S': 'bsBSb'}
 
     values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '-': 10,
-             }
+              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '-': 10}
 
     def __init__(self, value='', **args):
         self.height = None

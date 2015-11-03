@@ -21,8 +21,7 @@ _patterns = {'0': ('AcAaAb', 0), '1': ('AaAbAc', 1), '2': ('AaAcAb', 2),
              '$': ('CbAaAa', 39), '/': ('AaBaCa', 40), '+': ('AaCaBa', 41),
              '%': ('BaAaCa', 42), '#': ('AbAbBa', 43), '!': ('CaBaAa', 44),
              '=': ('CaAaBa', 45), '&': ('AbBbAa', 46),
-             'start': ('AaAaDa', -1), 'stop': ('AaAaDaA', -2)
-            }
+             'start': ('AaAaDa', -1), 'stop': ('AaAaDaA', -2)}
 
 _charsbyval = {}
 for k, v in _patterns.items():
@@ -50,8 +49,7 @@ _extended = {'\x00': '!U', '\x01': '#A', '\x02': '#B', '\x03': '#C',
              's': '&S', 't': '&T', 'u': '&U', 'v': '&V',
              'w': '&W', 'x': '&X', 'y': '&Y', 'z': '&Z',
              '{': '!P', '|': '!Q', '}': '!R', '~': '!S',
-             '\x7f': '!T'
-            }
+             '\x7f': '!T'}
 
 
 def _encode93(str):

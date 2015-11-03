@@ -5,8 +5,7 @@ from reportlab.lib.units import inch
 from barcode_report.barcode.common import Barcode
 import string
 
-_patterns = {
-             '0': ("bsbSBsBsb", 0), '1': ("BsbSbsbsB", 1),
+_patterns = {'0': ("bsbSBsBsb", 0), '1': ("BsbSbsbsB", 1),
              '2': ("bsBSbsbsB", 2), '3': ("BsBSbsbsb", 3),
              '4': ("bsbSBsbsB", 4), '5': ("BsbSBsbsb", 5),
              '6': ("bsBSBsbsb", 6), '7': ("bsbSbsBsB", 7),
@@ -27,15 +26,12 @@ _patterns = {
              '-': ("bSbsbsBsB", 36), '.': ("BSbsbsBsb", 37),
              ' ': ("bSBsbsBsb", 38), '*': ("bSbsBsBsb", 39),
              '$': ("bSbSbSbsb", 40), '/': ("bSbSbsbSb", 41),
-             '+': ("bSbsbSbSb", 42), '%': ("bsbSbSbSb", 43)
-            }
+             '+': ("bSbsbSbSb", 42), '%': ("bsbSbSbSb", 43)}
 
-_valchars = [
-             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+_valchars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
              'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
              'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-             'X', 'Y', 'Z', '-', '.', ' ', '*', '$', '/', '+', '%'
-            ]
+             'X', 'Y', 'Z', '-', '.', ' ', '*', '$', '/', '+', '%']
 
 _extended = {'\0': "%U", '\01': "$A", '\02': "$B", '\03': "$C",
              '\04': "$D", '\05': "$E", '\06': "$F", '\07': "$G",
@@ -59,13 +55,12 @@ _extended = {'\0': "%U", '\01': "$A", '\02': "$B", '\03': "$C",
              's': "+S", 't': "+T", 'u': "+U", 'v': "+V",
              'w': "+W", 'x': "+X", 'y': "+Y", 'z': "+Z",
              '{': "%P", '|': "%Q", '}': "%R", '~': "%S",
-             '\177': "%T"
-            }
+             '\177': "%T"}
 
 _stdchrs = string.digits + string.uppercase + "-. *$/+%"
-_extchrs = _stdchrs + string.lowercase + \
-    "\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017" + \
-    "\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037" + \
+_extchrs = _stdchrs + string.lowercase +\
+    "\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017" +\
+    "\020\021\022\023\024\025\026\027\030\031\032\033\034\035\036\037" +\
     "!'#&\"(),:;<=>?@[\\]^_`{|}~\177"
 
 

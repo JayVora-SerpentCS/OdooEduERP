@@ -311,8 +311,7 @@ class DailyAttendance(models.Model):
             domain = [('standard_id', '=',
                        daily_attendance_data.standard_id.id),
                       ('month_id', '=', month_search_ids.id),
-                      ('year_id', '=', year_search_ids.id)
-                     ]
+                      ('year_id', '=', year_search_ids.id)]
         sheet_ids = attendance_sheet_obj.search(domain)
         if sheet_ids:
             for data in sheet_ids:
@@ -407,7 +406,7 @@ class DailyAttendance(models.Model):
                           ('year_id', 'in', year_ids.ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
-                                        or False
+                                      or False
                 if not attendance_sheet_id:
                     sheet = {'name': 'Month ' + month_data.name
                                      + "-Year " + str(year),
@@ -415,15 +414,12 @@ class DailyAttendance(models.Model):
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
                              'year_id': year_ids and year_ids.id
-                                            or False
-                            }
+                                            or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
-                        line_dict = {
-                                     'roll_no': student_id.roll_no,
+                        line_dict = {'roll_no': student_id.roll_no,
                                      'standard_id': attendance_sheet_id.id,
-                                     'name': student_id.stud_id.student_name
-                                    }
+                                     'name': student_id.stud_id.student_name}
                         sheet_line_obj.create(line_dict)
                         for student_id in line.student_ids:
                             sheet_line_obj.read([student_id.roll_no])
@@ -622,10 +618,8 @@ class DailyAttendance(models.Model):
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
                         sheet_line_obj.read([student_id.roll_no])
-                        domain = [
-                                  ('roll_no', '=', student_id.roll_no),
-                                  ('standard_id', '=', attendance_sheet_id.id)
-                                 ]
+                        domain = [('roll_no', '=', student_id.roll_no),
+                                  ('standard_id', '=', attendance_sheet_id.id)]
                         search_id = sheet_line_obj.search(domain)
 
                         if date.day == 1 and student_id.is_absent:
