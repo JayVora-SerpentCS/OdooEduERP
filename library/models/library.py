@@ -271,14 +271,15 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def draft_book(self):
-        '''method for WorkFlow'''
-        ''' This method for books in draft state.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True'''
+#         '''method for WorkFlow'''
+#         ''' This method for books in draft state.
+#         @param self : Object Pointer
+#         @param cr : Database Cursor
+#         @param uid : Current Logged in User
+#         @param ids : Current Records
+#         @param context : standard Dictionary
+#         @return : True'''
+
         self.write({'state': 'draft'})
         return True
 
