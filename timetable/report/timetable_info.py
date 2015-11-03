@@ -12,8 +12,7 @@ class TimeTable(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
         super(TimeTable, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({'time': time,
-                                  'get_timetable': self._get_timetable,
-                                 })
+                                  'get_timetable': self._get_timetable})
 
     @api.v7
     def _get_timetable(self, timetable_id):
