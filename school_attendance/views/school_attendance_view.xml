@@ -153,7 +153,7 @@
 
         <!-- Form View Of Daily Attendance Information -->
 
-        <record id="view_daily_attendance_form" model="ir.ui.view">
+        <record id="view_daily_attendance_form_1" model="ir.ui.view">
             <field name="name">daily.attendance.form</field>
             <field name="model">daily.attendance</field>
             <field name="arch" type="xml">

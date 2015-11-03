@@ -5,4 +5,4 @@
 # A Module to School Management System
 # ----------------------------------------------------------
 
-from . import school
+import school

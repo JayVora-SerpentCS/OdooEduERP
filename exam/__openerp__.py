@@ -25,6 +25,6 @@
             ],
     'installable': True,
     'application': True,
-    'demo': ['demo/exam_demo.xml'],
+#     'demo': ['demo/exam_demo.xml'],
     'test': ['test/exam_test.yml'],
 }

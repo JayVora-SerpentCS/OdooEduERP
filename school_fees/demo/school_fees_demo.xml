@@ -136,7 +136,7 @@
 
         <!--Student fees Registration -->
 
-        <record id="demo_student_fees_registration_1" model="student.fees.register">
+        <record id="demo_student_fees_registration_1_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>
             <field name="date">2012-05-25</field>
             <field name="journal_id" ref= "bank_journal"/> 
@@ -164,8 +164,8 @@
             <field name="company_id" ref="base.main_company"/>
          </record>
 
-         <record id="demo_student_fees_registration_1" model="student.fees.register">
-            <field name="name" ref= "school.demo_student_student_1"/>
+         <record id="demo_student_fees_registration_5" model="student.fees.register">
+            <field name="name" ref= "school.demo_student_student_5"/>
             <field name="date">2012-10-10</field>
             <field name="journal_id" ref="bank_journal"/> 
             <field name="company_id" ref="base.main_company"/>

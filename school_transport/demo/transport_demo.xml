@@ -76,36 +76,6 @@
             <field name="amount">1400</field>
         </record>
 
-        <!--transport.vehicle-->
-
-        <record id="transport_vehicle_1" model="transport.vehicle">
-            <field name="vehicle"> GRN 1623</field>
-            <field name="driver_id" ref="hr_employee_driver_1"/>
-            <field name="capacity">56</field>
-            <field name="participant">1</field>
-        </record>
-
-        <record id="transport_vehicle_2" model="transport.vehicle">
-            <field name="vehicle"> GJW-2 9666</field>
-            <field name="driver_id" ref="hr_employee_driver_2"/>
-            <field name="capacity">56</field>
-            <field name="participant">1</field>
-        </record>
-
-        <record id="transport_vehicle_3" model="transport.vehicle">
-            <field name="vehicle"> GJV-2 9666</field>
-            <field name="driver_id" ref="hr_employee_driver_3"/>
-            <field name="capacity">56</field>
-            <field name="participant">1</field>
-        </record>
-
-        <record id="transport_vehicle_4" model="transport.vehicle">
-            <field name="vehicle"> GJ-1 1906</field>
-            <field name="driver_id" ref="hr_employee_driver_4"/>
-            <field name="capacity">56</field>
-            <field name="participant">1</field>
-        </record>
-
          <!--student.transport-->
 
         <record id="student_transport_1" model="student.transport">
@@ -148,63 +118,13 @@
             <field name="state">open</field>
         </record>
 
-        <!--transport.participants-->
-
-        <record id="transport_participant_1" model="transport.participant">
-            <field name="name" ref="school.demo_student_student_1"/>
-            <field name="stu_pid_id">2011/07/001</field>
-            <field name="transport_id" ref="student_transport_1"/>
-            <field name="vehicle_id" ref="transport_vehicle_1"/>
-            <field name="tr_reg_date">2011-07-05 13:42:43</field>
-            <field name="tr_end_date">2011-09-05 13:42:43</field>
-            <field name="point_id" ref="transport_point_1"/>
-            <field name="months">2</field>
-            <field name="amount">2000</field>
-        </record>
-
-       <record id="transport_participant_2" model="transport.participant">
-            <field name="name" ref="school.demo_student_student_2"/>
-            <field name="stu_pid_id">2011/07/002</field>
-            <field name="transport_id" ref="student_transport_2"/>
-            <field name="vehicle_id" ref="transport_vehicle_2"/>
-            <field name="point_id" ref="transport_point_2"/>
-            <field name="tr_reg_date">2011-07-05 13:42:43</field>
-            <field name="tr_end_date">2011-09-05 13:42:43</field>
-            <field name="months">2</field>
-            <field name="amount">2400</field>
-        </record>
-
-        <record id="transport_participant_3" model="transport.participant">
-            <field name="name" ref="school.demo_student_student_3"/>
-            <field name="stu_pid_id">2011/07/003</field>
-            <field name="transport_id" ref="student_transport_3"/>
-            <field name="point_id" ref="transport_point_4"/>
-            <field name="vehicle_id" ref="transport_vehicle_3"/>
-            <field name="tr_reg_date">2011-07-05 13:42:43</field>
-            <field name="tr_end_date">2011-10-05 13:42:43</field>
-            <field name="months">3</field>
-            <field name="amount">3000</field>
-        </record>
-
-        <record id="transport_participant_4" model="transport.participant">
-            <field name="name" ref="school.demo_student_student_4"/>
-            <field name="stu_pid_id">2011/07/004</field>
-            <field name="transport_id" ref="student_transport_4"/>
-            <field name="point_id" ref="transport_point_5"/>
-            <field name="vehicle_id" ref="transport_vehicle_4"/>
-            <field name="tr_reg_date">2011-07-05 13:42:43</field>
-            <field name="tr_end_date">2011-10-05 13:42:43</field>
-            <field name="months">3</field>
-            <field name="amount">3600</field>
-        </record>
-
         <!--transport.registration-->
 
         <record id="transport_registration_1" model="transport.registration">
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_1"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="vehicle_id" ref="transport_vehicle_1"/>
+            <!-- <field name="vehicle_id" ref="transport_vehicle_1"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_1"/>
             <field name="for_month">5</field>
@@ -214,7 +134,7 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_2"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="vehicle_id" ref="transport_vehicle_2"/>
+            <!-- <field name="vehicle_id" ref="transport_vehicle_2"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_2"/>
             <field name="for_month">4</field>
@@ -224,7 +144,7 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_3"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="vehicle_id" ref="transport_vehicle_3"/>
+            <!-- <field name="vehicle_id" ref="transport_vehicle_3"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_3"/>
             <field name="for_month">3</field>
@@ -234,7 +154,7 @@
             <field name="name" ref="student_transport_2"/>
             <field name="part_name" ref="school.demo_student_student_4"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="vehicle_id" ref="transport_vehicle_4"/>
+            <!-- <field name="vehicle_id" ref="transport_vehicle_4"/> -->
             <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_4"/>
             <field name="for_month">2</field> 
@@ -286,27 +206,93 @@
                 ref('transport_point_6')])]" />
        </record>
 
-       <!--transport.vehicle-->
+        <!--transport.participants-->
 
-       <record id="transport_vehicle_1" model="transport.vehicle">
-           <field name="vehi_participants_ids" 
+        <record id="transport_participant_1" model="transport.participant">
+            <field name="name" ref="school.demo_student_student_1"/>
+            <field name="stu_pid_id">2011/07/001</field>
+            <field name="transport_id" ref="student_transport_1"/>
+<!--             <field name="vehicle_id" ref="transport_vehicle_1"/> -->
+            <field name="tr_reg_date">2011-07-05 13:42:43</field>
+            <field name="tr_end_date">2011-09-05 13:42:43</field>
+            <field name="point_id" ref="transport_point_1"/>
+            <field name="months">2</field>
+            <field name="amount">2000</field>
+        </record>
+
+       <record id="transport_participant_2" model="transport.participant">
+            <field name="name" ref="school.demo_student_student_2"/>
+            <field name="stu_pid_id">2011/07/002</field>
+            <field name="transport_id" ref="student_transport_2"/>
+<!--             <field name="vehicle_id" ref="transport_vehicle_2"/> -->
+            <field name="point_id" ref="transport_point_2"/>
+            <field name="tr_reg_date">2011-07-05 13:42:43</field>
+            <field name="tr_end_date">2011-09-05 13:42:43</field>
+            <field name="months">2</field>
+            <field name="amount">2400</field>
+        </record>
+
+        <record id="transport_participant_3" model="transport.participant">
+            <field name="name" ref="school.demo_student_student_3"/>
+            <field name="stu_pid_id">2011/07/003</field>
+            <field name="transport_id" ref="student_transport_3"/>
+            <field name="point_id" ref="transport_point_4"/>
+<!--             <field name="vehicle_id" ref="transport_vehicle_3"/> -->
+            <field name="tr_reg_date">2011-07-05 13:42:43</field>
+            <field name="tr_end_date">2011-10-05 13:42:43</field>
+            <field name="months">3</field>
+            <field name="amount">3000</field>
+        </record>
+
+        <record id="transport_participant_4" model="transport.participant">
+            <field name="name" ref="school.demo_student_student_4"/>
+            <field name="stu_pid_id">2011/07/004</field>
+            <field name="transport_id" ref="student_transport_4"/>
+            <field name="point_id" ref="transport_point_5"/>
+<!--             <field name="vehicle_id" ref="transport_vehicle_4"/> -->
+            <field name="tr_reg_date">2011-07-05 13:42:43</field>
+            <field name="tr_end_date">2011-10-05 13:42:43</field>
+            <field name="months">3</field>
+            <field name="amount">3600</field>
+        </record>
+
+        <!--transport.vehicle-->
+
+        <record id="transport_vehicle_1" model="transport.vehicle">
+            <field name="vehicle"> GRN 1623</field>
+            <field name="driver_id" ref="hr_employee_driver_1"/>
+            <field name="capacity">56</field>
+            <field name="participant">1</field>
+            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_1')])]" />
-      </record>
+        </record>
 
-      <record id="transport_vehicle_2" model="transport.vehicle">
-           <field name="vehi_participants_ids" 
+        <record id="transport_vehicle_2" model="transport.vehicle">
+            <field name="vehicle"> GJW-2 9666</field>
+            <field name="driver_id" ref="hr_employee_driver_2"/>
+            <field name="capacity">56</field>
+            <field name="participant">1</field>
+            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_2')])]" />
-      </record>
+        </record>
 
-      <record id="transport_vehicle_3" model="transport.vehicle">
-           <field name="vehi_participants_ids" 
+        <record id="transport_vehicle_3" model="transport.vehicle">
+            <field name="vehicle"> GJV-2 9666</field>
+            <field name="driver_id" ref="hr_employee_driver_3"/>
+            <field name="capacity">56</field>
+            <field name="participant">1</field>
+            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_3')])]" />
-      </record>
+        </record>
 
-      <record id="transport_vehicle_4" model="transport.vehicle">
-           <field name="vehi_participants_ids" 
+        <record id="transport_vehicle_4" model="transport.vehicle">
+            <field name="vehicle"> GJ-1 1906</field>
+            <field name="driver_id" ref="hr_employee_driver_4"/>
+            <field name="capacity">56</field>
+            <field name="participant">1</field>
+            <field name="vehi_participants_ids" 
                eval="[(6, 0,[ref('transport_participant_4')])]" />
-      </record>
+        </record>
 
       <record id="ir_cron_student_transport_every_day" model="ir.cron">
             <field name="name">student_transport</field>
