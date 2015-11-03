@@ -11,12 +11,10 @@ class Result(report_sxw.rml_parse):
     @api.v7
     def __init__(self, cr, uid, name, context=None):
         super(Result, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-                                  'time': time,
+        self.localcontext.update({'time': time,
                                   'get_lines': self.get_lines,
                                   'get_exam_data': self.get_exam_data,
-                                  'get_grade': self.get_grade,
-                                 })
+                                  'get_grade': self.get_grade})
 
     @api.v7
     def get_grade(self, result_id, student):
@@ -33,15 +31,13 @@ class Result(report_sxw.rml_parse):
         for sub_id in result_id:
             for sub in sub_id.result_ids:
                 std_id = sub_id.standard_id.standard_id.name
-                list_result.append({
-                                    'standard_id': std_id,
+                list_result.append({'standard_id': std_id,
                                     'name': sub.subject_id.name,
                                     'code': sub.subject_id.code,
                                     'maximum_marks': sub.maximum_marks,
                                     'minimum_marks': sub.minimum_marks,
                                     'obtain_marks': sub.obtain_marks,
-                                    's_exam_ids': sub_id.s_exam_ids.name
-                                   })
+                                    's_exam_ids': sub_id.s_exam_ids.name})
         return list_result
 
     @api.v7
@@ -56,11 +52,9 @@ class Result(report_sxw.rml_parse):
                 count += 1
                 per = float(res.total / count)
             final_total = final_total + res.total
-            value.update({
-                          'result': res.result,
+            value.update({'result': res.result,
                           'percentage': per,
-                          'total': final_total,
-                         })
+                          'total': final_total})
         list_exam.append(value)
         return list_exam
 

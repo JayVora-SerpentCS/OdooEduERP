@@ -16,4 +16,5 @@ class SubjectResultWiz(models.TransientModel):
     def result_report(self, cr, uid, ids, context):
         data = self.read(cr, uid, ids)[0]
         return self.pool['report'].get_action(cr, uid, [],
-                        'exam.exam_result_report', data=data, context=context)
+                                              'exam.exam_result_report',
+                                              data=data, context=context)

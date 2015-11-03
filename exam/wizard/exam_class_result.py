@@ -18,12 +18,10 @@ class ResultPrint(models.TransientModel):
         for result_line in self:
             domain = [('standard_id', '=', result_line.standard_id.id),
                       ('s_exam_ids', '=', result_line.exam_id.id)]
-            return {
-                    'name': _('Result Info'),
+            return {'name': _('Result Info'),
                     'view_type': 'form',
-                    "view_mode": 'tree,form',
+                    'view_mode': 'tree,form',
                     'res_model': 'exam.result',
                     'type': 'ir.actions.act_window',
-                    'domain': domain,
-                   }
+                    'domain': domain}
         return True
