@@ -13,8 +13,8 @@ class StockMove(models.Model):
 
     @api.multi
     def onchange_qty(self):
-        '''  New function to manage the update of the quantities'''
-        '''  This method automatically change quantity of stock
+        '''  New function to manage the update of the quantities
+             This method automatically change quantity of stock
         @param self : Object Pointer
         @param cr : Database Cursor
         @param uid : Current Logged in User
@@ -23,6 +23,7 @@ class StockMove(models.Model):
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and the value of quantity'''
+
         return {'value': {'product_uos_qty': self.product_uos_qty,
                           'product_qty': self.product_qty}}
 
@@ -36,6 +37,7 @@ class StockMove(models.Model):
         @param ids : Current Records
         @param context : standard Dictionary
         @return : True'''
+
         if not len(self.ids):
             return True
         pickings = {}
