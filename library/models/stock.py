@@ -29,8 +29,8 @@ class StockMove(models.Model):
 
     @api.multi
     def action_cancel(self):
-        '''  action_cancel OveRidden to avoid the cascading cancellation'''
-        '''  This action_cancel OveRidden to avoid the cascading cancellation
+        '''  action_cancel OveRidden to avoid the cascading cancellation
+             This action_cancel OveRidden to avoid the cascading cancellation
         @param self : Object Pointer
         @param cr : Database Cursor
         @param uid : Current Logged in User
