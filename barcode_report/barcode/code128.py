@@ -173,8 +173,7 @@ class Code128(MultiWidthBarcode):
     http://www.barcodeman.com/c128.html
 
     Official Spec, "ANSI/AIM BC4-1999, ISS" is available for US$45 from
-    http://www.aimglobal.org/aimstore/
-    """
+    http://www.aimglobal.org/aimstore/"""
     def __init__(self, value='', **args):
         self.xdim = inch * 0.0075
         self.lquiet = None

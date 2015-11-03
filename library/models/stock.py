@@ -22,8 +22,7 @@ class StockMove(models.Model):
         @param qty : Field name
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
-                  and the value of quantity
-        '''
+                  and the value of quantity'''
         return {'value': {'product_uos_qty': self.product_uos_qty,
                           'product_qty': self.product_qty}}
 
@@ -36,8 +35,7 @@ class StockMove(models.Model):
         @param uid : Current Logged in User
         @param ids : Current Records
         @param context : standard Dictionary
-        @return : True
-        '''
+        @return : True'''
         if not len(self.ids):
             return True
         pickings = {}
