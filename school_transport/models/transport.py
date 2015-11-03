@@ -38,8 +38,8 @@ class TransportPoint(models.Model):
                 point_ids = [point_id.id
                              for point_id in transport_data.trans_point_ids]
                 args.append(('id', 'in', point_ids))
-        return super(TransportPoint, self).search(
-                     args, offset, limit, order, count=count)
+        return super(TransportPoint, self).search(args, offset, limit, order,
+                                                  count=count)
 
 
 class TransportVehicle(models.Model):
@@ -66,9 +66,9 @@ class TransportVehicle(models.Model):
     participant = fields.Integer(compute='_participants',
                                  string='Total Participants', readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
-                                            'vehicle_participant_student_rel',
-                                            'vehicle_id', 'student_id',
-                                            ' vehicle Participants')
+                                             'vehicle_participant_student_rel',
+                                             'vehicle_id', 'student_id',
+                                             ' vehicle Participants')
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -80,7 +80,7 @@ class TransportVehicle(models.Model):
                            for std_id in transport_data.trans_vehicle_ids]
             args.append(('id', 'in', vehicle_ids))
         return super(TransportVehicle, self).search(args, offset, limit,
-                                                     order, count=count)
+                                                    order, count=count)
 
 
 class TransportParticipant(models.Model):
@@ -111,10 +111,11 @@ class TransportParticipant(models.Model):
             student_obj = self.env['student.student']
             for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
-                                for transport_id in student_data.transport_ids]
+                                 for transport_id
+                                    in student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
-        return super(TransportParticipant, self).search(
-                    args, offset, limit, order, count=count)
+        return super(TransportParticipant, self).search(args, offset, limit,
+                                                        order, count=count)
 
 
 class StudentTransports(models.Model):
@@ -237,13 +238,12 @@ class TransportRegistration(models.Model):
                                 required=True)
     reg_date = fields.Date('Registration Date', readonly=True,
                            default=lambda * a:
-                            time.strftime("%Y-%m-%d %H:%M:%S"))
+                           time.strftime("%Y-%m-%d %H:%M:%S"))
     reg_end_date = fields.Date('Registration End Date', readonly=True)
     for_month = fields.Integer('Registration For Months')
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
-                              ('cancel', 'Cancel')
-                             ], 'State', readonly=True,
+                              ('cancel', 'Cancel')], 'State', readonly=True,
                              default='draft')
     vehicle_id = fields.Many2one('transport.vehicle', 'Vehicle No',
                                  required=True)
@@ -296,8 +296,8 @@ class TransportRegistration(models.Model):
         for reg_data in self:
             # registration months must one or more then one
             if reg_data.for_month <= 0:
-                raise UserError(_('Error! Sorry Registration months must be one\
-                                 or more then one.'))
+                raise UserError(_('Error! Sorry Registration months must be 1'
+                                  'or more then one.'))
             # First Check Is there vacancy or not
             person = int(reg_data.vehicle_id.participant) + 1
             if reg_data.vehicle_id.capacity < person:
@@ -312,11 +312,10 @@ class TransportRegistration(models.Model):
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise UserError(_('For this much Months\
-                                Registration is not Possible because\
-                                Root end date is Early.'))
+                                  Registration is not Possible because\
+                                  Root end date is Early.'))
             # make entry in Transport
-            dict_prt = {
-                        'stu_pid_id': str(reg_data.part_name.pid),
+            dict_prt = {'stu_pid_id': str(reg_data.part_name.pid),
                         'amount': amount,
                         'transport_id': reg_data.name.id,
                         'tr_end_date': tr_end_date,
@@ -324,8 +323,7 @@ class TransportRegistration(models.Model):
                         'months': reg_data.for_month,
                         'tr_reg_date': reg_data.reg_date,
                         'point_id': reg_data.point_id.id,
-                        'vehicle_id': reg_data.vehicle_id.id,
-                       }
+                        'vehicle_id': reg_data.vehicle_id.id}
             temp = stu_prt_obj.create(dict_prt)
             # make entry in Transport vehicle.
             list1 = []

@@ -44,8 +44,7 @@ class SchoolTeacherAssignment(models.Model):
                 std_ids.append(stu[0])
         if std_ids:
             for std in std_ids:
-                ass_dict = {
-                            'name': self.name,
+                ass_dict = {'name': self.name,
                             'subject_id': self.subject_id.id,
                             'standard_id': self.standard_id.id,
                             'assign_date': self.assign_date,
@@ -53,17 +52,14 @@ class SchoolTeacherAssignment(models.Model):
                             'state': 'active',
                             'attached_homework': self.attached_homework,
                             'teacher_id': self.teacher_id.id,
-                            'student_id': std
-                           }
+                            'student_id': std}
                 assignment_id = assignment_obj.create(ass_dict)
                 if self.attached_homework:
-                    attach = {
-                              'name': 'test',
+                    attach = {'name': 'test',
                               'datas': str(self.attached_homework),
                               'description': 'Assignment attachment',
                               'res_model': 'school.student.assignment',
-                              'res_id': assignment_id.id,
-                             }
+                              'res_id': assignment_id.id}
                     self.env['ir.attachment'].create(attach)
                 self.write({'state': 'active'})
             return True

@@ -174,7 +174,7 @@ class SchoolStandard(models.Model):
             domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
             import_sub_ids = self.search(domain)
             val = [last.id for sub in import_sub_ids
-                    for last in sub.subject_ids]
+                   for last in sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
         return True
 
@@ -328,9 +328,9 @@ class StudentStudent(models.Model):
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
     photo = fields.Binary('Photo', default=lambda self:\
-                                self._get_default_image
-                                (self._context.get('default_is_company',
-                                                   False)))
+                          self._get_default_image
+                          (self._context.get('default_is_company',
+                                             False)))
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
                            states={'done': [('readonly', True)]})
     cast_id = fields.Many2one('student.cast', 'Religion')
@@ -353,9 +353,10 @@ class StudentStudent(models.Model):
                                     'References',
                                     states={'done': [('readonly', True)]})
     previous_school_ids = fields.One2many('student.previous.school',
-                                        'previous_school_id',
-                                        'Previous School Detail',
-                                        states={'done': [('readonly', True)]})
+                                          'previous_school_id',
+                                          'Previous School Detail',
+                                          states={'done': [('readonly',
+                                                            True)]})
     family_con_ids = fields.One2many('student.family.contact',
                                      'family_contact_id',
                                      'Family Contact Detail',
@@ -474,14 +475,14 @@ class StudentStudent(models.Model):
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
-                               + str('/') + str(student_data.school_id.city)\
-                               + str('/')\
-                               + str(student_data.school_id.name) + str('/')\
-                               + str(reg_code)
+                                + str('/') + str(student_data.school_id.city)\
+                                + str('/')\
+                                + str(student_data.school_id.name) + str('/')\
+                                + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/')\
-                           + str(student_data.year.code) + str('/')\
-                           + str(stu_code)
+                            + str(student_data.year.code) + str('/')\
+                            + str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,

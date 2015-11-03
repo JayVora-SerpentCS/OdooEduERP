@@ -9,7 +9,7 @@ class HostelFeeReceipt(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(HostelFeeReceipt, self).__init__(cr, uid, name,
-                                                 context=context)
+                                               context=context)
 
 
 class ReportAddExamResult(models.AbstractModel):

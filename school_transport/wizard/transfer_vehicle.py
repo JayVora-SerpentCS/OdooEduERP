@@ -57,14 +57,14 @@ class TransferVehicle(models.TransientModel):
                                    vehicle.'))
             # remove entry of participant in old vehicle.
             participants = [prt_id.id for prt_id
-                                in vehi_data.vehi_participants_ids]
+                            in vehi_data.vehi_participants_ids]
             if new_data.participation_id.id in participants:
                 participants.remove(new_data.participation_id.id)
             old_veh_id = vehi_obj.browse(new_data.old_vehicle_id.id)
             old_veh_id.write({'vehi_participants_ids': [(6, 0, participants)]})
             # entry of participant in new vehicle.
             participants = [prt_id.id for prt_id
-                                in vehi_new_data.vehi_participants_ids]
+                            in vehi_new_data.vehi_participants_ids]
             participants.append(new_data.participation_id.id)
             new_veh_id = vehi_obj.browse(new_data.new_vehicle_id.id)
             new_veh_id.write({'vehi_participants_ids': [(6, 0, participants)]})

@@ -36,8 +36,8 @@ class ExtendedTimeTableLine(models.Model):
     def on_change_date_day(self, exm_date):
         val = {}
         if exm_date:
-            val['week_day'] = datetime.strptime(exm_date,
-                                                "%Y-%m-%d").strftime("%A").lower()
+            week_day = datetime.strptime(exm_date, "%Y-%m-%d")
+            val['week_day'] = week_day.strftime("%A").lower()
         return {'value': val}
 
     @api.multi
@@ -45,9 +45,7 @@ class ExtendedTimeTableLine(models.Model):
         for line in self:
             if line.exm_date:
                 dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
-                if line.week_day != datetime.strptime(line.exm_date,
-                                                      "%Y-%m-%d")\
-                                                      .strftime("%A").lower():
+                if line.week_day != dt.strftime("%A").lower():
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
@@ -116,9 +114,9 @@ class AdditionalExam(models.Model):
 
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,
-                              readonly=True,
-                              default=lambda obj:
-                              obj.env['ir.sequence'].get('additional.exam'))
+                                      readonly=True,
+                                      default=lambda obj:
+                                      obj.env['ir.sequence'].get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -397,8 +395,8 @@ class ExamResultBatchwise(models.Model):
                 divi = fina_tot / count  # Total_obtained mark of all student
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
-                        if divi >= grade_id.from_mark\
-                            and divi <= grade_id.to_mark:
+                        if (divi >= grade_id.from_mark
+                                and divi <= grade_id.to_mark):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
@@ -413,8 +411,8 @@ class AdditionalExamResult(models.Model):
     @api.one
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
-        if self.a_exam_id and self.a_exam_id.subject_id\
-            and self.a_exam_id.subject_id.minimum_marks:
+        if (self.a_exam_id and self.a_exam_id.subject_id
+                and self.a_exam_id.subject_id.minimum_marks):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
@@ -461,5 +459,5 @@ class StudentStudent(models.Model):
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('class_id', 'in', std_ids))
         return super(StudentStudent, self).search(args=args, offset=offset,
-                                                   limit=limit, order=order,
-                                                   count=count)
+                                                  limit=limit, order=order,
+                                                  count=count)

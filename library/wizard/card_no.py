@@ -20,12 +20,10 @@ class CardNumber(models.TransientModel):
             if not search_card_ids:
                 raise UserError(_('Invalid Card Number.'))
             else:
-                return {
-                        'type': 'ir.actions.act_window',
+                return {'type': 'ir.actions.act_window',
                         'res_model': 'book.name',
                         'src_model': 'library.book.issue',
                         'target': 'new',
                         'view_mode': 'form',
                         'view_type': 'form',
-                        'context': {'default_card_id': rec.card_id.id}
-                       }
+                        'context': {'default_card_id': rec.card_id.id}}

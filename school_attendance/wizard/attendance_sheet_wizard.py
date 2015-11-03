@@ -27,12 +27,9 @@ class MonthlyAttendanceSheet(models.TransientModel):
         data = self.read([])[0]
         models_data = self.env['ir.model.data']
         # Get opportunity views
-        dummy, form_view = models_data.get_object_reference(
-                            'school_attendance', 'view_attendance_sheet_form')
-        dummy, tree_view = models_data.get_object_reference(
-                            'school_attendance', 'view_attendance_sheet_tree')
-        return {
-                'view_type': 'form',
+        dummy, form_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_form')
+        dummy, tree_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_tree')
+        return {'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': 'attendance.sheet',
                 'view_id': False,
@@ -41,5 +38,4 @@ class MonthlyAttendanceSheet(models.TransientModel):
                            ('year_id', '=', data['year_id'][0])],
                 'views': [(tree_view or False, 'tree'),
                           (form_view or False, 'form')],
-                'type': 'ir.actions.act_window',
-               }
+                'type': 'ir.actions.act_window'}

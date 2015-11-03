@@ -16,7 +16,7 @@ class LibraryEditorSupplier(models.Model):
     delay = fields.Integer('Customer Lead Time')
     min_qty = fields.Float('Minimal Quantity')
     junk = fields.Text(compute=lambda self: dict([(idn, '')
-                           for idn in self.ids]),
+                       for idn in self.ids]),
                        method=True, string=" ", type="text")
 
     @api.model
@@ -39,13 +39,11 @@ class LibraryEditorSupplier(models.Model):
         sup_info = self.env['product.supplierinfo']
         last_id = 0
         for book_id in self._cr.fetchall():
-            params = {
-                      'name': vals['supplier_id'],
+            params = {'name': vals['supplier_id'],
                       'product_tmpl_id': book_id[0],
                       'sequence': vals['sequence'],
                       'delay': vals['delay'],
-                      'min_qty': vals['min_qty'],
-                     }
+                      'min_qty': vals['min_qty']}
             tmp_id = sup_info.create(params)
             last_id = last_id < tmp_id.id and last_id or tmp_id.id
         return last_id
@@ -67,11 +65,11 @@ class LibraryEditorSupplier(models.Model):
                                 'Please create a new relation.'))
             new_supplier_id = vals.get('supplier_id', 0)
             supplier_change = new_supplier_id != 0 and (idn < 0
-                                or (original_supplier_id != new_supplier_id))
+                              or (original_supplier_id != new_supplier_id))
 
             if supplier_change:
                 raise UserError(_('Warning ! Cannot set supplier in this form.'
-                                'Please create a new relation.'))
+                                  'Please create a new relation.'))
             else:
 
                 if 'sequence' in vals:

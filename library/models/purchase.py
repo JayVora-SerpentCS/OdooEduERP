@@ -30,14 +30,12 @@ class PurchaseOrder(models.Model):
             if order.invoice_method == 'picking':
                 istate = '2binvoiced'
             address_id = order.dest_address_id.id or order.partner_id.id
-            vals = {
-                    'origin': 'PO:%d:%s' % (order.id, order.name),
+            vals = {'origin': 'PO:%d:%s' % (order.id, order.name),
                     'type': 'in',
                     'address_id': address_id,
                     'invoice_state': istate,
                     'purchase_id': order.id or False,
-                    'picking_type_id': order.picking_type_id.id or False
-                   }
+                    'picking_type_id': order.picking_type_id.id or False}
             picking_id = picking_obj.create(vals)
             for order_line in order.order_line:
                 if not order_line.product_id:
@@ -46,8 +44,7 @@ class PurchaseOrder(models.Model):
                                                                   'consu'):
                     dest = order.location_id.id
                     prodlot_id = order_line.production_lot_id.id
-                    move_obj.create({
-                                     'name': 'PO:' + order_line.name[:50],
+                    move_obj.create({'name': 'PO:' + order_line.name[:50],
                                      'product_id': order_line.product_id.id,
                                      'origin_ref': order.name,
                                      'product_uos_qty': order_line.product_qty,
@@ -61,11 +58,8 @@ class PurchaseOrder(models.Model):
                                      'state': 'assigned',
                                      'prodlot_id': prodlot_id,
                                      'customer_ref': order_line.customer_ref,
-                                     'purchase_line_id': order_line.id,
-                                    })
-            purchase_order_dict = {
-                                   'picking_ids': [(4, picking_id.id)]
-                                  }
+                                     'purchase_line_id': order_line.id})
+            purchase_order_dict = {'picking_ids': [(4, picking_id.id)]}
             order.write(purchase_order_dict)
             workflow.trg_validate(self._uid, 'stock.picking', picking_id.id,
                                   'button_confirm', self._cr)
@@ -82,10 +76,8 @@ class PurchaseOrder(models.Model):
                 l_id += 1
                 name = line.order_id and (str(line.order_id.name)
                                           + '/Line' + str(l_id)) or False
-                production_lot_dict = {
-                                       'product_id': line.product_id.id,
-                                       'name': name
-                                      }
+                production_lot_dict = {'product_id': line.product_id.id,
+                                       'name': name}
                 production_lot_id = production_obj.create(production_lot_dict)
                 line.write({'production_lot_id': production_lot_id.id})
         super(PurchaseOrder, self).wkf_confirm_order()
