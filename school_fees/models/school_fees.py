@@ -58,14 +58,12 @@ class StudentFeesRegister(models.Model):
                                                   sid.id, 'fees_register'
                                                   '_confirm', self._cr)
                     else:
-                        res = {
-                               'student_id': stu.id,
+                        res = {'student_id': stu.id,
                                'register_id': vals.id,
                                'name': vals.name,
                                'date': vals.date,
                                'journal_id': vals.journal_id.id,
-                               'company_id': vals.company_id.id
-                              }
+                               'company_id': vals.company_id.id}
                         slip_id = slip_pool.create(res)
                         workflow.trg_validate(self._uid,
                                               'student.fees.register',
@@ -163,8 +161,7 @@ class StudentPayslip(models.Model):
                                      'code': data.code,
                                      'sequence': data.sequence,
                                      'type': data.type,
-                                     'amount': data.amount,
-                                    }
+                                     'amount': data.amount}
                         student_payslip_line_obj.create(line_vals)
                 amount = 0
                 for datas in self.browse(self.ids):
@@ -225,10 +222,8 @@ class StudentPayslip(models.Model):
                                  default=lambda obj_c: obj_c.env['res.users'].
                                  browse([obj_c._uid])[0].company_id)
 
-    _sql_constraints = [
-        ('code_uniq', 'unique(student_id,date,state)',
-         'The code of the Fees Structure must be unique !')
-    ]
+    _sql_constraints = [('code_uniq', 'unique(student_id,date,state)',
+                         'The code of the Fees Structure must be unique !')]
 
     @api.onchange('student_id')
     def onchange_student(self):
@@ -243,8 +238,7 @@ class StudentPayslip(models.Model):
         default.update({'state': 'draft',
                         'number': False,
                         'move_id': False,
-                        'line_ids': []
-                       })
+                        'line_ids': []})
         return super(StudentPayslip, self).copy(default)
 
     @api.multi
@@ -273,7 +267,7 @@ class StudentPayslip(models.Model):
             ctx.update({'lang': fees.student_id.lang})
             if not fees.payment_date:
                 self.write([fees.id], {'payment_date': time.strftime
-                                       ('%Y-%m-%d')})
+                           ('%Y-%m-%d')})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = fees.currency_id and fees.currency_id.id\
@@ -283,21 +277,21 @@ class StudentPayslip(models.Model):
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
                 comapny_ac_id = fees.company_id.partner_id.\
-                                    property_account_receivable.id
+                                property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
                 comapny_ac_id = fees.company_id.\
-                                    partner_id.property_account_payable.id
+                                partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
-                raise UserError(_('You cannot create an invoice on a centralized'
-                                'journal. UnCheck the centralized counterpart'
-                                'box in the related journal from the'
-                                'configuration menu.'))
-            move = {
-                    'ref': fees.name,
+                raise UserError(_('You cannot create an invoice on a'
+                                  'centralized'
+                                  'journal. UnCheck the centralized'
+                                  'counterpart'
+                                  'box in the related journal from the'
+                                  'configuration menu.'))
+            move = {'ref': fees.name,
                     'journal_id': fees.journal_id.id,
-                    'date': fees.payment_date or time.strftime('%Y-%m-%d'),
-                   }
+                    'date': fees.payment_date or time.strftime('%Y-%m-%d')}
             ctx.update({'company_id': fees.company_id.id})
             move_id = move_obj.create(move)
             context_multi_currency = self._context.copy()
@@ -321,37 +315,31 @@ class StudentPayslip(models.Model):
                 debit = -credit
                 credit = 0.0
             sign = debit - credit < 0 and - 1 or 1
-            move_line = {
-                         'name': fees.name or '/',
+            cr_id = diff_currency_p and current_currency or False
+            am_cr = diff_currency_p and sign * fees.total or 0.0
+            date = fees.payment_date or time.strftime('%Y-%m-%d')
+            move_line = {'name': fees.name or '/',
                          'move_id': move_id,
                          'debit': debit,
                          'credit': credit,
                          'account_id': account_id,
                          'journal_id': fees.journal_id.id,
                          'parent_id': fees.student_id.parent_id.id,
-                         'currency_id': diff_currency_p and current_currency\
-                                            or False,
-                         'amount_currency': diff_currency_p\
-                                                and sign * fees.total or 0.0,
-                         'date': fees.payment_date\
-                                    or time.strftime('%Y-%m-%d'),
-                        }
+                         'currency_id': cr_id,
+                         'amount_currency': am_cr,
+                         'date': date}
             move_line_obj.create(move_line)
-            move_line = {
-                         'name': fees.name or '/',
+            cr_id = diff_currency_p and current_currency or False
+            move_line = {'name': fees.name or '/',
                          'move_id': move_id,
                          'debit': credit,
                          'credit': debit,
                          'account_id': comapny_ac_id,
                          'journal_id': fees.journal_id.id,
                          'parent_id': fees.student_id.parent_id.id,
-                         'currency_id': diff_currency_p and current_currency\
-                                         or False,
-                         'amount_currency': diff_currency_p\
-                                             and sign * fees.total or 0.0,
-                         'date': fees.payment_date\
-                                    or time.strftime('%Y-%m-%d'),
-                        }
+                         'currency_id': cr_id,
+                         'amount_currency': am_cr,
+                         'date': date}
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
@@ -364,7 +352,8 @@ class StudentPayslip(models.Model):
             if not self.ids:
                 return []
             fees = student_obj.browse(student_obj.id)
-            return {'name': _("Pay Fees"), 'view_mode': 'form',
+            return {'name': _("Pay Fees"),
+                    'view_mode': 'form',
                     'view_id': False, 'view_type': 'form',
                     'res_model': 'account.voucher',
                     'type': 'ir.actions.act_window',
@@ -377,9 +366,7 @@ class StudentPayslip(models.Model):
                                 'close_after_process': True,
                                 'invoice_type': 'out_invoice',
                                 'default_type': 'receipt',
-                                'type': 'receipt'
-                               }
-                   }
+                                'type': 'receipt'}}
 
 
 class StudentPayslipLineLine(models.Model):
