@@ -3,11 +3,12 @@
 
 import time
 from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp import models, api
 
 
 class AddExamResult(report_sxw.rml_parse):
 
+    @api.v7
     def __init__(self, cr, uid, name, context=None):
         super(AddExamResult, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -15,6 +16,7 @@ class AddExamResult(report_sxw.rml_parse):
                                   'get_result_detail': self._get_result_detail,
                                  })
 
+    @api.v7
     def _get_result_detail(self, subject_ids, result):
         sub_list = []
         result_data = []
@@ -35,7 +37,7 @@ class AddExamResult(report_sxw.rml_parse):
         return result_data
 
 
-class ReportAddExamResult(osv.AbstractModel):
+class ReportAddExamResult(models.AbstractModel):
     _name = 'report.exam.exam_result_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.exam_result_report'

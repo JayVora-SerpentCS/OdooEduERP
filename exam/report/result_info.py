@@ -3,11 +3,12 @@
 
 import time
 from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp import models, api
 
 
 class Result(report_sxw.rml_parse):
 
+    @api.v7
     def __init__(self, cr, uid, name, context=None):
         super(Result, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -17,6 +18,7 @@ class Result(report_sxw.rml_parse):
                                   'get_grade': self.get_grade,
                                  })
 
+    @api.v7
     def get_grade(self, result_id, student):
         list_fail = []
         value = {}
@@ -25,6 +27,7 @@ class Result(report_sxw.rml_parse):
         list_fail.append(value)
         return list_fail
 
+    @api.v7
     def get_lines(self, result_id, student):
         list_result = []
         for sub_id in result_id:
@@ -41,6 +44,7 @@ class Result(report_sxw.rml_parse):
                                    })
         return list_result
 
+    @api.v7
     def get_exam_data(self, result_id, student):
         list_exam = []
         value = {}
@@ -61,7 +65,7 @@ class Result(report_sxw.rml_parse):
         return list_exam
 
 
-class ReportResultInfo(osv.AbstractModel):
+class ReportResultInfo(models.AbstractModel):
     _name = 'report.exam.result_information_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.result_information_report'
