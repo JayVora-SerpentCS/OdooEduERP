@@ -85,10 +85,8 @@ class LibraryCard(models.Model):
         if not student_id:
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
-        val = {
-               'standard_id': student_data.standard_id.id,
-               'roll_no': student_data.roll_no,
-              }
+        val = {'standard_id': student_data.standard_id.id,
+               'roll_no': student_data.roll_no}
         return {'value': val}
 
     @api.one
@@ -204,12 +202,12 @@ class LibraryBookIssue(models.Model):
                 if self.card_id.book_limit > len(card_ids) - 1:
                     return True
                 else:
-                    raise UserError(_('Book issue limit  is over on this card'))
+                    raise UserError(_('Book issue limit is over on this card'))
             else:
                 if self.card_id.book_limit > len(card_ids):
                     return True
                 else:
-                    raise UserError(_('Book issue limit  is over on this card'))
+                    raise UserError(_('Book issue limit is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
@@ -223,8 +221,8 @@ class LibraryBookIssue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=lambda *a:\
-                                 time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 default=lambda *a:
+                                    time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
@@ -264,16 +262,13 @@ class LibraryBookIssue(models.Model):
         card_data = self.env['library.card'].browse(card_id)
         val = {'user': str(card_data.user.title())}
         if card_data.user.title() == 'Student':
-            val.update({
-                        'student_id': card_data.student_id.id,
+            val.update({'student_id': card_data.student_id.id,
                         'standard_id': card_data.standard_id.id,
                         'roll_no': card_data.roll_no,
-                        'gt_name': card_data.gt_name
-                       })
+                        'gt_name': card_data.gt_name})
         else:
             val.update({'teacher_id': card_data.teacher_id.id,
-                        'gt_name': card_data.gt_name
-                       })
+                        'gt_name': card_data.gt_name})
         return {'value': val}
 
     @api.multi
@@ -400,35 +395,28 @@ class LibraryBookIssue(models.Model):
                                     'The Teacher must have a Home address.'))
                 addr = record.teacher_id.address_home_id\
                         and record.teacher_id.address_home_id.id
-            vals_invoice = {
-                            'partner_id': usr,
+            vals_invoice = {'partner_id': usr,
                             'address_invoice_id': addr,
-                            'account_id': 12,
-                           }
+                            'account_id': 12}
             invoice_lines = []
             if record.lost_penalty:
                 lost_pen = record.lost_penalty
-                invoice_line2 = {
-                                 'name': 'Book Lost Fine',
+                invoice_line2 = {'name': 'Book Lost Fine',
                                  'price_unit': lost_pen,
-                                 'account_id': 12
-                                }
+                                 'account_id': 12}
                 invoice_lines.append((0, 0, invoice_line2))
             if record.penalty:
                 pen = record.penalty
-                invoice_line1 = {
-                                 'name': 'Late Return Penalty',
+                invoice_line1 = {'name': 'Late Return Penalty',
                                  'price_unit': pen,
-                                 'account_id': 12
-                                }
+                                 'account_id': 12}
                 invoice_lines.append((0, 0, invoice_line1))
         vals_invoice.update({'invoice_line': invoice_lines})
         new_invoice_id = invoice_obj.create(vals_invoice)
         data_id = obj_data._get_id('account', 'invoice_form')
         data = obj_data.browse(data_id)
         view_id = data.res_id
-        return {
-                'name': _("New Invoice"),
+        return {'name': _("New Invoice"),
                 'view_mode': 'form',
                 'view_id': [view_id],
                 'view_type': 'form',
@@ -437,8 +425,7 @@ class LibraryBookIssue(models.Model):
                 'nodestroy': True,
                 'res_id': new_invoice_id.id,
                 'target': 'current',
-                'context': {}
-               }
+                'context': {}}
 
 
 class LibraryBookRequest(models.Model):

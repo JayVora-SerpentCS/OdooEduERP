@@ -21,8 +21,7 @@ class SaleOrderLine(models.Model):
         @param uid : Current Logged in User
         @param ids : Current Records
         @param context : standard Dictionary
-        @return : True
-        '''
+        @return : True'''
         l_id = 0
         production_obj = self.env['stock.production.lot']
         for line in self:
@@ -32,10 +31,8 @@ class SaleOrderLine(models.Model):
             name = line.order_id and (str(line.order_id.name)
                                       + ('/%02d' % (l_id,))) or False
             product_id = line.product_id and line.product_id.id or False
-            production_lot_dico = {
-                                   'name': name,
-                                   'product_id': product_id,
-                                  }
+            production_lot_dico = {'name': name,
+                                   'product_id': product_id}
             production_lot_id = production_obj.create(production_lot_dico)
             line.write({'production_lot_id': production_lot_id.id})
         super(SaleOrderLine, self).button_confirm()
@@ -52,14 +49,11 @@ class SaleOrderLine(models.Model):
         @param default : dictionary of field values to override
             in the original values of the copied record
         @param context : standard Dictionary
-        @return : id of the newly created record
-        '''
+        @return : id of the newly created record'''
         if default is None:
             default = {}
-        default.update({
-                        'production_lot_id': False,
-                        'customer_ref': ''
-                       })
+        default.update({'production_lot_id': False,
+                        'customer_ref': ''})
         return super(SaleOrderLine, self).copy(default)
 
 
@@ -70,10 +64,8 @@ class SaleOrder(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(SaleOrder, self).default_get(fields_list)
-        res.update({
-                    'picking_policy': 'direct',
-                    'order_policy': 'picking'
-                   })
+        res.update({'picking_policy': 'direct',
+                    'order_policy': 'picking'})
         return res
 
     @api.multi
@@ -84,8 +76,7 @@ class SaleOrder(models.Model):
         @param uid : Current Logged in User
         @param vals : dictionary of new values to be set
         @param context : standard Dictionary
-        @return :True
-        '''
+        @return :True'''
         picking_obj = self.env['stock.picking']
         move_obj = self.env['stock.move']
         procurment_obj = self.env['procurement.order']
@@ -107,8 +98,7 @@ class SaleOrder(models.Model):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         address_id = order.partner_shipping_id.id
-                        pick_dict = {
-                                     'origin': order.name,
+                        pick_dict = {'origin': order.name,
                                      'type': 'out',
                                      'state': 'draft',
                                      'move_type': order.picking_policy,
@@ -122,11 +112,9 @@ class SaleOrder(models.Model):
                                      'picking_type_id': order.warehouse_id
                                          and order.warehouse_id.out_type_id
                                          and order.warehouse_id.out_type_id.id
-                                         or False
-                                    }
+                                         or False}
                         picking_id = picking_obj.create(pick_dict)
-                    mv_dict = {
-                               'name': 'SO:' + order.name or '',
+                    mv_dict = {'name': 'SO:' + order.name or '',
                                'picking_id': picking_id.id,
                                'origin_ref': order.name,
                                'product_id': line.product_id.id,
@@ -143,12 +131,10 @@ class SaleOrder(models.Model):
                                'tracking_id': False,
                                'state': 'waiting',
                                'prodlot_id': line.production_lot_id.id,
-                               'customer_ref': line.customer_ref,
-                              }
+                               'customer_ref': line.customer_ref}
                     move_id = move_obj.create(mv_dict)
                     location_id = order.warehouse_id.lot_stock_id.id
-                    prc_dict = {
-                                'name': order.name,
+                    prc_dict = {'name': order.name,
                                 'origin': order.name,
                                 'date_planned': date_planned,
                                 'product_id': line.product_id.id,
@@ -158,8 +144,7 @@ class SaleOrder(models.Model):
                                 'procure_method': 'make_to_order',
                                 'move_id': move_id,
                                 'production_lot_id': line.production_lot_id.id,
-                                'customer_ref': line.customer_ref,
-                               }
+                                'customer_ref': line.customer_ref}
                     proc_id = procurment_obj.create(prc_dict)
                     workflow.trg_validate(self._uid, 'procurement.order',
                                           proc_id.id, 'button_confirm',
@@ -168,16 +153,14 @@ class SaleOrder(models.Model):
                 elif (line.product_id
                         and line.product_id.product_tmpl_id.type == 'service'):
                     location_id = order.warehouse_id.lot_stock_id.id
-                    prc_dict = {
-                                'name': line.name,
+                    prc_dict = {'name': line.name,
                                 'origin': order.name,
                                 'date_planned': date_planned,
                                 'product_id': line.product_id.id,
                                 'product_qty': line.product_uom_qty,
                                 'product_uom': line.product_uom.id,
                                 'location_id': location_id,
-                                'procure_method': line.type,
-                               }
+                                'procure_method': line.type}
                     proc_id = procurment_obj.create(prc_dict)
                     workflow.trg_validate(self._uid, 'procurement.order',
                                           proc_id.id, 'button_confirm',
@@ -194,7 +177,7 @@ class SaleOrder(models.Model):
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
-                if (order.order_policy == 'manual') and order.invoice_ids:
+                if order.order_policy == 'manual' and order.invoice_ids:
                     val['state'] = 'manual'
             order.write(val)
         return True
