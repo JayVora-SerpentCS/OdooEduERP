@@ -121,8 +121,8 @@ class SchoolEvent(models.Model):
                 and self.last_reg_date):
 
             if self.start_reg_date > self.last_reg_date:
-                raise UserError(_('Error! Event Registration start-date must be\
-                                 lower than Event Registration end-date.'))
+                raise UserError(_('Error! Event Registration StartDate must be'
+                                  'lower than Event Registration end-date.'))
             elif self.last_reg_date >= self.start_date:
                 raise UserError(_('Error! Event Registration last-date must be\
                                  lower than Event start-date.'))
