@@ -80,8 +80,7 @@ class LibraryCard(models.Model):
         @student : Apply method on this Field name
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
-            and the value of student roll number and standard
-        '''
+            and the value of student roll number and standard'''
         if not student_id:
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
@@ -129,8 +128,7 @@ class LibraryBookIssue(models.Model):
         @param args : Other arguments
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
-                  and the book return date as value
-        '''
+                  and the book return date as value'''
         if self.date_issue and self.day_to_return_book:
             ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
                        + relativedelta(days=self.day_to_return_book.day or 0.0)
