@@ -105,8 +105,9 @@ class SchoolEvent(models.Model):
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
 
-        if self.start_date and self.end_date\
-            and self.start_date > self.end_date:
+        if (self.start_date
+                and self.end_date
+                and self.start_date > self.end_date):
             raise UserError(_('Error! Event start-date must be lower\
                              then Event end-date.'))
 
@@ -114,8 +115,10 @@ class SchoolEvent(models.Model):
                     'last_reg_date')
     def _check_all_dates(self):
 
-        if self.start_date and self.end_date and self.start_reg_date\
-            and self.last_reg_date:
+        if (self.start_date
+                and self.end_date
+                and self.start_reg_date
+                and self.last_reg_date):
 
             if self.start_reg_date > self.last_reg_date:
                 raise UserError(_('Error! Event Registration start-date must be\
@@ -130,10 +133,10 @@ class SchoolEvent(models.Model):
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            args.append(('part_standard_ids', 'in',
-                         [data.class_id.id]))
+            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
+            args.append(arg_domain)
         return super(SchoolEvent, self).search(args, offset, limit, order,
-                                                count=count)
+                                               count=count)
 
     @api.multi
     def event_open(self):
@@ -192,8 +195,7 @@ class SchoolEventRegistration(models.Model):
             # delete entry of participant
             domain = [('stu_pid', '=', prt_data.pid),
                       ('event_id', '=', reg_data.name.id),
-                      ('name', '=', reg_data.part_name_id.id)
-                     ]
+                      ('name', '=', reg_data.part_name_id.id)]
             stu_prt_data = event_part_obj.search(domain)
             stu_prt_data.unlink()
             # remove entry of event from student
@@ -232,10 +234,8 @@ class SchoolEventRegistration(models.Model):
                 list1.remove(parii)
             participants = int(event_data.participants) - 1
             event_reg_id = event_obj.browse(reg_data.name.id)
-            event_reg_id.write({
-                                'part_ids': [(6, 0, list1)],
-                                'participants': participants
-                               })
+            event_reg_id.write({'part_ids': [(6, 0, list1)],
+                                'participants': participants})
         return True
 
     @api.multi
@@ -261,13 +261,11 @@ class SchoolEventRegistration(models.Model):
                                  _('Last Registration date is over'
                                    'for this Event.'))
             # make entry in participant
-            val = {
-                   'stu_pid': str(prt_data.pid),
+            val = {'stu_pid': str(prt_data.pid),
                    'score': 0,
                    'win_parameter_id': event_data.parameter_id.id,
                    'event_id': reg_data.name.id,
-                   'name': reg_data.part_name_id.id,
-                  }
+                   'name': reg_data.part_name_id.id}
             temp = event_part_obj.create(val)
             # make entry of event in student
             list1 = []
@@ -323,4 +321,4 @@ class StudentStudent(models.Model):
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
             args.append(('class_id', 'in', std_ids))
         return super(StudentStudent, self).search(args, offset, limit, order,
-                                                   count=count)
+                                                  count=count)
