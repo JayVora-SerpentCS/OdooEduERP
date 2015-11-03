@@ -50,26 +50,22 @@ class MoveStandards(models.TransientModel):
                         if result_exists:
                             result_data = result_obj.browse(result_exists.id)
                             if result_data.result == "Pass":
-                                next_class_id = standard_obj.next_standard(\
+                                next_class_id = standard_obj.next_standard(
                                                 standards.standard_id.sequence)
                                 if next_class_id:
                                     student_id = student_obj.browse(student.id)
-                                    d_one = {
-                                             'year': data.academic_year_id.id,
-                                             'standard_id': next_class_id,
-                                            }
+                                    d_one = {'year': data.academic_year_id.id,
+                                             'standard_id': next_class_id}
                                     student_id.write(d_one)
                                     std_id_id = standards.standard_id.id
                                     div_id_id = standards.division_id.id
-                                    v = {
-                                         'student_id': student.id,
+                                    v = {'student_id': student.id,
                                          'academice_year_id': student.year.id,
                                          'standard_id': std_id_id,
                                          'division_id': div_id_id,
                                          'medium_id': standards.medium_id.id,
                                          'result': result_data.result,
-                                         'percentage': result_data.percentage
-                                        }
+                                         'percentage': result_data.percentage}
                                     stud_history_obj.create(v)
                             else:
                                 raise except_orm(_("Error!"),
