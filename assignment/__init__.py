@@ -5,4 +5,4 @@
 # A Module to Assignment Management System
 # ----------------------------------------------------------
 
-import assignment.models
+from . import models
