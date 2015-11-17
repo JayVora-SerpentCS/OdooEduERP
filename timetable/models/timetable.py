@@ -26,8 +26,8 @@ class TimeTable(models.Model):
         domain = [('table_id', '=', self.ids)]
         line_ids = self.env['time.table.line'].search(domain)
         for rec in line_ids:
-            records = [rec_check.id for rec_check in line_ids
-                           if (rec.week_day == rec_check.week_day
+            records = [rec_check.id for rec_check in line_ids\
+                           if (rec.week_day == rec_check.week_day\
                                     and rec.start_time == rec_check.start_time
                                     and rec.end_time == rec_check.end_time)]
             if len(records) > 1:
