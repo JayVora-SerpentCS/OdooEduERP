@@ -5,5 +5,5 @@
 # A Module to School Management System
 # ----------------------------------------------------------
 
-import school.models
-import school.wizard
+from . import models
+from . import wizard
