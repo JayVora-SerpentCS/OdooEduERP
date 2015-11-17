@@ -5,6 +5,6 @@
 # A Module to School Attendance System
 # ----------------------------------------------------------
 
-import school_attendance.models
-import school_attendance.wizard
-import school_attendance.report
+from . import models
+from . import wizard
+from . import report
