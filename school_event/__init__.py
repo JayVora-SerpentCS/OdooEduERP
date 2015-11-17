@@ -5,4 +5,4 @@
 # A Module to For Management of Events in School
 # ----------------------------------------------------------
 
-import school_event.models
+from . import models

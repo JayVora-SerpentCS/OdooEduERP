@@ -5,5 +5,5 @@
 # A Module to School Timetable Management System
 # ----------------------------------------------------------
 
-import timetable.models
-import timetable.report
+from . import models
+from . import report

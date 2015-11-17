@@ -5,6 +5,6 @@
 # A Module to School Exam Management System
 # ----------------------------------------------------------
 
-import exam.models
-import exam.report
-import exam.wizard
+from . import models
+from . import report
+from . import wizard

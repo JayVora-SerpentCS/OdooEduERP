@@ -5,5 +5,5 @@
 # A Module to HOSTEL Management System
 # ----------------------------------------------------------
 
-import school_hostel.report
-import school_hostel.models
+from . import report
+from . import models
