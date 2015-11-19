@@ -5,7 +5,7 @@
 
         <!-- Form View Of View Daily Attendance Wizard -->
 
-        <record id="view_daily_attendance_form" model="ir.ui.view">
+        <record id="view_daily_attendance_form_2" model="ir.ui.view">
             <field name="name">view.daily.attendance.form</field>
             <field name="model">attendance.report</field>
             <field name="arch" type="xml">
@@ -29,7 +29,7 @@
             <field name="res_model">attendance.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="view_id" ref="view_daily_attendance_form"/>
+            <field name="view_id" ref="view_daily_attendance_form_2"/>
             <field name="target">new</field>
         </record>
 

@@ -1,30 +1,11 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from common import *
-from code39 import *
-from code93 import *
-from code128 import *
-from usps import *
+from barcode_report.barcode.common import I2of5, MSI, Codabar, Code11
+from barcode_report.barcode.code39 import Standard39, Extended39
+from barcode_report.barcode.code93 import Standard93, Extended93
+from barcode_report.barcode.code128 import Code128
+from barcode_report.barcode.usps import FIM, POSTNET, inch
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Frame
@@ -50,9 +31,9 @@ def run():
     story.append(Paragraph('Code93', styleN))
     story.append(Standard93("CODE 93"))
     story.append(Paragraph('Extended Code93', styleN))
-    story.append(Extended93("L@@K! Code 93 :-)"))  # , xdim = 0.005 * inch))
+    story.append(Extended93("L@@K! Code 93 :-)"))
     story.append(Paragraph('Code 128', styleN))
-    c = Code128("AB-12345678")  # , xdim=0.005 * inch)
+    c = Code128("AB-12345678")
     story.append(c)
     story.append(Paragraph('USPS FIM', styleN))
     story.append(FIM("A"))

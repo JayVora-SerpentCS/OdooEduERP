@@ -1,27 +1,8 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from reportlab.lib.units import inch
-from common import MultiWidthBarcode
+from barcode_report.barcode.common import MultiWidthBarcode
 from string import digits
 
 _patterns = {0: 'BaBbBb', 1: 'BbBaBb', 2: 'BbBbBa',
@@ -59,8 +40,7 @@ _patterns = {0: 'BaBbBb', 1: 'BbBaBb', 2: 'BbBbBa',
              96: 'AaDcAa', 97: 'DaAaAc', 98: 'DaAcAa',
              99: 'AaCaDa', 100: 'AaDaCa', 101: 'CaAaDa',
              102: 'DaAaCa', 103: 'BaAdAb', 104: 'BaAbAd',
-             105: 'BaAbCb', 106: 'BcCaAaB'
-}
+             105: 'BaAbCb', 106: 'BcCaAaB'}
 
 starta, startb, startc, stop = 103, 104, 105, 106
 
@@ -89,8 +69,7 @@ seta = {' ': 0, '!': 1, '"': 2, '#': 3,
         '\x18':  88, '\x19':  89, '\x1a':  90, '\x1b':  91,
         '\x1c':  92, '\x1d':  93, '\x1e':  94, '\x1f':  95,
         '\xf3':  96, '\xf2':  97, 'SHIFT':  98, 'TO_C':  99,
-        'TO_B': 100, '\xf4': 101, '\xf1': 102
-}
+        'TO_B': 100, '\xf4': 101, '\xf1': 102}
 
 setb = {' ': 0, '!': 1, '"': 2, '#': 3,
         '$': 4, '%': 5, '&': 6, '\'': 7,
@@ -117,8 +96,7 @@ setb = {' ': 0, '!': 1, '"': 2, '#': 3,
         'x':  88, 'y':  89, 'z':  90, '{':  91,
         '|':  92, '}':  93, '~':  94, '\x7f':  95,
         '\xf3': 96, '\xf2': 97, 'SHIFT': 98, 'TO_C': 99,
-        '\xf4': 100, 'TO_A': 101, '\xf1': 102
-}
+        '\xf4': 100, 'TO_A': 101, '\xf1': 102}
 
 setc = {'00': 0, '01': 1, '02': 2, '03': 3, '04': 4,
         '05': 5, '06': 6, '07': 7, '08': 8, '09': 9,
@@ -140,17 +118,15 @@ setc = {'00': 0, '01': 1, '02': 2, '03': 3, '04': 4,
         '85': 85, '86': 86, '87': 87, '88': 88, '89': 89,
         '90': 90, '91': 91, '92': 92, '93': 93, '94': 94,
         '95': 95, '96': 96, '97': 97, '98': 98, '99': 99,
-        'TO_B': 100, 'TO_A': 101, '\xf1': 102
-}
+        'TO_B': 100, 'TO_A': 101, '\xf1': 102}
 
-setmap = {
- 'TO_A': (seta, setb),
- 'TO_B': (setb, seta),
- 'TO_C': (setc, None),
- 'START_A': (starta, seta, setb),
- 'START_B': (startb, setb, seta),
- 'START_C': (startc, setc, None),
-}
+setmap = {'TO_A': (seta, setb),
+          'TO_B': (setb, seta),
+          'TO_C': (setc, None),
+          'START_A': (starta, seta, setb),
+          'START_B': (startb, setb, seta),
+          'START_C': (startc, setc, None)}
+
 tos = setmap.keys()
 
 
@@ -197,8 +173,7 @@ class Code128(MultiWidthBarcode):
     http://www.barcodeman.com/c128.html
 
     Official Spec, "ANSI/AIM BC4-1999, ISS" is available for US$45 from
-    http://www.aimglobal.org/aimstore/
-    """
+    http://www.aimglobal.org/aimstore/"""
     def __init__(self, value='', **args):
         self.xdim = inch * 0.0075
         self.lquiet = None
@@ -206,7 +181,7 @@ class Code128(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if type(value) is type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -243,8 +218,8 @@ class Code128(MultiWidthBarcode):
                 c = c + 1
                 rl.insert(0, '\xf1')
                 continue
-            elif len(l[i]) == 1 and l[i] in digits \
-             and len(l[i - 1]) == 1 and l[i - 1] in digits:
+            elif len(l[i]) == 1 and l[i] in digits\
+                    and len(l[i - 1]) == 1 and l[i - 1] in digits:
                 c = c + 2
                 savings = savings + 1
                 rl.insert(0, l[i - 1] + l[i])
@@ -261,7 +236,7 @@ class Code128(MultiWidthBarcode):
         s = self.validated
         l = ['START_B']
         for c in s:
-            if not setb.has_key(c):
+            if c not in setb:
                 l = l + ['TO_A', c, 'TO_B']
             else:
                 l.append(c)

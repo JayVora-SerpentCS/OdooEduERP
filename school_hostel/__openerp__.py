@@ -1,47 +1,21 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-{
-    'name': 'HOSTEL',
-    'version': '3.0',
-    'author': 'Serpent Consulting Services PVT. LTD.',
-    'category': 'School Management',
-    'website': 'http://www.serpentcs.com',
-    'complexity': 'easy',
-    'summary': 'Module For HOSTEL Management In School',
-    'description': '''Module to Manage HOSTEL.
-        Rooms Information,
-        Allocation of Rooms Details
-        Discharge of Room Details etc.''',
-    'depends': ['school'],
-    'demo': ['demo/school_hostel_demo.xml'],
-    'data': [
-        'security/hostel_security.xml',
-        'security/ir.model.access.csv',
-        'views/hostel_view.xml',
-        'views/hostel_sequence.xml',
-        'views/report_view.xml',
-        'views/hostel_fee_receipt.xml',
-    ],
-    'installable': True,
-    'auto_install': False,
-}
+{'name': 'HOSTEL',
+ 'version': '3.0',
+ 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'category': 'School Management',
+ 'website': 'http://www.serpentcs.com',
+ 'license': '',
+ 'complexity': 'easy',
+ 'summary': 'Module For HOSTEL Management In School',
+ 'depends': ['school'],
+ 'demo': ['demo/school_hostel_demo.xml'],
+ 'data': ['security/hostel_security.xml',
+          'security/ir.model.access.csv',
+          'views/hostel_view.xml',
+          'views/hostel_sequence.xml',
+          'views/report_view.xml',
+          'views/hostel_fee_receipt.xml'],
+ 'installable': True,
+ 'auto_install': False}

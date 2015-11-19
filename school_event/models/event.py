@@ -1,35 +1,16 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import except_orm, Warning as UserError
 
 
-class board_board(models.Model):
+class BoardBoard(models.Model):
     _inherit = "board.board"
 
 
-class school_standard(models.Model):
+class SchoolStandard(models.Model):
     _name = 'school.standard'
     _inherit = 'school.standard'
     _rec_name = 'event_ids'
@@ -39,7 +20,7 @@ class school_standard(models.Model):
                                  readonly=True)
 
 
-class school_event_parameter(models.Model):
+class SchoolEventParameter(models.Model):
     '''for event parameter based on which score will given'''
     _name = 'school.event.parameter'
     _description = 'Event Parameter'
@@ -47,7 +28,7 @@ class school_event_parameter(models.Model):
     name = fields.Char('Parameter Name', required=True)
 
 
-class school_event_participant(models.Model):
+class SchoolEventParticipant(models.Model):
     '''for Participant which are participated in events'''
     _name = 'school.event.participant'
     _description = 'Participant Information'
@@ -65,7 +46,7 @@ class school_event_participant(models.Model):
                                Rank to the Participant", default=0)
 
 
-class school_event(models.Model):
+class SchoolEvent(models.Model):
     '''for events'''
     _name = 'school.event'
     _description = 'Event Information'
@@ -74,8 +55,7 @@ class school_event(models.Model):
     @api.one
     def _participants(self):
         cnt = 0
-        for rec_part_id in self.part_ids:
-            cnt += 1
+        cnt += 1
         self.participants = cnt
 
     name = fields.Char('Event Name', help="Full Name of the event")
@@ -108,10 +88,9 @@ class school_event(models.Model):
                                          'Participant Standards',
                                          help="The Participant is from\
                                                which standard")
-    state = fields.Selection([
-                            ('draft', 'Draft'), ('open', 'Running'),
-                            ('close', 'Close'), ('cancel', 'Cancel')],
-                            string='State', readonly=True, default='draft')
+    state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
+                              ('close', 'Close'), ('cancel', 'Cancel')],
+                             string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant',
                                 'event_participants_rel', 'participant_id',
                                 'event_id', 'Participants', readonly=True,
@@ -125,35 +104,43 @@ class school_event(models.Model):
 
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
-        if self.start_date and self.end_date\
-            and self.start_date > self.end_date:
-            raise Warning(_('Error! Event start-date must be lower\
+
+        if (self.start_date
+                and self.end_date
+                and self.start_date > self.end_date):
+            raise UserError(_('Error! Event start-date must be lower\
                              then Event end-date.'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
                     'last_reg_date')
     def _check_all_dates(self):
-        if self.start_date and self.end_date and self.start_reg_date\
-            and self.last_reg_date:
+
+        if (self.start_date
+                and self.end_date
+                and self.start_reg_date
+                and self.last_reg_date):
+
             if self.start_reg_date > self.last_reg_date:
-                raise Warning(_('Error! Event Registration start-date must be\
-                                 lower than Event Registration end-date.'))
+                raise UserError(_('Error! Event Registration StartDate must be'
+                                  'lower than Event Registration end-date.'))
             elif self.last_reg_date >= self.start_date:
-                raise Warning(_('Error! Event Registration last-date must be\
+                raise UserError(_('Error! Event Registration last-date must be\
                                  lower than Event start-date.'))
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
+
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
-            student_data = student_obj.browse(self._context['part_name_id'])
-            args.append(('part_standard_ids', 'in',
-                         [student_data.class_id.id]))
-        return super(school_event, self).search(args, offset, limit, order,
-                                                count=count)
+            data = student_obj.browse(self._context.get('part_name_id'))
+            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
+            args.append(arg_domain)
+        return super(SchoolEvent, self).search(args, offset, limit, order,
+                                               count=count)
 
     @api.multi
     def event_open(self):
+
         if self.part_ids and self.part_ids[0].id:
             self.write({'state': 'open'})
         else:
@@ -176,7 +163,7 @@ class school_event(models.Model):
         return True
 
 
-class school_event_registration(models.Model):
+class SchoolEventRegistration(models.Model):
     '''for registration by students for events'''
     _name = 'school.event.registration'
     _description = 'Event Registration'
@@ -201,41 +188,49 @@ class school_event_registration(models.Model):
         student_obj = self.env['student.student']
         event_part_obj = self.env['school.event.participant']
         self.write({'state': 'cancel'})
+
         for reg_data in self:
             event_data = event_obj.browse(reg_data.name.id)
             prt_data = student_obj.browse(reg_data.part_name_id.id)
-            #delete entry of participant
-            stu_prt_data = event_part_obj.search([
-                            ('stu_pid', '=', prt_data.pid),
-                            ('event_id', '=', reg_data.name.id),
-                            ('name', '=', reg_data.part_name_id.id)])
+            # delete entry of participant
+            domain = [('stu_pid', '=', prt_data.pid),
+                      ('event_id', '=', reg_data.name.id),
+                      ('name', '=', reg_data.part_name_id.id)]
+            stu_prt_data = event_part_obj.search(domain)
             stu_prt_data.unlink()
-            #remove entry of event from student
+            # remove entry of event from student
             list1 = []
+
             for part in prt_data.event_ids:
                 part = student_obj.browse(part.id)
                 list1.append(part.id)
             flag = True
+
             for part in list1:
                 data = event_part_obj.browse(part)
                 if data.event_id.id == reg_data.name.id:
                     flag = False
-            if flag == False:
+
+            if not flag:
                 list1.remove(part)
             stu_part_id = student_obj.browse(reg_data.part_name_id.id)
             stu_part_id.write({'event_ids': [(6, 0, list1)]})
             list1 = []
-            #remove entry of participant from event
+            # remove entry of participant from event
             flag = True
+
             for par in event_data.part_ids:
                 part = event_part_obj.browse(par.id)
                 list1.append(part.id)
+
             for par in list1:
                 data = event_part_obj.browse(par)
+
                 if data.name.id == reg_data.part_name_id.id:
                     parii = par
                     flag = False
-            if flag == False:
+
+            if not flag:
                 list1.remove(parii)
             participants = int(event_data.participants) - 1
             event_reg_id = event_obj.browse(reg_data.name.id)
@@ -249,51 +244,59 @@ class school_event_registration(models.Model):
         event_obj = self.env['school.event']
         student_obj = self.env['student.student']
         event_part_obj = self.env['school.event.participant']
+
         for reg_data in self:
             event_data = event_obj.browse(reg_data.name.id)
             prt_data = student_obj.browse(reg_data.part_name_id.id)
             participants = int(event_data.participants) + 1
-            #check participation is full or not.
+
+            # check participation is full or not.
             if participants > event_data.maximum_participants:
                 raise except_orm(_('Error !'),
-                    _('Participation in this Event is Full.'))
-            #check last registration date is over or not
+                                 _('Participation in this Event is Full.'))
+
+            # check last registration date is over or not
             if reg_data.reg_date > event_data.last_reg_date:
                 raise except_orm(_('Error !'),
-                    _('Last Registration date is over for this Event.'))
+                                 _('Last Registration date is over'
+                                   'for this Event.'))
             # make entry in participant
-            val = {
-                'stu_pid': str(prt_data.pid),
-                'score': 0,
-                'win_parameter_id': event_data.parameter_id.id,
-                'event_id': reg_data.name.id,
-                'name': reg_data.part_name_id.id,
-            }
+            val = {'stu_pid': str(prt_data.pid),
+                   'score': 0,
+                   'win_parameter_id': event_data.parameter_id.id,
+                   'event_id': reg_data.name.id,
+                   'name': reg_data.part_name_id.id}
             temp = event_part_obj.create(val)
-            #make entry of event in student
+            # make entry of event in student
             list1 = []
+
             for evt in prt_data.event_ids:
                 part = student_obj.browse(evt.id)
                 list1.append(part.id)
             flag = True
+
             for evt in list1:
                 data = event_part_obj.browse(evt)
                 if data.event_id.id == reg_data.name.id:
                     flag = False
+
             if flag:
                 list1.append(temp.id)
             stu_part_id = student_obj.browse(reg_data.part_name_id.id)
             stu_part_id.write({'event_ids': [(6, 0, list1)]})
-            #make entry of participant in event
+            # make entry of participant in event
             list1 = []
             flag = True
+
             for evt in event_data.part_ids:
                 part = event_part_obj.browse(evt.id)
                 list1.append(part.id)
+
             for evt in list1:
                 data = event_part_obj.browse(evt)
                 if data.name.id == reg_data.part_name_id.id:
                     flag = False
+
             if flag:
                 list1.append(temp.id)
             evnt_reg_id = event_obj.browse(reg_data.name.id)
@@ -301,7 +304,7 @@ class school_event_registration(models.Model):
         return True
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     _name = 'student.student'
     _inherit = 'student.student'
     _description = 'Student Information'
@@ -317,5 +320,5 @@ class student_student(models.Model):
             event_data = event_obj.browse(self._context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
             args.append(('class_id', 'in', std_ids))
-        return super(student_student, self).search(args, offset, limit, order,
-                                                   count=count)
+        return super(StudentStudent, self).search(args, offset, limit, order,
+                                                  count=count)

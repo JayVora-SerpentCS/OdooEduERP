@@ -1,34 +1,14 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class library_price_category(models.Model):
-
+class LibraryPriceCategory(models.Model):
     _name = 'library.price.category'
     _description = 'Book Price Category'
 
@@ -37,8 +17,7 @@ class library_price_category(models.Model):
     product_ids = fields.One2many('product.product', 'price_cat', 'Books')
 
 
-class library_rack(models.Model):
-
+class LibraryRack(models.Model):
     _name = 'library.rack'
     _description = "Library Rack"
 
@@ -48,8 +27,7 @@ class library_rack(models.Model):
     active = fields.Boolean('Active', default='True')
 
 
-class library_collection(models.Model):
-
+class LibraryCollection(models.Model):
     _name = 'library.collection'
     _description = "Library Collection"
 
@@ -57,8 +35,7 @@ class library_collection(models.Model):
     code = fields.Char('Code')
 
 
-class library_book_returnday(models.Model):
-
+class LibraryBookReturnday(models.Model):
     _name = 'library.book.returnday'
     _description = "Library Collection"
     _rec_name = 'day'
@@ -70,8 +47,7 @@ class library_book_returnday(models.Model):
                             help="Fine amount after due of book return date")
 
 
-class library_author(models.Model):
-
+class LibraryAuthor(models.Model):
     _name = 'library.author'
     _description = "Author"
 
@@ -88,8 +64,7 @@ class library_author(models.Model):
                          'The name of the author must be unique !')]
 
 
-class library_card(models.Model):
-
+class LibraryCard(models.Model):
     _name = "library.card"
     _description = "Library Card information"
     _rec_name = "code"
@@ -105,15 +80,12 @@ class library_card(models.Model):
         @student : Apply method on this Field name
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
-            and the value of student roll number and standard
-        '''
+            and the value of student roll number and standard'''
         if not student_id:
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
-        val = {
-                'standard_id': student_data.standard_id.id,
-                'roll_no': student_data.roll_no,
-                }
+        val = {'standard_id': student_data.standard_id.id,
+               'roll_no': student_data.roll_no}
         return {'value': val}
 
     @api.one
@@ -133,14 +105,13 @@ class library_card(models.Model):
     standard_id = fields.Many2one('school.standard', 'Standard')
     gt_name = fields.Char(compute="get_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
-                            "User")
+                            'User')
     roll_no = fields.Integer('Roll No')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
 
 
-class library_book_issue(models.Model):
+class LibraryBookIssue(models.Model):
     '''Book variant of product'''
-
     _name = "library.book.issue"
     _description = "Library information"
     _rec_name = "standard_id"
@@ -157,9 +128,7 @@ class library_book_issue(models.Model):
         @param args : Other arguments
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
-                  and the book return date as value
-
-        '''
+                  and the book return date as value'''
         if self.date_issue and self.day_to_return_book:
             ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
                        + relativedelta(days=self.day_to_return_book.day or 0.0)
@@ -186,8 +155,9 @@ class library_book_issue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days) * 24 + (float(diff.seconds)\
-                                / 3600)
+                    duration = float(diff.days)\
+                               * 24\
+                               + (float(diff.seconds) / 3600)
                     day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
@@ -230,12 +200,12 @@ class library_book_issue(models.Model):
                 if self.card_id.book_limit > len(card_ids) - 1:
                     return True
                 else:
-                    raise Warning(_('Book issue limit  is over on this card'))
+                    raise UserError(_('Book issue limit is over on this card'))
             else:
                 if self.card_id.book_limit > len(card_ids):
                     return True
                 else:
-                    raise Warning(_('Book issue limit  is over on this card'))
+                    raise UserError(_('Book issue limit is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
@@ -249,8 +219,8 @@ class library_book_issue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=lambda *a:\
-                                 time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 default=lambda *a:
+                                    time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
@@ -290,29 +260,26 @@ class library_book_issue(models.Model):
         card_data = self.env['library.card'].browse(card_id)
         val = {'user': str(card_data.user.title())}
         if card_data.user.title() == 'Student':
-            val.update({
-                    'student_id': card_data.student_id.id,
-                    'standard_id': card_data.standard_id.id,
-                    'roll_no': card_data.roll_no,
-                    'gt_name': card_data.gt_name
-                })
+            val.update({'student_id': card_data.student_id.id,
+                        'standard_id': card_data.standard_id.id,
+                        'roll_no': card_data.roll_no,
+                        'gt_name': card_data.gt_name})
         else:
             val.update({'teacher_id': card_data.teacher_id.id,
-                        'gt_name': card_data.gt_name
-                })
+                        'gt_name': card_data.gt_name})
         return {'value': val}
 
     @api.multi
     def draft_book(self):
-        '''method for WorkFlow'''
-        ''' This method for books in draft state.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True
-        '''
+#         '''method for WorkFlow'''
+#         ''' This method for books in draft state.
+#         @param self : Object Pointer
+#         @param cr : Database Cursor
+#         @param uid : Current Logged in User
+#         @param ids : Current Records
+#         @param context : standard Dictionary
+#         @return : True'''
+
         self.write({'state': 'draft'})
         return True
 
@@ -417,61 +384,51 @@ class library_book_issue(models.Model):
             if record.user.title() == 'Student':
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
-                    raise Warning(_("Error !\
-                    The Student must have a Home address."))
+                    raise UserError(_('Error !'
+                                    'The Student must have a Home address.'))
                 addr = record.student_id.partner_id.contact_address
             else:
                 usr = record.teacher_id.id
                 if not record.teacher_id.address_home_id:
-                    raise Warning(_('Error !\
-                    The Teacher must have a Home address.'))
-                addr = record.teacher_id.address_home_id and\
-                record.teacher_id.address_home_id.id
-            vals_invoice = {
-                'partner_id': usr,
-                'address_invoice_id': addr,
-                'account_id': 12,
-            }
+                    raise UserError(_('Error !'
+                                    'The Teacher must have a Home address.'))
+                addr = record.teacher_id.address_home_id\
+                        and record.teacher_id.address_home_id.id
+            vals_invoice = {'partner_id': usr,
+                            'address_invoice_id': addr,
+                            'account_id': 12}
             invoice_lines = []
             if record.lost_penalty:
                 lost_pen = record.lost_penalty
-                invoice_line2 = {
-                    'name': 'Book Lost Fine',
-                    'price_unit': lost_pen,
-                    'account_id': 12
-                }
+                invoice_line2 = {'name': 'Book Lost Fine',
+                                 'price_unit': lost_pen,
+                                 'account_id': 12}
                 invoice_lines.append((0, 0, invoice_line2))
             if record.penalty:
                 pen = record.penalty
-                invoice_line1 = {
-                    'name': 'Late Return Penalty',
-                    'price_unit': pen,
-                    'account_id': 12
-                }
+                invoice_line1 = {'name': 'Late Return Penalty',
+                                 'price_unit': pen,
+                                 'account_id': 12}
                 invoice_lines.append((0, 0, invoice_line1))
         vals_invoice.update({'invoice_line': invoice_lines})
         new_invoice_id = invoice_obj.create(vals_invoice)
         data_id = obj_data._get_id('account', 'invoice_form')
         data = obj_data.browse(data_id)
         view_id = data.res_id
-        return {
-            'name': _("New Invoice"),
-            'view_mode': 'form',
-            'view_id': [view_id],
-            'view_type': 'form',
-            'res_model': 'account.invoice',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'res_id': new_invoice_id.id,
-            'target': 'current',
-            'context': {
-            }
-        }
+        return {'name': _("New Invoice"),
+                'view_mode': 'form',
+                'view_id': [view_id],
+                'view_type': 'form',
+                'res_model': 'account.invoice',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'res_id': new_invoice_id.id,
+                'target': 'current',
+                'context': {}}
 
 
-class library_book_request(models.Model):
+class LibraryBookRequest(models.Model):
     '''Request for Book'''
-
     _name = "library.book.request"
     _rec_name = 'req_id'
 

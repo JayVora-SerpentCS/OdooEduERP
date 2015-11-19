@@ -1,35 +1,15 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from calendar import monthrange
 from datetime import datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class attendance_sheet(models.Model):
+class AttendanceSheet(models.Model):
     ''' Defining Monthly Attendance sheet Information '''
-
     _description = 'Attendance Sheet'
     _name = 'attendance.sheet'
 
@@ -59,9 +39,11 @@ class attendance_sheet(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', context=None,
                         toolbar=False, submenu=False):
-        res = super(attendance_sheet, self).fields_view_get(view_id=view_id,
-            view_type=view_type, context=context, toolbar=toolbar,
-            submenu=submenu)
+        res = super(AttendanceSheet, self).fields_view_get(view_id=view_id,
+                                                           view_type=view_type,
+                                                           context=context,
+                                                           toolbar=toolbar,
+                                                           submenu=submenu)
         if context is None:
             context = {}
         if context.get('month_id', False):
@@ -69,17 +51,18 @@ class attendance_sheet(models.Model):
                                     context['month_id'][0])[1]
             if no_of_days == 31:
                 pass
-
             elif no_of_days == 30:
+
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
                         res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
                         res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-
             elif no_of_days == 29:
+
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
+
                     if 'views' in att:
                         res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
                         res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
@@ -87,8 +70,10 @@ class attendance_sheet(models.Model):
                         res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
 
             else:
+
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
+
                     if 'views' in att:
                         res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
                         res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
@@ -96,11 +81,10 @@ class attendance_sheet(models.Model):
                         res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
                         res['fields']['attendance_ids']['views']['tree']['fields']['two_9'].update({'invisible': 1})
                         res['fields']['attendance_ids']['views']['form']['fields']['two_9'].update({'invisible': 1})
-
         return res
 
 
-class attendance_sheet_line(models.Model):
+class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
     @api.multi
@@ -186,7 +170,6 @@ class attendance_sheet_line(models.Model):
     roll_no = fields.Integer('Roll Number', required=True,
                              help='Roll Number of Student')
     standard_id = fields.Many2one('attendance.sheet', 'Standard')
-#     name = fields.Many2one('student.student','Student Name', required=True)
     name = fields.Char('Student Name', required=True, readonly=True)
     one = fields.Boolean('1')
     two = fields.Boolean('2')
@@ -223,9 +206,8 @@ class attendance_sheet_line(models.Model):
                               string='Attendance (%)', store=False)
 
 
-class daily_attendance(models.Model):
+class DailyAttendance(models.Model):
     ''' Defining Daily Attendance Information '''
-
     _description = 'Daily Attendance'
     _name = 'daily.attendance'
 
@@ -289,7 +271,7 @@ class daily_attendance(models.Model):
         if vals:
             if 'student_ids' in vals.keys():
                 child = vals.pop('student_ids')
-        ret_val = super(daily_attendance, self).create(vals)
+        ret_val = super(DailyAttendance, self).create(vals)
         if child != '':
             ret_val.write({'student_ids': child})
         return ret_val
@@ -301,7 +283,7 @@ class daily_attendance(models.Model):
         stud_obj = self.env['student.student']
         if standard_id:
             self._cr.execute("""select id from student_student\
-                where standard_id=%s""", (standard_id,))
+                             where standard_id=%s""", (standard_id,))
             stud_ids = self._cr.fetchall()
             for stud_id in stud_ids:
                 student_ids = stud_obj.browse(stud_id)
@@ -318,24 +300,22 @@ class daily_attendance(models.Model):
 
         for daily_attendance_data in self:
             if not daily_attendance_data.date:
-                raise Warning(_('Please enter todays date.'))
+                raise UserError(_('Please enter todays date.'))
             date = datetime.strptime(daily_attendance_data.date, "%Y-%m-%d")
-            year_search_ids = academic_year_obj.search([
-                                                    ('code', '=', date.year)])
-            month_search_ids = academic_month_obj.search([
-                                                    ('code', '=', date.month)])
+            domain_year = [('code', '=', date.year)]
+            domain_month = [('code', '=', date.month)]
+            year_search_ids = academic_year_obj.search(domain_year)
+            month_search_ids = academic_month_obj.search(domain_month)
             for line in daily_attendance_data.student_ids:
                 line.write({'is_present': False, 'is_absent': False})
-
-            attendance_sheet_domain = [('standard_id', '=',
-                                        daily_attendance_data.standard_id.id),
-             ('month_id', '=', month_search_ids.id),
-             ('year_id', '=', year_search_ids.id)]
-        search_attendance_sheet_ids = attendance_sheet_obj.search(
-                                        attendance_sheet_domain)
-        if search_attendance_sheet_ids:
-            for attendance_sheet_datas in search_attendance_sheet_ids:
-                for attendance_id in attendance_sheet_datas.attendance_ids:
+            domain = [('standard_id', '=',
+                       daily_attendance_data.standard_id.id),
+                      ('month_id', '=', month_search_ids.id),
+                      ('year_id', '=', year_search_ids.id)]
+        sheet_ids = attendance_sheet_obj.search(domain)
+        if sheet_ids:
+            for data in sheet_ids:
+                for attendance_id in data.attendance_ids:
                     date = datetime.strptime(daily_attendance_data.date,
                                              "%Y-%m-%d")
                     if date.day == 1:
@@ -406,7 +386,7 @@ class daily_attendance(models.Model):
 
     @api.multi
     def attendance_validate(self):
-        attendance_sheet_line_obj = self.env['attendance.sheet.line']
+        sheet_line_obj = self.env['attendance.sheet.line']
         acadmic_year_obj = self.env['academic.year']
         acadmic_month_obj = self.env['academic.month']
         attendance_sheet_obj = self.env['attendance.sheet']
@@ -422,31 +402,29 @@ class daily_attendance(models.Model):
                                                    year_ids.ids)])
             if month_ids:
                 month_data = month_ids
-                att_sheet_ids = attendance_sheet_obj.search([
-                                    ('month_id', 'in', month_ids.ids),
-                                    ('year_id', 'in', year_ids.ids)])
+                domain = [('month_id', 'in', month_ids.ids),
+                          ('year_id', 'in', year_ids.ids)]
+                att_sheet_ids = attendance_sheet_obj.search(domain)
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
                                       or False
                 if not attendance_sheet_id:
-                    attendance_sheet_id = attendance_sheet_obj.create({
-                                            'name':  'Month ' + month_data.name
-                                                     + "-Year " + str(year),
-                                            'standard_id': line.standard_id.id,
-                                            'user_id': line.user_id.id,
-                                            'month_id': month_data.id,
-                                            'year_id': year_ids and year_ids.id
-                                                       or False})
+                    sheet = {'name': 'Month ' + month_data.name
+                                     + "-Year " + str(year),
+                             'standard_id': line.standard_id.id,
+                             'user_id': line.user_id.id,
+                             'month_id': month_data.id,
+                             'year_id': year_ids and year_ids.id
+                                            or False}
+                    attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
-                        attendance_sheet_line_obj.create({
-                                        'roll_no': student_id.roll_no,
-                                        'standard_id': attendance_sheet_id.id,
-                                        'name': student_id.stud_id.student_name
-                        })
+                        line_dict = {'roll_no': student_id.roll_no,
+                                     'standard_id': attendance_sheet_id.id,
+                                     'name': student_id.stud_id.student_name}
+                        sheet_line_obj.create(line_dict)
                         for student_id in line.student_ids:
-                            attendance_sheet_line_obj.read(
-                                                        [student_id.roll_no])
-                            search_id = attendance_sheet_line_obj.search([
-                                        ('roll_no', '=', student_id.roll_no)])
+                            sheet_line_obj.read([student_id.roll_no])
+                            domain = [('roll_no', '=', student_id.roll_no)]
+                            search_id = sheet_line_obj.search(domain)
                             if date.day == 1 and student_id.is_absent:
                                 val = {'one': False}
 
@@ -639,10 +617,11 @@ class daily_attendance(models.Model):
 
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
-                        attendance_sheet_line_obj.read([student_id.roll_no])
-                        search_id = attendance_sheet_line_obj.search([
-                                ('roll_no', '=', student_id.roll_no),
-                                ('standard_id', '=', attendance_sheet_id.id)])
+                        sheet_line_obj.read([student_id.roll_no])
+                        domain = [('roll_no', '=', student_id.roll_no),
+                                  ('standard_id', '=', attendance_sheet_id.id)]
+                        search_id = sheet_line_obj.search(domain)
+
                         if date.day == 1 and student_id.is_absent:
                             val = {'one': False}
 
@@ -832,14 +811,12 @@ class daily_attendance(models.Model):
                             val = {}
                         if search_id:
                             search_id.write(val)
-
         self.write({'state': 'validate'})
         return True
 
 
-class daily_attendance_line(models.Model):
+class DailyAttendanceLine(models.Model):
     ''' Defining Daily Attendance Sheet Line Information '''
-
     _description = 'Daily Attendance Line'
     _name = 'daily.attendance.line'
     _order = 'roll_no'

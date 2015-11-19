@@ -1,24 +1,5 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 _rm_patterns = {"0": "--||", "1": "-',|", "2": "-'|,", "3": "'-,|",
                 "4": "'-|,", "5": "'',,", "6": "-,'|", "7": "-|-|",
@@ -29,12 +10,10 @@ _rm_patterns = {"0": "--||", "1": "-',|", "2": "-'|,", "3": "'-,|",
                 "O": ",-|'", "P": ",','", "Q": ",'|-", "R": "|-,'",
                 "S": "|-|-", "T": "|',-", "U": ",,''", "V": ",|-'",
                 "W": ",|'-", "X": "|,-'", "Y": "|,'-", "Z": "||--",
-                "(": "'-,'", ")": "'|,|"
-}
+                "(": "'-,'", ")": "'|,|"}
 
 _ozN_patterns = {"0": "||",  "1": "|'",  "2": "|,",  "3": "'|",  "4": "''",
-                 "5": "',",  "6": ",|",  "7": ",'",  "8": ",,",  "9": ".|"
-}
+                 "5": "',",  "6": ",|",  "7": ",'",  "8": ",,",  "9": ".|"}
 
 _ozC_patterns = {"A": "|||", "B": "||'", "C": "||,", "D": "|'|",
                  "E": "|''", "F": "|',", "G": "|,|", "H": "|,'",
@@ -51,5 +30,4 @@ _ozC_patterns = {"A": "|||", "B": "||'", "C": "||,", "D": "|'|",
                  "w": "..|", "x": "..'", "y": "..,", "z": "...",
                  "0": ",,,", "1": ".||", "2": ".|'", "3": ".|,",
                  "4": ".'|", "5": ".''", "6": ".',", "7": ".,|",
-                 "8": ".,'", "9": ".,,", " ": "||.", "#": "|'.",
-}
+                 "8": ".,'", "9": ".,,", " ": "||.", "#": "|'."}

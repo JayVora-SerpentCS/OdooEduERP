@@ -1,31 +1,11 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from openerp import models, fields, api
 
 
-class student_evaluation(models.Model):
-
+class StudentEvaluation(models.Model):
     _name = "student.evaluation"
     _rec_name = 'student_id'
 
@@ -39,10 +19,10 @@ class student_evaluation(models.Model):
                 self._cr.execute('delete from student_evaluation_line\
                                   where eval_id=%s', (stu_eval_rec.id,))
             type_eval = stu_eval_rec.type
-            eval_temp_rec_browse = eval_temp_obj.search([
-                                   ('type', '=', type_eval)])
-            for eval_temp_rec in eval_temp_rec_browse:
-                eval_list.append(eval_temp_rec.id)
+            domain = [('type', '=', type_eval)]
+            eval_temp_ids = eval_temp_obj.search(domain)
+            for eval_temp_id in eval_temp_ids:
+                eval_list.append(eval_temp_id.id)
             for i in range(0, len(eval_list)):
                 eval_line_obj.create({'stu_eval_id': eval_list[i],
                                       'eval_id': self.id})
@@ -102,8 +82,7 @@ class student_evaluation(models.Model):
         return True
 
 
-class student_evaluation_line(models.Model):
-
+class StudentEvaluationLine(models.Model):
     _name = 'student.evaluation.line'
 
     @api.multi
@@ -124,8 +103,7 @@ class student_evaluation_line(models.Model):
     ]
 
 
-class student_evaluation_template(models.Model):
-
+class StudentEvaluationTemplate(models.Model):
     _name = "student.evaluation.template"
     _rec_name = 'desc'
 
@@ -135,8 +113,7 @@ class student_evaluation_template(models.Model):
     rating_line = fields.One2many('rating.rating', 'rating_id', 'Rating')
 
 
-class rating_rating(models.Model):
-
+class RatingRating(models.Model):
     _name = 'rating.rating'
     _rec_name = 'point'
 

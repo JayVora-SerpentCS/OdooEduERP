@@ -98,15 +98,6 @@
             <field name="sequence">19</field>
          </record>
 
-        <record id="event_participant_1" model="school.event.participant">
-            <field name="stu_pid">101</field>
-            <field name="name" ref="school.demo_student_student_1" />
-            <field name="event_id" ref="school_event_1" />
-            <field name="win_parameter_id" ref="event_parameter_1" />
-            <field name="score">101</field>
-            <field name="sequence">19</field>
-         </record>
-
         <record id="event_participant_2" model="school.event.participant">
             <field name="stu_pid">102</field>
             <field name="name" ref="school.demo_student_student_2" />

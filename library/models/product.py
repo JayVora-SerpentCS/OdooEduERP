@@ -1,31 +1,11 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 from openerp import models, fields, api
 
 
-class product_state(models.Model):
-
+class ProductState(models.Model):
     _name = "product.state"
     _description = "States of Books"
 
@@ -34,12 +14,10 @@ class product_state(models.Model):
     active = fields.Boolean('Active', select=2)
 
 
-class many2manysym(fields.Many2many):
+class Many2manySym(fields.Many2many):
 
     @api.multi
     def get(self, offset=0):
-#         if context is None:
-#             context
         res = {}
         if not self.ids:
             return res
@@ -51,7 +29,7 @@ class many2manysym(fields.Many2many):
                                        (self._id1, self._id2)]:
             self._cr.execute('select ' + self._id2 + ',' + self._id1
                              + ' from ' + self._rel + ' where ' + self._id1
-                             + ' in ('\
+                             + ' in ('
                              + ids_s + ')' + limit_str + ' offset %s',
                              (offset,))
             for r in self._cr.fetchall():
@@ -59,8 +37,7 @@ class many2manysym(fields.Many2many):
         return res
 
 
-class product_template(models.Model):
-
+class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     name = fields.Char('Name', required=True, select=True)
@@ -71,23 +48,19 @@ class product_template(models.Model):
         return self._cr.fetchall()
 
 
-class product_lang(models.Model):
-
-    """Book language"""
+class ProductLang(models.Model):
+    '''Book language'''
     _name = "product.lang"
 
     code = fields.Char('Code', required=True, select=True)
     name = fields.Char('Name', required=True, select=True, translate=True)
 
-    _sql_constraints = [
-                        ('name_uniq', 'unique (name)',
-                         'The name of the product must be unique !')
-        ]
+    _sql_constraints = [('name_uniq', 'unique (name)',
+                         'The name of the product must be unique !')]
 
 
-class product_product(models.Model):
+class ProductProduct(models.Model):
     """Book variant of product"""
-
     _inherit = "product.product"
 
     @api.multi
@@ -147,8 +120,8 @@ class product_product(models.Model):
         @param context : context arguments, like language, time zone
         @return : Dictionary
          '''
-
         res = {}
+
         for product in self:
             val = 0.0
             for c in self.env['account.tax'].compute(product.taxes_id,
@@ -189,14 +162,13 @@ class product_product(models.Model):
         @param context : context arguments, like language, time zone
         @return : Dictionary
          '''
-
         res = {}
+        parent_id = self._context.get('parent_id', None)
         for p in self:
-            res[p.id] = self._get_partner_code_name(p,
-                            self._context.get('parent_id', None))['code']
+            res[p.id] = self._get_partner_code_name(p, parent_id)['code']
         return res
 
-    @api.model
+    @api.multi
     def copy(self, default=None):
         ''' This method Duplicate record
             with given id updating it with default values
@@ -213,7 +185,7 @@ class product_product(models.Model):
         if default is None:
             default = {}
         default.update({'author_ids': []})
-        return super(product_product, self).copy(default)
+        return super(ProductProduct, self).copy(default)
 
     @api.model
     def create(self, vals):
@@ -236,24 +208,25 @@ class product_product(models.Model):
         if 'editor' in vals:
             editor_id = vals['editor']
             supplier_model = self.env['library.editor.supplier']
-            supplier_ids = [idn.id for idn in supplier_model.search([
-                            ('name', '=', editor_id)]) if idn.id > 0]
+            domain = [('name', '=', editor_id)]
+            supplier_ids = [idn.id for idn
+                            in supplier_model.search(domain)
+                            if idn.id > 0]
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
-                supplier = [
-                    0, 0, {'pricelist_ids': [],
-                           'name': obj.supplier_id.id,
-                           'sequence': obj.sequence,
-                           'qty': 0,
-                           'delay': 1,
-                           'product_code': False,
-                           'product_name': False}
-                ]
+                supplier = [0, 0,
+                            {'pricelist_ids': [],
+                             'name': obj.supplier_id.id,
+                             'sequence': obj.sequence,
+                             'qty': 0,
+                             'delay': 1,
+                             'product_code': False,
+                             'product_name': False}]
                 if 'seller_ids' not in vals:
                     vals['seller_ids'] = [supplier]
                 else:
                     vals['seller_ids'].append(supplier)
-        return super(product_product, self).create(vals)
+        return super(ProductProduct, self).create(vals)
 
     isbn = fields.Char('ISBN Code', unique=True,
                        help="Shows International Standard Book Number")
@@ -275,7 +248,7 @@ class product_product(models.Model):
     date_retour = fields.Date('Return Date', readonly=True,
                             help='Book Return date',
                             default=lambda *a:
-                                str(int(time.strftime("%Y")))\
+                                str(int(time.strftime("%Y")))
                                 + time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
@@ -285,16 +258,18 @@ class product_product(models.Model):
     availability = fields.Selection([('available', 'Available'),
                                      ('notavailable', 'Not Available')],
                                     'Book Availability', default='available')
-    link_ids = many2manysym('product.product', 'book_book_rel', 'product_id1',
+    link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
                             'product_id2', 'Related Books')
-    back = fields.Selection([('hard', 'Hardback'), ('paper', 'Paperback')],
+    back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",
                             default='paper')
     collection = fields.Many2one('library.collection', 'Collection',
-                            help="Show collection in which book is resides")
+                                 help='Show collection in which'
+                                      'book is resides')
     pocket = fields.Char('Pocket')
     num_pocket = fields.Char('Collection No.',
-                    help="Shows collection number in which book is resides")
+                             help='Shows collection number in which'
+                                  'book resides')
     num_edition = fields.Integer('No. edition', help="Edition number of book")
     format = fields.Char('Format',
                          help="The general physical appearance of a book")
@@ -304,18 +279,14 @@ class product_product(models.Model):
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
 
-    _sql_constraints = [
-        ('unique_ean13', 'unique(ean13)',
-         'ean13 field must be unique across all the products'),
-        ('code_uniq', 'unique (code)',
-         'Code of the product must be unique !')
-    ]
+    _sql_constraints = [('unique_ean13', 'unique(ean13)',
+                         'ean13 field must be unique across all the products'),
+                        ('code_uniq', 'unique (code)',
+                         'Code of the product must be unique !')]
 
 
-class book_attachment(models.Model):
-
+class BookAttachment(models.Model):
     _name = "book.attachment"
-
     _description = "Stores attachments of the book"
 
     name = fields.Char("Description", required=True)
@@ -325,8 +296,7 @@ class book_attachment(models.Model):
     attachment = fields.Binary("Attachment")
 
 
-class library_author(models.Model):
-
+class LibraryAuthor(models.Model):
     _inherit = 'library.author'
 
     book_ids = fields.Many2many('product.product', 'author_book_rel',

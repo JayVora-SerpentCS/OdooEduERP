@@ -1,53 +1,25 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-{
-    'name': 'Exam Management',
-    'version': '2.0',
-    'author': 'Serpent Consulting Services PVT. LTD.',
-    'website': 'http://www.serpentcs.com',
-    'category': 'School Management',
-    'summary': 'A Module For Exams Management Taken In School',
-    'complexity': 'easy',
-    'description': '''A module to manage the school examination:
-        1. Define Exam Timetable
-        2. Conduct Exams
-        3. Generate Results
-    ''',
-    'depends': ['timetable'],
-    'data': [
-            'security/ir.model.access.csv',
-            'views/exam_view.xml',
-            'views/exam_sequence.xml',
-            'views/exam_result_report.xml',
-            'views/additional_exam_report.xml',
-            'views/result_information_report.xml',
-            'views/report_view.xml',
-            'wizard/exam_class_result.xml',
-            'wizard/exam_create_result_view.xml',
-            'wizard/subject_result.xml',
-        ],
-    'installable': True,
-    'application': True,
-    'demo': ['demo/exam_demo.xml'],
-    'test': ['test/exam_test.yml'],
-}
+{'name': 'Exam Management',
+ 'version': '2.0',
+ 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'website': 'http://www.serpentcs.com',
+ 'category': 'School Management',
+ 'license': '',
+ 'summary': 'A Module For Exams Management Taken In School',
+ 'complexity': 'easy',
+ 'depends': ['timetable'],
+ 'data': ['security/ir.model.access.csv',
+          'views/exam_view.xml',
+          'views/exam_sequence.xml',
+          'views/exam_result_report.xml',
+          'views/additional_exam_report.xml',
+          'views/result_information_report.xml',
+          'views/report_view.xml',
+          'wizard/exam_class_result.xml',
+          'wizard/exam_create_result_view.xml',
+          'wizard/subject_result.xml'],
+ 'installable': True,
+ 'application': True,
+ 'test': ['test/exam_test.yml']}

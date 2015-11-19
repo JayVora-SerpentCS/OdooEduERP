@@ -1,36 +1,16 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.report import report_sxw
 from openerp import models
 
 
-class result_label_info(report_sxw.rml_parse):
+class ResultLabelInfo(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context=None):
-        super(result_label_info, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'get_student_all_info': self.get_student_info,
-    })
+        super(ResultLabelInfo, self).__init__(cr, uid, name, context=context)
+        get_stud_info = self.get_student_info
+        self.localcontext.update({'get_student_all_info': get_stud_info})
 
     def get_student_info(self, standard_id, division_id, medium_id, year_id):
         student_obj = self.pool.get('student.student')
@@ -41,15 +21,15 @@ class result_label_info(report_sxw.rml_parse):
                                           ('year', '=', year_id)])
         result = []
         for student in student_obj.browse(self.cr, self.uid, student_ids):
-            result.append({'name': student.name + " "
-                           + student.middle or '' + " " + student.last or '',
+            name = student.name + " " + student.middle or '' + " " + student.last or ''
+            result.append({'name': name,
                            'roll_no': student.roll_no, 'pid': student.pid})
         return result
 
 
-class report_label_info(models.AbstractModel):
+class ReportLabelInfo(models.AbstractModel):
 
     _name = 'report.barcode_report.result_label_info'
     _inherit = 'report.abstract_report'
     _template = 'barcode_report.result_label_info'
-    _wrapped_report_class = result_label_info
+    _wrapped_report_class = ResultLabelInfo

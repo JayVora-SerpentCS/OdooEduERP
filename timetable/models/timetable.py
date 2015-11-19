@@ -1,35 +1,15 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class board_board(models.Model):
+class BoardBoard(models.Model):
     _inherit = 'board.board'
 
 
-class time_table(models.Model):
-
+class TimeTable(models.Model):
     _description = 'Time Table'
     _name = 'time.table'
 
@@ -43,21 +23,20 @@ class time_table(models.Model):
     @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
-        line_ids = self.env['time.table.line'\
-                        ].search([('table_id', '=', self.ids)])
+        domain = [('table_id', '=', self.ids)]
+        line_ids = self.env['time.table.line'].search(domain)
         for rec in line_ids:
-            records = [rec_check.id for rec_check in line_ids
-                      if (rec.week_day == rec_check.week_day)
-                      and (rec.start_time == rec_check.start_time)
-                      and (rec.end_time == rec_check.end_time)]
+            records = [rec_check.id for rec_check in line_ids\
+                           if (rec.week_day == rec_check.week_day\
+                                    and rec.start_time == rec_check.start_time
+                                    and rec.end_time == rec_check.end_time)]
             if len(records) > 1:
-                raise Warning(_("You can Not set lecture at same time\
+                raise UserError(_("You can Not set lecture at same time\
                                  at same day..!!!"))
         return True
 
 
-class time_table_line(models.Model):
-
+class TimeTableLine(models.Model):
     _description = 'Time Table Line'
     _name = 'time.table.line'
     _rec_name = 'table_id'
@@ -65,10 +44,10 @@ class time_table_line(models.Model):
     @api.multi
     def onchange_recess(self, recess):
         recess = {}
-        sub_id = self.env['subject.subject'].search([
-                 ('name', 'like', 'Recess')])
+        domain = [('name', 'like', 'Recess')]
+        sub_id = self.env['subject.subject'].search(domain)
         if not sub_id:
-            raise Warning(_("You must have a 'Recess' as a subject"))
+            raise UserError(_("You must have a 'Recess' as a subject"))
         recess.update({'value': {'subject_id': sub_id.id}})
         return recess
 
@@ -88,15 +67,14 @@ class time_table_line(models.Model):
                                  ('sunday', 'Sunday')], "Week day",)
 
 
-class subject_subject(models.Model):
-
+class SubjectSubject(models.Model):
     _inherit = "subject.subject"
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('teacher_id'):
-            for teacher_data in self.env['hr.employee'].browse(
-                                self._context['teacher_id']):
+        teacher_id = self._context.get('teacher_id')
+        if teacher_id:
+            for teacher_data in self.env['hr.employee'].browse(teacher_id):
                 args.append(('teacher_ids', 'in', [teacher_data.id]))
-        return super(subject_subject, self).search(args, offset, limit, order,
-                                                   count=count)
+        return super(SubjectSubject, self).search(args, offset, limit, order,
+                                                  count=count)

@@ -1,24 +1,5 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from reportlab.platypus.flowables import Flowable
 from reportlab.lib.units import inch
@@ -36,9 +17,7 @@ class Barcode(Flowable):
             self.gap = None
         self.validate()
         self.encode()
-        #print self.encoded
         self.decompose()
-        #print self.decomposed
         self.computeSize()
 
     def validate(self):
@@ -55,7 +34,7 @@ class Barcode(Flowable):
         xdim = self.xdim
         wx = xdim * self.ratio
 
-        if self.gap == None:
+        if self.gap is None:
             self.gap = xdim
 
         w = 0.0
@@ -106,10 +85,10 @@ class Barcode(Flowable):
                 left = left + wx
 
         if self.bearers:
-            self.rect(self.lquiet, 0.0, \
-                self.width - (self.lquiet + self.rquiet), b)
-            self.rect(self.lquiet, self.height - b, \
-                self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, 0.0,
+                      self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, self.height - b,
+                      self.width - (self.lquiet + self.rquiet), b)
 
     def rect(self, x, y, w, h):
         self.canv.rect(x, y, w, h, stroke=0, fill=1)
@@ -214,20 +193,18 @@ class I2of5(Barcode):
     http://www.aimglobal.org/aimstore/
     """
 
-    patterns = {
-        'start': 'bsbs',
-        'stop': 'Bsb',
-        'B0': 'bbBBb', 'S0': 'ssSSs',
-        'B1': 'BbbbB', 'S1': 'SsssS',
-        'B2': 'bBbbB', 'S2': 'sSssS',
-        'B3': 'BBbbb', 'S3': 'SSsss',
-        'B4': 'bbBbB', 'S4': 'ssSsS',
-        'B5': 'BbBbb', 'S5': 'SsSss',
-        'B6': 'bBBbb', 'S6': 'sSSss',
-        'B7': 'bbbBB', 'S7': 'sssSS',
-        'B8': 'BbbBb', 'S8': 'SssSs',
-        'B9': 'bBbBb', 'S9': 'sSsSs'
-    }
+    patterns = {'start': 'bsbs',
+                'stop': 'Bsb',
+                'B0': 'bbBBb', 'S0': 'ssSSs',
+                'B1': 'BbbbB', 'S1': 'SsssS',
+                'B2': 'bBbbB', 'S2': 'sSssS',
+                'B3': 'BBbbb', 'S3': 'SSsss',
+                'B4': 'bbBbB', 'S4': 'ssSsS',
+                'B5': 'BbBbb', 'S5': 'SsSss',
+                'B6': 'bBBbb', 'S6': 'sSSss',
+                'B7': 'bbbBB', 'S7': 'sssSS',
+                'B8': 'BbbBb', 'S8': 'SssSs',
+                'B9': 'bBbBb', 'S9': 'sSsSs'}
 
     def __init__(self, value='', **args):
         self.height = None
@@ -238,7 +215,7 @@ class I2of5(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -256,7 +233,9 @@ class I2of5(Barcode):
     def validate(self):
         vval = ""
         self.valid = 1
+
         for c in string.strip(self.value):
+
             if c not in string.digits:
                 self.valid = 0
                 continue
@@ -268,8 +247,9 @@ class I2of5(Barcode):
         s = self.validated
         # make sure result will be a multiple of 2 digits long,
         # checksum included
-        if ((len(self.validated) % 2 == 0) and self.checksum) \
-        or ((len(self.validated) % 2 == 1) and not self.checksum):
+
+        if (((len(self.validated) % 2 == 0) and self.checksum)
+                or ((len(self.validated) % 2 == 1) and not self.checksum)):
             s = '0' + s
 
         if self.checksum:
@@ -284,7 +264,7 @@ class I2of5(Barcode):
                     cm = 3
 
             d = 10 - (int(d) % 10)
-            s = s + `d`
+            s += repr(d)
         self.encoded = s
 
     def decompose(self):
@@ -345,13 +325,12 @@ class MSI(Barcode):
     """
 
     patterns = {'start': 'Bs', 'stop': 'bSb',
-
                 '0': 'bSbSbSbS', '1': 'bSbSbSBs',
                 '2': 'bSbSBsbS', '3': 'bSbSBsBs',
                 '4': 'bSBsbSbS', '5': 'bSBsbSBs',
                 '6': 'bSBsBsbS', '7': 'bSBsBsBs',
                 '8': 'BsbSbSbS', '9': 'BsbSbSBs'
-    }
+               }
 
     def __init__(self, value="", **args):
         self.height = None
@@ -362,7 +341,7 @@ class MSI(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -474,14 +453,12 @@ class Codabar(Barcode):
                 '9': 'BsbSbsb', '-': 'bsbSBsb', '$': 'bsBSbsb',
                 ':': 'BsbsBsB', '/': 'BsBsbsB', '.': 'BsBsBsb',
                 '+': 'bsBsBsB', 'A': 'bsBSbSb', 'B': 'bSbSbsB',
-                'C': 'bsbSbSB', 'D': 'bsbSBSb'
-    }
+                'C': 'bsbSbSB', 'D': 'bsbSBSb'}
 
     values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
               '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
               '-': 10, '$': 11, ':': 12, '/': 13, '.': 14,
-              '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19
-    }
+              '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19}
 
     chars = string.digits + "-$:/.+"
 
@@ -494,7 +471,7 @@ class Codabar(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -534,7 +511,7 @@ class Codabar(Barcode):
 
         if self.checksum:
             v = 0
-            for c in s:
+            if s:
                 v = v + self.values[v]
             v = 16 - (v % 16)
             s = s + self.chars[v]
@@ -599,13 +576,10 @@ class Code11(Barcode):
     patterns = {'0': 'bsbsB', '1': 'BsbsB', '2': 'bSbsB',
                 '3': 'BSbsb', '4': 'bsBsB', '5': 'BsBsb',
                 '6': 'bSBsb', '7': 'bsbSB', '8': 'BsbSb',
-                '9': 'Bsbsb', '-': 'bsBsb', 'S': 'bsBSb'  # Start/Stop
-    }
+                '9': 'Bsbsb', '-': 'bsBsb', 'S': 'bsBSb'}
 
     values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-              '-': 10,
-    }
+              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '-': 10}
 
     def __init__(self, value='', **args):
         self.height = None
@@ -616,7 +590,7 @@ class Code11(Barcode):
         self.quiet = 1
         self.lquiet = self.rquiet = None
 
-        if type(value) == type(1):
+        if isinstance(value, 1):
             value = str(value)
 
         for (k, v) in args.items():
@@ -655,20 +629,22 @@ class Code11(Barcode):
 
         if self.checksum > 0:
             # compute first checksum
-            i = 0; v = 1; c = 0
+            i, v, c = 0, 1, 0
             while i < len(s):
                 c = c + v * string.index(self.chars, s[-(i + 1)])
-                i = i + 1; v = v + 1
+                i = i + 1
+                v = v + 1
                 if v > 10:
                     v = 1
             s = s + self.chars[c % 11]
 
         if self.checksum > 1:
             # compute second checksum
-            i = 0; v = 1; c = 0
+            i, v, c = 0, 1, 0
             while i < len(s):
-                c = c + v * string.index(self.chars, s[-(i+1)])
-                i = i + 1; v = v + 1
+                c = c + v * string.index(self.chars, s[-(i + 1)])
+                i = i + 1
+                v = v + 1
                 if v > 9:
                     v = 1
             s = s + self.chars[c % 10]

@@ -1,31 +1,11 @@
-# -*- coding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 
 
-class move_standards(models.TransientModel):
-
+class MoveStandards(models.TransientModel):
     _name = 'move.standards'
 
     academic_year_id = fields.Many2one('academic.year', 'Academic Year',
@@ -56,7 +36,8 @@ class move_standards(models.TransientModel):
                         continue
                     if stud_year_ids:
                         raise except_orm(_('Warning !'),
-                            _('Please Select Next Academic year.'))
+                                         _('Please Select'
+                                           'Next Academic year.'))
                     else:
                         result_domain = [('standard_id', '=',
                                           student.standard_id.id),
@@ -69,25 +50,25 @@ class move_standards(models.TransientModel):
                         if result_exists:
                             result_data = result_obj.browse(result_exists.id)
                             if result_data.result == "Pass":
-                                next_class_id = standard_obj.next_standard(\
+                                next_class_id = standard_obj.next_standard(
                                                 standards.standard_id.sequence)
                                 if next_class_id:
                                     student_id = student_obj.browse(student.id)
-                                    d_one = {
-                                             'year': data.academic_year_id.id,
-                                             'standard_id': next_class_id,
-                                            }
+                                    d_one = {'year': data.academic_year_id.id,
+                                             'standard_id': next_class_id}
                                     student_id.write(d_one)
-                                    stud_history_obj.create({
-                                    'student_id': student.id,
-                                    'academice_year_id': student.year.id,
-                                    'standard_id': standards.standard_id.id,
-                                    'division_id': standards.division_id.id,
-                                    'medium_id': standards.medium_id.id,
-                                    'result': result_data.result,
-                                    'percentage': result_data.percentage
-                                    })
+                                    std_id_id = standards.standard_id.id
+                                    div_id_id = standards.division_id.id
+                                    v = {'student_id': student.id,
+                                         'academice_year_id': student.year.id,
+                                         'standard_id': std_id_id,
+                                         'division_id': div_id_id,
+                                         'medium_id': standards.medium_id.id,
+                                         'result': result_data.result,
+                                         'percentage': result_data.percentage}
+                                    stud_history_obj.create(v)
                             else:
                                 raise except_orm(_("Error!"),
-                                _("Student isn't eligible for Next Standard."))
+                                                 _('Student is not eligible'
+                                                   'for Next Standard.'))
         return {}

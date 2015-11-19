@@ -1,24 +1,5 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
 import openerp
@@ -26,17 +7,15 @@ from datetime import date, datetime
 from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import except_orm, Warning as UserError
 
 
-class board_board(models.Model):
-
+class BoardBoard(models.Model):
     _inherit = "board.board"
 
 
-class academic_year(models.Model):
+class AcademicYear(models.Model):
     ''' Defines an academic year '''
-
     _name = "academic.year"
     _description = "Academic Year"
     _order = "sequence"
@@ -84,20 +63,19 @@ class academic_year(models.Model):
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop\
                    or old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                        raise Warning(_('Error! You cannot define\
+                        raise UserError(_('Error! You cannot define\
                                          overlapping academic years.'))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if (self.date_stop and self.date_start
                 and self.date_stop < self.date_start):
-            raise Warning(_('Error! The duration of the academic year\
+            raise UserError(_('Error! The duration of the academic year\
                              is invalid.'))
 
 
-class academic_month(models.Model):
+class AcademicMonth(models.Model):
     ''' Defining a month of an academic year '''
-
     _name = "academic.month"
     _description = "Academic Month"
     _order = "date_start"
@@ -117,8 +95,8 @@ class academic_month(models.Model):
         if (self.date_stop
                 and self.date_start
                 and self.date_stop < self.date_start):
-            raise Warning(_('Error ! The duration of the Month(s)\
-                                 is/are invalid.'))
+            raise UserError(_('Error ! The duration of the Month(s)\
+                             is/are invalid.'))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
@@ -127,14 +105,13 @@ class academic_month(models.Model):
                     or self.year_id.date_stop < self.date_start
                     or self.year_id.date_start > self.date_start
                     or self.year_id.date_start > self.date_stop):
-                raise Warning(_('Invalid Months ! Some months overlap or\
+                raise UserError(_('Invalid Months ! Some months overlap or\
                                    the date period is not in the scope of the\
                                    academic year.'))
 
 
-class standard_medium(models.Model):
+class StandardMedium(models.Model):
     ''' Defining a medium(ENGLISH, HINDI, GUJARATI) related to standard'''
-
     _name = "standard.medium"
     _description = "Standard Medium"
     _order = "sequence"
@@ -145,9 +122,8 @@ class standard_medium(models.Model):
     description = fields.Text('Description')
 
 
-class standard_division(models.Model):
+class StandardDivision(models.Model):
     ''' Defining a division(A, B, C) related to standard'''
-
     _name = "standard.division"
     _description = "Standard Division"
     _order = "sequence"
@@ -158,9 +134,8 @@ class standard_division(models.Model):
     description = fields.Text('Description')
 
 
-class standard_standard(models.Model):
+class StandardStandard(models.Model):
     ''' Defining Standard Information '''
-
     _name = 'standard.standard'
     _description = 'Standard Information'
     _order = "sequence"
@@ -173,15 +148,14 @@ class standard_standard(models.Model):
     @api.model
     def next_standard(self, sequence):
         stand_ids = self.search([('sequence', '>', sequence)],
-                                    order='id ASC', limit=1)
+                                order='id ASC', limit=1)
         if stand_ids:
             return stand_ids.id
         return False
 
 
-class school_standard(models.Model):
+class SchoolStandard(models.Model):
     ''' Defining a standard related to school '''
-
     _name = 'school.standard'
     _description = 'School Standards'
     _rec_name = "school_id"
@@ -231,9 +205,8 @@ class school_standard(models.Model):
         return res
 
 
-class school_school(models.Model):
+class SchoolSchool(models.Model):
     ''' Defining School Information '''
-
     _name = 'school.school'
     _inherits = {'res.company': 'company_id'}
     _description = 'School Information'
@@ -252,15 +225,14 @@ class school_school(models.Model):
     standards = fields.One2many('school.standard', 'school_id',
                                 'Standards')
     lang = fields.Selection(_lang_get, 'Language',
-                            help="If the selected language is loaded\
+                            help='If the selected language is loaded\
                             in the system, all documents related to this\
                             partner will be printed in this language.\
-                            If not, it will be English.")
+                            If not, it will be English.')
 
 
-class subject_subject(models.Model):
+class SubjectSubject(models.Model):
     '''Defining a subject '''
-
     _name = "subject.subject"
     _description = "Subjects"
 
@@ -286,9 +258,8 @@ class subject_subject(models.Model):
                                    'Syllabus')
 
 
-class subject_syllabus(models.Model):
+class SubjectSyllabus(models.Model):
     '''Defining a  syllabus'''
-
     _name = "subject.syllabus"
     _description = "Syllabus"
     _rec_name = "duration"
@@ -298,7 +269,7 @@ class subject_syllabus(models.Model):
     topic = fields.Text("Topic")
 
 
-class subject_elective(models.Model):
+class SubjectElective(models.Model):
     ''' Defining Subject Elective '''
     _name = 'subject.elective'
 
@@ -307,9 +278,8 @@ class subject_elective(models.Model):
                                   'Elective Subjects')
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     ''' Defining a student information '''
-
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
@@ -332,9 +302,10 @@ class student_student(models.Model):
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
         else:
-            raise except_orm(_('Error!'), _('PID not valid,\
-                    so record will not be saved.'))
-        result = super(student_student, self).create(vals)
+            raise except_orm(_('Error!'),
+                             _('PID not valid'
+                               'so record will not be saved.'))
+        result = super(StudentStudent, self).create(vals)
         return result
 
     @api.model
@@ -357,8 +328,9 @@ class student_student(models.Model):
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
     photo = fields.Binary('Photo', default=lambda self:\
-                                   self._get_default_image(self._context.get(
-                            'default_is_company', False)))
+                          self._get_default_image
+                          (self._context.get('default_is_company',
+                                             False)))
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
                            states={'done': [('readonly', True)]})
     cast_id = fields.Many2one('student.cast', 'Religion')
@@ -381,9 +353,10 @@ class student_student(models.Model):
                                     'References',
                                     states={'done': [('readonly', True)]})
     previous_school_ids = fields.One2many('student.previous.school',
-                                        'previous_school_id',
-                                        'Previous School Detail',
-                                        states={'done': [('readonly', True)]})
+                                          'previous_school_id',
+                                          'Previous School Detail',
+                                          states={'done': [('readonly',
+                                                            True)]})
     family_con_ids = fields.One2many('student.family.contact',
                                      'family_contact_id',
                                      'Family Contact Detail',
@@ -407,9 +380,9 @@ class student_student(models.Model):
     school_id = fields.Many2one('school.school', 'School',
                                 states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'),
-                            ('done', 'Done'),
-                            ('terminate', 'Terminate'),
-                            ('alumni', 'Alumni')],
+                              ('done', 'Done'),
+                              ('terminate', 'Terminate'),
+                              ('alumni', 'Alumni')],
                              'State', readonly=True, default='draft')
     history_ids = fields.One2many('student.history', 'student_id', 'History')
     certificate_ids = fields.One2many('student.certificate', 'student_id',
@@ -486,26 +459,30 @@ class student_student(models.Model):
         school_standard_obj = self.env['school.standard']
         for student_data in self:
             if student_data.age <= 5:
-                raise except_orm(_('Warning'), _('The student is not eligible.\
-                                                 Age is not valid.'))
-            school_standard_search_ids = school_standard_obj.search([
-                ('standard_id', '=', student_data.standard_id.id)])
+                raise except_orm(_('Warning'),
+                                 _('The student is not eligible.'
+                                   'Age is not valid.'))
+            domain = [('standard_id', '=', student_data.standard_id.id)]
+            school_standard_search_ids = school_standard_obj.search(domain)
             if not school_standard_search_ids:
-                raise except_orm(_('Warning'), _('The standard is not defined\
-                                                  in a school'))
-            student_search_ids = self.search([
-                ('standard_id', '=', student_data.standard_id.id)])
+                raise except_orm(_('Warning'),
+                                 _('The standard is not defined'
+                                   'in a school'))
+            student_search_ids = self.search(domain)
             number = 1
-            for student in self.browse(student_search_ids):
+            if student_search_ids:
                 self.write({'roll_no': number})
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
-                + str('/') + str(student_data.school_id.city) + str('/')\
-                + str(student_data.school_id.name) + str('/') + str(reg_code)
+                                + str('/') + str(student_data.school_id.city)\
+                                + str('/')\
+                                + str(student_data.school_id.name) + str('/')\
+                                + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/')\
-                + str(student_data.year.code) + str('/') + str(stu_code)
+                            + str(student_data.year.code) + str('/')\
+                            + str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -513,8 +490,7 @@ class student_student(models.Model):
         return True
 
 
-class student_grn(models.Model):
-
+class StudentGrn(models.Model):
     _name = "student.grn"
     _rec_name = "grn_no"
 
@@ -564,15 +540,13 @@ class student_grn(models.Model):
     grn_no = fields.Char('Generated GR No.', compute='_grn_no')
 
 
-class mother_tongue(models.Model):
-
+class MotherTongue(models.Model):
     _name = 'mother.toungue'
 
     name = fields.Char("Mother Tongue")
 
 
-class student_award(models.Model):
-
+class StudentAward(models.Model):
     _name = 'student.award'
 
     award_list_id = fields.Many2one('student.student', 'Student')
@@ -580,8 +554,7 @@ class student_award(models.Model):
     description = fields.Char('Description')
 
 
-class attendance_type(models.Model):
-
+class AttendanceType(models.Model):
     _name = "attendance.type"
     _description = "School Type"
 
@@ -589,8 +562,7 @@ class attendance_type(models.Model):
     code = fields.Char('Code', required=True)
 
 
-class student_document(models.Model):
-
+class StudentDocument(models.Model):
     _name = 'student.document'
     _rec_name = "doc_type"
 
@@ -604,9 +576,8 @@ class student_document(models.Model):
     new_datas = fields.Binary('Attachments')
 
 
-class document_type(models.Model):
+class DocumentType(models.Model):
     ''' Defining a Document Type(SSC,Leaving)'''
-
     _name = "document.type"
     _description = "Document Type"
     _rec_name = "doc_type"
@@ -617,9 +588,8 @@ class document_type(models.Model):
     doc_type = fields.Char('Document Type', required=True)
 
 
-class student_description(models.Model):
+class StudentDescription(models.Model):
     ''' Defining a Student Description'''
-
     _name = 'student.description'
 
     des_id = fields.Many2one('student.student', 'Description')
@@ -627,8 +597,7 @@ class student_description(models.Model):
     description = fields.Char('Description')
 
 
-class student_descipline(models.Model):
-
+class StudentDescipline(models.Model):
     _name = 'student.descipline'
 
     student_id = fields.Many2one('student.student', 'Student')
@@ -639,8 +608,7 @@ class student_descipline(models.Model):
     action_taken = fields.Text('Action Taken')
 
 
-class student_history(models.Model):
-
+class StudentHistory(models.Model):
     _name = "student.history"
 
     student_id = fields.Many2one('student.student', 'Student')
@@ -651,8 +619,7 @@ class student_history(models.Model):
     result = fields.Char('Result', readonly=True, store=True)
 
 
-class student_certificate(models.Model):
-
+class StudentCertificate(models.Model):
     _name = "student.certificate"
 
     student_id = fields.Many2one('student.student', 'Student')
@@ -660,9 +627,8 @@ class student_certificate(models.Model):
     certi = fields.Binary('Certificate', required=True)
 
 
-class hr_employee(models.Model):
+class HrEmployee(models.Model):
     ''' Defining a teacher information '''
-
     _name = 'hr.employee'
     _inherit = 'hr.employee'
     _description = 'Teacher Information'
@@ -682,7 +648,7 @@ class hr_employee(models.Model):
                                    'Subjects', compute='_compute_subject')
 
 
-class res_partner(models.Model):
+class ResPartner(models.Model):
     '''Defining a address information '''
     _inherit = 'res.partner'
     _description = 'Address Information'
@@ -693,9 +659,8 @@ class res_partner(models.Model):
                                    'parent_id', 'student_id', 'Children')
 
 
-class student_reference(models.Model):
+class StudentReference(models.Model):
     ''' Defining a student reference information '''
-
     _name = "student.reference"
     _description = "Student Reference"
 
@@ -709,9 +674,8 @@ class student_reference(models.Model):
                               'Gender')
 
 
-class student_previous_school(models.Model):
+class StudentPreviousSchool(models.Model):
     ''' Defining a student previous school information '''
-
     _name = "student.previous.school"
     _description = "Student Previous School"
 
@@ -724,9 +688,8 @@ class student_previous_school(models.Model):
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects')
 
 
-class academic_subject(models.Model):
+class AcademicSubject(models.Model):
     ''' Defining a student previous school information '''
-
     _name = "academic.subject"
     _description = "Student Previous School"
 
@@ -737,9 +700,8 @@ class academic_subject(models.Model):
     minimum_marks = fields.Integer("Minimum marks")
 
 
-class student_family_contact(models.Model):
+class StudentFamilyContact(models.Model):
     ''' Defining a student emergency contact information '''
-
     _name = "student.family.contact"
     _description = "Student Family Contact"
 
@@ -759,9 +721,8 @@ class student_family_contact(models.Model):
     email = fields.Char('E-Mail')
 
 
-class student_relation_master(models.Model):
+class StudentRelationMaster(models.Model):
     ''' Student Relation Information '''
-
     _name = "student.relation.master"
     _description = "Student Relation Master"
 
@@ -769,16 +730,14 @@ class student_relation_master(models.Model):
     seq_no = fields.Integer('Sequence')
 
 
-class grade_master(models.Model):
-
+class GradeMaster(models.Model):
     _name = 'grade.master'
 
     name = fields.Char('Grade', select=1, required=True)
     grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Name')
 
 
-class grade_line(models.Model):
-
+class GradeLine(models.Model):
     _name = 'grade.line'
 
     from_mark = fields.Integer('From Marks', required=True,
@@ -793,8 +752,7 @@ class grade_line(models.Model):
     name = fields.Char('Name')
 
 
-class student_news(models.Model):
-
+class StudentNews(models.Model):
     _name = 'student.news'
     _description = 'Student News'
     _rec_name = 'subject'
@@ -814,8 +772,9 @@ class student_news(models.Model):
         obj_mail_server = self.env['ir.mail_server']
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
-            raise except_orm(_('Mail Error'), _('No mail outgoing mail server\
-                                                specified!'))
+            raise except_orm(_('Mail Error'),
+                             _('No mail outgoing mail server'
+                               'specified!'))
         mail_server_record = mail_server_ids[0]
         email_list = []
         for news in self:
@@ -836,32 +795,33 @@ class student_news(models.Model):
                     raise except_orm(_('Mail Error'), _("Email not defined!"))
             t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body = 'Hi,<br/><br/> \
-                This is a news update from <b>%s</b> posted at %s<br/><br/>\
-                %s <br/><br/>\
-                Thank you.' % (self._cr.dbname,
-                            t.strftime('%d-%m-%Y %H:%M:%S'), news.description)
-            message = obj_mail_server.build_email(
-                            email_from=mail_server_record.smtp_user,
-                            email_to=email_list,
-                            subject='Notification for news update.',
-                            body=body,
-                            body_alternative=body,
-                            email_cc=None,
-                            email_bcc=None,
-                            reply_to=mail_server_record.smtp_user,
-                            attachments=None,
-                            references=None,
-                            object_id=None,
-                            subtype='html',  # It can be plain or HTML
-                            subtype_alternative=None,
-                            headers=None)
+                    This is a news update from <b>%s</b>posted at %s<br/><br/>\
+                    %s <br/><br/>\
+                    Thank you.' % (self._cr.dbname,
+                                   t.strftime('%d-%m-%Y %H:%M:%S'),
+                                   news.description)
+            smtp_user = mail_server_record.smtp_user
+            notification = 'Notification for news update.'
+            message = obj_mail_server.build_email(email_from=smtp_user,
+                                                  email_to=email_list,
+                                                  subject=notification,
+                                                  body=body,
+                                                  body_alternative=body,
+                                                  email_cc=None,
+                                                  email_bcc=None,
+                                                  reply_to=smtp_user,
+                                                  attachments=None,
+                                                  references=None,
+                                                  object_id=None,
+                                                  subtype='html',
+                                                  subtype_alternative=None,
+                                                  headers=None)
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
 
 
-class student_reminder(models.Model):
-
+class StudentReminder(models.Model):
     _name = 'student.reminder'
 
     stu_id = fields.Many2one('student.student', 'Student Name', required=True)
@@ -871,19 +831,17 @@ class student_reminder(models.Model):
     color = fields.Integer('Color Index', default=0)
 
 
-class student_cast(models.Model):
-
+class StudentCast(models.Model):
     _name = "student.cast"
 
     name = fields.Char("Name", required=True)
 
 
-class res_users(models.Model):
-
+class ResUsers(models.Model):
     _inherit = 'res.users'
 
     @api.model
     def create(self, vals):
         vals.update({'employee_ids': False})
-        res = super(res_users, self).create(vals)
+        res = super(ResUsers, self).create(vals)
         return res

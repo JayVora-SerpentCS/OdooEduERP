@@ -1,35 +1,16 @@
-# -*- encoding: UTF-8 -*-
-# -----------------------------------------------------------------------------
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
-#    (<http://www.serpentcs.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-# -----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import except_orm, Warning as UserError
 
 
-class board_board(models.Model):
+class BoardBoard(models.Model):
     _inherit = 'board.board'
 
 
-class extended_time_table(models.Model):
+class ExtendedTimeTable(models.Model):
     _inherit = 'time.table'
 
     timetable_type = fields.Selection([('exam', 'Exam'),
@@ -38,14 +19,14 @@ class extended_time_table(models.Model):
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 
-class extended_student_student(models.Model):
+class ExtendedStudentStudent(models.Model):
     _inherit = 'student.student'
 
     exam_results_ids = fields.One2many('exam.result', 'student_id',
                                        'Exam History', readonly=True)
 
 
-class extended_time_table_line(models.Model):
+class ExtendedTimeTableLine(models.Model):
     _inherit = 'time.table.line'
 
     exm_date = fields.Date('Exam Date')
@@ -55,8 +36,8 @@ class extended_time_table_line(models.Model):
     def on_change_date_day(self, exm_date):
         val = {}
         if exm_date:
-            val['week_day'] = datetime.strptime(exm_date,
-                              "%Y-%m-%d").strftime("%A").lower()
+            week_day = datetime.strptime(exm_date, "%Y-%m-%d")
+            val['week_day'] = week_day.strftime("%A").lower()
         return {'value': val}
 
     @api.multi
@@ -64,19 +45,18 @@ class extended_time_table_line(models.Model):
         for line in self:
             if line.exm_date:
                 dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
-                if line.week_day != datetime.strptime(line.exm_date,
-                                    "%Y-%m-%d").strftime("%A").lower():
+                if line.week_day != dt.strftime("%A").lower():
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
-                                    "%Y-%m-%d").__str__():
+                                                      "%Y-%m-%d").__str__():
                     raise except_orm(_('Invalid Date Error !'),
-                                     _('Either you have selected wrong day\
-                                        for the date or you have selected\
-                                        invalid date.'))
+                                     _('Either you have selected wrong day'
+                                       'for the date or you have selected'
+                                       'invalid date.'))
         return True
 
 
-class exam_exam(models.Model):
+class ExamExam(models.Model):
     _name = 'exam.exam'
     _description = 'Exam Information'
 
@@ -110,7 +90,7 @@ class exam_exam(models.Model):
             self.write({'state': 'running'})
         else:
             raise except_orm(_('Exam Schedule'),
-                _('You must add one Exam Schedule'))
+                             _('You must add one Exam Schedule'))
 
     @api.multi
     def set_finish(self):
@@ -128,21 +108,21 @@ class exam_exam(models.Model):
         return True
 
 
-class additional_exam(models.Model):
+class AdditionalExam(models.Model):
     _name = 'additional.exam'
     _description = 'additional Exam Information'
 
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,
-                              readonly=True,
-                              default=lambda obj:
-                              obj.env['ir.sequence'].get('additional.exam'))
+                                      readonly=True,
+                                      default=lambda obj:
+                                      obj.env['ir.sequence'].get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
     maximum_marks = fields.Integer("Maximum Mark")
     minimum_marks = fields.Integer("Minimum Mark")
-    weightage = fields.Char("Weightage")
+    weightage = fields.Char("WEIGHTAGE")
     create_date = fields.Date("Created Date", help="Exam Created Date")
     write_date = fields.Date("Updated date", help="Exam Updated Date")
 
@@ -158,7 +138,7 @@ class additional_exam(models.Model):
         return {'value': val}
 
 
-class exam_result(models.Model):
+class ExamResult(models.Model):
     _name = 'exam.result'
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
@@ -216,7 +196,8 @@ class exam_result(models.Model):
                             flag = True
             else:
                 raise except_orm(_('Configuration Error !'),
-                    _('First Select Grade System in Student->year->.'))
+                                 _('First Select Grade System in'
+                                   'Student->year->.'))
         if flag:
             self.result = 'Fail'
 
@@ -250,11 +231,12 @@ class exam_result(models.Model):
                          readonly=True, method=True, store=True)
     grade = fields.Char("Grade", readonly=True)
     state = fields.Selection([('draft', 'Draft'),
-                        ('confirm', 'Confirm'),
-                        ('re-access', 'Re-Access'),
-                        ('re-access_confirm', 'Re-Access-Confirm'),
-                        ('re-evaluation', 'Re-Evaluation'),
-                        ('re-evaluation_confirm', 'Re-Evaluation Confirm')],
+                              ('confirm', 'Confirm'),
+                              ('re-access', 'Re-Access'),
+                              ('re-access_confirm', 'Re-Access-Confirm'),
+                              ('re-evaluation', 'Re-Evaluation'),
+                              ('re-evaluation_confirm',
+                               'Re-Evaluation Confirm')],
                              'State', readonly=True, default='draft')
     color = fields.Integer('Color')
 
@@ -310,7 +292,6 @@ class exam_result(models.Model):
         eve_marks = []
         sum = 0.0
         total = 0.0
-        obtain_marks = 0.0
         per = 0.0
         grd = 0.0
         for result in self.browse(self.ids):
@@ -339,7 +320,7 @@ class exam_result(models.Model):
         return True
 
 
-class exam_grade_line(models.Model):
+class ExamGradeLine(models.Model):
     _name = "exam.grade.line"
     _description = 'Exam Subject Information'
     _rec_name = 'standard_id'
@@ -349,35 +330,36 @@ class exam_grade_line(models.Model):
     grade = fields.Char(string='Grade')
 
 
-class exam_subject(models.Model):
+class ExamSubject(models.Model):
     _name = "exam.subject"
     _description = 'Exam Subject Information'
     _rec_name = 'subject_id'
 
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
-        if self.obtain_marks > self.maximum_marks\
-            or self.minimum_marks > self.maximum_marks:
-            raise Warning(_('The obtained marks and minimum marks\
+        if (self.obtain_marks > self.maximum_marks
+                or self.minimum_marks > self.maximum_marks):
+            raise UserError(_('The obtained marks and minimum marks\
                              should not extend maximum marks.'))
 
     @api.one
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
-        if self.exam_id and self.exam_id.student_id\
-            and self.exam_id.student_id.year.grade_id.grade_ids:
+        if (self.exam_id and self.exam_id.student_id
+                and self.exam_id.student_id.year.grade_id.grade_ids):
             for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if self.obtain_marks >= grade_id.from_mark\
-                    and self.obtain_marks <= grade_id.to_mark:
+                if (self.obtain_marks >= grade_id.from_mark
+                        and self.obtain_marks <= grade_id.to_mark):
                     self.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
-                        ('re-access', 'Re-Access'),
-                        ('re-access_confirm', 'Re-Access-Confirm'),
-                        ('re-evaluation', 'Re-Evaluation'),
-                        ('re-evaluation_confirm', 'Re-Evaluation Confirm')],
-                        related='exam_id.state', string="State")
+                              ('re-access', 'Re-Access'),
+                              ('re-access_confirm', 'Re-Access-Confirm'),
+                              ('re-evaluation', 'Re-Evaluation'),
+                              ('re-evaluation_confirm',
+                               'Re-Evaluation Confirm')],
+                             related='exam_id.state', string="State")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     obtain_marks = fields.Float("Obtain Marks", group_operator="avg")
     minimum_marks = fields.Float("Minimum Marks")
@@ -388,7 +370,7 @@ class exam_subject(models.Model):
     grade = fields.Char(compute='_get_grade', string='Grade', type="char")
 
 
-class exam_result_batchwise(models.Model):
+class ExamResultBatchwise(models.Model):
     _name = 'exam.batchwise.result'
     _rec_name = 'standard_id'
     _description = 'exam result Information by Batch wise'
@@ -408,14 +390,13 @@ class exam_result_batchwise(models.Model):
             for stand in stand_id:
                 student_ids = stud_obj.browse(stand.id)
                 if student_ids.result_ids:
-                    for res_line in student_ids.result_ids:
-                        count += 1
+                    count += 1
                     fina_tot += student_ids.total
-                divi = fina_tot / count  # Total_obtain mark of all student
+                divi = fina_tot / count  # Total_obtained mark of all student
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
-                        if divi >= grade_id.from_mark\
-                            and divi <= grade_id.to_mark:
+                        if (divi >= grade_id.from_mark
+                                and divi <= grade_id.to_mark):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
@@ -423,15 +404,15 @@ class exam_result_batchwise(models.Model):
                         store=True)
 
 
-class additional_exam_result(models.Model):
+class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'
 
     @api.one
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
-        if self.a_exam_id and self.a_exam_id.subject_id\
-            and self.a_exam_id.subject_id.minimum_marks:
+        if (self.a_exam_id and self.a_exam_id.subject_id
+                and self.a_exam_id.subject_id.minimum_marks):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
@@ -449,23 +430,23 @@ class additional_exam_result(models.Model):
     @api.constrains('obtain_marks')
     def _validate_marks(self):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
-            raise Warning(_('The obtained marks should not extend\
-                             maximum marks.'))
+            raise UserError(_('The obtained marks should not extend'
+                            'maximum marks.'))
         return True
 
     a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
                                 required=True)
     student_id = fields.Many2one('student.student', 'Student Name',
-                                  required=True)
+                                 required=True)
     roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No",
                                 readonly=True)
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
-    obtain_marks = fields.Float("Obtain Marks")
+    obtain_marks = fields.Float('Obtain Marks')
     result = fields.Char(compute='_calc_result', string='Result', method=True)
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     _name = 'student.student'
     _inherit = 'student.student'
     _description = 'Student Information'
@@ -477,6 +458,6 @@ class student_student(models.Model):
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('class_id', 'in', std_ids))
-        return super(student_student, self).search(args=args, offset=offset,
-                                                   limit=limit, order=order,
-                                                   count=count)
+        return super(StudentStudent, self).search(args=args, offset=offset,
+                                                  limit=limit, order=order,
+                                                  count=count)
