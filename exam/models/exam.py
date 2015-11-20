@@ -185,21 +185,19 @@ class ExamResult(models.Model):
     @api.one
     @api.depends('result_ids', 'student_id')
     def _compute_result(self):
-        flag = False
+        flag = 'Pass'
         if self.result_ids and self.student_id:
             if self.student_id.year.grade_id.grade_ids:
-                for grades in self.student_id.year.grade_id.grade_ids:
-                    if grades.grade:
-                        if not grades.fail:
-                            self.result = 'Pass'
-                        else:
-                            flag = True
+                for result in self.result_ids:
+                    grade_ids = self.env['grade.line'].search([('grade', '=', result.grade),('fail', '=', False)])
+                    if not grade_ids:
+                        flag = 'Fail'
+                        break
             else:
                 raise except_orm(_('Configuration Error !'),
                                  _('First Select Grade System in'
                                    'Student->year->.'))
-        if flag:
-            self.result = 'Fail'
+        self.result = flag
 
     @api.multi
     def on_change_student(self, student, exam_id, standard_id):
@@ -262,6 +260,7 @@ class ExamResult(models.Model):
         res = {}
         opt_marks = []
         acc_mark = []
+        sum = 0.0
         total = 0.0
         per = 0.0
         grd = 0.0

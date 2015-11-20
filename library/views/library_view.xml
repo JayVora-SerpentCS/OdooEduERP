@@ -295,7 +295,7 @@
 
         <!-- Menu Item Of Books To Return Before 30 Days -->
 
-        <menuitem id="menu_action_book_30days" name="Books to return before 30 days" parent="menu_library"
+        <menuitem id="menu_action_book_30days" name="Books to return before 30 days" sequence = "5" parent="menu_library"
                   action="action_product_book_30days"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
@@ -330,7 +330,7 @@
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="sale_order_day" name="Orders of the day" parent="menu_library" action="action_order_today_tree"
+        <menuitem id="sale_order_day" name="Sale orders of the day" parent="menu_library" sequence="6" action="action_order_today_tree"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Purchase Order -->
@@ -367,8 +367,8 @@
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
-                  sequence="2"
+        <menuitem id="purchase_order_day" name="Purchase orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
+                  sequence="6"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Account Invoice -->
@@ -530,7 +530,7 @@
 
         <!-- Menu Item Of Library Card -->
 
-        <menuitem id="menu_card_main" parent="menu_library" action="action_card_info"
+        <menuitem id="menu_card_main" parent="menu_library" sequence="5" action="action_card_info"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian" />
 
         <!-- Form View Of Library Book Issue -->
@@ -1131,7 +1131,7 @@
 
         <!-- Menu Item Of Library Editor Supplier -->
 
-        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
+        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" sequence = "5" action="action_editor_supplier" parent="menu_library"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of MRP Procurement Order -->
