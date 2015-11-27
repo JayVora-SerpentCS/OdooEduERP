@@ -58,7 +58,7 @@ class student_fees_register(models.Model):
                 if old_slips:
                     old_slips.write({'register_id':vals.id})
                     for sid in old_slips:
-                        workflow.trg_validate(self._uid, 'student.payslip', sid, 'payslip_confirm', self._cr)
+                        workflow.trg_validate(self._uid, 'student.payslip', sid.id, 'payslip_confirm', self._cr)
                 else:
                     res = {
                         'student_id':stu.id,
@@ -70,7 +70,7 @@ class student_fees_register(models.Model):
                         'company_id': vals.company_id.id
                     }
                     slip_id = slip_pool.create(res)
-                    workflow.trg_validate(self._uid, 'student.payslip', slip_id, 'payslip_confirm', self._cr)
+                    workflow.trg_validate(self._uid, 'student.payslip', slip_id.id, 'payslip_confirm', self._cr)
             amount = 0
             for datas in self.browse(self.ids):
                 for data in datas.line_ids:
