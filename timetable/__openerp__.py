@@ -30,11 +30,11 @@
     "depends": ["school"],
     "data": [
         "timetable_view.xml",
-        "report_view.xml", 
+        "report_view.xml",
         "security/ir.model.access.csv",
         "views/timetable.xml",
     ],
-    'test':["test/timetable.yml"],
+    'test': ["test/timetable.yml"],
     "installable": True,
     "auto_install": False,
     "application": True,
