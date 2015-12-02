@@ -308,7 +308,8 @@ class transport_registration(models.Model):
                     flag = False
             if flag:
                 list1.append(temp.id)
-#            vehi_obj.write(cr, uid, reg_data.vehicle_id.id, {'vehi_participants_ids':[(6, 0, list1)]}, context=context)
+#            vehi_obj.write(cr, uid, reg_data.vehicle_id.id, 
+#             {'vehi_participants_ids':[(6, 0, list1)]}, context=context)
             vehicle_id = vehi_obj.browse(reg_data.vehicle_id.id)
             vehicle_id.write({'vehi_participants_ids':[(6, 0, list1)]})
             #make entry in student.
@@ -316,7 +317,8 @@ class transport_registration(models.Model):
             for root in reg_data.part_name.transport_ids:
                 list1.append(root.id)
             list1.append(temp.id)
-#            prt_obj.write(cr, uid, reg_data.part_name.id, {'transport_ids':[(6, 0, list1)]}, context=context)
+#            prt_obj.write(cr, uid, reg_data.part_name.id, 
+#            {'transport_ids':[(6, 0, list1)]}, context=context)
             part_name_id = prt_obj.browse(reg_data.part_name.id)
             part_name_id.write({'transport_ids':[(6, 0, list1)]})
             #make entry in transport.
@@ -324,9 +326,10 @@ class transport_registration(models.Model):
             for prt in reg_data.name.trans_participants_ids:
                 list1.append(prt.id)
             list1.append(temp.id)
-#            trans_obj.write(cr, uid, reg_data.name.id, {'trans_participants_ids':[(6, 0, list1)]}, context=context)
+#            trans_obj.write(cr, uid, reg_data.name.id, 
+#            {'trans_participants_ids':[(6, 0, list1)]}, context=context)
             stu_tran_id = trans_obj.browse(reg_data.name.id)
             stu_tran_id.write({'trans_participants_ids':[(6, 0, list1)]})
         return True
-        
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
