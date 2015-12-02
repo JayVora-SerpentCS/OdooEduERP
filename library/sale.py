@@ -21,7 +21,8 @@
 ##############################################################################
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
-from mx import DateTime
+import datetime
+from dateutil.relativedelta import relativedelta
 from openerp import workflow
 
 class sale_order_line(models.Model):
@@ -114,7 +115,7 @@ class sale_order(models.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = (DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)).strftime('%Y-%m-%d')
+                date_planned = (datetime.datetime.now() + relativedelta(days=line.delay or 0.0)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):

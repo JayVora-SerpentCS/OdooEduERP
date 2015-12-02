@@ -303,8 +303,10 @@ class student_student(models.Model):
     contact_phone1 =    fields.Char('Phone no.',)
     contact_mobile1 =   fields.Char('Mobile no',)
     roll_no =           fields.Integer('Roll No.',readonly=True)
-    photo =             fields.Binary('Photo')
-#    photo =             fields.Binary('Photo',default=lambda self: self._get_default_image(self._context.get('default_is_company', False)))
+    # If windows system use this filed
+#    photo =             fields.Binary('Photo')
+    # If ubuntu system use this filed
+    photo =             fields.Binary('Photo',default=lambda self: self._get_default_image(self._context.get('default_is_company', False)))
     year =              fields.Many2one('academic.year', 'Academic Year', required=True, states={'done':[('readonly',True)]})
     cast_id =           fields.Many2one('student.cast','Religion')
     admission_date =    fields.Date('Admission Date',default=date.today())
