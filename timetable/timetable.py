@@ -22,6 +22,7 @@
 from openerp import models, fields, api, _
 from openerp.exceptions import Warning
 
+
 class time_table(models.Model):
 
     _description = 'Time Table'
@@ -64,21 +65,24 @@ class time_table_line(models.Model):
         sub_obj = self.env['subject.subject']
         sub_id = sub_obj.search([('name', 'like', 'Recess')])
         if not sub_id:
-             raise Warning(_('Warning!'), _("You must have \
-                                             a 'Recess' as a subject"))
-        recess.update({'value': {'subject_id':sub_id.id}})
+            raise Warning(_('Warning!'), _("You must have \
+                                            a 'Recess' as a subject"))
+        recess.update({'value': {'subject_id': sub_id.id}})
         return recess
 
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
-    subject_id = fields.Many2one('subject.subject', 'Subject Name', required=True)
-    table_id  = fields.Many2one('time.table', 'TimeTable')
+    subject_id = fields.Many2one('subject.subject',
+                                 'Subject Name', required=True)
+    table_id = fields.Many2one('time.table', 'TimeTable')
     start_time = fields.Float('Start Time', required=True)
     end_time = fields.Float('End Time', required=True)
     is_break = fields.Boolean('Is Break')
-    week_day = fields.Selection([('monday', 'Monday'), ('tuesday', 'Tuesday'),
+    week_day = fields.Selection([('monday', 'Monday'),
+                                 ('tuesday', 'Tuesday'),
                                  ('wednesday', 'Wednesday'),
                                  ('thursday', 'Thursday'),
-                                 ('friday', 'Friday'), ('saturday', 'Saturday'),
+                                 ('friday', 'Friday'),
+                                 ('saturday', 'Saturday'),
                                  ('sunday', 'Sunday')], "Week day",)
 
 
@@ -92,8 +96,8 @@ class subject_subject(models.Model):
             teacher_id = self._context.get('teacher_id')
             for teacher_data in self.env['hr.employee'].browse(teacher_id):
                 args.append(('teacher_ids', 'in', [teacher_data.id]))
-        return super(subject_subject, self).search(args, 
-                                                   offset, 
+        return super(subject_subject, self).search(args,
+                                                   offset,
                                                    limit, order, count=count)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
