@@ -52,8 +52,8 @@ class timetable(report_sxw.rml_parse):
             for data in res:
                 if (time_detail['start_time'] == data['start_time'] and
                     time_detail['end_time'] == data['end_time']):
-                    time_detail[data['week_day']] = \
-                    data['name'] + '\n(' + data['teacher']+')'
+                    time_detail[data['week_day']] = (data['name'] + 
+                                                  '\n(' + data['teacher']+')')
                     if (data['name'] == 'Recess'):
                         time_detail[data['week_day']] = data['name']
             timetable_detail.append(time_detail)
