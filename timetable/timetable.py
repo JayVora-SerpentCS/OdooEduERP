@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
 #    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as

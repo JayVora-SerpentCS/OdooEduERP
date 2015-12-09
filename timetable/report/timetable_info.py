@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
 #    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -50,10 +50,10 @@ class timetable(report_sxw.rml_parse):
         time_data = self.cr.dictfetchall()
         for time_detail in time_data:
             for data in res:
-                if (time_detail['start_time'] == data['start_time'] and
-                    time_detail['end_time'] == data['end_time']):
-                    time_detail[data['week_day']] = (data['name'] + 
-                                                  '\n(' + data['teacher']+')')
+                if (time_detail['start_time'] == data['start_time']
+                    and time_detail['end_time'] == data['end_time']):
+                    time_detail[data['week_day']] = (data['name'] +\
+                                                '\n(' + data['teacher']+')')
                     if (data['name'] == 'Recess'):
                         time_detail[data['week_day']] = data['name']
             timetable_detail.append(time_detail)
