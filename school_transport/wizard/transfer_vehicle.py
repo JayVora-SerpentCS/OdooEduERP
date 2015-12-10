@@ -28,14 +28,14 @@ class transfer_vehicle(models.TransientModel):
     _name = "transfer.vehicle"
     _description = "transfer vehicle"
 
-    name = fields.Many2one('student.student', 'Student Name', readonly = True)
+    name = fields.Many2one('student.student', 'Student Name', readonly=True)
     participation_id = fields.Many2one('transport.participant',
-                                       'Participation', required = True)
+                                       'Participation', required=True)
     root_id = fields.Many2one('student.transport', 'Root', required=True)
     old_vehicle_id = fields.Many2one('transport.vehicle', 'Old Vehicle No',
-                                     required = True)
-    new_vehicle_id = fields.Many2one('transport.vehicle','New Vehicle No',
-                                     required = True)
+                                     required=True)
+    new_vehicle_id = fields.Many2one('transport.vehicle', 'New Vehicle No',
+                                     required=True)
 
     @api.model
     def default_get(self, fields):
