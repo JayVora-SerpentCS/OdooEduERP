@@ -29,14 +29,15 @@ class school_teacher_assignment(models.Model):
 
     name = fields.Char('Assignment Name')
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
-    standard_id = fields.Many2one('school.standard', 'Standard')
+    standard_id = fields.Many2one('school.standard', 'Standard',
+                                  required=True)
     teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True)
     assign_date = fields.Date("Assign Date", required=True)
     due_date = fields.Date("Due Date", required=True)
     attached_homework = fields.Binary("Attached Home work")
-    state = fields.Selection([('draft', 'Draft'), ('active', 'Active')], 
+    state = fields.Selection([('draft', 'Draft'), ('active', 'Active')],
                                  "Status", readonly=True, default='draft')
-    school_id = fields.Many2one(related='standard_id.school_id', 
+    school_id = fields.Many2one(related='standard_id.school_id',
                                              string="School Name")
     cmp_id = fields.Many2one(related='school_id.company_id', string="Company Name")
 
@@ -96,7 +97,7 @@ class school_student_assignment(models.Model):
     teacher_id = fields.Many2one("hr.employee", "Teacher", required=True)
     assign_date = fields.Date("Assign Date", required=True)
     due_date = fields.Date("Due Date", required=True)
-    state = fields.Selection([('draft', 'Draft'), ('active','Active'), 
+    state = fields.Selection([('draft', 'Draft'), ('active','Active'),
                               ('done', 'done')], "Status", readonly=True)
     student_id = fields.Many2one('student.student', 'Student', required=True)
     attached_homework = fields.Binary("Attached Home work")

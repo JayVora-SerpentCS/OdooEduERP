@@ -50,10 +50,13 @@ class timetable(report_sxw.rml_parse):
         time_data = self.cr.dictfetchall()
         for time_detail in time_data:
             for data in res:
-                if (time_detail['start_time'] == data['start_time']
-                    and time_detail['end_time'] == data['end_time']):
-                    time_detail[data['week_day']] = (data['name'] +\
-                                                '\n(' + data['teacher']+')')
+                s_time = time_detail['start_time']
+                d_s_time = data['start_time']
+                e_time = time_detail['end_time']
+                if (s_time == d_s_time and e_time == data['end_time']):
+                    w_day = data['week_day']
+                    d_tchr = data['teacher']
+                    time_detail[w_day] = (data['name'] + '\n(' + d_tchr + ')')
                     if (data['name'] == 'Recess'):
                         time_detail[data['week_day']] = data['name']
             timetable_detail.append(time_detail)
