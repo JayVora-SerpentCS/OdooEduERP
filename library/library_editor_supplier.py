@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -21,14 +21,15 @@
 ##############################################################################
 from openerp import models, fields, api, _
 from openerp import tools
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import Warning
+
 
 class library_editor_supplier(models.Model):
-    
+
     _name = "library.editor.supplier"
     _description = "Editor Relations"
     _auto = False
-     
+
     name = fields.Many2one('res.partner', 'Editor')
     supplier_id = fields.Many2one('res.partner', 'Supplier')
     sequence = fields.Integer('Sequence')
@@ -36,8 +37,8 @@ class library_editor_supplier(models.Model):
     min_qty = fields.Float('Minimal Quantity')
 #     junk = fields.Text(compute="get_junk", method=True, string=" ", )
     junk = fields.Text(compute=lambda self: dict([(idn, '') for idn in self.ids]),
-                method=True, string=" ", type="text")
-    
+                        method=True, string=" ", type="text")
+
 #     _columns = {
 #         'name': fields.many2one('res.partner', 'Editor'),
 #         'supplier_id': fields.many2one('res.partner', 'Supplier'),
@@ -66,7 +67,7 @@ class library_editor_supplier(models.Model):
                     ((pp.editor is not null) or (ps.name is not null))
                 group by pp.editor, ps.name, ps.sequence, ps.delay, ps.min_qty
             )""")
-    
+
     @api.model
     @api.returns('self', lambda value: value)
     def create(self, vals):
@@ -92,7 +93,7 @@ class library_editor_supplier(models.Model):
                 'product_tmpl_id': book_id[0],
                 'sequence': vals['sequence'],
                 'delay': vals['delay'],
-                'min_qty':vals['min_qty'],
+                'min_qty': vals['min_qty'],
             }
             tmp_id = sup_info.create(params)
             last_id = last_id < tmp_id.id and last_id or tmp_id.id
@@ -115,25 +116,27 @@ class library_editor_supplier(models.Model):
             supplier_obj.unlink(ids)
         return True
 
-    @api.multi  
+    @api.multi
     def write(self, vals):
         res = {}
-        update_sequence = "update product_supplierinfo set sequence = %s where name = %s"
-        update_delay = "update product_supplierinfo set delay = %s where name = %s"
+        update_sequence = "update product_supplierinfo set sequence = %s where\
+                             name = %s"
+        update_delay = "update product_supplierinfo set delay = %s where \
+                        name = %s"
 #         relations = self.browse(cr, user, ids)
 #         for rel, idn in zip(relations, ids):
         for rel, idn in zip(self, self.ids):
             #   cannot change supplier here. Must create a new relation:
             original_supplier_id = rel.supplier_id.id
             if not original_supplier_id:
-#                 raise osv.except_osv(_("Warning"), _("Cannot set supplier in this form. Please create a new relation."))
-                raise Warning(_("Warning ! Cannot set supplier in this form. Please create a new relation."))
+                raise Warning(_("Warning ! Cannot set supplier in this form. \
+                                Please create a new relation."))
 
             new_supplier_id = vals.get('supplier_id', 0)
             supplier_change = new_supplier_id != 0 and (idn < 0 or (original_supplier_id != new_supplier_id))
             if supplier_change:
-#                 raise osv.except_osv(_("Warning"), _("Cannot set supplier in this form. Please create a new relation."))
-                raise Warning(_("Warning ! Cannot set supplier in this form. Please create a new relation."))
+                raise Warning(_("Warning ! Cannot set supplier in this form. \
+                                Please create a new relation."))
             else:
                 if 'sequence' in vals:
                     params = [vals.get('sequence', 0), original_supplier_id]

@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -19,21 +19,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp import models, fields, api
 from openerp import workflow
 
+
 class purchase_order_line(models.Model):
-    
+
     _inherit = 'purchase.order.line'
 
     origin = fields.Char('Origin')
-    production_lot_id = fields.Many2one('stock.production.lot', 'Production Lot')
+    production_lot_id = fields.Many2one('stock.production.lot',
+                                        'Production Lot')
     customer_ref = fields.Char('Customer reference')
     origin_ref = fields.Char('Origin')
 
+
 class purchase_order(models.Model):
-    
+
     _inherit = 'purchase.order'
     _order = "create_date desc"
 
@@ -53,7 +55,7 @@ class purchase_order(models.Model):
                 'address_id': order.dest_address_id.id or order.partner_id.id,
                 'invoice_state': istate,
                 'purchase_id': order.id or False,
-                'picking_type_id': order.picking_type_id.id or False 
+                'picking_type_id': order.picking_type_id.id or False
             })
             for order_line in order.order_line:
                 if not order_line.product_id:
@@ -80,7 +82,8 @@ class purchase_order(models.Model):
                 'picking_ids': [(4, picking_id.id)]
             }
             order.write(purchase_order_dict)
-            workflow.trg_validate(self._uid, 'stock.picking', picking_id.id, 'button_confirm', self._cr)
+            workflow.trg_validate(self._uid, 'stock.picking', picking_id.id,
+                                  'button_confirm', self._cr)
         return picking_id.id
 
     @api.multi
@@ -103,9 +106,9 @@ class purchase_order(models.Model):
         return True
 
     @api.model
-    def default_get(self,fields_list):
-        res = super(purchase_order,self).default_get(fields_list)
-        res.update({'invoice_method':'picking'})
+    def default_get(self, fields_list):
+        res = super(purchase_order, self).default_get(fields_list)
+        res.update({'invoice_method': 'picking'})
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

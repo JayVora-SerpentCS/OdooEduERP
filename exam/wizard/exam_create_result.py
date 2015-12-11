@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -19,8 +19,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp import models, api, _
+from openerp.exceptions import except_orm
+
 
 class exam_create_result(models.TransientModel):
 
@@ -45,7 +46,7 @@ class exam_create_result(models.TransientModel):
                             result_exists = result_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
                                                                ('student_id.division_id', '=', school_std_rec.division_id.id),
                                                                ('student_id.medium_id', '=', school_std_rec.medium_id.id),
-                                                               ('student_id','=', student.id)])
+                                                               ('student_id', '=', student.id)])
                             if not result_exists:
                                 result_id = result_obj.create({'s_exam_ids': exam.id,
                                                                'student_id': student.id,

@@ -182,7 +182,7 @@ class student_payslip(models.Model):
             if not payslip_data['fees_structure_id']:
                 self.write({'state': 'paid'})
                 return True
-            for datas in fees_structure_obj.search([('name','=',
+            for datas in fees_structure_obj.search([('name', '=',
                                       payslip_data['fees_structure_id'][1])]):
                 for data in datas.line_ids or []:
                     student_payslip_line_vals = {
@@ -214,7 +214,7 @@ class student_payslip(models.Model):
     medium_id = fields.Many2one('standard.medium', 'Medium')
     register_id = fields.Many2one('student.fees.register', 'Register',
                                    states={'paid': [('readonly', True)]})
-    name = fields.Char('Description',states={'paid':[('readonly', True)]})
+    name = fields.Char('Description', states={'paid': [('readonly', True)]})
     number = fields.Char('Number', readonly=True, default=lambda obj:
                           obj.env['ir.sequence'].get('student.payslip'))
     student_id = fields.Many2one('student.student', 'Student', required=True,
@@ -227,14 +227,14 @@ class student_payslip(models.Model):
     total = fields.Float("Total", readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('paid', 'Paid')], 'State', readonly=True,
-                              default='draft')
+                               default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=True,
                                  states={'paid': [('readonly', True)]})
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
-                               select=1, ondelete='restrict', help="Link to \
+                                select=1, ondelete='restrict', help="Link to \
                                the automatically generated Journal Items.")
-    payment_date = fields.Date('Payment Date', readonly=True, 
+    payment_date = fields.Date('Payment Date', readonly=True,
                                states={'draft': [('readonly', False)]},
                                select=True, help="Keep empty to use the \
                                current date")
@@ -250,7 +250,7 @@ class student_payslip(models.Model):
                                  states={'draft': [('readonly', False)]})
     period_id = fields.Many2one('account.period', 'Force Period',
                                  required=True, domain=[('state', '<>',
-                                 'done')], help="Keep empty to use the \
+                                  'done')], help="Keep empty to use the \
                                  period of the validation(invoice) date.")
 
     _sql_constraints = [
@@ -262,11 +262,11 @@ class student_payslip(models.Model):
         if default is None:
             default = {}
         default.update({
-                        'state': 'draft',
-                        'number': False,
-                        'move_id': False,
-                        'line_ids': [],
-                      })
+                         'state': 'draft',
+                         'number': False,
+                         'move_id': False,
+                         'line_ids': [],
+                       })
         return super(student_payslip, self).copy(cr, uid, id, default, context)
 
     @api.multi
@@ -277,8 +277,8 @@ class student_payslip(models.Model):
             j_currency = journal.currency and journal.currency.id
             currency_id = j_currency or journal.company_id.currency_id.id
             result = {'value': {
-                                'currency_id': currency_id,
-                                }
+                                 'currency_id': currency_id,
+                               }
                       }
         return result
 
@@ -296,7 +296,7 @@ class student_payslip(models.Model):
             ctx = self._context.copy()
             ctx.update({'lang': fees.student_id.lang})
             if not fees.payment_date:
-                fees.write({'payment_date':time.strftime('%Y-%m-%d')})
+                fees.write({'payment_date': time.strftime('%Y-%m-%d')})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             fees_currency = fees.currency_id and fees.currency_id.id
@@ -312,9 +312,10 @@ class student_payslip(models.Model):
                 comapny_ac_id = partner_data.property_account_payable.id
             if fees.journal_id.centralisation:
                 raise except_orm(_('UserError'),
-                        _('You cannot create an invoice on a centralised \
-                          journal. Uncheck the centralised counterpart box \
-                    in the related journal from the configuration menu.'))
+                                 _('You cannot create an invoice on a \
+                                 centralised journal. Uncheck the centralised\
+                                 counterpart box in the related journal from \
+                                 the configuration menu.'))
             move = {
                 'ref': fees.name,
                 'journal_id': fees.journal_id.id,
@@ -328,12 +329,14 @@ class student_payslip(models.Model):
             credit = 0.0
             if fees.type in ('in_invoice', 'out_refund'):
                 credit = cur_obj.compute(self._cr, self._uid,
-                         fees.currency_id.id, company_currency, fees.total,
-                         context=context_multi_currency)
+                                         fees.currency_id.id,
+                                         company_currency, fees.total,
+                                         context=context_multi_currency)
             elif fees.type in ('out_invoice', 'in_refund'):
-                debit = cur_obj.compute(self._cr, self._uid, 
-                        fees.currency_id.id, company_currency, fees.total,
-                        context=context_multi_currency)
+                debit = cur_obj.compute(self._cr, self._uid,
+                                        fees.currency_id.id,
+                                        company_currency, fees.total,
+                                        context=context_multi_currency)
             if debit < 0:
                 credit = -debit
                 debit = 0.0

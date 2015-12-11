@@ -112,9 +112,9 @@ def _encode39(str, cksum):
         newval = newval + _valchars[v]
     return newval + '*'
 
-        
+
 class _Code39Base(Barcode):
-    def __init__(self, value = "", **args):
+    def __init__(self, value="", **args):
         self.xdim = inch * 0.0075
         self.lquiet = None
         self.rquiet = None
@@ -127,7 +127,7 @@ class _Code39Base(Barcode):
 
         for (k, v) in args.items():
             setattr(self, k, v)
-            
+
         if self.quiet:
             if self.lquiet is None:
                 self.lquiet = max(inch * 0.25, self.xdim * 10.0)
@@ -154,16 +154,16 @@ class Standard39(_Code39Base):
 
         value (int, or numeric string. required.):
             The value to encode.
-   
+
         xdim (float, default .0075):
             X-Dimension, or width of the smallest element
             Minumum is .0075 inch (7.5 mils).
-            
+
         ratio (float, default 2.2):
             The ratio of wide elements to narrow elements.
             Must be between 2.0 and 3.0 (or 2.2 and 3.0 if the
             xdim is greater than 20 mils (.02 inch))
-            
+
         gap (float or None, default None):
             width of intercharacter gap. None means "use xdim".
         
@@ -178,20 +178,19 @@ class Standard39(_Code39Base):
         bearers (float, in units of xdim. default 0):
             Height of bearer bars (horizontal bars along the top and
             bottom of the barcode). Default is 0 (no bearers).
-            
+
         quiet (bool, default 1):
             Wether to include quiet zones in the symbol.
-            
+
         lquiet (float, see default below):
             Quiet zone size to left of code, if quiet is true.
             Default is the greater of .25 inch, or .15 times the symbol's
             length.
-            
         rquiet (float, defaults as above):
             Quiet zone size to right left of code, if quiet is true.
 
     Sources of Information on Code 39:
-    
+
     http://www.semiconductor.agilent.com/barcode/sg/Misc/code_39.html
     http://www.adams1.com/pub/russadam/39code.html
     http://www.barcodeman.com/c39_1.html
@@ -223,11 +222,11 @@ class Extended39(_Code39Base):
     Extended Code 39 is a convention for encoding additional characters
     not present in stanmdard Code 39 by using pairs of characters to
     represent the characters missing in Standard Code 39.
-    
+
     See Standard39 for arguments.
 
     Sources of Information on Extended Code 39:
-    
+
     http://www.semiconductor.agilent.com/barcode/sg/Misc/xcode_39.html
     http://www.barcodeman.com/c39_ext.html
     """

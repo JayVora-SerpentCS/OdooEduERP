@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
 #    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,17 +30,16 @@
     "description": """A module to Student Evaluation.
     A Module support the following functionalities:
 
-    1. In This Module we can define the terms which we want to 
+    1. In This Module we can define the terms which we want to
        consider In Evaluation.
     2. student and Faculty Both can Evaluate This.
     """,
-    "depends": ["hr","school"],
+    "depends": ["hr", "school"],
     "data": ['student_evaluation_view.xml',
-             'security/ir.model.access.csv',
-     ],
+             'security/ir.model.access.csv'],
     "demo": [
              'demo/student_evaluation_demo.xml'
-     ],
+            ],
     "installable": True,
     "auto_install": False,
     "application": True,

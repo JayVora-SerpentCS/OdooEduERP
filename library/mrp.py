@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,12 +20,11 @@
 #
 ##############################################################################
 from openerp.osv import osv, fields
-import time
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT,DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class procurement_order(osv.Model):
-    
+
     _inherit = "procurement.order"
     _columns = {
         'production_lot_id': fields.many2one('stock.production.lot', 'Production Lot'),
@@ -41,7 +40,7 @@ class procurement_order(osv.Model):
         @param context : context arguments, like lang, time zone
         @return: New created Purchase Orders procurement wise
         """
-        
+
         res = {}
         if context is None:
             context = {}
@@ -55,7 +54,7 @@ class procurement_order(osv.Model):
         warehouse_obj = self.pool.get('stock.warehouse')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
-            partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
+            partner = procurement.product_id.seller_id  # Taken Main Supplier of Product of Procurement.
             seller_qty = procurement.product_id.seller_qty
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
@@ -65,14 +64,14 @@ class procurement_order(osv.Model):
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if seller_qty:
-                qty = max(qty,seller_qty)
+                qty = max(qty, seller_qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
             schedule_date = self._get_purchase_schedule_date(cr, uid, procurement, company, context=context)
             purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
-            #Passing partner_id to context for purchase order line integrity of Line name
+            # Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
 
             product = prod_obj.browse(cr, uid, procurement.product_id.id, context=context)
@@ -88,7 +87,7 @@ class procurement_order(osv.Model):
                 'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
-                'taxes_id': [(6,0,taxes)],
+                'taxes_id': [(6, 0, taxes)],
                 'production_lot_id': procurement.production_lot_id and procurement.production_lot_id.id or False,
                 'customer_ref': procurement.customer_ref,
             }
@@ -106,7 +105,8 @@ class procurement_order(osv.Model):
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
-            self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
+            self.write(cr, uid, [procurement.id], {'state': 'running',
+                                                   'purchase_id': res[procurement.id]})
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

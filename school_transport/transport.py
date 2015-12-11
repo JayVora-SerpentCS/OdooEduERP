@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
 #    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -48,8 +48,8 @@ class transport_point(models.Model):
     _name = 'transport.point'
     _description = 'Transport Point Information'
 
-    name = fields.Char('Point Name', required = True)
-    amount = fields.Float('Amount', default = 0.0)
+    name = fields.Char('Point Name', required=True)
+    amount = fields.Float('Amount', default=0.0)
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -81,26 +81,26 @@ class transport_vehicle(models.Model):
     _rec_name = 'vehicle'
     _description = 'Transport vehicle Information'
 
-    driver_id = fields.Many2one('hr.employee', 'Driver Name', required = True)
-    vehicle = fields.Char('Vehicle No', required = True)
+    driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
+    vehicle = fields.Char('Vehicle No', required=True)
     capacity = fields.Integer('Capacity')
     participant = fields.Integer(compute='_participants',
-                                 string = 'Total Participants',
-                                 readonly = True)
+                                 string='Total Participants',
+                                 readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
                                             'vehicle_participant_student_rel',
-                                            'vehicle_id', 'student_id',
-                                            ' vehicle Participants')
+                                             'vehicle_id', 'student_id',
+                                             ' vehicle Participants')
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self._context.get('name'):
             transport_obj = self.env['student.transport']
             transport_data = transport_obj.browse(self._context['name'])
-            vehicle_ids = [std_id.id 
+            vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
             args.append(('id', 'in', vehicle_ids))
-        return super(transport_vehicle, self).search(args, offset,limit,
+        return super(transport_vehicle, self).search(args, offset, limit,
                                                      order, count=count)
 
 
@@ -112,10 +112,10 @@ class transport_participant(models.Model):
     _description = 'Transport Participent Information'
 
     name = fields.Many2one('student.student', 'Participent Name',
-                           readonly = True, required = True)
+                           readonly=True, required=True)
     amount = fields.Float('Amount', readonly=True)
     transport_id = fields.Many2one('student.transport', 'Transport Root',
-                                   readonly = True, required = True)
+                                   readonly=True, required=True)
     stu_pid_id = fields.Char('Personal Identification Number', required=True)
     tr_reg_date = fields.Date('Transportation Registration Date')
     tr_end_date = fields.Date('Registration End Date')
@@ -130,12 +130,12 @@ class transport_participant(models.Model):
     def search(self, args, offset=0, limit=None, order=None, count=False):
         if self._context.get('name'):
             student_obj = self.env['student.student']
-            for student_data in student_obj.browse(self._context['name']):
+            for stud_data in student_obj.browse(self._context['name']):
                 transport_ids = [transport_id.id
-                            for transport_id in student_data.transport_ids]
+                                 for transport_id in stud_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
         return super(transport_participant, self).search(args, offset, limit,
-                                                         order, count = count)
+                                                         order, count=count)
 
 
 # class for root detail
@@ -155,19 +155,19 @@ class student_transports(models.Model):
         else:
             self.total_participantes = 0
 
-    name = fields.Char('Transport Root Name', required = True)
-    start_date = fields.Date('Start Date', required = True)
+    name = fields.Char('Transport Root Name', required=True)
+    start_date = fields.Date('Start Date', required=True)
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
-    end_date = fields.Date('End Date', required = True)
-    total_participantes = fields.Integer(compute ='_total_participantes',
-                                         method = True,
-                                         string = 'Total Participantes',
-                                         readonly = True)
+    end_date = fields.Date('End Date', required=True)
+    total_participantes = fields.Integer(compute='_total_participantes',
+                                         method=True,
+                                         string='Total Participantes',
+                                         readonly=True)
     trans_participants_ids = fields.Many2many('transport.participant',
                                               'transport_participant_rel',
                                               'participant_id',
                                               'transport_id', 'Participants',
-                                              readonly = True)
+                                              readonly=True)
     trans_vehicle_ids = fields.Many2many('transport.vehicle',
                                          'transport_vehicle_rel',
                                          'vehicle_id', 'transport_id',
@@ -178,8 +178,8 @@ class student_transports(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('open', 'Open'),
                               ('close', 'Close')],
-                             'State', readonly = True,
-                             default = 'draft')
+                             'State', readonly=True,
+                             default='draft')
 
     @api.multi
     def transport_open(self):
@@ -260,7 +260,8 @@ class transport_registration(models.Model):
     part_name = fields.Many2one('student.student', 'Participant Name',
                                 required=True)
     reg_date = fields.Date('Registration Date', readonly=True,
-                       default=lambda * a: time.strftime("%Y-%m-%d %H:%M:%S"))
+                           default=lambda * a:
+                           time.strftime("%Y-%m-%d %H:%M:%S"))
     reg_end_date = fields.Date('Registration End Date', readonly=True)
     for_month = fields.Integer('Registration For Months')
     state = fields.Selection([('draft', 'Draft'),
@@ -275,7 +276,7 @@ class transport_registration(models.Model):
     amount = fields.Float('Final Amount', readonly=True)
 
     @api.model
-    def create(self,vals):
+    def create(self, vals):
         ret_val = super(transport_registration, self).create(vals)
         m_amt = self.onchange_point_id(vals['point_id'])
         ex_dt = self.onchange_for_month(vals['for_month'])
@@ -299,7 +300,7 @@ class transport_registration(models.Model):
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
         tr_end_date = (datetime.strptime(tr_start_date, '%Y-%m-%d') +
-                       relativedelta(months =+ month))
+                       relativedelta(months=+month))
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 
@@ -313,7 +314,7 @@ class transport_registration(models.Model):
         self.write({'state': 'confirm'})
         trans_obj = self.env['student.transport']
         prt_obj = self.env['student.student']
-        stu_prt_obj = self.env['transport.participant']
+        tprt_obj = self.env['transport.participant']
         vehi_obj = self.env['transport.vehicle']
         for reg_data in self:
             # registration months must one or more then one
@@ -332,14 +333,14 @@ class transport_registration(models.Model):
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
             tr_end_date = (datetime.strptime(tr_start_date, '%Y-%m-%d') +
-                           relativedelta(months =+ month))
+                           relativedelta(months=+month))
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise Warning(_('Error !'), _('For this much Months\
                                 Registration is not Possibal because\
                                 Root end date is Early.'))
             # make entry in Transport
-            temp = stu_prt_obj.create({
+            temp = tprt_obj.create({
                                     'stu_pid_id': str(reg_data.part_name.pid),
                                     'amount': amount,
                                     'transport_id': reg_data.name.id,
@@ -349,14 +350,14 @@ class transport_registration(models.Model):
                                     'tr_reg_date': reg_data.reg_date,
                                     'point_id': reg_data.point_id.id,
                                     'vehicle_id': reg_data.vehicle_id.id,
-                                    })
+                                   })
             # make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:
                 list1.append(prt.id)
             flag = True
             for prt in list1:
-                data = stu_prt_obj.browse(prt)
+                data = tprt_obj.browse(prt)
                 if data.name.id == reg_data.part_name.id:
                     flag = False
             if flag:

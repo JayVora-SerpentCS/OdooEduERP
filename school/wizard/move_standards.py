@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,7 +20,8 @@
 #
 ##############################################################################
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm
+
 
 class move_standards(models.TransientModel):
 
@@ -96,7 +97,7 @@ class move_standards(models.TransientModel):
                         result_exists = result_obj.search([('standard_id', '=', student.standard_id.id),
                                                            ('standard_id.division_id', '=', student.division_id.id),
                                                            ('standard_id.medium_id', '=', student.medium_id.id),
-                                                           ('student_id','=', student.id)])
+                                                           ('student_id', '=', student.id)])
                         if result_exists:
                             result_data = result_obj.browse(result_exists.id)
                             if result_data.result == "Pass":
@@ -105,20 +106,19 @@ class move_standards(models.TransientModel):
                                     student_id = student_obj.browse(student.id)
                                     student_id.write({'year': data.academic_year_id.id,
                                                       'standard_id': next_class_id,
-                                                    })
-                                    student_history_obj.create({'student_id':student.id,
-                                                                'academice_year_id':student.year.id,
+                                                     })
+                                    student_history_obj.create({'student_id': student.id,
+                                                                'academice_year_id': student.year.id,
                                                                 'standard_id': standards.standard_id.id,
                                                                 'division_id': standards.division_id.id,
                                                                 'medium_id': standards.medium_id.id,
                                                                 'result': result_data.result,
                                                                 'percentage': result_data.percentage
-                                                            })
+                                                              })
                             else:
-                                raise except_orm(_("Error!"), _("Student is not eligible for Next Standard."))
+                                raise except_orm(_("Error!"),
+                                                 _("Student is not eligible \
+                                                   for Next Standard."))
         return {}
-    
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

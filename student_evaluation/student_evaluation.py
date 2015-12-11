@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2012-Today Serpent Consulting Services PVT. LTD.
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
 #    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -37,7 +37,7 @@ class student_evaluation(models.Model):
         for stu_eval_rec in self.browse(self.ids):
             if stu_eval_rec.eval_line:
                 self._cr.execute('delete from student_evaluation_line \
-                                  where eval_id=%s',(stu_eval_rec.id,))
+                                  where eval_id=%s', (stu_eval_rec.id,))
             type = stu_eval_rec.type
             eval_temp_rec_browse = eval_temp_obj.search([('type', '=', type)])
             for eval_temp_rec in eval_temp_rec_browse:
@@ -73,15 +73,15 @@ class student_evaluation(models.Model):
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
     eval_line = fields.One2many('student.evaluation.line', 'eval_id',
-                                 'Questionnaire')
+                                'Questionnaire')
     total = fields.Float(compute='_compute_total_points', method=True,
                          string="Total Points")
     state = fields.Selection([('draft', 'Draft'),
                               ('start', 'Start'),
                               ('finished', 'Finish'),
                               ('cancelled', 'Cancel')],
-                             'State', readonly=True, default = 'draft')
-    user_id = fields.Many2one('res.users','User', readonly=True,
+                             'State', readonly=True, default='draft')
+    user_id = fields.Many2one('res.users', 'User', readonly=True,
                               default=get_user)
 
     @api.multi
@@ -109,7 +109,7 @@ class student_evaluation_line(models.Model):
 
     _name = 'student.evaluation.line'
 
-    @api.multi  
+    @api.multi
     def onchange_point(self, point_id):
         if point_id:
             for point_obj in self.env['rating.rating'].browse(point_id):
@@ -133,8 +133,8 @@ class student_evaluation_template(models.Model):
     _rec_name = 'desc'
 
     desc = fields.Char('Description', required=True)
-    type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')], 
-                            'User Type', required=True, default = 'faculty')
+    type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')],
+                            'User Type', required=True, default='faculty')
     rating_line = fields.One2many('rating.rating', 'rating_id', 'Rating')
 
 

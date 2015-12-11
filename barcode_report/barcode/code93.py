@@ -36,55 +36,54 @@ from common import MultiWidthBarcode
 import string
 
 _patterns = {
-  '0' : ('AcAaAb', 0),  '1' : ('AaAbAc', 1),  '2' : ('AaAcAb', 2),
-  '3' : ('AaAdAa', 3),  '4' : ('AbAaAc', 4),  '5' : ('AbAbAb', 5),
-  '6' : ('AbAcAa', 6),  '7' : ('AaAaAd', 7),  '8' : ('AcAbAa', 8),
-  '9' : ('AdAaAa', 9),  'A' : ('BaAaAc', 10), 'B' : ('BaAbAb', 11),
-  'C' : ('BaAcAa', 12), 'D' : ('BbAaAb', 13), 'E' : ('BbAbAa', 14),
-  'F' : ('BcAaAa', 15), 'G' : ('AaBaAc', 16), 'H' : ('AaBbAb', 17),
-  'I' : ('AaBcAa', 18), 'J' : ('AbBaAb', 19), 'K' : ('AcBaAa', 20),
-  'L' : ('AaAaBc', 21), 'M' : ('AaAbBb', 22), 'N' : ('AaAcBa', 23),
-  'O' : ('AbAaBb', 24), 'P' : ('AcAaBa', 25), 'Q' : ('BaBaAb', 26),
-  'R' : ('BaBbAa', 27), 'S' : ('BaAaBb', 28), 'T' : ('BaAbBa', 29),
-  'U' : ('BbAaBa', 30), 'V' : ('BbBaAa', 31), 'W' : ('AaBaBb', 32),
-  'X' : ('AaBbBa', 33), 'Y' : ('AbBaBa', 34), 'Z' : ('AbCaAa', 35),
-  '-' : ('AbAaCa', 36), '.' : ('CaAaAb', 37), ' ' : ('CaAbAa', 38),
-  '$' : ('CbAaAa', 39), '/' : ('AaBaCa', 40), '+' : ('AaCaBa', 41),
-  '%' : ('BaAaCa', 42), '#' : ('AbAbBa', 43), '!' : ('CaBaAa', 44),
-  '=' : ('CaAaBa', 45), '&' : ('AbBbAa', 46),
-  'start' : ('AaAaDa', -1),  'stop' : ('AaAaDaA', -2)
-}
+              '0': ('AcAaAb', 0),  '1': ('AaAbAc', 1),  '2': ('AaAcAb', 2),
+              '3': ('AaAdAa', 3),  '4': ('AbAaAc', 4),  '5': ('AbAbAb', 5),
+              '6': ('AbAcAa', 6),  '7': ('AaAaAd', 7),  '8': ('AcAbAa', 8),
+              '9': ('AdAaAa', 9),  'A': ('BaAaAc', 10), 'B': ('BaAbAb', 11),
+              'C': ('BaAcAa', 12), 'D': ('BbAaAb', 13), 'E': ('BbAbAa', 14),
+              'F': ('BcAaAa', 15), 'G': ('AaBaAc', 16), 'H': ('AaBbAb', 17),
+              'I': ('AaBcAa', 18), 'J': ('AbBaAb', 19), 'K': ('AcBaAa', 20),
+              'L': ('AaAaBc', 21), 'M': ('AaAbBb', 22), 'N': ('AaAcBa', 23),
+              'O': ('AbAaBb', 24), 'P': ('AcAaBa', 25), 'Q': ('BaBaAb', 26),
+              'R': ('BaBbAa', 27), 'S': ('BaAaBb', 28), 'T': ('BaAbBa', 29),
+              'U': ('BbAaBa', 30), 'V': ('BbBaAa', 31), 'W': ('AaBaBb', 32),
+              'X': ('AaBbBa', 33), 'Y': ('AbBaBa', 34), 'Z': ('AbCaAa', 35),
+              '-': ('AbAaCa', 36), '.': ('CaAaAb', 37), ' ': ('CaAbAa', 38),
+              '$': ('CbAaAa', 39), '/': ('AaBaCa', 40), '+': ('AaCaBa', 41),
+              '%': ('BaAaCa', 42), '#': ('AbAbBa', 43), '!': ('CaBaAa', 44),
+              '=': ('CaAaBa', 45), '&': ('AbBbAa', 46),
+              'start': ('AaAaDa', -1),  'stop': ('AaAaDaA', -2)
+            }
 
 _charsbyval = {}
 for k, v in _patterns.items():
     _charsbyval[v[1]] = k
 
 _extended = {
-    '\x00' : '!U',    '\x01' : '#A',    '\x02' : '#B',    '\x03' : '#C',
-    '\x04' : '#D',    '\x05' : '#E',    '\x06' : '#F',    '\x07' : '#G',
-    '\x08' : '#H',    '\x09' : '#I',    '\x0a' : '#J',    '\x0b' : '#K',
-    '\x0c' : '#L',    '\x0d' : '#M',    '\x0e' : '#N',    '\x0f' : '#O',
-    '\x10' : '#P',    '\x11' : '#Q',    '\x12' : '#R',    '\x13' : '#S',
-    '\x14' : '#T',    '\x15' : '#U',    '\x16' : '#V',    '\x17' : '#W',
-    '\x18' : '#X',    '\x19' : '#Y',    '\x1a' : '#Z',    '\x1b' : '!A',
-    '\x1c' : '!B',    '\x1d' : '!C',    '\x1e' : '!D',    '\x1f' : '!E',
-    '!'    : '=A',    '"'    : '=B',    '#'    : '=C',    '$'    : '=D',
-    '%'    : '=E',    '&'    : '=F',    '\''   : '=G',    '('    : '=H',
-    ')'    : '=I',    '*'    : '=J',    '+'    : '=K',    ','    : '=L',
-    '/'    : '=O',    ':'    : '=Z',    ';'    : '!F',    '<'    : '!G',
-    '='    : '!H',    '>'    : '!I',    '?'    : '!J',    '@'    : '!V',
-    '['    : '!K',    '\\'   : '!L',    ']'    : '!M',    '^'    : '!N',
-    '_'    : '!O',    '`'    : '!W',    'a'    : '&A',    'b'    : '&B',
-    'c'    : '&C',    'd'    : '&D',    'e'    : '&E',    'f'    : '&F',
-    'g'    : '&G',    'h'    : '&H',    'i'    : '&I',    'j'    : '&J',
-    'k'    : '&K',    'l'    : '&L',    'm'    : '&M',    'n'    : '&N',
-    'o'    : '&O',    'p'    : '&P',    'q'    : '&Q',    'r'    : '&R',
-    's'    : '&S',    't'    : '&T',    'u'    : '&U',    'v'    : '&V',
-    'w'    : '&W',    'x'    : '&X',    'y'    : '&Y',    'z'    : '&Z',
-    '{'    : '!P',    '|'    : '!Q',    '}'    : '!R',    '~'    : '!S',
-    '\x7f' : '!T'
-}
-
+                '\x00': '!U', '\x01': '#A', '\x02': '#B', '\x03': '#C',
+                '\x04': '#D', '\x05': '#E', '\x06': '#F', '\x07': '#G',
+                '\x08': '#H', '\x09': '#I', '\x0a': '#J', '\x0b': '#K',
+                '\x0c': '#L', '\x0d': '#M', '\x0e': '#N', '\x0f': '#O',
+                '\x10': '#P', '\x11': '#Q', '\x12': '#R', '\x13': '#S',
+                '\x14': '#T', '\x15': '#U', '\x16': '#V', '\x17': '#W',
+                '\x18': '#X', '\x19': '#Y', '\x1a': '#Z', '\x1b': '!A',
+                '\x1c': '!B', '\x1d': '!C', '\x1e': '!D', '\x1f': '!E',
+                '!': '=A', '"': '=B', '#': '=C', '$': '=D',
+                '%': '=E', '&': '=F', '\'': '=G', '(': '=H',
+                ')': '=I', '*': '=J', '+': '=K', ', ': '=L',
+                '/': '=O', ': ': '=Z', ';': '!F', '<': '!G',
+                '=': '!H', '>': '!I', '?': '!J', '@': '!V',
+                '[': '!K', '\\': '!L', ']': '!M', '^': '!N',
+                '_': '!O', '`': '!W', 'a': '&A', 'b': '&B',
+                'c': '&C', 'd': '&D', 'e': '&E', 'f': '&F',
+                'g': '&G', 'h': '&H', 'i': '&I', 'j': '&J',
+                'k': '&K', 'l': '&L', 'm': '&M', 'n': '&N',
+                'o': '&O', 'p': '&P', 'q': '&Q', 'r': '&R',
+                's': '&S', 't': '&T', 'u': '&U', 'v': '&V',
+                'w': '&W', 'x': '&X', 'y': '&Y', 'z': '&Z',
+                '{': '!P', '|': '!Q', '}': '!R', '~': '!S',
+                '\x7f': '!T'
+            }
 
 def _encode93(str):
     s = map(None, str)
@@ -121,9 +120,9 @@ class _Code93Base(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if type(value) is type(1):
+        if type(value) == type(1):
             value = str(value)
-            
+
         for (k, v) in args.items():
             setattr(self, k, v)
 
@@ -149,16 +148,16 @@ class Standard93(_Code93Base):
     Code 93 is a Uppercase alphanumeric symbology with some punctuation.
     See Extended Code 93 for a variant that can represent the entire
     128 characrter ASCII set.
-    
+
     Options that may be passed to constructor:
 
         value (int, or numeric string. required.):
             The value to encode.
-   
+
         xdim (float, default .0075):
             X-Dimension, or width of the smallest element
             Minumum is .0075 inch (7.5 mils).
-            
+
         height (float, see default below):
             Height of the symbol.  Default is the height of the two
             bearer bars (if they exist) plus the greater of .25 inch
@@ -166,11 +165,11 @@ class Standard93(_Code93Base):
 
         quiet (bool, default 1):
             Wether to include quiet zones in the symbol.
-            
+
         lquiet (float, see default below):
             Quiet zone size to left of code, if quiet is true.
             Default is the greater of .25 inch, or 10 xdim
-            
+
         rquiet (float, defaults as above):
             Quiet zone size to right left of code, if quiet is true.
 
@@ -205,9 +204,9 @@ class Extended93(_Code93Base):
     Extended Code 93 is a convention for encoding the entire 128 character
     set using pairs of characters to represent the characters missing in
     Standard Code 93. It is very much like Extended Code 39 in that way.
-    
+
     See Standard93 for arguments.
-    """    
+    """
 
     def validate(self):
         vval = ""
