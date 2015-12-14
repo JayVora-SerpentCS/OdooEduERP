@@ -76,7 +76,7 @@ class stock_move(models.Model):
                 ids2.append(res['move_dest_id'][0])
         for stock_id in self.ids:
             workflow.trg_trigger(self._uid, 'stock.move', stock_id, self._cr)
-        # self.action_cancel(cr,uid, ids2, context) 
+        # self.action_cancel(cr, uid, ids2, context)
         # $$ [removed to avoid cascading cancellation]
         return True
 

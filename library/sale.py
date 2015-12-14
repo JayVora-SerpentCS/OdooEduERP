@@ -51,8 +51,8 @@ class sale_order_line(models.Model):
                 continue
             l_id += 1
             production_lot_dico = {
-                'name': line.order_id and (str(line.order_id.name)+
-                                           ('/%02d' % (l_id,))) or False,
+                'name': (line.order_id and (str(line.order_id.name) +
+                                            ('/%02d' % (l_id,))) or False),
                 'product_id': line.product_id and line.product_id.id or False
             }
             production_lot_id = production_obj.create(production_lot_dico)
@@ -90,10 +90,9 @@ class sale_order(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(sale_order, self).default_get(fields_list)
-        res.update({
-                'picking_policy': 'direct',
+        res.update({'picking_policy': 'direct',
                     'order_policy': 'picking'
-                })
+                    })
         return res
 
     @api.multi
@@ -121,12 +120,15 @@ class sale_order(models.Model):
                 proc_id = False
                 product_type = line.product_id.product_tmpl_id.type
                 days = line.delay or 0.0
-                date_planned = (datetime.datetime.now() + \
+                date_planned = (datetime.datetime.now() +
                                 relativedelta(days)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if line.product_id and product_type in ('product', 'consu'):
                     location_id = order.warehouse_id.lot_stock_id.id
+                    out_type_id = (order.warehouse_id and
+                                   order.warehouse_id.out_type_id and
+                                   order.warehouse_id.out_type_id.id or False)
                     if not picking_id:
                         picking_id = picking_obj.create({
                             'origin': order.name,
@@ -136,12 +138,10 @@ class sale_order(models.Model):
                             'sale_id': order.id,
                             'address_id': order.partner_shipping_id.id,
                             'note': order.note,
-                            'invoice_state': (order.order_policy == 'picking'
-                                              and '2binvoiced') or 'none',
+                            'invoice_state': ((order.order_policy == 'picking'
+                                               and '2binvoiced') or 'none'),
                             'carrier_id': order.carrier_id.id,
-                            'picking_type_id': order.warehouse_id and \
-                            order.warehouse_id.out_type_id and \
-                            order.warehouse_id.out_type_id.id or False
+                            'picking_type_id': out_type_id
                         })
                     move_id = move_obj.create({
                         'name': 'SO:' + order.name or '',
@@ -154,8 +154,8 @@ class sale_order(models.Model):
                         'product_uom': line.product_uom.id,
                         'product_uos': line.product_uos.id,
                         'product_packaging': line.product_packaging.id,
-                        'address_id': line.address_allotment_id.id or \
-                                      order.partner_shipping_id.id,
+                        'address_id': (line.address_allotment_id.id or
+                                       order.partner_shipping_id.id),
                         'location_id': location_id,
                         'location_dest_id': output_id,
                         'sale_line_id': line.id,

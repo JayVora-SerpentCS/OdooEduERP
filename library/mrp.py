@@ -20,6 +20,7 @@
 #
 ##############################################################################
 from openerp.osv import osv, fields
+from openerp import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -45,8 +46,8 @@ class procurement_order(osv.Model):
         res = {}
         if context is None:
             context = {}
-        company = self.pool.get('res.users').browse(cr, uid, uid,
-                                                context=context).company_id
+        compny = self.pool.get('res.users').browse(cr, uid, uid,
+                                                    context=context).company_id
         partner_obj = self.pool.get('res.partner')
         uom_obj = self.pool.get('product.uom')
         pricelist_obj = self.pool.get('product.pricelist')
@@ -66,8 +67,8 @@ class procurement_order(osv.Model):
             warehouse_id = warehouse_obj.search(cr,
                                                 uid,
                                                 [('company_id', '=',
-                                                  procurement.company_id.id \
-                                                  or company.id)],
+                                                  (procurement.company_id.id or
+                                                   compny.id))],
                                                 context=context)
             uom_id = procurement.product_id.uom_po_id.id
 
@@ -83,11 +84,11 @@ class procurement_order(osv.Model):
 
             schedule_date = self._get_purchase_schedule_date(cr, uid,
                                                              procurement,
-                                                             company,
+                                                             compny,
                                                              context=context)
             purchase_date = self._get_purchase_order_date(cr, uid,
                                                           procurement,
-                                                          company,
+                                                          compny,
                                                           schedule_date,
                                                           context=context)
 
@@ -112,12 +113,13 @@ class procurement_order(osv.Model):
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
                 'taxes_id': [(6, 0, taxes)],
-                'production_lot_id': procurement.production_lot_id and \
-                                     procurement.production_lot_id.id or \
-                                     False,
+                'production_lot_id': (procurement.production_lot_id and
+                                      procurement.production_lot_id.id or
+                                      False),
                 'customer_ref': procurement.customer_ref,
             }
-            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+            name = (seq_obj.get(cr, uid, 'purchase.order') or
+                    _('PO: %s') % procurement.name)
             dt_order = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             po_vals = {
                 'name': name,
@@ -129,9 +131,9 @@ class procurement_order(osv.Model):
                 'pricelist_id': pricelist_id,
                 'date_order': dt_order,
                 'company_id': procurement.company_id.id,
-                'fiscal_position': partner.property_account_position and \
-                                   partner.property_account_position.id or \
-                                   False
+                'fiscal_position': (partner.property_account_position and
+                                    partner.property_account_position.id or
+                                    False)
             }
             proc = self.create_procurement_purchase_order(cr,
                                                           uid,

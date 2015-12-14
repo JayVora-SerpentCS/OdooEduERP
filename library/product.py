@@ -47,9 +47,10 @@ class many2manysym(fields.Many2many):
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         for (self._id2, self._id1) in [(self._id2, self._id1),
                                        (self._id1, self._id2)]:
-            self._cr.execute('select '+self._id2+','+self._id1+' from '+
-                             self._rel+' where '+self._id1+' in ('+ids_s+')'+
-                             limit_str+' offset %s', (offset,))
+            self._cr.execute('select ' + self._id2 + ',' + self._id1 +
+                             ' from ' + self._rel + ' where ' + self._id1 +
+                             ' in (' + ids_s + ')' + limit_str +
+                             ' offset %s', (offset,))
             for r in self._cr.fetchall():
                 res[r[1]].append(r[0])
         return res
@@ -76,10 +77,9 @@ class product_lang(models.Model):
     code = fields.Char('Code', required=True, select=True)
     name = fields.Char('Name', required=True, select=True, translate=True)
 
-    _sql_constraints = [
-                       ('name_uniq', 'unique (name)',
+    _sql_constraints = [('name_uniq', 'unique (name)',
                          'The name of the product must be unique !')
-                      ]
+                        ]
 
 
 class product_product(models.Model):
@@ -244,13 +244,13 @@ class product_product(models.Model):
                             if idn.id > 0]
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
-                supplier = [
-                           0, 0, {'pricelist_ids': [],
+                supplier = [0, 0, {'pricelist_ids': [],
                                    'name': obj.supplier_id.id,
                                    'sequence': obj.sequence, 'qty': 0,
                                    'delay': 1, 'product_code': False,
-                                   'product_name': False}
-                        ]
+                                   'product_name': False
+                                   }
+                            ]
                 if 'seller_ids' not in vals:
                     vals['seller_ids'] = [supplier]
                 else:
@@ -283,7 +283,7 @@ class product_product(models.Model):
     date_retour = fields.Date('Return Date', readonly=True,
                               help='Book Return date',
                               default=lambda *a:
-                              str(int(time.strftime("%Y"))) + 
+                              str(int(time.strftime("%Y"))) +\
                               time.strftime("-%m-%d"))
     tome = fields.Char('Tome', help="It will store the information of \
                                         work in serveral volume")
@@ -297,7 +297,7 @@ class product_product(models.Model):
                             'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'Hardback'), ('paper', 'Paperback')],
                             'Reliure', help="It show the books binding type",
-                             default='paper')
+                            default='paper')
     collection = fields.Many2one('library.collection', 'Collection',
                                  help="It show the collection in which \
                                        book is resides")

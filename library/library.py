@@ -110,10 +110,9 @@ class library_card(models.Model):
         if not student_id:
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
-        val = {
-              'standard_id': student_data.standard_id.id,
-              'roll_no': student_data.roll_no,
-             }
+        val = {'standard_id': student_data.standard_id.id,
+               'roll_no': student_data.roll_no,
+               }
         return {'value': val}
 
     @api.one
@@ -165,10 +164,9 @@ class library_book_issue(models.Model):
         '''
         if self.date_issue and self.day_to_return_book:
             days = self.day_to_return_book.day or 0.0
-            ret_date = datetime.strptime(self.date_issue,
-                                          "%Y-%m-%d %H:%M:%S") + \
-                                          relativedelta(days)
-            self.date_return = ret_date
+            rdt = datetime.strptime(self.date_issue,
+                                    "%Y-%m-%d %H:%M:%S") + relativedelta(days)
+            self.date_return = rdt
 
     @api.one
     @api.depends('date_return', 'day_to_return_book')
@@ -248,7 +246,7 @@ class library_book_issue(models.Model):
                 else:
                     raise Warning(_('Book issue limit  is over on this card'))
 
-    name = fields.Many2one('product.product', 'Book Name', required=True) 
+    name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
                              self.env['ir.sequence'].get('library.book.issue')
                              or '/')
@@ -280,7 +278,7 @@ class library_book_issue(models.Model):
                               ('reissue', 'Reissued'),
                               ('cancel', 'Cancelled'), ('return', 'Returned'),
                               ('lost', 'Lost'), ('fine', 'Fined')],
-                              "State", default='draft')
+                             "State", default='draft')
     user = fields.Char("User")
     color = fields.Integer("Color Index")
 
@@ -304,16 +302,15 @@ class library_book_issue(models.Model):
         card_data = self.env['library.card'].browse(card_id)
         val = {'user': str(card_data.user.title())}
         if card_data.user.title() == 'Student':
-            val.update({
-                       'student_id': card_data.student_id.id,
-                       'standard_id': card_data.standard_id.id,
-                       'roll_no': card_data.roll_no,
-                       'gt_name': card_data.gt_name
-                     })
+            val.update({'student_id': card_data.student_id.id,
+                        'standard_id': card_data.standard_id.id,
+                        'roll_no': card_data.roll_no,
+                        'gt_name': card_data.gt_name
+                        })
         else:
             val.update({'teacher_id': card_data.teacher_id.id,
                         'gt_name': card_data.gt_name
-                     })
+                        })
         return {'value': val}
 
 # methode for the workflow#
@@ -443,8 +440,8 @@ class library_book_issue(models.Model):
                 if not record.teacher_id.address_home_id:
                     raise Warning(_('Error ! The Teacher must have a \
                                      Home address.'))
-                addr = record.teacher_id.address_home_id and \
-                       record.teacher_id.address_home_id.id
+                addr = (record.teacher_id.address_home_id
+                        and record.teacher_id.address_home_id.id)
             vals_invoice = {
                 'partner_id': usr,
                 'address_invoice_id': addr,

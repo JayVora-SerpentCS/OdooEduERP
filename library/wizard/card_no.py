@@ -34,7 +34,7 @@ class card_number(models.TransientModel):
     def card_number_ok(self):
         lib_book_obj = self.env['library.book.issue']
         for rec in self:
-            search_card_ids = lib_book_obj.search([('card_id','=' ,
+            search_card_ids = lib_book_obj.search([('card_id', '=',
                                                    rec.card_id.id)])
             if not search_card_ids:
                 raise Warning(_('Invalid Card Number.'))

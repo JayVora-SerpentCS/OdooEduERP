@@ -73,8 +73,8 @@ class purchase_order(models.Model):
                         'location_id': loc_id,
                         'location_dest_id': dest,
                         'picking_id': picking_id.id,
-                        'move_dest_id': order.location_id and \
-                                        order.location_id.id,
+                        'move_dest_id': (order.location_id and
+                                         order.location_id.id),
                         'state': 'assigned',
                         'prodlot_id': order_line.production_lot_id.id,
                         'customer_ref': order_line.customer_ref,
@@ -100,8 +100,9 @@ class purchase_order(models.Model):
                 l_id += 1
                 production_lot_dict = {
                     'product_id': line.product_id.id,
-                    'name': line.order_id and (str(line.order_id.name)+
-                                               '/Line'+str(l_id)) or False,
+                    'name': (line.order_id and str(line.order_id.name +
+                                                   '/Line' + str(l_id)) or
+                             False),
                 }
                 production_lot_id = production_obj.create(production_lot_dict)
                 line.write({'production_lot_id': production_lot_id.id})
