@@ -29,7 +29,8 @@ class stock_move(models.Model):
 
     customer_ref = fields.Char('Customer reference')
     origin_ref = fields.Char('Origin')
-#    procurement_ids = fields.one2many('procurement.order','move_id', string='Procurements')
+#    procurement_ids = fields.one2many('procurement.order','move_id',
+#    string='Procurements')
 
     # New function to manage the update of the quantities
     @api.multi
@@ -75,7 +76,8 @@ class stock_move(models.Model):
                 ids2.append(res['move_dest_id'][0])
         for stock_id in self.ids:
             workflow.trg_trigger(self._uid, 'stock.move', stock_id, self._cr)
-        # self.action_cancel(cr,uid, ids2, context) # $$ [removed to avoid cascading cancellation]
+        # self.action_cancel(cr,uid, ids2, context) 
+        # $$ [removed to avoid cascading cancellation]
         return True
 
 

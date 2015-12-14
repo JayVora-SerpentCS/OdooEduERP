@@ -41,7 +41,7 @@ class sale_order_line(models.Model):
         @param uid : Current Logged in User
         @param ids : Current Records
         @param context : standard Dictionary
-        @return : True 
+        @return : True
         '''
 
         l_id = 0
@@ -51,7 +51,8 @@ class sale_order_line(models.Model):
                 continue
             l_id += 1
             production_lot_dico = {
-                'name': line.order_id and (str(line.order_id.name)+('/%02d' % (l_id,))) or False,
+                'name': line.order_id and (str(line.order_id.name)+
+                                           ('/%02d' % (l_id,))) or False,
                 'product_id': line.product_id and line.product_id.id or False
             }
             production_lot_id = production_obj.create(production_lot_dico)
@@ -60,7 +61,7 @@ class sale_order_line(models.Model):
         return True
 
     @api.model
-    def copy(self,default=None):
+    def copy(self, default=None):
         ''' This method Duplicate record with given id updating it \
                 with default values
         @param self : Object Pointer
@@ -70,7 +71,7 @@ class sale_order_line(models.Model):
         @param default : dictionary of field values to override in the \
                         original values of the copied record
         @param context : standard Dictionary
-        @return : id of the newly created record 
+        @return : id of the newly created record
         '''
         if default is None:
             default = {}
@@ -90,9 +91,9 @@ class sale_order(models.Model):
     def default_get(self, fields_list):
         res = super(sale_order, self).default_get(fields_list)
         res.update({
-                    'picking_policy': 'direct',
+                'picking_policy': 'direct',
                     'order_policy': 'picking'
-                  })
+                })
         return res
 
     @api.multi
@@ -118,10 +119,13 @@ class sale_order(models.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = (datetime.datetime.now() + relativedelta(days=line.delay or 0.0)).strftime('%Y-%m-%d')
+                product_type = line.product_id.product_tmpl_id.type
+                days = line.delay or 0.0
+                date_planned = (datetime.datetime.now() + \
+                                relativedelta(days)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
-                if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
+                if line.product_id and product_type in ('product', 'consu'):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         picking_id = picking_obj.create({
@@ -132,9 +136,12 @@ class sale_order(models.Model):
                             'sale_id': order.id,
                             'address_id': order.partner_shipping_id.id,
                             'note': order.note,
-                            'invoice_state': (order.order_policy == 'picking' and '2binvoiced') or 'none',
+                            'invoice_state': (order.order_policy == 'picking'
+                                              and '2binvoiced') or 'none',
                             'carrier_id': order.carrier_id.id,
-                            'picking_type_id': order.warehouse_id and order.warehouse_id.out_type_id and order.warehouse_id.out_type_id.id or False
+                            'picking_type_id': order.warehouse_id and \
+                            order.warehouse_id.out_type_id and \
+                            order.warehouse_id.out_type_id.id or False
                         })
                     move_id = move_obj.create({
                         'name': 'SO:' + order.name or '',
@@ -142,18 +149,19 @@ class sale_order(models.Model):
                         'origin_ref': order.name,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
-                       # 'product_qty': line.product_qty,
+                        # 'product_qty': line.product_qty,
                         'product_uom_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
                         'product_uos': line.product_uos.id,
                         'product_packaging': line.product_packaging.id,
-                        'address_id': line.address_allotment_id.id or order.partner_shipping_id.id,
+                        'address_id': line.address_allotment_id.id or \
+                                      order.partner_shipping_id.id,
                         'location_id': location_id,
                         'location_dest_id': output_id,
                         'sale_line_id': line.id,
                         'tracking_id': False,
                         'state': 'waiting',
-#                        'note': line.notes,
+                        # 'note': line.notes,
                         'prodlot_id': line.production_lot_id.id,
                         'customer_ref': line.customer_ref,
                     })
@@ -174,7 +182,7 @@ class sale_order(models.Model):
                                           proc_id.id, 'button_confirm',
                                           self._cr)
                     line.write({'procurement_id': proc_id.id})
-                elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
+                elif line.product_id and product_type == 'service':
                     proc_id = procurment_obj.create({
                         'name': line.name,
                         'origin': order.name,

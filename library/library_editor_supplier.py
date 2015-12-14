@@ -36,18 +36,9 @@ class library_editor_supplier(models.Model):
     delay = fields.Integer('Customer Lead Time')
     min_qty = fields.Float('Minimal Quantity')
 #     junk = fields.Text(compute="get_junk", method=True, string=" ", )
-    junk = fields.Text(compute=lambda self: dict([(idn, '') for idn in self.ids]),
-                        method=True, string=" ", type="text")
-
-#     _columns = {
-#         'name': fields.many2one('res.partner', 'Editor'),
-#         'supplier_id': fields.many2one('res.partner', 'Supplier'),
-#         'sequence': fields.integer('Sequence'),
-#         'delay': fields.integer('Customer Lead Time'),
-#         'min_qty': fields.float('Minimal Quantity'),
-#         'junk': fields.function(lambda self, cr, uid, ids, name, attr, context: dict([(idn, '') for idn in ids]),
-#                 method=True, string=" ", type="text"),
-#     }
+    junk = fields.Text(compute=lambda self:
+                       dict([(idn, '') for idn in self.ids]),
+                       method=True, string=" ", type="text")
 
     @api.v7
     def init(self, cr):
@@ -55,14 +46,19 @@ class library_editor_supplier(models.Model):
         cr.execute("""
             create view library_editor_supplier as (
                 select
-                    case when min(ps.id) is null then - min(pp.id) else min(ps.id) end as id,
-                    case when pp.editor is null then 1 else pp.editor end as name,
-                    case when ps.name is null then 1 else ps.name end as supplier_id,
-                    case when ps.sequence is null then 0 else ps.sequence end as sequence,
+                    case when min(ps.id) is null then - min(pp.id) \
+                    else min(ps.id) end as id,
+                    case when pp.editor is null then 1 else pp.editor \
+                    end as name,
+                    case when ps.name is null then 1 else ps.name \
+                    end as supplier_id,
+                    case when ps.sequence is null then 0 else ps.sequence \
+                    end as sequence,
                     ps.delay as delay,
                     ps.min_qty as min_qty
                 from
-                    product_supplierinfo ps full outer join product_product pp on (ps.name = pp.product_tmpl_id)
+                    product_supplierinfo ps full outer join product_product \
+                    pp on (ps.name = pp.product_tmpl_id)
                 where
                     ((pp.editor is not null) or (ps.name is not null))
                 group by pp.editor, ps.name, ps.sequence, ps.delay, ps.min_qty
@@ -72,16 +68,14 @@ class library_editor_supplier(models.Model):
     @api.returns('self', lambda value: value)
     def create(self, vals):
         if not (vals['name'] and vals['supplier_id']):
-#             raise osv.except_osv(_("Error"), _("Please provide proper Information"))
             raise Warning(_("Error ! Please provide proper Information"))
-        # search for books of these editor not already linked with this supplier :
-        select = """select product_tmpl_id\n"""\
-                 """from product_product\n"""\
-                 """where editor = %s\n"""\
-                 """  and id not in (select product_tmpl_id from product_supplierinfo where name = %s)""" % (vals['name'], vals['supplier_id'])
+    # search for books of these editor not already linked with this supplier:
+        select = """select product_tmpl_id from product_product\
+                    where editor = %s and id not in (select product_tmpl_id \
+                    from product_supplierinfo where \
+                    name = %s)""" % (vals['name'], vals['supplier_id'])
         self._cr.execute(select)
         if not self._cr.rowcount:
-#             raise osv.except_osv(_("Error"), _("No book to apply this relation"))
             raise Warning(_("Error ! No book to apply this relation"))
 
         sup_info = self.env['product.supplierinfo']
@@ -89,7 +83,6 @@ class library_editor_supplier(models.Model):
         for book_id in self._cr.fetchall():
             params = {
                 'name': vals['supplier_id'],
-#                 'product_id': book_id[0],
                 'product_tmpl_id': book_id[0],
                 'sequence': vals['sequence'],
                 'delay': vals['delay'],
@@ -105,12 +98,13 @@ class library_editor_supplier(models.Model):
         for rel in self:
             if not (rel.name and rel.supplier_id):
                 continue
-            # search for the equivalent ids in product_supplierinfo (unpack the group)
-            self._cr.execute("""select si.id\n"""\
-                       """from product_supplierinfo si\n"""\
-                       """join product_product pp\n"""\
-                       """  on (si.product_id = pp.product_tmpl_id )\n"""\
-                       """where pp.editor = %s and si.name = %s""" % (rel.name.id, rel.supplier_id.id))
+    # search for the equivalent ids in product_supplierinfo (unpack the group)
+            self._cr.execute("""select si.id from product_supplierinfo si\
+                                join product_product pp on \
+                                (si.product_id = pp.product_tmpl_id )\
+                                where pp.editor = %s and \
+                                si.name = %s""" % (rel.name.id,
+                                                   rel.supplier_id.id))
 
             ids = [x[0] for x in self._cr.fetchall()]
             supplier_obj.unlink(ids)
@@ -133,7 +127,8 @@ class library_editor_supplier(models.Model):
                                 Please create a new relation."))
 
             new_supplier_id = vals.get('supplier_id', 0)
-            supplier_change = new_supplier_id != 0 and (idn < 0 or (original_supplier_id != new_supplier_id))
+            supplier_change = new_supplier_id != 0 and \
+            (idn < 0 or (original_supplier_id != new_supplier_id))
             if supplier_change:
                 raise Warning(_("Warning ! Cannot set supplier in this form. \
                                 Please create a new relation."))

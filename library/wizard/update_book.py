@@ -29,7 +29,6 @@ class update_books(models.TransientModel):
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
 
-
     @api.multi
     def action_update_books(self):
         lib_book_obj = self.env['library.book.issue']

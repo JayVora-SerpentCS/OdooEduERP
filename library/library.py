@@ -111,9 +111,9 @@ class library_card(models.Model):
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
         val = {
-               'standard_id': student_data.standard_id.id,
-               'roll_no': student_data.roll_no,
-              }
+              'standard_id': student_data.standard_id.id,
+              'roll_no': student_data.roll_no,
+             }
         return {'value': val}
 
     @api.one
@@ -126,13 +126,15 @@ class library_card(models.Model):
                 user = rec.teacher_id.name
             self.gt_name = user
 
-    code = fields.Char('Card No', required=True, default=lambda self: self.env['ir.sequence'].get('library.card') or '/')
+    code = fields.Char('Card No', required=True,
+                       default=lambda self:
+                       self.env['ir.sequence'].get('library.card') or '/')
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
     gt_name = fields.Char(compute="get_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
-                             "User")
+                            "User")
     roll_no = fields.Integer('Roll No')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
 
@@ -157,12 +159,15 @@ class library_book_issue(models.Model):
         @param name : Functional field's name
         @param args : Other arguments
         @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key and the book \
-                  return date as value
+        @return : Dictionary having identifier of the record as key and the \
+                  book return date as value
 
         '''
         if self.date_issue and self.day_to_return_book:
-            ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S") + relativedelta(days=self.day_to_return_book.day or 0.0)
+            days = self.day_to_return_book.day or 0.0
+            ret_date = datetime.strptime(self.date_issue,
+                                          "%Y-%m-%d %H:%M:%S") + \
+                                          relativedelta(days)
             self.date_return = ret_date
 
     @api.one
@@ -180,14 +185,15 @@ class library_book_issue(models.Model):
                   penalty as value
 
         '''
-        res = {}
         for line in self:
             if line.date_return:
                 start_day = datetime.now()
-                end_day = datetime.strptime(line.date_return, "%Y-%m-%d %H:%M:%S")
+                end_day = datetime.strptime(line.date_return,
+                                            "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
+                    duration = float(diff.days) * 24 + (float(diff.seconds)
+                                                        / 3600)
                     day = duration/24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
@@ -208,7 +214,6 @@ class library_book_issue(models.Model):
                   lost penalty as value
         '''
 
-        res = {}
 
 #         for line in self:
         if self.state:
@@ -226,7 +231,7 @@ class library_book_issue(models.Model):
         @param ids : Current Records
         @param context : standard Dictionary
         @return : True or False
-                
+
         '''
 #         for issue in self.browse(cr, uid, ids, context = context):
         if self.card_id:
@@ -243,9 +248,10 @@ class library_book_issue(models.Model):
                 else:
                     raise Warning(_('Book issue limit  is over on this card'))
 
-
     name = fields.Many2one('product.product', 'Book Name', required=True) 
-    issue_code = fields.Char('Issue No.', required=True, default=lambda self: self.env['ir.sequence'].get('library.book.issue') or '/') 
+    issue_code = fields.Char('Issue No.', required=True, default=lambda self:
+                             self.env['ir.sequence'].get('library.book.issue')
+                             or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
@@ -254,10 +260,9 @@ class library_book_issue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=lambda *a:
-                                      time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 default=time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date",
-                                  string ='Return Date', method=True,
+                                  string='Return Date', method=True,
                                   store=True, help="Book To Be \
                                                     Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
@@ -275,39 +280,9 @@ class library_book_issue(models.Model):
                               ('reissue', 'Reissued'),
                               ('cancel', 'Cancelled'), ('return', 'Returned'),
                               ('lost', 'Lost'), ('fine', 'Fined')],
-                               "State", default='draft')
+                              "State", default='draft')
     user = fields.Char("User")
     color = fields.Integer("Color Index")
-
-#     _columns = {
-#         'name': fields.many2one('product.product', 'Book Name', required=True), 
-#         'issue_code' : fields.char('Issue No.', size=24, required=True), 
-#         'student_id': fields.many2one('student.student', 'Student Name'), 
-#         'teacher_id': fields.many2one('hr.employee', 'Teacher Name'), 
-#         'gt_name' : fields.char('Name', size=64),
-#         'standard_id': fields.many2one('standard.standard', 'Standard'), 
-#         'roll_no': fields.integer('Roll No'), 
-#         'invoice_id': fields.many2one('account.invoice', "User's Invoice"), 
-#         'date_issue': fields.datetime('Release Date', required=True, help="Release(Issue) date of the book"), 
-#         'date_return': fields.function(_calc_retunr_date, string ='Return Date', method=True, type='datetime', store=True, help="Book To Be Return On This Date"), 
-#         'actual_return_date': fields.datetime("Actual Return Date", readonly=True, help="Actual Return Date of Book"), 
-#         'penalty': fields.function(_calc_penalty, string ='Penalty', method=True, type='float',help='It show the late book return penalty'), 
-#         'lost_penalty': fields.function(_calc_lost_penalty, string= 'Fine', method=True, type='float', store=True, help='It show the penalty for lost book'), 
-#         'day_to_return_book': fields.many2one("library.book.returnday", "Book Return Days"), 
-#         'card_id': fields.many2one("library.card", "Card No", required=True), 
-#         'state': fields.selection([('draft', 'Draft'), ('issue', 'Issued'), ('reissue', 'Reissued'), ('cancel', 'Cancelled'), ('return', 'Returned'), ('lost', 'Lost'), ('fine', 'Fined')], "State"), 
-#         'user': fields.char("User", size=30), 
-#         'color': fields.integer("Color Index")
-#     }
-    
-#     _constraints = [(_check_issue_book_limit, _('Book issue limit  is over on this card'), ['issue_code'])]
-    
-
-#     _defaults = {
-#         'date_issue': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
-#         'state': 'draft', 
-#         'issue_code' : lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'library.book.issue') or '/', 
-#     }
 
     @api.multi
     def on_change_card_issue(self, card_id):
@@ -330,15 +305,15 @@ class library_book_issue(models.Model):
         val = {'user': str(card_data.user.title())}
         if card_data.user.title() == 'Student':
             val.update({
-                        'student_id': card_data.student_id.id,
-                        'standard_id': card_data.standard_id.id,
-                        'roll_no': card_data.roll_no,
-                        'gt_name': card_data.gt_name
-                       })
+                       'student_id': card_data.student_id.id,
+                       'standard_id': card_data.standard_id.id,
+                       'roll_no': card_data.roll_no,
+                       'gt_name': card_data.gt_name
+                     })
         else:
             val.update({'teacher_id': card_data.teacher_id.id,
                         'gt_name': card_data.gt_name
-                      })
+                     })
         return {'value': val}
 
 # methode for the workflow#
@@ -405,7 +380,7 @@ class library_book_issue(models.Model):
         '''
 #         product_obj = self.env("product.product")
         vals = {'actual_return_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                 'state': 'return'}
+                'state': 'return'}
 #         for issue in self.browse(cr, uid, ids, context = context):
         self.write(vals)
         product_id = self.name
@@ -468,17 +443,18 @@ class library_book_issue(models.Model):
                 if not record.teacher_id.address_home_id:
                     raise Warning(_('Error ! The Teacher must have a \
                                      Home address.'))
-                addr = record.teacher_id.address_home_id and record.teacher_id.address_home_id.id
+                addr = record.teacher_id.address_home_id and \
+                       record.teacher_id.address_home_id.id
             vals_invoice = {
                 'partner_id': usr,
-                'address_invoice_id' : addr,
+                'address_invoice_id': addr,
                 'account_id': 12,
             }
             invoice_lines = []
             if record.lost_penalty:
                 lost_pen = record.lost_penalty
                 invoice_line2 = {
-                    'name' : 'Book Lost Fine',
+                    'name': 'Book Lost Fine',
                     'price_unit': lost_pen,
                     'account_id': 12
                 }
@@ -486,7 +462,7 @@ class library_book_issue(models.Model):
             if record.penalty:
                 pen = record.penalty
                 invoice_line1 = {
-                    'name' : 'Late Return Penalty',
+                    'name': 'Late Return Penalty',
                     'price_unit': pen,
                     'account_id': 12
                 }
@@ -526,13 +502,16 @@ class library_book_request(models.Model):
                 book = self.new1
             self.bk_nm = book
 
-    req_id = fields.Char('Request ID', readonly=True, default=lambda self: self.env['ir.sequence'].get('library.book.request') or '/')
+    req_id = fields.Char('Request ID', readonly=True,
+                         default=lambda self:
+                         self.env['ir.sequence'].get('library.book.request')
+                         or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
     new1 = fields.Char('Book Name')
-    bk_nm = fields.Char(compute="gt_bname", method=True, string = 'Name',
+    bk_nm = fields.Char(compute="gt_bname", method=True, string='Name',
                         store=True)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
