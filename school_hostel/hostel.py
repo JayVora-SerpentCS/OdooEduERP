@@ -62,9 +62,10 @@ class hostel_room(models.Model):
     floor_no = fields.Integer('Floor No.', default=1)
     room_no = fields.Char('Room No.', required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
-    availability = fields.Float(compute='_check_availability', 
+    availability = fields.Float(compute='_check_availability',
                                 string="Availability")
-    student_ids = fields.One2many('hostel.student', 'hostel_room_id', 'Student')
+    student_ids = fields.One2many('hostel.student', 'hostel_room_id',
+                                  'Student')
     telephone = fields.Boolean('Telephone access')
     ac = fields.Boolean('Air Conditioning')
     private_bathroom = fields.Boolean('Private Bathroom')
@@ -118,7 +119,7 @@ class hostel_student(models.Model):
                 'datas': datas}
 
     hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
-    hostel_id = fields.Char('Hostel ID', readonly=True, default=lambda obj: \
+    hostel_id = fields.Char('Hostel ID', readonly=True, default=lambda obj:
                             obj.env['ir.sequence'].get('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
@@ -127,15 +128,15 @@ class hostel_student(models.Model):
     admission_date = fields.Datetime('Admission Date')
     discharge_date = fields.Datetime('Discharge Date')
     paid_amount = fields.Float('Paid Amount')
-    remaining_amount = fields.Float(compute='_get_remaining_fee_amt', \
+    remaining_amount = fields.Float(compute='_get_remaining_fee_amt',
                                     string='Remaining Amount')
     status = fields.Selection([('draft', 'Draft'),
                                ('reservation', 'Reservation'),
                                ('confirm', 'Confirm')], 'Status',
-                               default='draft')
+                                default='draft')
 
     _sql_constraints = [('admission_date_greater',
-                      'check(discharge_date >= admission_date)', 'Error ! \
+                         'check(discharge_date >= admission_date)', 'Error ! \
                        Discharge Date cannot be set before Admission Date.')]
 
 
