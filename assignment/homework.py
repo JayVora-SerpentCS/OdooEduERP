@@ -53,7 +53,7 @@ class school_teacher_assignment(models.Model):
         '''  This method change state as active state and create assignment line
         @return : True
         '''
-        assignment_obj = self.env['school.student.assignment']
+        assign_obj = self.env['school.student.assignment']
         std_ids = []
         self._cr.execute("""select id from student_student where\
                           standard_id=%s""", (self.standard_id.id, ))
@@ -63,25 +63,29 @@ class school_teacher_assignment(models.Model):
                 std_ids.append(stu[0])
         if std_ids:
             for std in std_ids:
-                assignment_id = assignment_obj.create({
-                            'name': self.name,
-                                'subject_id': self.subject_id.id,
-                                'standard_id': self.standard_id.id,
-                                'assign_date': self.assign_date,
-                                'due_date': self.due_date,
-                                'state': 'active',
-                                'attached_homework': self.attached_homework,
-                                'teacher_id': self.teacher_id.id,
-                                'student_id': std
-                        })
+                homework = self.attached_homework
+                subj_id = self.subject_id.id
+                standard_id = self.standard_id.id
+                assign_date = self.assign_date
+                teacher_id = self.teacher_id.id
+                assignment = assign_obj.create({
+                                                'name': self.name,
+                                                'subject_id': subj_id,
+                                                'standard_id': standard_id,
+                                                'assign_date': assign_date,
+                                                'due_date': self.due_date,
+                                                'state': 'active',
+                                                'attached_homework': homework,
+                                                'teacher_id': teacher_id,
+                                                'student_id': std
+                                                })
                 if self.attached_homework:
-                    data_attach = {
-                                    'name': 'test',
-                                    'datas': str(self.attached_homework),
-                                    'description': 'Assignment attachment',
-                                    'res_model': 'school.student.assignment',
-                                    'res_id': assignment_id.id,
-                        }
+                    data_attach = {'name': 'test',
+                                   'datas': str(self.attached_homework),
+                                   'description': 'Assignment attachment',
+                                   'res_model': 'school.student.assignment',
+                                   'res_id': assignment.id,
+                                   }
                     self.env['ir.attachment'].create(data_attach)
                 self.write({'state': 'active'})
             return True
