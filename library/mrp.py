@@ -47,7 +47,7 @@ class procurement_order(osv.Model):
         if context is None:
             context = {}
         compny = self.pool.get('res.users').browse(cr, uid, uid,
-                                                    context=context).company_id
+                                                   context=context).company_id
         partner_obj = self.pool.get('res.partner')
         uom_obj = self.pool.get('product.uom')
         pricelist_obj = self.pool.get('product.pricelist')

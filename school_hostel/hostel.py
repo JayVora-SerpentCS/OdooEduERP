@@ -33,7 +33,7 @@ class hostel_type(models.Model):
     name = fields.Char('Hostel Name', required=True)
     type = fields.Selection([('boys', 'Boys'), ('girls', 'Girls'),
                              ('common', 'Common')], 'Hostel Type',
-                             required=True, default='common')
+                            required=True, default='common')
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('res.partner', 'Rector')
     room_ids = fields.One2many('hostel.room', 'name', 'Room')
@@ -133,7 +133,7 @@ class hostel_student(models.Model):
     status = fields.Selection([('draft', 'Draft'),
                                ('reservation', 'Reservation'),
                                ('confirm', 'Confirm')], 'Status',
-                                default='draft')
+                              default='draft')
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)', 'Error ! \

@@ -36,7 +36,7 @@ class school_teacher_assignment(models.Model):
     due_date = fields.Date("Due Date", required=True)
     attached_homework = fields.Binary("Attached Home work")
     state = fields.Selection([('draft', 'Draft'), ('active', 'Active')],
-                               "Status", readonly=True, default='draft')
+                             "Status", readonly=True, default='draft')
     school_id = fields.Many2one(related='standard_id.school_id',
                                 string="School Name")
     cmp_id = fields.Many2one(related='school_id.company_id',
@@ -64,7 +64,7 @@ class school_teacher_assignment(models.Model):
         if std_ids:
             for std in std_ids:
                 assignment_id = assignment_obj.create({
-                                'name': self.name,
+                            'name': self.name,
                                 'subject_id': self.subject_id.id,
                                 'standard_id': self.standard_id.id,
                                 'assign_date': self.assign_date,
@@ -73,15 +73,15 @@ class school_teacher_assignment(models.Model):
                                 'attached_homework': self.attached_homework,
                                 'teacher_id': self.teacher_id.id,
                                 'student_id': std
-                            })
+                        })
                 if self.attached_homework:
                     data_attach = {
-                                  'name': 'test',
-                            'datas': str(self.attached_homework),
-                            'description': 'Assignment attachment',
-                            'res_model': 'school.student.assignment',
-                            'res_id': assignment_id.id,
-                         }
+                                    'name': 'test',
+                                    'datas': str(self.attached_homework),
+                                    'description': 'Assignment attachment',
+                                    'res_model': 'school.student.assignment',
+                                    'res_id': assignment_id.id,
+                        }
                     self.env['ir.attachment'].create(data_attach)
                 self.write({'state': 'active'})
             return True

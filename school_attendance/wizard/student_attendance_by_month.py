@@ -34,17 +34,17 @@ class student_attendance_by_month(models.TransientModel):
                               (7, 'July'), (8, 'August'), (9, 'September'),
                               (10, 'October'), (11, 'November'),
                               (12, 'December')], 'Month', required=True,
-                               default=lambda *a: time.gmtime()[1])
+                             default=lambda *a: time.gmtime()[1])
     year = fields.Integer('Year', required=True, default=lambda *a:
-                           time.gmtime()[0])
+                          time.gmtime()[0])
     attendance_type = fields.Selection([('daily', 'FullDay'),
                                         ('lecture', 'Lecture Wise')], 'Type')
 
 
 #     _columns = {
 #         'month': fields.selection([(1, 'January'), (2, 'February'),
-# (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), 
-# (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), 
+# (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'),
+# (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'),
 # (12, 'December')], 'Month', required=True),
 #         'year': fields.integer('Year', required=True),
 #         'attendance_type':fields.selection([('daily','FullDay'),('lecture',
@@ -68,10 +68,10 @@ class student_attendance_by_month(models.TransientModel):
         data = self.read([])[0]
         data.update({'stud_ids': self._context.get('active_ids', [])})
         datas = {
-                 'ids': [],
+                'ids': [],
                  'model': 'student.student',
                  'form': data,
-                }
+            }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'attendance.by.month.student',

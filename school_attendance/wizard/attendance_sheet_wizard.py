@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 # from openerp.osv import fields, osv
 
 
@@ -31,16 +31,10 @@ class monthly_attendance_sheet(models.TransientModel):
     _description = "Monthly Attendance Sheet Wizard"
 
     standard_id = fields.Many2one('school.standard', 'Academic Class',
-                                                        required=True)
+                                  required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     month_id = fields.Many2one('academic.month', 'Month', required=True)
 
-#     _columns = {
-#         'standard_id': fields.many2one('school.standard', 'Academic Class',
-#                                                               required=True ),
-#         'year_id': fields.many2one('academic.year', 'Year', required=True),
-#         'month_id': fields.many2one('academic.month', 'Month', required=True)
-#     }
     @api.multi
     def monthly_attendance_sheet_open_window(self):
         ''' This method open new window with monthly attendance sheet
@@ -56,9 +50,13 @@ class monthly_attendance_sheet(models.TransientModel):
         data = self.read([])[0]
         models_data = self.env['ir.model.data']
         # Get opportunity views
-        dummy, form_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_form')
-        dummy, tree_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_tree')
-        print "\n data ::::::::::::", data
+        atten_mdle = 'school_attendance'
+        atten_form = 'view_attendance_sheet_form'
+        atten_tree = 'view_attendance_sheet_tree'
+        dummy, form_view = models_data.get_object_reference(atten_mdle,
+                                                            atten_form)
+        dummy, tree_view = models_data.get_object_reference(atten_mdle,
+                                                            atten_tree)
         return {
             'view_type': 'form',
             'view_mode': 'tree, form',
@@ -68,7 +66,7 @@ class monthly_attendance_sheet(models.TransientModel):
                        ('month_id', '=', data['month_id'][0]),
                        ('year_id', '=', data['year_id'][0])],
             'views': [(tree_view or False, 'tree'), (form_view or False,
-                                                              'form')],
+                                                     'form')],
             'type': 'ir.actions.act_window',
         }
 

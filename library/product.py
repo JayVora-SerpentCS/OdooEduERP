@@ -283,7 +283,7 @@ class product_product(models.Model):
     date_retour = fields.Date('Return Date', readonly=True,
                               help='Book Return date',
                               default=lambda *a:
-                              str(int(time.strftime("%Y"))) +\
+                              str(int(time.strftime("%Y"))) +
                               time.strftime("-%m-%d"))
     tome = fields.Char('Tome', help="It will store the information of \
                                         work in serveral volume")
