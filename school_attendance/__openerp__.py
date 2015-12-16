@@ -15,7 +15,6 @@
           'views/attendance_workflow.xml',
           'wizard/attendance_sheet_wizard_view.xml',
           'wizard/student_attendance_by_month_view.xml'],
-        # 'data/daily_attendance_data.xml'
  'demo': ['demo/school_attendance_demo.xml'],
  'installable': True,
  'application': True}

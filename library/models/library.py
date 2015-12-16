@@ -130,8 +130,10 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         if self.date_issue and self.day_to_return_book:
-            ret_date = (datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S") +
-                        relativedelta(days=self.day_to_return_book.day or 0.0))
+            ret_date = (datetime.strptime(self.date_issue,
+                                          "%Y-%m-%d %H:%M:%S") +
+                        relativedelta(days=self.day_to_return_book.day or
+                                      0.0))
             self.date_return = ret_date
 
     @api.one
@@ -381,8 +383,8 @@ class LibraryBookIssue(models.Model):
                 if not record.teacher_id.address_home_id:
                     raise UserError(_('Error !'
                                     'The Teacher must have a Home address.'))
-                addr = record.teacher_id.address_home_id\
-                and record.teacher_id.address_home_id.id
+                addr = (record.teacher_id.address_home_id and
+                        record.teacher_id.address_home_id.id)
             vals_invoice = {'partner_id': usr,
                             'address_invoice_id': addr,
                             'account_id': 12}

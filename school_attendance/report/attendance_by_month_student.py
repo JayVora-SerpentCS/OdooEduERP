@@ -149,7 +149,7 @@ class ReportCustom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))\
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
                + ' ' + str(time.strftime("%H:%M")),
                users_obj.browse(cr, uid, uid).company_id.name)
 

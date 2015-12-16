@@ -111,7 +111,7 @@ class ExamExam(models.Model):
 class AdditionalExam(models.Model):
     _name = 'additional.exam'
     _description = 'additional Exam Information'
-    
+
     @api.model
     def get_sequence(self):
         return self.env['ir.sequence'].get('additional.exam')
