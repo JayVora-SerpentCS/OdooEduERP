@@ -112,7 +112,7 @@ class TransportParticipant(models.Model):
             for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
                                  for transport_id
-                                    in student_data.transport_ids]
+                                 in student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
         return super(TransportParticipant, self).search(args, offset, limit,
                                                         order, count=count)
@@ -277,7 +277,7 @@ class TransportRegistration(models.Model):
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
         tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
-                      + relativedelta(months=+month)
+        + relativedelta(months=+month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 
@@ -308,7 +308,7 @@ class TransportRegistration(models.Model):
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
             tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
-                          + relativedelta(months=+month)
+            + relativedelta(months=+month)
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise UserError(_('For this much Months\

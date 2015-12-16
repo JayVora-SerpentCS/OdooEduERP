@@ -49,6 +49,8 @@ class AttendanceSheet(models.Model):
         if context.get('month_id', False):
             no_of_days = monthrange(context['year_id'][0],
                                     context['month_id'][0])[1]
+            att_form = res['fields']['attendance_ids']['views']['form']
+            att_tree = res['fields']['attendance_ids']['views']['tree']
             if no_of_days == 31:
                 pass
             elif no_of_days == 30:
@@ -56,18 +58,18 @@ class AttendanceSheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
+                        att_tree['fields']['three_1'].update({'invisible': 1})
+                        att_form['fields']['three_1'].update({'invisible': 1})
             elif no_of_days == 29:
 
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
+                        att_tree['fields']['three_1'].update({'invisible': 1})
+                        att_form['fields']['three_1'].update({'invisible': 1})
+                        att_tree['fields']['two_0'].update({'invisible': 1})
+                        att_form['fields']['two_0'].update({'invisible': 1})
 
             else:
 
@@ -75,12 +77,12 @@ class AttendanceSheet(models.Model):
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_9'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_9'].update({'invisible': 1})
+                        att_tree['fields']['three_1'].update({'invisible': 1})
+                        att_form['fields']['three_1'].update({'invisible': 1})
+                        att_tree['fields']['two_0'].update({'invisible': 1})
+                        att_form['fields']['two_0'].update({'invisible': 1})
+                        att_tree['fields']['two_9'].update({'invisible': 1})
+                        att_form['fields']['two_9'].update({'invisible': 1})
         return res
 
 
@@ -406,15 +408,15 @@ class DailyAttendance(models.Model):
                           ('year_id', 'in', year_ids.ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
-                                      or False
+                or False
                 if not attendance_sheet_id:
                     sheet = {'name': 'Month ' + month_data.name
                                      + "-Year " + str(year),
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
-                             'year_id': year_ids and year_ids.id
-                                            or False}
+                             'year_id': year_ids and year_ids.id 
+                             or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
                         line_dict = {'roll_no': student_id.roll_no,

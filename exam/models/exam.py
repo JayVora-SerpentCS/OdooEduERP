@@ -116,7 +116,7 @@ class AdditionalExam(models.Model):
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       readonly=True,
                                       default=lambda obj:
-                                      obj.env['ir.sequence'].get('additional.exam'))
+    obj.env['ir.sequence'].get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")

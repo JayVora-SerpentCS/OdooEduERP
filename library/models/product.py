@@ -231,7 +231,7 @@ class ProductProduct(models.Model):
     isbn = fields.Char('ISBN Code', unique=True,
                        help="Shows International Standard Book Number")
     catalog_num = fields.Char('Catalog number',
-                       help="Shows Identification number of books")
+                              help="Shows Identification number of books")
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
@@ -246,10 +246,9 @@ class ProductProduct(models.Model):
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Date('Return Date', readonly=True,
-                            help='Book Return date',
-                            default=lambda *a:
-                                str(int(time.strftime("%Y")))
-                                + time.strftime("-%m-%d"))
+                              help='Book Return date',
+                              default=lambda *a:
+    str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')

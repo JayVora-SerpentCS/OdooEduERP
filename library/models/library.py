@@ -131,7 +131,7 @@ class LibraryBookIssue(models.Model):
                   and the book return date as value'''
         if self.date_issue and self.day_to_return_book:
             ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
-                       + relativedelta(days=self.day_to_return_book.day or 0.0)
+            + relativedelta(days=self.day_to_return_book.day or 0.0)
             self.date_return = ret_date
 
     @api.one
@@ -155,9 +155,8 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days)\
-                               * 24\
-                               + (float(diff.seconds) / 3600)
+                    duration = float(diff.days) * 24\
+                    + (float(diff.seconds) / 3600)
                     day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
@@ -209,7 +208,7 @@ class LibraryBookIssue(models.Model):
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
-                             self.env['ir.sequence'].get('library.book.issue')\
+                             self.env['ir.sequence'].get('library.book.issue')
                              or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
@@ -220,7 +219,7 @@ class LibraryBookIssue(models.Model):
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
-                                    time.strftime('%Y-%m-%d %H:%M:%S'))
+    time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
@@ -271,14 +270,14 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def draft_book(self):
-#         '''method for WorkFlow'''
-#         ''' This method for books in draft state.
-#         @param self : Object Pointer
-#         @param cr : Database Cursor
-#         @param uid : Current Logged in User
-#         @param ids : Current Records
-#         @param context : standard Dictionary
-#         @return : True'''
+#       '''method for WorkFlow'''
+#       ''' This method for books in draft state.
+#       @param self : Object Pointer
+#       @param cr : Database Cursor
+#       @param uid : Current Logged in User
+#       @param ids : Current Records
+#       @param context : standard Dictionary
+#       @return : True'''
 
         self.write({'state': 'draft'})
         return True
@@ -393,7 +392,7 @@ class LibraryBookIssue(models.Model):
                     raise UserError(_('Error !'
                                     'The Teacher must have a Home address.'))
                 addr = record.teacher_id.address_home_id\
-                        and record.teacher_id.address_home_id.id
+                and record.teacher_id.address_home_id.id
             vals_invoice = {'partner_id': usr,
                             'address_invoice_id': addr,
                             'account_id': 12}

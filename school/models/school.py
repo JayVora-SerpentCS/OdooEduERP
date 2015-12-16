@@ -6,7 +6,8 @@ import openerp
 from datetime import date, datetime
 from openerp import models, fields, api
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import image_colorize, image_resize_image_big
 from openerp.exceptions import except_orm, Warning as UserError
 
 
@@ -199,8 +200,7 @@ class SchoolStandard(models.Model):
         res = []
         for standard in self:
             name = standard.standard_id.name\
-                   + "[" + standard.division_id.name\
-                   + "]"
+            + "[" + standard.division_id.name + "]"
             res.append((standard.id, name))
         return res
 
@@ -310,8 +310,10 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(openerp.modules.get_module_resource('base',
-                    'static/src/img', 'avatar.png')).read())
+        resource = openerp.modules.get_module_resource('base',
+                                                       'static/src/img',
+                                                       'avatar.png')
+        image = image_colorize(open(resource).read())
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
@@ -327,7 +329,7 @@ class StudentStudent(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self:\
+    photo = fields.Binary('Photo', default=lambda self:
                           self._get_default_image
                           (self._context.get('default_is_company',
                                              False)))
@@ -475,14 +477,11 @@ class StudentStudent(models.Model):
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
-                                + str('/') + str(student_data.school_id.city)\
-                                + str('/')\
-                                + str(student_data.school_id.name) + str('/')\
-                                + str(reg_code)
+            + str('/') + str(student_data.school_id.city) + str('/')\
+            + str(student_data.school_id.name) + str('/') + str(reg_code)
             stu_code = self.env['ir.sequence'].get('student.code')
             student_code = str(student_data.school_id.code) + str('/')\
-                            + str(student_data.year.code) + str('/')\
-                            + str(stu_code)
+            + str(student_data.year.code) + str('/') + str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
