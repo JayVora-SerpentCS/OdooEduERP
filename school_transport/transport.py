@@ -88,9 +88,9 @@ class transport_vehicle(models.Model):
                                  string='Total Participants',
                                  readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
-                                            'vehicle_participant_student_rel',
+                                             'vehicle_participant_stud_rel',
                                              'vehicle_id', 'student_id',
-                                             ' vehicle Participants')
+                                             'vehicle Participants')
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -340,8 +340,7 @@ class transport_registration(models.Model):
                                 Registration is not Possibal because\
                                 Root end date is Early.'))
             # make entry in Transport
-            temp = tprt_obj.create({
-                                   'stu_pid_id': str(reg_data.part_name.pid),
+            temp = tprt_obj.create({'stu_pid_id': str(reg_data.part_name.pid),
                                     'amount': amount,
                                     'transport_id': reg_data.name.id,
                                     'tr_end_date': tr_end_date,
@@ -350,7 +349,7 @@ class transport_registration(models.Model):
                                     'tr_reg_date': reg_data.reg_date,
                                     'point_id': reg_data.point_id.id,
                                     'vehicle_id': reg_data.vehicle_id.id,
-                                })
+                                    })
             # make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:

@@ -37,19 +37,16 @@
         "school",
         "account_voucher"
     ],
-    "demo": [
-              "demo/school_fees_demo.xml"
-            ],
-    "data": [
-        "security/ir.model.access.csv",
-        "school_fees_view.xml",
-        "school_fees_sequence.xml",
-        "student_fees_register_workflow.xml",
-        "student_payslip_workflow.xml",
-        "view/student_payslip.xml",
-        "view/student_fees_register.xml",
-        "report_view.xml",
-    ],
+    "demo": ["demo/school_fees_demo.xml"],
+    "data": ["security/ir.model.access.csv",
+             "school_fees_view.xml",
+             "school_fees_sequence.xml",
+             "student_fees_register_workflow.xml",
+             "student_payslip_workflow.xml",
+             "view/student_payslip.xml",
+             "view/student_fees_register.xml",
+             "report_view.xml",
+             ],
 
     'test': [
         'test/school_fees_test.yml',

@@ -219,7 +219,7 @@ class Code128(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if type(value) == type(1):
+        if isinstance(value, integer):
             value = str(value)
 
         for (k, v) in args.items():
@@ -256,8 +256,8 @@ class Code128(MultiWidthBarcode):
                 c = c + 1
                 rl.insert(0, '\xf1')
                 continue
-            elif len(l[i]) == 1 and l[i] in digits \
-            and len(l[i-1]) == 1 and l[i-1] in digits:
+            elif (len(l[i]) == 1 and l[i] in digits and
+                  len(l[i-1]) == 1 and l[i-1] in digits):
                 c = c + 2
                 savings = savings + 1
                 rl.insert(0, l[i-1] + l[i])
@@ -274,7 +274,7 @@ class Code128(MultiWidthBarcode):
         s = self.validated
         l = ['START_B']
         for c in s:
-            if not c in setb:
+            if c not in setb:
                 l = l + ['TO_A', c, 'TO_B']
             else:
                 l.append(c)

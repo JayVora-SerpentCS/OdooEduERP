@@ -125,7 +125,7 @@ class _Code93Base(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if type(value) == type(1):
+        if isinstance(value, integer):
             value = str(value)
 
         for (k, v) in args.items():
@@ -192,7 +192,7 @@ class Standard93(_Code93Base):
         for c in self.value:
             if c in string.lowercase:
                 c = string.upper(c)
-            if not c in _patterns:
+            if c not in _patterns:
                 self.valid = 0
                 continue
             vval = vval + c
@@ -217,7 +217,7 @@ class Extended93(_Code93Base):
         vval = ""
         self.valid = 1
         for c in self.value:
-            if not c in _patterns and not c in _extended:
+            if c not in _patterns and c not in _extended:
                 self.valid = 0
                 continue
             vval = vval + c
