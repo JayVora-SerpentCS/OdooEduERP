@@ -31,9 +31,8 @@
         2. Conduct Exams
         3. Generate Results
 """,
-    "depends": [
-               "timetable"
-            ],
+    "depends": ["timetable"
+                ],
     "data": ["exam_view.xml",
              "exam_sequence.xml",
              "security/ir.model.access.csv",

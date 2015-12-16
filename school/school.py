@@ -87,10 +87,10 @@ class academic_year(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if (self.date_stop and self.date_start and
-            self.date_stop < self.date_start):
-            raise Warning(_('Error! The duration of the academic \
-                             year is invalid.'))
+        if self.date_stop and self.date_start:
+            if self.date_stop < self.date_start:
+                raise Warning(_('Error! The duration of the academic \
+                                year is invalid.'))
 
 
 class academic_month(models.Model):
@@ -192,7 +192,7 @@ class school_standard(models.Model):
         for im_ob in self:
             import_sub_ids = self.search([('standard_id', '=',
                                            int(im_ob.standard_id)-1)])
-            val = [last.id for sub in import_sub_ids\
+            val = [last.id for sub in import_sub_ids
                    for last in sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
         return True
@@ -324,7 +324,7 @@ class student_student(models.Model):
                                              not save.'))
         result = super(student_student, self).create(vals)
         return result
-    
+
     @api.model
     def _get_photo(self):
         company = self._context.get('default_is_company', False)
@@ -913,7 +913,7 @@ class student_news(models.Model):
                                               subtype='html',
                                               subtype_alternative=None,
                                               headers=None)
-            obj_mail_server.send_email(message=message,
+            mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
 

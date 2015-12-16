@@ -40,7 +40,6 @@ class move_standards(models.TransientModel):
         school_standard_obj = self.env['school.standard']
         standard_obj = self.env["standard.standard"]
         result_obj = self.env['exam.result']
-        student_obj = self.env['student.student']
         history_obj = self.env["student.history"]
         for data in self:
             active_ids = self._context.get('active_ids')
@@ -83,18 +82,18 @@ class move_standards(models.TransientModel):
                                                'standard_id': next_class_id,
                                                })
                                 history_obj.create({'student_id': student.id,
-                                                    'academice_year_id':\
-                                                    student.year.id,
-                                                    'standard_id':\
-                                                    standards.standard_id.id,
-                                                    'division_id':\
-                                                    standards.division_id.id,
-                                                    'medium_id':\
-                                                    standards.medium_id.id,
-                                                    'result':\
-                                                    result_data.result,
-                                                    'percentage':\
-                                                    result_data.percentage
+                                                    'academice_year_id':
+                                student.year.id,
+                                                    'standard_id':
+                                standards.standard_id.id,
+                                                    'division_id':
+                                standards.division_id.id,
+                                                    'medium_id':
+                                standards.medium_id.id,
+                                                    'result':
+                                result_data.result,
+                                                    'percentage':
+                                result_data.percentage
                                                     })
                         else:
                             raise except_orm(_("Error!"),

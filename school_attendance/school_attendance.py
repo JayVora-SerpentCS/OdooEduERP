@@ -430,8 +430,8 @@ class daily_attendance(models.Model):
                                                        month_ids.ids),
                                                       ('year_id', 'in',
                                                        year_ids.ids)])
-                att_sheet_id = att_sheet_ids and \
-                                    att_sheet_ids[0] or False
+                att_sheet_id = (att_sheet_ids and
+                                att_sheet_ids[0] or False)
                 if not att_sheet_id:
                     name = 'Month ' + month_data.name + "-Year " + str(year)
                     st_id = line.standard_id.id
@@ -443,7 +443,6 @@ class daily_attendance(models.Model):
                                                          'user_id': user_id,
                                                          'month_id': month_id,
                                                          'year_id': year_id
-                                                         
                                                          })
                     for student_id in line.student_ids:
                         roll_no = student_id.roll_no

@@ -49,7 +49,8 @@ class exam_create_result(models.TransientModel):
                                                           ('medium_id', '=',
                                                            med_id)])
                         for stud in student_ids:
-                            result = resobj.search([('standard_id', '=', stand_id),
+                            result = resobj.search([('standard_id', '=',
+                                                     stand_id),
                                                     ('student_id.division_id',
                                                      '=', div_id),
                                                     ('student_id.medium_id',
@@ -58,23 +59,25 @@ class exam_create_result(models.TransientModel):
                                                      stud.id)])
                             if not result:
                                 res = resobj.create({'s_exam_ids': exam.id,
-                                                      'student_id': stud.id,
-                                                      'standard_id': stand_id,
-                                                      'division_id': div_id,
-                                                      'medium_id': med_id})
+                                                     'student_id': stud.id,
+                                                     'standard_id': stand_id,
+                                                     'division_id': div_id,
+                                                     'medium_id': med_id
+                                                     })
                                 for line in exam.standard_id:
-                                    sub_id = line.standard_id.subject_id and \
-                                                line.subject_id.id or False,
-                                    min_marks = line.subject_id and \
-                                                line.subject_id.minimum_marks \
-                                                or 0.0
-                                    max_marks = line.subject_id and \
-                                                line.subject_id.maximum_marks\
-                                                or 0.0
+                                    sub_id = (line.standard_id.subject_id and
+                                              line.subject_id.id or False),
+                                    min_marks = (line.subject_id and
+                                                 line.subject_id.minimum_marks
+                                                 or 0.0)
+                                    max_marks = (line.subject_id and
+                                                 line.subject_id.maximum_marks
+                                                 or 0.0)
                                     subject_obj.create({'exam_id': res.id,
                                                         'subject_id': sub_id,
                                                         'minimum_marks': min_marks,
-                                                        'maximum_marks': max_marks})
+                                                        'maximum_marks': max_marks
+                                                        })
                 else:
                     raise except_orm(_('Error !'), _('Please \
                                                       Select Standard Id.'))

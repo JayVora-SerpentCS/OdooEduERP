@@ -125,10 +125,10 @@ class school_event(models.Model):
 
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
-        if self.start_date and self.end_date and \
-                    self.start_date > self.end_date:
-            raise Warning(_('Error! Event start-date must be lower \
-                            then Event end-date.'))
+        if self.start_date and self.end_date:
+            if self.start_date > self.end_date:
+                raise Warning(_('Error! Event start-date must be lower \
+                                 then Event end-date.'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
                     'last_reg_date')
