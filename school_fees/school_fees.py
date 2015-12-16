@@ -32,11 +32,9 @@ class student_fees_register(models.Model):
 
     @api.model
     def _get_company(self):
-        return lambda self, cr, uid, c:\
-            self.pool.get('res.users').browse(cr,
-                                              uid,
-                                              [uid],
-                                              c)[0].company_id.id
+        return self.pool.get('res.users').browse(cr,
+                                                 uid,
+                                                 [uid])[0].company_id.id
 
     _name = 'student.fees.register'
     _description = 'Student fees Register'
@@ -213,7 +211,7 @@ class student_payslip(models.Model):
 
     @api.model
     def _get_date(self):
-        return lambda obj: obj.env['ir.sequence'].get('student.payslip')
+        return self.env['ir.sequence'].get('student.payslip')
 
     _name = 'student.payslip'
     _description = 'Student Payslip'

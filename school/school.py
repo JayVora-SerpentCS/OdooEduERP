@@ -328,8 +328,7 @@ class student_student(models.Model):
     @api.model
     def _get_photo(self):
         company = self._context.get('default_is_company', False)
-        return lambda self:\
-            self._get_default_image(company)
+        return self._get_default_image(company)
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):

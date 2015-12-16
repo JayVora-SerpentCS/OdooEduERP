@@ -129,15 +129,14 @@ class additional_exam(models.Model):
 
     _name = 'additional.exam'
     _description = 'additional Exam Information'
-    
+
     @api.model
     def _get_exam_code(self):
-        return lambda obj: obj.env['ir.sequence'].get('additional.exam')
+        return self.env['ir.sequence'].get('additional.exam')
 
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,
-                                      readonly = True,
-                                      default = _get_exam_code)
+                                      readonly=True,default=_get_exam_code)
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -363,20 +362,23 @@ class exam_subject(models.Model):
 
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
-        if (self.obtain_marks > self.maximum_marks
-            or self.minimum_marks > self.maximum_marks):
+        if self.obtain_marks > self.maximum_marks:
+            raise Warning(_('The obtained marks and minimum marks should not \
+                             extend maximum marks.'))
+        elif self.minimum_marks > self.maximum_marks:
             raise Warning(_('The obtained marks and minimum marks should not \
                              extend maximum marks.'))
 
     @api.one
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
-        if (self.exam_id and self.exam_id.student_id
-            and self.exam_id.student_id.year.grade_id.grade_ids):
-            for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if (self.obtain_marks >= grade_id.from_mark
-                    and self.obtain_marks <= grade_id.to_mark):
-                    self.grade = grade_id.grade
+        if self.exam_id and self.exam_id.student_id:
+            if self.exam_id.student_id.year.grade_id.grade_ids:
+                grades = self.exam_id.student_id.year.grade_id.grade_ids
+                for grade_id in grades:
+                    if self.obtain_marks >= grade_id.from_mark:
+                        if self.obtain_marks <= grade_id.to_mark:
+                            self.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
