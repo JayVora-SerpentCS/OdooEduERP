@@ -57,13 +57,13 @@ class school_event_participant(models.Model):
                            readonly=True)
     score = fields.Float('Score', default=0)
     event_id = fields.Many2one('school.event', 'Event', readonly=True)
-    stu_pid = fields.Char('Personal Identification Number',required=True,
+    stu_pid = fields.Char('Personal Identification Number', required=True,
                           readonly=True)
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
                                        readonly=True)
     sequence = fields.Integer('Rank', help="The sequence field is used to \
                                             Give Rank to the Participant",
-                                            default=0)
+                              default=0)
 
 # class for events
 
@@ -110,8 +110,8 @@ class school_event(models.Model):
                                          'Participant Standards',
                                          help="The Participant is from \
                                                whcih standard")
-    state = fields.Selection([('draft','Draft'),('open','Running'),
-                              ('close','Close'),('cancel','Cancel')],
+    state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
+                              ('close', 'Close'), ('cancel', 'Cancel')],
                              string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant',
                                 'event_participants_rel', 'participant_id',
@@ -126,7 +126,7 @@ class school_event(models.Model):
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
         if self.start_date and self.end_date and \
-                        self.start_date > self.end_date:
+                    self.start_date > self.end_date:
             raise Warning(_('Error! Event start-date must be lower \
                             then Event end-date.'))
 

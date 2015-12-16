@@ -118,10 +118,10 @@ class Barcode(Flowable):
                 left = left + wx
 
         if self.bearers:
-            self.rect(self.lquiet, 0.0, \
-                self.width - (self.lquiet + self.rquiet), b)
-            self.rect(self.lquiet, self.height - b, \
-                self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, 0.0,
+                      self.width - (self.lquiet + self.rquiet), b)
+            self.rect(self.lquiet, self.height - b,
+                      self.width - (self.lquiet + self.rquiet), b)
 
     def rect(self, x, y, w, h):
         self.canv.rect(x, y, w, h, stroke=0, fill=1)
@@ -282,8 +282,8 @@ class I2of5(Barcode):
 
         # make sure result will be a multiple of 2 digits long,
         # checksum included
-        if ((len(self.validated) % 2 == 0) and self.checksum) \
-        or ((len(self.validated) % 2 == 1) and not self.checksum):
+        if ((len(self.validated) % 2 == 0) and self.checksum) or \
+        ((len(self.validated) % 2 == 1) and not self.checksum):
             s = '0' + s
 
         if self.checksum:
@@ -298,7 +298,7 @@ class I2of5(Barcode):
                     cm = 3
 
             d = 10 - (int(d) % 10)
-            s = s + `d`
+            s = s + repr(d)
 
         self.encoded = s
 
@@ -359,14 +359,13 @@ class MSI(Barcode):
     http://www.adams1.com/pub/russadam/plessy.html
     """
 
-    patterns = {
-                'start': 'Bs', 'stop': 'bSb',
+    patterns = {'start': 'Bs', 'stop': 'bSb',
                 '0': 'bSbSbSbS', '1': 'bSbSbSBs',
                 '2': 'bSbSBsbS', '3': 'bSbSBsBs',
                 '4': 'bSBsbSbS', '5': 'bSBsbSBs',
                 '6': 'bSBsBsbS', '7': 'bSBsBsBs',
                 '8': 'BsbSbSbS', '9': 'BsbSbSBs'
-    }
+                }
 
     def __init__(self, value="", **args):
         self.height = None
@@ -459,7 +458,7 @@ class Codabar(Barcode):
 
         checksum (bool, default 0):
             Wether to compute and include the check digit
-            
+
         bearers (float, in units of xdim. default 0):
             Height of bearer bars (horizontal bars along the top and
             bottom of the barcode). Default is 0 (no bearers).
@@ -493,12 +492,11 @@ class Codabar(Barcode):
         'C':    'bsbSbSB',        'D':    'bsbSBSb'
     }
 
-    values = {
-                '0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-                '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-                '-': 10, '$': 11, ':': 12, '/': 13, '.': 14,
-                '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19
-    }
+    values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
+              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+              '-': 10, '$': 11, ':': 12, '/': 13, '.': 14,
+              '+': 15, 'A': 16, 'B': 17, 'C': 18, 'D': 19
+              }
 
     chars = string.digits + "-$:/.+"
 
@@ -576,7 +574,7 @@ class Code11(Barcode):
 
         xdim (float, default .0075):
             X-Dimension, or width of the smallest element
-            
+
         ratio (float, default 2.2):
             The ratio of wide elements to narrow elements.
 
@@ -613,23 +611,21 @@ class Code11(Barcode):
 
     chars = string.digits + '-'
 
-    patterns = {
-                '0': 'bsbsB', '1' : 'BsbsB', '2' : 'bSbsB',
-                '3': 'BSbsb', '4' : 'bsBsB', '5' : 'BsBsb',
-                '6': 'bSBsb', '7' : 'bsbSB', '8' : 'BsbSb',
-                '9': 'Bsbsb', '-' : 'bsBsb', 'S' : 'bsBSb'  # Start/Stop
-    }
+    patterns = {'0': 'bsbsB', '1': 'BsbsB', '2': 'bSbsB',
+                '3': 'BSbsb', '4': 'bsBsB', '5': 'BsBsb',
+                '6': 'bSBsb', '7': 'bsbSB', '8': 'BsbSb',
+                '9': 'Bsbsb', '-': 'bsBsb', 'S': 'bsBSb'  # Start/Stop
+                }
 
-    values = {
-                '0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
-                '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-                '-': 10,
-             }
+    values = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4,
+              '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+              '-': 10,
+              }
 
     def __init__(self, value='', **args):
         self.height = None
         self.xdim = inch * 0.0075
-        self.ratio = 2.2 #  XXX ?
+        self.ratio = 2.2  # XXX ?
         self.checksum = -1  # Auto
         self.bearers = 0.0
         self.quiet = 1
@@ -675,20 +671,26 @@ class Code11(Barcode):
 
         if self.checksum > 0:
             # compute first checksum
-            i = 0; v = 1; c = 0
+            i = 0
+            v = 1
+            c = 0
             while i < len(s):
                 c = c + v * string.index(self.chars, s[-(i+1)])
-                i = i + 1; v = v + 1
+                i = i + 1
+                v = v + 1
                 if v > 10:
                     v = 1
             s = s + self.chars[c % 11]
 
         if self.checksum > 1:
             # compute second checksum
-            i = 0; v = 1; c = 0
+            i = 0
+            v = 1
+            c = 0
             while i < len(s):
                 c = c + v * string.index(self.chars, s[-(i+1)])
-                i = i + 1; v = v + 1
+                i = i + 1
+                v = v + 1
                 if v > 9:
                     v = 1
             s = s + self.chars[c % 10]

@@ -72,7 +72,7 @@ class FIM(Barcode):
 
         quiet (bool, default 1):
             Wether to include quiet zones in the symbol.
-            
+
     The following may also be passed, but doing so will generate nonstandard
     symbols which should not be used. This is mainly documented here to
     show the defaults:
@@ -81,12 +81,12 @@ class FIM(Barcode):
             Height of the code. This might legitimately be overriden to make
             a taller symbol that will 'bleed' off the edge of the paper,
             leaving 5/8 inch remaining.
-            
+
         lquiet (float, default 1/4 inch):
             Quiet zone size to left of code, if quiet is true.
             Default is the greater of .25 inch, or .15 times the symbol's
             length.
-            
+
         rquiet (float, default 15/32 inch):
             Quiet zone size to right left of code, if quiet is true.
 
@@ -204,7 +204,7 @@ class POSTNET(Barcode):
             else:
                 raise ValueError('Invalid character in input')
         check = (10 - (check % 10)) % 10
-        self.encoded = self.encoded + `check` + 'S'
+        self.encoded = self.encoded + repr(check) + 'S'
         return self.encoded
 
     def decompose(self):

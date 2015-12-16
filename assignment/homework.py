@@ -68,8 +68,7 @@ class school_teacher_assignment(models.Model):
                 standard_id = self.standard_id.id
                 assign_date = self.assign_date
                 teacher_id = self.teacher_id.id
-                assignment = assign_obj.create({
-                                                'name': self.name,
+                assignment = assign_obj.create({'name': self.name,
                                                 'subject_id': subj_id,
                                                 'standard_id': standard_id,
                                                 'assign_date': assign_date,

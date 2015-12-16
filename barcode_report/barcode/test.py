@@ -11,6 +11,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Frame
 from reportlab.platypus.flowables import XBox
 
+
 def run():
     styles = getSampleStyleSheet()
     styleN = styles['Normal']
@@ -33,7 +34,7 @@ def run():
     story.append(Paragraph('Extended Code93', styleN))
     story.append(Extended93("L@@K! Code 93 :-)"))  # , xdim=0.005 * inch))
     story.append(Paragraph('Code 128', styleN))
-    c=Code128("AB-12345678")  # , xdim = 0.005 * inch)
+    c = Code128("AB-12345678")  # , xdim = 0.005 * inch)
     story.append(c)
     story.append(Paragraph('USPS FIM', styleN))
     story.append(FIM("A"))

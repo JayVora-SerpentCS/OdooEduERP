@@ -270,11 +270,13 @@ class daily_attendance(models.Model):
                        time.strftime('%Y-%m-%d'))
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True, states={'validate':
-                                    [('readonly', True)]})
+                                                         [('readonly',
+                                                           True)]})
     student_ids = fields.One2many('daily.attendance.line', 'standard_id',
                                   'Students', states={'validate':
-                                    [('readonly', True)],
-                                    'draft': [('readonly', False)]})
+                                                      [('readonly', True)],
+                                                      'draft': [('readonly',
+                                                                 False)]})
     user_id = fields.Many2one('hr.employee', 'Faculty',
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
@@ -331,9 +333,9 @@ class daily_attendance(models.Model):
                 line.write({'is_present': False, 'is_absent': False})
 
             att_sheet_domain = [('standard_id', '=',
-                                        daily_attendance_data.standard_id.id),
-                                       ('month_id', '=', month_search_ids.id),
-                                       ('year_id', '=', year_search_ids.id)]
+                                 daily_attendance_data.standard_id.id),
+                                ('month_id', '=', month_search_ids.id),
+                                ('year_id', '=', year_search_ids.id)]
         search_attendance_sheet_ids = att_sheet_obj.search(att_sheet_domain)
         if search_attendance_sheet_ids:
             for attendance_sheet_datas in search_attendance_sheet_ids:
@@ -419,9 +421,9 @@ class daily_attendance(models.Model):
             year_ids = acadmic_year_obj.search([('date_start', '<=', date),
                                                ('date_stop', '>=', date)])
             month_ids = acadmic_month_obj.search([('date_start', '<=', date),
-                                                ('date_stop', '>=', date),
-                                                ('year_id', 'in',
-                                                 year_ids.ids)])
+                                                  ('date_stop', '>=', date),
+                                                  ('year_id', 'in',
+                                                   year_ids.ids)])
             if month_ids:
                 month_data = month_ids
                 att_sheet_ids = att_sheet_obj.search([('month_id', 'in',
@@ -429,26 +431,25 @@ class daily_attendance(models.Model):
                                                       ('year_id', 'in',
                                                        year_ids.ids)])
                 att_sheet_id = att_sheet_ids and \
-                                        att_sheet_ids[0] or False
+                                    att_sheet_ids[0] or False
                 if not att_sheet_id:
                     name = 'Month ' + month_data.name + "-Year " + str(year)
-                    stand_id = line.standard_id.id
+                    st_id = line.standard_id.id
                     user_id = line.user_id.id
                     month_id = month_data.id
                     year_id = year_ids and year_ids.id or False
-                    att_sheet_id = att_sheet_obj.create({
-                                                         'name': name,
-                                                         'standard_id': stand_id,
+                    att_sheet_id = att_sheet_obj.create({'name': name,
+                                                         'standard_id': st_id,
                                                          'user_id': user_id,
                                                          'month_id': month_id,
                                                          'year_id': year_id
+                                                         
                                                          })
                     for student_id in line.student_ids:
                         roll_no = student_id.roll_no
                         at_sheet_id = att_sheet_id.id
                         name = student_id.stud_id.student_name
-                        att_sheet_line_obj.create({
-                                                   'roll_no': roll_no,
+                        att_sheet_line_obj.create({'roll_no': roll_no,
                                                    'standard_id': at_sheet_id,
                                                    'name': name
                                                    })
@@ -584,7 +585,7 @@ class daily_attendance(models.Model):
                                 val = {'two_1': True}
 
                             elif date.day == 22 and student_id.is_absent:
-                                val = {'two_2':False}
+                                val = {'two_2': False}
 
                             elif date.day == 22 and not student_id.is_absent:
                                 val = {'two_2': True}

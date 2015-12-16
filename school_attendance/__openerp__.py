@@ -42,9 +42,8 @@
         "wizard/attendance_sheet_wizard_view.xml",
         "wizard/student_attendance_by_month_view.xml",
     ],
-    'demo': [
-            "demo/school_attendance_demo.xml"
-        ],
+    'demo': ["demo/school_attendance_demo.xml"
+             ],
 
     "installable": True,
     "auto_install": False,

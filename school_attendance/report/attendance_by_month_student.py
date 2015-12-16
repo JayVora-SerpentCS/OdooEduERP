@@ -30,12 +30,12 @@ from openerp.tools import ustr
 
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun',
-              'July', 'August', 'September', 'October','November',
+              'July', 'August', 'September', 'October', 'November',
               'December']
 
 
 def lengthmonth(year, month):
-    if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or \
+    if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or
                                             (year % 400 == 0))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
@@ -56,7 +56,7 @@ class report_custom(report_rml):
         if stu_ids:
             for student in obj_student.read(cr, uid, stu_ids,
                                             ['name', 'standard_id']):
-                days_xml = False, []
+                days_xml = []
                 user_repr = '''
                 <user>
                   <name>%s</name>
@@ -170,7 +170,7 @@ class report_custom(report_rml):
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),
-                                      date=True))+' ' + \
+                                      date=True))+' ' + 
                str(time.strftime("%H:%M")),
                users_obj.browse(cr, uid, uid).company_id.name)
 
@@ -221,7 +221,8 @@ class report_custom(report_rml):
 
         while day_diff1 > 0:
             if month+i <= 12:
-       # Not on 30 else you have problems when entering 01-01-2009 for example
+                # Not on 30 else you have problems when entering \
+                # 01-01-2009 for example
                 if day_diff1 > lengthmonth(year, i + month):
                     som1 = datetime.date(year, month + i, 1)
                     mon = lengthmonth(year, i+month)

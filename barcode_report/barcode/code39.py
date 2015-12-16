@@ -134,7 +134,7 @@ class _Code39Base(Barcode):
                 self.rquiet = max(inch * 0.25, self.xdim * 10.0)
         else:
             self.lquiet = self.rquiet = 0.0
-                                                         
+
         Barcode.__init__(self, value)
 
     def decompose(self):
@@ -166,7 +166,7 @@ class Standard39(_Code39Base):
 
         gap (float or None, default None):
             width of intercharacter gap. None means "use xdim".
-        
+
         height (float, see default below):
             Height of the symbol.  Default is the height of the two
             bearer bars (if they exist) plus the greater of .25 inch
@@ -174,7 +174,7 @@ class Standard39(_Code39Base):
 
         checksum (bool, default 0):
             Wether to compute and include the check digit
-            
+
         bearers (float, in units of xdim. default 0):
             Height of bearer bars (horizontal bars along the top and
             bottom of the barcode). Default is 0 (no bearers).
@@ -245,7 +245,7 @@ class Extended39(_Code39Base):
     def encode(self):
         self.encoded = ""
         for c in self.validated:
-            if _extended.has_key(c):
+            if c in _extended:
                 self.encoded = self.encoded + _extended[c]
             elif c in _stdchrs:
                 self.encoded = self.encoded + c

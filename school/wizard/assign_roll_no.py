@@ -42,7 +42,7 @@ class assign_roll_no(models.TransientModel):
         for stud_data in self:
             student_ids = student_obj.search([('standard_id', '=',
                                                stud_data.standard_id.id),
-                                              ('medium_id' ,'=',
+                                              ('medium_id', '=',
                                                stud_data.medium_id.id),
                                               ('division_id', '=',
                                                stud_data.division_id.id)])

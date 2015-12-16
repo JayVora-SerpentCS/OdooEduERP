@@ -43,9 +43,11 @@ class email_template(models.TransientModel):
     @api.multi
     def generate_email(self, template_id, res_id):
         if self._context is None:
-            context = {}
+            self._context = {}
         ret = super(email_template, self).generate_email(template_id, res_id)
-        if self._context.get('body_text', False) or self._context.get('subject', False) or self._context.get('email_to', False):
+        if self._context.get('body_text', False) or \
+                self._context.get('subject', False) or \
+                self._context.get('email_to', False):
             ret['body_text'] = self._context['body_text']
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']
@@ -72,7 +74,7 @@ class send_email(models.TransientModel):
 #            for i in self.browse(cr, uid, ids):
 #                body += '\n' + i.note
 #            email_template.send_mail(cr, uid , template_id[0],
-#                                         context.get('active_id'), force_send=True)
+#                     context.get('active_id'), force_send=True)
 #        return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

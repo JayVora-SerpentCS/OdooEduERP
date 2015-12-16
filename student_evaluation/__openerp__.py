@@ -37,9 +37,8 @@
     "depends": ["hr", "school"],
     "data": ['student_evaluation_view.xml',
              'security/ir.model.access.csv'],
-    "demo": [
-             'demo/student_evaluation_demo.xml'
-            ],
+    "demo": ['demo/student_evaluation_demo.xml'
+             ],
     "installable": True,
     "auto_install": False,
     "application": True,

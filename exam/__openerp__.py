@@ -32,28 +32,25 @@
         3. Generate Results
 """,
     "depends": [
-                "timetable"
-               ],
-    "data": [
-              "exam_view.xml",
-              "exam_sequence.xml",
-              "security/ir.model.access.csv",
-              "wizard/exam_class_result.xml",
-              "wizard/exam_create_result_view.xml",
-              "wizard/subject_result.xml",
-              "views/exam_result_report.xml",
-              "views/additional_exam_report.xml",
-              "views/result_information_report.xml",
-              "report_view.xml",
+               "timetable"
             ],
+    "data": ["exam_view.xml",
+             "exam_sequence.xml",
+             "security/ir.model.access.csv",
+             "wizard/exam_class_result.xml",
+             "wizard/exam_create_result_view.xml",
+             "wizard/subject_result.xml",
+             "views/exam_result_report.xml",
+             "views/additional_exam_report.xml",
+             "views/result_information_report.xml",
+             "report_view.xml",
+             ],
     "installable": True,
     "application": True,
-    'demo': [
-             "demo/exam_demo.xml"
-            ],
-    'test': [
-             "test/exam_test.yml"
-           ],
+    'demo': ["demo/exam_demo.xml"
+             ],
+    'test': ["test/exam_test.yml"
+             ],
     "auto_install": False,
 }
 

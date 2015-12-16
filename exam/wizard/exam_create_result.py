@@ -33,34 +33,51 @@ class exam_create_result(models.TransientModel):
             return {}
         exam_obj = self.env['exam.exam']
         student_obj = self.env['student.student']
-        result_obj = self.env['exam.result']
-        result_subject_obj = self.env['exam.subject']
+        resobj = self.env['exam.result']
+        subject_obj = self.env['exam.subject']
         for result in self:
             for exam in exam_obj.browse(self._context.get('active_ids')):
                 if exam.standard_id:
                     for school_std_rec in exam.standard_id:
-                        student_ids = student_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
-                                                          ('division_id', '=', school_std_rec.division_id.id),
-                                                          ('medium_id', '=', school_std_rec.medium_id.id)])
-                        for student in student_ids:
-                            result_exists = result_obj.search([('standard_id', '=', school_std_rec.standard_id.id),
-                                                               ('student_id.division_id', '=', school_std_rec.division_id.id),
-                                                               ('student_id.medium_id', '=', school_std_rec.medium_id.id),
-                                                               ('student_id', '=', student.id)])
-                            if not result_exists:
-                                result_id = result_obj.create({'s_exam_ids': exam.id,
-                                                               'student_id': student.id,
-                                                               'standard_id': school_std_rec.standard_id.id,
-                                                               'division_id': school_std_rec.division_id.id,
-                                                               'medium_id': school_std_rec.medium_id.id})
+                        stand_id = school_std_rec.standard_id.id
+                        div_id = school_std_rec.division_id.id
+                        med_id = school_std_rec.medium_id.id
+                        student_ids = student_obj.search([('standard_id', '=',
+                                                           stand_id),
+                                                          ('division_id', '=',
+                                                           div_id),
+                                                          ('medium_id', '=',
+                                                           med_id)])
+                        for stud in student_ids:
+                            result = resobj.search([('standard_id', '=', stand_id),
+                                                    ('student_id.division_id',
+                                                     '=', div_id),
+                                                    ('student_id.medium_id',
+                                                     '=', med_id),
+                                                    ('student_id', '=',
+                                                     stud.id)])
+                            if not result:
+                                res = resobj.create({'s_exam_ids': exam.id,
+                                                      'student_id': stud.id,
+                                                      'standard_id': stand_id,
+                                                      'division_id': div_id,
+                                                      'medium_id': med_id})
                                 for line in exam.standard_id:
-#                                    for line in school_std_rec.timetable_ids:
-                                    result_subject_obj.create({'exam_id': result_id.id,
-                                                               'subject_id': line.standard_id.subject_id and line.subject_id.id or False,
-                                                               'minimum_marks': line.subject_id and line.subject_id.minimum_marks or 0.0,
-                                                               'maximum_marks': line.subject_id and line.subject_id.maximum_marks or 0.0})
+                                    sub_id = line.standard_id.subject_id and \
+                                                line.subject_id.id or False,
+                                    min_marks = line.subject_id and \
+                                                line.subject_id.minimum_marks \
+                                                or 0.0
+                                    max_marks = line.subject_id and \
+                                                line.subject_id.maximum_marks\
+                                                or 0.0
+                                    subject_obj.create({'exam_id': res.id,
+                                                        'subject_id': sub_id,
+                                                        'minimum_marks': min_marks,
+                                                        'maximum_marks': max_marks})
                 else:
-                    raise except_orm(_('Error !'), _('Please Select Standard Id.'))
+                    raise except_orm(_('Error !'), _('Please \
+                                                      Select Standard Id.'))
             return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

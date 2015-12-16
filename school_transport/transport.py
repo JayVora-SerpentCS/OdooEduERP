@@ -341,7 +341,7 @@ class transport_registration(models.Model):
                                 Root end date is Early.'))
             # make entry in Transport
             temp = tprt_obj.create({
-                                    'stu_pid_id': str(reg_data.part_name.pid),
+                                   'stu_pid_id': str(reg_data.part_name.pid),
                                     'amount': amount,
                                     'transport_id': reg_data.name.id,
                                     'tr_end_date': tr_end_date,
@@ -350,7 +350,7 @@ class transport_registration(models.Model):
                                     'tr_reg_date': reg_data.reg_date,
                                     'point_id': reg_data.point_id.id,
                                     'vehicle_id': reg_data.vehicle_id.id,
-                                   })
+                                })
             # make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:
