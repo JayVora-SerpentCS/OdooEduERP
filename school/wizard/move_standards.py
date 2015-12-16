@@ -81,19 +81,19 @@ class move_standards(models.TransientModel):
                                                data.academic_year_id.id,
                                                'standard_id': next_class_id,
                                                })
+                                year = student.year.id
+                                sta_id = standards.standard_id.id
+                                div_id = standards.division_id.id
+                                med_id = standards.medium_id.id
+                                result = result_data.result
+                                percent = result_data.percentage
                                 history_obj.create({'student_id': student.id,
-                                                    'academice_year_id':
-                                student.year.id,
-                                                    'standard_id':
-                                standards.standard_id.id,
-                                                    'division_id':
-                                standards.division_id.id,
-                                                    'medium_id':
-                                standards.medium_id.id,
-                                                    'result':
-                                result_data.result,
-                                                    'percentage':
-                                result_data.percentage
+                                                    'academice_year_id': year,
+                                                    'standard_id': sta_id,
+                                                    'division_id': div_id,
+                                                    'medium_id': med_id,
+                                                    'result': result,
+                                                    'percentage': percent
                                                     })
                         else:
                             raise except_orm(_("Error!"),

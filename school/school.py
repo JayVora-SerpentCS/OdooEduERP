@@ -914,7 +914,7 @@ class student_news(models.Model):
                                               subtype_alternative=None,
                                               headers=None)
             mail_server.send_email(message=message,
-                                       mail_server_id=mail_server_ids[0].id)
+                                   mail_server_id=mail_server_ids[0].id)
         return True
 
 
