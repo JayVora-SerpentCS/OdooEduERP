@@ -125,7 +125,7 @@ class _Code93Base(MultiWidthBarcode):
         self.quiet = 1
         self.height = None
 
-        if isinstance(value, integer):
+        if isinstance(value, int):
             value = str(value)
 
         for (k, v) in args.items():

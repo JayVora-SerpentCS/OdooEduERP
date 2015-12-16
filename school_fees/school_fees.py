@@ -29,7 +29,7 @@ class student_fees_register(models.Model):
     """
     Student fees Register
     """
-    
+
     @api.model
     def _get_company(self):
         return lambda self, cr, uid, c:\
@@ -213,7 +213,7 @@ class student_payslip(models.Model):
 
     @api.model
     def _get_date(self):
-        return lambda obj:obj.env['ir.sequence'].get('student.payslip')
+        return lambda obj: obj.env['ir.sequence'].get('student.payslip')
 
     _name = 'student.payslip'
     _description = 'Student Payslip'

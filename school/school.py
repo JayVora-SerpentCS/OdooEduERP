@@ -87,8 +87,8 @@ class academic_year(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if self.date_stop and self.date_start and \
-            self.date_stop < self.date_start:
+        if (self.date_stop and self.date_start and
+            self.date_stop < self.date_start):
             raise Warning(_('Error! The duration of the academic \
                              year is invalid.'))
 
@@ -113,9 +113,10 @@ class academic_month(models.Model):
     def _check_duration(self):
         if self.date_stop and self.date_start and \
                 self.date_stop < self.date_start:
-            raise Warning(_('Error ! The duration of the Month(s) is/are invalid.'))
+            raise Warning(_('Error ! The duration of the\
+                             Month(s) is/are invalid.'))
 
-    @api.constrains('year_id','date_start','date_stop')
+    @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
             if self.year_id.date_stop < self.date_stop or \
@@ -182,16 +183,17 @@ class school_standard(models.Model):
     def _compute_student(self):
         self.student_ids = False
         if self.standard_id:
-            self.student_ids = self.env['student.student'].search([('standard_id', '=', self.standard_id.id)])
-
+            stud_obj = self.env['student.student']
+            self.student_ids = stud_obj.search([('standard_id', '=',
+                                                 self.standard_id.id)])
 
     @api.multi
     def import_subject(self):
         for im_ob in self:
             import_sub_ids = self.search([('standard_id', '=',
                                            int(im_ob.standard_id)-1)])
-            val = [last.id for sub in import_sub_ids for 
-                   last in sub.subject_ids]
+            val = [last.id for sub in import_sub_ids\
+                   for last in sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
         return True
 
@@ -216,8 +218,8 @@ class school_standard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name+"[" + \
-                   standard.division_id.name + "]"
+            name = (standard.standard_id.name+"[" +
+                    standard.division_id.name + "]")
             res.append((standard.id, name))
         return res
 
@@ -322,10 +324,19 @@ class student_student(models.Model):
                                              not save.'))
         result = super(student_student, self).create(vals)
         return result
+    
+    @api.model
+    def _get_photo(self):
+        company = self._context.get('default_is_company', False)
+        return lambda self:\
+            self._get_default_image(company)
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
+        avatar = openerp.modules.get_module_resource('base',
+                                                     'static/src/img',
+                                                     'avatar.png')
+        image = image_colorize(open(avatar).read())
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', string='User ID',
@@ -342,10 +353,9 @@ class student_student(models.Model):
     contact_mobile1 = fields.Char('Mobile no')
     roll_no = fields.Integer('Roll No.', readonly=True)
     # If windows system use this filed
-#    photo =             fields.Binary('Photo')
+#    photo = fields.Binary('Photo')
     # If ubuntu system use this filed
-    photo = fields.Binary('Photo', default=lambda self:
-                          self._get_default_image(self._context.get('default_is_company', False)))
+    photo = fields.Binary('Photo', default=_get_photo)
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
                            states={'done': [('readonly', True)]})
     cast_id = fields.Many2one('student.cast', 'Religion')
@@ -363,9 +373,9 @@ class student_student(models.Model):
     age = fields.Integer(compute='_calc_age', string='Age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
-                                         'Maritual Status',
-                                        states={'done': [('readonly',
-                                                           True)]})
+                                       'Maritual Status',
+                                       states={'done': [('readonly',
+                                                         True)]})
     reference_ids = fields.One2many('student.reference', 'reference_id',
                                     string='References',
                                     states={'done': [('readonly', True)]})
@@ -426,7 +436,8 @@ class student_student(models.Model):
     contact_phone = fields.Char(related='student_id.phone', string='Phone No')
 #    contact_mobile = fields.related('student_id','mobile',type='char',
 # relation='student.student',string='Mobile No')
-    contact_mobile = fields.Char(related='student_id.mobile', string='Mobile No')
+    contact_mobile = fields.Char(related='student_id.mobile',
+                                 string='Mobile No')
     student_id = fields.Many2one('student.student', 'Name')
     contact_phone = fields.Char(related='student_id.phone', string='Phone No',
                                 readonly=True)
@@ -503,13 +514,14 @@ class student_student(models.Model):
                 self.write({'roll_no': number})
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
-            registation_code = str(student_data.school_id.state_id.name) + \
-            str('/') + str(student_data.school_id.city) + str('/') + \
-            str(student_data.school_id.name) + str('/') + str(reg_code)
+            registation_code = (str(student_data.school_id.state_id.name) +
+                                str('/') + str(student_data.school_id.city) +
+                                str('/') + str(student_data.school_id.name) +
+                                str('/') + str(reg_code))
             stu_code = self.env['ir.sequence'].get('student.code')
-            student_code = str(student_data.school_id.code) + str('/') + \
-                               str(student_data.year.code) + str('/') + \
-                               str(stu_code)
+            student_code = (str(student_data.school_id.code) + str('/') +
+                            str(student_data.year.code) + str('/') +
+                            str(stu_code))
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -737,14 +749,14 @@ class student_family_contact(models.Model):
     rel_name = fields.Selection([('exist', 'Link to Existing Student'),
                                  ('new', 'Create New Relative Name')],
                                 'Related Student', help="Select Name",
-                                 required=True)
+                                required=True)
     user_id = fields.Many2one('res.users', string='User ID',
                               ondelete="cascade", select=True, required=True)
     stu_name = fields.Char(related='user_id.name', string='Name',
                            help="Select Student From Existing List")
     name = fields.Char('Name')
     relation = fields.Many2one('student.relation.master', string='Relation',
-                                required=True)
+                               required=True)
     phone = fields.Char('Phone', required=True)
     email = fields.Char('E-Mail')
 
@@ -812,7 +824,7 @@ class student_news(models.Model):
 #                    if user.email:
 #                        email_list.append(user.email)
 #                if not email_list:
-#                    raise osv.except_osv(_('User Email Configuration '), 
+#                    raise osv.except_osv(_('User Email Configuration '),
 #                        _("Email not found in users !"))
 #            else:
 #                emp_ids = emp_obj.search(cr, uid, [], context = context)
@@ -854,12 +866,12 @@ class student_news(models.Model):
     @api.multi
     def news_update(self):
         emp_obj = self.env['hr.employee']
-        obj_mail_server = self.env['ir.mail_server']
-        mail_server_ids = obj_mail_server.search([])
+        mail_server = self.env['ir.mail_server']
+        mail_server_ids = mail_server.search([])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'), _('No mail outgoing mail \
                                                  server specified!'))
-        mail_server_record = mail_server_ids[0]
+        server_rec = mail_server_ids[0]
         email_list = []
         for news in self:
             if news.user_ids:
@@ -877,8 +889,8 @@ class student_news(models.Model):
                         email_list.append(employee.user_id.email)
                 if not email_list:
                     raise except_orm(_('Mail Error'), _("Email not defined!"))
-# rec_date = fields.datetime.context_timestamp(datetime.strptime(news.date, 
-#DEFAULT_SERVER_DATETIME_FORMAT))
+# rec_date = fields.datetime.context_timestamp(datetime.strptime(news.date,
+# DEFAULT_SERVER_DATETIME_FORMAT))
             t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body = 'Hi,<br/><br/> \
                 This is a news update from <b>%s</b> posted at %s<br/><br/>\
@@ -886,21 +898,21 @@ class student_news(models.Model):
                 Thank you.' % (self._cr.dbname,
                                t.strftime('%d-%m-%Y %H:%M:%S'),
                                news.description)
-            message = obj_mail_server.build_email(
-                            email_from=mail_server_record.smtp_user,
-                            email_to=email_list,
-                            subject='Notification for news update.',
-                            body=body,
-                            body_alternative=body,
-                            email_cc=None,
-                            email_bcc=None,
-                            reply_to=mail_server_record.smtp_user,
-                            attachments=None,
-                            references=None,
-                            object_id=None,
-                            subtype='html',  # It can be plain or html
-                            subtype_alternative=None,
-                            headers=None)
+            message = mail_server.build_email(email_from=server_rec.smtp_user,
+                                              email_to=email_list,
+                                              subject='Notification for\
+                                              news update.',
+                                              body=body,
+                                              body_alternative=body,
+                                              email_cc=None,
+                                              email_bcc=None,
+                                              reply_to=server_rec.smtp_user,
+                                              attachments=None,
+                                              references=None,
+                                              object_id=None,
+                                              subtype='html',
+                                              subtype_alternative=None,
+                                              headers=None)
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True

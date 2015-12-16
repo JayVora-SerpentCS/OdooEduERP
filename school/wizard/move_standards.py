@@ -69,32 +69,37 @@ class move_standards(models.TransientModel):
                                                   '=', division_id),
                                                  ('standard_id.medium_id',
                                                   '=', medium_id),
-                                                 ('student_id', '=', 
+                                                 ('student_id', '=',
                                                   student.id)])
+                        result_data = False
                         if res:
                             result_data = result_obj.browse(res.id)
-                            if result_data.result == "Pass":
-                                seq = standards.standard_id.sequence
-                                next_class_id = standard_obj.next_standard(seq)
-                                if next_class_id:
-                                    student_id = student_obj.browse(student.id)
-                                    student_id.write({
-                                                'year': data.academic_year_id.id,
-                                                'standard_id': next_class_id,
-                                            })
-                                    history_obj.create({
-                                      'student_id': student.id,
-                                      'academice_year_id': student.year.id,
-                                      'standard_id': standards.standard_id.id,
-                                      'division_id': standards.division_id.id,
-                                      'medium_id': standards.medium_id.id,
-                                      'result': result_data.result,
-                                      'percentage': result_data.percentage
-                                                            })
-                            else:
-                                raise except_orm(_("Error!"),
-                                                 _("Student is not eligible \
-                                                   for Next Standard."))
+                        if result_data and result_data.result == "Pass":
+                            seq = standards.standard_id.sequence
+                            next_class_id = standard_obj.next_standard(seq)
+                            if next_class_id:
+                                student.write({'year':
+                                               data.academic_year_id.id,
+                                               'standard_id': next_class_id,
+                                               })
+                                history_obj.create({'student_id': student.id,
+                                                    'academice_year_id':\
+                                                    student.year.id,
+                                                    'standard_id':\
+                                                    standards.standard_id.id,
+                                                    'division_id':\
+                                                    standards.division_id.id,
+                                                    'medium_id':\
+                                                    standards.medium_id.id,
+                                                    'result':\
+                                                    result_data.result,
+                                                    'percentage':\
+                                                    result_data.percentage
+                                                    })
+                        else:
+                            raise except_orm(_("Error!"),
+                                             _("Student is not eligible \
+                                               for Next Standard."))
         return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

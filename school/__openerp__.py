@@ -50,9 +50,7 @@
             "report_view.xml",
             "views/identity_card.xml",
     ],
-  'demo': [
-           'demo/school_demo.xml',
-           ],
+  'demo': ['demo/school_demo.xml'],
 
     'test': [
         'test/school_test.yml',
