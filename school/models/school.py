@@ -199,8 +199,8 @@ class SchoolStandard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name\
-            + "[" + standard.division_id.name + "]"
+            name = (standard.standard_id.name +
+                    "[" + standard.division_id.name + "]")
             res.append((standard.id, name))
         return res
 
@@ -476,12 +476,14 @@ class StudentStudent(models.Model):
                 self.write({'roll_no': number})
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
-            registation_code = str(student_data.school_id.state_id.name)\
-            + str('/') + str(student_data.school_id.city) + str('/')\
-            + str(student_data.school_id.name) + str('/') + str(reg_code)
+            registation_code = (str(student_data.school_id.state_id.name) +
+                                str('/') + str(student_data.school_id.city) +
+                                str('/') + str(student_data.school_id.name) +
+                                str('/') + str(reg_code))
             stu_code = self.env['ir.sequence'].get('student.code')
-            student_code = str(student_data.school_id.code) + str('/')\
-            + str(student_data.year.code) + str('/') + str(stu_code)
+            student_code = (str(student_data.school_id.code) + str('/') +
+                            str(student_data.year.code) + str('/') +
+                            str(stu_code))
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,

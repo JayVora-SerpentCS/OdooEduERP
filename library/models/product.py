@@ -248,7 +248,8 @@ class ProductProduct(models.Model):
     date_retour = fields.Date('Return Date', readonly=True,
                               help='Book Return date',
                               default=lambda *a:
-    str(int(time.strftime("%Y"))) + time.strftime("-%m-%d"))
+                                                str(int(time.strftime("%Y")))
+                                                + time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')

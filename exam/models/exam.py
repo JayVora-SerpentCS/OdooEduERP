@@ -111,12 +111,15 @@ class ExamExam(models.Model):
 class AdditionalExam(models.Model):
     _name = 'additional.exam'
     _description = 'additional Exam Information'
+    
+    @api.model
+    def get_sequence(self):
+        return self.env['ir.sequence'].get('additional.exam')
 
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       readonly=True,
-                                      default=lambda obj:
-    obj.env['ir.sequence'].get('additional.exam'))
+                                      default=get_sequence)
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -189,7 +192,10 @@ class ExamResult(models.Model):
         if self.result_ids and self.student_id:
             if self.student_id.year.grade_id.grade_ids:
                 for result in self.result_ids:
-                    grade_ids = self.env['grade.line'].search([('grade', '=', result.grade),('fail', '=', False)])
+                    grade_ids = self.env['grade.line'].search([('grade', '=',
+                                                                result.grade),
+                                                               ('fail', '=',
+                                                                False)])
                     if not grade_ids:
                         flag = 'Fail'
                         break

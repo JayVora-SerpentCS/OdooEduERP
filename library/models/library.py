@@ -130,8 +130,8 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         if self.date_issue and self.day_to_return_book:
-            ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
-            + relativedelta(days=self.day_to_return_book.day or 0.0)
+            ret_date = (datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S") +
+                        relativedelta(days=self.day_to_return_book.day or 0.0))
             self.date_return = ret_date
 
     @api.one
@@ -155,8 +155,8 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days) * 24\
-                    + (float(diff.seconds) / 3600)
+                    duration = (float(diff.days) * 24 +
+                                (float(diff.seconds) / 3600))
                     day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
@@ -218,8 +218,7 @@ class LibraryBookIssue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=lambda *a:
-    time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 default=time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
@@ -270,15 +269,6 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def draft_book(self):
-#       '''method for WorkFlow'''
-#       ''' This method for books in draft state.
-#       @param self : Object Pointer
-#       @param cr : Database Cursor
-#       @param uid : Current Logged in User
-#       @param ids : Current Records
-#       @param context : standard Dictionary
-#       @return : True'''
-
         self.write({'state': 'draft'})
         return True
 

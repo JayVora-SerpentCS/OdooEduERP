@@ -407,15 +407,15 @@ class DailyAttendance(models.Model):
                 domain = [('month_id', 'in', month_ids.ids),
                           ('year_id', 'in', year_ids.ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
-                attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
-                or False
+                attendance_sheet_id = (att_sheet_ids and att_sheet_ids[0] or
+                                       False)
                 if not attendance_sheet_id:
                     sheet = {'name': 'Month ' + month_data.name
                                      + "-Year " + str(year),
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
-                             'year_id': year_ids and year_ids.id 
+                             'year_id': year_ids and year_ids.id
                              or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:

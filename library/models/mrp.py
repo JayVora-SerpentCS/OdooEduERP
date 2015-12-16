@@ -71,8 +71,8 @@ class ProcurementOrder(models.Model):
             context.update({'lang': partner.lang, 'partner_id': partner_id})
             product = prod_obj.browse(cr, uid, procurement.product_id.id,
                                       context=context)
-            taxes_ids = procurement.product_id.product_tmpl_id.\
-            supplier_taxes_id
+            product_id = procurement.product_id
+            taxes_ids = product_id.product_tmpl_id.supplier_taxes_id
             taxes = acc_pos_obj.map_tax(cr, uid,
                                         partner.property_account_position,
                                         taxes_ids)
@@ -89,8 +89,8 @@ class ProcurementOrder(models.Model):
                          'production_lot_id': procurement.production_lot_id
                          and procurement.production_lot_id.id or False,
                          'customer_ref': procurement.customer_ref}
-            name = seq_obj.get(cr, uid, 'purchase.order')\
-            or _('PO: %s') % procurement.name
+            name = (seq_obj.get(cr, uid, 'purchase.order') or
+                    _('PO: %s') % procurement.name)
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             warehouse_id = warehouse_id and warehouse_id[0] or False
             po_vals = {'name': name,
@@ -104,8 +104,9 @@ class ProcurementOrder(models.Model):
                        'company_id': procurement.company_id.id,
                        'fiscal_position': partner.property_account_position
                        and partner.property_account_position.id or False}
-            proc = self.create_procurement_purchase_order(cr,uid,procurement,
-                                                          po_vals,line_vals,
+            proc = self.create_procurement_purchase_order(cr, uid,
+                                                          procurement,
+                                                          po_vals, line_vals,
                                                           context=context)
             res[procurement.id] = proc
             self.write(cr, uid, [procurement.id],

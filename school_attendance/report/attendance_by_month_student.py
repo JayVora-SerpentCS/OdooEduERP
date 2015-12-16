@@ -58,10 +58,9 @@ class ReportCustom(report_rml):
                     if not sheet_ids:
                         var = 'A'
                     else:
-
-                        for attendance_sheet_data in \
-                        sheet_obj.browse(cr, uid, sheet_ids,
-                                         context=context):
+                        att_browse = sheet_obj.browse(cr, uid, sheet_ids,
+                                                      context=context)
+                        for attendance_sheet_data in att_browse:
 
                             for line in attendance_sheet_data.attendance_ids:
 
@@ -144,15 +143,15 @@ class ReportCustom(report_rml):
 
         rpt_obj = pooler.get_pool(cr.dbname).get('student.student')
         rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name, context)
+        users_obj = pooler.get_pool(cr.dbname).get('res.users')
         header_xml = '''
         <header>
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))\
                + ' ' + str(time.strftime("%H:%M")),
-                   pooler.get_pool(cr.dbname).get('res.users').browse(
-                cr, uid, uid).company_id.name)
+               users_obj.browse(cr, uid, uid).company_id.name)
 
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')

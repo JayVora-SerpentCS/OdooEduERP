@@ -52,7 +52,8 @@ class ExamCreateResult(models.TransientModel):
                             for line in exam.standard_id:
                                 for subject_ids in line.subject_ids:
                                     sub_dict = {'exam_id': result_id.id,
-                                                'subject_id':subject_ids.id or False,
+                                                'subject_id': subject_ids.id
+                                                or False,
                                                 'minimum_marks': subject_ids.id
                                                 and subject_ids.minimum_marks
                                                 or 0.0,
