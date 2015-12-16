@@ -136,7 +136,7 @@ class additional_exam(models.Model):
 
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,
-                                      readonly=True,default=_get_exam_code)
+                                      readonly=True, default=_get_exam_code)
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")

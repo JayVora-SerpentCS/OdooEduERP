@@ -32,9 +32,9 @@ class student_fees_register(models.Model):
 
     @api.model
     def _get_company(self):
-        return self.pool.get('res.users').browse(cr,
-                                                 uid,
-                                                 [uid])[0].company_id.id
+        return self.pool.get('res.users').browse(self._cr,
+                                                 self._uid,
+                                                 [self._uid])[0].company_id.id
 
     _name = 'student.fees.register'
     _description = 'Student fees Register'
