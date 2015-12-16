@@ -247,7 +247,7 @@ class ProductProduct(models.Model):
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Date('Return Date', readonly=True,
                               help='Book Return date',
-                              default=lambda *a:str(int(time.strftime("%Y")))
+                              default=lambda *a: str(int(time.strftime("%Y")))
                               + time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
