@@ -23,6 +23,7 @@
 # ----------------------------------------------------------
 # A Module to For Management of Events in School
 # ----------------------------------------------------------
-import event
+
+from . import event
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

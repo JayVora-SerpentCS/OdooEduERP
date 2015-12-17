@@ -66,7 +66,6 @@ class student_attendance_by_month(models.TransientModel):
         @return : printed report
         '''
         data = self.read([])[0]
-        print 'data=======', data
         data.update({'stud_ids': self._context.get('active_ids', [])})
         datas = {'ids': [],
                  'model': 'student.student',

@@ -32,6 +32,7 @@
 #
 
 from reportlab.lib.units import inch
+from . import common
 from common import MultiWidthBarcode
 from string import digits
 

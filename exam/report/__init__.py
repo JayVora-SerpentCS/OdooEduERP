@@ -19,7 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import result_info
-import add_exam_result
+
+from . import result_info
+from . import add_exam_result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
