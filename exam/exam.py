@@ -492,7 +492,7 @@ class StudentStudent(models.Model):
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('class_id', 'in', std_ids))
         return super(StudentStudent, self).search(args=args, offset=offset,
-                                                   limit=limit, order=order,
-                                                   count=count)
+                                                  limit=limit, order=order,
+                                                  count=count)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

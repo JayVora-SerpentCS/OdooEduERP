@@ -26,7 +26,7 @@ from openerp.osv import orm
 
 class AddExamResult(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
-        super(add_exam_result, self).__init__(cr, uid, name, context=context)
+        super(AddExamResult, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'get_result_detail': self._get_result_detail,

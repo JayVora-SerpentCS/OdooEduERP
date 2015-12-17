@@ -32,7 +32,7 @@
 #
 
 from reportlab.lib.units import inch
-from common import Barcode
+from barcode_report.barcode.common import Barcode
 import string
 
 _fim_patterns = {

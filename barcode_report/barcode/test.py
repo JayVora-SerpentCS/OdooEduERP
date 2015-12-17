@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python
-from common import I2of5, MSI, Codabar, Code11
-from code39 import Standard39, Extended39
-from code93 import Standard93, Extended93
-from code128 import Code128
-from usps import FIM, POSTNET
+from barcode_report.barcode.common import I2of5, MSI, Codabar, Code11
+from barcode_report.barcode.code39 import Standard39, Extended39
+from barcode_report.barcode.code93 import Standard93, Extended93
+from barcode_report.barcode.code128 import Code128
+from barcode_report.barcode.usps import FIM, POSTNET
 
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet

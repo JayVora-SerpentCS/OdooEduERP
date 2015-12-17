@@ -44,7 +44,7 @@ class SchoolTeacherAssignment(models.Model):
 
     @api.model
     def default_get(self, fields_list):
-        res = super(school_teacher_assignment, self).default_get(fields_list)
+        res = super(SchoolTeacherAssignment, self).default_get(fields_list)
         res.update({'state': 'draft'})
         return res
 
