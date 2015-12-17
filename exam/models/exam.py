@@ -63,7 +63,7 @@ class ExamExam(models.Model):
     name = fields.Char("Exam Name", required=True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             default=lambda obj:
-                            obj.env['ir.sequence'].get('exam.exam'))
+                            obj.env['ir.sequence'].next_by_code('exam.exam'))
     standard_id = fields.Many2many('school.standard',
                                    'school_standard_exam_rel', 'standard_id',
                                    'event_id', 'Participant Standards')
@@ -114,7 +114,7 @@ class AdditionalExam(models.Model):
 
     @api.model
     def get_sequence(self):
-        return self.env['ir.sequence'].get('additional.exam')
+        return self.env['ir.sequence'].next_by_code('additional.exam')
 
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,

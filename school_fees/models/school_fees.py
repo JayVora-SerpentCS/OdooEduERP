@@ -19,7 +19,7 @@ class StudentFeesRegister(models.Model):
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
-                         get('student.fees.register'))
+                         next_by_code('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id',
                                'PaySlips',
                                states={'confirm': [('readonly', True)]})
@@ -187,7 +187,7 @@ class StudentPayslip(models.Model):
                        states={'paid': [('readonly', True)]})
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
-                         get('student.payslip'))
+                         next_by_code('student.payslip'))
     student_id = fields.Many2one('student.student', 'Student', required=True,
                                  states={'paid': [('readonly', True)]})
     date = fields.Date('Date', readonly=True,

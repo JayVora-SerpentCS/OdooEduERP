@@ -99,7 +99,8 @@ class LibraryCard(models.Model):
             self.gt_name = user
 
     code = fields.Char('Card No', required=True, default=lambda self:
-                       self.env['ir.sequence'].get('library.card') or '/')
+                       self.env['ir.sequence'].next_by_code('library.card') or
+                       '/')
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
@@ -210,8 +211,8 @@ class LibraryBookIssue(models.Model):
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
-                             self.env['ir.sequence'].get('library.book.issue')
-                             or '/')
+                             self.env['ir.sequence'].
+                             next_by_code('library.book.issue') or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
@@ -434,8 +435,8 @@ class LibraryBookRequest(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                         self.env['ir.sequence'].get('library.book.request')
-                         or '/')
+                         self.env['ir.sequence'].
+                         next_by_code('library.book.request') or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
