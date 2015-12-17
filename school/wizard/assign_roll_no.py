@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -25,7 +25,7 @@ from openerp import models, fields, api
 # This wizard is designed for assigning the roll number to a student.
 
 
-class assign_roll_no(models.TransientModel):
+class AssignRollNo(models.TransientModel):
 
     _name = 'assign.roll.no'
     _description = 'Assign Roll Number'

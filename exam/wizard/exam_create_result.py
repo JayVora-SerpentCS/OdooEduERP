@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -23,7 +23,7 @@ from openerp import models, api, _
 from openerp.exceptions import except_orm
 
 
-class exam_create_result(models.TransientModel):
+class ExamCreateResult(models.TransientModel):
 
     _name = 'exam.create.result'
 

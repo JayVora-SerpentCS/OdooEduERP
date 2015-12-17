@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -21,10 +21,10 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp.osv import orm
 
 
-class add_exam_result(report_sxw.rml_parse):
+class AddExamResult(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
         super(add_exam_result, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -51,10 +51,8 @@ class add_exam_result(report_sxw.rml_parse):
         return result_data
 
 
-class report_add_exam_result(osv.AbstractModel):
+class ReportAddExamResult(orm.AbstractModel):
     _name = 'report.exam.exam_result_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.exam_result_report'
-    _wrapped_report_class = add_exam_result
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _wrapped_report_class = AddExamResult

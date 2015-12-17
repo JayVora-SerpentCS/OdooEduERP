@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 from openerp import models, fields, api
 
 
-class school_teacher_assignment(models.Model):
+class SchoolTeacherAssignment(models.Model):
 
     _name = 'school.teacher.assignment'
     _description = 'Teacher Assignment Information'
@@ -90,7 +90,7 @@ class school_teacher_assignment(models.Model):
             return True
 
 
-class school_student_assignment(models.Model):
+class SchoolStudentAssignment(models.Model):
 
     _name = 'school.student.assignment'
     _description = 'Student Assignment Information'
@@ -110,5 +110,3 @@ class school_student_assignment(models.Model):
     def done_assignment(self):
         self.write({'state': 'done'})
         return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

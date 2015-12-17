@@ -21,10 +21,10 @@
 ##############################################################################
 from datetime import date, datetime
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import except_orm, Warning as UserError
 
 
-class extended_time_table(models.Model):
+class ExtendedTimeTable(models.Model):
 
     _inherit = 'time.table'
 
@@ -34,7 +34,7 @@ class extended_time_table(models.Model):
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 
-class extended_student_student(models.Model):
+class ExtendedStudentStudent(models.Model):
 
     _inherit = 'student.student'
 
@@ -42,7 +42,7 @@ class extended_student_student(models.Model):
                                        'Exam History', readonly=True)
 
 
-class extended_time_table_line(models.Model):
+class ExtendedTimeTableLine(models.Model):
 
     _inherit = 'time.table.line'
 
@@ -73,7 +73,7 @@ class extended_time_table_line(models.Model):
         return True
 
 
-class exam_exam(models.Model):
+class ExamExam(models.Model):
 
     _name = 'exam.exam'
     _description = 'Exam Information'
@@ -125,7 +125,7 @@ class exam_exam(models.Model):
         return True
 
 
-class additional_exam(models.Model):
+class AdditionalExam(models.Model):
 
     _name = 'additional.exam'
     _description = 'additional Exam Information'
@@ -158,7 +158,7 @@ class additional_exam(models.Model):
         return {'value': val}
 
 
-class exam_result(models.Model):
+class ExamResult(models.Model):
 
     _name = 'exam.result'
     _rec_name = 's_exam_ids'
@@ -345,7 +345,7 @@ class exam_result(models.Model):
         return True
 
 
-class exam_grade_line(models.Model):
+class ExamGradeLine(models.Model):
     _name = "exam.grade.line"
     _description = 'Exam Subject Information'
     _rec_name = 'standard_id'
@@ -355,7 +355,7 @@ class exam_grade_line(models.Model):
     grade = fields.Char(string='Grade')
 
 
-class exam_subject(models.Model):
+class ExamSubject(models.Model):
     _name = "exam.subject"
     _description = 'Exam Subject Information'
     _rec_name = 'subject_id'
@@ -363,10 +363,10 @@ class exam_subject(models.Model):
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
         if self.obtain_marks > self.maximum_marks:
-            raise Warning(_('The obtained marks and minimum marks should not \
+            raise UserError(_('The obtained marks and minimum marks should not \
                              extend maximum marks.'))
         elif self.minimum_marks > self.maximum_marks:
-            raise Warning(_('The obtained marks and minimum marks should not \
+            raise UserError(_('The obtained marks and minimum marks should not \
                              extend maximum marks.'))
 
     @api.one
@@ -398,7 +398,7 @@ class exam_subject(models.Model):
     grade = fields.Char(compute='_get_grade', string='Grade', type="char")
 
 
-class exam_result_batchwise(models.Model):
+class ExamResultBatchwise(models.Model):
 
     _name = 'exam.batchwise.result'
     _rec_name = 'standard_id'
@@ -435,7 +435,7 @@ class exam_result_batchwise(models.Model):
                         store=True)
 
 
-class additional_exam_result(models.Model):
+class AdditionalExamResult(models.Model):
 
     _name = 'additional.exam.result'
     _description = 'subject result Information'
@@ -463,7 +463,7 @@ class additional_exam_result(models.Model):
     @api.constrains('obtain_marks')
     def _validate_marks(self):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
-            raise Warning(_('The obtained marks should not extend \
+            raise UserError(_('The obtained marks should not extend \
                              maximum marks.'))
         return True
 
@@ -479,7 +479,7 @@ class additional_exam_result(models.Model):
     result = fields.Char(compute='_calc_result', string='Result', method=True)
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     _name = 'student.student'
     _inherit = 'student.student'
     _description = 'Student Information'
@@ -491,7 +491,7 @@ class student_student(models.Model):
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('class_id', 'in', std_ids))
-        return super(student_student, self).search(args=args, offset=offset,
+        return super(StudentStudent, self).search(args=args, offset=offset,
                                                    limit=limit, order=order,
                                                    count=count)
 

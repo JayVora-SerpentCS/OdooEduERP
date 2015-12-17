@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 from openerp import models, fields, api
 
 
-class subject_result_wiz(models.TransientModel):
+class SubjectResultWiz(models.TransientModel):
 
     _name = "subject.result.wiz"
     _description = "Subject Wise Result"
@@ -42,5 +42,3 @@ class subject_result_wiz(models.TransientModel):
         return self.pool['report'].get_action(cr, uid, [],
                                               'exam.exam_result_report',
                                               data=data, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

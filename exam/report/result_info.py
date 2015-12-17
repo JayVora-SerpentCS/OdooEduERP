@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -21,7 +21,7 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
-from openerp.osv import osv
+from openerp.osv import orm
 
 
 class result(report_sxw.rml_parse):
@@ -77,10 +77,8 @@ class result(report_sxw.rml_parse):
         return list
 
 
-class report_result_info(osv.AbstractModel):
+class ReportResultInfo(orm.AbstractModel):
     _name = 'report.exam.result_information_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.result_information_report'
     _wrapped_report_class = result
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

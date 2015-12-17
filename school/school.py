@@ -323,7 +323,7 @@ class StudentStudent(models.Model):
         else:
             raise except_orm(_('Error!'), _('PID not valid, so record will \
                                              not save.'))
-        result = super(student_student, self).create(vals)
+        result = super(StudentStudent, self).create(vals)
         return result
 
     @api.model
@@ -601,7 +601,7 @@ class AttendanceType(models.Model):
     code = fields.Char('Code', required=True)
 
 
-class student_document(models.Model):
+class StudentDocument(models.Model):
     _name = 'student.document'
     _rec_name = "doc_type"
 

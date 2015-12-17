@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 from openerp import models, fields, api, _
 
 
-class result_print(models.TransientModel):
+class ResultPrint(models.TransientModel):
 
     _name = 'result.print'
     _description = 'students result'
@@ -46,5 +46,3 @@ class result_print(models.TransientModel):
                     'domain': domain,
                     }
         return True
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

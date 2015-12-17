@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -23,7 +23,7 @@
 from openerp import models, fields, api
 
 
-class send_email(models.TransientModel):
+class SendEmail(models.TransientModel):
     _name = "send.email"
 
     note = fields.Text('Text')
