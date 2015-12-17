@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python
-from . import common, code39, code93, code128, usps
 from common import I2of5, MSI, Codabar, Code11
 from code39 import Standard39, Extended39
 from code93 import Standard93, Extended93

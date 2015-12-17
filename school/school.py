@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from openerp import models, fields, api, _
 import time
 import openerp
@@ -28,10 +29,10 @@ from datetime import datetime
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize
 from openerp.tools import image_resize_image_big
-from openerp.exceptions import except_orm, Warning
+from openerp.exceptions import except_orm, Warning as UserError
 
 
-class academic_year(models.Model):
+class AcademicYear(models.Model):
     ''' Defining an academic year '''
 
     _name = "academic.year"
@@ -82,18 +83,18 @@ class academic_year(models.Model):
             for old_ac in data_academic_yr:
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop \
                    or old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                    raise Warning(_('Error! You cannot define \
+                    raise UserError(_('Error! You cannot define \
                                      overlapping academic years.'))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if self.date_stop and self.date_start:
             if self.date_stop < self.date_start:
-                raise Warning(_('Error! The duration of the academic \
+                raise UserError(_('Error! The duration of the academic \
                                 year is invalid.'))
 
 
-class academic_month(models.Model):
+class AcademicMonth(models.Model):
     ''' Defining a month of an academic year '''
     _name = "academic.month"
     _description = "Academic Month"
@@ -113,7 +114,7 @@ class academic_month(models.Model):
     def _check_duration(self):
         if self.date_stop and self.date_start and \
                 self.date_stop < self.date_start:
-            raise Warning(_('Error ! The duration of the\
+            raise UserError(_('Error ! The duration of the\
                              Month(s) is/are invalid.'))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
@@ -123,12 +124,12 @@ class academic_month(models.Model):
                 self.year_id.date_stop < self.date_start or \
                 self.year_id.date_start > self.date_start or \
                     self.year_id.date_start > self.date_stop:
-                raise Warning(_('Invalid Months ! Some months overlap or the \
+                raise UserError(_('Invalid Months ! Some months overlap or the \
                                 date period is not in the scope of \
                                 the academic year.'))
 
 
-class standard_medium(models.Model):
+class StandardMedium(models.Model):
     ''' Defining a medium(English, Hindi, Gujarati) related to standard'''
     _name = "standard.medium"
     _description = "Standard Medium"
@@ -140,7 +141,7 @@ class standard_medium(models.Model):
     description = fields.Text('Description')
 
 
-class standard_division(models.Model):
+class StandardDivision(models.Model):
     ''' Defining a division(A, B, C) related to standard'''
     _name = "standard.division"
     _description = "Standard Division"
@@ -152,7 +153,7 @@ class standard_division(models.Model):
     description = fields.Text('Description')
 
 
-class standard_standard(models.Model):
+class StandardStandard(models.Model):
     ''' Defining Standard Information '''
     _name = 'standard.standard'
     _description = 'Standard Information'
@@ -172,7 +173,7 @@ class standard_standard(models.Model):
         return False
 
 
-class school_standard(models.Model):
+class SchoolStandard(models.Model):
     ''' Defining a standard related to school '''
     _name = 'school.standard'
     _description = 'School Standards'
@@ -224,7 +225,7 @@ class school_standard(models.Model):
         return res
 
 
-class school_school(models.Model):
+class SchoolSchool(models.Model):
     ''' Defining School Information '''
     _name = 'school.school'
     _inherits = {'res.company': 'company_id'}
@@ -248,7 +249,7 @@ class school_school(models.Model):
     partner will be printed in this language. If not, it will be english.")
 
 
-class subject_subject(models.Model):
+class SubjectSubject(models.Model):
     '''Defining a subject '''
     _name = "subject.subject"
     _description = "Subjects"
@@ -276,7 +277,7 @@ class subject_subject(models.Model):
                                    string='Syllabus')
 
 
-class subject_syllabus(models.Model):
+class SubjectSyllabus(models.Model):
     '''Defining a  syllabus'''
     _name = "subject.syllabus"
     _description = "Syllabus"
@@ -287,7 +288,7 @@ class subject_syllabus(models.Model):
     topic = fields.Text("Topic")
 
 
-class subject_elective(models.Model):
+class SubjectElective(models.Model):
     ''' Defining Subject Elective '''
     _name = 'subject.elective'
 
@@ -296,7 +297,7 @@ class subject_elective(models.Model):
                                   string='Elective Subjects')
 
 
-class student_student(models.Model):
+class StudentStudent(models.Model):
     ''' Defining a student information '''
     _name = 'student.student'
     _table = "student_student"
@@ -528,7 +529,7 @@ class student_student(models.Model):
         return True
 
 
-class student_grn(models.Model):
+class StudentGrn(models.Model):
     _name = "student.grn"
     _rec_name = "grn_no"
 
@@ -578,13 +579,13 @@ class student_grn(models.Model):
     grn_no = fields.Char(compute='_grn_no', string='Generated GR No')
 
 
-class mother_tongue(models.Model):
+class MotherTongue(models.Model):
     _name = 'mother.toungue'
 
     name = fields.Char("Mother Tongue")
 
 
-class student_award(models.Model):
+class StudentAward(models.Model):
     _name = 'student.award'
 
     award_list_id = fields.Many2one('student.student', 'Student')
@@ -592,7 +593,7 @@ class student_award(models.Model):
     description = fields.Char('Description')
 
 
-class attendance_type(models.Model):
+class AttendanceType(models.Model):
     _name = "attendance.type"
     _description = "School Type"
 
@@ -615,7 +616,7 @@ class student_document(models.Model):
     new_datas = fields.Binary('Attachments')
 
 
-class document_type(models.Model):
+class DocumentType(models.Model):
     ''' Defining a Document Type(SSC,Leaving)'''
     _name = "document.type"
     _description = "Document Type"
@@ -627,7 +628,7 @@ class document_type(models.Model):
     doc_type = fields.Char('Document Type', required=True)
 
 
-class student_description(models.Model):
+class StudentDescription(models.Model):
     ''' Defining a Student Description'''
     _name = 'student.description'
 
@@ -636,7 +637,7 @@ class student_description(models.Model):
     description = fields.Char('Description')
 
 
-class student_descipline(models.Model):
+class StudentDescipline(models.Model):
     _name = 'student.descipline'
 
     student_id = fields.Many2one('student.student', 'Student')
@@ -647,7 +648,7 @@ class student_descipline(models.Model):
     action_taken = fields.Text('Action Taken')
 
 
-class student_history(models.Model):
+class StudentHistory(models.Model):
     _name = "student.history"
 
     student_id = fields.Many2one('student.student', 'Student')
@@ -659,7 +660,7 @@ class student_history(models.Model):
     result = fields.Char(string='Result', readonly=True, store=True)
 
 
-class student_certificate(models.Model):
+class StudentCertificate(models.Model):
     _name = "student.certificate"
 
     student_id = fields.Many2one('student.student', 'Student')
@@ -667,7 +668,7 @@ class student_certificate(models.Model):
     certi = fields.Binary('Certificate', required=True)
 
 
-class hr_employee(models.Model):
+class HrEmployee(models.Model):
     ''' Defining a teacher information '''
     _name = 'hr.employee'
     _inherit = 'hr.employee'
@@ -689,7 +690,7 @@ class hr_employee(models.Model):
                                    string='Subjects')
 
 
-class res_partner(models.Model):
+class ResPartner(models.Model):
     '''Defining a address information '''
     _inherit = 'res.partner'
     _description = 'Address Information'
@@ -697,7 +698,7 @@ class res_partner(models.Model):
     student_id = fields.Many2one('student.student', 'Student')
 
 
-class student_reference(models.Model):
+class StudentReference(models.Model):
     ''' Defining a student reference information '''
     _name = "student.reference"
     _description = "Student Reference"
@@ -712,7 +713,7 @@ class student_reference(models.Model):
                               'Gender')
 
 
-class student_previous_school(models.Model):
+class StudentPreviousSchool(models.Model):
     ''' Defining a student previous school information '''
     _name = "student.previous.school"
     _description = "Student Previous School"
@@ -727,7 +728,7 @@ class student_previous_school(models.Model):
                               string='Add Subjects')
 
 
-class academic_subject(models.Model):
+class AcademicSubject(models.Model):
     ''' Defining a student previous school information '''
     _name = "academic.subject"
     _description = "Student Previous School"
@@ -739,7 +740,7 @@ class academic_subject(models.Model):
     minimum_marks = fields.Integer("Minimum marks")
 
 
-class student_family_contact(models.Model):
+class StudentFamilyContact(models.Model):
     ''' Defining a student emergency contact information '''
     _name = "student.family.contact"
     _description = "Student Family Contact"
@@ -760,7 +761,7 @@ class student_family_contact(models.Model):
     email = fields.Char('E-Mail')
 
 
-class student_relation_master(models.Model):
+class StudentRelationMaster(models.Model):
     ''' Student Relation Information '''
     _name = "student.relation.master"
     _description = "Student Relation Master"
@@ -769,14 +770,14 @@ class student_relation_master(models.Model):
     seq_no = fields.Integer('Sequence')
 
 
-class grade_master(models.Model):
+class GradeMaster(models.Model):
     _name = 'grade.master'
 
     name = fields.Char('Grade', select=1, required=True)
     grade_ids = fields.One2many('grade.line', 'grade_id', string='Grade Name')
 
 
-class grade_line(models.Model):
+class GradeLine(models.Model):
     _name = 'grade.line'
 
     from_mark = fields.Integer("From Marks", required=True, help="The grade \
@@ -791,7 +792,7 @@ class grade_line(models.Model):
     name = fields.Char('Name')
 
 
-class student_news(models.Model):
+class StudentNews(models.Model):
     _name = 'student.news'
     _description = 'Student News'
     _rec_name = 'subject'
@@ -917,7 +918,7 @@ class student_news(models.Model):
         return True
 
 
-class student_reminder(models.Model):
+class StudentReminder(models.Model):
     _name = 'student.reminder'
 
     stu_id = fields.Many2one('student.student', ' Student Name',
@@ -928,23 +929,23 @@ class student_reminder(models.Model):
     color = fields.Integer('Color Index', default=0)
 
 
-class student_cast(models.Model):
+class StudentCast(models.Model):
     _name = "student.cast"
 
     name = fields.Char("Name", required=True)
 
 
-class res_users(models.Model):
+class ResUsers(models.Model):
     _inherit = 'res.users'
 
     @api.model
     def create(self, vals):
         vals.update({'employee_ids': False})
-        res = super(res_users, self).create(vals)
+        res = super(ResUsers, self).create(vals)
         return res
 
 
-class email_template(models.Model):
+class EmailTemplate(models.Model):
     _inherit = "email.template"
 
 #    def generate_email(self, cr, uid, template_id, res_id, context=None):
@@ -965,7 +966,7 @@ class email_template(models.Model):
     def generate_email(self, template_id, res_id):
         if self._context is None:
             self._context = {}
-        ret = super(email_template, self).generate_email(template_id, res_id)
+        ret = super(EmailTemplate, self).generate_email(template_id, res_id)
         if self._context.get('body_text', False) or \
                 self._context.get('subject', False) or \
                 self._context.get('email_to', False):
@@ -975,4 +976,3 @@ class email_template(models.Model):
             return ret
         else:
             return ret
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
