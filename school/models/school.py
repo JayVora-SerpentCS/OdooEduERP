@@ -47,24 +47,20 @@ class AcademicYear(models.Model):
     def name_get(self):
         res = []
         for acd_year_rec in self:
-            name = "[" + acd_year_rec['code'] + "]" + acd_year_rec['name']
-            res.append((acd_year_rec['id'], name))
+            name = "[" + acd_year_rec.code + "]" + acd_year_rec.name
+            res.append((acd_year_rec.id, name))
         return res
 
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
-        obj_academic_ids = self.search([])
-        academic_list = []
-        for rec_academic in obj_academic_ids:
-            academic_list.append(rec_academic.id)
         for current_academic_yr in self:
-            academic_list.remove(current_academic_yr.id)
-            data_academic_yr = self.browse(academic_list)
-            for old_ac in data_academic_yr:
-                if old_ac.date_start <= self.date_start <= old_ac.date_stop\
-                   or old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                        raise UserError(_('Error! You cannot define\
-                                         overlapping academic years.'))
+            args = [('date_start', '<=', current_academic_yr.date_start)]
+            args += [('date_stop', '>=', current_academic_yr.date_start)]
+            args += [('id', '!=', current_academic_yr.id)]
+            old_ac_ids = self.search(args)
+            if old_ac_ids:
+                raise UserError(_('Error! You cannot define\
+                                 overlapping academic years.'))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
@@ -164,18 +160,19 @@ class SchoolStandard(models.Model):
     @api.depends('standard_id')
     def _compute_student(self):
         self.student_ids = False
-        domain = [('standard_id', '=', self.standard_id.id)]
         if self.standard_id:
+            domain = [('standard_id', '=', self.standard_id.id)]
             self.student_ids = self.env['student.student'].search(domain)
 
     @api.multi
     def import_subject(self):
         for im_ob in self:
-            domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
-            import_sub_ids = self.search(domain)
-            val = [last.id for sub in import_sub_ids
-                   for last in sub.subject_ids]
-            self.write({'subject_ids': [(6, 0, val)]})
+            if im_ob.standard_id:
+                domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
+                import_sub_ids = self.search(domain)
+                val = [last.id for sub in import_sub_ids
+                       for last in sub.subject_ids]
+                self.write({'subject_ids': [(6, 0, val)]})
         return True
 
     school_id = fields.Many2one('school.school', 'School', required=True)
@@ -298,15 +295,15 @@ class StudentStudent(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals is None:
+            vals = {}
         if vals.get('pid', False):
-            vals['login'] = vals['pid']
-            vals['password'] = vals['pid']
+            vals.update({'login': vals['pid'], 'password': vals['pid']})
         else:
             raise except_orm(_('Error!'),
                              _('PID not valid'
                                'so record will not be saved.'))
-        result = super(StudentStudent, self).create(vals)
-        return result
+        return super(StudentStudent, self).create(vals)
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
@@ -496,30 +493,24 @@ class StudentGrn(models.Model):
 
     @api.one
     def _grn_no(self):
-        for stud_grn in self:
-            grn_no1 = " "
-            grn_no2 = " "
-            grn_no1 = stud_grn['grn']
-            if stud_grn['prefix'] == 'static':
-                grn_no1 = stud_grn['static_prefix'] + stud_grn['grn']
-            elif stud_grn['prefix'] == 'school':
-                a = stud_grn.schoolprefix_id.code
-                grn_no1 = a + stud_grn['grn']
-            elif stud_grn['prefix'] == 'year':
-                grn_no1 = time.strftime('%Y') + stud_grn['grn']
-            elif stud_grn['prefix'] == 'month':
-                grn_no1 = time.strftime('%m') + stud_grn['grn']
-            grn_no2 = grn_no1
-            if stud_grn['postfix'] == 'static':
-                grn_no2 = grn_no1 + stud_grn['static_postfix']
-            elif stud_grn['postfix'] == 'school':
-                b = stud_grn.schoolpostfix_id.code
-                grn_no2 = grn_no1 + b
-            elif stud_grn['postfix'] == 'year':
-                grn_no2 = grn_no1 + time.strftime('%Y')
-            elif stud_grn['postfix'] == 'month':
-                grn_no2 = grn_no1 + time.strftime('%m')
-            self.grn_no = grn_no2
+        grn_no1 = self.grn or ''
+        if self.prefix == 'static':
+            grn_no1 = self.static_prefix + grn_no1
+        elif self.prefix == 'school' and self.schoolprefix_id:
+            grn_no1 = self.schoolprefix_id.code + self.grn
+        elif self.prefix == 'year':
+            grn_no1 = time.strftime('%Y') + self.grn
+        elif self.prefix == 'month':
+            grn_no1 = time.strftime('%m') + self.grn
+        if self.postfix == 'static':
+            grn_no1 = grn_no1 + self.static_postfix
+        elif self.postfix == 'school' and self.schoolpostfix_id:
+            grn_no1 = grn_no1 + self.schoolpostfix_id.code
+        elif self.postfix == 'year':
+            grn_no1 = grn_no1 + time.strftime('%Y')
+        elif self.postfix == 'month':
+            grn_no1 = grn_no1 + time.strftime('%m')
+        self.grn_no = grn_no1
 
     grn = fields.Char('GR no', help='General Reg Number', readonly=True,
                       default=lambda obj:
@@ -639,10 +630,7 @@ class HrEmployee(models.Model):
             particular teacher.'''
         subject_obj = self.env['subject.subject']
         subject_ids = subject_obj.search([('teacher_ids.id', '=', self.id)])
-        sub_list = []
-        for sub_rec in subject_ids:
-            sub_list.append(sub_rec.id)
-        self.subject_ids = sub_list
+        self.subject_ids = [sub_rec.id for sub_rec in subject_ids]
 
     subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
                                    'Subjects', compute='_compute_subject')
@@ -769,8 +757,7 @@ class StudentNews(models.Model):
     @api.multi
     def news_update(self):
         emp_obj = self.env['hr.employee']
-        obj_mail_server = self.env['ir.mail_server']
-        mail_server_ids = obj_mail_server.search([])
+        mail_server_ids = self.env['ir.mail_server'].search([])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'),
                              _('No mail outgoing mail server'
@@ -793,16 +780,16 @@ class StudentNews(models.Model):
                         email_list.append(employee.user_id.email)
                 if not email_list:
                     raise except_orm(_('Mail Error'), _("Email not defined!"))
-            t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
+            news_date = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
             body = 'Hi,<br/><br/> \
                     This is a news update from <b>%s</b>posted at %s<br/><br/>\
                     %s <br/><br/>\
                     Thank you.' % (self._cr.dbname,
-                                   t.strftime('%d-%m-%Y %H:%M:%S'),
+                                   news_date.strftime('%d-%m-%Y %H:%M:%S'),
                                    news.description)
             smtp_user = mail_server_record.smtp_user
             notification = 'Notification for news update.'
-            message = obj_mail_server.build_email(email_from=smtp_user,
+            message = mail_server_record.build_email(email_from=smtp_user,
                                                   email_to=email_list,
                                                   subject=notification,
                                                   body=body,
@@ -816,7 +803,7 @@ class StudentNews(models.Model):
                                                   subtype='html',
                                                   subtype_alternative=None,
                                                   headers=None)
-            obj_mail_server.send_email(message=message,
+            mail_server_record.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
 

@@ -90,7 +90,7 @@
                         <group col="4" colspan="6" attrs="{'readonly': [('state','!=','draft')]}">
                             <separator colspan="4" col="4" />
                             <field name="exam_code"/>
-                            <field name="name" placeholder="Exam Name"/>
+                            <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                         <group col="4" colspan="2">
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
@@ -100,13 +100,13 @@
                                     <field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 </page>
                                 <page string="Standard">
-                                    <field name="standard_id" nolabel="1" colspan="4"/>
+                                    <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 </page>
                             </notebook>
                         </group>
-                        <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
-                            <field name="create_date" placeholder="Created Date"/>
-                            <field name="write_date" placeholder="Last Update Date"/>
+                        <group col="6" colspan="4">
+                            <field name="create_date" placeholder="Created Date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="write_date" placeholder="Last Update Date" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -202,7 +202,7 @@
                         <group col="4" string="Additional Exam Information" colspan="6">
                             <field name="addtional_exam_code" />
                             <field name="name"  placeholder="Exam Name"/>
-                            <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
+                            <field name="standard_id" placeholder="Select or Create Standard"/>
                             <field name="subject_id" placeholder="Select or Create Subject"/>
                         </group>
                         <group col="4" string="Examination Dates" colspan="4">
@@ -277,10 +277,10 @@
             <field name="arch" type="xml">
                 <form string="Results">
                     <header>
-                        <button name="result_confirm" string="Confirm" states="draft" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_confirm" string="Confirm" states="draft,re-evaluation_confirm,re-access_confirm" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_result_confirm" string="Compute Re-aceess" states="re-access" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="result_re_access" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="result_re_evaluation" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" icon="gtk-jump-to" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_re_access" string="Re-Access" states="confirm,re-evaluation_confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_re_evaluation" string="Re-Evaluation" states="confirm,re-access_confirm" type="object" icon="gtk-jump-to" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_evaluation_confirm" string="Compute Re-evaluation" states="re-evaluation" type="object" icon="gtk-execute"/>
                         <field name="state" widget="statusbar" readonly="1" />
                     </header>
@@ -289,7 +289,7 @@
                             <field name="s_exam_ids" placeholder="Select or Create Examination"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="student_id" placeholder="Select or Create Student" on_change="on_change_student(student_id, s_exam_ids, standard_id)" context="{'exam':s_exam_ids}"/>
+                            <field name="student_id" placeholder="Select or Create Student" context="{'exam':s_exam_ids}"/>
                             <field name="roll_no_id" />
                             <field name="standard_id" placeholder="Select or Create Standard"/>
                         </group>
@@ -301,28 +301,30 @@
                                 <field name="obtain_marks"/>
                                 <field name="grade"/>
                                 <field name="state" invisible="1"/>
-                                <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/>
-                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="marks_access" attrs="{'invisible':[('state','not in',['confirm','re-access_confirm','re-access'])]}"/>
+                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
                             </tree>
                             <form string="Subjects">
                                 <group col = "4">
-                                    <field name="subject_id"/>
-                                    <field name="maximum_marks"/>
-                                    <field name="minimum_marks"/>
-                                    <field name="obtain_marks"/>
+                                    <field name="subject_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                    <field name="maximum_marks" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                    <field name="minimum_marks" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                    <field name="obtain_marks" attrs="{'readonly':[('state','!=','draft')]}"/>
                                     <field name="marks_access" attrs="{'invisible':[('state','!=','re-access')]}"/>
-                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation'])]}"/>
                                     <field name="state" invisible="1"/>
                                 </group>
                             </form>
                         </field>
                         <group col="4" colspan="4">
+                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                            <newline/>
                             <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
-                            <field name="grade"/>
+                        </group>
+                        <group col="4" colspan="4">
                             <field name="percentage"/>
+                            <field name="grade"/>
                             <field name="result"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -531,7 +533,7 @@
                             <field name="a_exam_id"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">
-                            <field name="student_id" on_change="on_change_student(student_id)" />
+                            <field name="student_id" />
                             <field name="roll_no_id"/>
                             <field name="standard_id"/>
                         </group>

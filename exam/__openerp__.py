@@ -19,7 +19,8 @@
           'views/report_view.xml',
           'wizard/exam_class_result.xml',
           'wizard/exam_create_result_view.xml',
-          'wizard/subject_result.xml'],
+          'wizard/subject_result.xml',
+          'wizard/move_standards_view.xml'],
  'installable': True,
  'application': True,
  'test': ['test/exam_test.yml']}

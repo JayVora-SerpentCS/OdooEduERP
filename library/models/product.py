@@ -207,7 +207,7 @@ class ProductProduct(models.Model):
         # add link from editor to supplier:
         if 'editor' in vals:
             editor_id = vals['editor']
-            supplier_model = self.env['library.editor.supplier']
+            supplier_model = self.env['res.partner']
             domain = [('name', '=', editor_id)]
             supplier_ids = [idn.id for idn
                             in supplier_model.search(domain)

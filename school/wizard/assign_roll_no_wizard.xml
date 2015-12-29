@@ -15,12 +15,10 @@
                         <field name="medium_id" widget="selection"  />
                         <field name="division_id" widget="selection" />
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <label string="" colspan="2"/>
+                    <footer>
                         <button icon="gtk-cancel" special="cancel" string="Close"/>
                         <button icon="gtk-go-forward" name="assign_rollno" string="Finish" type="object"/>
-                   </group>
+                   </footer>
                </form>
             </field>
         </record>

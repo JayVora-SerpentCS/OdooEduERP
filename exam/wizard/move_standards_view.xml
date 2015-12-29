@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <!-- Assign Roll Number Wizard Form View  -->
+
+        <record id="view_move_standards_form" model="ir.ui.view">
+            <field name="name">move_standards.form</field>
+            <field name="model">move.standards</field>
+            <field name="arch" type="xml">
+                <form string="Move Standards">
+                    <group col="2" colspan="1">
+                        <field name="academic_year_id"/>
+                    </group>
+                    <footer>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+                        <button icon="gtk-go-forward" name="move_start" string="Move" type="object"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <act_window id="action_move_standards_form"
+            key2="client_action_multi"
+            name="Move Standards"
+            res_model="move.standards"
+            src_model="school.standard"
+            view_mode="form"
+            target="new"
+            view_type="form"/>
+
+    </data>
+</openerp>

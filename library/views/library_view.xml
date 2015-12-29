@@ -471,17 +471,17 @@
                         <separator string="Card Details" colspan="4" col="4"/>
                         <group col="2" colspan="4">
                             <field name="code" placeholder="Code"/>
-                            <field name="user"/>
+                            <field name="user_title"/>
                             <field name="book_limit"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
+                        <group col="4" colspan="4" attrs="{'invisible':[('user_title','!=','student')]}">
                             <separator colspan="4" col="4" />
-                            <field name="student_id" on_change="on_change_student(student_id)"/>
+                            <field name="student_id" />
                             <field name="roll_no" />
                             <field name="standard_id"/>
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','teacher')]}">
+                        <group col="4" colspan="4" attrs="{'invisible':[('user_title','!=','teacher')]}">
                             <separator colspan="4" col="4"/>
                             <field name="teacher_id"/>
                         </group>
@@ -498,7 +498,7 @@
             <field name="arch" type="xml">
                 <tree string="Card Details">
                     <field name="code"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="book_limit"/>
                     <field name="gt_name"/>
                 </tree>
@@ -513,7 +513,7 @@
             <field name="arch" type="xml">
                 <search string="Card Details">
                     <field name="code"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="gt_name"/>
                 </search>
             </field>
@@ -565,19 +565,19 @@
                             <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]"/>
                         </group>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
-                            <field name="card_id" on_change="on_change_card_issue(card_id)"/>
-                            <field name="user"/>
+                            <field name="card_id" />
+                            <field name="user_title"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
                         <group col="4" colspan="4"
-                               attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user_title','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Student Details" colspan="4" col="4"/>
                             <field name="student_id" readonly="1"/>
                             <field name="roll_no" readonly="1"/>
                             <field name="standard_id" readonly="1"/>
                         </group>
                         <group col="2" colspan="4"
-                               attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user_title','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Teacher Details" colspan="4" col="4"/>
                             <field name="teacher_id" readonly="1"/>
                         </group>
@@ -605,7 +605,7 @@
                 <tree string="Books Issue" colors="blue:state in ('issue','reissue');red:(lost_penalty&gt;0.1);red:(penalty&gt;0.1);">
                     <field name="issue_code"/>
                     <field name="name"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="gt_name"/>
                     <field name="date_issue"/>
                     <field name="date_return"/>
@@ -628,8 +628,8 @@
                     <field name="name"/>
                     <field name="card_id"/>
                     <field name="gt_name"/>
-                    <field name="standard_id" attrs="{'invisible':[('user','!=','Student')]}"/>
-                    <field name="roll_no" attrs="{'invisible':[('user','!=','Student')]}"/>
+                    <field name="standard_id" attrs="{'invisible':[('user_title','!=','Student')]}"/>
+                    <field name="roll_no" attrs="{'invisible':[('user_title','!=','Student')]}"/>
                     <field name="date_issue"/>
                     <field name="date_return"/>
                     <field name="day_to_return_book"/>
@@ -708,7 +708,7 @@
                     <filter icon="terp-check" string="Return" domain="[('state','=','return')]"/>
                     <filter icon="gtk-cancel" string="Lost" domain="[('state','=','lost')]"/>
                     <field name="name"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="gt_name"/>
                     <newline />
                     <group expand="0" string="Group By" colspan="12" col="10">
@@ -716,7 +716,7 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-personal" string="Name of book" help="By Book Name" context="{'group_by':'name'}"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-personal" string="User" help="User" context="{'group_by':'user'}"/>
+                        <filter icon="terp-personal" string="User" help="User" context="{'group_by':'user_title'}"/>
                     </group>
                 </search>
             </field>

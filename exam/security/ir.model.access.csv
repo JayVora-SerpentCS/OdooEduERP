@@ -4,8 +4,8 @@
 "access_exam_result","exam.result","model_exam_result","school.group_school_administration",1,1,1,1
 "access_exm_subject","exam.subject","model_exam_subject","school.group_school_administration",1,1,1,1
 "access_additional_exam_result","additional.exam.result","model_additional_exam_result","school.group_school_administration",1,1,1,1
-"access_time_table","time.table","model_time_table","school.group_school_administration",1,1,1,1
-"access_time_table_line","time.table.line","model_time_table_line","school.group_school_administration",1,1,1,1
+"access_time_table","time.table","timetable.model_time_table","school.group_school_administration",1,1,1,1
+"access_time_table_line","time.table.line","timetable.model_time_table_line","school.group_school_administration",1,1,1,1
 "access_exam_grade_line","exam.grade.line","model_exam_grade_line","school.group_school_administration",1,1,1,1
 "access_exam_batchwise_result","exam.batchwise.result","model_exam_batchwise_result","school.group_school_administration",1,1,1,1
 "access_student_student","student.student","model_student_student","school.group_school_administration",1,1,1,1
@@ -16,7 +16,7 @@
 "access_exm_subject_student","exam.subject","exam.model_exam_subject","school.group_school_student",1,0,0,0
 "access_additional_exam_result","additional.exam.result","model_additional_exam_result","school.group_school_student",1,0,0,0
 "access_time_table","time.table","model_time_table","school.group_school_student",1,1,0,0
-"access_time_table_line","time.table.line","model_time_table_line","school.group_school_student",1,1,0,0
+"access_time_table_line","time.table.line","timetable.model_time_table_line","school.group_school_student",1,1,0,0
 "access_exam_grade_line","exam.grade.line","model_exam_grade_line","school.group_school_student",1,0,0,0
 "access_exam_batchwise_result","exam.batchwise.result","model_exam_batchwise_result","school.group_school_student",1,0,0,0
 "access_student_student","student.student","model_student_student","school.group_school_student",1,1,0,0
@@ -29,7 +29,7 @@
 "access_exm_subject","exam.subject","model_exam_subject","school.group_school_teacher",1,1,1,1
 "access_additional_exam_result","additional.exam.result","model_additional_exam_result","school.group_school_teacher",1,1,1,1
 "access_time_table","time.table","model_time_table","school.group_school_teacher",1,1,1,1
-"access_time_table_line","time.table.line","model_time_table_line","school.group_school_teacher",1,1,1,1
+"access_time_table_line","time.table.line","timetable.model_time_table_line","school.group_school_teacher",1,1,1,1
 "access_exam_grade_line","exam.grade.line","model_exam_grade_line","school.group_school_teacher",1,1,1,1
 "access_exam_batchwise_result","exam.batchwise.result","model_exam_batchwise_result","school.group_school_teacher",1,1,1,1
 "access_student_student","student.student","model_student_student","school.group_school_teacher",1,1,1,1
@@ -42,7 +42,7 @@
 "access_exm_subject","exam.subject","model_exam_subject","school.group_school_parent",1,0,0,0
 "access_additional_exam_result","additional.exam.result","model_additional_exam_result","school.group_school_parent",1,0,0,0
 "access_time_table","time.table","model_time_table","school.group_school_parent",1,1,0,0
-"access_time_table_line","time.table.line","model_time_table_line","school.group_school_parent",1,1,0,0
+"access_time_table_line","time.table.line","timetable.model_time_table_line","school.group_school_parent",1,1,0,0
 "access_exam_grade_line","exam.grade.line","model_exam_grade_line","school.group_school_parent",1,0,0,0
 "access_exam_batchwise_result","exam.batchwise.result","model_exam_batchwise_result","school.group_school_parent",1,0,0,0
 "access_student_student","student.student","model_student_student","school.group_school_parent",1,1,0,0

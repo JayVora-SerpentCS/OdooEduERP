@@ -17,7 +17,6 @@ class AssignRollNo(models.TransientModel):
 
     @api.multi
     def assign_rollno(self):
-        res = {}
         student_obj = self.env['student.student']
         for student_data in self:
             search_student_ids = student_obj.search([
@@ -28,4 +27,4 @@ class AssignRollNo(models.TransientModel):
         for student in search_student_ids:
             student.write({'roll_no': number})
             number = number + 1
-        return res
+        return {'type': 'ir.actions.act_window_close'}

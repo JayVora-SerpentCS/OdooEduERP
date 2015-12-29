@@ -69,8 +69,8 @@ class LibraryCard(models.Model):
     _description = "Library Card information"
     _rec_name = "code"
 
-    @api.multi
-    def on_change_student(self, student_id):
+    @api.onchange('student_id')
+    def on_change_student(self):
         '''  This method automatically fill up student roll number
              and standard field  on student_id field
         @param self : Object Pointer
@@ -81,22 +81,19 @@ class LibraryCard(models.Model):
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
             and the value of student roll number and standard'''
-        if not student_id:
-            return {'value': {}}
-        student_data = self.env['student.student'].browse(student_id)
-        val = {'standard_id': student_data.standard_id.id,
-               'roll_no': student_data.roll_no}
-        return {'value': val}
+        if self.student_id:
+            self.standard_id = self.student_id.standard_id and \
+                        self.student_id.standard_id.id,
+            self.roll_no = self.student_id.roll_no
 
     @api.one
     @api.depends('student_id')
     def get_name(self):
-        for rec in self:
-            if rec.student_id:
-                user = rec.student_id.name
-            else:
-                user = rec.teacher_id.name
-            self.gt_name = user
+        self.gt_name = ''
+        if self.user_title == 'student':
+            self.gt_name = self.student_id.name
+        else:
+            self.gt_name = self.teacher_id and self.teacher_id.name
 
     code = fields.Char('Card No', required=True, default=lambda self:
                        self.env['ir.sequence'].get('library.card') or '/')
@@ -104,7 +101,7 @@ class LibraryCard(models.Model):
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
     gt_name = fields.Char(compute="get_name", method=True, string='Name')
-    user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
+    user_title = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
     roll_no = fields.Integer('Roll No')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
@@ -148,19 +145,18 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and penalty as value
         '''
-        for line in self:
-            if line.date_return:
-                start_day = datetime.now()
-                end_day = datetime.strptime(line.date_return,
-                                            "%Y-%m-%d %H:%M:%S")
-                if start_day > end_day:
-                    diff = start_day - end_day
-                    duration = float(diff.days)\
-                               * 24\
-                               + (float(diff.seconds) / 3600)
-                    day = duration / 24
-                    if line.day_to_return_book:
-                        line.penalty = day * line.day_to_return_book.fine_amt
+        if self.date_return:
+            start_day = datetime.now()
+            end_day = datetime.strptime(self.date_return,
+                                        "%Y-%m-%d %H:%M:%S")
+            if start_day > end_day:
+                diff = start_day - end_day
+                duration = float(diff.days)\
+                           * 24\
+                           + (float(diff.seconds) / 3600)
+                day = duration / 24
+                if self.day_to_return_book:
+                    self.penalty = day * self.day_to_return_book.fine_amt
 
     @api.one
     @api.depends('state')
@@ -176,11 +172,10 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and book lost penalty as value
         '''
-
+        self.lost_penalty = 0.0
         if self.state:
             if self.state.title() == 'Lost':
-                fine = self.name.list_price
-                self.lost_penalty = fine
+                self.lost_penalty = self.name.list_price
 
     @api.one
     @api.constrains('card_id', 'state')
@@ -211,10 +206,10 @@ class LibraryBookIssue(models.Model):
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
                              self.env['ir.sequence'].get('library.book.issue')\
                              or '/')
-    student_id = fields.Many2one('student.student', 'Student Name')
-    teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
-    gt_name = fields.Char('Name')
-    standard_id = fields.Many2one('standard.standard', 'Standard')
+    student_id = fields.Many2one('student.student', 'Student Name', compute='on_change_card_issue', store=True)
+    teacher_id = fields.Many2one('hr.employee', 'Teacher Name', compute='on_change_card_issue', store=True)
+    gt_name = fields.Char('Name', related="card_id.gt_name", store=True)
+    standard_id = fields.Many2one('standard.standard', 'Standard', compute='on_change_card_issue', store=True)
     roll_no = fields.Integer('Roll No')
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
@@ -240,11 +235,12 @@ class LibraryBookIssue(models.Model):
                               ('reissue', 'Reissued'), ('cancel', 'Cancelled'),
                               ('return', 'Returned'), ('lost', 'Lost'),
                               ('fine', 'Fined')], "State", default='draft')
-    user = fields.Char("User")
+    user_title = fields.Char("User")
     color = fields.Integer("Color Index")
-
-    @api.multi
-    def on_change_card_issue(self, card_id):
+    
+    @api.one
+    @api.depends('card_id', 'card_id.user_title')
+    def on_change_card_issue(self):
         ''' This method automatically fill up values on card.
             @param self : Object Pointer
             @param cr : Database Cursor
@@ -255,19 +251,17 @@ class LibraryBookIssue(models.Model):
             @return : Dictionary having identifier of the record as key
                       and the user info as value
         '''
-        if not card_id:
-            return {'value': {}}
-        card_data = self.env['library.card'].browse(card_id)
-        val = {'user': str(card_data.user.title())}
-        if card_data.user.title() == 'Student':
-            val.update({'student_id': card_data.student_id.id,
-                        'standard_id': card_data.standard_id.id,
-                        'roll_no': card_data.roll_no,
-                        'gt_name': card_data.gt_name})
-        else:
-            val.update({'teacher_id': card_data.teacher_id.id,
-                        'gt_name': card_data.gt_name})
-        return {'value': val}
+        if self.card_id and self.card_id.user_title:
+            self.user_title = str(self.card_id.user_title.title())
+            if self.card_id.user_title.title() == 'Student':
+                self.student_id = self.card_id.student_id and \
+                                self.card_id.student_id.id
+                self.standard_id =  self.card_id.standard_id and \
+                                self.card_id.standard_id.id
+                self.roll_no = self.card_id.roll_no
+            else:
+                self.teacher_id = self.card_id.teacher_id and \
+                                self.card_id.teacher_id.id
 
     @api.multi
     def draft_book(self):
@@ -381,7 +375,7 @@ class LibraryBookIssue(models.Model):
         pen = 0.0
         lost_pen = 0.0
         for record in self:
-            if record.user.title() == 'Student':
+            if record.user_title.title() == 'Student':
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
                     raise UserError(_('Error !'

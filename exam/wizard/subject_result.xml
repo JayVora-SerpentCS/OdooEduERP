@@ -18,7 +18,10 @@
                             <field name="obtain_marks"/>
                         </form>
                     </field>
-                    <button name='result_report' type='object' string='Result' icon='gtk-ok'/>
+                    <footer>
+                        <button name='result_report' type='object' string='Result' icon='gtk-ok'/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+                   </footer>
                </form>
             </field>
         </record>

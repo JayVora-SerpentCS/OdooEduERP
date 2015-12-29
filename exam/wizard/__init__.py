@@ -4,3 +4,4 @@
 import exam_class_result
 import exam_create_result
 import subject_result
+import move_standards
