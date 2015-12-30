@@ -8,13 +8,15 @@ class SubjectResultWiz(models.TransientModel):
     _name = 'subject.result.wiz'
     _description = 'Subject Wise Result'
 
-    result_ids = fields.Many2many("exam.subject", 'subject_result_wiz_rel',
-                                  'result_id', "exam_id", "Exam Subjects",
-                                  select=1)
+    subject_ids = fields.Many2many("subject.subject", 'subjectwise_result_wiz_rel',
+                                  'sub_res_wiz_id', "subject_id", "Subjects")
 
-    @api.v7
-    def result_report(self, cr, uid, ids, context):
-        data = self.read(cr, uid, ids)[0]
-        return self.pool['report'].get_action(cr, uid, [],
+    @api.multi
+    def result_report(self):
+        datas = self.read()
+        data = datas and datas[0] or {}
+        data.update({'result_ids' : self._context and \
+                     self._context.get('active_ids', [])})
+        return self.pool['report'].get_action(self._cr, self._uid, [],
                                               'exam.exam_result_report',
-                                              data=data, context=context)
+                                              data=data, context=self._context)

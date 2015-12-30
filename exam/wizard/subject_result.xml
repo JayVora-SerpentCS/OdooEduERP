@@ -9,15 +9,9 @@
             <field name="name">subject.result.form</field>
             <field name="model">subject.result.wiz</field>
             <field name="arch" type="xml">
-                <form string="Result Report">
-                    <field name="result_ids">
-                        <form string="Subjects">
-                            <field name="subject_id"/>
-                            <field name="maximum_marks"/>
-                            <field name="minimum_marks"/>
-                            <field name="obtain_marks"/>
-                        </form>
-                    </field>
+                <form string="Subjectwise Result">
+                    <separator string="Subject(s)"/>
+                    <field name="subject_ids" colspan="4" nolabel="1"/>
                     <footer>
                         <button name='result_report' type='object' string='Result' icon='gtk-ok'/>
                         <button icon="gtk-cancel" special="cancel" string="Close"/>

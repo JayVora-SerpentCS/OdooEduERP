@@ -163,10 +163,6 @@ class ExamResult(models.Model):
         grd = ""
         for sub_line in self.result_ids:
             obtain_marks = sub_line.obtain_marks
-            if sub_line.marks_reeval:
-                obtain_marks = sub_line.marks_reeval
-            elif sub_line.marks_access:
-                obtain_marks = sub_line.marks_access
             total += sub_line.maximum_marks or 0
             obtained_total += obtain_marks
         if total:

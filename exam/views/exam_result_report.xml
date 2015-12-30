@@ -2,22 +2,21 @@
 
 <openerp>
     <data>
-
         <template id="exam_result_report">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="report.external_layout">
-                        <div class="page">
-                            <div class="oe_structure" />
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <br/>
-                            <t t-foreach="o" t-as="result">
+                <t t-foreach="get_subject_result(data)" t-as="student">
+                    <t t-if="student['flag']">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <div class="oe_structure" />
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
                                 <table width="100%">
                                     <center>
-                                        <h2 t-field="o and o[0].s_exam_ids.name"></h2>
+                                        <h2 t-esc="student['exam']"></h2>
                                     </center>
                                     <tr>
                                         <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
@@ -27,7 +26,7 @@
                                             <span>:</span>
                                         </td>
                                         <td width="80%" style="font-family: 'Helvetica';font-size: 18px;">
-                                            <span t-field="result.student_id.name"></span>
+                                            <span t-esc="student['student']"></span>
                                         </td>
                                     </tr>
                                 </table>
@@ -54,7 +53,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-foreach="get_result_detail(result.result_ids,result)" t-as="sub_res_info">
+                                        <t t-foreach="student['result_ids']" t-as="sub_res_info">
                                             <tr>
                                                 <td align="center"
                                                     style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
@@ -76,12 +75,11 @@
                                         </t>
                                     </tbody>
                                 </table>
-                            </t>
-                        </div>
+                            </div>
+                        </t>
                     </t>
                 </t>
             </t>
         </template>
-
     </data>
 </openerp>

@@ -277,7 +277,7 @@
             <field name="arch" type="xml">
                 <form string="Results">
                     <header>
-                        <button name="result_confirm" string="Confirm" states="draft,re-evaluation_confirm,re-access_confirm" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_confirm" string="Confirm" states="draft" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_result_confirm" string="Compute Re-aceess" states="re-access" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_access" string="Re-Access" states="confirm,re-evaluation_confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_evaluation" string="Re-Evaluation" states="confirm,re-access_confirm" type="object" icon="gtk-jump-to" groups="school.group_school_administration,school.group_school_teacher"/>
