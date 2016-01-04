@@ -3,7 +3,7 @@
 <openerp>
     <data>
 
-        <!-- Inherited Form View Of Student Information -->
+        <!-- Inherited Form View Of Standard Information -->
 
         <record id="school_standard_form_view" model="ir.ui.view">
             <field name="name">school.standard.form</field>
@@ -12,6 +12,23 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[1]" position="after">
+                        <page string="Events">
+                            <field name="event_ids" nolabel= '1' />
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Inherited Form View of School -->
+
+        <record id="view_school_school_form_event" model="ir.ui.view">
+            <field name="name">school.standard.form.event</field>
+            <field name="model">school.school</field>
+            <field name="inherit_id" ref="school.view_school_school_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='standards']/form/sheet/notebook" position="inside">
                         <page string="Events">
                             <field name="event_ids" nolabel= '1' />
                         </page>
@@ -388,11 +405,13 @@
                     </header>
                     <sheet>
                         <separator string="Event Registration" />
-                        <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="part_name_id" context="{'name':name}" placeholder="Select Or Create Participant Name" />
-                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" />
-                            <field name="reg_date" />
-                            <field name="is_holiday" />
+                        <group colspan="4" col="4">
+                            <field name="part_name_id" context="{'name':name}" placeholder="Select Or Create Participant Name" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="reg_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="is_holiday" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -469,7 +488,7 @@
             <field name="name">Event Registration</field>
             <field name="res_model">school.event.registration</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="event_registration_form"/>
+            <field name="view_id" ref="school_event_registration_tree_view"/>
             <field name="view_mode">tree,form</field>
         </record>
 

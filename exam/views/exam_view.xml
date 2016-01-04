@@ -291,7 +291,7 @@
                         <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
                             <field name="student_id" placeholder="Select or Create Student" context="{'exam':s_exam_ids}"/>
                             <field name="roll_no_id" />
-                            <field name="standard_id" placeholder="Select or Create Standard"/>
+                            <field name="standard_id" placeholder="Select or Create Standard" context="{'exam':s_exam_ids}"/>
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
                             <tree string="Subjects" >

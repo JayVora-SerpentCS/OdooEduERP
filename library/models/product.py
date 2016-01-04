@@ -95,7 +95,6 @@ class ProductProduct(models.Model):
         @param uid : Current Logged in User
         @param context : context arguments, like language, time zone
         '''
-
         if self._context is None:
             self._context = {}
         if 'category_id' in self._context and self._context['category_id']:
@@ -233,23 +232,18 @@ class ProductProduct(models.Model):
     catalog_num = fields.Char('Catalog number',
                        help="Shows Identification number of books")
     lang = fields.Many2one('product.lang', 'Language')
-    editor = fields.Many2one('res.partner', 'Editor', change_default=True)
+    editor = fields.Many2one('res.partner', 'Publisher', change_default=True)
     author = fields.Many2one('library.author', 'Author')
     code = fields.Char(compute="_product_code", method=True, string='Acronym',
                        store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
-    date_parution = fields.Date('Release date',
-                                help="Release(Issue) Date of book")
+    date_parution = fields.Date('Publishing Date',
+                                help="Publishing Date of book")
     creation_date = fields.Datetime('Creation date', readonly=True,
                                     help="Record creation date",
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_retour = fields.Date('Return Date', readonly=True,
-                            help='Book Return date',
-                            default=lambda *a:
-                                str(int(time.strftime("%Y")))
-                                + time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')
@@ -299,5 +293,4 @@ class BookAttachment(models.Model):
 class LibraryAuthor(models.Model):
     _inherit = 'library.author'
 
-    book_ids = fields.Many2many('product.product', 'author_book_rel',
-                                'author_id', 'product_id', 'Books', select=1)
+    book_ids = fields.One2many('product.product', 'author', 'Books')

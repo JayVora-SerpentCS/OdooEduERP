@@ -17,10 +17,10 @@
                                     <field name="name" placeholder="Author Name"/>
                                 </group>
                                 <separator string="Books" colspan="4"/>
-                                <field name="book_ids" nolabel="1" colspan="4"/>
+                                <field name="book_ids" nolabel="1" colspan="4" readonly="1"/>
                             </page>
                             <page string="More Information">
-                                <separator string="Editors" colspan="4"/>
+                                <separator string="Publishers" colspan="4"/>
                                 <field name="editor_ids" nolabel="1" colspan="4"/>
                                 <separator string="Notes" colspan="4"/>
                                 <field name="note" nolabel="1" colspan="4"/>
@@ -152,21 +152,22 @@
                             <field name="isbn" placeholder="International Standard Book Number"/>
                             <field name="rack" placeholder="Position of book"/>
                             <field name="categ_id" placeholder="Select or Create Book"/>
+                            <field name="author" placeholder="Name of Author" required="1"/>
                             <field name="editor" placeholder="Editor" required="1"
                                    context="{'form_view_ref':'library.view_partner_form_11'}"/>
-                            <field name="author" placeholder="Name of Author"/>
                             <field name="collection" placeholder="Collection Name"/>
                             <field name="virtual_available"/>
                         </group>
                         <notebook>
                             <page string="Details">
                                 <group col="4" colspan="2">
+                                    <field name="list_price" string="Amount to be paid if lost" 
+                                        palceholder="Amount to be paid if lost"/>
                                     <field name="availability"/>
                                     <field name="nbpage" placeholder="No of Page in books"/>
                                     <field name="day_to_return_book" placeholder="Days of Returnning"/>
                                     <field name="creation_date"/>
-                                    <field name="date_parution" placeholder="Book Release Date"/>
-                                    <field name="date_retour"/>
+                                    <field name="date_parution" placeholder="Publishing Date"/>
                                     <field name="tome"/>
                                     <field name="format" placeholder="Format of Book"/>
                                     <field name="weight"/>
@@ -210,7 +211,6 @@
                     <field name="barcode"/>
                     <field name="catalog_num"/>
                     <field name="virtual_available"/>
-                    <field name="date_retour"/>
                     <field name="availability"/>
                 </tree>
             </field>
@@ -325,13 +325,14 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-%m-%d 00:00:00')),('date_order','&lt;',time.strftime('%Y-%m-%d 23:59:59'))]</field>
             <field name="view_id" ref="view_order_tree"/>
         </record>
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="sale_order_day" name="Orders of the day" parent="menu_library" action="action_order_today_tree"
-                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+        <menuitem id="sale_order_day" name="Sale orders of the day" parent="menu_library" action="action_order_today_tree"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian" sequence="3"/>
 
         <!-- Tree View Of Purchase Order -->
 
@@ -362,13 +363,14 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-%m-%d 00:00:00')),('date_order','&lt;',time.strftime('%Y-%m-%d 23:59:59'))]</field>
             <field name="view_id" ref="view_purchase_order_tree" />
         </record>
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
-                  sequence="2"
+        <menuitem id="purchase_order_day" name="Purchase orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
+                  sequence="4"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Account Invoice -->
@@ -477,7 +479,7 @@
                         </group>
                         <group col="4" colspan="4" attrs="{'invisible':[('user_title','!=','student')]}">
                             <separator colspan="4" col="4" />
-                            <field name="student_id" />
+                            <field name="student_id" domain="[('state','!=','draft')]"/>
                             <field name="roll_no" />
                             <field name="standard_id"/>
                         </group>
@@ -553,8 +555,9 @@
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
                         <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!" states="return,lost"
-                                attrs="{'invisible':[('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
+                        <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!"
+                                attrs="{'invisible':['|',('state','not in',('return', 'lost')),
+                                                     ('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
                         <field name="state" widget="statusbar" align="right" readonly="1"/>
                     </header>
@@ -566,24 +569,24 @@
                         </group>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="card_id" />
-                            <field name="user_title"/>
-                            <field name="gt_name" invisible="True"/>
+                            <field name="user_title" readonly="1"/>
+                            <field name="gt_name" invisible="1"/>
                         </group>
                         <group col="4" colspan="4"
-                               attrs="{'invisible':[('user_title','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user_title','!=','student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Student Details" colspan="4" col="4"/>
                             <field name="student_id" readonly="1"/>
                             <field name="roll_no" readonly="1"/>
                             <field name="standard_id" readonly="1"/>
                         </group>
                         <group col="2" colspan="4"
-                               attrs="{'invisible':[('user_title','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user_title','!=','teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Teacher Details" colspan="4" col="4"/>
                             <field name="teacher_id" readonly="1"/>
                         </group>
                         <group col="4" colspan="4"
                                attrs="{'invisible':[('state','=','draft')], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
-                            <separator string="Issue Date" colspan="4" col="4" />
+                            <separator string="Date Details" colspan="4" col="4" />
                             <field name="day_to_return_book" attrs="{'required':[('state','=','issue')]}"/>
                             <field name="date_issue"/>
                             <field name="date_return"/>
@@ -735,7 +738,7 @@
         <!--Menu Item Of Library Book Issue -->
 
         <menuitem id="menu_book_issue_sub_form" name="Book Issues" parent="menu_library"
-                  action="action_library_book_list1" sequence="2"
+                  action="action_library_book_list1" sequence="1"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of Library Book Request -->
@@ -752,7 +755,7 @@
                             <field name="card_id" placeholder="Card Id"/>
                             <field name="type"/>
                             <field name="bk_nm" invisible="True"/>
-                            <field name="name" attrs="{'invisible':[('type','!=','existing')]}"/>
+                            <field name="name" domain="[('categ_id.name','=','Books')]" attrs="{'invisible':[('type','!=','existing')]}"/>
                             <field name="new1" attrs="{'invisible':[('type','!=','new')]}"/>
                         </group>
                     </sheet>
@@ -806,7 +809,7 @@
 
         <!-- Menu Item Of Library Book Request -->
 
-        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="4"
+        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="2"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
 
         <!-- Form view Of Product Language -->
@@ -867,7 +870,6 @@
                     <sheet>
                         <separator string="Book Return Days"/>
                         <group colspan="2" col="4">
-                            <field name="code" placeholder="Books Code"/>
                             <field name="day" placeholder="Return Day/s"/>
                             <field name="fine_amt"/>
                         </group>
@@ -883,7 +885,6 @@
             <field name="model">library.book.returnday</field>
             <field name="arch" type="xml">
                 <tree string="Book Return day">
-                    <field name="code"/>
                     <field name="day"/>
                     <field name="fine_amt"/>
                 </tree>
@@ -897,7 +898,6 @@
             <field name="model">library.book.returnday</field>
             <field name="arch" type="xml">
                 <search string="Book Return day">
-                    <field name="code"/>
                     <field name="day"/>
                     <field name="fine_amt"/>
                 </search>
@@ -1131,7 +1131,7 @@
 
         <!-- Menu Item Of Library Editor Supplier -->
 
-        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
+        <menuitem name="Editor/Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of MRP Procurement Order -->

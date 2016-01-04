@@ -8,7 +8,6 @@ from openerp.exceptions import Warning as UserError
 class LibraryEditorSupplier(models.Model):
     _name = "library.editor.supplier"
     _description = "Editor Relations"
-    _auto = False
 
     name = fields.Many2one('res.partner', 'Editor')
     supplier_id = fields.Many2one('res.partner', 'Supplier')

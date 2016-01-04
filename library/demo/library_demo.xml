@@ -7,31 +7,31 @@
 
         <record id="demo_library_card_1" model="library.card">
             <field name="code">A1</field>
-            <field name="user">student</field>
+            <field name="user_title">student</field>
             <field name="book_limit">02</field>
         </record>
 
         <record id="demo_library_card_2" model="library.card">
             <field name="code">F1</field>
-            <field name="user">teacher</field>
+            <field name="user_title">teacher</field>
             <field name="book_limit">04</field>
         </record>
 
         <record id="demo_library_card_3" model="library.card">
             <field name="code">A2</field>
-            <field name="user">student</field>
+            <field name="user_title">student</field>
             <field name="book_limit">02</field>
         </record>
 
         <record id="demo_library_card_4" model="library.card">
             <field name="code">F2</field>
-            <field name="user">teacher</field>
+            <field name="user_title">teacher</field>
             <field name="book_limit">04</field>
         </record>
 
         <record id="demo_library_card_5" model="library.card">
             <field name="code">F3</field>
-            <field name="user">teacher</field>
+            <field name="user_title">teacher</field>
             <field name="book_limit">04</field>
         </record>
 
@@ -55,14 +55,12 @@
             <field name="issue_code">101</field>
             <field name="name"  ref="product_product_b1"/>
             <field name="card_id" ref="demo_library_card_1"/>
-            <field name="user">Teacher</field>
         </record>
 
         <record id="demo_library_book_2" model="library.book.issue">
             <field name="issue_code">201</field>
             <field name="name"  ref="library_product_b2"/>
             <field name="card_id" ref="demo_library_card_2"/>
-            <field name="user">Student</field>
         </record>
 
         <!-- library.book.request -->
@@ -146,25 +144,21 @@
         <!-- library.book.returnday -->
 
         <record id="library_book_returnday_1" model="library.book.returnday">
-            <field name="code">B001</field>
             <field name="day">10</field>
             <field name="fine_amt">20</field>
         </record>
 
         <record id="library_book_returnday_2" model="library.book.returnday">
-            <field name="code">B002</field>
             <field name="day">15</field>
             <field name="fine_amt">30</field>
         </record>
 
         <record id="library_book_returnday_3" model="library.book.returnday">
-            <field name="code">B003</field>
             <field name="day">25</field>
             <field name="fine_amt">50</field>
         </record>
 
         <record id="library_book_returnday_4" model="library.book.returnday">
-            <field name="code">B004</field>
             <field name="day">30</field>
             <field name="fine_amt">60</field>
         </record>

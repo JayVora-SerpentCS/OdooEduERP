@@ -156,13 +156,13 @@ class SchoolStandard(models.Model):
     _description = 'School Standards'
     _rec_name = "school_id"
 
-    @api.one
-    @api.depends('standard_id')
-    def _compute_student(self):
-        self.student_ids = False
-        if self.standard_id:
-            domain = [('standard_id', '=', self.standard_id.id)]
-            self.student_ids = self.env['student.student'].search(domain)
+#    @api.one
+#    @api.depends('standard_id')
+#    def _compute_student(self):
+#        self.student_ids = False
+#        if self.standard_id:
+#            domain = [('standard_id', '=', self.standard_id.id)]
+#            self.student_ids = self.env['student.student'].search(domain)
 
     @api.multi
     def import_subject(self):
@@ -184,12 +184,15 @@ class SchoolStandard(models.Model):
                                    'subject_id', 'standard_id', 'Subject')
     user_id = fields.Many2one('hr.employee', 'Class Teacher')
     student_ids = fields.One2many('student.student', 'standard_id',
-                                  'Student In Class',
-                                  compute='_compute_student')
+                                  'Student In Class')
     color = fields.Integer('Color Index')
     passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
+    
+    _sql_constraints = [
+        ('standard_uniq', 'unique(school_id, standard_id, division_id, medium_id)', 'Standard must be unique per School!'),
+    ]
 
     @api.multi
     def name_get(self):
@@ -243,7 +246,7 @@ class SubjectSubject(models.Model):
     standard_ids = fields.Many2many('school.standard', 'subject_standards_rel',
                                     'standard_id', 'subject_id', 'Standards')
     standard_id = fields.Many2one('standard.standard', 'Class')
-    is_practical = fields.Boolean('Is Practical',
+    is_practical = fields.Boolean('Has Practical',
                                   help='Check this if subject is practical.')
     no_exam = fields.Boolean("No Exam",
                              help='Check this if subject has no exam.')

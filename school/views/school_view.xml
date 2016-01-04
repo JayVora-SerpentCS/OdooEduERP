@@ -799,16 +799,18 @@
                 <form string="Student GRN format" >
                     <sheet>
                         <group col="4" colspan="4">
-                            <field name="grn" />
+                            <field name="grn" invisible="1"/>
                             <newline/>
                             <field name="name"/>
                             <newline/>
                             <field name="prefix" placeholder="Prefix" />
+                            <newline/>
                             <field name="static_prefix" attrs="{'invisible':[('prefix','!=','static')],'required':[('prefix','=','static')]}"/>
                             <newline/>
                             <field name="schoolprefix_id" attrs="{'invisible':[('prefix','!=','school')],'required':[('prefix','=','school')]}"/>
                             <newline/>
-                            <field name="postfix" placeholder="Suffix" />
+                            <field name="postfix" placeholder="Postfix" />
+                            <newline/>
                             <field name="schoolpostfix_id" attrs="{'invisible':[('postfix','!=','school')],'required':[('postfix','=','school')]}"/>
                             <newline/>
                             <field name="static_postfix" attrs="{'invisible':[('postfix','!=','static')],'required':[('postfix','=','static')]}"/>
@@ -874,7 +876,33 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Standards">
-                                <field name="standards" nolabel="1" colspan="4"/>
+                                <field name="standards" nolabel="1" colspan="4">
+                                    <tree>
+                                        <field name="standard_id"/>
+                                        <field name="division_id"/>
+                                        <field name="medium_id"/>
+                                        <field name="user_id"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group col="4" colspan="4">
+                                                <field name="standard_id"/>
+                                                <field name="division_id"/>
+                                                <field name="medium_id"/>
+                                                <field name="user_id"/>
+                                                <field name="passing"/>
+                                            </group>
+                                            <notebook>
+                                                <page string="Students">
+                                                    <field name="student_ids" colspan="4" nolabel="1"/>
+                                                </page>
+                                                <page string="Subjects">
+                                                    <field name="subject_ids" colspan="4" nolabel="1"/>
+                                                </page>
+                                            </notebook>
+                                        </sheet>
+                                    </form>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
@@ -951,7 +979,7 @@
                                 <button name="import_subject" string="Import Previous Standard subject"
                                         type="object" class="oe_highlight"/>
                                 <field name="subject_ids" nolabel="1" colspan="4"
-                                       string="Add Subjects"/>
+                                       string="Add Subjects" readonly="1"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -970,6 +998,7 @@
                     <field name="user_id"/>
                     <field name="division_id"/>
                     <field name="medium_id"/>
+                    <field name="school_id"/>
                 </tree>
             </field>
         </record>
@@ -1034,10 +1063,8 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>
-                                            <a string="Delete" icon="gtk-delete" type="delete"/>
-                                            <a string="Change Color" icon="color-picker" type="color"
-                                               name="color"/>
+                                            <a type="edit"><img src="/web/static/src/img/icons/gtk-edit.png"/></a>
+                                            <a type="delete"><img src="/web/static/src/img/icons/gtk-delete.png"/></a>
                                         </div>
                                         <br class="oe_kanban_clear"/>
                                     </div>

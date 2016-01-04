@@ -25,7 +25,7 @@ class ExtendedStudentStudent(models.Model):
                                        'Exam History', readonly=True)
 
 
-#class ExtendedTimeTableLine(models.Model):
+# class ExtendedTimeTableLine(models.Model):
 #    _inherit = 'time.table.line'
 #
 #    exm_date = fields.Date('Exam Date')
@@ -390,7 +390,7 @@ class ExamResultBatchwise(models.Model):
             for stand in stand_id:
                 if stand.result_ids:
                     fina_tot += stand.total
-                #Total_obtained mark of all student
+                # Total_obtained mark of all student
                 divi = fina_tot / (len(stand.result_ids) or 1)
                 if self.year.grade_id.grade_ids:
                     for grade_id in self.year.grade_id.grade_ids:
@@ -436,18 +436,31 @@ class AdditionalExamResult(models.Model):
                                 required=True)
     student_id = fields.Many2one('student.student', 'Student Name',
                                  required=True)
-    roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No",
-                                readonly=True)
+    roll_no_id = fields.Integer(related='student_id.roll_no',
+                                string="Roll No", readonly=True)
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_calc_result', string='Result', method=True)
+    result = fields.Char(compute='_calc_result', string='Result',
+                         method=True)
 
 
 class StudentStudent(models.Model):
     _name = 'student.student'
     _inherit = 'student.student'
     _description = 'Student Information'
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        context = self._context and dict(self._context) or {}
+        args = args or []
+        if context.get('exam', False):
+            exam_data = self.env['exam.exam'].browse(context['exam'])
+            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            args.append(('standard_id', 'in', std_ids))
+        return super(StudentStudent, self).name_search(name, args=args, \
+                                                       operator='ilike', \
+                                                       limit=limit)
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -457,7 +470,37 @@ class StudentStudent(models.Model):
         if context.get('exam', False):
             exam_data = self.env['exam.exam'].browse(context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
-            args.append(('class_id', 'in', std_ids))
+            args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self).search(args=args, offset=offset,
+                                                  limit=limit, order=order,
+                                                  count=count)
+
+
+class SchoolStandard(models.Model):
+    ''' Defining a standard related to school '''
+    _inherit = 'school.standard'
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        context = self._context and dict(self._context) or {}
+        args = args or []
+        if context.get('exam', False):
+            exam_data = self.env['exam.exam'].browse(context['exam'])
+            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            args.append(('id', 'in', std_ids))
+        return super(SchoolStandard, self).name_search(name, args=args,\
+                                                       operator='ilike',\
+                                                       limit=limit)
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        context = self._context and dict(self._context) or {}
+        if args is None:
+            args = []
+        if context.get('exam', False):
+            exam_data = self.env['exam.exam'].browse(context['exam'])
+            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            args.append(('id', 'in', std_ids))
+        return super(SchoolStandard, self).search(args=args, offset=offset,
                                                   limit=limit, order=order,
                                                   count=count)

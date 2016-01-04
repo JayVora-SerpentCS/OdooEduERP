@@ -23,19 +23,14 @@ class HostelRoom(models.Model):
     _name = 'hostel.room'
 
     @api.one
-    @api.depends('student_ids')
+    @api.depends('student_ids', 'student_per_room')
     def _check_availability(self):
-        room_availability = 0
-        for data in self:
-            count = 0
-            if self.student_ids:
-                count += 1
-            room_availability = data.student_per_room - count
-            if room_availability < 0:
-                raise except_orm(_("You can not assign room\
-                more than %s student" % data.student_per_room))
-            else:
-                self.availability = room_availability
+        self.availability = 0
+        room_availability = self.student_per_room - len(self.student_ids)
+        if room_availability < 0:
+            raise except_orm(_("You can not assign \
+            more than %s student" % self.student_per_room))
+        self.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'HOSTEL')
     floor_no = fields.Integer('Floor No.', default=1)

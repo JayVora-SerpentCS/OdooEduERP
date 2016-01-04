@@ -3,6 +3,22 @@
 <openerp>
     <data>
 
+        <!-- Inherited Form View Of Standard Information -->
+
+        <record id="school_standard_form_view_fees" model="ir.ui.view">
+            <field name="name">school.standard.form.fees</field>
+            <field name="model">school.standard</field>
+            <field name="inherit_id" ref="school.view_school_standard_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <field name="passing" position="after">
+                        <field name="fee_structure_id"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+
         <!-- Search View Of Student PaySlip Line Information -->
 
         <record id="view_student_payslip_line_search" model="ir.ui.view">
@@ -190,9 +206,13 @@
                     <header>
                         <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="workflow" groups="school.group_school_administration"/>
                         <button name="student_pay_fees" string="Payment" states="confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
+                        <button name="payslip_paid" string="Paid"  
+                            attrs="{'invisible':['|',('state','!=','payment_pending'),('voucher_state','!=','posted')]}"
+                            type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
+                        <field name="voucher_state" invisible="1"/>
                         <group col="4">
                             <group col="2">
                                 <separator string="Information" colspan="2"/>
@@ -211,13 +231,14 @@
                             <field name="student_id" placeholder="Student Name" colspan="4"/>
                             <separator string="Fees Structure" colspan="4"/>
                             <field name="fees_structure_id" required="1" placeholder="Fee Structure"/>
-                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" placeholder="Journal"/>
+                            <field name="journal_id" widget="selection" placeholder="Journal"/>
                             <notebook colspan="4">
                                 <page string="Fees Structure">
                                     <field name="line_ids" colspan="4" nolabel="1"/>
                                     <separator string="" colspan="4"/>
                                     <group col="8" colspan="4">
                                         <field name="total"/>
+                                        <field name="voucher_id" readonly="1"/>
                                     </group>
                                 </page>
                                 <page string="Other Information">
@@ -300,7 +321,8 @@
                             <field name="date"/>
                             <field name="journal_id" placeholder="Journal"/>
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
-                            <field name="company_id" string = "School" placeholder="School Name"/>
+                            <field name="school_id" placeholder="School Name"/>
+                            <field name="standard_id" domain="[('school_id','=',school_id)]"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Student Payslip">
