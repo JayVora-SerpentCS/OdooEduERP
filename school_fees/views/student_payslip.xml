@@ -11,7 +11,7 @@
                             <div class="oe_structure" />
                             <div class="row" align="center">
                                 <span>
-                                    <h1>Student PaySlip</h1>
+                                    <h1>Fee Receipt</h1>
                                 </span>
                             </div>
                             <div class="row" align="center" style="font-family: 'Helvetica';font-size: 20px;">
@@ -51,7 +51,7 @@
                             </table>
                             <div class="row" align="center" style="font-family: 'Helvetica';font-size: 18px;">
                                 <span>
-                                    <b>PaySlip of </b>
+                                    <b>Fee Receipt of </b>
                                     <b t-field="o.student_id.name"></b>
                                 </span>
                             </div>

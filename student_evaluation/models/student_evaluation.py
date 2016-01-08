@@ -9,23 +9,22 @@ class StudentEvaluation(models.Model):
     _name = "student.evaluation"
     _rec_name = 'student_id'
 
-    @api.one
+    @api.multi
     def get_record(self):
         eval_line_obj = self.env['student.evaluation.line']
         eval_temp_obj = self.env['student.evaluation.template']
         eval_list = []
-        for stu_eval_rec in self.browse(self.ids):
+        for stu_eval_rec in self:
             if stu_eval_rec.eval_line:
                 self._cr.execute('delete from student_evaluation_line\
                                   where eval_id=%s', (stu_eval_rec.id,))
-            type_eval = stu_eval_rec.type
-            domain = [('type', '=', type_eval)]
+            domain = [('type', '=', stu_eval_rec.type)]
             eval_temp_ids = eval_temp_obj.search(domain)
             for eval_temp_id in eval_temp_ids:
                 eval_list.append(eval_temp_id.id)
             for i in range(0, len(eval_list)):
                 eval_line_obj.create({'stu_eval_id': eval_list[i],
-                                      'eval_id': self.id})
+                                      'eval_id': stu_eval_rec.id})
         return True
 
     @api.one

@@ -466,7 +466,7 @@ class StudentStudent(models.Model):
 
     @api.multi
     def admission_done(self):
-        school_standard_obj = self.env['school.standard']
+#        school_standard_obj = self.env['school.standard']
         seq_obj = self.env['ir.sequence']
         for student_data in self:
             if student_data.age <= 5:
@@ -474,11 +474,11 @@ class StudentStudent(models.Model):
                                  _('The student is not eligible.'
                                    'Age is not valid.'))
             domain = [('standard_id', '=', student_data.standard_id.id)]
-            school_standard_search_ids = school_standard_obj.search(domain)
-            if not school_standard_search_ids:
-                raise except_orm(_('Warning'),
-                                 _('The standard is not defined'
-                                   'in a school'))
+#            school_standard_search_ids = school_standard_obj.search(domain)
+#            if not school_standard_search_ids:
+#                raise except_orm(_('Warning'),
+#                                 _('The standard is not defined'
+#                                   'in a school'))
             student_search_ids = self.search(domain)
             reg_code = seq_obj.get('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\

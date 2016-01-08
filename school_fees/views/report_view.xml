@@ -4,7 +4,7 @@
     <data>
 
         <report id="report_student_payslip_qweb"
-                string="Student Payslip"
+                string="Receipt"
                 model="student.payslip"
                 report_type = "qweb-pdf"
                 file="school_fees.student_payslip"

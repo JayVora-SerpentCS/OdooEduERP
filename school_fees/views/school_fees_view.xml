@@ -153,6 +153,7 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip Line">
                     <group col="6" colspan="4">
+                        <field name="sequence"/>
                         <field name="name"/>
                         <field name="code"/>
                     </group>
@@ -161,18 +162,15 @@
                         <field name="type"/>
                         <field name="amount"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Function">
-                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('type','!=','range')]}">
-                                <tree string="Function Arguments" >
-                                    <field name="from_month"/>
-                                    <field name="to_month"/>
-                                </tree>
-                                <form string="Function Arguments" >
+                    <newline/>
+                    <notebook colspan="4" attrs="{'invisible':[('type','!=','range')]}">
+                        <page string="Range">
+                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'invisible':[('type','!=','range')]}">
+                                <tree string="Function Arguments" editable="bottom">
                                     <field name="sequence"/>
                                     <field name="from_month"/>
                                     <field name="to_month"/>
-                                </form>
+                                </tree>
                             </field>
                         </page>
                     </notebook>
@@ -204,15 +202,11 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip">
                     <header>
-                        <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="workflow" groups="school.group_school_administration"/>
+                        <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="object" groups="school.group_school_administration"/>
                         <button name="student_pay_fees" string="Payment" states="confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
-                        <button name="payslip_paid" string="Paid"  
-                            attrs="{'invisible':['|',('state','!=','payment_pending'),('voucher_state','!=','posted')]}"
-                            type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-                        <field name="voucher_state" invisible="1"/>
                         <group col="4">
                             <group col="2">
                                 <separator string="Information" colspan="2"/>
@@ -231,14 +225,17 @@
                             <field name="student_id" placeholder="Student Name" colspan="4"/>
                             <separator string="Fees Structure" colspan="4"/>
                             <field name="fees_structure_id" required="1" placeholder="Fee Structure"/>
-                            <field name="journal_id" widget="selection" placeholder="Journal"/>
+                            <field name="journal_id" placeholder="Journal"
+                                domain="[('type','=','sale')]"
+                                context="{'default_type':'sale}"/>
                             <notebook colspan="4">
                                 <page string="Fees Structure">
                                     <field name="line_ids" colspan="4" nolabel="1"/>
                                     <separator string="" colspan="4"/>
                                     <group col="8" colspan="4">
                                         <field name="total"/>
-                                        <field name="voucher_id" readonly="1"/>
+                                        <field name="voucher_id" readonly="1"
+                                               context="{'form_view_ref':'account_voucher.view_sale_receipt_form'}"/>
                                     </group>
                                 </page>
                                 <page string="Other Information">
@@ -319,13 +316,14 @@
                             <field name="name" placeholder="Name"/>
                             <field name="number"/>
                             <field name="date"/>
-                            <field name="journal_id" placeholder="Journal"/>
+                            <field name="journal_id" placeholder="Journal"
+                                    domain="[('type','=','sale')]" context="{'default_type':'sale'}"/>
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
                             <field name="school_id" placeholder="School Name"/>
                             <field name="standard_id" domain="[('school_id','=',school_id)]"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Student Payslip">
+                            <page string="Receipt(s)">
                                 <field name="line_ids" colspan="4" nolabel="1" >
                                     <tree string="Student Payslip" >
                                         <field name="name"/>
@@ -413,7 +411,7 @@
 
         <record id="action_student_payslip_line_form" model="ir.actions.act_window">
             <field name="name">Fees Head</field>
-            <field name="res_model">student.payslip.line</field>
+            <field name="res_model">student.fees.structure.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -473,7 +471,7 @@
         <menuitem id="menu_student_payslip" name="Fees Receipts" parent="menu_fees" action="action_student_payslip_form"
                   groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
-        <menuitem id="menu_student_fees_register" name="Fees Registers" parent="menu_fees" action="action_student_fees_register_form"
+        <menuitem id="menu_student_fees_register" name="Fees Registers" parent="menu_fees" action="action_student_fees_register_form" sequence="1"
                   groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
         <menuitem id="menu_student_fees_structure_form" name="Fees" parent="school.menu_configuration"/>
