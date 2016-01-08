@@ -55,9 +55,6 @@ class LibraryAuthor(models.Model):
     death_date = fields.Date('Date of Death')
     biography = fields.Text('Biography')
     note = fields.Text('Notes')
-    editor_ids = fields.Many2many('res.partner', 'author_editor_rel',
-                                  'author_id', 'parent_id', 'Editors',
-                                  select=1)
 
     _sql_constraints = [('name_uniq', 'unique (name)',
                          'The name of the author must be unique !')]
@@ -152,12 +149,8 @@ class LibraryBookIssue(models.Model):
                                         "%Y-%m-%d %H:%M:%S")
             if start_day > end_day:
                 diff = start_day - end_day
-                duration = float(diff.days)\
-                           * 24\
-                           + (float(diff.seconds) / 3600)
-                day = duration / 24
                 if self.day_to_return_book:
-                    self.penalty = day * self.day_to_return_book.fine_amt
+                    self.penalty = diff.days * self.day_to_return_book.fine_amt
 
     @api.one
     @api.depends('state', 'name.list_price')
@@ -224,10 +217,9 @@ class LibraryBookIssue(models.Model):
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
                                          help="Actual Return Date of Book")
     penalty = fields.Float(compute="_calc_penalty",
-                           string='Penalty', store=True,
+                           string='Penalty',
                            help='It show the late book return penalty')
     lost_penalty = fields.Float(compute="_calc_lost_penalty", string='Fine',
-                                store=True,
                                 help='It show the penalty for lost book')
     day_to_return_book = fields.Many2one('library.book.returnday',
                                          'Book Return Days')
@@ -290,14 +282,8 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        if self.card_id:
-            card_ids = self.search([('card_id', '=', self.card_id.id),
-                                    ('state', 'in', ['issue', 'reissue'])])
-            if self.card_id.book_limit > len(card_ids):
-                self.write({'state': 'issue'})
-                product_id = self.name
-                product_id.write({'availability': 'notavailable'})
-        return True
+        self.name.write({'availability': 'notavailable'})
+        return self.write({'state': 'issue'})
 
     @api.multi
     def reissue_book(self):
@@ -384,8 +370,8 @@ class LibraryBookIssue(models.Model):
                 addr = record.student_id.partner_id.contact_address
             else:
                 usr = record.teacher_id and record.teacher_id.user_id\
-                    and record.teacher_id.user_id.parnter_id\
-                    and record.teacher_id.user_id.parnter_id.id
+                    and record.teacher_id.user_id.partner_id\
+                    and record.teacher_id.user_id.partner_id.id
                 if not record.teacher_id.address_home_id:
                     raise UserError(_('Error !'
                                     'The Teacher must have a Home address.'))

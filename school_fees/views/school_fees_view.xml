@@ -479,7 +479,7 @@
         <menuitem id="menu_student_fees_structure_form" name="Fees" parent="school.menu_configuration"/>
 
         <menuitem id="menu_student_fees_structure_sub_form" name="Fees Structure" parent="menu_student_fees_structure_form"
-                  action="action_student_fees_structure_form"/>
+                  action="action_student_fees_structure_form" sequence="1"/>
 
         <menuitem id="menu_student_payslip_line_form" name="Fees Head" parent="menu_student_fees_structure_form"
                   action="action_student_payslip_line_form" sequence="2"/>

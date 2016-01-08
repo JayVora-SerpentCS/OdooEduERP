@@ -43,9 +43,9 @@ class SchoolEventParticipant(models.Model):
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
                                        readonly=True)
     sequence = fields.Integer('Rank', help="The sequence field is \
-                               used to Give Rank to the Participant", 
+                               used to Give Rank to the Participant",
                                default=0)
-    registration_id = fields.Many2one('school.event.registration', 
+    registration_id = fields.Many2one('school.event.registration',
                                       'Registration')
 
 
@@ -66,11 +66,11 @@ class SchoolEvent(models.Model):
                                   'Event Type',
                                   help='Event is either IntraSchool\
                                         or InterSchool')
-    start_date = fields.Date('Start Date', help="Event Starting Date")
-    end_date = fields.Date('End Date', help="Event Ending Date")
-    start_reg_date = fields.Date('Start Registration Date',
+    start_date = fields.Date('Event Start Date', help="Event Starting Date")
+    end_date = fields.Date('Event End Date', help="Event Ending Date")
+    start_reg_date = fields.Date('Registration Start Date',
                                  help="Event registration starting date")
-    last_reg_date = fields.Date('Last Registration Date',
+    last_reg_date = fields.Date('Registration End Date',
                                 help="Last Date of registration")
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person',
                                      help="Event contact person")
@@ -90,7 +90,10 @@ class SchoolEvent(models.Model):
                                          'Participant Standards',
                                          help="The Participant is from\
                                                which standard")
-    state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
+    state = fields.Selection([('draft', 'Draft'), 
+                              ('reg_start', 'Registration Started'),
+                              ('reg_end', 'Registration Closed'),
+                              ('open', 'Running'),
                               ('close', 'Close'), ('cancel', 'Cancel')],
                              string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant',
@@ -135,17 +138,22 @@ class SchoolEvent(models.Model):
         if context.get('part_name_id', False):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
-            args.append(arg_domain)
+            if data and data.class_id:
+                args.append(('part_standard_ids', 'in', [data.class_id.id]))
         return super(SchoolEvent, self).search(args, offset, limit, order,
                                                count=count)
 
     @api.multi
+    def registration_open(self):
+        return self.write({'state': 'reg_start'})
+    
+    @api.multi
+    def registration_closed(self):
+        return self.write({'state' : 'reg_end'})
+
+    @api.multi
     def event_open(self):
-        if not self.part_ids:
-            raise except_orm(_('No Participants !'),
-                             _('No Participants to open the Event.'))
-        return self.write({'state': 'open'})
+        return self.write({'state' : 'open'})
 
     @api.multi
     def event_close(self):
@@ -181,8 +189,6 @@ class SchoolEventRegistration(models.Model):
 
     @api.multi
     def regi_cancel(self):
-        event_obj = self.env['school.event']
-        student_obj = self.env['student.student']
         event_part_obj = self.env['school.event.participant']
 
         for reg_data in self:
@@ -192,52 +198,6 @@ class SchoolEventRegistration(models.Model):
                       ('registration_id', '=', reg_data.id)]
             stu_prt_data = event_part_obj.search(domain)
             stu_prt_data.unlink()
-#            event_data = event_obj.browse(reg_data.name.id)
-#            prt_data = student_obj.browse(reg_data.part_name_id.id)
-#            # delete entry of participant
-#            domain = [('stu_pid', '=', prt_data.pid),
-#                      ('event_id', '=', reg_data.name.id),
-#                      ('name', '=', reg_data.part_name_id.id)]
-#            stu_prt_data = event_part_obj.search(domain)
-#            stu_prt_data.unlink()
-#            # remove entry of event from student
-#            list1 = []
-#
-#            for part in prt_data.event_ids:
-#                part = student_obj.browse(part.id)
-#                list1.append(part.id)
-#            flag = True
-#
-#            for part in list1:
-#                data = event_part_obj.browse(part)
-#                if data.event_id.id == reg_data.name.id:
-#                    flag = False
-#
-#            if not flag:
-#                list1.remove(part)
-#            stu_part_id = student_obj.browse(reg_data.part_name_id.id)
-#            stu_part_id.write({'event_ids': [(6, 0, list1)]})
-#            list1 = []
-#            # remove entry of participant from event
-#            flag = True
-#
-#            for par in event_data.part_ids:
-#                part = event_part_obj.browse(par.id)
-#                list1.append(part.id)
-#
-#            for par in list1:
-#                data = event_part_obj.browse(par)
-#
-#                if data.name.id == reg_data.part_name_id.id:
-#                    parii = par
-#                    flag = False
-#
-#            if not flag:
-#                list1.remove(parii)
-#            participants = int(event_data.participants) - 1
-#            event_reg_id = event_obj.browse(reg_data.name.id)
-#            event_reg_id.write({'part_ids': [(6, 0, list1)],
-#                                'participants': participants})
         return self.write({'state': 'cancel'})
 
     @api.multi
@@ -272,40 +232,6 @@ class SchoolEventRegistration(models.Model):
                          reg_data.part_name_id.event_ids]
             event_ids.append(part_id.id)
             reg_data.part_name_id.write({'event_ids' : [(6, 0, event_ids)]})
-#            # make entry of event in student
-#            list1 = []
-#
-#            for evt in prt_data.event_ids:
-#                part = student_obj.browse(evt.id)
-#                list1.append(part.id)
-#            flag = True
-#
-#            for evt in list1:
-#                data = event_part_obj.browse(evt)
-#                if data.event_id.id == reg_data.name.id:
-#                    flag = False
-#
-#            if flag:
-#                list1.append(temp.id)
-#            stu_part_id = student_obj.browse(reg_data.part_name_id.id)
-#            stu_part_id.write({'event_ids': [(6, 0, list1)]})
-#            # make entry of participant in event
-#            list1 = []
-#            flag = True
-#
-#            for evt in event_data.part_ids:
-#                part = event_part_obj.browse(evt.id)
-#                list1.append(part.id)
-#
-#            for evt in list1:
-#                data = event_part_obj.browse(evt)
-#                if data.name.id == reg_data.part_name_id.id:
-#                    flag = False
-#
-#            if flag:
-#                list1.append(temp.id)
-#            evnt_reg_id = event_obj.browse(reg_data.name.id)
-#            evnt_reg_id.write({'part_ids': [(6, 0, list1)]})
         return self.write({'state': 'confirm'})
 
 
@@ -326,10 +252,11 @@ class StudentStudent(models.Model):
         if context.get('name', False):
             event_data = self.env['school.event'].browse(context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
-            args.append(('standard_id', 'in', std_ids))
+            if std_ids:
+                args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self).search(args, offset, limit, order,
                                                   count=count)
-    
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         context = self._context and dict(self._context) or {}

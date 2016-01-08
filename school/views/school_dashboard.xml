@@ -15,7 +15,7 @@
                         <div t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
                                            oe_kanban_global_click_edit oe_semantic_html_override
                                            oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                            <div class="oe_dropdown_toggle o_dropdown_kanban">
                                 <ul class="oe_dropdown_menu">
                                     <li>
                                         <a type="edit">Edit...</a>

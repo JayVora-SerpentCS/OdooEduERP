@@ -17,7 +17,7 @@
           'views/qrcode_label.xml',
           'views/library_data.xml',
           'views/library_view.xml',
-          'views/library_issue_workflow.xml',
+#          'views/library_issue_workflow.xml',
           'views/library_sequence.xml',
           'views/library_workflow.xml',
           'views/library_category_data.xml',

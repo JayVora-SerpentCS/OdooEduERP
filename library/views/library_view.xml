@@ -11,21 +11,18 @@
             <field name="arch" type="xml">
                 <form string="Authors">
                     <sheet>
+                        <group>
+                            <field name="name" placeholder="Author Name"/>
+                        </group>
                         <notebook>
-                            <page string="General Information">
-                                <group>
-                                    <field name="name" placeholder="Author Name"/>
-                                </group>
-                                <separator string="Books" colspan="4"/>
+                            <page string="Books">
                                 <field name="book_ids" nolabel="1" colspan="4" readonly="1"/>
-                            </page>
-                            <page string="More Information">
-                                <separator string="Publishers" colspan="4"/>
-                                <field name="editor_ids" nolabel="1" colspan="4"/>
-                                <separator string="Notes" colspan="4"/>
-                                <field name="note" nolabel="1" colspan="4"/>
                                 <separator string="Biography" colspan="4"/>
                                 <field name="biography" nolabel="1" colspan="4"/>
+                            </page>
+                            <page string="Other Information">
+                                <separator string="Notes" colspan="4"/>
+                                <field name="note" nolabel="1" colspan="4"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -131,7 +128,7 @@
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"/>
 
         <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config"
-                  action="action_library_rack"
+                  action="action_library_rack" sequence="2"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of Product Book -->
@@ -260,7 +257,7 @@
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" />
 
         <menuitem id="menu_book_products" name="Books" parent="menu_library_config"
-                  action="action_product_book_list"
+                  action="action_product_book_list" sequence="1"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian" />
 
         <!-- Action Of Form View Of View Book -->
@@ -543,17 +540,17 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <header>
-                        <button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl" states="issue,reissue"
+                        <button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl" states="issue,reissue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="issue_book" string="Book Issue" icon="terp-gtk-jump-to-ltr" states="draft"
+                        <button name="issue_book" string="Book Issue" icon="terp-gtk-jump-to-ltr" states="draft" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="reissue_book" string="Book Reissue" icon="terp-gtk-jump-to-ltr" states="issue"
+                        <button name="reissue_book" string="Book Reissue" icon="terp-gtk-jump-to-ltr" states="issue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="cancel_book" string="Cancel" icon="gtk-cancel" states="draft,issue"
+                        <button name="cancel_book" string="Cancel" icon="gtk-cancel" states="draft,issue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="draft_book" string="Draft" icon="terp-document-new" states="cancel"
+                        <button name="draft_book" string="Draft" icon="terp-document-new" states="cancel" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue"
+                        <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
                         <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!"
                                 attrs="{'invisible':['|',('state','not in',('return', 'lost')),
@@ -946,7 +943,8 @@
                                 attrs="{'invisible': [('is_company','=', True)]}" on_change="onchange_address(use_parent_address, parent_id)" />
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
-                        <div class="oe_right oe_button_box" name="buttons"></div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
                         <group>
                             <group>
                                 <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
@@ -1143,7 +1141,8 @@
             <field name="arch" type="xml">
                 <field name="origin" position="after">
                     <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
+                    <field name="production_lot_id"/>
+                </field>
             </field>
         </record>
 
@@ -1174,7 +1173,8 @@
             <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
             <field name="arch" type="xml">
                 <field name="product_id" position="before">
-                    <field name="origin_ref"/></field>
+                    <field name="origin_ref"/>
+                </field>
             </field>
         </record>
 
@@ -1188,7 +1188,8 @@
                 <field name="product_id" position="after">
                     <field name="customer_ref"/>
                     <field name="origin_ref"/>
-                    <field name="production_lot_id"/></field>
+                    <field name="production_lot_id"/>
+                </field>
             </field>
         </record>
 
@@ -1201,7 +1202,8 @@
             <field name="arch" type="xml">
                 <field name="product_id" position="after">
                     <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
+                    <field name="production_lot_id"/>
+                </field>
             </field>
         </record>
 
@@ -1218,7 +1220,8 @@
             <field name="arch" type="xml">
                 <field name="price_subtotal" position="after">
                     <field name="customer_ref" select="1"/>
-                    <field name="production_lot_id" select="1"/></field>
+                    <field name="production_lot_id" select="1"/>
+                </field>
             </field>
         </record>
 
@@ -1244,7 +1247,8 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <field name="name" position="replace">
-                    <field name="name" domain="[('supplier','=',True)]"/></field>
+                    <field name="name" domain="[('supplier','=',True)]"/>
+                </field>
             </field>
         </record>
 
@@ -1257,7 +1261,8 @@
             <field name="arch" type="xml">
                 <field name="discount" position="after">
                     <field name="customer_ref" select="1"/>
-                    <field name="production_lot_id" select="1"/></field>
+                    <field name="production_lot_id" select="1"/>
+                </field>
             </field>
         </record>
 

@@ -20,29 +20,31 @@ class ExamCreateResult(models.TransientModel):
                 students = timetable.standard_id and \
                             timetable.standard_id.student_ids
                 for student in students:
-                    domain = [('standard_id', '=',
-                               timetable.standard_id.id),
-                              ('student_id', '=', student.id)]
-                    result_exists = result_obj.search(domain)
-                    if not result_exists:
-                        standard_id = timetable.standard_id.id
-                        rs_dict = {'s_exam_ids': exam.id,
-                                   'student_id': student.id,
-                                   'standard_id': standard_id,
-                                   }
-                        result_id = result_obj.create(rs_dict)
-                        for line in timetable.timetable_ids:
-                            minimum_marks = line.subject_id and \
-                                        line.subject_id.minimum_marks or 0.0
-                            maximum_marks = line.subject_id and \
-                                        line.subject_id.maximum_marks or 0.0
-                            result_subject_obj.create({
-                                'subject_id': line.subject_id.id,
-                                'exam_id': result_id.id,
-                                'student_id': student.id,
-                                'minimum_marks': minimum_marks,
-                                'maximum_marks': maximum_marks
-                            })
+                    if student.state != 'draft':
+                        domain = [('standard_id', '=',
+                                   timetable.standard_id.id),
+                                  ('student_id', '=', student.id),
+                                  ('s_exam_ids', '=', exam.id)]
+                        result_exists = result_obj.search(domain)
+                        if not result_exists:
+                            standard_id = timetable.standard_id.id
+                            rs_dict = {'s_exam_ids': exam.id,
+                                       'student_id': student.id,
+                                       'standard_id': standard_id,
+                                       }
+                            result_id = result_obj.create(rs_dict)
+                            for line in timetable.timetable_ids:
+                                minimum_marks = line.subject_id and \
+                                            line.subject_id.minimum_marks or 0.0
+                                maximum_marks = line.subject_id and \
+                                            line.subject_id.maximum_marks or 0.0
+                                result_subject_obj.create({
+                                    'subject_id': line.subject_id.id,
+                                    'exam_id': result_id.id,
+                                    'student_id': student.id,
+                                    'minimum_marks': minimum_marks,
+                                    'maximum_marks': maximum_marks
+                                })
 #            if not exam.standard_id:
 #                raise except_orm(_('Error !'),
 #                                 _('Please Select Standard Id.'))

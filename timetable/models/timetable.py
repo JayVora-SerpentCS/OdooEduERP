@@ -18,16 +18,15 @@ class TimeTable(models.Model):
                                   required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
-    do_not_create = fields.Boolean('Do not Create')
 
     @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
         for rec in self.timetable_ids:
-            records = [rec_check.id for rec_check in self.timetable_ids\
-                           if (rec.week_day == rec_check.week_day\
-                                    and rec.start_time == rec_check.start_time
-                                    and rec.end_time == rec_check.end_time)]
+            records = [(rec_check.id for rec_check in self.timetable_ids \
+                           if (rec.week_day == rec_check.week_day \
+                                and rec.start_time == rec_check.start_time \
+                                and rec.end_time == rec_check.end_time))]
             if len(records) > 1:
                 raise UserError(_("You can not set lecture at same time\
                                  at same day..!!!"))
@@ -48,6 +47,11 @@ class TimeTableLine(models.Model):
                 raise UserError(_("You must have a 'Recess' as a subject"))
             return {'value': {'subject_id': sub_id.id}}
         return {'value': {}}
+    
+    def _check_times(self):
+        if self.start_time and self.end_time:
+            if self.start_time < self.end_time:
+                raise UserError(_("Please check timings!"))
 
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',

@@ -13,6 +13,8 @@
  'data': ['wizard/wiz_send_email_view.xml',
           'security/school_security.xml',
           'views/school_view.xml',
+          'views/student_view.xml',
+          'views/teacher_view.xml',
           'security/ir.model.access.csv',
           'views/admission_workflow.xml',
           'data/student_sequence.xml',

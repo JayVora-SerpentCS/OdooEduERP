@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <record id="open_teacher_list" model="ir.actions.act_window">
+            <field name="name">Teacher</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('relation_type','=','teacher')]</field>
+            <field name="context">{'default_relation_type':'teacher'}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new teacher.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_teacher" name="Teacher" parent="menu_school_config_form1" action="open_teacher_list" />
+
+    </data>
+</openerp>

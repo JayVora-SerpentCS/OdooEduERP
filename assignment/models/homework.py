@@ -39,14 +39,17 @@ class SchoolTeacherAssignment(models.Model):
 #        std_ids = []
         for rec in self:
             self._cr.execute('''select id from student_student\
-                                where standard_id=%s'''%(rec.standard_id.id))
+                                where standard_id=%s
+                                and state!='draft'
+                                '''
+                                % (rec.standard_id.id))
             student = self._cr.fetchall()
 #            if student:
 #                for stu in student:
 #                    std_ids.append(stu[0])
             if student:
                 for std in student:
-                    ass_dict = {'name': rec.name,
+                    assign_dict = {'name': rec.name,
                                 'subject_id': rec.subject_id.id,
                                 'standard_id': rec.standard_id.id,
                                 'assign_date': rec.assign_date,
@@ -55,13 +58,15 @@ class SchoolTeacherAssignment(models.Model):
                                 'attached_homework': rec.attached_homework,
                                 'teacher_id': rec.teacher_id.id,
                                 'student_id': std[0]}
-                    assignment_id = assignment_obj.create(ass_dict)
+                    assignment_id = assignment_obj.create(assign_dict)
                     if rec.attached_homework:
-                        att_obj.create({'name': 'test',
-                                      'datas': str(rec.attached_homework),
-                                      'description': 'Assignment attachment',
-                                      'res_model': 'school.student.assignment',
-                                      'res_id': assignment_id.id})
+                        att_obj.create({
+                            'name': rec.name,
+                            'datas': str(rec.attached_homework),
+                            'description': 'Assignment attachment',
+                            'res_model': 'school.student.assignment',
+                            'res_id': assignment_id.id
+                        })
         self.write({'state': 'active'})
         return True
 

@@ -28,6 +28,7 @@ class AttendanceSheet(models.Model):
     @api.onchange('standard_id')
     def onchange_class_info(self):
         student_list = []
+        stud_obj = self.env['student.student']
         if self.standard_id:
             stud_ids = stud_obj.search([('standard_id', 
                                          '=', 
@@ -88,81 +89,81 @@ class AttendanceSheet(models.Model):
 class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
-    @api.multi
+    @api.one
     def attendance_percentage(self):
-        res = {}
-        for attendance_sheet_data in self:
-            att_count = 0
-            percentage = 0.0
-            if attendance_sheet_data.one:
-                att_count = att_count + 1
-            if attendance_sheet_data.two:
-                att_count = att_count + 1
-            if attendance_sheet_data.three:
-                att_count = att_count + 1
-            if attendance_sheet_data.four:
-                att_count = att_count + 1
-            if attendance_sheet_data.five:
-                att_count = att_count + 1
-            if attendance_sheet_data.six:
-                att_count = att_count + 1
-            if attendance_sheet_data.seven:
-                att_count = att_count + 1
-            if attendance_sheet_data.eight:
-                att_count = att_count + 1
-            if attendance_sheet_data.nine:
-                att_count = att_count + 1
-            if attendance_sheet_data.ten:
-                att_count = att_count + 1
+        start_date = self.sheet_id.month_id.date_start
+        end_date = self.sheet_id.month_id.date_stop
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        diff = end_date - start_date
+        month_days = diff.days + 1
+        att_count = 0
+        if self.one:
+            att_count = att_count + 1
+        if self.two:
+            att_count = att_count + 1
+        if self.three:
+            att_count = att_count + 1
+        if self.four:
+            att_count = att_count + 1
+        if self.five:
+            att_count = att_count + 1
+        if self.six:
+            att_count = att_count + 1
+        if self.seven:
+            att_count = att_count + 1
+        if self.eight:
+            att_count = att_count + 1
+        if self.nine:
+            att_count = att_count + 1
+        if self.ten:
+            att_count = att_count + 1
 
-            if attendance_sheet_data.one_1:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_2:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_3:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_4:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_5:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_6:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_7:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_8:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_9:
-                att_count = att_count + 1
-            if attendance_sheet_data.one_0:
-                att_count = att_count + 1
+        if self.one_1:
+            att_count = att_count + 1
+        if self.one_2:
+            att_count = att_count + 1
+        if self.one_3:
+            att_count = att_count + 1
+        if self.one_4:
+            att_count = att_count + 1
+        if self.one_5:
+            att_count = att_count + 1
+        if self.one_6:
+            att_count = att_count + 1
+        if self.one_7:
+            att_count = att_count + 1
+        if self.one_8:
+            att_count = att_count + 1
+        if self.one_9:
+            att_count = att_count + 1
+        if self.one_0:
+            att_count = att_count + 1
 
-            if attendance_sheet_data.two_1:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_2:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_3:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_4:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_5:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_6:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_7:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_8:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_9:
-                att_count = att_count + 1
-            if attendance_sheet_data.two_0:
-                att_count = att_count + 1
+        if self.two_1:
+            att_count = att_count + 1
+        if self.two_2:
+            att_count = att_count + 1
+        if self.two_3:
+            att_count = att_count + 1
+        if self.two_4:
+            att_count = att_count + 1
+        if self.two_5:
+            att_count = att_count + 1
+        if self.two_6:
+            att_count = att_count + 1
+        if self.two_7:
+            att_count = att_count + 1
+        if self.two_8:
+            att_count = att_count + 1
+        if self.two_9:
+            att_count = att_count + 1
+        if self.two_0:
+            att_count = att_count + 1
 
-            if attendance_sheet_data.three_1:
-                att_count = att_count + 1
-
-            percentage = (float(att_count / 31.00)) * 100
-            res[attendance_sheet_data.id] = percentage
-        return res
+        if self.three_1:
+            att_count = att_count + 1
+        self.percentage = (float(att_count)/float(month_days)) * 100
 
     _description = 'Attendance Sheet Line'
     _name = 'attendance.sheet.line'
@@ -172,6 +173,7 @@ class AttendanceSheetLine(models.Model):
                              help='Roll Number of Student')
     standard_id = fields.Many2one('school.standard', 'Standard')
     sheet_id = fields.Many2one('attendance.sheet', 'Sheet')
+    student_id = fields.Many2one('student.student', 'Student', readonly=True)
     name = fields.Char('Student Name', required=True, readonly=True)
     one = fields.Boolean('1')
     two = fields.Boolean('2')
@@ -273,7 +275,8 @@ class DailyAttendance(models.Model):
         stud_obj = self.env['student.student']
         if standard_id:
             self._cr.execute("""select id from student_student\
-                             where standard_id=%s""", (standard_id,))
+                             where standard_id=%s and state!='draft'
+                             """, (standard_id,))
             stud_ids = self._cr.fetchall()
             for stud_id in stud_ids:
                 student_ids = stud_obj.browse(stud_id)
@@ -287,90 +290,96 @@ class DailyAttendance(models.Model):
         attendance_sheet_obj = self.env['attendance.sheet']
         academic_year_obj = self.env['academic.year']
         academic_month_obj = self.env['academic.month']
-
         for daily_attendance_data in self:
+            sheet_ids = []
             if not daily_attendance_data.date:
                 raise UserError(_('Please enter todays date.'))
             date = datetime.strptime(daily_attendance_data.date, "%Y-%m-%d")
-            domain_year = [('code', '=', date.year)]
-            domain_month = [('code', '=', date.month)]
-            year_search_ids = academic_year_obj.search(domain_year)
-            month_search_ids = academic_month_obj.search(domain_month)
-            for line in daily_attendance_data.student_ids:
-                line.write({'is_present': False, 'is_absent': False})
-            domain = [('standard_id', '=',
+            year_ids = academic_year_obj.search([('date_start', '<=', date),
+                                                ('date_stop', '>=', date)])
+            month_ids = academic_month_obj.search([('date_start', '<=', date),
+                                                  ('date_stop', '>=', date),
+                                                  ('year_id', 'in',
+                                                   year_ids.ids)])
+            domain = []
+            if year_ids and month_ids:
+                domain = [('standard_id', '=',
                        daily_attendance_data.standard_id.id),
-                      ('month_id', '=', month_search_ids.id),
-                      ('year_id', '=', year_search_ids.id)]
-        sheet_ids = attendance_sheet_obj.search(domain)
-        if sheet_ids:
-            for data in sheet_ids:
-                for attendance_id in data.attendance_ids:
-                    date = datetime.strptime(daily_attendance_data.date,
-                                             "%Y-%m-%d")
-                    if date.day == 1:
-                        dic = {'one': False}
-                    elif date.day == 2:
-                        dic = {'two': False}
-                    elif date.day == 3:
-                        dic = {'three': False}
-                    elif date.day == 4:
-                        dic = {'four': False}
-                    elif date.day == 5:
-                        dic = {'five': False}
-                    elif date.day == 6:
-                        dic = {'six': False}
-                    elif date.day == 7:
-                        dic = {'seven': False}
-                    elif date.day == 8:
-                        dic = {'eight': False}
-                    elif date.day == 9:
-                        dic = {'nine': False}
-                    elif date.day == 10:
-                        dic = {'ten': False}
-                    elif date.day == 11:
-                        dic = {'one_1': False}
-                    elif date.day == 12:
-                        dic = {'one_2': False}
-                    elif date.day == 13:
-                        dic = {'one_3': False}
-                    elif date.day == 14:
-                        dic = {'one_4': False}
-                    elif date.day == 15:
-                        dic = {'one_5': False}
-                    elif date.day == 16:
-                        dic = {'one_6': False}
-                    elif date.day == 17:
-                        dic = {'one_7': False}
-                    elif date.day == 18:
-                        dic = {'one_8': False}
-                    elif date.day == 19:
-                        dic = {'one_9': False}
-                    elif date.day == 20:
-                        dic = {'one_0': False}
-                    elif date.day == 21:
-                        dic = {'two_1': False}
-                    elif date.day == 22:
-                        dic = {'two_2': False}
-                    elif date.day == 23:
-                        dic = {'two_3': False}
-                    elif date.day == 24:
-                        dic = {'two_4': False}
-                    elif date.day == 25:
-                        dic = {'two_5': False}
-                    elif date.day == 26:
-                        dic = {'two_6': False}
-                    elif date.day == 27:
-                        dic = {'two_7': False}
-                    elif date.day == 28:
-                        dic = {'two_8': False}
-                    elif date.day == 29:
-                        dic = {'two_9': False}
-                    elif date.day == 30:
-                        dic = {'two_0': False}
-                    elif date.day == 31:
-                        dic = {'three_1': False}
-                    attendance_id.write(dic)
+                      ('month_id', '=', month_ids[0].id),
+                      ('year_id', '=', year_ids[0].id)]
+            
+            for line in daily_attendance_data.student_ids:
+                line.write({'is_present': False})
+            if domain:
+                sheet_ids = attendance_sheet_obj.search(domain)
+            if sheet_ids:
+                for data in sheet_ids:
+                    for attendance_id in data.attendance_ids:
+                        date = datetime.strptime(daily_attendance_data.date,
+                                                 "%Y-%m-%d")
+                        if date.day == 1:
+                            dic = {'one': False}
+                        elif date.day == 2:
+                            dic = {'two': False}
+                        elif date.day == 3:
+                            dic = {'three': False}
+                        elif date.day == 4:
+                            dic = {'four': False}
+                        elif date.day == 5:
+                            dic = {'five': False}
+                        elif date.day == 6:
+                            dic = {'six': False}
+                        elif date.day == 7:
+                            dic = {'seven': False}
+                        elif date.day == 8:
+                            dic = {'eight': False}
+                        elif date.day == 9:
+                            dic = {'nine': False}
+                        elif date.day == 10:
+                            dic = {'ten': False}
+                        elif date.day == 11:
+                            dic = {'one_1': False}
+                        elif date.day == 12:
+                            dic = {'one_2': False}
+                        elif date.day == 13:
+                            dic = {'one_3': False}
+                        elif date.day == 14:
+                            dic = {'one_4': False}
+                        elif date.day == 15:
+                            dic = {'one_5': False}
+                        elif date.day == 16:
+                            dic = {'one_6': False}
+                        elif date.day == 17:
+                            dic = {'one_7': False}
+                        elif date.day == 18:
+                            dic = {'one_8': False}
+                        elif date.day == 19:
+                            dic = {'one_9': False}
+                        elif date.day == 20:
+                            dic = {'one_0': False}
+                        elif date.day == 21:
+                            dic = {'two_1': False}
+                        elif date.day == 22:
+                            dic = {'two_2': False}
+                        elif date.day == 23:
+                            dic = {'two_3': False}
+                        elif date.day == 24:
+                            dic = {'two_4': False}
+                        elif date.day == 25:
+                            dic = {'two_5': False}
+                        elif date.day == 26:
+                            dic = {'two_6': False}
+                        elif date.day == 27:
+                            dic = {'two_7': False}
+                        elif date.day == 28:
+                            dic = {'two_8': False}
+                        elif date.day == 29:
+                            dic = {'two_9': False}
+                        elif date.day == 30:
+                            dic = {'two_0': False}
+                        elif date.day == 31:
+                            dic = {'three_1': False}
+                        attendance_id.write(dic)
         self.write({'state': 'draft'})
         return True
 
@@ -390,10 +399,13 @@ class DailyAttendance(models.Model):
                                                   ('date_stop', '>=', date),
                                                   ('year_id', 'in',
                                                    year_ids.ids)])
-            if month_ids:
-                month_data = month_ids
-                domain = [('month_id', 'in', month_ids.ids),
-                          ('year_id', 'in', year_ids.ids)]
+            if month_ids and year_ids:
+                month_data = month_ids[0]
+                year_data = year_ids[0]
+                month_ids = [mth.id for mth in month_ids]
+                year_ids = [yr.id for yr in year_ids]
+                domain = [('month_id', 'in', month_ids),
+                          ('year_id', 'in', year_ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
                                       or False
@@ -403,13 +415,15 @@ class DailyAttendance(models.Model):
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
-                             'year_id': year_ids and year_ids.id
+                             'year_id': year_data.id
                                             or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
                         line_dict = {'roll_no': student_id.roll_no,
-                                     'standard_id': attendance_sheet_id.id,
-                                     'name': student_id.stud_id.student_name}
+                                     'standard_id': line.standard_id.id,
+                                     'student_id' : student_id.stud_id.id,
+                                     'name': student_id.stud_id.student_name,
+                                     'sheet_id' : attendance_sheet_id.id}
                         if date.day == 1:
                             val = {'one': student_id.is_present}
 
@@ -509,106 +523,104 @@ class DailyAttendance(models.Model):
                         sheet_line_obj.create(line_dict)
                 else:
                     for student_id in line.student_ids:
-                        sheet_line_obj.read([student_id.roll_no])
-                        domain = [('roll_no', '=', student_id.roll_no),
-                                  ('standard_id', '=', attendance_sheet_id.id)]
+                        domain = [('student_id', '=', student_id.stud_id.id),
+                                  ('sheet_id', '=', attendance_sheet_id.id)]
                         search_id = sheet_line_obj.search(domain)
-
-                        if date.day == 1:
-                            val = {'one': student_id.is_present}
-
-                        elif date.day == 2:
-                            val = {'two': student_id.is_present}
-
-                        elif date.day == 3:
-                            val = {'three': student_id.is_present}
-
-                        elif date.day == 4:
-                            val = {'four': student_id.is_present}
-
-                        elif date.day == 5:
-                            val = {'five': student_id.is_present}
-
-                        elif date.day == 6:
-                            val = {'six': student_id.is_present}
-
-                        elif date.day == 7:
-                            val = {'seven': student_id.is_present}
-
-                        elif date.day == 8:
-                            val = {'eight': student_id.is_present}
-
-                        elif date.day == 9:
-                            val = {'nine': student_id.is_present}
-
-                        elif date.day == 10:
-                            val = {'ten': student_id.is_present}
-
-                        elif date.day == 11:
-                            val = {'one_1': student_id.is_present}
-
-                        elif date.day == 12:
-                            val = {'one_2': student_id.is_present}
-
-                        elif date.day == 13:
-                            val = {'one_3': student_id.is_present}
-
-                        elif date.day == 14:
-                            val = {'one_4': student_id.is_present}
-
-                        elif date.day == 15:
-                            val = {'one_5': student_id.is_present}
-
-                        elif date.day == 16:
-                            val = {'one_6': student_id.is_present}
-
-                        elif date.day == 17:
-                            val = {'one_7': student_id.is_present}
-
-                        elif date.day == 18:
-                            val = {'one_8': student_id.is_present}
-
-                        elif date.day == 19:
-                            val = {'one_9': student_id.is_present}
-
-                        elif date.day == 20:
-                            val = {'one_0': student_id.is_present}
-
-                        elif date.day == 21:
-                            val = {'two_1': student_id.is_present}
-
-                        elif date.day == 22:
-                            val = {'two_2': student_id.is_present}
-
-                        elif date.day == 23:
-                            val = {'two_3': student_id.is_present}
-
-                        elif date.day == 24:
-                            val = {'two_4': student_id.is_present}
-
-                        elif date.day == 25:
-                            val = {'two_5': student_id.is_present}
-
-                        elif date.day == 26:
-                            val = {'two_6': student_id.is_present}
-
-                        elif date.day == 27:
-                            val = {'two_7': student_id.is_present}
-
-                        elif date.day == 28:
-                            val = {'two_8': student_id.is_present}
-
-                        elif date.day == 29:
-                            val = {'two_9': student_id.is_present}
-
-                        elif date.day == 30:
-                            val = {'two_0': student_id.is_present}
-
-                        elif date.day == 31:
-                            val = {'three_1': student_id.is_present}
-                        else:
-                            val = {}
                         if search_id:
+                            if date.day == 1:
+                                val = {'one': student_id.is_present}
+
+                            elif date.day == 2:
+                                val = {'two': student_id.is_present}
+
+                            elif date.day == 3:
+                                val = {'three': student_id.is_present}
+
+                            elif date.day == 4:
+                                val = {'four': student_id.is_present}
+
+                            elif date.day == 5:
+                                val = {'five': student_id.is_present}
+
+                            elif date.day == 6:
+                                val = {'six': student_id.is_present}
+
+                            elif date.day == 7:
+                                val = {'seven': student_id.is_present}
+
+                            elif date.day == 8:
+                                val = {'eight': student_id.is_present}
+
+                            elif date.day == 9:
+                                val = {'nine': student_id.is_present}
+
+                            elif date.day == 10:
+                                val = {'ten': student_id.is_present}
+
+                            elif date.day == 11:
+                                val = {'one_1': student_id.is_present}
+
+                            elif date.day == 12:
+                                val = {'one_2': student_id.is_present}
+
+                            elif date.day == 13:
+                                val = {'one_3': student_id.is_present}
+
+                            elif date.day == 14:
+                                val = {'one_4': student_id.is_present}
+
+                            elif date.day == 15:
+                                val = {'one_5': student_id.is_present}
+
+                            elif date.day == 16:
+                                val = {'one_6': student_id.is_present}
+
+                            elif date.day == 17:
+                                val = {'one_7': student_id.is_present}
+
+                            elif date.day == 18:
+                                val = {'one_8': student_id.is_present}
+
+                            elif date.day == 19:
+                                val = {'one_9': student_id.is_present}
+
+                            elif date.day == 20:
+                                val = {'one_0': student_id.is_present}
+
+                            elif date.day == 21:
+                                val = {'two_1': student_id.is_present}
+
+                            elif date.day == 22:
+                                val = {'two_2': student_id.is_present}
+
+                            elif date.day == 23:
+                                val = {'two_3': student_id.is_present}
+
+                            elif date.day == 24:
+                                val = {'two_4': student_id.is_present}
+
+                            elif date.day == 25:
+                                val = {'two_5': student_id.is_present}
+
+                            elif date.day == 26:
+                                val = {'two_6': student_id.is_present}
+
+                            elif date.day == 27:
+                                val = {'two_7': student_id.is_present}
+
+                            elif date.day == 28:
+                                val = {'two_8': student_id.is_present}
+
+                            elif date.day == 29:
+                                val = {'two_9': student_id.is_present}
+
+                            elif date.day == 30:
+                                val = {'two_0': student_id.is_present}
+
+                            elif date.day == 31:
+                                val = {'three_1': student_id.is_present}
+                            else:
+                                val = {}
                             search_id.write(val)
         self.write({'state': 'validate'})
         return True

@@ -60,27 +60,27 @@
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-	                    <separator string="Teacher Assignment" colspan="4"/>
-	                    <group col="4" colspan="4">
-	                        <field name="name" placeholder="Assignment Name"/>
-	                        <field name="teacher_id" placeholder="Teacher Name"/>
-	                    </group>
-	                    
-	                    <group col="2" string="Standard" colspan="2">
-	                        <separator  colspan="4" col="4"/>
-	                        <field name="standard_id" select="1" placeholder="Standard"/>
-	                    </group>
-	                    <group col="2" string="Subject and Dates" colspan="2">
-	                        <separator colspan="4" col="4"/>
-	                        <field name="subject_id" select="1" placeholder="Subject"/>
-	                        <field name="assign_date" placeholder="Assign Date"/>
-	                        <field name="due_date" placeholder="Due Date"/>
-	                    </group>
-	                    <separator string="Attachements" colspan="4"/>
-	                    <group col="6" colspan="4">
-	                        <field name="attached_homework" placeholder="Attachement File"/>
-	                    </group>
-                    
+                        <separator string="Teacher Assignment" colspan="4"/>
+                        <group col="4" colspan="4">
+                            <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','!=','draft')]}"
+                                    domain="[('relation_type','=','teacher')]"/>
+                        </group>
+                        
+                        <group col="2" string="Standard" colspan="2">
+                            <separator  colspan="4" col="4"/>
+                            <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                        <group col="2" string="Subject and Dates" colspan="2">
+                            <separator colspan="4" col="4"/>
+                            <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                        <separator string="Attachements" colspan="4"/>
+                        <group col="6" colspan="4">
+                            <field name="attached_homework" placeholder="Attachement File" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -109,24 +109,25 @@
                    <sheet>
                     <separator colspan="4"/>
                     <group col="4" colspan="4" string="Assignment Information">
-                        <field name="student_id" placeholder="Student"/>
-                        <field name="name" placeholder="Assignment Name"/>
+                        <field name="student_id" placeholder="Student"
+                            domain="[('state','!=','draft')]"  attrs="{'readonly':[('state','!=','draft')]}"/>
+                        <field name="name" placeholder="Assignment Name"  attrs="{'readonly':[('state','!=','draft')]}"/>
                         <newline />
                         <field name="teacher_id" placeholder="Teacher"/>
                     </group>
                     <group col="2" string="Standard and Division" colspan="2">
                         <separator  colspan="4" col="4"/>
-                        <field name="subject_id"  placeholder="Subject"/>
-                        <field name="standard_id" placeholder="Standerd"/>
+                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        <field name="standard_id" placeholder="Standerd" attrs="{'readonly':[('state','!=','draft')]}"/>
                     </group>
                     <group col="2" colspan="2" string="Dates">
                         <separator colspan="4" col="4"/>
-                        <field name="assign_date" placeholder="Assign Date" />
-                        <field name="due_date" placeholder="Due Date"/>
+                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
                     </group>
                     <separator string="Attachements" colspan="4"/>
                         <group col="6" colspan="4">
-                            <field name="attached_homework" placeholder="Attachment File"/>
+                            <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                    </sheet>
                 </form>

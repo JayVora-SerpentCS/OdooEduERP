@@ -241,8 +241,8 @@ class SubjectSubject(models.Model):
     maximum_marks = fields.Integer("Maximum marks")
     minimum_marks = fields.Integer("Minimum marks")
     weightage = fields.Integer("WeightAge")
-    teacher_ids = fields.Many2many('hr.employee', 'subject_teacher_rel',
-                                   'subject_id', 'teacher_id', 'Teachers')
+    teacher_ids = fields.Many2many('hr.employee', 'hr_employee_subject_rel',
+                                   'subject_id', 'employee_id', 'Teachers')
     standard_ids = fields.Many2many('school.standard', 'subject_standards_rel',
                                     'standard_id', 'subject_id', 'Standards')
     standard_id = fields.Many2one('standard.standard', 'Class')
@@ -277,6 +277,20 @@ class SubjectElective(models.Model):
     subject_ids = fields.One2many('subject.subject', 'elective_id',
                                   'Elective Subjects')
 
+
+class StudentParent(models.Model):
+
+    _name = 'student.parent'
+    _description = 'Parent Information of Student'
+
+    student_id = fields.Many2one('student.student', 'Student')
+    name = fields.Char('Name')
+    relation = fields.Selection([('father', 'Father'),
+                                 ('mother', 'Mother'),
+                                 ('brother', 'Brother'),
+                                 ('sister', 'Sister')],
+                                'Relation')
+    phone_no = fields.Char('Phone Number')
 
 class StudentStudent(models.Model):
     ''' Defining a student information '''
@@ -345,10 +359,6 @@ class StudentStudent(models.Model):
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
     age = fields.Integer('Age', compute='_calc_age', readonly=True)
-    maritual_status = fields.Selection([('unmarried', 'Unmarried'),
-                                        ('married', 'Married')],
-                                       'Marital Status',
-                                       states={'done': [('readonly', True)]})
     reference_ids = fields.One2many('student.reference', 'reference_id',
                                     'References',
                                     states={'done': [('readonly', True)]})
@@ -422,9 +432,9 @@ class StudentStudent(models.Model):
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
     standard_id = fields.Many2one('school.standard', 'Standard')
-    parent_id = fields.Many2many('res.partner', 'student_parent_rel',
-                                 'student_id', 'parent_id', 'Parent(s)',
-                                 states={'done': [('readonly', True)]})
+    student_parent_ids = fields.One2many('student.parent', 'student_id',
+                                  'Parent',
+                                  states={'done': [('readonly', True)]})
 
     _sql_constraints = [('grn_unique', 'unique(grn_number)',
                          'GRN Number must be unique!')]
@@ -457,6 +467,7 @@ class StudentStudent(models.Model):
     @api.multi
     def admission_done(self):
         school_standard_obj = self.env['school.standard']
+        seq_obj = self.env['ir.sequence']
         for student_data in self:
             if student_data.age <= 5:
                 raise except_orm(_('Warning'),
@@ -469,24 +480,23 @@ class StudentStudent(models.Model):
                                  _('The standard is not defined'
                                    'in a school'))
             student_search_ids = self.search(domain)
-            number = 1
-            if student_search_ids:
-                self.write({'roll_no': number})
-                number += 1
-            reg_code = self.env['ir.sequence'].get('student.registration')
+            reg_code = seq_obj.get('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
                                 + str('/') + str(student_data.school_id.city)\
                                 + str('/')\
                                 + str(student_data.school_id.name) + str('/')\
                                 + str(reg_code)
-            stu_code = self.env['ir.sequence'].get('student.code')
+            stu_code = seq_obj.get('student.code')
             student_code = str(student_data.school_id.code) + str('/')\
                             + str(student_data.year.code) + str('/')\
                             + str(stu_code)
-        self.write({'state': 'done',
-                    'admission_date': time.strftime('%Y-%m-%d'),
-                    'student_code': student_code,
-                    'reg_code': registation_code})
+            student_data.write({
+                'roll_no': len(student_search_ids) + 1,
+                'admission_date': time.strftime('%Y-%m-%d'),
+                'student_code': student_code,
+                'reg_code': registation_code,
+                'state': 'done'
+            })
         return True
 
 
@@ -623,20 +633,15 @@ class StudentCertificate(models.Model):
 
 class HrEmployee(models.Model):
     ''' Defining a teacher information '''
-    _name = 'hr.employee'
     _inherit = 'hr.employee'
     _description = 'Teacher Information'
 
-    @api.one
-    def _compute_subject(self):
-        ''' This function will automatically computes the subjects related to\
-            particular teacher.'''
-        subject_obj = self.env['subject.subject']
-        subject_ids = subject_obj.search([('teacher_ids.id', '=', self.id)])
-        self.subject_ids = [sub_rec.id for sub_rec in subject_ids]
-
-    subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
-                                   'Subjects', compute='_compute_subject')
+    subject_ids = fields.Many2many('subject.subject', 'hr_employee_subject_rel',
+                                   'employee_id', 'subject_id',
+                                   'Subjects')
+    relation_type = fields.Selection([('driver', 'Driver'),
+                                      ('teacher', 'Teacher')],
+                                     'Type')
 
 
 class ResPartner(models.Model):

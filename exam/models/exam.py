@@ -58,14 +58,30 @@ class ExtendedStudentStudent(models.Model):
 class ExamExam(models.Model):
     _name = 'exam.exam'
     _description = 'Exam Information'
+    
+    @api.one
+    @api.depends('exam_timetable_ids','exam_timetable_ids.standard_id')
+    def _get_standards(self):
+        self.standard_id = list(set([timetable.standard_id.id\
+                        for timetable in self.exam_timetable_ids\
+                        if timetable.standard_id]))
+
+    @api.one
+    @api.onchange('start_date','end_date')
+    def _check_dates(self):
+        if self.start_date and self.end_date:
+            if self.start_date > self.end_date:
+                raise except_orm(_('Warning'),
+                                 _('Kindly check exam dates!'))
 
     name = fields.Char("Exam Name", required=True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             default=lambda obj:
                             obj.env['ir.sequence'].get('exam.exam'))
     standard_id = fields.Many2many('school.standard',
-                                   'school_standard_exam_rel', 'standard_id',
-                                   'event_id', 'Participant Standards')
+                                   'school_standard_exam_rel', 'exam_id',
+                                   'standard_id', 'Standards',
+                                   compute="_get_standards")
     start_date = fields.Date("Exam Start Date",
                              help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
@@ -74,6 +90,7 @@ class ExamExam(models.Model):
     exam_timetable_ids = fields.One2many('time.table', 'exam_id',
                                          'Exam Schedule')
     state = fields.Selection([('draft', 'Draft'),
+                              ('confirm', 'Confirmed'),
                               ('running', 'Running'),
                               ('finished', 'Finished'),
                               ('cancelled', 'Cancelled')], 'State',
@@ -81,7 +98,11 @@ class ExamExam(models.Model):
 
     @api.multi
     def set_to_draft(self):
-        self.write({'state': 'draft'})
+        return self.write({'state': 'draft'})
+
+    @api.multi
+    def set_to_confirm(self):
+        return self.write({'state' : 'confirm'})
 
     @api.multi
     def set_running(self):
@@ -90,14 +111,15 @@ class ExamExam(models.Model):
                 raise except_orm(_('Exam Schedule'),
                                  _('You must add one Exam Schedule'))
             rec.write({'state': 'running'})
+        return True
 
     @api.multi
     def set_finish(self):
-        self.write({'state': 'finished'})
+        return self.write({'state': 'finished'})
 
     @api.multi
     def set_cancel(self):
-        self.write({'state': 'cancelled'})
+        return self.write({'state': 'cancelled'})
 
     @api.multi
     def _validate_date(self):
@@ -141,56 +163,46 @@ class ExamResult(models.Model):
     _description = 'exam result Information'
 
     @api.one
-    @api.depends('result_ids')
+    @api.depends('result_ids', 'result_ids.obtain_marks',
+                 'result_ids.marks_reeval', 'result_ids.marks_access',
+                 'state')
     def _compute_total(self):
         total = 0.0
+        marks_total = 0.0
+        eval_state = ['re-evaluation', 're-evaluation_confirm']
+        acc_state = ['re-access', 're-access_confirm']
         for line in self.result_ids:
+            marks_total += line.maximum_marks or 0
             obtain_marks = line.obtain_marks
-            if line.state == "re-evaluation":
+            if line.state in eval_state and line.marks_reeval:
                 obtain_marks = line.marks_reeval
-            elif line.state == "re-access":
+            elif line.state in acc_state and line.marks_access:
                 obtain_marks = line.marks_access
             total += obtain_marks
         self.total = total
-
-    @api.model
-    def _compute_per(self):
-        res = {}
-        total = 0.0
-        obtained_total = 0.0
-        obtain_marks = 0.0
-        per = 0.0
-        grd = ""
-        for sub_line in self.result_ids:
-            obtain_marks = sub_line.obtain_marks
-            total += sub_line.maximum_marks or 0
-            obtained_total += obtain_marks
-        if total:
-            per = (obtained_total / total) * 100
+        self.re_total = total
+        if marks_total:
+            self.percentage = (total / marks_total) * 100
             for grade_id in self.student_id.year.grade_id.grade_ids:
-                if per >= grade_id.from_mark and per <= grade_id.to_mark:
-                    grd = grade_id.grade
-            res.update({'percentage': per, 'grade': grd})
-        return res
+                if self.percentage >= grade_id.from_mark and\
+                    self.percentage <= grade_id.to_mark:
+                    self.grade = grade_id.grade
+                    self.result = grade_id.fail and 'Fail' or 'Pass'
 
     @api.one
-    @api.depends('result_ids', 'student_id')
+    @api.depends('percentage', 'student_id')
     def _compute_result(self):
-        flag = False
-        if self.result_ids and self.student_id:
+        self.result = 'Fail'
+        if self.student_id:
             if self.student_id.year.grade_id.grade_ids:
-                for grades in self.student_id.year.grade_id.grade_ids:
-                    if grades.grade:
-                        if not grades.fail:
-                            self.result = 'Pass'
-                        else:
-                            flag = True
+                for grade_id in self.student_id.year.grade_id.grade_ids:
+                    if self.percentage >= grade_id.from_mark and \
+                        self.percentage <= grade_id.to_mark:
+                        self.result = grade_id.fail and 'Fail' or 'Pass'
             else:
                 raise except_orm(_('Configuration Error !'),
                                  _('First Select Grade System in'
                                    'Student->year->.'))
-        if flag:
-            self.result = 'Fail'
 
     @api.onchange('student_id', 's_exam_ids', 'standard_id')
     def on_change_student(self):
@@ -215,11 +227,14 @@ class ExamResult(models.Model):
                                  "Exam Subjects")
     total = fields.Float(compute='_compute_total', string='Obtain Total',
                          method=True, store=True)
-    re_total = fields.Float('Re-access Obtain Total', readonly=True)
-    percentage = fields.Float("Percentage", readonly=True)
+    re_total = fields.Float(compute='_compute_total', string='Obtain Total',
+                            readonly=True)
+    percentage = fields.Float(compute='_compute_total', string="Percentage",
+                              readonly=True)
     result = fields.Char(compute='_compute_result', string='Result',
                          readonly=True, method=True, store=True)
-    grade = fields.Char("Grade", readonly=True)
+    grade = fields.Char(compute='_compute_result',string="Grade",
+                        readonly=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('re-access', 'Re-Access'),
@@ -232,14 +247,7 @@ class ExamResult(models.Model):
 
     @api.multi
     def result_confirm(self):
-        for rec in self:
-            res = rec._compute_per()
-            if not res:
-                raise except_orm(_('Warning!'),
-                                 _('Please Enter the students Marks.'))
-            res.update({'state': 'confirm'})
-            rec.write(res)
-        return True
+        return self.write({'state' : 'confirm'})
 
     @api.multi
     def result_re_access(self):
@@ -247,71 +255,11 @@ class ExamResult(models.Model):
 
     @api.multi
     def re_result_confirm(self):
-        res = {}
-        opt_marks = []
-        acc_mark = []
-        total = 0.0
-        per = 0.0
-        grd = 0.0
-        mark_sum = 0.0
-        for result in self:
-            for sub_line in result.result_ids:
-                opt_marks.append(sub_line.obtain_marks)
-                acc_mark.append(sub_line.marks_access)
-                sub_line.write({'marks_reeval' : 0.0})
-            for mark in range(0, len(opt_marks)):
-                if acc_mark[mark]:
-                    opt_marks[mark] = acc_mark[mark]
-            for mark in range(0, len(opt_marks)):
-                mark_sum += opt_marks[mark]
-                total += sub_line.maximum_marks or 0
-            if total:
-                per = (mark_sum / total) * 100
-                if (self.student_id
-                    and self.student_id.year.grade_id.grade_ids):
-                    for grade_id in result.student_id.year.grade_id.grade_ids:
-                        if (per >= grade_id.from_mark
-                            and per <= grade_id.to_mark):
-                            grd = grade_id.grade
-                res.update({'grade': grd, 'percentage': per,
-                            'state': 're-access_confirm',
-                            're_total': mark_sum})
-            result.write(res)
-        return True
+        return self.write({'state': 're-access_confirm'})
 
     @api.multi
     def re_evaluation_confirm(self):
-        res = {}
-        opt_marks = []
-        eve_marks = []
-        mark_sum = 0.0
-        total = 0.0
-        per = 0.0
-        grd = 0.0
-        for result in self:
-            for sub_line in result.result_ids:
-                opt_marks.append(sub_line.obtain_marks)
-                eve_marks.append(sub_line.marks_reeval)
-                sub_line.write({'marks_access' : 0.0})
-            for mark in range(0, len(opt_marks)):
-                if eve_marks[mark]:
-                    opt_marks[mark] = eve_marks[mark]
-            for mark in range(0, len(opt_marks)):
-                mark_sum += opt_marks[mark]
-                total += sub_line.maximum_marks or 0
-            if total:
-                per = (mark_sum / total) * 100
-                if (self.student_id
-                    and self.student_id.year.grade_id.grade_ids):
-                    for grade_id in result.student_id.year.grade_id.grade_ids:
-                        if (per >= grade_id.from_mark
-                            and per <= grade_id.to_mark):
-                            grd = grade_id.grade
-                res.update({'grade': grd, 'percentage': per,
-                            'state': 're-evaluation_confirm',
-                            're_total': mark_sum})
-            result.write(res)
-        return True
+        return self.write({'state': 're-evaluation_confirm'})
 
     @api.multi
     def result_re_evaluation(self):
@@ -341,14 +289,18 @@ class ExamSubject(models.Model):
                              should not extend maximum marks.'))
 
     @api.one
-    @api.depends('exam_id', 'obtain_marks')
+    @api.depends('exam_id', 'obtain_marks',
+                 'marks_access', 'marks_reeval',
+                 'state')
     def _get_grade(self):
+        eval_state = ['re-evaluation', 're-evaluation_confirm']
+        acc_state = ['re-access', 're-access_confirm']
         if (self.exam_id and self.exam_id.student_id
                 and self.exam_id.student_id.year.grade_id.grade_ids):
             marks = self.obtain_marks
-            if self.marks_reeval:
+            if self.state in eval_state and self.marks_reeval:
                 marks = self.marks_reeval
-            elif self.marks_access:
+            elif self.state in acc_state and self.marks_access:
                 marks = self.marks_access
             for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
                 if (marks >= grade_id.from_mark
@@ -370,7 +322,8 @@ class ExamSubject(models.Model):
     marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_id = fields.Many2one('grade.master', "Grade")
-    grade = fields.Char(compute='_get_grade', string='Grade', type="char")
+    grade = fields.Char(compute='_get_grade', string='Grade', 
+                        type="char", store=False)
 
 
 class ExamResultBatchwise(models.Model):
@@ -381,27 +334,27 @@ class ExamResultBatchwise(models.Model):
     @api.one
     @api.depends('standard_id', 'year')
     def compute_grade(self):
-        fina_tot = 0
-        divi = 0
-        stud_obj = self.env['exam.result']
+        total = 0.0
+        lines = 0.0
+        result_obj = self.env['exam.result']
         if self.standard_id and self.year:
-            stand_id = stud_obj.search([
+            result_ids = result_obj.search([
                 ('standard_id', '=', self.standard_id.id)])
-            for stand in stand_id:
-                if stand.result_ids:
-                    fina_tot += stand.total
-                # Total_obtained mark of all student
-                divi = fina_tot / (len(stand.result_ids) or 1)
-                if self.year.grade_id.grade_ids:
-                    for grade_id in self.year.grade_id.grade_ids:
-                        if (divi >= grade_id.from_mark
-                                and divi <= grade_id.to_mark):
-                            self.grade = grade_id.grade
+            for result in result_ids:
+                lines += len(result.result_ids)
+                if result.state == 'confirm':
+                    total += result.total
+                elif result.state in ['re-evaluation_confirm', 're-access_confirm']:
+                    total += result.re_total
+            per = total / (lines or 1.0)
+            for grade_id in self.year.grade_id.grade_ids:
+                if (per >= grade_id.from_mark
+                        and per <= grade_id.to_mark):
+                    self.grade = grade_id.grade
 
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
-    grade = fields.Char(compute='compute_grade', string='Grade', method=True,
-                        store=True)
+    grade = fields.Char(compute='compute_grade', string='Grade', method=True)
 
 
 class AdditionalExamResult(models.Model):
