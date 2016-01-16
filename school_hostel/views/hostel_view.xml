@@ -17,65 +17,69 @@
                             <field name="type"/>
                             <field name="rector"/>
                         </group>
-                        <group col="2">
-                            <field name="other_info"/>
-                        </group>
-                        <separator string="Room Detail"/>
-                        <field name="room_ids">
-                            <tree>
-                                <field name="floor_no"/>
-                                <field name="room_no"/>
-                                <field name="student_per_room"/>
-                                <field name="availability"/>
-                            </tree>
-                            <form>
-                                <group col="4">
-                                    <field name="floor_no"/>
-                                    <field name="room_no"/>
-                                    <field name="student_per_room"/>
-                                    <field name="availability"/>
-                                    <field name="telephone"/>
-                                    <field name="ac"/>
-                                    <field name="private_bathroom"/>
-                                    <field name="guest_sofa"/>
-                                    <field name="tv"/>
-                                    <field name="internet"/>
-                                    <field name="refrigerator"/>
-                                    <field name="microwave"/>
-                                </group>
-                                <field name="student_ids" colspan="4" nolabel="1">
-                                    <form string="Hostel Student">
-                                        <header>
-                                            <button name="confirm_state" string="Confirm" type="object"/>
-                                            <button name="reservation_state" string="Reservation" type="object"/>
-                                            <button name="print_fee_receipt" string="Print Fee Slip" type="object" />
-                                            <field name="state" widget="statusbar" nolabel="1"/>
-                                        </header>
-                                        <sheet>
-                                            <separator string="Student Detail"/>
-                                            <group col="4">
-                                                <field name="hostel_id"/>
+                        <notebook>
+                            <page string="Room Details">
+                                <field name="room_ids">
+                                    <tree>
+                                        <field name="floor_no"/>
+                                        <field name="room_no"/>
+                                        <field name="student_per_room"/>
+                                        <field name="availability"/>
+                                    </tree>
+                                    <form>
+                                        <group col="4">
+                                            <field name="floor_no"/>
+                                            <field name="room_no"/>
+                                            <field name="student_per_room"/>
+                                            <field name="availability"/>
+                                            <field name="telephone"/>
+                                            <field name="ac"/>
+                                            <field name="private_bathroom"/>
+                                            <field name="guest_sofa"/>
+                                            <field name="tv"/>
+                                            <field name="internet"/>
+                                            <field name="refrigerator"/>
+                                            <field name="microwave"/>
+                                        </group>
+                                        <field name="student_ids" colspan="4" nolabel="1">
+                                            <form string="Hostel Student">
+                                                <header>
+                                                    <button name="confirm_state" string="Confirm" states="reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <button name="reservation_state" string="Reservation" states="draft" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <button name="discharge_state" string="Discharge" states="confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <button name="print_fee_receipt" states="confirm" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <field name="state" widget="statusbar" nolabel="1" />
+                                                </header>
+                                                <sheet>
+                                                    <separator string="Student Detail"/>
+                                                    <group col="4">
+                                                        <field name="hostel_id"/>
+                                                        <field name="student_id"/>
+                                                        <field name="school_id"/>
+                                                        <field name="bed_type"  widget="selection"/>
+                                                        <field name="admission_date"/>
+                                                        <field name="discharge_date"/>
+                                                        <field name="room_rent" />
+                                                        <field name="paid_amount"/>
+                                                        <field name="remaining_amount"/>
+                                                    </group>
+                                                </sheet>
+                                            </form>
+                                            <tree>
                                                 <field name="student_id"/>
-                                                <field name="school_id"/>
-                                                <field name="bed_type"  widget="selection"/>
-                                                <field name="admission_date"/>
-                                                <field name="discharge_date"/>
-                                                <field name="room_rent" />
+                                                <field name="room_rent"/>
                                                 <field name="paid_amount"/>
                                                 <field name="remaining_amount"/>
-                                            </group>
-                                        </sheet>
+                                                <field name="state"/>
+                                            </tree>
+                                        </field>
                                     </form>
-                                    <tree>
-                                        <field name="student_id"/>
-                                        <field name="room_rent"/>
-                                        <field name="paid_amount"/>
-                                        <field name="remaining_amount"/>
-                                        <field name="state"/>
-                                    </tree>
                                 </field>
-                            </form>
-                        </field>
+                            </page>
+                            <page string="Other Information">
+                                <field name="other_info"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -125,8 +129,13 @@
                             <field name="name" required="1"/>
                             <field name="floor_no"/>
                             <field name="room_no"/>
+                            <newline/>
+                            <separator string="Availability"/>
+                            <newline/>
                             <field name="student_per_room"/>
                             <field name="availability"/>
+                            <separator string="Facilities"/>
+                            <newline/>
                             <field name="telephone"/>
                             <field name="ac"/>
                             <field name="private_bathroom"/>
@@ -135,6 +144,16 @@
                             <field name="internet"/>
                             <field name="refrigerator"/>
                             <field name="microwave"/>
+                            <newline/>
+                            <separator string="Students"/>
+                            <field name="student_ids" colspan="4" nolabel="1" readonly="1">
+                                <tree editable="top">
+                                    <field name="hostel_id"/>
+                                    <field name="student_id"/>
+                                    <field name="remaining_amount"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>
@@ -182,6 +201,7 @@
                     <header>
                         <button name="confirm_state" string="Confirm" states="reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <button name="reservation_state" string="Reservation" states="draft" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                        <button name="discharge_state" string="Discharge" states="confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <button name="print_fee_receipt" states="confirm" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
                         <field name="state" widget="statusbar" nolabel="1" />
                     </header>
@@ -189,14 +209,14 @@
                         <group col="4" colspan="4">
                             <field name="hostel_id" />
                             <newline/>
-                            <field name="student_id" required="1"/>
-                            <field name="hostel_room_id" required="1"/>
-                            <field name="admission_date" />
-                            <field name="discharge_date" />
-                            <field name="room_rent" />
-                            <field name="bed_type"  widget="selection"/>
-                            <field name="paid_amount" />
-                            <field name="remaining_amount" />
+                            <field name="student_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="hostel_room_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="admission_date" readonly="1"/>
+                            <field name="discharge_date" readonly="1"/>
+                            <field name="room_rent" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="bed_type"  widget="selection" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="paid_amount" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="remaining_amount" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                     </sheet>
                 </form>

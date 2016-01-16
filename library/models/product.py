@@ -81,11 +81,8 @@ class ProductProduct(models.Model):
 
         def _name_get(d):
             name = d.get('name', '')
-            ean = d.get('ean13', False)
-            if ean:
-                name = '[%s] %s' % (ean or '', name)
             return (d['id'], name)
-        return map(_name_get, self.read(['name', 'ean13']))
+        return map(_name_get, self.read(['name']))
 
     @api.multi
     def _default_categ(self):
@@ -272,11 +269,20 @@ class ProductProduct(models.Model):
                                          'Book return Days')
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
+    book_location_ids = fields.One2many('library.book.location', 'book_id',
+                                        'Book Location(s)')
 
-    _sql_constraints = [('unique_ean13', 'unique(ean13)',
-                         'ean13 field must be unique across all the products'),
-                        ('code_uniq', 'unique (code)',
-                         'Code of the product must be unique !')]
+    _sql_constraints = [('code_uniq', 'unique (code)',
+                        'Code of the product must be unique !')]
+
+
+class BookLocation(models.Model):
+    _name = 'library.book.location'
+    _description = 'Book Location'
+
+    rack_id = fields.Many2one('library.rack', 'Rack')
+    case_id = fields.Many2one('library.case', 'Case')
+    book_id = fields.Many2one('library.book', 'Book')
 
 
 class BookAttachment(models.Model):

@@ -3,6 +3,7 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
+from datetime import datetime
 
 
 class HostelType(models.Model):
@@ -16,6 +17,7 @@ class HostelType(models.Model):
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('hr.employee', 'Rector')
     room_ids = fields.One2many('hostel.room', 'name', 'Room')
+    school_id = fields.Many2one('school.school', 'School')
 
 
 class HostelRoom(models.Model):
@@ -37,7 +39,9 @@ class HostelRoom(models.Model):
     @api.depends('student_ids', 'student_per_room')
     def _check_availability(self):
         self.availability = 0
-        room_availability = self.student_per_room - len(self.student_ids)
+        students = len([stu for stu in self.student_ids\
+                          if stu.state not in ['draft', 'discharge']])
+        room_availability = self.student_per_room - students
         if room_availability < 0:
             raise except_orm(_("You can not assign \
             more than %s student" % self.student_per_room))
@@ -71,6 +75,7 @@ class HostelRoom(models.Model):
 class HostelStudent(models.Model):
 
     _name = 'hostel.student'
+    _rec_name = 'hostel_id'
 
     @api.one
     @api.depends('room_rent', 'paid_amount')
@@ -81,11 +86,19 @@ class HostelStudent(models.Model):
 
     @api.multi
     def confirm_state(self):
-        return self.write({'state': 'confirm'})
+        today = datetime.now()
+        return self.write({'state': 'confirm',
+                           'admission_date' : today})
 
     @api.multi
     def reservation_state(self):
         return self.write({'state': 'reservation'})
+    
+    @api.multi
+    def discharge_state(self):
+        today = datetime.today()
+        return self.write({'state' : 'discharge',
+                           'discharge_date' : today})
 
     @api.multi
     def print_fee_receipt(self):
@@ -100,7 +113,7 @@ class HostelStudent(models.Model):
                 'datas': datas}
 
     hostel_room_id = fields.Many2one('hostel.room', 'Hostel Room')
-    hostel_id = fields.Char('HOSTEL ID', readonly=True,
+    hostel_id = fields.Char('Hostel ID', readonly=True,
                             default=lambda obj:
                             obj.env['ir.sequence'].get('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
@@ -113,8 +126,9 @@ class HostelStudent(models.Model):
     remaining_amount = fields.Float(compute='_get_remaining_fee_amt',
                                     string='Remaining Amount')
     state = fields.Selection([('draft', 'Draft'),
-                               ('reservation', 'Reservation'),
-                               ('confirm', 'Confirm')], 'Status',
+                              ('reservation', 'Reserved'),
+                              ('confirm', 'Confirmed'),
+                              ('discharge', 'Discharged')], 'Status',
                               default='draft')
 
     _sql_constraints = [('admission_date_greater',

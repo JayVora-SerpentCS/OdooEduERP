@@ -17,6 +17,18 @@ class LibraryPriceCategory(models.Model):
     product_ids = fields.One2many('product.product', 'price_cat', 'Books')
 
 
+class LibraryCase(models.Model):
+    _name = 'library.case'
+    _description = 'Library Case'
+
+    name = fields.Char('Name', required=True,
+                       help="Case Name")
+    code = fields.Char('Code')
+    rack_ids = fields.Many2many('library.case', 'rack_case_rel',
+                                'case_id', 'rack_id',
+                                'Rack(s)')
+
+
 class LibraryRack(models.Model):
     _name = 'library.rack'
     _description = "Library Rack"
@@ -25,6 +37,9 @@ class LibraryRack(models.Model):
                        help="it will be show the position of book")
     code = fields.Char('Code')
     active = fields.Boolean('Active', default='True')
+    case_ids = fields.Many2many('library.case', 'rack_case_rel',
+                                'rack_id', 'case_id',
+                                'Case(s)')
 
 
 class LibraryCollection(models.Model):
@@ -282,7 +297,48 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.name.write({'availability': 'notavailable'})
+        ir_model_data = self.env['ir.model.data']
+        move_obj = self.env['stock.move']
+        picking_obj = self.env['stock.picking']
+        src_location_id = ir_model_data.get_object_reference(
+                                             'stock', \
+                                             'stock_location_stock')[1]
+        dest_location_id = ir_model_data.get_object_reference(
+                                             'stock', \
+                                             'stock_location_customers')[1]
+        picking_type_id = ir_model_data.get_object_reference('stock',
+                                            'picking_type_out')[1]
+        for rec in self:
+            partner_id = False
+            if rec.user_title == 'student':
+                partner_id = rec.student_id and rec.student_id.partner_id
+            else:
+                partner_id = rec.teacher_id and rec.teacher_id.user_id\
+                    and rec.teacher_id.user_id.partner_id\
+                            
+            picking_data = {
+                'partner_id' : partner_id and partner_id.id or False,
+                'location_id' : src_location_id,
+                'location_dest_id' : dest_location_id,
+                'origin' : rec.issue_code,
+                'picking_type_id' : picking_type_id
+            }
+            pick_id = picking_obj.create(picking_data)
+            data = {
+                'name' : rec.issue_code,
+                'date': datetime.today(),
+                'product_id': rec.name.id,
+                'product_uom': rec.name.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': src_location_id,
+                'location_dest_id': dest_location_id,
+                'procure_method' : 'make_to_order',
+                'picking_id' : pick_id.id
+            }
+            move_obj.create(data)
+            pick_id.action_assign()
+            pick_id.force_assign()
+            pick_id.do_transfer()
         return self.write({'state': 'issue'})
 
     @api.multi
@@ -296,9 +352,8 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'reissue'})
-        self.write({'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return True
+        return self.write({'state': 'reissue', 
+                           'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     @api.multi
     def return_book(self):
@@ -311,12 +366,51 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        vals = {'actual_return_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'state': 'return'}
-        self.write(vals)
-        product_id = self.name
-        product_id.write({'availability': 'available'})
-        return True
+        ir_model_data = self.env['ir.model.data']
+        move_obj = self.env['stock.move']
+        picking_obj = self.env['stock.picking']
+        dest_location_id = ir_model_data.get_object_reference(
+                                             'stock', \
+                                             'stock_location_stock')[1]
+        src_location_id = ir_model_data.get_object_reference(
+                                             'stock', \
+                                             'stock_location_customers')[1]
+        picking_type_id = ir_model_data.get_object_reference('stock',
+                                            'picking_type_in')[1]
+        for rec in self:
+            partner_id = False
+            if rec.user_title == 'student':
+                partner_id = rec.student_id and rec.student_id.partner_id
+            else:
+                partner_id = rec.teacher_id and rec.teacher_id.user_id\
+                    and rec.teacher_id.user_id.partner_id\
+                            
+            picking_data = {
+                'partner_id' : partner_id and partner_id.id or False,
+                'location_id' : src_location_id,
+                'location_dest_id' : dest_location_id,
+                'origin' : rec.issue_code,
+                'picking_type_id' : picking_type_id
+            }
+            pick_id = picking_obj.create(picking_data)
+            data = {
+                'name' : rec.issue_code,
+                'date': datetime.today(),
+                'product_id': rec.name.id,
+                'product_uom': rec.name.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': src_location_id,
+                'location_dest_id': dest_location_id,
+                'procure_method' : 'make_to_order',
+                'picking_id' : pick_id.id
+            }
+            move_obj.create(data)
+            pick_id.action_assign()
+            pick_id.force_assign()
+            pick_id.do_transfer()
+        return self.write({'actual_return_date': \
+                           time.strftime('%Y-%m-%d %H:%M:%S'),
+                           'state': 'return'})
 
     @api.multi
     def lost_book(self):
@@ -329,8 +423,49 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'lost'})
-        return True
+        ir_model_data = self.env['ir.model.data']
+        move_obj = self.env['stock.move']
+        picking_obj = self.env['stock.picking']
+        src_location_id = ir_model_data.get_object_reference(
+                                             'stock', \
+                                             'stock_location_stock')[1]
+        dest_location_id = ir_model_data.get_object_reference(
+                                             'stock', \
+                                             'location_inventory')[1]
+        picking_type_id = ir_model_data.get_object_reference('stock',
+                                            'picking_type_out')[1]
+        for rec in self:
+            partner_id = False
+            if rec.user_title == 'student':
+                partner_id = rec.student_id and rec.student_id.partner_id
+            else:
+                partner_id = rec.teacher_id and rec.teacher_id.user_id\
+                    and rec.teacher_id.user_id.partner_id\
+                            
+            picking_data = {
+                'partner_id' : partner_id and partner_id.id or False,
+                'location_id' : src_location_id,
+                'location_dest_id' : dest_location_id,
+                'origin' : rec.issue_code,
+                'picking_type_id' : picking_type_id
+            }
+            pick_id = picking_obj.create(picking_data)
+            data = {
+                'name' : rec.issue_code,
+                'date': datetime.today(),
+                'product_id': rec.name.id,
+                'product_uom': rec.name.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': src_location_id,
+                'location_dest_id': dest_location_id,
+                'procure_method' : 'make_to_order',
+                'picking_id' : pick_id.id
+            }
+            move_obj.create(data)
+            pick_id.action_assign()
+            pick_id.force_assign()
+            pick_id.do_transfer()
+        return self.write({'state': 'lost'})
 
     @api.multi
     def cancel_book(self):

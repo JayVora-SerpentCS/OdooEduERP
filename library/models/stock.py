@@ -13,8 +13,7 @@ class StockMove(models.Model):
 
     @api.multi
     def onchange_qty(self):
-        return {'value': {'product_uos_qty': self.product_uos_qty,
-                          'product_qty': self.product_qty}}
+        return {'value': {'product_qty': self.product_qty}}
 
     @api.multi
     def action_cancel(self):
