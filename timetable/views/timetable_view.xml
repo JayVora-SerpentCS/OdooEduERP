@@ -14,7 +14,6 @@
                             <field name="name" placeholder="Enter Description"/>
                             <field name="standard_id" placeholder="Select or Create Standard"/>
                             <field name="year_id" colspan="4" placeholder="Select Or Create Year"/>
-                            <field name="do_not_create"/>
                         </group>
                         <notebook colspan="4">
                             <page string="TimeTable">
@@ -29,14 +28,15 @@
                                     <form string="TimeTable">
                                         <group col="4" colspan="4">
                                             <field name="week_day"/>
+                                            <field name="subject_id" attrs="{'invisible':[('is_break','=',True)],
+                                                                             'required' : [('is_break','=',False)]}"
+                                                   placeholder="Create Or Select Subject"/>
                                             <field name="start_time"/>
                                             <field name="end_time"/>
-                                            <field name="subject_id" attrs="{'invisible':[('is_break','=',True)]}"
-                                                   placeholder="Create Or Select Subject"/>
                                             <field name="teacher_id" context="{'subject_id':subject_id}"
                                                    attrs="{'invisible':[('is_break','=',True)]}"
                                                    placeholder="Create Or Select Supervisior" />
-                                            <field name="is_break" on_change="onchange_recess(is_break)"/>
+                                            <field name="is_break"/>
                                         </group>
                                     </form>
                                 </field>

@@ -9,8 +9,8 @@ class ResultPrint(models.TransientModel):
     _description = 'students result'
 
     standard_id = fields.Many2one('school.standard', 'Standard', required=True)
-    exam_id = fields.Many2one('exam.exam', 'Exam')
-    year_id = fields.Many2one('academic.year', 'Academic Year', required=True)
+    exam_id = fields.Many2one('exam.exam', 'Exam', required=True)
+    year_id = fields.Many2one('academic.year', 'Academic Year')
 
     @api.multi
     def get_result(self):
@@ -20,7 +20,7 @@ class ResultPrint(models.TransientModel):
                       ('s_exam_ids', '=', result_line.exam_id.id)]
             return {'name': _('Result Info'),
                     'view_type': 'form',
-                    'view_mode': 'tree,form',
+                    'view_mode': 'tree',
                     'res_model': 'exam.result',
                     'type': 'ir.actions.act_window',
                     'domain': domain}

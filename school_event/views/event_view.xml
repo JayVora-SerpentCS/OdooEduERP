@@ -3,7 +3,7 @@
 <openerp>
     <data>
 
-        <!-- Inherited Form View Of Student Information -->
+        <!-- Inherited Form View Of Standard Information -->
 
         <record id="school_standard_form_view" model="ir.ui.view">
             <field name="name">school.standard.form</field>
@@ -12,6 +12,23 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[1]" position="after">
+                        <page string="Events">
+                            <field name="event_ids" nolabel= '1' />
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Inherited Form View of School -->
+
+        <record id="view_school_school_form_event" model="ir.ui.view">
+            <field name="name">school.standard.form.event</field>
+            <field name="model">school.school</field>
+            <field name="inherit_id" ref="school.view_school_school_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='standards']/form/sheet/notebook" position="inside">
                         <page string="Events">
                             <field name="event_ids" nolabel= '1' />
                         </page>
@@ -149,8 +166,13 @@
             <field name="arch" type="xml">
                 <form string="Event Information">
                     <header>
+                        <button name="registration_open" icon="terp-gtk-go-back-rtl" type="object"
+                            string="Start Registration" states="draft" groups="school.group_school_administration,school.group_school_teacher" />
+                        <button name="registration_closed" icon="terp-gtk-go-back-rtl" type="object"
+                            string="Close Registration" states="reg_start" groups="school.group_school_administration,school.group_school_teacher" />
                         <button name="event_open" icon="terp-gtk-go-back-rtl" type="object"
-                            string="Open" states="draft" groups="school.group_school_administration,school.group_school_teacher" />
+                            string="Start Event" states="reg_end" groups="school.group_school_administration,school.group_school_teacher" />
+                        
                         <button name="event_draft" icon="terp-gtk-go-back-ltr" type="object"
                             string="Draft" states="cancel" groups="school.group_school_administration,school.group_school_teacher" />
                         <button name="event_close" type="object" icon="gtk-cancel" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
@@ -158,26 +180,37 @@
                     </header>
                     <sheet>
                         <separator string="Event Information" />
-                        <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="name" placeholder="Enter Event Name" />
-                            <field name="code" string="Organiser school" placeholder="Select Or Create School" />
-                            <group colspan="4" col="4">
-                                <field name="start_reg_date" placeholder="Enter Start Date Of Registration" />
-                                <field name="last_reg_date" placeholder="Enter Last Date Of Registration" />
-                                <field name="start_date" placeholder="Start Date Of Event" />
-                                <field name="end_date" placeholder="End Date Of Event" />
-                                <field name="contact_per_id" placeholder="Select Or Create Organiser Name" />
-                                <field name="supervisor_id" placeholder="Select Or Create Supervisor Name" />
-                                <field name="maximum_participants" />
-                                <field name="parameter_id" widget="selection" />
-                                <field name="is_holiday" />
-                                <field name="participants" readonly="1" />
-                            </group>
+                        <group col="4">
+                            <field name="name" placeholder="Enter Event Name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="code" string="Organiser school" placeholder="Select Or Create School" 
+                                        attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="start_reg_date" placeholder="Enter Start Date Of Registration" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="last_reg_date" placeholder="Enter Last Date Of Registration" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="start_date" placeholder="Start Date Of Event" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="end_date" placeholder="End Date Of Event" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="contact_per_id" placeholder="Select Or Create Organiser Name" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"
+                                    domain="[('relation_type','=','teacher')]"
+                                    context="{'default_relation_type':'teacher'}"/>
+                            <field name="supervisor_id" placeholder="Select Or Create Supervisor Name"
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="maximum_participants" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="parameter_id" widget="selection" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="is_holiday" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="participants" readonly="1" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Participated Standards"
-                            attrs="{'readonly':[('state','!=','draft')]}">
-                                <field name="part_standard_ids" nolabel='1' />
+                            <page string="Participated Standards">
+                                <field name="part_standard_ids" nolabel='1'
+                                        attrs="{'readonly':[('state','!=','draft')]}"/>
                             </page>
                             <page string="Participants">
                                 <field name="part_ids" nolabel='1'>
@@ -286,7 +319,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle o_dropdown_kanban">
                                     <ul class="oe_dropdown_menu">
                                         <li>
                                             <a type="edit">Edit...</a>
@@ -388,11 +421,14 @@
                     </header>
                     <sheet>
                         <separator string="Event Registration" />
-                        <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="part_name_id" context="{'name':name}" placeholder="Select Or Create Participant Name" />
-                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" />
-                            <field name="reg_date" />
-                            <field name="is_holiday" />
+                        <group colspan="4" col="4">
+                            <field name="part_name_id" context="{'name':name}" placeholder="Select Or Create Participant Name" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" 
+                                    attrs="{'readonly':[('state','!=','draft')]}"
+                                    domain="[('state','=','reg_start')]"/>
+                            <field name="reg_date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="is_holiday" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -469,7 +505,7 @@
             <field name="name">Event Registration</field>
             <field name="res_model">school.event.registration</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="event_registration_form"/>
+            <field name="view_id" ref="school_event_registration_tree_view"/>
             <field name="view_mode">tree,form</field>
         </record>
 

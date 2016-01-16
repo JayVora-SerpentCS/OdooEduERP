@@ -11,8 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Send Email">
                     <field name='note' nolabel="0" height="350" width="350"/>
-                    <newline/>
-                    <button name="send_email" string="Send Email" icon="gtk-execute" type="object"/>
+                    <footer>
+                        <button name="send_email" string="Send Email" icon="gtk-execute" type="object"/>
+                    </footer>
                 </form>
             </field>
         </record>

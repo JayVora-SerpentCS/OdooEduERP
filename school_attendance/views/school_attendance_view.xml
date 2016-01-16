@@ -10,14 +10,9 @@
             <field name="model">attendance.sheet</field>
             <field name="arch" type="xml">
                 <form string="Attendance Sheet" >
-                    <group col="6" colspan="6">
-                        <field name="name" />
-                    </group>
-                    <group col="6" colspan="4">
-                        <field name="standard_id" widget="selection" on_change="onchange_class_info(standard_id)" />
-                    </group>
-                    <newline />
                     <group col="4">
+                        <field name="name" />
+                        <field name="standard_id" widget="selection"/>
                         <field name="year_id" widget="selection" colspan="2" />
                         <field name="month_id" widget="selection" colspan="2" />
                     </group>
@@ -26,7 +21,7 @@
                             <field name="attendance_ids" nolabel="1" colspan="4">
                                 <tree string="Monthly Attendance" editable="bottom" create="false" delete="false">
                                     <field name="roll_no" />
-                                    <field name="name" />
+                                    <field name="student_id" />
                                     <field name="one" />
                                     <field name="two" />
                                     <field name="three" />
@@ -60,10 +55,13 @@
                                     <field name="three_1" />
                                     <field name="percentage" widget="progressbar" />
                                 </tree>
-                                <form string="Monthly Attendance">
+                                <form string="Attendance">
                                     <group col="6" colspan="4">
+                                        <field name="student_id" />
                                         <field name="roll_no" />
-                                        <field name="name" />
+                                    </group>
+                                    <separator string="Attendance"/>
+                                    <group col="6" colspan="4">
                                         <field name="one" />
                                         <field name="two" />
                                         <field name="three" />
@@ -172,21 +170,12 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Students">
-                                <field name="student_ids" nolabel="1" colspan="4">
+                                <field name="student_ids" nolabel="1" colspan="4" create="false" delete="false">
                                     <tree string="Student Information" editable="top">
-                                        <field name="roll_no" required="1" />
-                                        <field name="stud_id" required="1" />
-                                        <field name="is_present" attrs="{'readonly':[('is_absent','=',True)]}" />
-                                        <field name="is_absent" attrs="{'readonly':[('is_present','=',True)]}" />
+                                        <field name="roll_no" required="1" readonly="1"/>
+                                        <field name="stud_id" required="1" readonly="1"/>
+                                        <field name="is_present"/>
                                     </tree>
-                                    <form string="Student Information">
-                                        <group col="4">
-                                            <field name="stud_id" on_change="onchange_name(stud_id)" >
-                                                <field name="roll_no" />
-                                                <field name="is_present" attrs="{'readonly':[('is_absent','=',True)]}" on_change="onchange_is_present_option(is_present)" />
-                                                <field name="is_absent" attrs="{'readonly':[('is_present','=',True)]}" /></field>
-                                        </group>
-                                    </form>
                                 </field>
                                 <group col="2" string="Classroom Indicator">
                                     <field name="total_student" />

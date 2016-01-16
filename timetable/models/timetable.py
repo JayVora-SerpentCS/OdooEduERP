@@ -18,20 +18,17 @@ class TimeTable(models.Model):
                                   required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
-    do_not_create = fields.Boolean('Do not Create')
 
     @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
-        domain = [('table_id', '=', self.ids)]
-        line_ids = self.env['time.table.line'].search(domain)
-        for rec in line_ids:
-            records = [rec_check.id for rec_check in line_ids\
-                           if (rec.week_day == rec_check.week_day\
-                                    and rec.start_time == rec_check.start_time
-                                    and rec.end_time == rec_check.end_time)]
+        for rec in self.timetable_ids:
+            records = [(rec_check.id for rec_check in self.timetable_ids \
+                           if (rec.week_day == rec_check.week_day \
+                                and rec.start_time == rec_check.start_time \
+                                and rec.end_time == rec_check.end_time))]
             if len(records) > 1:
-                raise UserError(_("You can Not set lecture at same time\
+                raise UserError(_("You can not set lecture at same time\
                                  at same day..!!!"))
         return True
 
@@ -41,15 +38,20 @@ class TimeTableLine(models.Model):
     _name = 'time.table.line'
     _rec_name = 'table_id'
 
-    @api.multi
-    def onchange_recess(self, recess):
-        recess = {}
-        domain = [('name', 'like', 'Recess')]
-        sub_id = self.env['subject.subject'].search(domain)
-        if not sub_id:
-            raise UserError(_("You must have a 'Recess' as a subject"))
-        recess.update({'value': {'subject_id': sub_id.id}})
-        return recess
+    @api.onchange('is_break')
+    def onchange_recess(self):
+        if self.is_break:
+            domain = [('name', 'ilike', 'Recess')]
+            sub_id = self.env['subject.subject'].search(domain)
+            if not sub_id:
+                raise UserError(_("You must have a 'Recess' as a subject"))
+            return {'value': {'subject_id': sub_id.id}}
+        return {'value': {}}
+    
+    def _check_times(self):
+        if self.start_time and self.end_time:
+            if self.start_time < self.end_time:
+                raise UserError(_("Please check timings!"))
 
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
@@ -72,9 +74,11 @@ class SubjectSubject(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        teacher_id = self._context.get('teacher_id')
+        context = dict(self._context) or {}
+        if args is None:
+            args = []
+        teacher_id = context.get('teacher_id', False)
         if teacher_id:
-            for teacher_data in self.env['hr.employee'].browse(teacher_id):
-                args.append(('teacher_ids', 'in', [teacher_data.id]))
+            args.append(('teacher_ids', 'in', [teacher_id]))
         return super(SubjectSubject, self).search(args, offset, limit, order,
                                                   count=count)

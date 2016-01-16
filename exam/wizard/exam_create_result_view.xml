@@ -11,11 +11,10 @@
             <field name="arch" type="xml">
                 <form string="Result Genereate">
                     <separator string="Generate Results" colspan="4"/>
-                    <group colspan="4">
-                        <label string="" colspan="2"/>
+                    <footer>
                         <button icon="gtk-cancel" special="cancel" string="Close"/>
                         <button icon="gtk-execute" name="generate_result" string="Create Result" type="object"/>
-                   </group>
+                   </footer>
                </form>
             </field>
         </record>

@@ -60,7 +60,9 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name = 'name']" position="after">
-                        <field name="licence_no"/>
+                        <field name="relation_type" invisible="1"/>
+                        <field name="licence_no" placeholder="License No." 
+                            attrs="{'invisible':[('relation_type','!=','driver')]}"/>
                     </xpath>
                 </data>
             </field>
@@ -229,7 +231,9 @@
                     <separator string="Transport Information"/>
                     <group col="4">
                     <field name="name" placeholder="Root Name"/>
-                    <field name="contact_per_id" placeholder="Contact Person"/>
+                    <field name="contact_per_id" placeholder="Contact Person"
+                            domain="[('relation_type','=','driver')]"
+                            context="{'default_relation_type':'driver'}"/>
                     <field name="start_date" placeholder="Start Date Of Journey"/>
                     <field name="end_date" placeholder="End Date Of Journey"/>
                     <field name="total_participantes"/>
@@ -339,6 +343,20 @@
             </field>
         </record>
 
+        <record id="transport_registration_tree" model="ir.ui.view">
+            <field name="name">transport.registration.tree</field>
+            <field name="model">transport.registration</field>
+            <field name="arch" type="xml">
+                <tree string="Transport Registration">
+                    <field name="part_name" placeholder="Enter Participant Name"/>
+                    <field name="name" placeholder="Enter Transport Root Name"/>
+                    <field name="vehicle_id" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
+                    <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
+                    <field name="m_amount"/>
+                </tree>
+            </field>
+        </record>
+
        <!-- Tree View Of Transport vehicle Information -->
 
        <record id="view_transport_vehicle_tree" model="ir.ui.view">
@@ -364,7 +382,8 @@
                     <sheet>
                     <group col="4" colspan="4">
                         <field name="vehicle"/>
-                        <field name="driver_id"/>
+                        <field name="driver_id" domain="[('relation_type','=','driver')]"
+                            context="{'default_relation_type':'driver'}"/>
                         <field name="capacity"/>
                         <field name="participant"/>
                     </group>
@@ -414,7 +433,7 @@
             <field name="name">Transport Registration</field>
             <field name="res_model">transport.registration</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="transport_registration_form1"/>
+            <field name="view_id" ref="transport_registration_tree"/>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -441,6 +460,8 @@
         <record id="action_bus_driver_form_1" model="ir.actions.act_window">
             <field name="name">Driver Information</field>
             <field name="res_model">hr.employee</field>
+            <field name="domain">[('relation_type','=','driver')]</field>
+            <field name="context">{'default_relation_type':'driver'}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>

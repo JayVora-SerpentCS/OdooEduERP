@@ -18,8 +18,7 @@ class MailTemplate(models.TransientModel):
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']
             return ret
-        else:
-            return ret
+        return ret
 
 
 class SendMail(models.TransientModel):
@@ -34,9 +33,8 @@ class SendMail(models.TransientModel):
         domain = [('model', '=', 'student.student')]
         template_id = email_template_obj.search(domain, limit=1)
         if template_id:
-            for i in self:
-                body += '\n' + i.note
-            email_template_obj.send_mail(template_id.id,
-                                         self._context.get('active_id'),
-                                         force_send=True)
+            for rec in self:
+                body += '\n' + rec.note
+            template_id.send_mail(self._context.get('active_id'),
+                                  force_send=True)
         return {'type': 'ir.actions.act_window_close'}

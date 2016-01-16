@@ -10,6 +10,7 @@ class AssignRollNo(models.TransientModel):
     _name = 'assign.roll.no'
     _description = 'Assign Roll Number'
 
+    school_id = fields.Many2one('school.school', 'School', required=True)
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
     division_id = fields.Many2one('standard.division', 'Division',
@@ -17,15 +18,16 @@ class AssignRollNo(models.TransientModel):
 
     @api.multi
     def assign_rollno(self):
-        res = {}
         student_obj = self.env['student.student']
         for student_data in self:
             search_student_ids = student_obj.search([
                 ('standard_id', '=', student_data.standard_id.id),
                 ('medium_id', '=', student_data.medium_id.id),
-                ('division_id', '=', student_data.division_id.id)])
+                ('division_id', '=', student_data.division_id.id),
+                ('school_id', '=', student_data.school_id.id),
+                ('state','!=','draft')])
         number = 1
         for student in search_student_ids:
             student.write({'roll_no': number})
             number = number + 1
-        return res
+        return {'type': 'ir.actions.act_window_close'}

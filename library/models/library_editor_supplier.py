@@ -8,7 +8,6 @@ from openerp.exceptions import Warning as UserError
 class LibraryEditorSupplier(models.Model):
     _name = "library.editor.supplier"
     _description = "Editor Relations"
-    _auto = False
 
     name = fields.Many2one('res.partner', 'Editor')
     supplier_id = fields.Many2one('res.partner', 'Supplier')
@@ -22,7 +21,10 @@ class LibraryEditorSupplier(models.Model):
     @api.model
     @api.returns('self', lambda value: value)
     def create(self, vals):
-        if not (vals['name'] and vals['supplier_id']):
+        if vals is None:
+            vals = {}
+        if not (vals.get('name', False) and \
+                vals.get('supplier_id', False)):
             raise UserError(_("Error ! Please provide proper Information"))
         # search for books of these editor not already linked
         # with this supplier:

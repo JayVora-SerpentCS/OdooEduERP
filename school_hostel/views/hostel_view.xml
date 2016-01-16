@@ -17,65 +17,69 @@
                             <field name="type"/>
                             <field name="rector"/>
                         </group>
-                        <group col="2">
-                            <field name="other_info"/>
-                        </group>
-                        <separator string="Room Detail"/>
-                        <field name="room_ids">
-                            <tree>
-                                <field name="floor_no"/>
-                                <field name="room_no"/>
-                                <field name="student_per_room"/>
-                                <field name="availability"/>
-                            </tree>
-                            <form>
-                                <group col="4">
-                                    <field name="floor_no"/>
-                                    <field name="room_no"/>
-                                    <field name="student_per_room"/>
-                                    <field name="availability"/>
-                                    <field name="telephone"/>
-                                    <field name="ac"/>
-                                    <field name="private_bathroom"/>
-                                    <field name="guest_sofa"/>
-                                    <field name="tv"/>
-                                    <field name="internet"/>
-                                    <field name="refrigerator"/>
-                                    <field name="microwave"/>
-                                </group>
-                                <field name="student_ids" colspan="4" nolabel="1">
-                                    <form string="Hostel Student">
-                                        <header>
-                                            <button name="confirm_state" string="Confirm" type="object"/>
-                                            <button name="reservation_state" string="Reservation" type="object"/>
-                                            <button name="print_fee_receipt" string="Print Fee Slip" type="object" />
-                                            <field name="status" widget="statusbar" nolabel="1"/>
-                                        </header>
-                                        <sheet>
-                                            <separator string="Student Detail"/>
-                                            <group col="4">
-                                                <field name="hostel_id"/>
+                        <notebook>
+                            <page string="Room Details">
+                                <field name="room_ids">
+                                    <tree>
+                                        <field name="floor_no"/>
+                                        <field name="room_no"/>
+                                        <field name="student_per_room"/>
+                                        <field name="availability"/>
+                                    </tree>
+                                    <form>
+                                        <group col="4">
+                                            <field name="floor_no"/>
+                                            <field name="room_no"/>
+                                            <field name="student_per_room"/>
+                                            <field name="availability"/>
+                                            <field name="telephone"/>
+                                            <field name="ac"/>
+                                            <field name="private_bathroom"/>
+                                            <field name="guest_sofa"/>
+                                            <field name="tv"/>
+                                            <field name="internet"/>
+                                            <field name="refrigerator"/>
+                                            <field name="microwave"/>
+                                        </group>
+                                        <field name="student_ids" colspan="4" nolabel="1">
+                                            <form string="Hostel Student">
+                                                <header>
+                                                    <button name="confirm_state" string="Confirm" states="reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <button name="reservation_state" string="Reservation" states="draft" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <button name="discharge_state" string="Discharge" states="confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <button name="print_fee_receipt" states="confirm" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                                    <field name="state" widget="statusbar" nolabel="1" />
+                                                </header>
+                                                <sheet>
+                                                    <separator string="Student Detail"/>
+                                                    <group col="4">
+                                                        <field name="hostel_id"/>
+                                                        <field name="student_id"/>
+                                                        <field name="school_id"/>
+                                                        <field name="bed_type"  widget="selection"/>
+                                                        <field name="admission_date"/>
+                                                        <field name="discharge_date"/>
+                                                        <field name="room_rent" />
+                                                        <field name="paid_amount"/>
+                                                        <field name="remaining_amount"/>
+                                                    </group>
+                                                </sheet>
+                                            </form>
+                                            <tree>
                                                 <field name="student_id"/>
-                                                <field name="school_id"/>
-                                                <field name="bed_type"  widget="selection"/>
-                                                <field name="admission_date"/>
-                                                <field name="discharge_date"/>
-                                                <field name="room_rent" />
+                                                <field name="room_rent"/>
                                                 <field name="paid_amount"/>
                                                 <field name="remaining_amount"/>
-                                            </group>
-                                        </sheet>
+                                                <field name="state"/>
+                                            </tree>
+                                        </field>
                                     </form>
-                                    <tree>
-                                        <field name="student_id"/>
-                                        <field name="room_rent"/>
-                                        <field name="paid_amount"/>
-                                        <field name="remaining_amount"/>
-                                        <field name="status"/>
-                                    </tree>
                                 </field>
-                            </form>
-                        </field>
+                            </page>
+                            <page string="Other Information">
+                                <field name="other_info"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -97,7 +101,7 @@
         <!-- Actions Of Form & Tree Views Of HOSTEL Type -->
 
         <record id="action_hostel_type" model="ir.actions.act_window">
-            <field name="name">HOSTEL Type</field>
+            <field name="name">Hostel Type</field>
             <field name="res_model">hostel.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -120,11 +124,18 @@
                     <sheet style="width: 10%%,height:10%%">
                         <separator string="Hostel Room"/>
                         <group col="4">
+                            <field name="full_name"/>
+                            <newline/>
                             <field name="name" required="1"/>
                             <field name="floor_no"/>
                             <field name="room_no"/>
+                            <newline/>
+                            <separator string="Availability"/>
+                            <newline/>
                             <field name="student_per_room"/>
                             <field name="availability"/>
+                            <separator string="Facilities"/>
+                            <newline/>
                             <field name="telephone"/>
                             <field name="ac"/>
                             <field name="private_bathroom"/>
@@ -133,6 +144,16 @@
                             <field name="internet"/>
                             <field name="refrigerator"/>
                             <field name="microwave"/>
+                            <newline/>
+                            <separator string="Students"/>
+                            <field name="student_ids" colspan="4" nolabel="1" readonly="1">
+                                <tree editable="top">
+                                    <field name="hostel_id"/>
+                                    <field name="student_id"/>
+                                    <field name="remaining_amount"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
                         </group>
                     </sheet>
                 </form>
@@ -158,7 +179,7 @@
         <!-- Action Of Form & Tree Views Of HOSTEL Room -->
 
         <record id="action_hostel_room" model="ir.actions.act_window">
-            <field name="name">HOSTEL Room</field>
+            <field name="name">Hostel Room</field>
             <field name="res_model">hostel.room</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -178,22 +199,24 @@
             <field name="arch" type="xml">
                 <form string="Hostel Student" >
                     <header>
-                        <button name="confirm_state" string="Confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
-                        <button name="reservation_state" string="Reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
-                        <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
-                        <field name="status" widget="statusbar" nolabel="1" />
+                        <button name="confirm_state" string="Confirm" states="reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                        <button name="reservation_state" string="Reservation" states="draft" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                        <button name="discharge_state" string="Discharge" states="confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                        <button name="print_fee_receipt" states="confirm" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                        <field name="state" widget="statusbar" nolabel="1" />
                     </header>
                     <sheet>
-                        <separator string="Hostel student"/>
                         <group col="4" colspan="4">
-                            <field name="student_id" />
                             <field name="hostel_id" />
-                            <field name="admission_date" />
-                            <field name="discharge_date" />
-                            <field name="room_rent" />
-                            <field name="bed_type"  widget="selection"/>
-                            <field name="paid_amount" />
-                            <field name="remaining_amount" />
+                            <newline/>
+                            <field name="student_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="hostel_room_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="admission_date" readonly="1"/>
+                            <field name="discharge_date" readonly="1"/>
+                            <field name="room_rent" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="bed_type"  widget="selection" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="paid_amount" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="remaining_amount" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -214,7 +237,7 @@
                     <field name="room_rent" />
                     <field name="paid_amount" />
                     <field name="remaining_amount" />
-                    <field name="status" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -233,7 +256,7 @@
                     <field name="room_rent" />
                     <field name="paid_amount" />
                     <field name="remaining_amount" />
-                    <field name="status" />
+                    <field name="state" />
                     <group expand="0" string="Group By..." colspan="6" col="4">
                         <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
                     </group>
@@ -262,7 +285,7 @@
                     <xpath expr="//div[@name='buttons']" position="inside">
                         <button name="%(action_hostel_student_button)d" type="action" class="oe_right oe_stat_button">
                             <img src="/school_hostel/static/description/hostel.jpg" style="height:25px;width:50px;float:left;"/>
-                            <lable style="">HOSTEL</lable>
+                            <lable style="">Hostel</lable>
                         </button>
                     </xpath>
                 </data>
@@ -272,7 +295,7 @@
         <!-- Actions Of Form & Tree Views Of HOSTEL Student -->
 
         <record id="action_hostel_student" model="ir.actions.act_window">
-            <field name="name">HOSTEL Student</field>
+            <field name="name">Hostel Student</field>
             <field name="res_model">hostel.student</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -303,7 +326,7 @@
             <field name="name">bed_type_Form</field>
             <field name="model">bed.type</field>
             <field name="arch" type="xml">
-                <form string="Bad Type Form">
+                <form string="Bed Type Form">
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name"/>
@@ -321,7 +344,7 @@
             <field name="name">bed_type_Tree</field>
             <field name="model">bed.type</field>
             <field name="arch" type="xml">
-                <tree string="Bad Type">
+                <tree string="Bed Type">
                     <field name="name"/>
                     <field name="description"/>
                 </tree>
@@ -342,6 +365,48 @@
         <menuitem id="menu_hostel" name="Hostel" parent="school.menu_configuration" sequence="4"/>
 
         <menuitem id="menu_bed_type" name="Bed Type" parent="menu_hostel" action="action_bed_type"/>
+
+        <!-- Form View Of Floor -->
+
+        <record id="hostel_floor_form" model="ir.ui.view">
+            <field name="name">hostel_floor_Form</field>
+            <field name="model">hostel.floor</field>
+            <field name="arch" type="xml">
+                <form string="Floor Form">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <newline/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Bed Type -->
+
+        <record id="hostel_floor_tree" model="ir.ui.view">
+            <field name="name">hostel_floor_Tree</field>
+            <field name="model">hostel.floor</field>
+            <field name="arch" type="xml">
+                <tree string="Floor">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Bed Type-->
+
+        <record id="action_hostel_floor" model="ir.actions.act_window">
+            <field name="name">Floor</field>
+            <field name="res_model">hostel.floor</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_hostel_floor" parent="menu_hostel" action="action_hostel_floor"/>
 
     </data>
 </openerp>

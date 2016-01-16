@@ -11,21 +11,18 @@
             <field name="arch" type="xml">
                 <form string="Authors">
                     <sheet>
+                        <group>
+                            <field name="name" placeholder="Author Name"/>
+                        </group>
                         <notebook>
-                            <page string="General Information">
-                                <group>
-                                    <field name="name" placeholder="Author Name"/>
-                                </group>
-                                <separator string="Books" colspan="4"/>
-                                <field name="book_ids" nolabel="1" colspan="4"/>
-                            </page>
-                            <page string="More Information">
-                                <separator string="Editors" colspan="4"/>
-                                <field name="editor_ids" nolabel="1" colspan="4"/>
-                                <separator string="Notes" colspan="4"/>
-                                <field name="note" nolabel="1" colspan="4"/>
+                            <page string="Books">
+                                <field name="book_ids" nolabel="1" colspan="4" readonly="1"/>
                                 <separator string="Biography" colspan="4"/>
                                 <field name="biography" nolabel="1" colspan="4"/>
+                            </page>
+                            <page string="Other Information">
+                                <separator string="Notes" colspan="4"/>
+                                <field name="note" nolabel="1" colspan="4"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -74,13 +71,15 @@
             <field name="name">Library Rack</field>
             <field name="model">library.rack</field>
             <field name="arch" type="xml">
-                <form string="Authors">
+                <form string="Rack">
                     <sheet>
                         <group>
                             <field name="name"/>
                             <field name="code"/>
                             <field name="active"/>
                         </group>
+                        <separator string="Case(s)"/>
+                        <field name="case_ids" colspan="4" nolabel="1"/>
                     </sheet>
                 </form>
             </field>
@@ -92,7 +91,7 @@
             <field name="name">Library Rack Tree</field>
             <field name="model">library.rack</field>
             <field name="arch" type="xml">
-                <tree string="Authors">
+                <tree string="Rack">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="active"/>
@@ -106,7 +105,7 @@
             <field name="name">Library Rack Search</field>
             <field name="model">library.rack</field>
             <field name="arch" type="xml">
-                <search string="Authors">
+                <search string="Rack">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="active"/>
@@ -124,6 +123,60 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <!-- Form View Of Library Case -->
+
+        <record id="case_form" model="ir.ui.view">
+            <field name="name">Library Case</field>
+            <field name="model">library.case</field>
+            <field name="arch" type="xml">
+                <form string="Case">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Library Case -->
+
+        <record id="case_tree" model="ir.ui.view">
+            <field name="name">Library Case Tree</field>
+            <field name="model">library.case</field>
+            <field name="arch" type="xml">
+                <tree string="Case">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Library Case -->
+
+        <record id="case_search" model="ir.ui.view">
+            <field name="name">Library Case Search</field>
+            <field name="model">library.case</field>
+            <field name="arch" type="xml">
+                <search string="Case">
+                    <field name="name"/>
+                    <field name="code"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions Of Form & Tree Views Of Library Case -->
+
+        <record id="action_library_case" model="ir.actions.act_window">
+            <field name="name">Library Case</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">library.case</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
         <!-- Menu Items Of Library -->
 
         <menuitem id="menu_library" name="Library" parent="school.menu_ems" sequence="5"/>
@@ -131,7 +184,11 @@
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"/>
 
         <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config"
-                  action="action_library_rack"
+                  action="action_library_rack" sequence="2"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+
+        <menuitem id="menu_library_case" name="Library Case" parent="menu_library_config"
+                  action="action_library_case" sequence="3"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of Product Book -->
@@ -152,21 +209,23 @@
                             <field name="isbn" placeholder="International Standard Book Number"/>
                             <field name="rack" placeholder="Position of book"/>
                             <field name="categ_id" placeholder="Select or Create Book"/>
+                            <field name="author" placeholder="Name of Author" required="1"/>
                             <field name="editor" placeholder="Editor" required="1"
-                                   context="{'form_view_ref':'library.view_partner_form_11'}"/>
-                            <field name="author" placeholder="Name of Author"/>
+                                   domain="[('supplier','=',True)]"
+                                   context="{'form_view_ref':'library.view_partner_form_11','default_supplier':True}"/>
                             <field name="collection" placeholder="Collection Name"/>
-                            <field name="virtual_available"/>
+                            <field name="qty_available"/>
                         </group>
                         <notebook>
                             <page string="Details">
                                 <group col="4" colspan="2">
+                                    <field name="list_price" string="Amount to be paid if lost" 
+                                        palceholder="Amount to be paid if lost"/>
                                     <field name="availability"/>
                                     <field name="nbpage" placeholder="No of Page in books"/>
                                     <field name="day_to_return_book" placeholder="Days of Returnning"/>
                                     <field name="creation_date"/>
-                                    <field name="date_parution" placeholder="Book Release Date"/>
-                                    <field name="date_retour"/>
+                                    <field name="date_parution" placeholder="Publishing Date"/>
                                     <field name="tome"/>
                                     <field name="format" placeholder="Format of Book"/>
                                     <field name="weight"/>
@@ -185,6 +244,14 @@
                                     <separator string="Supplier Taxes" colspan="2"/>
                                     <field name="supplier_taxes_id" nolabel="1"/>
                                 </group>
+                            </page>
+                            <page string="Location(s)">
+                                <field name="book_location_ids" nolabel="1" colspan="4">
+                                    <tree editable="top">
+                                        <field name="rack_id" required="1"/>
+                                        <field name="case_id" domain="[('rack_ids','in',[rack_id])]"/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Descriptions">
                                 <separator string="Description"/>
@@ -210,7 +277,6 @@
                     <field name="barcode"/>
                     <field name="catalog_num"/>
                     <field name="virtual_available"/>
-                    <field name="date_retour"/>
                     <field name="availability"/>
                 </tree>
             </field>
@@ -260,7 +326,7 @@
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" />
 
         <menuitem id="menu_book_products" name="Books" parent="menu_library_config"
-                  action="action_product_book_list"
+                  action="action_product_book_list" sequence="1"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian" />
 
         <!-- Action Of Form View Of View Book -->
@@ -280,24 +346,6 @@
             <field name="view_id" ref="view_product_book_tree"/>
             <field name="act_window_id" ref="action_product_book_list"/>
         </record>
-
-        <!-- Action Of Form & Tree Views Of Product Book 30 Days -->
-
-        <record id="action_product_book_30days" model="ir.actions.act_window">
-            <field name="name">Books to return before 30 days</field>
-            <field name="res_model">product.product</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_id" ref="view_product_book_tree"/>
-            <field name="domain">[('categ_id.name', '=', 'Books')]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-
-        <!-- Menu Item Of Books To Return Before 30 Days -->
-
-        <menuitem id="menu_action_book_30days" name="Books to return before 30 days" parent="menu_library"
-                  action="action_product_book_30days"
-                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Sale Order -->
 
@@ -325,13 +373,14 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-%m-%d 00:00:00')),('date_order','&lt;',time.strftime('%Y-%m-%d 23:59:59'))]</field>
             <field name="view_id" ref="view_order_tree"/>
         </record>
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="sale_order_day" name="Orders of the day" parent="menu_library" action="action_order_today_tree"
-                  groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
+        <menuitem id="sale_order_day" name="Sale orders of the day" parent="menu_library" action="action_order_today_tree"
+                  groups="school.group_school_administration,library.group_librarian,library.group_userian" sequence="3"/>
 
         <!-- Tree View Of Purchase Order -->
 
@@ -362,13 +411,14 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-%m-%d 00:00:00')),('date_order','&lt;',time.strftime('%Y-%m-%d 23:59:59'))]</field>
             <field name="view_id" ref="view_purchase_order_tree" />
         </record>
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
-                  sequence="2"
+        <menuitem id="purchase_order_day" name="Purchase orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
+                  sequence="4"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Account Invoice -->
@@ -471,19 +521,20 @@
                         <separator string="Card Details" colspan="4" col="4"/>
                         <group col="2" colspan="4">
                             <field name="code" placeholder="Code"/>
-                            <field name="user"/>
+                            <field name="user_title"/>
                             <field name="book_limit"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
+                        <group col="4" colspan="4" attrs="{'invisible':[('user_title','!=','student')]}">
                             <separator colspan="4" col="4" />
-                            <field name="student_id" on_change="on_change_student(student_id)"/>
+                            <field name="student_id" domain="[('state','!=','draft')]"/>
                             <field name="roll_no" />
                             <field name="standard_id"/>
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','teacher')]}">
+                        <group col="4" colspan="4" attrs="{'invisible':[('user_title','!=','teacher')]}">
                             <separator colspan="4" col="4"/>
-                            <field name="teacher_id"/>
+                            <field name="teacher_id" domain="[('relation_type','=','teacher')]"
+                                context="{'default_relation_type':'teacher'}"/>
                         </group>
                     </sheet>
                 </form>
@@ -498,7 +549,7 @@
             <field name="arch" type="xml">
                 <tree string="Card Details">
                     <field name="code"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="book_limit"/>
                     <field name="gt_name"/>
                 </tree>
@@ -513,7 +564,7 @@
             <field name="arch" type="xml">
                 <search string="Card Details">
                     <field name="code"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="gt_name"/>
                 </search>
             </field>
@@ -541,20 +592,21 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <header>
-                        <button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl" states="issue,reissue"
+                        <button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl" states="issue,reissue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="issue_book" string="Book Issue" icon="terp-gtk-jump-to-ltr" states="draft"
+                        <button name="issue_book" string="Book Issue" icon="terp-gtk-jump-to-ltr" states="draft" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="reissue_book" string="Book Reissue" icon="terp-gtk-jump-to-ltr" states="issue"
+                        <button name="reissue_book" string="Book Reissue" icon="terp-gtk-jump-to-ltr" states="issue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="cancel_book" string="Cancel" icon="gtk-cancel" states="draft,issue"
+                        <button name="cancel_book" string="Cancel" icon="gtk-cancel" states="draft,issue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="draft_book" string="Draft" icon="terp-document-new" states="cancel"
+                        <button name="draft_book" string="Draft" icon="terp-document-new" states="cancel" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue"
+                        <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue" type="object"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!" states="return,lost"
-                                attrs="{'invisible':[('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
+                        <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!"
+                                attrs="{'invisible':['|',('state','not in',('return', 'lost')),
+                                                     ('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
                         <field name="state" widget="statusbar" align="right" readonly="1"/>
                     </header>
@@ -562,28 +614,28 @@
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="issue_code" />
-                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]"/>
+                            <field name="name" domain="[('qty_available','&gt;',0),('categ_id.name', '=', 'Books')]"/>
                         </group>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
-                            <field name="card_id" on_change="on_change_card_issue(card_id)"/>
-                            <field name="user"/>
-                            <field name="gt_name" invisible="True"/>
+                            <field name="card_id" />
+                            <field name="user_title" readonly="1"/>
+                            <field name="gt_name" invisible="1"/>
                         </group>
                         <group col="4" colspan="4"
-                               attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user_title','!=','student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Student Details" colspan="4" col="4"/>
                             <field name="student_id" readonly="1"/>
                             <field name="roll_no" readonly="1"/>
                             <field name="standard_id" readonly="1"/>
                         </group>
                         <group col="2" colspan="4"
-                               attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user_title','!=','teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Teacher Details" colspan="4" col="4"/>
                             <field name="teacher_id" readonly="1"/>
                         </group>
                         <group col="4" colspan="4"
                                attrs="{'invisible':[('state','=','draft')], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
-                            <separator string="Issue Date" colspan="4" col="4" />
+                            <separator string="Date Details" colspan="4" col="4" />
                             <field name="day_to_return_book" attrs="{'required':[('state','=','issue')]}"/>
                             <field name="date_issue"/>
                             <field name="date_return"/>
@@ -605,7 +657,7 @@
                 <tree string="Books Issue" colors="blue:state in ('issue','reissue');red:(lost_penalty&gt;0.1);red:(penalty&gt;0.1);">
                     <field name="issue_code"/>
                     <field name="name"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="gt_name"/>
                     <field name="date_issue"/>
                     <field name="date_return"/>
@@ -628,8 +680,8 @@
                     <field name="name"/>
                     <field name="card_id"/>
                     <field name="gt_name"/>
-                    <field name="standard_id" attrs="{'invisible':[('user','!=','Student')]}"/>
-                    <field name="roll_no" attrs="{'invisible':[('user','!=','Student')]}"/>
+                    <field name="standard_id" attrs="{'invisible':[('user_title','!=','Student')]}"/>
+                    <field name="roll_no" attrs="{'invisible':[('user_title','!=','Student')]}"/>
                     <field name="date_issue"/>
                     <field name="date_return"/>
                     <field name="day_to_return_book"/>
@@ -708,7 +760,7 @@
                     <filter icon="terp-check" string="Return" domain="[('state','=','return')]"/>
                     <filter icon="gtk-cancel" string="Lost" domain="[('state','=','lost')]"/>
                     <field name="name"/>
-                    <field name="user"/>
+                    <field name="user_title"/>
                     <field name="gt_name"/>
                     <newline />
                     <group expand="0" string="Group By" colspan="12" col="10">
@@ -716,7 +768,7 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-personal" string="Name of book" help="By Book Name" context="{'group_by':'name'}"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-personal" string="User" help="User" context="{'group_by':'user'}"/>
+                        <filter icon="terp-personal" string="User" help="User" context="{'group_by':'user_title'}"/>
                     </group>
                 </search>
             </field>
@@ -735,7 +787,7 @@
         <!--Menu Item Of Library Book Issue -->
 
         <menuitem id="menu_book_issue_sub_form" name="Book Issues" parent="menu_library"
-                  action="action_library_book_list1" sequence="2"
+                  action="action_library_book_list1" sequence="1"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of Library Book Request -->
@@ -752,7 +804,7 @@
                             <field name="card_id" placeholder="Card Id"/>
                             <field name="type"/>
                             <field name="bk_nm" invisible="True"/>
-                            <field name="name" attrs="{'invisible':[('type','!=','existing')]}"/>
+                            <field name="name" domain="[('categ_id.name','=','Books')]" attrs="{'invisible':[('type','!=','existing')]}"/>
                             <field name="new1" attrs="{'invisible':[('type','!=','new')]}"/>
                         </group>
                     </sheet>
@@ -806,7 +858,7 @@
 
         <!-- Menu Item Of Library Book Request -->
 
-        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="4"
+        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="2"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
 
         <!-- Form view Of Product Language -->
@@ -867,7 +919,6 @@
                     <sheet>
                         <separator string="Book Return Days"/>
                         <group colspan="2" col="4">
-                            <field name="code" placeholder="Books Code"/>
                             <field name="day" placeholder="Return Day/s"/>
                             <field name="fine_amt"/>
                         </group>
@@ -883,7 +934,6 @@
             <field name="model">library.book.returnday</field>
             <field name="arch" type="xml">
                 <tree string="Book Return day">
-                    <field name="code"/>
                     <field name="day"/>
                     <field name="fine_amt"/>
                 </tree>
@@ -897,7 +947,6 @@
             <field name="model">library.book.returnday</field>
             <field name="arch" type="xml">
                 <search string="Book Return day">
-                    <field name="code"/>
                     <field name="day"/>
                     <field name="fine_amt"/>
                 </search>
@@ -934,7 +983,7 @@
                             <div class="oe_edit_only">
                                 <label for="name"/>
                                 (
-                                <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/>
+                                <field name="is_company" class="oe_inline"/>
                                 <label for="is_company" string="Is a Company?"/>
                                 )
                             </div>
@@ -943,18 +992,18 @@
                             </h1>
                             <field name="parent_id" placeholder="Company"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                attrs="{'invisible': [('is_company','=', True)]}" on_change="onchange_address(use_parent_address, parent_id)" />
+                                attrs="{'invisible': [('is_company','=', True)]}" />
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
-                        <div class="oe_right oe_button_box" name="buttons"></div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
                         <group>
                             <group>
                                 <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
                                 <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
                                     <field class="oe_inline" name="type"/>
                                     <label for="use_parent_address" class="oe_edit_only"/>
-                                    <field name="use_parent_address" class="oe_edit_only oe_inline"
-                                           on_change="onchange_address(use_parent_address, parent_id)"/>
+                                    <field name="use_parent_address" class="oe_edit_only oe_inline"/>
                                 </div>
                                 <label for="street" string="Address"/>
                                 <div>
@@ -1076,7 +1125,8 @@
                     <sheet>
                         <group>
                             <field name="name" required="1" context="{'form_view_ref':'library.view_partner_form_11'}"/>
-                            <field name="supplier_id" required="1"/>
+                            <field name="supplier_id" required="1" domain="[('supplier','=',True)]"
+                                context="{'default_supplier':True}"/>
                             <field name="sequence"/>
                             <field name="delay"/>
                             <field name="min_qty"/>
@@ -1131,7 +1181,7 @@
 
         <!-- Menu Item Of Library Editor Supplier -->
 
-        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
+        <menuitem name="Editor/Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of MRP Procurement Order -->
@@ -1143,7 +1193,8 @@
             <field name="arch" type="xml">
                 <field name="origin" position="after">
                     <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
+                    <field name="production_lot_id"/>
+                </field>
             </field>
         </record>
 
@@ -1174,7 +1225,8 @@
             <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
             <field name="arch" type="xml">
                 <field name="product_id" position="before">
-                    <field name="origin_ref"/></field>
+                    <field name="origin_ref"/>
+                </field>
             </field>
         </record>
 
@@ -1188,7 +1240,8 @@
                 <field name="product_id" position="after">
                     <field name="customer_ref"/>
                     <field name="origin_ref"/>
-                    <field name="production_lot_id"/></field>
+                    <field name="production_lot_id"/>
+                </field>
             </field>
         </record>
 
@@ -1201,7 +1254,8 @@
             <field name="arch" type="xml">
                 <field name="product_id" position="after">
                     <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
+                    <field name="production_lot_id"/>
+                </field>
             </field>
         </record>
 
@@ -1218,7 +1272,8 @@
             <field name="arch" type="xml">
                 <field name="price_subtotal" position="after">
                     <field name="customer_ref" select="1"/>
-                    <field name="production_lot_id" select="1"/></field>
+                    <field name="production_lot_id" select="1"/>
+                </field>
             </field>
         </record>
 
@@ -1244,7 +1299,8 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <field name="name" position="replace">
-                    <field name="name" domain="[('supplier','=',True)]"/></field>
+                    <field name="name" domain="[('supplier','=',True)]"/>
+                </field>
             </field>
         </record>
 
@@ -1257,7 +1313,8 @@
             <field name="arch" type="xml">
                 <field name="discount" position="after">
                     <field name="customer_ref" select="1"/>
-                    <field name="production_lot_id" select="1"/></field>
+                    <field name="production_lot_id" select="1"/>
+                </field>
             </field>
         </record>
 
@@ -1474,6 +1531,11 @@
                 </form>
             </field>
         </record>
+
+        <!-- Publisher Configuration -->
+        <menuitem id="menu_book_publisher" name="Publisher"
+            parent="menu_library_config"
+            action="base.action_partner_supplier_form" sequence="15"/>
 
     </data>
 </openerp>

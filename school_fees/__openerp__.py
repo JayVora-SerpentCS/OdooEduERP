@@ -15,7 +15,7 @@
           'views/school_fees_view.xml',
           'views/school_fees_sequence.xml',
           'views/student_fees_register_workflow.xml',
-          'views/student_payslip_workflow.xml',
+#          'views/student_payslip_workflow.xml',
           'views/student_payslip.xml',
           'views/student_fees_register.xml',
           'views/report_view.xml'],

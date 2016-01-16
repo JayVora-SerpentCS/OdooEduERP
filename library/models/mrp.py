@@ -15,6 +15,7 @@ class ProcurementOrder(models.Model):
 
     @api.v7
     def make_po(self, cr, uid, ids, context=None):
+        print "I AM CALLED"
         """ Make purchase order from procurement
         @param self : Object Pointer
         @param cr : Database Cursor

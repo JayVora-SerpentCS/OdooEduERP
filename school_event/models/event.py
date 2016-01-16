@@ -42,8 +42,11 @@ class SchoolEventParticipant(models.Model):
                           readonly=True)
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
                                        readonly=True)
-    sequence = fields.Integer('Rank', help="The sequence field is used to Give\
-                               Rank to the Participant", default=0)
+    sequence = fields.Integer('Rank', help="The sequence field is \
+                               used to Give Rank to the Participant",
+                               default=0)
+    registration_id = fields.Many2one('school.event.registration',
+                                      'Registration')
 
 
 class SchoolEvent(models.Model):
@@ -53,10 +56,9 @@ class SchoolEvent(models.Model):
     _rec_name = 'name'
 
     @api.one
+    @api.depends('part_ids')
     def _participants(self):
-        cnt = 0
-        cnt += 1
-        self.participants = cnt
+        self.participants = len(self.part_ids)
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),
@@ -64,11 +66,11 @@ class SchoolEvent(models.Model):
                                   'Event Type',
                                   help='Event is either IntraSchool\
                                         or InterSchool')
-    start_date = fields.Date('Start Date', help="Event Starting Date")
-    end_date = fields.Date('End Date', help="Event Ending Date")
-    start_reg_date = fields.Date('Start Registration Date',
+    start_date = fields.Date('Event Start Date', help="Event Starting Date")
+    end_date = fields.Date('Event End Date', help="Event Ending Date")
+    start_reg_date = fields.Date('Registration Start Date',
                                  help="Event registration starting date")
-    last_reg_date = fields.Date('Last Registration Date',
+    last_reg_date = fields.Date('Registration End Date',
                                 help="Last Date of registration")
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person',
                                      help="Event contact person")
@@ -88,7 +90,10 @@ class SchoolEvent(models.Model):
                                          'Participant Standards',
                                          help="The Participant is from\
                                                which standard")
-    state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
+    state = fields.Selection([('draft', 'Draft'), 
+                              ('reg_start', 'Registration Started'),
+                              ('reg_end', 'Registration Closed'),
+                              ('open', 'Running'),
                               ('close', 'Close'), ('cancel', 'Cancel')],
                              string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant',
@@ -102,18 +107,14 @@ class SchoolEvent(models.Model):
                                       on holiday.')
     color = fields.Integer('Color Index', default=0)
 
-    @api.constrains('start_date', 'end_date')
-    def _check_dates(self):
-
+    @api.constrains('start_date', 'end_date', 'start_reg_date',
+                    'last_reg_date')
+    def _check_all_dates(self):
         if (self.start_date
                 and self.end_date
                 and self.start_date > self.end_date):
             raise UserError(_('Error! Event start-date must be lower\
                              then Event end-date.'))
-
-    @api.constrains('start_date', 'end_date', 'start_reg_date',
-                    'last_reg_date')
-    def _check_all_dates(self):
 
         if (self.start_date
                 and self.end_date
@@ -121,46 +122,50 @@ class SchoolEvent(models.Model):
                 and self.last_reg_date):
 
             if self.start_reg_date > self.last_reg_date:
-                raise UserError(_('Error! Event Registration StartDate must be'
-                                  'lower than Event Registration end-date.'))
+                raise UserError(_('Error! Event Registration StartDate must\
+                                be lower than Event Registration end-date.'))
             elif self.last_reg_date >= self.start_date:
-                raise UserError(_('Error! Event Registration last-date must be\
-                                 lower than Event start-date.'))
+                raise UserError(_('Error! Event Registration last-date must\
+                                be lower than Event start-date.'))
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-
-        if self._context.get('part_name_id'):
+        context = dict(self._context)
+        if context is None:
+            context = {}
+        if args is None:
+            args = []
+        if context.get('part_name_id', False):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
-            args.append(arg_domain)
+            if data and data.class_id:
+                args.append(('part_standard_ids', 'in', [data.class_id.id]))
         return super(SchoolEvent, self).search(args, offset, limit, order,
                                                count=count)
 
     @api.multi
-    def event_open(self):
+    def registration_open(self):
+        return self.write({'state': 'reg_start'})
+    
+    @api.multi
+    def registration_closed(self):
+        return self.write({'state' : 'reg_end'})
 
-        if self.part_ids and self.part_ids[0].id:
-            self.write({'state': 'open'})
-        else:
-            raise except_orm(_('No Participants !'),
-                             _('No Participants to open the Event.'))
+    @api.multi
+    def event_open(self):
+        return self.write({'state' : 'open'})
 
     @api.multi
     def event_close(self):
-        self.write({'state': 'close'})
-        return True
+        return self.write({'state': 'close'})
 
     @api.multi
     def event_draft(self):
-        self.write({'state': 'draft'})
-        return True
+        return self.write({'state': 'draft'})
 
     @api.multi
     def event_cancel(self):
-        self.write({'state': 'cancel'})
-        return True
+        return self.write({'state': 'cancel'})
 
 
 class SchoolEventRegistration(models.Model):
@@ -179,129 +184,55 @@ class SchoolEventRegistration(models.Model):
                               ('confirm', 'Confirm'),
                               ('cancel', 'Cancel')], 'State', readonly=True,
                              default='draft')
-    is_holiday = fields.Boolean('Is Holiday(s)', help='Checked if the event is\
+    is_holiday = fields.Boolean('Is Holiday', help='Checked if the event is\
                                                     organized on holiday.')
 
     @api.multi
     def regi_cancel(self):
-        event_obj = self.env['school.event']
-        student_obj = self.env['student.student']
         event_part_obj = self.env['school.event.participant']
-        self.write({'state': 'cancel'})
 
         for reg_data in self:
-            event_data = event_obj.browse(reg_data.name.id)
-            prt_data = student_obj.browse(reg_data.part_name_id.id)
-            # delete entry of participant
-            domain = [('stu_pid', '=', prt_data.pid),
+            domain = [('stu_pid', '=', reg_data.part_name_id.pid),
                       ('event_id', '=', reg_data.name.id),
-                      ('name', '=', reg_data.part_name_id.id)]
+                      ('name', '=', reg_data.part_name_id.id),
+                      ('registration_id', '=', reg_data.id)]
             stu_prt_data = event_part_obj.search(domain)
             stu_prt_data.unlink()
-            # remove entry of event from student
-            list1 = []
-
-            for part in prt_data.event_ids:
-                part = student_obj.browse(part.id)
-                list1.append(part.id)
-            flag = True
-
-            for part in list1:
-                data = event_part_obj.browse(part)
-                if data.event_id.id == reg_data.name.id:
-                    flag = False
-
-            if not flag:
-                list1.remove(part)
-            stu_part_id = student_obj.browse(reg_data.part_name_id.id)
-            stu_part_id.write({'event_ids': [(6, 0, list1)]})
-            list1 = []
-            # remove entry of participant from event
-            flag = True
-
-            for par in event_data.part_ids:
-                part = event_part_obj.browse(par.id)
-                list1.append(part.id)
-
-            for par in list1:
-                data = event_part_obj.browse(par)
-
-                if data.name.id == reg_data.part_name_id.id:
-                    parii = par
-                    flag = False
-
-            if not flag:
-                list1.remove(parii)
-            participants = int(event_data.participants) - 1
-            event_reg_id = event_obj.browse(reg_data.name.id)
-            event_reg_id.write({'part_ids': [(6, 0, list1)],
-                                'participants': participants})
-        return True
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def regi_confirm(self):
-        self.write({'state': 'confirm'})
-        event_obj = self.env['school.event']
-        student_obj = self.env['student.student']
         event_part_obj = self.env['school.event.participant']
 
         for reg_data in self:
-            event_data = event_obj.browse(reg_data.name.id)
-            prt_data = student_obj.browse(reg_data.part_name_id.id)
-            participants = int(event_data.participants) + 1
+            participants = len(reg_data.name.part_ids) + 1
 
             # check participation is full or not.
-            if participants > event_data.maximum_participants:
+            if participants > reg_data.name.maximum_participants:
                 raise except_orm(_('Error !'),
                                  _('Participation in this Event is Full.'))
 
             # check last registration date is over or not
-            if reg_data.reg_date > event_data.last_reg_date:
+            if reg_data.reg_date > reg_data.name.last_reg_date:
                 raise except_orm(_('Error !'),
                                  _('Last Registration date is over'
                                    'for this Event.'))
             # make entry in participant
-            val = {'stu_pid': str(prt_data.pid),
+            val = {'stu_pid': str(reg_data.part_name_id.pid),
                    'score': 0,
-                   'win_parameter_id': event_data.parameter_id.id,
+                   'win_parameter_id': reg_data.name.parameter_id.id,
                    'event_id': reg_data.name.id,
+                   'registration_id' : reg_data.id,
                    'name': reg_data.part_name_id.id}
-            temp = event_part_obj.create(val)
-            # make entry of event in student
-            list1 = []
-
-            for evt in prt_data.event_ids:
-                part = student_obj.browse(evt.id)
-                list1.append(part.id)
-            flag = True
-
-            for evt in list1:
-                data = event_part_obj.browse(evt)
-                if data.event_id.id == reg_data.name.id:
-                    flag = False
-
-            if flag:
-                list1.append(temp.id)
-            stu_part_id = student_obj.browse(reg_data.part_name_id.id)
-            stu_part_id.write({'event_ids': [(6, 0, list1)]})
-            # make entry of participant in event
-            list1 = []
-            flag = True
-
-            for evt in event_data.part_ids:
-                part = event_part_obj.browse(evt.id)
-                list1.append(part.id)
-
-            for evt in list1:
-                data = event_part_obj.browse(evt)
-                if data.name.id == reg_data.part_name_id.id:
-                    flag = False
-
-            if flag:
-                list1.append(temp.id)
-            evnt_reg_id = event_obj.browse(reg_data.name.id)
-            evnt_reg_id.write({'part_ids': [(6, 0, list1)]})
-        return True
+            part_id = event_part_obj.create(val)
+            part_ids = [part.id for part in reg_data.name.part_ids]
+            part_ids.append(part_id.id)
+            reg_data.name.write({'part_ids': [(6, 0, part_ids)]})
+            event_ids = [event.id for event in \
+                         reg_data.part_name_id.event_ids]
+            event_ids.append(part_id.id)
+            reg_data.part_name_id.write({'event_ids' : [(6, 0, event_ids)]})
+        return self.write({'state': 'confirm'})
 
 
 class StudentStudent(models.Model):
@@ -315,10 +246,25 @@ class StudentStudent(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('name'):
-            event_obj = self.env['school.event']
-            event_data = event_obj.browse(self._context['name'])
+        context = dict(self._context)
+        if context is None:
+            context = {}
+        if context.get('name', False):
+            event_data = self.env['school.event'].browse(context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
-            args.append(('class_id', 'in', std_ids))
+            if std_ids:
+                args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self).search(args, offset, limit, order,
                                                   count=count)
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        context = self._context and dict(self._context) or {}
+        args = args or []
+        if context.get('name', False):
+            event_data = self.env['school.event'].browse(context['name'])
+            std_ids = [std_id.id for std_id in event_data.part_standard_ids]
+            args.append(('standard_id', 'in', std_ids))
+        return super(StudentStudent, self).name_search(name, args=args, \
+                                                       operator='ilike', \
+                                                       limit=limit)

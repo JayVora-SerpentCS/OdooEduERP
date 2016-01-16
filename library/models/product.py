@@ -81,11 +81,8 @@ class ProductProduct(models.Model):
 
         def _name_get(d):
             name = d.get('name', '')
-            ean = d.get('ean13', False)
-            if ean:
-                name = '[%s] %s' % (ean or '', name)
             return (d['id'], name)
-        return map(_name_get, self.read(['name', 'ean13']))
+        return map(_name_get, self.read(['name']))
 
     @api.multi
     def _default_categ(self):
@@ -95,7 +92,6 @@ class ProductProduct(models.Model):
         @param uid : Current Logged in User
         @param context : context arguments, like language, time zone
         '''
-
         if self._context is None:
             self._context = {}
         if 'category_id' in self._context and self._context['category_id']:
@@ -207,7 +203,7 @@ class ProductProduct(models.Model):
         # add link from editor to supplier:
         if 'editor' in vals:
             editor_id = vals['editor']
-            supplier_model = self.env['library.editor.supplier']
+            supplier_model = self.env['res.partner']
             domain = [('name', '=', editor_id)]
             supplier_ids = [idn.id for idn
                             in supplier_model.search(domain)
@@ -233,23 +229,18 @@ class ProductProduct(models.Model):
     catalog_num = fields.Char('Catalog number',
                        help="Shows Identification number of books")
     lang = fields.Many2one('product.lang', 'Language')
-    editor = fields.Many2one('res.partner', 'Editor', change_default=True)
+    editor = fields.Many2one('res.partner', 'Publisher', change_default=True)
     author = fields.Many2one('library.author', 'Author')
     code = fields.Char(compute="_product_code", method=True, string='Acronym',
                        store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
-    date_parution = fields.Date('Release date',
-                                help="Release(Issue) Date of book")
+    date_parution = fields.Date('Publishing Date',
+                                help="Publishing Date of book")
     creation_date = fields.Datetime('Creation date', readonly=True,
                                     help="Record creation date",
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_retour = fields.Date('Return Date', readonly=True,
-                            help='Book Return date',
-                            default=lambda *a:
-                                str(int(time.strftime("%Y")))
-                                + time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')
@@ -278,11 +269,20 @@ class ProductProduct(models.Model):
                                          'Book return Days')
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
+    book_location_ids = fields.One2many('library.book.location', 'book_id',
+                                        'Book Location(s)')
 
-    _sql_constraints = [('unique_ean13', 'unique(ean13)',
-                         'ean13 field must be unique across all the products'),
-                        ('code_uniq', 'unique (code)',
-                         'Code of the product must be unique !')]
+    _sql_constraints = [('code_uniq', 'unique (code)',
+                        'Code of the product must be unique !')]
+
+
+class BookLocation(models.Model):
+    _name = 'library.book.location'
+    _description = 'Book Location'
+
+    rack_id = fields.Many2one('library.rack', 'Rack')
+    case_id = fields.Many2one('library.case', 'Case')
+    book_id = fields.Many2one('library.book', 'Book')
 
 
 class BookAttachment(models.Model):
@@ -299,5 +299,4 @@ class BookAttachment(models.Model):
 class LibraryAuthor(models.Model):
     _inherit = 'library.author'
 
-    book_ids = fields.Many2many('product.product', 'author_book_rel',
-                                'author_id', 'product_id', 'Books', select=1)
+    book_ids = fields.One2many('product.product', 'author', 'Books')

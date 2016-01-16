@@ -2,11 +2,9 @@
 
 <openerp>
     <data>
-
         <template id="result_information_report">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="result">
-                    <!-- <t t-call="report.external_layout"> -->
+                <t t-foreach="docs" t-as="student">
                     <div class="page">
                         <div class="oe_structure" />
                         <div class="row" align="center">
@@ -14,158 +12,138 @@
                         </div>
                         <br />
                         <br />
-                        <table width="100%">
-                            <t t-esc="result.exam_results_ids.result=='Fail' "></t>
-                            <tr>
-                                <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <b>Student Name</b>
-                                </td>
-                                <td width="5%" style="font-size: 18px;">
-                                    <b>:</b>
-                                </td>
-                                <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.name"></span>
-                                    <span t-field="result.middle"></span>
-                                    <span t-field="result.last"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <b>Roll No</b>
-                                </td>
-                                <td width="5%" style="font-size: 18px;">
-                                    <b>:</b>
-                                </td>
-                                <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.roll_no"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <b>Standard</b>
-                                </td>
-                                <td width="5%" style="font-size: 18px;">
-                                    <b>:</b>
-                                </td>
-                                <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.standard_id.name"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <b>Division</b>
-                                </td>
-                                <td width="5%" style="font-size: 18px;">
-                                    <b>:</b>
-                                </td>
-                                <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.division_id.name"></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <b>Medium</b>
-                                </td>
-                                <td width="5%" style="font-size: 18px;">
-                                    <b>:</b>
-                                </td>
-                                <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.medium_id.name"></span>
-                                </td>
-                            </tr>
-                        </table>
-                        <br />
-                        <table width="100%">
-                            <thead style="background-color:#e6e6e6;">
-                                <tr>
-                                    <td align="center" width="15%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Subject Code</b>
-                                    </td>
-                                    <td align="center" width="20%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Subject Name</b>
-                                    </td>
-                                    <td align="center" width="15%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Maximum marks</b>
-                                    </td>
-                                    <td align="center" width="15%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Minimum Marks</b>
-                                    </td>
-                                    <td align="center" width="15%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Obtain Mark</b>
-                                    </td>
-                                    <td align="center" width="20%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Exam</b>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="get_lines(result.exam_results_ids,result)"
-                                   t-as="result_ids">
+                        <div align="center" style="font-family: 'Helvetica';">
+                            <b>Student Name : </b>
+                            <span t-field="student.name">
+                            </span>
+                            <span t-field="student.middle">
+                            </span>
+                            <span t-field="student.last">
+                            </span>
+                        </div>
+                        <br/>
+                        <t t-set="counter" t-value="1"/>
+                        <t t-foreach="get_result_info(student)" t-as="result">
+                            <b>Result : </b>
+                            <span t-esc="counter"/>
+                            <t t-set="counter" t-value="counter+1"/>
+                            <table width="100%">
+                                <thead style="background-color:#e6e6e6;">
                                     <tr>
-                                        <td align="center" width="15%"
-                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                            <span t-esc="result_ids.get('code')"></span>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Roll No</b>
                                         </td>
-                                        <td align="center" width="20%"
-                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                            <span t-esc="result_ids.get('name')"></span>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Standard</b>
                                         </td>
-                                        <td align="center" width="15%"
-                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                            <span t-esc="result_ids.get('maximum_marks')"></span>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>DIvision</b>
                                         </td>
-                                        <td align="center" width="15%"
-                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                            <span t-esc="result_ids.get('minimum_marks')"></span>
-                                        </td>
-                                        <td align="center" width="15%"
-                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                            <span t-esc="result_ids.get('obtain_marks')"></span>
-                                        </td>
-                                        <td align="center" width="20%"
-                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                            <span t-esc="result_ids.get('s_exam_ids')"></span>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Medium</b>
                                         </td>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                        <br />
-                        <br />
-                        <t t-foreach="get_exam_data(result.exam_results_ids,result)" t-as="exam_ids">
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <span t-esc="result.get('roll_no', '')" />
+                                        </td>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <span t-esc="result.get('standard', '')" />
+                                        </td>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <span t-esc="result.get('division', '')" />
+                                        </td>
+                                        <td align="center" width="25%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <span t-esc="result.get('medium', '')" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <table width="100%">
+                                <thead style="background-color:#e6e6e6;">
+                                    <tr>
+                                        <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Subject Code</b>
+                                        </td>
+                                        <td align="center" width="20%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Subject Name</b>
+                                        </td>
+                                        <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Maximum marks</b>
+                                        </td>
+                                        <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Minimum Marks</b>
+                                        </td>
+                                        <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Obtain Mark</b>
+                                        </td>
+                                        <td align="center" width="20%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                            <b>Exam</b>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="result.get('results',[])" t-as="line">
+                                        <tr>
+                                            <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                                <span t-esc="line.get('code')"/>
+                                            </td>
+                                            <td align="center" width="20%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                                <span t-esc="line.get('subject')"/>
+                                            </td>
+                                            <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                                <span t-esc="line.get('max_mark')"/>
+                                            </td>
+                                            <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                                <span t-esc="line.get('mini_marks')"/>
+                                            </td>
+                                            <td align="center" width="15%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                                <span t-esc="line.get('obt_marks')"/>
+                                            </td>
+                                            <td align="center" width="20%" style="font-family: 'Helvetica';border: 1px solid black;">
+                                                <span t-esc="line.get('exam')"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <br/>
                             <table width="100%">
                                 <tr>
-                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;background-color:#e6e6e6;">
+                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';border: 1px solid black;background-color:#e6e6e6;">
                                         <b>Total</b>
                                     </td>
-                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <span t-esc="exam_ids.get('total')"></span>
+                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';border: 1px solid black;">
+                                        <span t-esc="result.get('summary',{}).get('obtain')"></span>
                                     </td>
-                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;background-color:#e6e6e6;">
+                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';border: 1px solid black;background-color:#e6e6e6;">
                                         <b>Percentage</b>
                                     </td>
-                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <span t-esc="exam_ids.get('percentage')"></span>%
+                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';border: 1px solid black;">
+                                        <span t-esc="result.get('summary',{}).get('percentage')"></span>%
                                     </td>
-                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;background-color:#e6e6e6;">
+                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';border: 1px solid black;background-color:#e6e6e6;">
                                         <b>Result</b>
                                     </td>
-                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <span t-esc="exam_ids.get('result')"></span>
+                                    <td width="16.6%" align="center" style="font-family: 'Helvetica';border: 1px solid black;">
+                                        <span t-esc="result.get('p/f', '')"></span>
                                     </td>
                                 </tr>
                             </table>
+                            <br/>
+                            <br/>
+                            <br/>
                         </t>
                     </div>
                 </t>
             </t>
         </template>
-
     </data>
 </openerp>
