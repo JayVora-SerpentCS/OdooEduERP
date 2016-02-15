@@ -1321,7 +1321,7 @@
 		</record>
 
 		<!-- Student Document Type Tree View -->
-		<record model="ir.ui.view" id="view_standard_division_tree">
+		<record model="ir.ui.view" id="view_standard_document_tree">
 			<field name="name">document.type.tree</field>
 			<field name="model">document.type</field>
 			<field name="arch" type="xml">

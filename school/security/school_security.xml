@@ -43,7 +43,7 @@
          </record>
          
 		<!-- Record Rule for student profile info for admin for multi company -->
-		<record id="student_rule_multi_company_profile_record" model="ir.rule">
+		<record id="student_rule_multi_company_profile_record_admin" model="ir.rule">
             <field name="name">Personal Student multi company Record Admin</field>
             <field ref="model_student_student" name="model_id"/>
             <field eval="True" name="global"/>
@@ -52,7 +52,7 @@
          </record>
          
          <!-- Record Rule for student profile info for teacher for multi company -->
-		<record id="student_rule_multi_company_profile_record" model="ir.rule">
+		<record id="student_rule_multi_company_profile_record_teacher" model="ir.rule">
             <field name="name">Personal Student multi company Record Teacher</field>
             <field ref="model_student_student" name="model_id"/>
             <field eval="True" name="global"/>

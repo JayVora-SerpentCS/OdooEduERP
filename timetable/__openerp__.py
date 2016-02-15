@@ -3,9 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2015 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -21,25 +20,21 @@
 #
 ##############################################################################
 {
-    "name" : "Timetable Management",
-    "version" : "3.0",
-    "author" : "Serpent Consulting Services Pvt. Ltd.",
-    "website" : "http://www.serpentcs.com",
+    "name": "Timetable Management",
+    "version": "3.0",
+    "author": "Serpent Consulting Services Pvt. Ltd.",
+    "website": "http://www.serpentcs.com",
     "category": "School Management",
     "complexity": "easy",
     "description": "A module to School Timetable Management.",
-    "depends" : [
-        "school"
-    ],
-    "data" : [
+    "depends": ["school"],
+    "data": [
         "timetable_view.xml",
-        "report_view.xml", 
+        "report_view.xml",
         "security/ir.model.access.csv",
         "views/timetable.xml",
     ],
-    'test':[
-        "test/timetable.yml"
-    ],
+    'test': ["test/timetable.yml"],
     "installable": True,
     "auto_install": False,
     "application": True,

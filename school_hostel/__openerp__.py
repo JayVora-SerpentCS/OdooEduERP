@@ -3,8 +3,8 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,21 +20,21 @@
 #
 ##############################################################################
 {
-    "name" : "Hostel",
-    "version" : "3.0",
-    "author" : "Serpent Consulting Services Pvt. Ltd.",
+    "name": "Hostel",
+    "version": "3.0",
+    "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
-    "website" : "http://www.serpentcs.com",
+    "website": "http://www.serpentcs.com",
     "complexity": "easy",
-    "description" : """Module to Manages Hostel.
+    "description": """Module to Manages Hostel.
         Rooms Information,
         Allocation of Rooms Details
         Discharge of Room Details ...""",
-    "depends" : ["school"],
-    "demo" : [
+    "depends": ["school"],
+    "demo": [
               "demo/school_hostel_demo.xml"
-              ],
-    "data" : [
+        ],
+    "data": [
         "security/hostel_security.xml",
         "security/ir.model.access.csv",
         "hostel_view.xml",
@@ -42,7 +42,7 @@
         "report_view.xml",
         "views/hostel_fee_receipt.xml",
     ],
-    "installable" : True,
+    "installable": True,
     "auto_install": False,
 }
 

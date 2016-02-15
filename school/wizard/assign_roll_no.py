@@ -1,10 +1,10 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2011-2012 Serpent Consulting Services (<http://www.serpentcs.com>)
-#    Copyright (C) 2013-2014 Serpent Consulting Services (<http://www.serpentcs.com>)
+#    Copyright (C) 2011-Today Serpent Consulting Services PVT. LTD.
+#    (<http://www.serpentcs.com>)
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
 #    published by the Free Software Foundation, either version 3 of the
@@ -20,31 +20,35 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 
 # This wizard is designed for assigning the roll number to a student.
 
-class assign_roll_no(models.TransientModel):
+
+class AssignRollNo(models.TransientModel):
 
     _name = 'assign.roll.no'
     _description = 'Assign Roll Number'
-    
+
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
-    division_id = fields.Many2one('standard.division', 'Division', required=True)
-        
+    division_id = fields.Many2one('standard.division', 'Division',
+                                  required=True)
 
     @api.multi
     def assign_rollno(self):
         res = {}
         student_obj = self.env['student.student']
-        for student_data in self:
-            search_student_ids = student_obj.search([('standard_id','=',student_data.standard_id.id),
-                                                    ('medium_id' ,'=', student_data.medium_id.id),
-                                                    ('division_id', '=', student_data.division_id.id)])
+        for stud_data in self:
+            student_ids = student_obj.search([('standard_id', '=',
+                                               stud_data.standard_id.id),
+                                              ('medium_id', '=',
+                                               stud_data.medium_id.id),
+                                              ('division_id', '=',
+                                               stud_data.division_id.id)])
         number = 1
-        for student in search_student_ids:
-            student.write({'roll_no':number})
+        for student in student_ids:
+            student.write({'roll_no': number})
             number = number + 1
         return res
 
