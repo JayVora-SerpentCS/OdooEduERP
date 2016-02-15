@@ -961,9 +961,7 @@ class EmailTemplate(models.Model):
             ret['body_text'] = context['body_text']
             ret['subject'] = context['subject']
             ret['email_to'] = context['email_to']
-            return ret
-        else:
-            return ret
+        return ret
 
 #    @api.multi
 #    def generate_email(self, template_id, res_id):
