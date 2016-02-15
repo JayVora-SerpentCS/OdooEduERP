@@ -20,10 +20,9 @@
 #
 ##############################################################################
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api
 import time
 import openerp
-import datetime
 from datetime import date
 from datetime import datetime
 from openerp.tools.translate import _
@@ -941,38 +940,42 @@ class ResUsers(models.Model):
     @api.model
     def create(self, vals):
         vals.update({'employee_ids': False})
-        res = super(ResUsers, self).create(vals)
-        return res
+        return super(ResUsers, self).create(vals)
 
 
 class EmailTemplate(models.Model):
     _inherit = "email.template"
 
-#    def generate_email(self, cr, uid, template_id, res_id, context=None):
-#        if context is None:
-#            context = {}
-#        ret = super(email_template, self).generate_email(cr, uid,
-#                             template_id, res_id, context=context)
-#        if context.get('body_text', False) or context.get('subject',
-#                                     False) or context.get('email_to', False):
-#            ret['body_text'] = context['body_text']
-#            ret['subject'] = context['subject']
-#            ret['email_to'] = context['email_to']
-#            return ret
-#        else:
-#            return ret
-
-    @api.multi
-    def generate_email(self, template_id, res_id):
-        if self._context is None:
-            self._context = {}
-        ret = super(EmailTemplate, self).generate_email(template_id, res_id)
-        if self._context.get('body_text', False) or \
-                self._context.get('subject', False) or \
-                self._context.get('email_to', False):
-            ret['body_text'] = self._context['body_text']
-            ret['subject'] = self._context['subject']
-            ret['email_to'] = self._context['email_to']
+    def generate_email(self, cr, uid, template_id, res_id, context=None):
+        if context is None:
+            context = {}
+        ret = super(EmailTemplate,
+                    self).generate_email(cr, uid,
+                                         template_id,
+                                         res_id, context=context)
+        if context.get('body_text',
+                       False) or context.get('subject',
+                                             False) or context.get(
+                                                                   'email_to',
+                                                                   False):
+            ret['body_text'] = context['body_text']
+            ret['subject'] = context['subject']
+            ret['email_to'] = context['email_to']
             return ret
         else:
             return ret
+
+#    @api.multi
+#    def generate_email(self, template_id, res_id):
+#        if self._context is None:
+#            self._context = {}
+#        ret = super(EmailTemplate, self).generate_email(self._cr, self._uid,
+#                                                        template_id, res_id,
+#                                                        context=self._context)
+#        if self._context.get('body_text', False) or \
+#                self._context.get('subject', False) or \
+#                self._context.get('email_to', False):
+#            ret['body_text'] = self._context['body_text']
+#            ret['subject'] = self._context['subject']
+#            ret['email_to'] = self._context['email_to']
+#        return ret
