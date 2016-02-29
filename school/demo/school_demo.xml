@@ -79,24 +79,24 @@
                 <field name="code">2011</field>
                 <field name="sequence">1</field>
                 <field name="grade_id" ref="demo_student_grade_1"/>
-                <field name="date_start">01/01/2011</field>
-                <field name="date_stop">12/31/2011</field>
+                <field eval="2011-01-01" name="date_start"/>
+                <field eval="2011-12-31" name="date_stop"/>
         </record>
         <record id="demo_academic_year_2" model="academic.year">
                <field name="name">Academic Year 2012</field>
                <field name="code">2012</field>
                <field name="sequence">2</field>
                <field name="grade_id" ref="demo_student_grade_1"/>
-               <field name="date_start">01/01/2012</field>
-               <field name="date_stop">12/31/2012</field>
+               <field eval="2012-01-01" name="date_start"/>
+               <field eval="2012-12-31" name="date_stop"/>
         </record>
         <record id="demo_academic_year_3" model="academic.year">
                <field name="name">Academic Year 2013</field>
                <field name="code">2013</field>
                <field name="sequence">3</field>
                <field name="grade_id" ref="demo_student_grade_1"/>
-               <field name="date_start">01/01/2013</field>
-               <field name="date_stop">12/31/2013</field>
+               <field eval="2013-01-01" name="date_start"/>
+               <field eval="2013-12-31" name="date_stop"/>
         </record>
 
         <!-- Acadamic Month -->
