@@ -29,7 +29,8 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize
 from openerp.tools import image_resize_image_big
 from openerp.exceptions import except_orm, Warning as UserError
-
+from openerp.modules.module import get_module_resource
+from openerp import tools
 
 class AcademicYear(models.Model):
     ''' Defining an academic year '''
@@ -678,7 +679,7 @@ class HrEmployee(models.Model):
         ''' This function will automatically computes the subjects related \
                                                    to particular teacher.'''
         subject_obj = self.env['subject.subject']
-        subject_ids = subject_obj.search([('teacher_ids.id', '=', self.id)])
+        subject_ids = subject_obj.search([('teacher_ids', '=', self.id)])
         sub_list = []
         for sub_rec in subject_ids:
             sub_list.append(sub_rec.id)
