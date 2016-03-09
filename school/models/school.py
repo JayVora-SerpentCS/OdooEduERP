@@ -638,7 +638,7 @@ class HrEmployee(models.Model):
         ''' This function will automatically computes the subjects related to\
             particular teacher.'''
         subject_obj = self.env['subject.subject']
-        subject_ids = subject_obj.search([('teacher_ids.id', '=', self.id)])
+        subject_ids = subject_obj.search([('teacher_ids', '=', self.id)])
         sub_list = []
         for sub_rec in subject_ids:
             sub_list.append(sub_rec.id)
