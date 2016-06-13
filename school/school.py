@@ -952,12 +952,13 @@ class EmailTemplate(models.Model):
                     self).generate_email(cr, uid,
                                          template_id,
                                          res_id, context=context)
-        if (context.get('body_text', False) or
-            context.get('subject', False) or
-            context.get('email_to', False)):
-            ret['body_text'] = context['body_text']
-            ret['subject'] = context['subject']
-            ret['email_to'] = context['email_to']
+        body_text = context.get('body_text', False)
+        subject = context.get('subject', False)
+        email_to = context.get('email_to', False)
+        if (body_text or subject or email_to):
+            ret['body_text'] = body_text
+            ret['subject'] = subject
+            ret['email_to'] = email_to
         return ret
 
 #    @api.multi
