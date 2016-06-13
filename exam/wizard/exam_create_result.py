@@ -67,16 +67,14 @@ class ExamCreateResult(models.TransientModel):
                                 for line in exam.standard_id:
                                     sub_id = (line.standard_id.subject_id and
                                               line.subject_id.id or False),
-                                    min = (line.subject_id and
-                                           line.subject_id.minimum_marks
-                                           or 0.0)
-                                    max = (line.subject_id and
-                                           line.subject_id.maximum_marks
-                                           or 0.0)
+                                    mn = (line.subject_id and
+                                          line.subject_id.minimum_marks or 0.0)
+                                    mx = (line.subject_id and
+                                          line.subject_id.maximum_marks or 0.0)
                                     subject_obj.create({'exam_id': res.id,
                                                         'subject_id': sub_id,
-                                                        'minimum_marks': min,
-                                                        'maximum_marks': max
+                                                        'minimum_marks': mn,
+                                                        'maximum_marks': mx
                                                         })
                 else:
                     raise except_orm(_('Error !'), _('Please \

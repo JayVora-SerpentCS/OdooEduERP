@@ -50,7 +50,8 @@ class SchoolTeacherAssignment(models.Model):
 
     @api.multi
     def active_assignment(self):
-        '''  This method change state as active state and create assignment line
+        '''  This method change state as active state and create assignment
+             line
         @return : True
         '''
         assign_obj = self.env['school.student.assignment']

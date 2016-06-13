@@ -196,7 +196,7 @@ class ExamResult(models.Model):
                 total += sub_line.maximum_marks or 0
                 obtained_total += obtain_marks
             if total != 0.0:
-                per = (obtained_total/total) * 100
+                per = (obtained_total / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade

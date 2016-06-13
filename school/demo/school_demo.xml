@@ -75,72 +75,282 @@
 
         <!--Academic Year  Information-->
         <record id="demo_academic_year_1" model="academic.year">
-                <field name="name">Academic Year 2011</field>
-                <field name="code">2011</field>
+                <field name="name">Academic Year Previous</field>
+                <field name="code">First</field>
                 <field name="sequence">1</field>
                 <field name="grade_id" ref="demo_student_grade_1"/>
-                <field eval="2011-01-01" name="date_start"/>
-                <field eval="2011-12-31" name="date_stop"/>
+                <field eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01 %H:%M')" name="date_start"/>
+                <field eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-31 %H:%M')" name="date_stop"/>
         </record>
         <record id="demo_academic_year_2" model="academic.year">
-               <field name="name">Academic Year 2012</field>
-               <field name="code">2012</field>
+               <field name="name">Academic Year Current</field>
+               <field name="code">Second</field>
                <field name="sequence">2</field>
                <field name="grade_id" ref="demo_student_grade_1"/>
-               <field eval="2012-01-01" name="date_start"/>
-               <field eval="2012-12-31" name="date_stop"/>
+               <field eval="(DateTime.today()).strftime('%Y-01-01 %H:%M')" name="date_start"/>
+               <field eval="(DateTime.today()).strftime('%Y-12-31 %H:%M')" name="date_stop"/>
         </record>
         <record id="demo_academic_year_3" model="academic.year">
-               <field name="name">Academic Year 2013</field>
-               <field name="code">2013</field>
+               <field name="name">Academic Year Next</field>
+               <field name="code">Third</field>
                <field name="sequence">3</field>
                <field name="grade_id" ref="demo_student_grade_1"/>
-               <field eval="2013-01-01" name="date_start"/>
-               <field eval="2013-12-31" name="date_stop"/>
+               <field eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-01 %H:%M')" name="date_start"/>
+               <field eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')" name="date_stop"/>
         </record>
 
         <!-- Acadamic Month -->
-        <record id="demo_academic_month_1" model="academic.month">
+        <record id="demo_academic_month_previous_1" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
                 <field name="year_id" ref="school.demo_academic_year_1"/>
-                <field name="date_start">01/01/2011</field>
-                <field name="date_stop">12/31/2011</field>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-01-31 %H:%M')"/>
        </record>
-       <record id="demo_academic_month_3" model="academic.month">
-              <field name="name">February</field>
-              <field name="code">FEB</field>
-              <field name="year_id" ref="school.demo_academic_year_1"/>
-              <field name="date_start">02/01/2011</field>
-              <field name="date_stop">02/28/2011</field>
+       <record id="demo_academic_month_previous_2" model="academic.month">
+                <field name="name">February</field>
+                <field name="code">FEB</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-02-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-02-28 %H:%M')"/>
        </record>
-       <record id="demo_academic_month_4" model="academic.month">
+       <record id="demo_academic_month_previous_3" model="academic.month">
+                <field name="name">March</field>
+                <field name="code">MAR</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-03-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-03-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_4" model="academic.month">
+                <field name="name">April</field>
+                <field name="code">APR</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-04-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-04-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_5" model="academic.month">
+                <field name="name">May</field>
+                <field name="code">MAY</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-05-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-05-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_6" model="academic.month">
+                <field name="name">June</field>
+                <field name="code">JUN</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_7" model="academic.month">
+                <field name="name">July</field>
+                <field name="code">JUL</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-07-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-07-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_8" model="academic.month">
+                <field name="name">August</field>
+                <field name="code">AUG</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-08-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-08-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_9" model="academic.month">
+                <field name="name">September</field>
+                <field name="code">SEP</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-09-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-09-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_10" model="academic.month">
+                <field name="name">October</field>
+                <field name="code">OCT</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-10-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-10-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_11" model="academic.month">
+                <field name="name">November</field>
+                <field name="code">NOV</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-11-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-11-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_previous_12" model="academic.month">
+                <field name="name">December</field>
+                <field name="code">DEC</field>
+                <field name="year_id" ref="school.demo_academic_year_1"/>
+                <field name="date_start" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"/>
+       </record>
+        <record id="demo_academic_month_current_1" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
                 <field name="year_id" ref="school.demo_academic_year_2"/>
-                <field name="date_start">01/01/2012</field>
-                <field name="date_stop">01/31/2012</field>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-01-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-01-31 %H:%M')"/>
        </record>
-       <record id="demo_academic_month_2" model="academic.month">
-              <field name="name">February</field>
-              <field name="code">FEB</field>
-              <field name="year_id" ref="school.demo_academic_year_2"/>
-              <field name="date_start">02/01/2012</field>
-              <field name="date_stop">02/29/2012</field>
+       <record id="demo_academic_month_current_2" model="academic.month">
+                <field name="name">February</field>
+                <field name="code">FEB</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-02-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-02-28 %H:%M')"/>
        </record>
-       <record id="demo_academic_month_5" model="academic.month">
+       <record id="demo_academic_month_current_3" model="academic.month">
+                <field name="name">March</field>
+                <field name="code">MAR</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-03-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-03-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_4" model="academic.month">
+                <field name="name">April</field>
+                <field name="code">APR</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-04-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-04-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_5" model="academic.month">
+                <field name="name">May</field>
+                <field name="code">MAY</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-05-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-05-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_6" model="academic.month">
+                <field name="name">June</field>
+                <field name="code">JUN</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-06-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-06-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_7" model="academic.month">
+                <field name="name">July</field>
+                <field name="code">JUL</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-07-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-07-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_cur_8" model="academic.month">
+                <field name="name">August</field>
+                <field name="code">AUG</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-08-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-08-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_9" model="academic.month">
+                <field name="name">September</field>
+                <field name="code">SEP</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-09-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-09-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_10" model="academic.month">
+                <field name="name">October</field>
+                <field name="code">OCT</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-10-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-10-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_11" model="academic.month">
+                <field name="name">November</field>
+                <field name="code">NOV</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-11-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-11-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_current_12" model="academic.month">
+                <field name="name">December</field>
+                <field name="code">DEC</field>
+                <field name="year_id" ref="school.demo_academic_year_2"/>
+                <field name="date_start" eval="(DateTime.today()).strftime('%Y-12-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today()).strftime('%Y-12-31 %H:%M')"/>
+       </record>
+        <record id="demo_academic_month_next_1" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
                 <field name="year_id" ref="school.demo_academic_year_3"/>
-                <field name="date_start">01/01/2013</field>
-                <field name="date_stop">12/31/2013</field>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-31 %H:%M')"/>
        </record>
-       <record id="demo_academic_month_6" model="academic.month">
-              <field name="name">February</field>
-              <field name="code">FEB</field>
-              <field name="year_id" ref="school.demo_academic_year_3"/>
-             <field name="date_start">02/01/2013</field>
-              <field name="date_stop">02/28/2013</field>
+       <record id="demo_academic_month_next_2" model="academic.month">
+                <field name="name">February</field>
+                <field name="code">FEB</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-02-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-02-28 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_3" model="academic.month">
+                <field name="name">March</field>
+                <field name="code">MAR</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-03-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-03-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_4" model="academic.month">
+                <field name="name">April</field>
+                <field name="code">APR</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-04-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-04-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_5" model="academic.month">
+                <field name="name">May</field>
+                <field name="code">MAY</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-05-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-05-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_6" model="academic.month">
+                <field name="name">June</field>
+                <field name="code">JUN</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-06-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_7" model="academic.month">
+                <field name="name">July</field>
+                <field name="code">JUL</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-07-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-07-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_8" model="academic.month">
+                <field name="name">August</field>
+                <field name="code">AUG</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-08-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-08-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_9" model="academic.month">
+                <field name="name">September</field>
+                <field name="code">SEP</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-09-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-09-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_10" model="academic.month">
+                <field name="name">October</field>
+                <field name="code">OCT</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-10-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-10-31 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_11" model="academic.month">
+                <field name="name">November</field>
+                <field name="code">NOV</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-11-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-11-30 %H:%M')"/>
+       </record>
+       <record id="demo_academic_month_next_12" model="academic.month">
+                <field name="name">December</field>
+                <field name="code">DEC</field>
+                <field name="year_id" ref="school.demo_academic_year_3"/>
+                <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-01 %H:%M')"/>
+                <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"/>
        </record>
 
        <!--Standard Information-->
