@@ -22,7 +22,7 @@
 
 {
     "name": "Exam Management",
-    "version": "2.0",
+    "version": '8.0.2.0',
     "author": '''Odoo Community Association (OCA),
                  Serpent Consulting Services Pvt. Ltd.''',
     "license": 'AGPL-3',
