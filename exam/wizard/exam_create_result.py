@@ -80,5 +80,3 @@ class ExamCreateResult(models.TransientModel):
                     raise except_orm(_('Error !'), _('Please \
                                                       Select Standard Id.'))
             return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
