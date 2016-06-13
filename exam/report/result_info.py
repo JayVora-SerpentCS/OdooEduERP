@@ -48,13 +48,13 @@ class ResultInfo(report_sxw.rml_parse):
             for sub in sub_id.result_ids:
                 standard_id = sub_id.standard_id.standard_id.name
                 list_temp.append({'standard_id': standard_id,
-                             'name': sub.subject_id.name,
-                             'code': sub.subject_id.code,
-                             'maximum_marks': sub.maximum_marks,
-                             'minimum_marks': sub.minimum_marks,
-                             'obtain_marks': sub.obtain_marks,
-                             's_exam_ids': sub_id.s_exam_ids.name
-                             })
+                                  'name': sub.subject_id.name,
+                                  'code': sub.subject_id.code,
+                                  'maximum_marks': sub.maximum_marks,
+                                  'minimum_marks': sub.minimum_marks,
+                                  'obtain_marks': sub.obtain_marks,
+                                  's_exam_ids': sub_id.s_exam_ids.name
+                                  })
         return list_temp
 
     def get_exam_data(self, result_id, student):

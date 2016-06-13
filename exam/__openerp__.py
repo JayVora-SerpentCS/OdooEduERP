@@ -29,11 +29,6 @@
     "website": "http://www.serpentcs.com",
     "category": "School Management",
     "complexity": "easy",
-#    "description": """A module to manage the school examination:
-#        1. Define Exam Timetable
-#        2. Conduct Exams
-#        3. Generate Results
-#""",
     "depends": ["timetable"],
     "data": ["exam_view.xml",
              "exam_sequence.xml",
