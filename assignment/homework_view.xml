@@ -56,26 +56,26 @@
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-	                    <separator string="Teacher Assignment" colspan="4"/>
-	                    <group col="4" colspan="4">
-	                        <field name="name" placeholder="Assignment Name"/>
-	                        <field name="teacher_id" placeholder="Teacher Name"/>
-	                    </group>
-	                    
-	                    <group col="2" string="Standard" colspan="2">
-	                        <separator  colspan="4" col="4"/>
-	                        <field name="standard_id" select="1" placeholder="Standard"/>
-	                    </group>
-	                    <group col="2" string="Subject and Dates" colspan="2">
-	                        <separator colspan="4" col="4"/>
-	                        <field name="subject_id" select="1" placeholder="Subject"/>
-	                        <field name="assign_date" placeholder="Assign Date"/>
-	                        <field name="due_date" placeholder="Due Date"/>
-	                    </group>
-	                    <separator string="Attachements" colspan="4"/>
-	                    <group col="6" colspan="4">
-	                        <field name="attached_homework" placeholder="Attachement File"/>
-	                    </group>
+                        <separator string="Teacher Assignment" colspan="4"/>
+                        <group col="4" colspan="4">
+                            <field name="name" placeholder="Assignment Name"/>
+                            <field name="teacher_id" placeholder="Teacher Name"/>
+                        </group>
+                        
+                        <group col="2" string="Standard" colspan="2">
+                            <separator  colspan="4" col="4"/>
+                            <field name="standard_id" select="1" placeholder="Standard"/>
+                        </group>
+                        <group col="2" string="Subject and Dates" colspan="2">
+                            <separator colspan="4" col="4"/>
+                            <field name="subject_id" select="1" placeholder="Subject"/>
+                            <field name="assign_date" placeholder="Assign Date"/>
+                            <field name="due_date" placeholder="Due Date"/>
+                        </group>
+                        <separator string="Attachements" colspan="4"/>
+                        <group col="6" colspan="4">
+                            <field name="attached_homework" placeholder="Attachement File"/>
+                        </group>
                     
                     </sheet>
                 </form>
@@ -190,8 +190,8 @@
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
                         <button name="%(action_school_student_assignment_form_btn)d" type="action" class="oe_inline oe_stat_button">
-                      		<img src="/assignment/static/description/Assign.png" style="height:25px;width:50px;float:left;"/>
-                      		<lable style = "">Assignment</lable>
+                            <img src="/assignment/static/description/Assign.png" style="height:25px;width:50px;float:left;"/>
+                            <lable style = "">Assignment</lable>
                         </button>
                     </xpath>
                 </data>

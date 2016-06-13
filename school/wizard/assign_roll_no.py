@@ -51,5 +51,3 @@ class AssignRollNo(models.TransientModel):
             student.write({'roll_no': number})
             number = number + 1
         return res
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

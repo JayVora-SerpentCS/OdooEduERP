@@ -2,7 +2,7 @@
 <openerp>
     <data noupdate="1">
 
-		<record id="sequence_type_grn" model='ir.sequence.type'>
+        <record id="sequence_type_grn" model='ir.sequence.type'>
                 <field name="name">General Reg Number</field>
                 <field name="code">student.grn</field>
         </record>
@@ -17,7 +17,7 @@
              <field name="number_increment">1</field>
         </record>
         
-		<!-- Sequences for student.code (student code) -->
+        <!-- Sequences for student.code (student code) -->
         <record id="seq_student_code_type" model="ir.sequence.type">
             <field name="name">Student code</field>
             <field name="code">student.code</field>
@@ -29,7 +29,7 @@
             <field name="padding">3</field>
         </record>
         
-		<!-- Sequences for student.registration (Registration code) -->
+        <!-- Sequences for student.registration (Registration code) -->
         <record id="seq_student_reg_type" model="ir.sequence.type">
             <field name="name">Registration code</field>
             <field name="code">student.registration</field>

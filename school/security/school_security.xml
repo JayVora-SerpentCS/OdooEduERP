@@ -33,7 +33,7 @@
                 <field name="groups" eval="[(4, ref('group_school_teacher')),(4, ref('group_school_student')),(4, ref('group_school_parent'))]"/> 
         </record>
         
-		<!-- Record Rule for student profile info for Student -->
+        <!-- Record Rule for student profile info for Student -->
         <record id="student_rule_student_profile_record" model="ir.rule">
             <field name="name">Personal Student Profile Record</field>
             <field ref="model_student_student" name="model_id"/>
@@ -42,8 +42,8 @@
             <field name="groups" eval="[(4, ref('group_school_student'))]"/>
          </record>
          
-		<!-- Record Rule for student profile info for admin for multi company -->
-		<record id="student_rule_multi_company_profile_record_admin" model="ir.rule">
+        <!-- Record Rule for student profile info for admin for multi company -->
+        <record id="student_rule_multi_company_profile_record_admin" model="ir.rule">
             <field name="name">Personal Student multi company Record Admin</field>
             <field ref="model_student_student" name="model_id"/>
             <field eval="True" name="global"/>
@@ -52,7 +52,7 @@
          </record>
          
          <!-- Record Rule for student profile info for teacher for multi company -->
-		<record id="student_rule_multi_company_profile_record_teacher" model="ir.rule">
+        <record id="student_rule_multi_company_profile_record_teacher" model="ir.rule">
             <field name="name">Personal Student multi company Record Teacher</field>
             <field ref="model_student_student" name="model_id"/>
             <field eval="True" name="global"/>
@@ -61,7 +61,7 @@
          </record>
          
          <!-- Record Rule for standard info for admin for multi company -->
-		<record id="standard_rule_multi_company_profile_record" model="ir.rule">
+        <record id="standard_rule_multi_company_profile_record" model="ir.rule">
             <field name="name">Standard multi company Record Admin</field>
             <field ref="model_school_standard" name="model_id"/>
             <field eval="True" name="global"/>
@@ -70,7 +70,7 @@
          </record>
          
          <!-- Record Rule for standard info for teacher for multi company -->
-		<record id="student_rule_multi_company_profile_record" model="ir.rule">
+        <record id="student_rule_multi_company_profile_record" model="ir.rule">
             <field name="name">Standard multi company Record Teacher</field>
             <field ref="model_school_standard" name="model_id"/>
             <field eval="True" name="global"/>

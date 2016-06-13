@@ -49,7 +49,7 @@ class StudentMeeting(models.TransientModel):
                                     'email': student.email}))
         if flag:
             raise except_orm(_('Error !'), _("Following Student don't have \
-                             Email ID.\n\n"+error_student+"\nMeeting \
+                             Email ID.\n\n" + error_student + "\nMeeting \
                              cannot be scheduled."))
         cal_event_obj.create({
             'name': cur_rec.name,
@@ -59,5 +59,3 @@ class StudentMeeting(models.TransientModel):
             'attendee_ids': attendee_ids
         })
         return {'type': 'ir.actions.act_window_close'}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

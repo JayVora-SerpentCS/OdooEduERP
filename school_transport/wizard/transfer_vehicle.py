@@ -94,5 +94,3 @@ class transfer_vehicle(models.TransientModel):
             stu_prt_id = stu_prt_obj.browse(new_data.participation_id.id)
             stu_prt_id.write({'vehicle_id': new_data.new_vehicle_id.id})
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

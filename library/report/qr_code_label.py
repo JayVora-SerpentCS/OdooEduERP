@@ -24,13 +24,13 @@ from openerp.report import report_sxw
 import qrcode
 import base64
 import tempfile
-from openerp.osv import osv
+from openerp import models
 
 
-class qr_code_label(report_sxw.rml_parse):
+class QrCodeLabel(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(qr_code_label, self).__init__(cr, uid, name, context=context)
+        super(QrCodeLabel, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'get_qr_code': self.get_qr_code,
@@ -43,13 +43,8 @@ class qr_code_label(report_sxw.rml_parse):
         return base64.encodestring(file(filename, 'rb').read())
 
 
-class report_qrcode_lable(osv.AbstractModel):
+class ReportQrcodeLable(models.AbstractModel):
     _name = 'report.library.qrcode_label'
     _inherit = 'report.abstract_report'
     _template = 'library.qrcode_label'
-    _wrapped_report_class = qr_code_label
-
-# report_sxw.report_sxw('report.qr.code.label', 'product.product',
-#         'library/report/qrcode_label.rml',parser=qr_code_label, header=False)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _wrapped_report_class = QrCodeLabel
