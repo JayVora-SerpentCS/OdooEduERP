@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -20,10 +20,10 @@
 #
 ##############################################################################
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning as UserError
 
 
-class card_number(models.TransientModel):
+class CardNumber(models.TransientModel):
 
     _name = "card.number"
     _description = "Card Number"
@@ -48,5 +48,3 @@ class card_number(models.TransientModel):
                     'view_type': 'form',
                     'context': {'default_card_id': rec.card_id.id}
                 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

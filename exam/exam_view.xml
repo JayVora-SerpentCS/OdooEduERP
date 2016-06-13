@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-		<record model="ir.actions.act_window" id="action_stu_result_form">
+        <record model="ir.actions.act_window" id="action_stu_result_form">
             <field name="name">Result</field>
             <field name="res_model">exam.result</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_student_id': active_id}</field>
-        </record>	
+        </record>   
 
-		<record model="ir.ui.view" id="view_student_student_form2">
+        <record model="ir.ui.view" id="view_student_student_form2">
             <field name="name">student.student.form</field>
             <field name="model">student.student</field>
             <field name="inherit_id" ref="school.view_student_student_form_1"/>
@@ -25,234 +25,234 @@
                 </data>
             </field>
         </record>
-		
-		<!-- Exam Information Tree View -->
-		<record model="ir.ui.view" id="view_exam_exam_tree">
-			<field name="name">exam.exam.tree</field>
-			<field name="model">exam.exam</field>
-			<field name="arch" type="xml">
-				<tree string="Exam Information">
-					<field name="name" select="1"/>
-					<field name="start_date"/>
-					<field name="end_date"/>
-					<field name="write_date"/>
-					<field name="state"/>
-				</tree>
-			</field>
-		</record>
-		
-		<!-- Exam Information Search View -->
-		<record model="ir.ui.view" id="view_exam_exam_search">
-			<field name="name">exam.exam.search</field>
-			<field name="model">exam.exam</field>
-			<field name="arch" type="xml">
-				<search string="Exam Information Search">
-					<field name="exam_code" string="Exam Code"/>
-					<field name="name" string="Name"/>
-					<field name="start_date" string="Start Date"/>
-					<field name="end_date" string="End Date"/>
-					<newline />
-					<filter string="Running" domain="[('state','=','running')]" help="Exam is Running"/>
-					<filter string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
-					<newline />
-					<group expand="0" string="Group By" colspan="12" col="10">
-						<filter icon="terp-project" string="Date"
-							help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
-						<filter icon="terp-stock_symbol-selection" string="State"
-							help="By State" domain="[]" context="{'group_by':'state'}"/>
-					</group>
-				</search>
-			</field>
-		</record>
+        
+        <!-- Exam Information Tree View -->
+        <record model="ir.ui.view" id="view_exam_exam_tree">
+            <field name="name">exam.exam.tree</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <tree string="Exam Information">
+                    <field name="name" select="1"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="write_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Exam Information Search View -->
+        <record model="ir.ui.view" id="view_exam_exam_search">
+            <field name="name">exam.exam.search</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <search string="Exam Information Search">
+                    <field name="exam_code" string="Exam Code"/>
+                    <field name="name" string="Name"/>
+                    <field name="start_date" string="Start Date"/>
+                    <field name="end_date" string="End Date"/>
+                    <newline />
+                    <filter string="Running" domain="[('state','=','running')]" help="Exam is Running"/>
+                    <filter string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-project" string="Date"
+                            help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
+                        <filter icon="terp-stock_symbol-selection" string="State"
+                            help="By State" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-		<!-- Exam Information From View -->
-		<record model="ir.ui.view" id="view_exam_exam_form">
-			<field name="name">exam.exam.form</field>
-			<field name="model">exam.exam</field>
-			<field name="arch" type="xml">
-				<form string="Exam Information">
-				    <header>
+        <!-- Exam Information From View -->
+        <record model="ir.ui.view" id="view_exam_exam_form">
+            <field name="name">exam.exam.form</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <form string="Exam Information">
+                    <header>
                         <button name="set_to_draft" string="Set to Draft" type="object" states="cancelled" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_running" string="Start" type="object" states="draft" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_finish" string="Finish" type="object" states="running" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_cancel" string="Cancel" type="object" states="draft,running" groups="school.group_school_administration,school.group_school_teacher"/>
                         <field name="state" nolabel="1" widget="statusbar"/>
-				    </header>
-				    <sheet>
-					<separator string="Exam Detail"/>
-					<group col="4" colspan="6" attrs="{'readonly': [('state','!=','draft')]}">
-						<separator colspan="4" col="4" />
-						<field name="exam_code"/>
-						<field name="name" placeholder="Exam Name"/>
-					</group>
-					<group col="4" colspan="2">
-						<field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
-						<field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
-						<notebook colspan="4" >
-							<page string="Exam Schedule">
-								<field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
-							</page>
-							<page string="Standard">
-								<field name="standard_id" nolabel="1" colspan="4"/>
-							</page>
-						</notebook>
-					</group>
-					<group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
-						<field name="create_date" placeholder="Created Date"/>
-						<field name="write_date" placeholder="Last Update Date"/>
-					</group>
-				    </sheet>
-				</form>
-			</field>
-		</record>
-		
-		<!-- Exam Information Calendar view -->
-		<record id="view_exam_exam_calendar" model="ir.ui.view">
-			<field name="name">exam.exam.calendar</field>
-			<field name="model">exam.exam</field>
-			<field name="arch" type="xml">
-				<calendar string="Exam Information Calendar" color="name" date_start="start_date">
-					<field name="name"/>
-				</calendar>
-			</field>
-		</record>
-		
-		
+                    </header>
+                    <sheet>
+                    <separator string="Exam Detail"/>
+                    <group col="4" colspan="6" attrs="{'readonly': [('state','!=','draft')]}">
+                        <separator colspan="4" col="4" />
+                        <field name="exam_code"/>
+                        <field name="name" placeholder="Exam Name"/>
+                    </group>
+                    <group col="4" colspan="2">
+                        <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
+                        <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
+                        <notebook colspan="4" >
+                            <page string="Exam Schedule">
+                                <field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            </page>
+                            <page string="Standard">
+                                <field name="standard_id" nolabel="1" colspan="4"/>
+                            </page>
+                        </notebook>
+                    </group>
+                    <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
+                        <field name="create_date" placeholder="Created Date"/>
+                        <field name="write_date" placeholder="Last Update Date"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Exam Information Calendar view -->
+        <record id="view_exam_exam_calendar" model="ir.ui.view">
+            <field name="name">exam.exam.calendar</field>
+            <field name="model">exam.exam</field>
+            <field name="arch" type="xml">
+                <calendar string="Exam Information Calendar" color="name" date_start="start_date">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+        
+        
         <!-- Exam's Inherited TimeTable Form View -->
-	   <record id="extended_exam_time_table_form" model="ir.ui.view">
-			<field name="name">extended.exam.time.table.form</field>
-			<field name="model">time.table</field>
-			<field name="inherit_id" ref="timetable.view_time_table_form"/>
-			<field name="arch" type="xml">
-	          	<xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
-					<field name="timetable_type" placeholder= "Select Time Table Type"/>
-				</xpath> 
-			</field>
-		</record>
+       <record id="extended_exam_time_table_form" model="ir.ui.view">
+            <field name="name">extended.exam.time.table.form</field>
+            <field name="model">time.table</field>
+            <field name="inherit_id" ref="timetable.view_time_table_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
+                    <field name="timetable_type" placeholder= "Select Time Table Type"/>
+                </xpath> 
+            </field>
+        </record>
 
-		<!-- Exam Information Action -->
-		<record model="ir.actions.act_window" id="action_exam_exam_form">
-			<field name="name">Regular Exam</field>
-			<field name="res_model">exam.exam</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">calendar,tree,form</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_exam_exam_tree">
-			<field name="name">Regular Exam</field>
-			<field name="res_model">exam.exam</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
+        <!-- Exam Information Action -->
+        <record model="ir.actions.act_window" id="action_exam_exam_form">
+            <field name="name">Regular Exam</field>
+            <field name="res_model">exam.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_exam_exam_tree">
+            <field name="name">Regular Exam</field>
+            <field name="res_model">exam.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-		<!-- Exam Menu -->
-		<menuitem name="Exam" parent="school.menu_ems" id="menu_exam"
-			sequence="4" />
+        <!-- Exam Menu -->
+        <menuitem name="Exam" parent="school.menu_ems" id="menu_exam"
+            sequence="4" />
         <menuitem name="Exams" parent="menu_exam" id="menu_exam_sub_form"
             action="action_exam_exam_form" />
         
         <!-- Additional Exam Information Calendar view -->
-		<record id="view_additional_exam_calendar" model="ir.ui.view">
-			<field name="name">additional.exam.calendar</field>
-			<field name="model">additional.exam</field>
-			<field name="arch" type="xml">
-				<calendar string="Additional Exam Information Calendar" color="name" date_start="exam_date">
-					<field name="name"/>
-					<field name="standard_id" />
-					<field name="subject_id" />
-				</calendar>
-			</field>
-		</record>
+        <record id="view_additional_exam_calendar" model="ir.ui.view">
+            <field name="name">additional.exam.calendar</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <calendar string="Additional Exam Information Calendar" color="name" date_start="exam_date">
+                    <field name="name"/>
+                    <field name="standard_id" />
+                    <field name="subject_id" />
+                </calendar>
+            </field>
+        </record>
         
-		<!-- Additional Exam Information Tree View -->
-		<record model="ir.ui.view" id="view_additional_exam_tree">
-			<field name="name">additional.exam.tree</field>
-			<field name="model">additional.exam</field>
-			<field name="arch" type="xml">
-				<tree string="Additional Exam Information">
-					<field name="name" select="1" />
-					<field name="standard_id" />
-					<field name="subject_id" select="1" />
-					<field name="exam_date" />
-				</tree>
-			</field>
-		</record>
+        <!-- Additional Exam Information Tree View -->
+        <record model="ir.ui.view" id="view_additional_exam_tree">
+            <field name="name">additional.exam.tree</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <tree string="Additional Exam Information">
+                    <field name="name" select="1" />
+                    <field name="standard_id" />
+                    <field name="subject_id" select="1" />
+                    <field name="exam_date" />
+                </tree>
+            </field>
+        </record>
 
-		<!-- Additional Exam Information From View -->
-		<record model="ir.ui.view" id="view_additional_exam_form">
-			<field name="name">additional.exam.form</field>
-			<field name="model">additional.exam</field>
-			<field name="arch" type="xml">
-				<form string="Additional Exam Information">
-				    <sheet>
-						<group col="4" string="Additional Exam Information" colspan="6">
-							<field name="addtional_exam_code" />
-							<field name="name"  placeholder="Exam Name"/>
-							<field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
-							<field name="subject_id" placeholder="Select or Create Subject"/>
-						</group>
-						<group col="4" string="Examination Dates" colspan="4">
-							<field name="exam_date" placeholder="Exam Date"/>
-							<newline/>
-							<field name="create_date" placeholder="Created Date" />
-							<field name="write_date" placeholder="Last Updated Date"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
+        <!-- Additional Exam Information From View -->
+        <record model="ir.ui.view" id="view_additional_exam_form">
+            <field name="name">additional.exam.form</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <form string="Additional Exam Information">
+                    <sheet>
+                        <group col="4" string="Additional Exam Information" colspan="6">
+                            <field name="addtional_exam_code" />
+                            <field name="name"  placeholder="Exam Name"/>
+                            <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
+                            <field name="subject_id" placeholder="Select or Create Subject"/>
+                        </group>
+                        <group col="4" string="Examination Dates" colspan="4">
+                            <field name="exam_date" placeholder="Exam Date"/>
+                            <newline/>
+                            <field name="create_date" placeholder="Created Date" />
+                            <field name="write_date" placeholder="Last Updated Date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-		<!-- additional exam search view -->
-		<record model="ir.ui.view" id="view_additional_exam_search">
-			<field name="name">additional.exam.search</field>
-			<field name="model">additional.exam</field>
-			<field name="arch" type="xml">
-				<search string="Search">
-					<group col="10" colspan="4">
-						<field name="standard_id"/>
-					</group>
-					<newline />
-					<group expand="0" string="Group By" colspan="12" col="10">
-						<filter icon="terp-stock_symbol-selection" string="Standard"
-							help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
-						<separator orientation="vertical"/>
-						<filter icon="terp-personal" string="Subject" help="By Subject Name"
-							domain="[]" context="{'group_by':'subject_id'}"/>
-					</group>
-				</search>
-			</field>
-		</record>
+        <!-- additional exam search view -->
+        <record model="ir.ui.view" id="view_additional_exam_search">
+            <field name="name">additional.exam.search</field>
+            <field name="model">additional.exam</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="standard_id"/>
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Standard"
+                            help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-personal" string="Subject" help="By Subject Name"
+                            domain="[]" context="{'group_by':'subject_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-		<!-- Additional Exam Information Action -->
-		<record model="ir.actions.act_window" id="action_additional_exam_form">
-			<field name="name">Additional Exam</field>
-			<field name="res_model">additional.exam</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">calendar,tree,form</field>
-		</record>
+        <!-- Additional Exam Information Action -->
+        <record model="ir.actions.act_window" id="action_additional_exam_form">
+            <field name="name">Additional Exam</field>
+            <field name="res_model">additional.exam</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+        </record>
 
-		<!-- Addional Exam Menu -->
-		  <menuitem name="Additional Exam" parent="menu_exam"
+        <!-- Addional Exam Menu -->
+          <menuitem name="Additional Exam" parent="menu_exam"
             id="menu_additional_exam_sub_form" action="action_additional_exam_form"
             />
 
-		<!-- Result Information Tree View -->
-		<record model="ir.ui.view" id="view_exam_result_tree">
-			<field name="name">exam.result.tree</field>
-			<field name="model">exam.result</field>
-			<field name="arch" type="xml">
-				<tree string="Results">
-					<field name="student_id"/>
-					<field name="standard_id"/>
-					<field name="s_exam_ids"/>
-					<field name="percentage"/> 
-					<field name="total"/>
-					<field name="re_total"/>
-					<field name="result"/>
-				</tree>
-			</field>
-		</record>
-		 
-		
+        <!-- Result Information Tree View -->
+        <record model="ir.ui.view" id="view_exam_result_tree">
+            <field name="name">exam.result.tree</field>
+            <field name="model">exam.result</field>
+            <field name="arch" type="xml">
+                <tree string="Results">
+                    <field name="student_id"/>
+                    <field name="standard_id"/>
+                    <field name="s_exam_ids"/>
+                    <field name="percentage"/> 
+                    <field name="total"/>
+                    <field name="re_total"/>
+                    <field name="result"/>
+                </tree>
+            </field>
+        </record>
+         
+        
         <!-- Result Information From View -->
         <record model="ir.ui.view" id="view_exam_result_form">
             <field name="name">exam.results.form</field>
@@ -265,7 +265,7 @@
                         <button name="result_re_access" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_evaluation" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" icon="gtk-jump-to" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_evaluation_confirm" string="Compute Re-evaluation" states="re-evaluation" type="object" icon="gtk-execute"/>
-						<field name="state" widget="statusbar" readonly="1" />
+                        <field name="state" widget="statusbar" readonly="1" />
                     </header>
                     <sheet>
                         <group col="4" string="Exam Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
@@ -382,30 +382,30 @@
             </field>
         </record>
 
-		<!-- Result Search View -->
-		<record model="ir.ui.view" id="view_exam_result_search">
-			<field name="name">exam.result.search</field>
-			<field name="model">exam.result</field>
-			<field name="arch" type="xml">
-				<search string="Search">
-					<group col="10" colspan="4">
-						<field name="student_id"  />
-						<field name="standard_id"  />
-					</group>
-					<newline />
-					<group expand="0" string="Group By" colspan="12" col="10">
-						<filter icon="terp-stock_symbol-selection" string="Student"
-							help="By Name" domain="[]" context="{'group_by':'student_id'}" />
-						<separator orientation="vertical" />
-						<filter icon="terp-stock_symbol-selection" string="Standard"
-							help="By Name" domain="[]" context="{'group_by':'standard_id'}" />
-						<separator orientation="vertical" />
-					</group>
-				</search>
-			</field>
-		</record>
+        <!-- Result Search View -->
+        <record model="ir.ui.view" id="view_exam_result_search">
+            <field name="name">exam.result.search</field>
+            <field name="model">exam.result</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="student_id"  />
+                        <field name="standard_id"  />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Student"
+                            help="By Name" domain="[]" context="{'group_by':'student_id'}" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_symbol-selection" string="Standard"
+                            help="By Name" domain="[]" context="{'group_by':'standard_id'}" />
+                        <separator orientation="vertical" />
+                    </group>
+                </search>
+            </field>
+        </record>
 
-		 <record id="student_rule_exam_record" model="ir.rule">
+         <record id="student_rule_exam_record" model="ir.rule">
             <field name="name">Personal Exam Result Record</field>
             <field ref="exam.model_exam_result" name="model_id"/>
             <field eval="1" name="global"/>
@@ -413,19 +413,19 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
          </record>  
          
-		<!-- Result Information Action -->
-		<record model="ir.actions.act_window" id="action_exam_result_form">
-			<field name="name">Result</field>
-			<field name="res_model">exam.result</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
-		</record>
-		
-		<!-- Result Menu -->
+        <!-- Result Information Action -->
+        <record model="ir.actions.act_window" id="action_exam_result_form">
+            <field name="name">Result</field>
+            <field name="res_model">exam.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        
+        <!-- Result Menu -->
         <menuitem name="Exam Results" parent="menu_exam" id="menu_exam_result"
             action="action_exam_result_form" />
-		
-	     <!--Batchwise Result Information Tree View -->
+        
+         <!--Batchwise Result Information Tree View -->
         <record model="ir.ui.view" id="view_exam_batch_result_tree">
             <field name="name">exam.batchwise.result.tree</field>
             <field name="model">exam.batchwise.result</field>
@@ -454,7 +454,7 @@
                 </form>
             </field>
         </record>
-		<!--Gradewise Result Information Action -->
+        <!--Gradewise Result Information Action -->
         <record model="ir.actions.act_window" id="action_batchwise_exam_result_form">
             <field name="name">Batchwise Result</field>
             <field name="res_model">exam.batchwise.result</field>
@@ -462,87 +462,87 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-		
+        
         <!-- Batchwise Result Menu -->
         <menuitem name="Batchwise Exam Results" parent="menu_exam" id="menu_exam_batch_result"
             action="action_batchwise_exam_result_form" />
-		
-		<!-- Additional Result Information Tree View -->
-		<record model="ir.ui.view" id="view_additional_exam_result_tree">
-			<field name="name">additional.exam.result.tree</field>
-			<field name="model">additional.exam.result</field>
-			<field name="arch" type="xml">
-				<tree string="Results">
-					<field name="student_id" select="1"/>
-					<field name="roll_no_id" select="1"/>
-					<field name="a_exam_id"/>
-					<field name="standard_id"/>
-					<field name="obtain_marks"/>
-					<field name="result"/>
-				</tree>
-			</field>
-		</record>
+        
+        <!-- Additional Result Information Tree View -->
+        <record model="ir.ui.view" id="view_additional_exam_result_tree">
+            <field name="name">additional.exam.result.tree</field>
+            <field name="model">additional.exam.result</field>
+            <field name="arch" type="xml">
+                <tree string="Results">
+                    <field name="student_id" select="1"/>
+                    <field name="roll_no_id" select="1"/>
+                    <field name="a_exam_id"/>
+                    <field name="standard_id"/>
+                    <field name="obtain_marks"/>
+                    <field name="result"/>
+                </tree>
+            </field>
+        </record>
 
-		<!-- Additional Result Information From View -->
-		<record model="ir.ui.view" id="view_additional_exam_result_form">
-			<field name="name">additional.exam.result.form</field>
-			<field name="model">additional.exam.result</field>
-			<field name="arch" type="xml">
-				<form string="Results">
-				    <sheet>
-						<group col="4" string="Result Information" colspan="4">
-							<field name="a_exam_id"/>
-						</group>
-						<group col="4" string="Student Information" colspan="4">
-							<field name="student_id" on_change="on_change_student(student_id)" />
-							<field name="roll_no_id"/>
-							<field name="standard_id"/>
-						</group>
-						<group col="4" string="Result Information" colspan="4">
-							<field name="obtain_marks"/>
-							<field name="result"/>
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>
+        <!-- Additional Result Information From View -->
+        <record model="ir.ui.view" id="view_additional_exam_result_form">
+            <field name="name">additional.exam.result.form</field>
+            <field name="model">additional.exam.result</field>
+            <field name="arch" type="xml">
+                <form string="Results">
+                    <sheet>
+                        <group col="4" string="Result Information" colspan="4">
+                            <field name="a_exam_id"/>
+                        </group>
+                        <group col="4" string="Student Information" colspan="4">
+                            <field name="student_id" on_change="on_change_student(student_id)" />
+                            <field name="roll_no_id"/>
+                            <field name="standard_id"/>
+                        </group>
+                        <group col="4" string="Result Information" colspan="4">
+                            <field name="obtain_marks"/>
+                            <field name="result"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
 
-		<!--Additional Result Search View -->
-		<record model="ir.ui.view" id="view_additioanal_result_search">
-			<field name="name">additional.exam.resultsearch</field>
-			<field name="model">additional.exam.result</field>
-			<field name="arch" type="xml">
-				<search string="Search">
-					<group col="10" colspan="4">
-						<field name="student_id" />
-						<field name="standard_id" />
-					</group>
-					<newline />
-					<group expand="0" string="Group By" colspan="12" col="10">
-						<filter icon="terp-stock_symbol-selection" string="Student"
-							help="By Name" domain="[]" context="{'group_by':'student_id'}"/>
-						<separator orientation="vertical"/>
-						<filter icon="terp-stock_symbol-selection" string="Standard"
-							help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
-						<separator orientation="vertical"/>
-					</group>
-				</search>
-			</field>
-		</record>
+        <!--Additional Result Search View -->
+        <record model="ir.ui.view" id="view_additioanal_result_search">
+            <field name="name">additional.exam.resultsearch</field>
+            <field name="model">additional.exam.result</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="student_id" />
+                        <field name="standard_id" />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Student"
+                            help="By Name" domain="[]" context="{'group_by':'student_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-stock_symbol-selection" string="Standard"
+                            help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
+                        <separator orientation="vertical"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-		<!-- Additional Result Information Action -->
-		<record model="ir.actions.act_window" id="action_additional_exam_result_form01">
-			<field name="name">Additional Exam Results</field>
-			<field name="res_model">additional.exam.result</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
+        <!-- Additional Result Information Action -->
+        <record model="ir.actions.act_window" id="action_additional_exam_result_form01">
+            <field name="name">Additional Exam Results</field>
+            <field name="res_model">additional.exam.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-		<!-- Additional Exam Result Menu -->
-		
-		<menuitem name="Additional Exam Results" parent="menu_exam"
-			id="menu_additional_exam_result" action="action_additional_exam_result_form01"/>
+        <!-- Additional Exam Result Menu -->
+        
+        <menuitem name="Additional Exam Results" parent="menu_exam"
+            id="menu_additional_exam_result" action="action_additional_exam_result_form01"/>
         
         <!-- Result Information Tree View -->
          <record id="view_exam_result_board_view_form" model="ir.ui.view">
@@ -576,5 +576,5 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
          </record>
 
-	</data>
+    </data>
 </openerp>
