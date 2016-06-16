@@ -190,9 +190,9 @@ class library_book_issue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days) * 24 + (float(diff.seconds)
-                                                        / 3600)
-                    day = duration/24
+                    duration = (float(diff.days) * 24 + (float(diff.seconds) /
+                                                         3600))
+                    day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
 #     return res
@@ -212,8 +212,6 @@ class library_book_issue(models.Model):
                   lost penalty as value
         '''
 
-
-#         for line in self:
         if self.state:
             if self.state.title() == 'Lost':
                 fine = self.name.list_price
@@ -236,7 +234,7 @@ class library_book_issue(models.Model):
             card_ids = self.search([('card_id', '=', self.card_id.id),
                                     ('state', 'in', ['issue', 'reissue'])])
             if self.state == 'issue' or self.state == 'reissue':
-                if self.card_id.book_limit > len(card_ids)-1:
+                if self.card_id.book_limit > (len(card_ids) - 1):
                     return True
                 else:
                     raise Warning(_('Book issue limit  is over on this card'))
@@ -247,9 +245,7 @@ class library_book_issue(models.Model):
                     raise Warning(_('Book issue limit  is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
-    issue_code = fields.Char('Issue No.', required=True, default=lambda self:
-                             self.env['ir.sequence'].get('library.book.issue')
-                             or '/')
+    issue_code = fields.Char('Issue No.', required=True, default='New')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
@@ -281,6 +277,13 @@ class library_book_issue(models.Model):
                              "State", default='draft')
     user = fields.Char("User")
     color = fields.Integer("Color Index")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('issue_code', 'New') == 'New':
+            seq_obj = self.env['ir.sequence']
+            vals['issue_code'] = seq_obj.get('library.book.issue')
+        return super(library_book_issue, self).create(vals)
 
     @api.multi
     def on_change_card_issue(self, card_id):
@@ -440,8 +443,8 @@ class library_book_issue(models.Model):
                 if not record.teacher_id.address_home_id:
                     raise Warning(_('Error ! The Teacher must have a \
                                      Home address.'))
-                addr = (record.teacher_id.address_home_id
-                        and record.teacher_id.address_home_id.id)
+                addr = (record.teacher_id.address_home_id and
+                        record.teacher_id.address_home_id.id)
             vals_invoice = {
                 'partner_id': usr,
                 'address_invoice_id': addr,
@@ -500,9 +503,7 @@ class library_book_request(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True,
-                         default=lambda self:
-                         self.env['ir.sequence'].get('library.book.request')
-                         or '/')
+                         default='New')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
@@ -510,5 +511,12 @@ class library_book_request(models.Model):
     new1 = fields.Char('Book Name')
     bk_nm = fields.Char(compute="gt_bname", method=True, string='Name',
                         store=True)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('req_id', 'New') == 'New':
+            seq_obj = self.env['ir.sequence']
+            vals['req_id'] = seq_obj.get('library.book.request')
+        return super(library_book_request, self).create(vals)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

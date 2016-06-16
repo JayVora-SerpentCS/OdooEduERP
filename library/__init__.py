@@ -30,5 +30,3 @@ from . import wizard
 from . import stock
 from . import library_editor_supplier
 from . import account
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -130,19 +130,21 @@ class sale_order(models.Model):
                                    order.warehouse_id.out_type_id and
                                    order.warehouse_id.out_type_id.id or False)
                     if not picking_id:
-                        picking_id = picking_obj.create({
-                            'origin': order.name,
-                            'type': 'out',
-                            'state': 'draft',
-                            'move_type': order.picking_policy,
-                            'sale_id': order.id,
-                            'address_id': order.partner_shipping_id.id,
-                            'note': order.note,
-                            'invoice_state': ((order.order_policy == 'picking'
-                                               and '2binvoiced') or 'none'),
-                            'carrier_id': order.carrier_id.id,
-                            'picking_type_id': out_type_id
-                        })
+                        order_policy = ((order.order_policy == 'picking' and
+                                         '2binvoiced') or 'none')
+                        address_id = order.partner_shipping_id.id or False
+                        picking_vals = {'origin': order.name,
+                                        'type': 'out',
+                                        'state': 'draft',
+                                        'move_type': order.picking_policy,
+                                        'sale_id': order.id,
+                                        'address_id': address_id,
+                                        'note': order.note,
+                                        'invoice_state': order_policy,
+                                        'carrier_id': order.carrier_id.id,
+                                        'picking_type_id': out_type_id
+                                        }
+                        picking_id = picking_obj.create(picking_vals)
                     move_id = move_obj.create({
                         'name': 'SO:' + order.name or '',
                         'picking_id': picking_id.id,

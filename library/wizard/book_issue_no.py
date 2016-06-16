@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 from openerp import models, fields, api
 
 
-class book_name(models.TransientModel):
+class BookName(models.TransientModel):
 
     _name = "book.name"
     _description = "Book Name"
@@ -35,5 +35,3 @@ class book_name(models.TransientModel):
         for rec in self:
             rec.create({'name': rec.name.id, 'card_id': rec.card_id.id})
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

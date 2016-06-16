@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -164,7 +164,6 @@ class ExamResult(models.Model):
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
 
-    @api.one
     @api.depends('result_ids')
     def _compute_total(self):
         total = 0.0
@@ -196,14 +195,13 @@ class ExamResult(models.Model):
                 total += sub_line.maximum_marks or 0
                 obtained_total += obtain_marks
             if total != 0.0:
-                per = (obtained_total/total) * 100
+                per = (obtained_total / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res[result.id] = {'percentage': per, 'grade': grd}
         return res
 
-    @api.one
     @api.depends('result_ids', 'student_id')
     def _compute_result(self):
         flag = False
@@ -286,7 +284,7 @@ class ExamResult(models.Model):
         for result in self.browse(self.ids):
             opt_marks = []
             acc_mark = []
-            sum = 0.0
+            sum_temp = 0.0
             total = 0.0
             per = 0.0
             grd = 0.0
@@ -297,10 +295,10 @@ class ExamResult(models.Model):
                 if acc_mark[i] != 0.0:
                     opt_marks[i] = acc_mark[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                sum_temp = sum_temp + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum/total) * 100
+                per = (sum_temp / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
@@ -315,7 +313,7 @@ class ExamResult(models.Model):
         for result in self.browse(self.ids):
             opt_marks = []
             eve_marks = []
-            sum = 0.0
+            sum_temp = 0.0
             total = 0.0
             per = 0.0
             grd = 0.0
@@ -326,10 +324,10 @@ class ExamResult(models.Model):
                 if eve_marks[i] != 0.0:
                     opt_marks[i] = eve_marks[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                sum_temp = sum_temp + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum/total) * 100
+                per = (sum_temp / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
@@ -363,13 +361,12 @@ class ExamSubject(models.Model):
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
         if self.obtain_marks > self.maximum_marks:
-            raise UserError(_('The obtained marks and minimum marks should not \
+            raise UserError(_('The obtained marks and minimum marks should not\
                              extend maximum marks.'))
         elif self.minimum_marks > self.maximum_marks:
-            raise UserError(_('The obtained marks and minimum marks should not \
+            raise UserError(_('The obtained marks and minimum marks should not\
                              extend maximum marks.'))
 
-    @api.one
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
         if self.exam_id and self.exam_id.student_id:
@@ -404,7 +401,6 @@ class ExamResultBatchwise(models.Model):
     _rec_name = 'standard_id'
     _description = 'exam result Information by Batch wise'
 
-    @api.one
     @api.depends('standard_id', 'year')
     def compute_grade(self):
         fina_tot = 0
@@ -418,11 +414,9 @@ class ExamResultBatchwise(models.Model):
                                          self.standard_id.id)])
             for stand in stand_id:
                 student_ids = stud_obj.browse(stand.id)
-                if student_ids.result_ids:
-                    for res_line in student_ids.result_ids:
-                        count += 1
-                    fina_tot += student_ids.total
-                divi = fina_tot/count  # Total_obtain mark of all student
+                count = len(student_ids.result_ids)
+                fina_tot += student_ids.total
+                divi = fina_tot / count  # Total_obtain mark of all student
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
                         if divi >= grade_id.from_mark:
@@ -440,7 +434,6 @@ class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'
 
-    @api.one
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
         if self.a_exam_id and self.a_exam_id.subject_id:
@@ -494,5 +487,3 @@ class StudentStudent(models.Model):
         return super(StudentStudent, self).search(args=args, offset=offset,
                                                   limit=limit, order=order,
                                                   count=count)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

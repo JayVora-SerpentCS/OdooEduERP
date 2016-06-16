@@ -100,5 +100,3 @@ class MoveStandards(models.TransientModel):
                                              _("Student is not eligible \
                                                for Next Standard."))
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -29,8 +29,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize
 from openerp.tools import image_resize_image_big
 from openerp.exceptions import except_orm, Warning as UserError
-from openerp.modules.module import get_module_resource
-from openerp import tools
+
 
 class AcademicYear(models.Model):
     ''' Defining an academic year '''
@@ -124,8 +123,8 @@ class AcademicMonth(models.Model):
                 self.year_id.date_stop < self.date_start or \
                 self.year_id.date_start > self.date_start or \
                     self.year_id.date_start > self.date_stop:
-                raise UserError(_('Invalid Months ! Some months overlap or the \
-                                date period is not in the scope of \
+                raise UserError(_('Invalid Months ! Some months overlap or\
+                                the date period is not in the scope of \
                                 the academic year.'))
 
 
@@ -192,7 +191,7 @@ class SchoolStandard(models.Model):
     def import_subject(self):
         for im_ob in self:
             import_sub_ids = self.search([('standard_id', '=',
-                                           int(im_ob.standard_id)-1)])
+                                           int(im_ob.standard_id) - 1)])
             val = [last.id for sub in import_sub_ids
                    for last in sub.subject_ids]
             self.write({'subject_ids': [(6, 0, val)]})
@@ -219,7 +218,7 @@ class SchoolStandard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = (standard.standard_id.name+"[" +
+            name = (standard.standard_id.name + "[" +
                     standard.division_id.name + "]")
             res.append((standard.id, name))
         return res
@@ -510,8 +509,8 @@ class StudentStudent(models.Model):
             student_search_ids = self.search([('standard_id', '=',
                                                student_data.standard_id.id)])
             number = 1
-            for student in self.browse(student_search_ids):
-                self.write({'roll_no': number})
+            for student in student_search_ids:
+                student.write({'roll_no': number})
                 number += 1
             reg_code = self.env['ir.sequence'].get('student.registration')
             registation_code = (str(student_data.school_id.state_id.name) +
@@ -806,7 +805,6 @@ class StudentNews(models.Model):
                                 this news is related.")
     color = fields.Integer('Color Index', default=0)
 
-
 #    @api.v7
 #    def news_update(self, cr, uid, ids, context = None):
 #        emp_obj = self.pool.get("hr.employee")
@@ -954,14 +952,13 @@ class EmailTemplate(models.Model):
                     self).generate_email(cr, uid,
                                          template_id,
                                          res_id, context=context)
-        if context.get('body_text',
-                       False) or context.get('subject',
-                                             False) or context.get(
-                                                                   'email_to',
-                                                                   False):
-            ret['body_text'] = context['body_text']
-            ret['subject'] = context['subject']
-            ret['email_to'] = context['email_to']
+        body_text = context.get('body_text', False)
+        subject = context.get('subject', False)
+        email_to = context.get('email_to', False)
+        if (body_text or subject or email_to):
+            ret['body_text'] = body_text
+            ret['subject'] = subject
+            ret['email_to'] = email_to
         return ret
 
 #    @api.multi

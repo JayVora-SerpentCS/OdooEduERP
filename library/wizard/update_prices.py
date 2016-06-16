@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 from openerp import models, api
 
 
-class update_prices(models.TransientModel):
+class UpdatePrices(models.TransientModel):
 
     _name = "update.prices"
 
@@ -36,5 +36,3 @@ class update_prices(models.TransientModel):
                 for prod_line in prod_ids:
                     prod_line.write({'list_price': cat.price})
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

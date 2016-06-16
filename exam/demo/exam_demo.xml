@@ -20,7 +20,7 @@
             <field name="name">Final Exam Timetable</field>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>
 <!--             <field name="class_id" ref="school.demo_school_standard_1"/> -->
-			<field name="standard_id" ref="school.demo_school_standard_1"/>
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="timetable_type">exam</field>
             <field name="year_id" ref="school.demo_academic_year_1"/>
             <field model="exam.exam" name="exam_id" search="[('name', '=', u'Final Exam')]"/>
@@ -190,7 +190,7 @@
         <record id="additional_exam_result_0" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
-       	    <field eval="60.0" name="obtain_marks"/>
+            <field eval="60.0" name="obtain_marks"/>
         </record>
          <record id="additional_exam_result_1" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_2"/>
@@ -214,20 +214,20 @@
         </record>
         
     <!-- Bactchwise Exam Result -->  
-    	  <record id="batchwise_exam_result_1" model="exam.batchwise.result">
-    	     <field name="year" ref="school.demo_academic_year_1"/>
-    	  	 <field name="standard_id" ref="school.demo_school_standard_1"/>
-    	  	 <field name="grade">A</field>
-    	  </record>	 
-  		  <record id="batchwise_exam_result_2" model="exam.batchwise.result">
-    	     <field name="year" ref="school.demo_academic_year_2"/>
-    	  	 <field name="standard_id" ref="school.demo_school_standard_2"/>
-    	  	 <field name="grade">B</field>
-    	  </record>
-    	  <record id="batchwise_exam_result_3" model="exam.batchwise.result">
-    	     <field name="year" ref="school.demo_academic_year_3"/>
-    	  	 <field name="standard_id" ref="school.demo_school_standard_3"/>
-    	  	 <field name="grade">C</field>
-    	  </record>	
+          <record id="batchwise_exam_result_1" model="exam.batchwise.result">
+             <field name="year" ref="school.demo_academic_year_1"/>
+             <field name="standard_id" ref="school.demo_school_standard_1"/>
+             <field name="grade">A</field>
+          </record>  
+          <record id="batchwise_exam_result_2" model="exam.batchwise.result">
+             <field name="year" ref="school.demo_academic_year_2"/>
+             <field name="standard_id" ref="school.demo_school_standard_2"/>
+             <field name="grade">B</field>
+          </record>
+          <record id="batchwise_exam_result_3" model="exam.batchwise.result">
+             <field name="year" ref="school.demo_academic_year_3"/>
+             <field name="standard_id" ref="school.demo_school_standard_3"/>
+             <field name="grade">C</field>
+          </record> 
     </data>
 </openerp>

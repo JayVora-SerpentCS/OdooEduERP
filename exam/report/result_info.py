@@ -21,12 +21,12 @@
 ##############################################################################
 import time
 from openerp.report import report_sxw
-from openerp.osv import orm
+from openerp import models
 
 
-class result(report_sxw.rml_parse):
+class ResultInfo(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context=None):
-        super(result, self).__init__(cr, uid, name, context=context)
+        super(ResultInfo, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'get_lines': self.get_lines,
@@ -35,50 +35,49 @@ class result(report_sxw.rml_parse):
         })
 
     def get_grade(self, result_id, student):
-        list = []
+        list_temp = []
         value = {}
         for stu_res in student.year.grade_id.grade_ids:
             value.update({'fail': stu_res.fail})
-        list.append(value)
-        return list
+        list_temp.append(value)
+        return list_temp
 
     def get_lines(self, result_id, student):
-        list = []
+        list_temp = []
         for sub_id in result_id:
             for sub in sub_id.result_ids:
                 standard_id = sub_id.standard_id.standard_id.name
-                list.append({'standard_id': standard_id,
-                             'name': sub.subject_id.name,
-                             'code': sub.subject_id.code,
-                             'maximum_marks': sub.maximum_marks,
-                             'minimum_marks': sub.minimum_marks,
-                             'obtain_marks': sub.obtain_marks,
-                             's_exam_ids': sub_id.s_exam_ids.name
-                             })
-        return list
+                list_temp.append({'standard_id': standard_id,
+                                  'name': sub.subject_id.name,
+                                  'code': sub.subject_id.code,
+                                  'maximum_marks': sub.maximum_marks,
+                                  'minimum_marks': sub.minimum_marks,
+                                  'obtain_marks': sub.obtain_marks,
+                                  's_exam_ids': sub_id.s_exam_ids.name
+                                  })
+        return list_temp
 
     def get_exam_data(self, result_id, student):
-        list = []
+        list_temp = []
         value = {}
         final_total = 0
         count = 0
         per = 0.0
         for res in result_id:
-            for sub in res.result_ids:
-                count += 1
-                per = float(res.total/count)
+            count = len(res.result_ids)
+            per = float(res.total / count)
             final_total = final_total + res.total
             value.update({'result': res.result,
                           'percentage': per,
                           'total': final_total,
                           })
 
-        list.append(value)
-        return list
+            list_temp.append(value)
+        return list_temp
 
 
-class ReportResultInfo(orm.AbstractModel):
+class ReportResultInfo(models.AbstractModel):
     _name = 'report.exam.result_information_report'
     _inherit = 'report.abstract_report'
     _template = 'exam.result_information_report'
-    _wrapped_report_class = result
+    _wrapped_report_class = ResultInfo

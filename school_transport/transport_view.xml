@@ -95,14 +95,14 @@
                     </group>
                     <separator string="Transportation Detail" orientation="vertical"/>
                     <group col="4" colspan="4">
-	                    <field name="transport_id"/>
-	                    <field name="vehicle_id"/>
-	                    <field name="point_id"/>
-	                    <field name="months"/>
-	                    <field name="tr_reg_date"/>
-	                    <field name="tr_end_date"/>
-	                    <field name="amount"/>
-	                    <field name="state"/>
+                        <field name="transport_id"/>
+                        <field name="vehicle_id"/>
+                        <field name="point_id"/>
+                        <field name="months"/>
+                        <field name="tr_reg_date"/>
+                        <field name="tr_end_date"/>
+                        <field name="amount"/>
+                        <field name="state"/>
                     </group>
                     </sheet>
                 </form>
@@ -302,23 +302,23 @@
             <field name="model">transport.registration</field>
             <field name="arch" type="xml">
                 <form string="Transport Registration">
-	                <header>
-	                    <button name="trans_regi_confirm" icon="gtk-apply" string="Confirm" states="draft" type='object'/>
-	                    <button name="trans_regi_cancel" icon="gtk-cancel" string="Cancel" states="draft" type='object'/>
-	                    <field name="state" widget="statusbar" readonly="1"/>
-	                </header>
-	                <sheet>
-	                    <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-	                       <separator string="Transport Registration" colspan="4"/>
-	                        <field name="part_name" placeholder="Enter Participant Name"/>
-	                        <field name="name" placeholder="Enter Transport Root Name"/>
-	                        <field name="vehicle_id" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
-	                        <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
-	                        <field name="m_amount"/>
-	                        <field name="for_month" on_change="onchange_for_month(for_month)"/>
-	                        <field name="reg_date"/>
-	                        <field name="reg_end_date" context="{'for_month':for_month}"/>
-	                    </group>
+                    <header>
+                        <button name="trans_regi_confirm" icon="gtk-apply" string="Confirm" states="draft" type='object'/>
+                        <button name="trans_regi_cancel" icon="gtk-cancel" string="Cancel" states="draft" type='object'/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
+                           <separator string="Transport Registration" colspan="4"/>
+                            <field name="part_name" placeholder="Enter Participant Name"/>
+                            <field name="name" placeholder="Enter Transport Root Name"/>
+                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
+                            <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
+                            <field name="m_amount"/>
+                            <field name="for_month" on_change="onchange_for_month(for_month)"/>
+                            <field name="reg_date"/>
+                            <field name="reg_end_date" context="{'for_month':for_month}"/>
+                        </group>
                    </sheet>
                 </form>
             </field>

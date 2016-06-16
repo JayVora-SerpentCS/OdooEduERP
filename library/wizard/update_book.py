@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# coding: utf-8
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -22,7 +22,7 @@
 from openerp import models, fields, api
 
 
-class update_books(models.TransientModel):
+class UpdateBooks(models.TransientModel):
 
     _name = "update.books"
     _description = "Update Books"
@@ -37,5 +37,3 @@ class update_books(models.TransientModel):
                 for active_id in self._context.get('active_ids'):
                     lib_book_obj.browse(active_id).write({'name': rec.name.id})
         return {}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
