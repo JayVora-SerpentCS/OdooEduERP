@@ -20,7 +20,9 @@
                                 <tr>
                                     <td width="100%" align="center" height="30">
                                         <strong>
-                                            <span t-field="student.school_id.name" />
+                                            <t t-if="student.school_id.name">
+                                                <span t-field="student.school_id.name" />
+                                            </t>
                                         </strong>
                                     </td>
                                 </tr>
@@ -35,13 +37,13 @@
                                 </tr>
                                 <tr>
                                     <td align="center" height="30px">
-                                        <strong>
+                                        <strong t-if="student.name">
                                             <span t-field="student.name" />
                                         </strong>
-                                        <strong>
+                                        <strong t-if="student.middle">
                                             <span t-field="student.middle" />
                                         </strong>
-                                        <strong>
+                                        <strong t-if="student.last">
                                             <span t-field="student.last" />
                                         </strong>
                                     </td>
@@ -57,18 +59,25 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.roll_no" />
+                                                    <t t-if="student.roll_no">
+                                                        <span t-field="student.roll_no" />
+                                                    </t>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                    <strong>Standard</strong>
+                                                    <strong>Course</strong>
                                                 </td>
                                                 <td>
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.standard_id" />
+                                                    <t t-if="student.standard_id.stan_name">
+                                                       <span t-field="student.standard_id.stan_name" />
+                                                       (
+                                                       <span t-field="student.division_id.name" />
+                                                       )
+                                                    </t>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -79,7 +88,9 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.medium_id.name" />
+                                                    <t t-if="student.medium_id.name">
+                                                        <span t-field="student.medium_id.name" />
+                                                    </t>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -90,7 +101,9 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.date_of_birth" />
+                                                    <t t-if="student.date_of_birth">
+                                                        <span t-field="student.date_of_birth" />
+                                                    </t>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -101,7 +114,9 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.blood_group" />
+                                                    <t t-if="student.blood_group">
+                                                        <span t-field="student.blood_group" />
+                                                    </t>
                                                 </td>
                                             </tr>
                                         </table>

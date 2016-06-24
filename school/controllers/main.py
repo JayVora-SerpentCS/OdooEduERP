@@ -207,17 +207,17 @@ class School_Dashboard(http.Controller):
         try:
             stu_assignmnt_obj = env['school.student.assignment']
             student_assign = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 student_assign = stu_assignmnt_obj.search([('state', 'in',
                                                             ('active', 'draft')
                                                             )])
-            elif groups_data['student'] == True:
+            elif groups_data['student']:
                 student_assign = stu_assignmnt_obj.search([('student_id',
                                                             '=', student.id),
                                                            ('state', 'in',
                                                             ('active', 'draft')
                                                             )])
-            elif groups_data['teacher'] == True:
+            elif groups_data['teacher']:
                 student_assign = stu_assignmnt_obj.search([('teacher_id',
                                                             '=', teacher.id),
                                                            ('state', 'in',
@@ -231,7 +231,7 @@ class School_Dashboard(http.Controller):
                                                     student_ids),
                                                    ('state', 'in',
                                                     ('active', 'draft'))])
-            elif groups_data['parent'] == True:
+            elif groups_data['parent']:
                 student_parent = 'student_id.student_parent_id'
                 student_assign = stu_assignmnt_obj.search([(student_parent,
                                                             '=', parent.id),
@@ -264,16 +264,16 @@ class School_Dashboard(http.Controller):
         try:
             tea_assignment = env['school.teacher.assignment']
             lec_assign = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 lec_assign = tea_assignment.search([('state', 'in',
                                                      ('active', 'draft'))])
-            elif groups_data['teacher'] == True:
+            elif groups_data['teacher']:
                 lec_assign = tea_assignment.search([('teacher_id', '=',
                                                      teacher.id),
                                                     ('state', 'in',
                                                      ('active', 'draft'))])
             elif (groups_data['faculty'] or groups_data['campus'] or
-                  groups_data['department'] == True):
+                  groups_data['department']):
                     lec_assign = tea_assignment.search([('standard_id',
                                                          'in',
                                                          course_ids),
@@ -303,22 +303,22 @@ class School_Dashboard(http.Controller):
 
         try:
             exam_resu = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 exam_resu = env['exam.exam'].search([('state', '=', 'draft')])
-            elif groups_data['student'] == True:
+            elif groups_data['student']:
                 exam_resu = env['exam.exam'].search([('standard_id', '=',
                                                       student.standard_id.id),
                                                      ('state', '=', 'draft')])
-            elif groups_data['teacher'] == True:
+            elif groups_data['teacher']:
                 exam_resu = env['exam.exam'].search([('standard_id', '=',
                                                       teacher.standard_id.id),
                                                      ('state', '=', 'draft')])
             elif (groups_data['faculty'] or groups_data['campus'] or
-                  groups_data['department'] == True):
+                  groups_data['department']):
                 exam_resu = env['exam.exam'].search([('standard_id', '=',
                                                       course_ids),
                                                      ('state', '=', 'draft')])
-            elif groups_data['parent'] == True:
+            elif groups_data['parent']:
                 stad_rec = parent.student_id.standard_id
                 exam_resu = env['exam.exam'].search([('standard_id', '=',
                                                       stad_rec.id),
@@ -363,17 +363,17 @@ class School_Dashboard(http.Controller):
         try:
             exam_res_obj = env['exam.result']
             exam_resu = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 exam_resu = exam_res_obj.search([('state', 'in',
                                                   ('done', 'confirm')),
                                                  ('cgpa', '<=', 2)])
-            elif groups_data['student'] == True:
+            elif groups_data['student']:
                 exam_resu = exam_res_obj.search([('student_id', '=',
                                                   student.id),
                                                  ('state', 'in', ('done',
                                                                   'confirm')),
                                                  ('cgpa', '<=', 2)])
-            elif groups_data['teacher'] == True:
+            elif groups_data['teacher']:
                 exam_resu = exam_res_obj.search([('standard_id', '=',
                                                   teacher.standard_id.id),
                                                  ('state', 'in', ('done',
@@ -386,7 +386,7 @@ class School_Dashboard(http.Controller):
                                                  ('state', 'in', ('done',
                                                                   'confirm')),
                                                  ('cgpa', '<=', 2)])
-            elif groups_data['parent'] == True:
+            elif groups_data['parent']:
                 exam_resu = exam_res_obj.search([('student_id', '=',
                                                   parent.student_id.id),
                                                  ('state', 'in', ('done',
@@ -419,17 +419,17 @@ class School_Dashboard(http.Controller):
         try:
             book_req = env['library.book.request']
             book_req = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 book_req = book_req.search([('state', '=', 'draft')])
-            if groups_data['librarian'] == True:
+            if groups_data['librarian']:
                 book_req = book_req.search([('state', '=', 'draft')])
-            if groups_data['student'] == True:
-                if groups_data['userian'] == True:
+            if groups_data['student']:
+                if groups_data['userian']:
                     book_req = book_req.search([('student_id', '=',
                                                  student.id),
                                                 ('state', '=', 'draft')])
-            if groups_data['teacher'] == True:
-                if groups_data['userian'] == True:
+            if groups_data['teacher']:
+                if groups_data['userian']:
                     book_req = env['library.book.request'
                                    ].search([('teacher_id',
                                               '=',
@@ -457,12 +457,12 @@ class School_Dashboard(http.Controller):
         try:
             time_table = env['time.table']
             time_table = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 time_table = time_table.search([])
-            elif groups_data['student'] == True:
+            elif groups_data['student']:
                 time_table = time_table.search([('standard_id', '=',
                                                  student.standard_id.id)])
-            elif groups_data['teacher'] == True:
+            elif groups_data['teacher']:
                 time_table = time_table.search([('timetable_ids.teacher_id',
                                                  '=',
                                                  teacher.id)])
@@ -470,7 +470,7 @@ class School_Dashboard(http.Controller):
                   groups_data['department']):
                     time_table = time_table.search([('standard_id', 'in',
                                                      course_ids)])
-            elif groups_data['parent'] == True:
+            elif groups_data['parent']:
                 time_table = time_table.search([('standard_id.student_ids',
                                                  'in', parent.student_id.id)])
             for table in time_table:
@@ -495,13 +495,13 @@ class School_Dashboard(http.Controller):
         try:
             post_lecture = env['post.lecture.notes']
             lecture_notes = False
-            if groups_data['admin'] == True:
+            if groups_data['admin']:
                 lecture_notes = post_lecture.search([])
-            elif groups_data['student'] == True:
+            elif groups_data['student']:
                 lecture_notes = post_lecture.search([('class_id',
                                                       '=',
                                                       student.standard_id.id)])
-            elif groups_data['teacher'] == True:
+            elif groups_data['teacher']:
                 lecture_notes = post_lecture.search([('lecturer_id', '=',
                                                       teacher.id)])
             elif (groups_data['faculty'] or groups_data['campus'] or
@@ -580,7 +580,7 @@ class School_Dashboard(http.Controller):
                                                 'in',
                                                 user_rec.partner_id.id),
                                                ('state', '=', 'valid')])
-            elif groups_data['department'] == True:
+            elif groups_data['department']:
                 dept_id = 'standard_id.department_manager_id'
                 placements = placement.search([(dept_id,
                                                 '=',
@@ -603,8 +603,7 @@ class School_Dashboard(http.Controller):
         except Exception:
             models_data.update({'placement': []})
 
-        res = {
-               'invoice_total': False,
+        res = {'invoice_total': False,
                'invoice_outstanding_total': False,
                'invoice_paid_total': False,
                'fees_total': False,
@@ -621,8 +620,7 @@ class School_Dashboard(http.Controller):
                'accomm_paid_total': False,
                'issue_total': False,
                'issue_outstanding_total': False,
-               'issue_paid_total': False,
-        }
+               'issue_paid_total': False}
 
         try:
             canteen_obj = env['canteen.canteen']
@@ -658,18 +656,18 @@ class School_Dashboard(http.Controller):
                         inv_id = canteen.order_id.invoice_ids.id
                         invoice_details += inv_obj.sudo().search([('id', '=',
                                                                    inv_id)])
-            elif groups_data['student'] == True:
+            elif groups_data['student']:
                 partner_rec = user_rec.partner_id
                 invoice_details = inv_obj.sudo().search([('partner_id', '=',
                                                           partner_rec.id)])
-            elif groups_data['accommo_mng'] == True:
+            elif groups_data['accommo_mng']:
                 invoice_details = inv_obj.sudo().search([('name', '=',
                                                           'Accommodation')])
-            elif groups_data['hostel_manager'] == True:
+            elif groups_data['hostel_manager']:
                 temp = 'Accommodation For Room'
                 invoice_details = inv_obj.sudo().search([('name', '=',
                                                           temp)])
-            elif groups_data['canteen_manager'] == True:
+            elif groups_data['canteen_manager']:
                 for canteen in canteen_details:
                     if canteen.order_id.invoice_ids:
                         inv_id = canteen.order_id.invoice_ids.id
@@ -734,7 +732,7 @@ class School_Dashboard(http.Controller):
                                                ('state', 'in',
                                                 ('paid', 'confirm', 'submit'))
                                                ])
-            elif groups_data['parent'] == True:
+            elif groups_data['parent']:
                 fees = payslip.search([('student_id.student_parent_id',
                                         '=', parent.id),
                                        ('state', 'in',
@@ -842,7 +840,7 @@ class School_Dashboard(http.Controller):
                                               ('state', 'in',
                                                ('paid', 'validate')),
                                               ('invoice_id', '!=', False)])
-            elif groups_data['parent'] == True:
+            elif groups_data['parent']:
                 trans_details = trans.search([('part_name.student_parent_id',
                                                '=', parent.id),
                                               ('state', 'in',
@@ -850,7 +848,7 @@ class School_Dashboard(http.Controller):
                                               ('invoice_id', '!=', False)])
 
             if trans_details:
-                transport_outstanding_total = 0.0
+                trans_os_total = 0.0
                 transport_total = 0.0
                 transport_paid_total = 0.0
                 for transport in trans_details:
@@ -858,12 +856,12 @@ class School_Dashboard(http.Controller):
                         if transport.state in ('paid', 'validate'):
                             transport_total += transport.amount
                         if transport.state in ('validate'):
-                            transport_outstanding_total += transport.amount
+                            trans_os_total += transport.amount
                         if transport.state in ('paid'):
                             transport_paid_total += transport.amount
+                t_os_total = round(trans_os_total, 2)
                 res.update({'transport_total': round(transport_total, 2),
-                            'transport_outstanding_total': round(
-                                            transport_outstanding_total, 2),
+                            'transport_outstanding_total': t_os_total,
                             'transport_paid_total': round(transport_paid_total,
                                                           2)})
         except Exception:
@@ -937,19 +935,19 @@ class School_Dashboard(http.Controller):
             librarian = groups_data['librarian']
             if (groups_data['admin'] or librarian or groups_data['fees_mng']):
                 issue_details = issue.search([('invoice_id', '!=', False)])
-            elif groups_data['student'] == True:
-                if groups_data['userian'] == True:
+            elif groups_data['student']:
+                if groups_data['userian']:
                     issue_details = issue.search([('student_id',
                                                    '=', student.id),
                                                   ('invoice_id', '!=', False)])
-            elif groups_data['teacher'] == True:
-                if groups_data['userian'] == True:
+            elif groups_data['teacher']:
+                if groups_data['userian']:
                     book_req = issue.search([('teacher_id',
                                               '=',
                                               teacher.id),
                                              ('invoice_id', '!=', False)])
 
-            issue_outstanding_total = 0.0
+            issue_os_total = 0.0
             issue_total = 0.0
             issue_paid_total = 0.0
             if issue_details:
@@ -958,12 +956,12 @@ class School_Dashboard(http.Controller):
                         if issue.state in ('done', 'pay_fine', 'fine'):
                             issue_total += issue.penalty
                         if issue.state in ('pay_fine', 'fine'):
-                            issue_outstanding_total += issue.penalty
+                            issue_os_total += issue.penalty
                         if issue.state in ('done'):
                             issue_paid_total += issue.penalty
                 res.update({'issue_total': round(issue_total, 2),
-                            'issue_outstanding_total': round(
-                                            issue_outstanding_total, 2),
+                            'issue_outstanding_total': round(issue_os_total,
+                                                             2),
                             'issue_paid_total': round(issue_paid_total,
                                                       2)})
         except Exception:
@@ -987,7 +985,7 @@ class School_Dashboard(http.Controller):
         if groups_data['admin']:
             reminder_details = news.search([('date', '>=',
                                              date.today())])
-        elif groups_data['student'] == True:
+        elif groups_data['student']:
             reminder_details = news.search([('date', '>=',
                                              date.today()),
                                             ('stu_id', '=',
@@ -998,12 +996,12 @@ class School_Dashboard(http.Controller):
                                              date.today()),
                                             ('stu_id', 'in',
                                              student_ids)])
-        elif groups_data['parent'] == True:
+        elif groups_data['parent']:
             reminder_details = news.search([('date', '>=',
                                              date.today()),
                                             ('stu_id.student_parent_id',
                                              '=', parent.id)])
-        elif groups_data['fees_mng'] == True:
+        elif groups_data['fees_mng']:
             reminder = env['student.reminder']
             reminder_details = reminder.search([('date', '>=', date.today())])
 

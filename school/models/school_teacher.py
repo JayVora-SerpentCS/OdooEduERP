@@ -147,12 +147,11 @@ class ResUsers(models.Model):
     def create(self, vals):
         user_rec = super(ResUsers, self).create(vals)
         if vals.get('teacher_create'):
-            teacher_grp_id = self.pool.get(
-                                       'ir.model.data').get_object(
-                                                    self._cr,
-                                                    self._uid,
-                                                    'school',
-                                                    'group_school_teacher')
+            ir_obj = self.pool.get('ir.model.data')
+            teacher_grp_id = ir_obj.get_object(self._cr,
+                                               self._uid,
+                                               'school',
+                                               'group_school_teacher')
             groups = teacher_grp_id
             if user_rec.groups_id:
                 groups = user_rec.groups_id
@@ -170,11 +169,11 @@ class StudentFeedback(models.Model):
     @api.model
     def _get_student(self):
         user_rec = self.env['res.users'].browse(self._uid)
-        student_group = self.pool.get('ir.model.data').get_object(
-                                                    self._cr,
-                                                    self._uid,
-                                                    'school',
-                                                    'group_school_student')
+        ir_obj = self.pool.get('ir.model.data')
+        student_group = ir_obj.get_object(self._cr,
+                                          self._uid,
+                                          'school',
+                                          'group_school_student')
         groups = [grp.id for grp in user_rec.groups_id]
         if student_group.id in groups:
             student = self.env['student.student'].search([('user_id', '=',

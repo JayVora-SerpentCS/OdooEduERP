@@ -75,12 +75,11 @@ class ResUsers(models.Model):
     def create(self, vals):
         user_rec = super(ResUsers, self).create(vals)
         if vals.get('parent_create'):
-            parent_grp_id = self.pool.get(
-                                       'ir.model.data').get_object(
-                                                    self._cr,
-                                                    self._uid,
-                                                    'school',
-                                                    'group_school_parent')
+            ir_obj = self.pool.get('ir.model.data')
+            parent_grp_id = ir_obj.get_object(self._cr,
+                                              self._uid,
+                                              'school',
+                                              'group_school_parent')
             groups = parent_grp_id
             if user_rec.groups_id:
                 groups = user_rec.groups_id

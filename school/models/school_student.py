@@ -638,31 +638,32 @@ class StudentStudent(models.Model):
                             if object_re2[0] == 'reject':
                                 if stu.third_choice_id:
                                     fac_id3 = stu.third_choice_id.faculty_id.id
-                                    object_re3 = self._department_sub_grade(
-                                                    stu, stu.third_choice_id)
-                                    if object_re3[0] == 'reject':
+                                    chic3 = stu.third_choice_id
+                                    obj_re3 = self._department_sub_grade(stu,
+                                                                         chic3)
+                                    if obj_re3[0] == 'reject':
                                         if stu.fourth_choice_id:
-                                            sf_id = stu.fourth_choice_id
-                                            fac_id4 = sf_id.faculty_id.id
-                                            obre4 = self._department_sub_grade(
-                                                                stu, sf_id)
-                                            if obre4[0] == 'reject':
-                                                return stu.write(
-                                                     {'state': 'reject',
-                                                      'remark': 'obre4[1]'})
+                                            sid = stu.fourth_choice_id
+                                            fac_id4 = sid.faculty_id.id
+                                            t = self._department_sub_grade(stu,
+                                                                           sid)
+                                            if t[0] == 'reject':
+                                                stu.write({'state': 'reject',
+                                                           'remark': t[1]})
+                                                return True
                                             return stu.write(
                                                      {'state': 'verify',
-                                                      'stand_id': sf_id.id,
+                                                      'stand_id': sid.id,
                                                       'faculty_id': fac_id4,
                                                       'remark': ''})
-                                        return stu.write(
-                                                     {'state': 'reject',
-                                                      'remark': object_re3[1]})
-                                    return stu.write(
-                                         {'state': 'verify',
-                                          'stand_id': stu.third_choice_id.id,
-                                          'faculty_id': fac_id3,
-                                          'remark': ''})
+                                        return stu.write({'state': 'reject',
+                                                          'remark': obj_re3[1]
+                                                          })
+                                    choice3 = stu.third_choice_id.id
+                                    return stu.write({'state': 'verify',
+                                                      'stand_id': choice3,
+                                                      'faculty_id': fac_id3,
+                                                      'remark': ''})
                                 return stu.write({'state': 'reject',
                                                   'remark': object_re2[1]})
                             return stu.write({'state': 'verify',
@@ -694,30 +695,31 @@ class StudentStudent(models.Model):
                         if object_re2[0] == 'reject':
                             if stu.third_choice_id:
                                 fac_id3 = stu.third_choice_id.faculty_id.id
-                                object_re3 = self._department_sub_grade(
-                                                stu, stu.third_choice_id)
+                                ch3 = stu.third_choice_id
+                                object_re3 = self._department_sub_grade(stu,
+                                                                        ch3)
                                 if object_re3[0] == 'reject':
                                     if stu.fourth_choice_id:
-                                        sf_id = stu.fourth_choice_id
-                                        fac_id4 = sf_id.faculty_id.id
-                                        obre4 = self._department_sub_grade(
-                                                            stu, sf_id)
+                                        sid = stu.fourth_choice_id
+                                        fac_id4 = sid.faculty_id.id
+                                        obre4 = self._department_sub_grade(stu,
+                                                                           sid)
                                         if obre4[0] == 'reject':
                                             return stu.write(
                                                  {'state': 'reject',
                                                   'remark': obre4[1]})
                                         return stu.write(
                                                  {'state': 'verify',
-                                                  'stand_id': sf_id.id,
+                                                  'stand_id': sid.id,
                                                   'faculty_id': fac_id4,
                                                   'remark': ''})
-                                    return stu.write(
-                                                 {'state': 'reject',
-                                                  'remark': object_re3[1]})
-                                return stu.write(
-                                     {'state': 'verify',
-                                      'stand_id': stu.third_choice_id.id,
-                                      'faculty_id': fac_id3, 'remark': ''})
+                                    return stu.write({'state': 'reject',
+                                                      'remark': object_re3[1]})
+                                choi3 = stu.third_choice_id.id
+                                return stu.write({'state': 'verify',
+                                                  'stand_id': choi3,
+                                                  'faculty_id': fac_id3,
+                                                  'remark': ''})
                             return stu.write({'state': 'reject',
                                               'remark': object_re2[1]})
                         return stu.write({'state': 'verify',

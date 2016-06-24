@@ -33,9 +33,9 @@ class FacultyManager(models.Model):
                 raise UserError(_(str(faculty_dean_id.faculty_id.name) +
                                   ' Faculty is already assigned to user ' +
                                   str(faculty_dean_id.name)))
-            faculty_dean_id.faculty_id.write(
-                             {'faculty_manager_id': faculty_dean_id.id,
-                              'faculty_manager_write': True})
+            dean_id = faculty_dean_id.id
+            faculty_dean_id.faculty_id.write({'faculty_manager_id': dean_id,
+                                              'faculty_manager_write': True})
         user_vals = {'name': faculty_dean_id.name,
                      'login': faculty_dean_id.work_email,
                      'email': faculty_dean_id.work_email,
@@ -91,9 +91,8 @@ class FacultyManager(models.Model):
             group_ids = [group.id for group in groups]
             user_rec.write({'groups_id': [(6, 0, group_ids)]})
         if vals.get('faculty_id'):
-            self.faculty_id.write(
-                              {'faculty_manager_id': False,
-                               'faculty_manager_write': True})
+            self.faculty_id.write({'faculty_manager_id': False,
+                                   'faculty_manager_write': True})
             vals_id = self.faculty_id.search([('id', '=',
                                                vals.get('faculty_id'))])
             vals_id.write({'faculty_manager_id': self.id,

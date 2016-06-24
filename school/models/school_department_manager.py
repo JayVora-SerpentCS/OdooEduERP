@@ -33,9 +33,8 @@ class DepartmentManager(models.Model):
                 raise UserError(_(str(d_manager_id.d_id.name) +
                                   ' Department is already assigned to user ' +
                                   str(d_manager_id.name)))
-            d_manager_id.d_id.write(
-                             {'d_manager_id': d_manager_id.id,
-                              'department_manager_write': True})
+            d_manager_id.d_id.write({'d_manager_id': d_manager_id.id,
+                                     'department_manager_write': True})
         user_vals = {'name': d_manager_id.name,
                      'login': d_manager_id.work_email,
                      'email': d_manager_id.work_email,
@@ -128,12 +127,11 @@ class ResUsers(models.Model):
     def create(self, vals):
         user_rec = super(ResUsers, self).create(vals)
         if vals.get('department_manager_create'):
-            department_grp_id = self.pool.get(
-                                       'ir.model.data').get_object(
-                                                    self._cr,
-                                                    self._uid,
-                                                    'school',
-                                                    'group_department_manager')
+            ir_obj = self.pool.get('ir.model.data')
+            department_grp_id = ir_obj.get_object(self._cr,
+                                                  self._uid,
+                                                  'school',
+                                                  'group_department_manager')
             groups = department_grp_id
             if user_rec.groups_id:
                 groups = user_rec.groups_id

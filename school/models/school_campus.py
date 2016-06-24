@@ -24,27 +24,26 @@ class CampusManager(models.Model):
 
     @api.model
     def create(self, vals):
-        c_manager_id = super(CampusManager, self).create(vals)
-        if c_manager_id.campus_id:
+        c_mngr_id = super(CampusManager, self).create(vals)
+        if c_mngr_id.campus_id:
             cm_ids = self.search([('campus_id', '=',
-                                   c_manager_id.campus_id.id),
-                                  ('id', '!=', c_manager_id.id)])
+                                   c_mngr_id.campus_id.id),
+                                  ('id', '!=', c_mngr_id.id)])
             if cm_ids:
-                raise UserError(_(str(c_manager_id.campus_id.name) +
+                raise UserError(_(str(c_mngr_id.campus_id.name) +
                                   ' Campus is already assigned to user ' +
-                                  str(c_manager_id.name)))
-            c_manager_id.campus_id.write(
-                             {'campus_manager_id': c_manager_id.id,
-                              'campus_manager_write': True})
-        user_vals = {'name': c_manager_id.name,
-                     'login': c_manager_id.work_email,
-                     'email': c_manager_id.work_email,
-                     'campus_manager_create': c_manager_id}
+                                  str(c_mngr_id.name)))
+            c_mngr_id.campus_id.write({'campus_manager_id': c_mngr_id.id,
+                                          'campus_manager_write': True})
+        user_vals = {'name': c_mngr_id.name,
+                     'login': c_mngr_id.work_email,
+                     'email': c_mngr_id.work_email,
+                     'campus_manager_create': c_mngr_id}
         user_id = self.env['res.users'].create(user_vals)
-        c_manager_id.employee_id.write({'user_id': user_id.id})
+        c_mngr_id.employee_id.write({'user_id': user_id.id})
         if vals.get('is_parent'):
-            self.parent_crt(c_manager_id)
-        return c_manager_id
+            self.parent_crt(c_mngr_id)
+        return c_mngr_id
 
     @api.multi
     def parent_crt(self, manager_id):
@@ -91,9 +90,8 @@ class CampusManager(models.Model):
             group_ids = [group.id for group in groups]
             user_rec.write({'groups_id': [(6, 0, group_ids)]})
         if vals.get('campus_id'):
-            self.campus_id.write(
-                              {'campus_manager_id': False,
-                               'campus_manager_write': True})
+            self.campus_id.write({'campus_manager_id': False,
+                                  'campus_manager_write': True})
             vals_id = self.campus_id.search([('id', '=',
                                               vals.get('campus_id'))])
             vals_id.write({'campus_manager_id': self.id,
