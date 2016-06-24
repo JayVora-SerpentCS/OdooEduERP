@@ -318,10 +318,9 @@
                         </field>
                         <group col="4" colspan="4">
                             <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
-                            <field name="grade"/>
+                            <field name="grade" attrs="{'invisible':[('state','=','draft')]}"/>
                             <field name="percentage"/>
                             <field name="result"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
                             <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
                         </group>
                     </sheet>

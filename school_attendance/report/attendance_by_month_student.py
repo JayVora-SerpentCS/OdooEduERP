@@ -18,8 +18,8 @@ month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
 def lengthmonth(year, month):
     if ((month == 2)
             and ((year % 4 == 0)
-            and ((year % 100 != 0)
-            or (year % 400 == 0)))):
+                 and ((year % 100 != 0)
+                      or (year % 400 == 0)))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
@@ -58,10 +58,9 @@ class ReportCustom(report_rml):
                     if not sheet_ids:
                         var = 'A'
                     else:
-
-                        for attendance_sheet_data in\
-                        sheet_obj.browse(cr, uid, sheet_ids,
-                                         context=context):
+                        att_browse = sheet_obj.browse(cr, uid, sheet_ids,
+                                                      context=context)
+                        for attendance_sheet_data in att_browse:
 
                             for line in attendance_sheet_data.attendance_ids:
 
@@ -144,15 +143,15 @@ class ReportCustom(report_rml):
 
         rpt_obj = pooler.get_pool(cr.dbname).get('student.student')
         rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name, context)
+        users_obj = pooler.get_pool(cr.dbname).get('res.users')
         header_xml = '''
         <header>
         <date>%s</date>
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
-                   + ' ' + str(time.strftime("%H:%M")),
-            pooler.get_pool(cr.dbname).get('res.users').browse(
-                cr, uid, uid).company_id.name)
+               + ' ' + str(time.strftime("%H:%M")),
+               users_obj.browse(cr, uid, uid).company_id.name)
 
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
@@ -166,7 +165,7 @@ class ReportCustom(report_rml):
                          (x, som.replace(day=x).strftime('%a'),
                           x - som.day + 1)
                          for x in range(som.day,
-                            lengthmonth(som.year, som.month) + 1)]
+                                        lengthmonth(som.year, som.month) + 1)]
         else:
             if day_diff.days >= (lengthmonth(som.year, som.month) - som.day):
                 date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
@@ -194,8 +193,8 @@ class ReportCustom(report_rml):
         while day_diff1 > 0:
             if month + i <= 12:
                 if day_diff1 > lengthmonth(year, i + month):
-                # Not on 30 else you have problems when
-                # entering 01-01-2009 for example
+                    # Not on 30 else you have problems when
+                    # entering 01-01-2009 for example
                     som1 = datetime.date(year, month + i, 1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                                  (x, som1.replace(day=x).strftime('%a'),
@@ -259,4 +258,4 @@ class ReportCustom(report_rml):
         return xml
 
 ReportCustom('report.attendance.by.month.student', 'student.student', '',
-              'addons/school_attendance/report/attendance_by_month.xsl')
+             'addons/school_attendance/report/attendance_by_month.xsl')

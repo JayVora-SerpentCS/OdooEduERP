@@ -54,7 +54,7 @@ class PurchaseOrder(models.Model):
                                      'location_dest_id': dest,
                                      'picking_id': picking_id.id,
                                      'move_dest_id': order.location_id
-                                         and order.location_id.id,
+                                     and order.location_id.id,
                                      'state': 'assigned',
                                      'prodlot_id': prodlot_id,
                                      'customer_ref': order_line.customer_ref,

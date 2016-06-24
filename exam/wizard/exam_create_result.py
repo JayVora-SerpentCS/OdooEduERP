@@ -18,7 +18,6 @@ class ExamCreateResult(models.TransientModel):
         result_subject_obj = self.env['exam.subject']
 
         for exam in exam_obj.browse(self._context.get('active_ids')):
-
             if exam.standard_id:
 
                 for school_std_rec in exam.standard_id:
@@ -42,25 +41,26 @@ class ExamCreateResult(models.TransientModel):
                         if not result_exists:
                             standard_id = school_std_rec.standard_id.id
                             division_id = school_std_rec.division_id.id
+                            medium_id = school_std_rec.medium_id.id
                             rs_dict = {'s_exam_ids': exam.id,
                                        'student_id': student.id,
                                        'standard_id': standard_id,
                                        'division_id': division_id,
-                                       'medium_id': school_std_rec.medium_id.id}
+                                       'medium_id': medium_id}
                             result_id = result_obj.create(rs_dict)
 
                             for line in exam.standard_id:
-                                sub_dict = {'exam_id': result_id.id,
-                                            'subject_id':
-                                             line.standard_id.subject_id
-                                             and line.subject_id.id or False,
-                                            'minimum_marks': line.subject_id
-                                             and line.subject_id.minimum_marks
-                                             or 0.0,
-                                            'maximum_marks': line.subject_id
-                                             and line.subject_id.maximum_marks
-                                             or 0.0}
-                                result_subject_obj.create(sub_dict)
+                                for subject_ids in line.subject_ids:
+                                    sub_dict = {'exam_id': result_id.id,
+                                                'subject_id': subject_ids.id
+                                                or False,
+                                                'minimum_marks': subject_ids.id
+                                                and subject_ids.minimum_marks
+                                                or 0.0,
+                                                'maximum_marks': subject_ids.id
+                                                and subject_ids.maximum_marks
+                                                or 0.0}
+                                    result_subject_obj.create(sub_dict)
             else:
                 raise except_orm(_('Error !'),
                                  _('Please Select Standard Id.'))

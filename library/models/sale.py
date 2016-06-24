@@ -86,10 +86,9 @@ class SaleOrder(models.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
+                date_time = DateTime.RelativeDateTime(days=line.delay or 0.0)
                 date_planned = (DateTime.now()
-                                + DateTime.RelativeDateTime(days=line.delay
-                                                            or 0.0)
-                               ).strftime('%Y-%m-%d')
+                                + date_time).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if (line.product_id
@@ -98,6 +97,7 @@ class SaleOrder(models.Model):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         address_id = order.partner_shipping_id.id
+                        order_policy = order.order_policy == 'picking'
                         pick_dict = {'origin': order.name,
                                      'type': 'out',
                                      'state': 'draft',
@@ -105,14 +105,14 @@ class SaleOrder(models.Model):
                                      'sale_id': order.id,
                                      'address_id': address_id,
                                      'note': order.note,
-                                     'invoice_state': (order.order_policy == 'picking'
+                                     'invoice_state': (order_policy
                                                        and '2binvoiced')
-                                                       or 'none',
+                                     or 'none',
                                      'carrier_id': order.carrier_id.id,
                                      'picking_type_id': order.warehouse_id
-                                         and order.warehouse_id.out_type_id
-                                         and order.warehouse_id.out_type_id.id
-                                         or False}
+                                     and order.warehouse_id.out_type_id
+                                     and order.warehouse_id.out_type_id.id
+                                     or False}
                         picking_id = picking_obj.create(pick_dict)
                     mv_dict = {'name': 'SO:' + order.name or '',
                                'picking_id': picking_id.id,
@@ -124,7 +124,7 @@ class SaleOrder(models.Model):
                                'product_uos': line.product_uos.id,
                                'product_packaging': line.product_packaging.id,
                                'address_id': line.address_allotment_id.id
-                                   or order.partner_shipping_id.id,
+                               or order.partner_shipping_id.id,
                                'location_id': location_id,
                                'location_dest_id': output_id,
                                'sale_line_id': line.id,

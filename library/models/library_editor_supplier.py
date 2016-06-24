@@ -8,7 +8,6 @@ from openerp.exceptions import Warning as UserError
 class LibraryEditorSupplier(models.Model):
     _name = "library.editor.supplier"
     _description = "Editor Relations"
-    _auto = False
 
     name = fields.Many2one('res.partner', 'Editor')
     supplier_id = fields.Many2one('res.partner', 'Supplier')
@@ -64,8 +63,9 @@ class LibraryEditorSupplier(models.Model):
                 raise UserError(_('Warning ! Cannot set supplier in this form.'
                                 'Please create a new relation.'))
             new_supplier_id = vals.get('supplier_id', 0)
-            supplier_change = new_supplier_id != 0 and (idn < 0
-                              or (original_supplier_id != new_supplier_id))
+            supplier_change = (new_supplier_id != 0 and
+                               (idn < 0 or
+                                (original_supplier_id != new_supplier_id)))
 
             if supplier_change:
                 raise UserError(_('Warning ! Cannot set supplier in this form.'

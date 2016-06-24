@@ -6,7 +6,8 @@ import openerp
 from datetime import date, datetime
 from openerp import models, fields, api
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import image_colorize, image_resize_image_big
 from openerp.exceptions import except_orm, Warning as UserError
 
 
@@ -198,9 +199,8 @@ class SchoolStandard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name\
-                   + "[" + standard.division_id.name\
-                   + "]"
+            name = (standard.standard_id.name +
+                    "[" + standard.division_id.name + "]")
             res.append((standard.id, name))
         return res
 
@@ -310,8 +310,10 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(openerp.modules.get_module_resource('base',
-                    'static/src/img', 'avatar.png')).read())
+        resource = openerp.modules.get_module_resource('base',
+                                                       'static/src/img',
+                                                       'avatar.png')
+        image = image_colorize(open(resource).read())
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
@@ -319,7 +321,7 @@ class StudentStudent(models.Model):
     student_name = fields.Char('Student Name', related='user_id.name',
                                store=True, readonly=True)
     pid = fields.Char('Student ID', required=True, default=lambda obj:
-                      obj.env['ir.sequence'].get('student.student'),
+                      obj.env['ir.sequence'].next_by_code('student.student'),
                       help='Personal IDentification Number')
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
@@ -327,7 +329,7 @@ class StudentStudent(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self:\
+    photo = fields.Binary('Photo', default=lambda self:
                           self._get_default_image
                           (self._context.get('default_is_company',
                                              False)))
@@ -473,16 +475,16 @@ class StudentStudent(models.Model):
             if student_search_ids:
                 self.write({'roll_no': number})
                 number += 1
-            reg_code = self.env['ir.sequence'].get('student.registration')
-            registation_code = str(student_data.school_id.state_id.name)\
-                                + str('/') + str(student_data.school_id.city)\
-                                + str('/')\
-                                + str(student_data.school_id.name) + str('/')\
-                                + str(reg_code)
-            stu_code = self.env['ir.sequence'].get('student.code')
-            student_code = str(student_data.school_id.code) + str('/')\
-                            + str(student_data.year.code) + str('/')\
-                            + str(stu_code)
+            seq_obj = self.env['ir.sequence']
+            reg_code = seq_obj.next_by_code('student.registration')
+            registation_code = (str(student_data.school_id.state_id.name) +
+                                str('/') + str(student_data.school_id.city) +
+                                str('/') + str(student_data.school_id.name) +
+                                str('/') + str(reg_code))
+            stu_code = seq_obj.next_by_code('student.code')
+            student_code = (str(student_data.school_id.code) + str('/') +
+                            str(student_data.year.code) + str('/') +
+                            str(stu_code))
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -523,7 +525,7 @@ class StudentGrn(models.Model):
 
     grn = fields.Char('GR no', help='General Reg Number', readonly=True,
                       default=lambda obj:
-                      obj.env['ir.sequence'].get('student.grn'))
+                      obj.env['ir.sequence'].next_by_code('student.grn'))
     name = fields.Char('GRN Format Name', required=True)
     prefix = fields.Selection([('school', 'School Name'),
                                ('year', 'Year'), ('month', 'Month'),
@@ -568,7 +570,8 @@ class StudentDocument(models.Model):
 
     doc_id = fields.Many2one('student.student', 'Student')
     file_no = fields.Char('File No', readonly="1", default=lambda obj:
-                          obj.env['ir.sequence'].get('student.document'))
+                          obj.env['ir.sequence'].
+                          next_by_code('student.document'))
     submited_date = fields.Date('Submitted Date')
     doc_type = fields.Many2one('document.type', 'Document Type', required=True)
     file_name = fields.Char('File Name',)
@@ -584,7 +587,7 @@ class DocumentType(models.Model):
     _order = "seq_no"
 
     seq_no = fields.Char('Sequence', readonly=True, default=lambda obj:
-                         obj.env['ir.sequence'].get('document.type'))
+                         obj.env['ir.sequence'].next_by_code('document.type'))
     doc_type = fields.Char('Document Type', required=True)
 
 

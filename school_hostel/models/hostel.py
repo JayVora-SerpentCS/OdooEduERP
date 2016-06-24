@@ -100,7 +100,8 @@ class HostelStudent(models.Model):
     hostel_room_id = fields.Many2one('hostel.room', 'HOSTEL Room')
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda obj:
-                            obj.env['ir.sequence'].get('hostel.student'))
+                            obj.env['ir.sequence'].
+                            next_by_code('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', required=True)

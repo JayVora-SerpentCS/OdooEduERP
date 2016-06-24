@@ -330,7 +330,7 @@ class MSI(Barcode):
                 '4': 'bSBsbSbS', '5': 'bSBsbSBs',
                 '6': 'bSBsBsbS', '7': 'bSBsBsBs',
                 '8': 'BsbSbSbS', '9': 'BsbSbSBs'
-               }
+                }
 
     def __init__(self, value="", **args):
         self.height = None

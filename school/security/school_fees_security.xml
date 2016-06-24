@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data noupdate="0">
+
+        <!-- Rule For Student Profile Record As A Fees Manager -->
+
+        <record id="rule_student_profile_record_as_fees_manager" model="ir.rule">
+            <field name="name">Rule Student Profile Record As A Fees Manager</field>
+            <field name="model_id" ref="model_student_student"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('school_id.school_feesmng_id.employee_id.user_id.id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_fees_manager'))]"/>
+        </record>
+
+        <!-- Rule For School Profile Record As A Fees Manager -->
+
+        <record id="rule_school_profile_record_as_fees_manager" model="ir.rule">
+            <field name="name">Rule School Profile Record As A Fees Manager</field>
+            <field name="model_id" ref="model_school_school"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('school_feesmng_id.employee_id.user_id.id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_fees_manager'))]"/>
+        </record>
+
+        <!-- Rule For Reminder Profile Record As A Fees Manager -->
+
+        <record id="rule_reminder_profile_record_as_fees_manager" model="ir.rule">
+            <field name="name">Rule Reminder Profile Record As A Fees Manager</field>
+            <field name="model_id" ref="model_student_reminder"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('stu_id.school_id.school_feesmng_id.employee_id.user_id.id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_fees_manager'))]"/>
+        </record>
+    </data>
+</openerp>
