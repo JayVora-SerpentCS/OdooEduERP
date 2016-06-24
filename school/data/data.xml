@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data noupdate="1">
+
+    <!-- Student Parent relation data -->
+    <record id="parent_relation_father" model="parent.relation">
+        <field name="name">Father</field>
+    </record>
+    
+    <record id="parent_relation_mother" model="parent.relation">
+        <field name="name">Mother</field>
+    </record>
+    
+    <record id="parent_relation_aunt" model="parent.relation">
+        <field name="name">Aunt</field>
+    </record>
+    
+    <record id="parent_relation_uncle" model="parent.relation">
+        <field name="name">Uncle</field>
+    </record>
+    
+    <record id="parent_relation_other" model="parent.relation">
+        <field name="name">Other</field>
+    </record>
+    
+      <!-- Product fees -->
+      <record id="data_fees_product" model="product.product">
+         <field name="name">Fees</field>
+      </record>
+        
+       <!-- Language -->
+
+        <record id="mother_toungue_1" model="mother.toungue">
+            <field name="name">English</field>
+        </record>
+
+        <record id="mother_toungue_2" model="mother.toungue">
+            <field name="name">French</field>
+        </record>
+
+        <record id="mother_toungue_3" model="mother.toungue">
+            <field name="name">China</field>
+        </record>
+        
+        <record id="mother_toungue_4" model="mother.toungue">
+            <field name="name">German</field>
+        </record>
+        
+        <!-- Student cast -->
+        <record id="demo_student_cast_1" model="student.cast">
+            <field name="name">Hindu</field>
+        </record>
+        
+        <record id="demo_student_cast_2" model="student.cast">
+            <field name="name">Muslim</field>
+        </record>
+        
+        <record id="demo_student_cast_3" model="student.cast">
+            <field name="name">Christian</field>
+        </record>
+        
+        <record id="demo_student_cast_1" model="student.cast">
+            <field name="name">Others</field>
+        </record>
+
+        <!--Standard Medium Information-->
+        
+        <record id="demo_standard_medium_1" model="standard.medium">
+            <field name="name">English</field>
+            <field name="code">ENG</field>
+            <field name="sequence">1</field>
+        </record>
+        
+        <record id="demo_standard_medium_2" model="standard.medium">
+            <field name="name">French</field>
+            <field name="code">FRENCH</field>
+            <field name="sequence">2</field>
+        </record>
+        
+        <record id="demo_standard_medium_3" model="standard.medium">
+            <field name="name">Urdu</field>
+            <field name="code">URDU</field>
+            <field name="sequence">3</field>
+        </record>
+        
+    </data>
+</openerp>

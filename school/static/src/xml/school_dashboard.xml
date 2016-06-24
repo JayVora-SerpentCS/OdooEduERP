@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="school_template" xml:space="preserve">
+    <!--
+        This template is the ribbon at the top of the school dashboard that adds
+        some figures to it. We call this rubbon the "SchoolDashboard".
+    -->
+    <t t-name="school.SchoolDashboard">
+        <div class="o_school_dashboard">
+            <div style="width: 100%">
+                <table class="table table-condensed" style="width: 100%;">
+                    <tr id="dash_tr">
+                        <t t-if="(group_details.admin or group_details.admission_regi or group_details.student_inadmission) == true ">
+                            <td class="o_main" title="Register" rowspan="2" style="background-color: #21b799">
+                                <a href="#" class="o_dashboard_action" name="school.action_student_student_form_2">
+                                    <img src="/school/static/src/img/admission.png" style="width: 60px;height: 60px;"></img>
+                                    <br/>
+                                    Admission Register
+                                </a>
+                            </td>
+                        </t>
+                        <t t-if="(group_details.admin or group_details.student or group_details.teacher or group_details.parent 
+                                    or group_details.campus or group_details.faculty or group_details.department 
+                                    or group_details.accommo_mng or group_details.hostel_manager or group_details.canteen_manager 
+                                    or group_details.librarian or group_details.userian or group_details.placement_mng
+                                    or group_details.Placement_mem or group_details.event_mng or group_details.fees_mng
+                                    or group_details.admission_regi) == true">
+                            <td class="o_main" title="Students" rowspan="2" style="background-color: darkslateblue">
+                                <a href="#" class="o_dashboard_action" name="school.action_student_student_form_12">
+                                    <img src="/school/static/src/img/student.png" style="width: 60px;height: 60px;"></img>
+                                    <br/>
+                                    Students
+                                </a>
+                            </td>
+                        </t>
+                        <t t-if="(group_details.student or group_details.parent)  == true ">
+                            <td class="o_main" title="Students" rowspan="2" style="background-color: rebeccapurple;">
+                                <a href="#" class="o_dashboard_action" name="school.action_school_parent_form">
+                                    <img src="/school/static/src/img/parent.png" style="width: 60px;height: 60px;"></img>
+                                    <br/>
+                                    Parent
+                                </a>
+                            </td>
+                        </t>
+                        <t t-if="(group_details.admin or group_details.teacher or group_details.campus or group_details.faculty or group_details.department) == true ">
+                            <td class="o_main" title="Lecturer" rowspan="2" style="background-color: tan">
+                                <a href="#" class="o_dashboard_action" name="school.action_school_teacher_form">
+                                    <img src="/school/static/src/img/lecturer.png" style="width: 60px;height: 60px;"></img>
+                                    <br/>
+                                    Lecturer
+                                </a>
+                            </td>
+                        </t>
+                        <t t-if="(group_details.admin or group_details.teacher or group_details.campus or group_details.faculty or group_details.department)  == true " >
+                            <td class="o_main" title="Course" rowspan="2" style="background-color: tomato">
+                                <a href="#" class="o_dashboard_action" name="school.action_school_standard_form">
+                                    <img src="/school/static/src/img/course.png" style="width: 60px;height: 60px;"></img>
+                                    <br/>
+                                    Courses
+                                </a>
+                            </td>
+                        </t>
+                    </tr>
+                </table>
+                <br/>
+                    <table style="width: 100%;">
+                        <t t-if="group_details.student_inadmission == true">
+                            <tr>
+                                <td style="width: 28%;background-color: teal; font-size: 20px;" class="news">
+                                    News/Updates
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="5" class="school_news" style="background-color: aliceblue;">
+                                    <t t-if="news_details">
+                                        <marquee direction="up" scrollamount="2" onMouseOver="this.setAttribute('scrollamount', 2, 0);" OnMouseOut="this.setAttribute('scrollamount', 2, 0);" style="height:200px">
+                                            <t t-foreach="news_details" t-as="news_detail">
+                                                <t t-if="news_details[news_detail].length">
+                                                    <div t-foreach="news_details[news_detail]" t-as="detail" model="student.news" t-att-id="detail['ID']">
+                                                        <t t-foreach="news_details[news_detail][0].columns" t-as="column">
+                                                            <t t-if="(column != 'ID')">
+                                                                <a class="oe_kanban_action oe_kanban_action_a">
+                                                                    <h4>
+                                                                        <t t-esc="detail[column]"/>
+                                                                    </h4>
+                                                                </a>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </marquee>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-if="(group_details.admin or group_details.student or group_details.teacher or group_details.parent 
+                                    or group_details.campus or group_details.faculty or group_details.department 
+                                    or group_details.accommo_mng or group_details.hostel_manager or group_details.canteen_manager 
+                                    or group_details.librarian or group_details.userian or group_details.placement_mng
+                                    or group_details.Placement_mem or group_details.event_mng or group_details.fees_mng
+                                    or group_details.admission_regi) == true">
+                            <tr>
+                                <td style="width: 28%;background-color: teal; font-size: 20px;" class="news">
+                                    News/Updates
+                                </td>
+                                <t t-if="typeof(payment_details.invoice_total) == 'number'">
+                                    <td style="width: 11%;" rowspan="2">
+                                        <h3>Payments</h3>
+                                    </td>
+                                    <td class="o_secondary total_invoice" title="Invoice Total" style="width: 11%;">
+                                        <a >
+                                                <i class="fa fa-suitcase" style="font-size:16px;float:left;margin-left: 2%;"></i>
+                                          Invoice Total
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary total_payment" title="Total Payments" style="width: 11%;">
+                                        <a >
+                                           <i class="fa fa-shopping-cart" style="font-size:16px;float:left;margin-left: 2%;"></i>
+                                            Total Payments
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary total_outstanding_payment" title="OutStanding Balance" style="width: 11%;">
+                                        <a >
+                                                <i class="fa fa-suitcase" style="font-size:16px;float:left;margin-left: 2%;"></i>
+                                           O/S Balance
+                                        </a>
+                                    </td>
+                                </t>
+                                <td style="width: 28%;background-color: teal;font-size: 20px;" class="news">
+                                   Reminders
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="6" class="school_news" style="background-color: aliceblue;">
+                                    <t t-if="news_details['news'].length">
+                                        <marquee direction="up" scrollamount="2" onMouseOver="this.setAttribute('scrollamount', 2, 0);" OnMouseOut="this.setAttribute('scrollamount', 2, 0);" style="height:200px">
+                                            <t t-foreach="news_details" t-as="news_detail">
+                                                <t t-if="news_details[news_detail].length">
+                                                    <div t-foreach="news_details[news_detail]" t-as="detail" model="student.news" t-att-id="detail['ID']">
+                                                        <t t-foreach="news_details[news_detail][0].columns" t-as="column">
+                                                            <t t-if="(column != 'ID')">
+                                                                <a class="oe_kanban_action oe_kanban_action_a">
+                                                                    <h4>
+                                                                        <t t-esc="detail[column]"/>
+                                                                    </h4>
+                                                                </a>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </marquee>
+                                    </t>
+                                </td>
+                                <t t-if="typeof(payment_details.invoice_total) == 'number'">
+                                    <td class="o_secondary total_invoice" title="Invoice Total" style="width: 11%;">
+                                            <a>
+                                                <span class="o_highlight">
+                                                    <t t-esc="payment_details.invoice_total"/>
+                                                </span>
+                                            </a>
+                                    </td>
+                               </t>
+                               <t t-if="typeof(payment_details.invoice_paid_total) == 'number'">
+                                    <td class="o_secondary total_payment" title="Total Payments" style="width: 11%;">
+                                       <a>
+                                           <span class="o_highlight">
+                                               <t t-esc="payment_details.invoice_paid_total"/>
+                                           </span>
+                                       </a>
+                                    </td>
+                                </t>
+                                <t t-if="typeof(payment_details.invoice_outstanding_total) == 'number'">
+                                    <td class="o_secondary total_outstanding_payment" title="OutStanding Balance" style="width: 11%;">
+                                       <a>
+                                           <span class="o_highlight">
+                                               <t t-esc="payment_details.invoice_outstanding_total"/>
+                                           </span>
+                                       </a>
+                                    </td>
+                                 </t>
+                                <td rowspan="6" class="school_news"  style="background-color: aliceblue;">
+                                    <t t-if="reminders_details['reminder'].length">
+                                        <marquee direction="up" scrollamount="2" onMouseOver="this.setAttribute('scrollamount', 2, 0);" OnMouseOut="this.setAttribute('scrollamount', 2, 0);" style="height:200px">
+                                            <t t-foreach="reminders_details" t-as="reminders_detail">
+                                                <t t-if="reminders_details[reminders_detail].length">
+                                                    <div t-foreach="reminders_details[reminders_detail]" t-as="detail" model="student.reminder" t-att-id="detail['ID']">
+                                                        <t t-foreach="reminders_details[reminders_detail][0].columns" t-as="column">
+                                                            <t t-if="(column != 'ID')">
+                                                                <a class="oe_kanban_action oe_kanban_action_a">
+                                                                    <h4>
+                                                                        <t t-esc="detail[column]"/>
+                                                                    </h4>
+                                                                </a>
+                                                            </t>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </marquee>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <t t-if="typeof(payment_details.fees_total) == 'number'">
+                                    <td class="o_text payment_label o_secondary" >
+                                        Fees
+                                    </td>
+                                    <td class="o_secondary" title="Fees Total">
+                                        <a href="#" class="o_dashboard_action" id="total" name="school_fees.action_student_payslip_form">
+                                            <t t-esc="payment_details.fees_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary" title="Fees Remaining Total">
+                                        <a href="#" class="o_dashboard_action" id="paid" name="school_fees.action_student_payslip_form">
+                                            <t t-esc="payment_details.fees_paid_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary" title="Fees Paid Total">
+                                        <a href="#" class="o_dashboard_action" id="open" name="school_fees.action_student_payslip_form">
+                                            <t t-esc="payment_details.fees_outstanding_total"/>
+                                        </a>
+                                    </td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <t t-if="typeof(payment_details.canteen_total) == 'number'">
+                                    <td class="o_text payment_label o_secondary">
+                                        Canteen
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="total" name="school_canteen.action_canteen">
+                                            <t t-esc="payment_details.canteen_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action"  id="paid" name="school_canteen.action_canteen">
+                                            <t t-esc="payment_details.canteen_paid_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="open" name="school_canteen.action_canteen">
+                                            <t t-esc="payment_details.canteen_outstanding_total"/>
+                                        </a>
+                                    </td>
+                                 </t>
+                            </tr>
+                            <tr>
+                                <t t-if="typeof(payment_details.transport_total) == 'number'">
+                                    <td class="o_text payment_label o_secondary">
+                                    Transport
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="total" name="school_transport.action_student_transport_registration_form">
+                                            <t t-esc="payment_details.transport_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="paid" name="school_transport.action_student_transport_registration_form">
+                                            <t t-esc="payment_details.transport_paid_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="open" name="school_transport.action_student_transport_registration_form">
+                                            <t t-esc="payment_details.transport_outstanding_total"/>
+                                        </a>
+                                    </td>
+                                </t>
+                            </tr>
+                             <tr>
+                                <t t-if="typeof(payment_details.issue_total) == 'number'">
+                                    <td class="o_text payment_label o_secondary">
+                                        Library penalty
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="total" name="library.action_library_book_list1">
+                                            <t t-esc="payment_details.issue_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="paid" name="library.action_library_book_list1">
+                                            <t t-esc="payment_details.issue_paid_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="open" name="library.action_library_book_list1">
+                                            <t t-esc="payment_details.issue_outstanding_total"/>
+                                        </a>
+                                    </td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <t t-if="typeof(payment_details.accomm_total) == 'number'">
+                                    <td class="o_text payment_label o_secondary">
+                                        Accommodation
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="total" name="accommodation.action_accommodation_accommodation">
+                                            <t t-esc="payment_details.accomm_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="paid" name="accommodation.action_accommodation_accommodation">
+                                            <t t-esc="payment_details.accomm_paid_total"/>
+                                        </a>
+                                    </td>
+                                    <td class="o_secondary">
+                                        <a href="#" class="o_dashboard_action" id="open" name="accommodation.action_accommodation_accommodation">
+                                            <t t-esc="payment_details.accomm_outstanding_total"/>
+                                        </a>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                    <br/>
+                </div>
+            </div>
+            <t t-foreach="tree_details" t-as="tree_detail">
+                <t t-if="tree_details[tree_detail].length">
+                    <div class="o_kanban_record dashboard_tree" style="background:#e2e2e0;">
+                        <table class="o_list_view table table-condensed table-striped school_dashboard_tree_table" >
+                            <div style="height:50px;">
+                                <span style="padding-left: 15px;font-size: 20px;top: 10px;">
+                                    <a><t t-esc="tree_details[tree_detail][0].Tree_Tital"/></a>
+                                </span>
+                            </div>
+                            <thead>
+                                <tr style="background-color: none;">
+                                    <t t-foreach="tree_details[tree_detail][0].columns" t-as="column">
+                                        <t t-if="(column != 'ID') &amp;&amp; (column != 'Model')">
+                                            <th>
+                                                <t t-esc="column"/>
+                                            </th>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="tree_details[tree_detail]" t-as="detail" t-att-model="detail['Model']" t-att-id="detail['ID']" style="background-color: white;">
+                                    <t t-foreach="tree_details[tree_detail][0].columns" t-as="column">
+                                        <t t-if="(column != 'ID') &amp;&amp; (column != 'Model')">
+                                            <td >
+                                                <t t-if="(detail[column] != false)">
+    	                                            <a class="oe_kanban_action oe_kanban_action_a">
+    	                                                <t t-esc="detail[column]"/>
+    	                                            </a>
+    	                                         </t>
+                                            </td>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+    </t>
+</templates>

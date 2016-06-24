@@ -1,0 +1,405 @@
+<?xml version="1.0" ?>
+<openerp>
+    <!--  Mail template are declared in a NOUPDATE block so users can freely customize/delete them -->
+    <data noupdate="1">
+    
+        <!-- Email template for Successful application submission -->
+        <record id="email_template_student_reminders" model="mail.template">
+            <field name="name">Reminders for ${object.name}.</field>
+            <field name="email_from"><![CDATA['noreply@localhost'|safe}>]]></field>
+            <field name="subject">Reminders for ${object.name}</field>
+            <field name="email_to">${object.stu_id and object.stu_id.email}</field>
+            <field name="model_id" ref="school.model_student_reminder"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, </p
+                % if object.stu_id:
+                <p><strong>${object.stu_id.name} ${object.stu_id.middle} ${object.stu_id.last}</strong></p>
+                % endif
+                <br/>
+                <p>This email is to inform you reminders for ${object.description}.</p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student Reject -->
+        <record id="email_template_student_reject" model="mail.template">
+            <field name="name">Admission Reject</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Reject</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that your applcation is rejected becuser the folloing reason:</p>
+                <br/>
+                <p>${object.remark}.</p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student withdrawn -->
+        <record id="email_template_student_withdrawn" model="mail.template">
+            <field name="name">Admission Withdrawn</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Withdrawn</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that your application is withdrawn because there is no reply for acceptance from you was sent within 4 weeks after
+                   the verification mail was sent from the university.
+                </p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student withdrawn -->
+        <record id="email_template_student_withdrawn_student" model="mail.template">
+            <field name="name">Admission Withdrawn student side</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Withdrawn Form Student</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that your application is withdrawn.
+                </p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student registration id -->
+        <record id="email_template_student_registration" model="mail.template">
+            <field name="name">Admission Registration</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Registration</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that you have successfully accept the Admission Request.</p>
+                % if object.registration_id:
+                <p>Your Registration Id is <strong>${object.registration_id.seq}</strong></p>
+                %endif
+                <br/>
+                <p>Kindly proceed to submit your documents to the Admission Registrar ASAP.</p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student registration id -->
+        <record id="email_template_student_registration_done" model="mail.template">
+            <field name="name">Admission Registration done</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Registration Done</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p><br/>
+                <p>This email is to inform you that your Registration is successfully done now.</p>
+                <p>You can able to see the Admission Register and can proceed for the payment.</p><>
+                <p>Kindly proceed for Fees Payment now.</p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student registration id -->
+        <record id="email_template_student_registration_withdrawn" model="mail.template">
+            <field name="name">Admission Registration done</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Registration Withdrawn</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that your Registration is Withdrawn.</p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Successful application verification registrar-->
+        <record id="email_temp_registrar_verify" model="mail.template">
+            <field name="name">Application Verified Successfully by Registrar</field>
+            <field name="email_from"><![CDATA['noreply@localhost'|safe}>]]></field>
+            <field name="subject">Application Verified Successfully by Registrar</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p>
+                <p>This email is to inform you that Your submitted Application
+                   is successfully verified by Admission Registrar.</p>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+
+        <!-- Email template for Successful application verification Department Head-->
+        <record id="email_temp_department_verify" model="mail.template">
+            <field name="name">Application Verified Successfully by Department Head</field>
+            <field name="email_from"><![CDATA['noreply@localhost'|safe}>]]></field>
+            <field name="subject">Application Verified Successfully by Department Head</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p>
+                <p>This email is to inform you that Your submitted Application
+                   is successfully verified by Department Head.</p>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Successful Student application -->
+        <record id="email_temp_stu_postutme_qualified" model="mail.template">
+            <field name="name">Student Application Entrance Exam Qualified Successfully</field>
+            <field name="email_from"><![CDATA['noreply@localhost'|safe}>]]></field>
+            <field name="subject">Entrance Exam Qualified Successfully</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p>
+                % if object.utme_post_score:
+                <p>You have passed the Entrance Exam with <strong>${object.utme_post_score} </strong> marks Out of <strong>${object.utme_confi_id.total_marks}.</p>
+                % endif
+                <p>Your Admission Register have successfully Varified.</p>
+                <br/>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Successful Finally application verification registrar-->
+        <record id="email_temp_final_registrar_verify" model="mail.template">
+            <field name="name">Application Verified Successfully by Registrar</field>
+            <field name="email_from"><![CDATA['noreply@localhost'|safe}>]]></field>
+            <field name="subject">Application Admission Letter Verified Successfully by Admission Registrar</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="report_student_admission_result"/>
+            <field name="report_name">Admission Letter of ${object.name}</field>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p>
+                <p>This email is to inform you that Your submitted Application
+                   is Finally successfully verified by Admission Registrar.</p>
+                <p>you are now admitted in the university.</p>
+                <p>Your admission letter is attached with this mail. Kindly find the attachment.</p>
+                <p>
+                   To accept the invitation, click on the following link:
+                </p>
+                <ul>
+                    <li><a href="${object.accept_url}">Accept invitation to "${object.school_id.name}"</a></li>
+                </ul>
+                <br/>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Successful application Accepted-->
+        <record id="email_template_accepted_student" model="mail.template">
+            <field name="name">Application Accepted Successfully by Student</field>
+            <field name="email_from"><![CDATA['noreply@localhost'|safe}>]]></field>
+            <field name="subject">Application Accepted Successfully</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p>
+                <p>This email is to inform you that Your submitted Application
+                   is successfully Accepted.</p>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student Addmission done -->
+        <record id="email_temp_student_admission_done" model="mail.template">
+            <field name="name">Admission done</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Admission Done</field>
+            <field name="email_to">${object.email}</field>
+            <field name="model_id" ref="school.model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>Congratulations!</p>
+                <p>This email is to inform you that your Admission is successfully done now.</p>
+                <p>Your profile is created and <b>Login Credential</b> are as below :</p>
+                <br/>
+                <p>User Name: <b>${object.student_code}</b></p>
+                <p>Password : <b>${object.student_code}</b></p>
+                <br/>
+                <p>You can reset your password by yourself now.</p>
+                 <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+
+        <!-- Email template for Student Post Lecture Notes -->
+        <record id="email_temp_student_post_lec_notes" model="mail.template">
+            <field name="name">Lecture Notes</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Lecture Notes</field>
+            <field name="email_to">% for student in object.student_ids:
+                                        ${student.email}
+                                   % endfor</field>
+            <field name="model_id" ref="school.model_post_lecture_notes"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello</p>
+                <br/>
+                <p>This email is to inform you that your Post Lecture Notes for <b> ${object.name} </b> is uploaded by <b> ${object.lecturer_id.name} </b>. Kindly find it.</p>
+                <br/>
+               <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+        </field>
+        </record>
+        
+        <!-- Email template for Student Post Lecture Notes -->
+        <record id="email_temp_student_deferment_req_cancel" model="mail.template">
+            <field name="name">Deferment Request Cancelled</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Deferment Request Cancelled</field>
+            <field name="email_to">${object.student_id.email}</field>
+            <field name="model_id" ref="model_student_drop_request"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that your Deferment Request has been rejected for the below reason.</p>
+                <p><strong>Reason:</strong> ${object.reason}</p>
+                <br/>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+        
+        <!-- Email template for Student Document -->
+        <record id="email_temp_student_document" model="mail.template">
+            <field name="name">Document</field>
+            <field name="email_from">noreply@gmail.com</field>
+            <field name="subject">Document</field>
+            <field name="email_to">${object.student_id.email}</field>
+            <field name="model_id" ref="model_student_student"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+                <p>Hello, <strong>${object.name} ${object.middle} ${object.last}</strong></p>
+                <br/>
+                <p>This email is to inform you that your Document are not completely attached.</p>
+                <p>kindly, Below Documents attach in you profile:</p>
+                <p>${object.remark}</p>
+                <br/>
+                <p>Thank you.</p>
+               <p>Have a nice day!</p></div>
+
+            ]]>
+            </field>
+        </record>
+    </data>
+</openerp>
