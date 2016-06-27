@@ -32,7 +32,6 @@ class StudentStudent(models.Model):
     _table = "student_student"
     _description = 'Student Information'
 
-    @api.one
     @api.depends('standard_id')
     def _get_group_student(self):
         ir_obj = self.env['ir.model.data']
@@ -43,7 +42,6 @@ class StudentStudent(models.Model):
         if stu_xml_id.id in grps:
             self.student_bool = True
 
-    @api.one
     @api.depends('standard_id')
     def _get_grp_stu_admission(self):
         ir_obj = self.env['ir.model.data']
@@ -54,7 +52,6 @@ class StudentStudent(models.Model):
         if stu_xml_id.id in grps:
             self.student_admission_bool = True
 
-    @api.one
     @api.depends('date_of_birth')
     def _calc_age(self):
         self.age = 0
@@ -881,7 +878,7 @@ class StudentStudent(models.Model):
                 result = act_obj.read(self._cr, self._uid, [result_id])[0]
 
                 if not student.admission_fees_id:
-                    raise UserError(('There is no payments Done/In Process\
+                    raise UserError(_('There is no payments Done/In Process\
                     till Date!'))
                 # choose the view_mode accordingly
                 res = mod_obj.get_object_reference(self._cr, self._uid,

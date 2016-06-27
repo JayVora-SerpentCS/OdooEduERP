@@ -2,43 +2,42 @@
 
 <openerp>
     <data>
-    
+
         <!--  School Information -->
-        
         <record id="demo_school_1" model="school.school">
             <field name="name">West High Campus</field>
             <field name="code">0672</field>
             <field name="city">MELBOURNE</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <record id="demo_school_2" model="school.school">
             <field name="name">East High Campus</field>
             <field name="code">0786</field>
             <field name="city">ONTARIO</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <record id="demo_school_3" model="school.school">
             <field name="name">EverWood High Campus</field>
             <field name="code">0895</field>
             <field name="city">LONDON</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <!-- Campus manager -->
         <record id="campus_manager_1" model="campus.manager">
             <field name="name">Errol Brown</field>
             <field name="work_email">errol@campus.com</field>
             <field name="campus_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="campus_manager_2" model="campus.manager">
             <field name="name">Denny Hamlin</field>
             <field name="work_email">denny@campus.com</field>
             <field name="campus_id" ref="demo_school_2"/>
         </record>
-        
+
         <record id="campus_manager_3" model="campus.manager">
             <field name="name">Henry Garcia</field>
             <field name="work_email">henry@campus.com</field>
@@ -46,12 +45,12 @@
         </record>
     
         <!-- Student Grade Master -->
-        
+
         <record id="demo_student_grade_1" model="grade.master">
             <field name="name">Grade System for Finals</field>
             <field name="type">exam</field>
         </record>
-        
+
         <record id="demo_student_grade_line_1" model="grade.line">
             <field name="sequence">1</field>
             <field name="grade">A</field>
@@ -60,7 +59,7 @@
             <field name="remarks">Excellent</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
-        
+
         <record id="demo_student_grade_line_2" model="grade.line">
             <field name="sequence">2</field>
             <field name="grade">B</field>
@@ -69,7 +68,7 @@
             <field name="remarks">Very Good</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
-        
+
         <record id="demo_student_grade_line_3" model="grade.line">
             <field name="sequence">3</field>
             <field name="grade">C</field>
@@ -78,7 +77,7 @@
             <field name="remarks">Good</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
-        
+
         <record id="demo_student_grade_line_4" model="grade.line">
             <field name="sequence">4</field>
             <field name="grade">D</field>
@@ -87,7 +86,7 @@
             <field name="remarks">Fair</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
-        
+
         <record id="demo_student_grade_line_5" model="grade.line">
             <field name="sequence">5</field>
             <field name="grade">E</field>
@@ -96,7 +95,7 @@
             <field name="remarks">Pass</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
-        
+
         <record id="demo_student_grade_line_6" model="grade.line">
             <field name="sequence">6</field>
             <field name="grade">F</field>
@@ -105,7 +104,7 @@
             <field name="remarks">Fail</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
-        
+
         <!--Academic Year  Information-->
         <record id="demo_academic_year_1" model="academic.year">
                 <field eval="'Academic Year ' + str((DateTime.today() - relativedelta(years=1)).strftime('%Y'))" name="name"/>
@@ -131,9 +130,8 @@
                <field eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-01-01 %H:%M')" name="date_start"/>
                <field eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')" name="date_stop"/>
         </record>
-        
+
         <!-- Academic Month -->
-        
         <record id="demo_academic_month_previous_1" model="academic.month">
                 <field name="name">January</field>
                 <field name="code">JAN</field>
@@ -386,26 +384,26 @@
                 <field name="date_start" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-01 %H:%M')"/>
                 <field name="date_stop" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-31 %H:%M')"/>
        </record>
-        
+
         <!--Faculty Information -->
         <record id="faculty_faculty_1" model="faculty.faculty">
             <field name="name">Faculty of Science</field>
             <field name="code">F.O.S.</field>
             <field name="campus_ids" eval="[(6,0,[ref('demo_school_1'), ref('demo_school_2')])]"/>
         </record>
-        
+
         <record id="faculty_faculty_2" model="faculty.faculty">
             <field name="name">Faculty in Commerce</field>
             <field name="code">F.O.C</field>
             <field name="campus_ids" eval="[(6,0,[ref('demo_school_1'), ref('demo_school_2')])]"/>
         </record>
-        
+
         <record id="faculty_faculty_3" model="faculty.faculty">
             <field name="name">Faculty in Arts</field>
             <field name="code">F.O.A</field>
             <field name="campus_ids" eval="[(6,0,[ref('demo_school_2'), ref('demo_school_3')])]"/>
         </record>
-        
+
         <!-- Faculty manager -->
         <record id="faculty_manager_1" model="faculty.manager">
             <field name="name">Eric Johnson</field>
@@ -413,94 +411,95 @@
             <field name="faculty_id" ref="faculty_faculty_1"/>
             <field name="campus_ids" eval="[(6,0,[ref('demo_school_1'), ref('demo_school_2')])]"/>
         </record>
-        
+
         <record id="faculty_manager_2" model="faculty.manager">
             <field name="name">Roshel Fernando</field>
             <field name="work_email">roshel@faculty.com</field>
             <field name="faculty_id" ref="faculty_faculty_2"/>
             <field name="campus_ids" eval="[(6,0,[ref('demo_school_1'), ref('demo_school_2')])]"/>
         </record>
-        
+
         <record id="faculty_manager_3" model="faculty.manager">
             <field name="name">Juliet Roberts</field>
             <field name="work_email">juliet@faculty.com</field>
             <field name="faculty_id" ref="faculty_faculty_3"/>
             <field name="campus_ids" eval="[(6,0,[ref('demo_school_2'), ref('demo_school_3')])]"/>
         </record>
-        
-        
+
         <!--Standard Information-->
-        
+
         <record id="demo_standard_standard_be" model="standard.standard">
             <field name="name">Department in Engineering</field>
             <field name="code">B.E.</field>
             <field name="faculty_id" ref="school.faculty_faculty_1"/>
         </record>
-        
+
         <record id="demo_standard_standard_bsc" model="standard.standard">
             <field name="name">Department in Science</field>
             <field name="code">B.Sc.</field>
             <field name="faculty_id" ref="school.faculty_faculty_1"/>
         </record>
+
         <record id="demo_standard_standard_bcom" model="standard.standard">
             <field name="name">Department in Commerce</field>
             <field name="code">B.Com.</field>
             <field name="faculty_id" ref="school.faculty_faculty_2"/>
         </record>
+
         <record id="demo_standard_standard_ba" model="standard.standard">
             <field name="name">Department in Arts</field>
             <field name="code">B.A.</field>
             <field name="faculty_id" ref="school.faculty_faculty_3"/>
         </record>
-        
+
         <!-- department manager -->
         <record id="department_manager_1" model="department.manager">
             <field name="name">Rose Badree</field>
             <field name="work_email">rose@department.com</field>
             <field name="d_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="department_manager_2" model="department.manager">
             <field name="name">Samuel Leslie</field>
             <field name="work_email">Samuel@department.com</field>
             <field name="d_id" ref="demo_standard_standard_bsc"/>
         </record>
-        
+
         <record id="department_manager_3" model="department.manager">
             <field name="name">Julia Guarin</field>
             <field name="work_email">julia@campus.com</field>
             <field name="d_id" ref="demo_standard_standard_bcom"/>
         </record>
-        
+
         <record id="department_manager_4" model="department.manager">
             <field name="name">Fredy Vins</field>
             <field name="work_email">fredy@department.com</field>
             <field name="d_id" ref="demo_standard_standard_ba"/>
         </record>
-        
+
         <record id="demo_course_years_1" model="course.years">
             <field name="name">Semester-1</field>
             <field name="code">1</field>
             <field name="sequence">1</field>
             <field name="course_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_course_years_2" model="course.years">
             <field name="name">Semester-2</field>
             <field name="code">2</field>
             <field name="sequence">2</field>
             <field name="course_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_course_years_3" model="course.years">
             <field name="name">Semester-3</field>
             <field name="code">3</field>
             <field name="sequence">3</field>
             <field name="course_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <!--Subject Information-->
-        
+
         <record id="demo_subject_subject_eee" model="subject.subject">
             <field name="name">Elements of Electrical Engineering</field>
             <field name="code">EEE</field>
@@ -511,7 +510,7 @@
             <field name="level_id" ref="demo_course_years_1"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_calc" model="subject.subject">
             <field name="name">Calculus</field>
             <field name="code">Calc.</field>
@@ -522,7 +521,7 @@
             <field name="level_id" ref="demo_course_years_1"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_es" model="subject.subject">
             <field name="name">Environmental Studies</field>
             <field name="code">E.S.</field>
@@ -533,7 +532,7 @@
             <field name="level_id" ref="demo_course_years_1"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_phy" model="subject.subject">
             <field name="name">Physics</field>
             <field name="code">Phy.</field>
@@ -544,7 +543,7 @@
             <field name="level_id" ref="demo_course_years_1"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_cpu" model="subject.subject">
             <field name="name">Computer Programming And Utilization</field>
             <field name="code">CPU</field>
@@ -554,7 +553,7 @@
             <field name="weightage">5</field>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_workshop" model="subject.subject">
             <field name="name">Workshop</field>
             <field name="code">Workshop</field>
@@ -565,7 +564,7 @@
             <field name="weightage">5</field>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_eme" model="subject.subject">
             <field name="name">Elements of Mechanical Engineering</field>
             <field name="code">EME</field>
@@ -576,7 +575,7 @@
             <field name="weightage">5</field>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_eg" model="subject.subject">
             <field name="name">Engineering Graphics</field>
             <field name="code">EG</field>
@@ -587,7 +586,7 @@
             <field name="weightage">5</field>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_cs" model="subject.subject">
             <field name="name">Communication Skills</field>
             <field name="code">C.S.</field>
@@ -598,7 +597,7 @@
             <field name="level_id" ref="demo_course_years_2"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_cpd" model="subject.subject">
             <field name="name">Contributor Personality Development</field>
             <field name="code">CPD</field>
@@ -608,7 +607,7 @@
             <field name="weightage">5</field>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_aem" model="subject.subject">
             <field name="name">Advance Engineering Maths</field>
             <field name="code">AEM</field>
@@ -619,7 +618,7 @@
             <field name="level_id" ref="demo_course_years_3"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_eem" model="subject.subject">
             <field name="name">Engineering Economics And Management</field>
             <field name="code">EEM</field>
@@ -630,7 +629,7 @@
             <field name="level_id" ref="demo_course_years_3"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_ds" model="subject.subject">
             <field name="name">Data Structures</field>
             <field name="code">DS</field>
@@ -641,7 +640,7 @@
             <field name="level_id" ref="demo_course_years_3"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-         
+
         <record id="demo_subject_subject_dbms" model="subject.subject">
             <field name="name">Database Management System</field>
             <field name="code">DBMS</field>
@@ -652,7 +651,7 @@
             <field name="weightage">5</field>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_de" model="subject.subject">
             <field name="name">Digital Electronics</field>
             <field name="code">DE</field>
@@ -663,7 +662,7 @@
             <field name="level_id" ref="demo_course_years_3"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_subject_subject_de_1a" model="subject.subject">
             <field name="name">Design Engineering - I A</field>
             <field name="code">DE - 1A</field>
@@ -675,69 +674,68 @@
             <field name="level_id" ref="demo_course_years_3"/>
             <field name="department_id" ref="demo_standard_standard_be"/>
         </record>
-        
+
         <record id="demo_standard_standard_be" model="standard.standard">
             <field name="name">Bachelor in Engineering</field>
             <field name="code">B.E.</field>
             <field name="faculty_id" ref="school.faculty_faculty_1"/>
             <field name="electives_subject_ids" eval="[(6,0,[ref('demo_subject_subject_cpu'), ref('demo_subject_subject_workshop')])]"/>
         </record>
-        
+
         <!--Course Semesters Information-->
-        
         <record id="demo_course_years_1" model="course.years">
             <field eval="[(6,0,[ref('demo_subject_subject_eee'), ref('demo_subject_subject_calc'), ref('demo_subject_subject_es'), ref('demo_subject_subject_phy')])]"
                    name="subject_id"/>
         </record>
-        
+
         <record id="demo_course_years_2" model="course.years">
             <field eval="[(6,0,[ref('demo_subject_subject_eme'), ref('demo_subject_subject_eg'), ref('demo_subject_subject_cs')])]"
                    name="subject_id"/>
         </record>
-        
+
         <record id="demo_course_years_3" model="course.years">
             <field eval="[(6,0,[ref('demo_subject_subject_aem'), ref('demo_subject_subject_eem'), ref('demo_subject_subject_ds'), ref('demo_subject_subject_dbms'), ref('demo_subject_subject_de'),ref('demo_subject_subject_de_1a')])]"
                    name="subject_id"/>
         </record>
-        
+
         <!--Standard Division Information-->
-        
+
         <record id="demo_standard_division_1" model="standard.division">
             <field name="name">A</field>
             <field name="code">A</field>
             <field name="sequence">1</field>
         </record>
-        
+
         <record id="demo_standard_division_2" model="standard.division">
             <field name="name">B</field>
             <field name="code">B</field>
             <field name="sequence">2</field>
         </record>
-        
+
         <!-- School Standard -->
-        
+
         <record id="demo_school_standard_1" model="school.standard">
             <field name="standard_id" ref="demo_standard_standard_be"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="demo_school_standard_2" model="school.standard">
             <field name="standard_id" ref="demo_standard_standard_be"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="demo_school_standard_3" model="school.standard">
             <field name="standard_id" ref="demo_standard_standard_bsc"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <!-- Student Informations -->
-        
+
         <record id="demo_student_student_1" model="student.student">
             <field name="name">Mary</field>
             <field name="middle">Deniel</field>
@@ -748,7 +746,7 @@
             <field eval="(DateTime.today() - relativedelta(years=17)).strftime('%Y-01-25 %H:%M')" name="date_of_birth"/>
             <field name="gender">female</field>
         </record>
-        
+
         <record id="demo_student_student_2" model="student.student">
             <field name="name">William</field>
             <field name="middle">Joseph</field>
@@ -759,7 +757,7 @@
             <field eval="(DateTime.today() - relativedelta(years=17)).strftime('%Y-06-13 %H:%M')" name="date_of_birth"/>
             <field name="gender">male</field>
         </record>
-        
+
         <record id="demo_student_student_3" model="student.student">
             <field name="name">Jacob</field>
             <field name="middle">Caleb</field>
@@ -770,7 +768,7 @@
             <field eval="(DateTime.today() - relativedelta(years=18)).strftime('%Y-03-09 %H:%M')" name="date_of_birth"/>
             <field name="gender">male</field>
         </record>
-        
+
         <record id="demo_student_student_4" model="student.student">
             <field name="name">Maria</field>
             <field name="middle">Samuel</field>
@@ -782,7 +780,7 @@
             <field name="gender">female</field>
             <field name="roll_no">2</field>
         </record>
-        
+
        <record id="demo_student_student_5" model="student.student">
             <field name="name">John</field>
             <field name="middle">Jim</field>
@@ -800,7 +798,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="course_year_id" ref="demo_course_years_1"/>
         </record>
-        
+
         <record id="demo_student_student_6" model="student.student">
             <field name="name">Alexander</field>
             <field name="middle">Carol</field>
@@ -818,7 +816,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="course_year_id" ref="demo_course_years_1"/>
         </record>
-        
+
         <record id="demo_student_student_7" model="student.student">
             <field name="name">Sarah</field>
             <field name="middle">Isaac</field>
@@ -836,7 +834,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="course_year_id" ref="demo_course_years_1"/>
         </record>
-        
+
        <record id="demo_student_student_8" model="student.student">
             <field name="name">Lucy</field>
             <field name="middle">Harold</field>
@@ -854,8 +852,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="course_year_id" ref="demo_course_years_1"/>
         </record>
-        
-        
+
         <!-- Student Subject -->
         
          <record id="demo_student_subjects_1" model="student.subjects">
@@ -864,30 +861,29 @@
             <field name="subjects_ids" eval="[(6,0,[ref('demo_subject_subject_eee'), ref('demo_subject_subject_calc'), ref('demo_subject_subject_es'), ref('demo_subject_subject_phy')])]"
                    />
         </record>
-        
+
         <record id="demo_student_subjects_2" model="student.subjects">
             <field name="student_id" ref="demo_student_student_6"/>
             <field name="semester_id" ref="demo_course_years_1"/>
             <field name="subjects_ids" eval="[(6,0,[ref('demo_subject_subject_eee'), ref('demo_subject_subject_calc'), ref('demo_subject_subject_es'), ref('demo_subject_subject_phy')])]"
                    />
         </record>
-        
+
         <record id="demo_student_subjects_3" model="student.subjects">
             <field name="student_id" ref="demo_student_student_7"/>
             <field name="semester_id" ref="demo_course_years_1"/>
             <field name="subjects_ids" eval="[(6,0,[ref('demo_subject_subject_eee'), ref('demo_subject_subject_calc'), ref('demo_subject_subject_es'), ref('demo_subject_subject_phy')])]"
                    />
         </record>
-        
+
         <record id="demo_student_subjects_4" model="student.subjects">
             <field name="student_id" ref="demo_student_student_8"/>
             <field name="semester_id" ref="demo_course_years_1"/>
             <field name="subjects_ids" eval="[(6,0,[ref('demo_subject_subject_eee'), ref('demo_subject_subject_calc'), ref('demo_subject_subject_es'), ref('demo_subject_subject_phy')])]"
                    />
         </record>
-        
+
         <!-- School Teacher Information-->
-        
         <record id="demo_school_teacher_1" model="school.teacher">
             <field name="name">Winely</field>
             <field name="standard_id" ref="demo_school_standard_1"/>
@@ -895,7 +891,7 @@
             <field eval="[(6,0,[ref('demo_subject_subject_cs')])]" name="subject_id"/>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="demo_school_teacher_2" model="school.teacher">
             <field name="name">Peter White</field>
             <field name="standard_id" ref="demo_school_standard_2"/>
@@ -903,7 +899,7 @@
             <field name="work_email">peter@demo.com</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="demo_school_teacher_3" model="school.teacher">
             <field name="name">Winparker Gabriel</field>
             <field name="standard_id" ref="demo_school_standard_1"/>
@@ -911,98 +907,92 @@
             <field name="work_email">winparker@demo.com</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
-<!--         Student Parent Information -->
-        
+
+        <!-- Student Parent Information -->
+
         <record id="demo_student_parent_1" model="school.parent">
             <field name="name">Jim Davis</field>
             <field name="email">jim.davis@example.com</field>
             <field eval="[(6,0,[ref('demo_student_student_5')])]" name="student_id"/>
         </record>
-        
+
         <record id="demo_student_parent_2" model="school.parent">
             <field name="name">Carol Amidon</field>
             <field name="email">carol.amidon@example.com</field>
             <field eval="[(6,0,[ref('demo_student_student_6')])]" name="student_id"/>
         </record>
-        
+
         <record id="demo_student_parent_3" model="school.parent">
             <field name="name">Linda Kellian</field>
             <field name="email">linda@kellian@example.com</field>
             <field eval="[(6,0,[ref('demo_student_student_7')])]" name="student_id"/>
         </record>
-        
+
         <record id="demo_student_parent_4" model="school.parent">
             <field name="name">Harold Placek</field>
             <field name="email">harold.placek@example.com</field>
             <field eval="[(6,0,[ref('demo_student_student_8')])]" name="student_id"/>
         </record>
-        
-<!--         <record id="demo_student_parent_5" model="school.parent"> -->
-<!--             <field name="name">Michele Jophnson</field> -->
-<!--             <field name="email">michele.jophnson@example.com</field> -->
-<!--             <field eval="[(6,0,[ref('demo_student_student_8')])]" name="student_id"/> -->
-<!--         </record> -->
-        
+
         <record id="demo_student_parent_6" model="school.parent">
             <field name="name">Jessie Warner</field>
             <field name="email">jessie.warner@example.com</field>
             <field eval="[(6,0,[ref('demo_student_student_6')])]" name="student_id"/>
         </record>
-        
+
         <!-- student.news -->
-        
+
         <record id="demo_student_news_desc_1" model="student.news">
             <field name="subject">Education Information</field>
             <field name="date">2013-07-15</field>
         </record>
-        
+
         <!-- School Room Type-->
-        
+
         <record id="room_type" model="room.type">
             <field name="name">Hall</field>
         </record>
-        
+
         <record id="room_type_1" model="room.type">
             <field name="name">Class Room</field>
         </record>
-        
+
         <record id="room_type_2" model="room.type">
             <field name="name">Lab</field>
         </record>
-        
+
         <!-- School Floor-->
-        
+
         <record id="school_floor" model="school.floor">
             <field name="sequence">0</field>
             <field name="name">Ground</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="school_floor_1" model="school.floor">
             <field name="sequence">1</field>
             <field name="name">First</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="school_floor_2" model="school.floor">
             <field name="sequence">2</field>
             <field name="name">Second</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
-        
+
         <record id="school_floor_3" model="school.floor">
             <field name="sequence">3</field>
             <field name="name">Ground</field>
             <field name="school_id" ref="demo_school_2"/>
         </record>
-        
+
         <record id="school_floor_4" model="school.floor">
             <field name="sequence">4</field>
             <field name="name">First</field>
             <field name="school_id" ref="demo_school_2"/>
         </record>
-        
+
         <record id="school_floor_5" model="school.floor">
             <field name="sequence">5</field>
             <field name="name">Second</field>

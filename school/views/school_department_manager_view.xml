@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <field name="department_id"/>
+                    <field name="d_id"/>
                     <field name="category_ids" groups="base.group_hr_user"/>
                     <field name="job_id"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>

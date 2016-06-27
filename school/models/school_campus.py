@@ -34,7 +34,7 @@ class CampusManager(models.Model):
                                   ' Campus is already assigned to user ' +
                                   str(c_mngr_id.name)))
             c_mngr_id.campus_id.write({'campus_manager_id': c_mngr_id.id,
-                                          'campus_manager_write': True})
+                                       'campus_manager_write': True})
         user_vals = {'name': c_mngr_id.name,
                      'login': c_mngr_id.work_email,
                      'email': c_mngr_id.work_email,

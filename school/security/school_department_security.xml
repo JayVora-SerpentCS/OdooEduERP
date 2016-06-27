@@ -22,7 +22,7 @@
             <field name="domain_force">[('department_ids.department_manager_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
          </record>
-        
+
         <!-- Rule For Department recode as a University Department Manager -->
 
        <record id="rule_department_manager_standard" model="ir.rule">
@@ -32,17 +32,7 @@
             <field name="domain_force">[('department_manager_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
          </record>
-         
-        <!-- Rule For Course Specification Record As A University Department-->
 
-<!--         <record id="rule_course_specification_university_department" model="ir.rule"> -->
-<!--             <field name="name">Rule For Course Specification Record As A University Department</field> -->
-<!--             <field name="model_id" ref="school.model_course_specification"/> -->
-<!--             <field name="global" eval="True"/> -->
-<!--             <field name="domain_force">[('course_id.department_manager_id.user_id', '=', user.id)]</field> -->
-<!--             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/> -->
-<!--          </record> -->
-        
         <!-- Rule For Course Subject Record As A University Department -->
 
         <record id="rule_course_subject_university_department" model="ir.rule">
@@ -62,7 +52,7 @@
             <field name="domain_force">[('course_id.department_manager_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
          </record>
-         
+
         <!-- Rule For Course years Record As A University Department -->
 
         <record id="rule_course_years_university_department" model="ir.rule">
@@ -74,7 +64,7 @@
          </record>
 
         <!-- Rule For School Record As A Department Manager -->
-        
+
         <record id="rule_school_school_record_as_department_manager" model="ir.rule">
             <field name="name">Rule School Record As A Department Manager</field>
             <field name="model_id" ref="model_school_school"/>
@@ -151,7 +141,7 @@
             <field name="domain_force">[('school_id.standards.standard_id.department_manager_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
         </record>
-        
+
          <!-- Rule For Post Lecture Notes Record As A University Department Manager -->
 
         <record id="rule_post_lect_notes_as_university_department_manager" model="ir.rule">
@@ -161,7 +151,7 @@
             <field name="domain_force">[('class_id.standard_id.department_manager_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
         </record>
-        
+
          <!-- Rule For Drop Request Record As A University Department Manager -->
 
         <record id="rule_drop_request_as_university_department_manager" model="ir.rule">
@@ -171,7 +161,7 @@
             <field name="domain_force">[('school_standard_id.standard_id.department_manager_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
         </record>
-        
+
          <!-- Rule For Readmission As A University Department Manager -->
 
         <record id="rule_readmission_as_university_department_manager" model="ir.rule">
@@ -181,6 +171,6 @@
             <field name="domain_force">[('school_standard_id.standard_id.department_manager_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_department_manager'))]"/>
         </record>
-        
+
     </data>
 </openerp>

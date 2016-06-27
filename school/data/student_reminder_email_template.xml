@@ -2,7 +2,7 @@
 <openerp>
     <!--  Mail template are declared in a NOUPDATE block so users can freely customize/delete them -->
     <data noupdate="1">
-    
+
         <!-- Email template for Successful application submission -->
         <record id="email_template_student_reminders" model="mail.template">
             <field name="name">Reminders for ${object.name}.</field>
@@ -27,7 +27,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student Reject -->
         <record id="email_template_student_reject" model="mail.template">
             <field name="name">Admission Reject</field>
@@ -51,7 +51,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student withdrawn -->
         <record id="email_template_student_withdrawn" model="mail.template">
             <field name="name">Admission Withdrawn</field>
@@ -75,7 +75,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student withdrawn -->
         <record id="email_template_student_withdrawn_student" model="mail.template">
             <field name="name">Admission Withdrawn student side</field>
@@ -98,7 +98,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student registration id -->
         <record id="email_template_student_registration" model="mail.template">
             <field name="name">Admission Registration</field>
@@ -125,7 +125,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student registration id -->
         <record id="email_template_student_registration_done" model="mail.template">
             <field name="name">Admission Registration done</field>
@@ -172,7 +172,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Successful application verification registrar-->
         <record id="email_temp_registrar_verify" model="mail.template">
             <field name="name">Application Verified Successfully by Registrar</field>
@@ -218,7 +218,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Successful Student application -->
         <record id="email_temp_stu_postutme_qualified" model="mail.template">
             <field name="name">Student Application Entrance Exam Qualified Successfully</field>
@@ -244,7 +244,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Successful Finally application verification registrar-->
         <record id="email_temp_final_registrar_verify" model="mail.template">
             <field name="name">Application Verified Successfully by Registrar</field>
@@ -278,7 +278,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Successful application Accepted-->
         <record id="email_template_accepted_student" model="mail.template">
             <field name="name">Application Accepted Successfully by Student</field>
@@ -301,7 +301,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student Addmission done -->
         <record id="email_temp_student_admission_done" model="mail.template">
             <field name="name">Admission done</field>
@@ -354,7 +354,7 @@
             ]]>
         </field>
         </record>
-        
+
         <!-- Email template for Student Post Lecture Notes -->
         <record id="email_temp_student_deferment_req_cancel" model="mail.template">
             <field name="name">Deferment Request Cancelled</field>
@@ -377,7 +377,7 @@
             ]]>
             </field>
         </record>
-        
+
         <!-- Email template for Student Document -->
         <record id="email_temp_student_document" model="mail.template">
             <field name="name">Document</field>

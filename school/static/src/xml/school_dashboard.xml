@@ -342,10 +342,10 @@
                                         <t t-if="(column != 'ID') &amp;&amp; (column != 'Model')">
                                             <td >
                                                 <t t-if="(detail[column] != false)">
-    	                                            <a class="oe_kanban_action oe_kanban_action_a">
-    	                                                <t t-esc="detail[column]"/>
-    	                                            </a>
-    	                                         </t>
+                                                    <a class="oe_kanban_action oe_kanban_action_a">
+                                                        <t t-esc="detail[column]"/>
+                                                    </a>
+                                                 </t>
                                             </td>
                                         </t>
                                     </t>

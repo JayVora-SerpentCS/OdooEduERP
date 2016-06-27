@@ -7,7 +7,7 @@ from datetime import date
 import time
 
 
-class School_Dashboard(http.Controller):
+class SchoolDashboard(http.Controller):
 
     @http.route(['/get_school_dash_board_details'],
                 type='json', auth='public')

@@ -12,7 +12,7 @@
             <field name="name">University Administrator</field>
             <field name="category_id" ref="module_category_school"/>
         </record>
-        
+
         <record id="group_department_manager" model="res.groups">
             <field name="name">Department Manager</field>
             <field name="category_id" ref="module_category_school"/>
@@ -27,7 +27,7 @@
             <field name="name">Student</field>
             <field name="category_id" ref="module_category_school"/>
         </record>
-        
+
         <record id="group_school_parent" model="res.groups">
             <field name="name">Parent</field>
             <field name="category_id" ref="module_category_school"/>
@@ -59,7 +59,7 @@
             <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="category_id" ref="school.module_category_school"/>
         </record>
-        
+
          <record id="group_admissions_registrar" model="res.groups">
             <field name="name">Admission Registrar</field>
             <field name="category_id" ref="school.module_category_school"/>
@@ -69,7 +69,7 @@
             <field name="name">Deactivate Student</field>
             <field name="category_id" ref="school.module_category_school"/>
         </record>
-        
+
         <record id="group_freeze_student" model="res.groups">
             <field name="name">Freeze Student</field>
             <field name="category_id" ref="school.module_category_school"/>
@@ -84,7 +84,7 @@
             <field name="domain_force">[('employee_id.user_id.id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_admissions_registrar'))]"/>
          </record>
-         
+
          <!-- Rule For Fees Record As A University Campus Fees-->
 
         <record id="rule_university_fees_manager_profile" model="ir.rule">
@@ -153,8 +153,8 @@
             <field name="domain_force"> [('partner_id','=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_school_parent'))]"/>
         </record>
-        
-<!--         Rule For Parent Profile Record As A Student -->
+
+        <!-- Rule For Parent Profile Record As A Student -->
 
         <record id="rule_parent_profile_record_as_student" model="ir.rule">
             <field name="name">Rule Parent Profile Record As A Student</field>
@@ -203,7 +203,7 @@
             <field name="domain_force">[('user_ids.id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student')),(4, ref('school.group_school_teacher'))]"/>
         </record>
-        
+
         <!-- Rule For Teacher Profile-->
 
         <record id="rule_personal_school_teacher" model="ir.rule">
@@ -221,7 +221,7 @@
             <field name="domain_force">[(1 ,'=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_school_administration'))]"/>
         </record>
-        
+
         <!-- Rule For student reminder Profile-->
 
         <record id="rule_personal_student_reminder" model="ir.rule">
@@ -230,7 +230,7 @@
             <field name="domain_force">[('stu_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
-        
+
         <!-- Rule For student reminder Profile-->
 
         <record id="rule_personal_parent_reminder" model="ir.rule">
@@ -239,7 +239,7 @@
             <field name="domain_force">[('stu_id.student_parent_id.partner_id', '=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
-        
+
         <!-- Rule For subject Record As A Teacher -->
 
         <record id="rule_subject_record_as_teacher" model="ir.rule">
@@ -258,7 +258,7 @@
             <field name="domain_force">[('stu_id.teacher_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
-        
+
          <!-- Rule For Teacher Feedback -->
 
         <record id="rule_personal_teacher_feedback" model="ir.rule">
@@ -267,7 +267,7 @@
             <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
-        
+
         <!-- Rule For Teacher Feedback -->
 
         <record id="rule_personal_teacher_feedback_11" model="ir.rule">
@@ -276,7 +276,7 @@
             <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
-        
+
         <!-- Rule For student Feedback -->
 
          <record id="rule_personal_student_feedback" model="ir.rule">
@@ -295,7 +295,7 @@
             <field name="domain_force">[('student_ids.user_id','=',user.id),('state', '=', 'post')]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
-        
+
         <!-- Rule For Post Lecture Notes Record As A Teacher -->
 
         <record id="rule_post_lect_notes_as_university_teacher" model="ir.rule">
@@ -305,9 +305,9 @@
             <field name="domain_force">[('lecturer_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
-        
+
         <!-- Rule For Drop Request As A Student -->
-        
+
         <record id="rule_drop_request_as_student" model="ir.rule">
             <field name="name">Rule For Drop Request As A Student</field>
             <field name="model_id" ref="model_student_drop_request"/>
@@ -315,9 +315,9 @@
             <field name="domain_force"> [('student_id.user_id','=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_school_student'))]"/>
         </record>
-        
+
         <!-- Rule For readmission As A Student -->
-        
+
         <record id="rule_readmission_as_student" model="ir.rule">
             <field name="name">Rule For Drop Request As A Student</field>
             <field name="model_id" ref="model_student_readmission"/>
@@ -325,7 +325,7 @@
             <field name="domain_force"> [('student_id.user_id','=', user.id)]</field>
             <field name="groups" eval="[(4, ref('group_freeze_student'))]"/>
         </record>
-        
+
         <!-- Rule For Student Record As A Deactivate Student -->
 
         <record id="rule_student_as_deactivate_student" model="ir.rule">
@@ -337,7 +337,7 @@
         </record>
 
         <!-- Rule For Student Drop Request Record As A Parent -->
-        
+
         <record id="rule_student_drop_request_as_parent" model="ir.rule">
             <field name="name">Rule Student Drop Request As A Parent</field>
             <field name="model_id" ref="model_student_drop_request"/>
@@ -345,9 +345,9 @@
             <field name="domain_force"> [('student_id.student_parent_id.partner_id','=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_school_parent'))]"/>
         </record>
-        
+
         <!-- Rule For Student Readmission Record As A Parent -->
-        
+
         <record id="rule_student_readmission_as_parent" model="ir.rule">
             <field name="name">Rule Student Readmission As A Parent</field>
             <field name="model_id" ref="model_student_readmission"/>
@@ -355,6 +355,6 @@
             <field name="domain_force"> [('student_id.student_parent_id.partner_id','=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_school_parent'))]"/>
         </record>
-        
+
     </data>
 </openerp>

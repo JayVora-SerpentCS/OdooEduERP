@@ -321,7 +321,6 @@ class SchoolStandard(models.Model):
     _description = 'School Standards'
     _rec_name = "school_id"
 
-    @api.one
     @api.depends('standard_id')
     def _compute_student(self):
         domain = [('standard_id', '=', self._ids),
@@ -330,7 +329,6 @@ class SchoolStandard(models.Model):
         if self.standard_id:
             self.student_ids = self.env['student.student'].search(domain)
 
-    @api.one
     @api.depends('standard_id', 'division_id')
     def _standard_name(self):
         name = self.name_get()
@@ -340,8 +338,6 @@ class SchoolStandard(models.Model):
     stan_name = fields.Char("Standard Name", compute='_standard_name')
     standard_id = fields.Many2one('standard.standard', 'Department',
                                   required=True)
-#    course_spe_id = fields.Many2one('course.specification',
-#                                    "Course Specification")
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
     subject_ids = fields.Many2many('subject.subject', 'subject_standards_rel',
@@ -497,13 +493,9 @@ class SubjectSubject(models.Model):
                                     help="Type of Subject",
                                     default="compulsory")
     department_id = fields.Many2one("standard.standard", "Department")
-#    elective_id = fields.Many2one('subject.elective')
-#    unit_subject = fields.Char("Unit")
     student_ids = fields.Many2many('student.student',
                                    'elective_subject_student_rel',
                                    'subject_id', 'student_id', 'Students')
-#    syllabus_ids = fields.One2many('subject.syllabus', 'subject_id',
-#                                   'Syllabus')
     level_id = fields.Many2one("course.years", "Level")
     student_bool = fields.Boolean('Student user', compute="_get_group_student")
 

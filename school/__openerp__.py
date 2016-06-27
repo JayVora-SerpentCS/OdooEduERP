@@ -3,8 +3,9 @@
 
 {
     'name': 'University',
-    'version': '9.0.0.1.0',
-    'author': 'Serpent Consulting Services PVT. LTD.',
+    'version': '9.0.0.2.2',
+    'author': '''Serpent Consulting Services PVT. LTD.,
+                Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
     'category': 'University Management',
     'license': '',
@@ -23,7 +24,6 @@
              'wizard/select_subject_wizard.xml',
              'views/school_view.xml',
              'views/school_dashboard.xml',
-             'views/admission_workflow.xml',
              'data/student_sequence.xml',
              'wizard/assign_roll_no_wizard.xml',
              'wizard/move_standards_view.xml',
