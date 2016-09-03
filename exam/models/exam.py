@@ -25,6 +25,19 @@ class ExtendedStudentStudent(models.Model):
     exam_results_ids = fields.One2many('exam.result', 'student_id',
                                        'Exam History', readonly=True)
 
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        if self._context.get('exam'):
+            exam_obj = self.env['exam.exam']
+            exam_data = exam_obj.browse(self._context['exam'])
+            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            args.append(('class_id', 'in', std_ids))
+        return super(ExtendedStudentStudent, self).search(args=args,
+                                                          offset=offset,
+                                                          limit=limit,
+                                                          order=order,
+                                                          count=count)
+
 
 class ExtendedTimeTableLine(models.Model):
     _inherit = 'time.table.line'
@@ -448,20 +461,3 @@ class AdditionalExamResult(models.Model):
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
     result = fields.Char(compute='_calc_result', string='Result', method=True)
-
-
-class StudentStudent(models.Model):
-    _name = 'student.student'
-    _inherit = 'student.student'
-    _description = 'Student Information'
-
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('exam'):
-            exam_obj = self.env['exam.exam']
-            exam_data = exam_obj.browse(self._context['exam'])
-            std_ids = [std_id.id for std_id in exam_data.standard_id]
-            args.append(('class_id', 'in', std_ids))
-        return super(StudentStudent, self).search(args=args, offset=offset,
-                                                  limit=limit, order=order,
-                                                  count=count)
