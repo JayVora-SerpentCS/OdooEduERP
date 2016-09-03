@@ -27,16 +27,16 @@ class TimeTable(models.Model):
         line_ids = self.env['time.table.line'].search(domain)
         for rec in line_ids:
             records = [rec_check.id for rec_check in line_ids
-                       if (rec.week_day == rec_check.week_day
-                           and rec.start_time == rec_check.start_time
-                           and rec.end_time == rec_check.end_time)]
+                       if (rec.week_day == rec_check.week_day and
+                           rec.start_time == rec_check.start_time and
+                           rec.end_time == rec_check.end_time)]
             if len(records) > 1:
                 raise UserError(_("You can Not set lecture at same time\
                                  at same day..!!!"))
         return True
 
 
-class TimeTableLine(models.Model):
+class TimeTableLine (models.Model):
     _description = 'Time Table Line'
     _name = 'time.table.line'
     _rec_name = 'table_id'
@@ -58,13 +58,13 @@ class TimeTableLine(models.Model):
     start_time = fields.Float('Start Time', required=True)
     end_time = fields.Float('End Time', required=True)
     is_break = fields.Boolean('Is Break')
-    week_day = fields.Selection([('monday', 'Monday'),
-                                 ('tuesday', 'Tuesday'),
-                                 ('wednesday', 'Wednesday'),
-                                 ('thursday', 'Thursday'),
-                                 ('friday', 'Friday'),
-                                 ('saturday', 'Saturday'),
-                                 ('sunday', 'Sunday')], "Week day",)
+    week_day = fields.Selection([('monday', _('Monday')),
+                                 ('tuesday', _('Tuesday')),
+                                 ('wednesday', _('Wednesday')),
+                                 ('thursday', _('Thursday')),
+                                 ('friday', _('Friday')),
+                                 ('saturday', _('Saturday')),
+                                 ('sunday', _('Sunday'))], "Week day",)
 
 
 class SubjectSubject(models.Model):

@@ -211,8 +211,8 @@ class LibraryBookIssue(models.Model):
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True, default=lambda self:
-                             self.env['ir.sequence'].
-                             next_by_code('library.book.issue') or '/')
+                             self.env['ir.sequence'
+                                      ].get('library.book.issue') or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
@@ -221,7 +221,8 @@ class LibraryBookIssue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 default=lambda *a:
+                                 time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(compute="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
@@ -272,6 +273,15 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def draft_book(self):
+        '''method for WorkFlow'''
+        ''' This method for books in draft state.
+         @param self : Object Pointer
+         @param cr : Database Cursor
+         @param uid : Current Logged in User
+         @param ids : Current Records
+         @param context : standard Dictionary
+         @return : True'''
+
         self.write({'state': 'draft'})
         return True
 
@@ -435,8 +445,8 @@ class LibraryBookRequest(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                         self.env['ir.sequence'].
-                         next_by_code('library.book.request') or '/')
+                         self.env['ir.sequence'].get('library.book.request') or
+                         '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')

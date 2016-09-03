@@ -9,38 +9,6 @@
                 report_type="qweb-pdf"
                 file="school.identity_card"
                 name="school.identity_card"/>
-        
-        <report id="report_student_admission_result"
-                string="Admission Letter"
-                model="student.student"
-                report_type="qweb-pdf"
-                file="school.student_admission_letter"
-                name="school.student_admission_letter"/>
-        
-         <!-- menu="False" -->
-        
-        <report id="report_student_application_form"
-                string="Application Form"
-                model="student.student"
-                report_type="qweb-pdf"
-                file="school.application_form_template"
-                name="school.application_form_template"/>
-        
-         <record id="student_application_form_report" model="report.paperformat">
-           <field name="name">Application Form</field>
-           <field name="default" eval="True" />
-           <field name="format">A4</field>
-           <field name="page_height">0</field>
-           <field name="page_width">0</field>
-           <field name="orientation">Portrait</field>
-           <field name="margin_top">15</field>
-           <field name="margin_bottom">15</field>
-           <field name="margin_left">15</field>
-           <field name="margin_right">15</field>
-           <field name="header_line" eval="False" />
-           <field name="header_spacing">10</field>
-           <field name="dpi">90</field>
-           <field name="report_ids" eval="[(4, ref('school.report_student_application_form'))]"/>
-        </record>
+
     </data>
 </openerp>

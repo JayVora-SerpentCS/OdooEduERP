@@ -23,6 +23,14 @@
             <field name="padding">3</field>
         </record>
 
+        <!-- Sequences For student.registration (Registration Code) -->
+
+        <record id="seq_student_reg" model="ir.sequence">
+            <field name="name">Student registration code</field>
+            <field name="code">student.registration</field>
+            <field name="padding">3</field>
+        </record>
+
         <!-- Sequences For student.student (Personal Identification Number) -->
 
         <record id="seq_student_student" model="ir.sequence">
@@ -32,22 +40,22 @@
             <field name="padding">3</field>
         </record>
 
-        <!-- Sequences for room -->
+        <!-- Sequences For student.document (Student Documents) -->
 
-        <record id="seq_room_room" model="ir.sequence">
-            <field name="name">Room</field>
-            <field name="code">room.room</field>
-            <field name="prefix">ROOM</field>
+        <record id="seq_student_document" model="ir.sequence">
+            <field name="name">Document</field>
+            <field name="code">student.document</field>
+            <field name="prefix">F</field>
             <field name="padding">3</field>
         </record>
-        
-        <!-- Sequences for Drop Request -->
 
-        <record id="seq_student_drop_request" model="ir.sequence">
-            <field name="name">Request Code</field>
-            <field name="code">student.drop.request</field>
-            <field name="prefix">DROP</field>
-            <field name="padding">3</field>
+        <!-- Sequences For document.type (Document Type) -->
+
+        <record id="seq_student_sequence" model="ir.sequence">
+            <field name="name">sequence</field>
+            <field name="code">document.type</field>
+            <field name="padding">1</field>
         </record>
+
     </data>
 </openerp>

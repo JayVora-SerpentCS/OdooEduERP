@@ -9,13 +9,13 @@
             <field name="name">move_standards.form</field>
             <field name="model">move.standards</field>
             <field name="arch" type="xml">
-                <form string="Move Course">
-                    <group colspan="4" col="4">
+                <form string="Move Standards">
                     <field name="academic_year_id"/>
-                    <field name="semester_id"/>
                     <separator string="" colspan="4"/>
-                   <button icon="gtk-cancel" special="cancel" string="Close"/>
-                   <button icon="gtk-go-forward" name="move_start" string="Move" type="object"/>
+                    <group colspan="4" col="6">
+                        <label string="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Close"/>
+                        <button icon="gtk-go-forward" name="move_start" string="Move" type="object"/>
                    </group>
                </form>
             </field>
@@ -23,7 +23,7 @@
 
         <act_window id="action_move_standards_form"
             key2="client_action_multi"
-            name="Move Academic Class"
+            name="Move Standards"
             res_model="move.standards"
             src_model="school.standard"
             view_mode="form"

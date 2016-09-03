@@ -28,8 +28,8 @@ class SaleOrderLine(models.Model):
             if line.production_lot_id:
                 continue
             l_id += 1
-            name = line.order_id and (str(line.order_id.name)
-                                      + ('/%02d' % (l_id,))) or False
+            name = line.order_id and (str(line.order_id.name) +
+                                      ('/%02d' % (l_id,))) or False
             product_id = line.product_id and line.product_id.id or False
             production_lot_dico = {'name': name,
                                    'product_id': product_id}
@@ -86,18 +86,23 @@ class SaleOrder(models.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_time = DateTime.RelativeDateTime(days=line.delay or 0.0)
-                date_planned = (DateTime.now()
-                                + date_time).strftime('%Y-%m-%d')
+                date_planned = (DateTime.now() +
+                                DateTime.RelativeDateTime(days=line.delay or
+                                                          0.0)
+                                ).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
-                if (line.product_id
-                        and line.product_id.product_tmpl_id.type
-                        in ('product', 'consu')):
+                if (line.product_id and
+                        line.product_id.product_tmpl_id.type in ('product',
+                                                                 'consu')):
                     location_id = order.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         address_id = order.partner_shipping_id.id
-                        order_policy = order.order_policy == 'picking'
+                        temp = (order.order_policy == 'picking' and
+                                '2binvoiced')
+                        type_temp = (order.warehouse_id and
+                                     order.warehouse_id.out_type_id and
+                                     order.warehouse_id.out_type_id.id)
                         pick_dict = {'origin': order.name,
                                      'type': 'out',
                                      'state': 'draft',
@@ -105,14 +110,9 @@ class SaleOrder(models.Model):
                                      'sale_id': order.id,
                                      'address_id': address_id,
                                      'note': order.note,
-                                     'invoice_state': (order_policy
-                                                       and '2binvoiced')
-                                     or 'none',
+                                     'invoice_state': temp or 'none',
                                      'carrier_id': order.carrier_id.id,
-                                     'picking_type_id': order.warehouse_id
-                                     and order.warehouse_id.out_type_id
-                                     and order.warehouse_id.out_type_id.id
-                                     or False}
+                                     'picking_type_id': type_temp or False}
                         picking_id = picking_obj.create(pick_dict)
                     mv_dict = {'name': 'SO:' + order.name or '',
                                'picking_id': picking_id.id,
@@ -123,8 +123,8 @@ class SaleOrder(models.Model):
                                'product_uom': line.product_uom.id,
                                'product_uos': line.product_uos.id,
                                'product_packaging': line.product_packaging.id,
-                               'address_id': line.address_allotment_id.id
-                               or order.partner_shipping_id.id,
+                               'address_id': (line.address_allotment_id.id or
+                                              order.partner_shipping_id.id),
                                'location_id': location_id,
                                'location_dest_id': output_id,
                                'sale_line_id': line.id,
@@ -150,8 +150,8 @@ class SaleOrder(models.Model):
                                           proc_id.id, 'button_confirm',
                                           self._cr)
                     line.write({'procurement_id': proc_id.id})
-                elif (line.product_id
-                        and line.product_id.product_tmpl_id.type == 'service'):
+                elif (line.product_id and
+                        line.product_id.product_tmpl_id.type == 'service'):
                     location_id = order.warehouse_id.lot_stock_id.id
                     prc_dict = {'name': line.name,
                                 'origin': order.name,

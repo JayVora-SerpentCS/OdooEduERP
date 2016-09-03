@@ -53,8 +53,8 @@ class PurchaseOrder(models.Model):
                                      'location_id': loc_id,
                                      'location_dest_id': dest,
                                      'picking_id': picking_id.id,
-                                     'move_dest_id': order.location_id
-                                     and order.location_id.id,
+                                     'move_dest_id': (order.location_id and
+                                                      order.location_id.id),
                                      'state': 'assigned',
                                      'prodlot_id': prodlot_id,
                                      'customer_ref': order_line.customer_ref,
@@ -74,8 +74,8 @@ class PurchaseOrder(models.Model):
                 if line.production_lot_id:
                     continue
                 l_id += 1
-                name = line.order_id and (str(line.order_id.name)
-                                          + '/Line' + str(l_id)) or False
+                name = line.order_id and (str(line.order_id.name) + '/Line' +
+                                          str(l_id)) or False
                 production_lot_dict = {'product_id': line.product_id.id,
                                        'name': name}
                 production_lot_id = production_obj.create(production_lot_dict)

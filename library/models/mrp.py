@@ -39,8 +39,9 @@ class ProcurementOrder(models.Model):
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             # Taking Main Supplier of Product of Procurement.
-            partner = procurement.product_id.seller_id
-            seller_qty = procurement.product_id.seller_qty
+            product = procurement.product_id
+            partner = product.seller_id
+            seller_qty = product.seller_qty
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id],
                                                  ['delivery'])['delivery']
@@ -49,13 +50,13 @@ class ProcurementOrder(models.Model):
                        procurement.company_id.id or company.id)]
             warehouse_id = warehouse_obj.search(cr, uid,
                                                 domain, context=context)
-            uom_id = procurement.product_id.uom_po_id.id
+            uom_id = product.uom_po_id.id
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id,
                                        procurement.product_qty, uom_id)
             if seller_qty:
                 qty = max(qty, seller_qty)
             price = pricelist_obj.price_get(cr, uid, [pricelist_id],
-                                            procurement.product_id.id,
+                                            product.id,
                                             qty, partner_id,
                                             {'uom': uom_id})[pricelist_id]
             schedule_date = self._get_purchase_schedule_date(cr, uid,
@@ -69,14 +70,14 @@ class ProcurementOrder(models.Model):
             # Passing partner_id to context
             # for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
-            product = prod_obj.browse(cr, uid, procurement.product_id.id,
+            product = prod_obj.browse(cr, uid, product.id,
                                       context=context)
-            product_id = procurement.product_id
-            taxes_ids = product_id.product_tmpl_id.supplier_taxes_id
+            taxes_ids = product.product_tmpl_id.supplier_taxes_id
             taxes = acc_pos_obj.map_tax(cr, uid,
                                         partner.property_account_position,
                                         taxes_ids)
             date = schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            lot = procurement.production_lot_id
             line_vals = {'name': product.partner_ref,
                          'product_qty': qty,
                          'product_id': procurement.product_id.id,
@@ -86,13 +87,13 @@ class ProcurementOrder(models.Model):
                          'move_dest_id': res_id,
                          'notes': product.description_purchase,
                          'taxes_id': [(6, 0, taxes)],
-                         'production_lot_id': procurement.production_lot_id
-                         and procurement.production_lot_id.id or False,
+                         'production_lot_id': lot and lot.id or False,
                          'customer_ref': procurement.customer_ref}
-            name = (seq_obj.next_by_code(cr, uid, 'purchase.order') or
+            name = (seq_obj.get(cr, uid, 'purchase.order') or
                     _('PO: %s') % procurement.name)
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             warehouse_id = warehouse_id and warehouse_id[0] or False
+            property_account_position = partner.property_account_position
             po_vals = {'name': name,
                        'origin': procurement.origin,
                        'partner_id': partner_id,
@@ -102,13 +103,15 @@ class ProcurementOrder(models.Model):
                        'pricelist_id': pricelist_id,
                        'date_order': date,
                        'company_id': procurement.company_id.id,
-                       'fiscal_position': partner.property_account_position
-                       and partner.property_account_position.id or False}
-            proc = self.create_procurement_purchase_order(cr, uid,
-                                                          procurement,
-                                                          po_vals, line_vals,
-                                                          context=context)
-            res[procurement.id] = proc
+                       'fiscal_position': (property_account_position and
+                                           property_account_position.id or
+                                           False)}
+            temp_proc = self.create_procurement_purchase_order(cr, uid,
+                                                               procurement,
+                                                               po_vals,
+                                                               line_vals,
+                                                               context=context)
+            res[procurement.id] = temp_proc
             self.write(cr, uid, [procurement.id],
                        {'state': 'running',
                         'purchase_id': res[procurement.id]})

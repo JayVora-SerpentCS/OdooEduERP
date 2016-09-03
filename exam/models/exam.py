@@ -112,14 +112,12 @@ class AdditionalExam(models.Model):
     _name = 'additional.exam'
     _description = 'additional Exam Information'
 
-    @api.model
-    def get_sequence(self):
-        return self.env['ir.sequence'].next_by_code('additional.exam')
-
     name = fields.Char("Additional Exam Name", required=True)
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       readonly=True,
-                                      default=get_sequence)
+                                      default=lambda obj:
+                                      obj.env['ir.sequence'
+                                              ].get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -266,10 +264,10 @@ class ExamResult(models.Model):
         res = {}
         opt_marks = []
         acc_mark = []
-        sum = 0.0
         total = 0.0
         per = 0.0
         grd = 0.0
+        sum1 = 0.0
         for result in self.browse(self.ids):
             for sub_line in result.result_ids:
                 opt_marks.append(sub_line.obtain_marks)
@@ -278,15 +276,15 @@ class ExamResult(models.Model):
                 if acc_mark[i] != 0.0:
                     opt_marks[i] = acc_mark[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                sum1 = sum1 + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum / total) * 100
+                per = (sum1 / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res.update({'grade': grd, 'percentage': per,
-                            'state': 're-access_confirm', 're_total': sum})
+                            'state': 're-access_confirm', 're_total': sum1})
             self.write(res)
         return True
 
@@ -295,7 +293,7 @@ class ExamResult(models.Model):
         res = {}
         opt_marks = []
         eve_marks = []
-        sum = 0.0
+        sum1 = 0.0
         total = 0.0
         per = 0.0
         grd = 0.0
@@ -307,15 +305,16 @@ class ExamResult(models.Model):
                 if eve_marks[i] != 0.0:
                     opt_marks[i] = eve_marks[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                sum1 = sum1 + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum / total) * 100
+                per = (sum1 / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res.update({'grade': grd, 'percentage': per,
-                            'state': 're-evaluation_confirm', 're_total': sum})
+                            'state': 're-evaluation_confirm', 're_total': sum1
+                            })
             self.write(res)
         return True
 
@@ -342,19 +341,19 @@ class ExamSubject(models.Model):
 
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
-        if (self.obtain_marks > self.maximum_marks
-                or self.minimum_marks > self.maximum_marks):
+        if (self.obtain_marks > self.maximum_marks or
+                self.minimum_marks > self.maximum_marks):
             raise UserError(_('The obtained marks and minimum marks\
                              should not extend maximum marks.'))
 
     @api.one
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
-        if (self.exam_id and self.exam_id.student_id
-                and self.exam_id.student_id.year.grade_id.grade_ids):
+        if (self.exam_id and self.exam_id.student_id and
+                self.exam_id.student_id.year.grade_id.grade_ids):
             for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if (self.obtain_marks >= grade_id.from_mark
-                        and self.obtain_marks <= grade_id.to_mark):
+                if (self.obtain_marks >= grade_id.from_mark and
+                        self.obtain_marks <= grade_id.to_mark):
                     self.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
@@ -400,8 +399,8 @@ class ExamResultBatchwise(models.Model):
                 divi = fina_tot / count  # Total_obtained mark of all student
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
-                        if (divi >= grade_id.from_mark
-                                and divi <= grade_id.to_mark):
+                        if (divi >= grade_id.from_mark and
+                                divi <= grade_id.to_mark):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
@@ -416,8 +415,8 @@ class AdditionalExamResult(models.Model):
     @api.one
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
-        if (self.a_exam_id and self.a_exam_id.subject_id
-                and self.a_exam_id.subject_id.minimum_marks):
+        if (self.a_exam_id and self.a_exam_id.subject_id and
+                self.a_exam_id.subject_id.minimum_marks):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:

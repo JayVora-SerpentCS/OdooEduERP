@@ -111,8 +111,8 @@ class TransportParticipant(models.Model):
             student_obj = self.env['student.student']
             for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
-                                 for transport_id
-                                 in student_data.transport_ids]
+                                 for transport_id in student_data.transport_ids
+                                 ]
                 args.append(('id', 'in', transport_ids))
         return super(TransportParticipant, self).search(args, offset, limit,
                                                         order, count=count)
