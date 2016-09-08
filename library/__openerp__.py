@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Library Management',
- 'version': '1.6',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.1.6',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+             Odoo Community Association (OCA)''',
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',
  'license': '',

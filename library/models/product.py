@@ -150,7 +150,7 @@ class ProductProduct(models.Model):
         return res
 
     @api.multi
-    def _product_code(self):
+    def _compute_product_code(self):
         ''' This method get the product code
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -234,7 +234,7 @@ class ProductProduct(models.Model):
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
-    code = fields.Char(compute="_product_code", method=True, string='Acronym',
+    code = fields.Char(compute="_compute_product_code", method=True, string='Acronym',
                        store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")

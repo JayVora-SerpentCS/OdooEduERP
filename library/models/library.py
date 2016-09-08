@@ -15,7 +15,7 @@ class LibraryPriceCategory(models.Model):
     name = fields.Char('Category', required=True)
     price = fields.Float('Price', required=True, default=0)
     product_ids = fields.One2many('product.product', 'price_cat', 'Books')
-
+    
 
 class LibraryRack(models.Model):
     _name = 'library.rack'
@@ -88,9 +88,8 @@ class LibraryCard(models.Model):
                'roll_no': student_data.roll_no}
         return {'value': val}
 
-    @api.one
     @api.depends('student_id')
-    def get_name(self):
+    def _compute_get_name(self):
         for rec in self:
             if rec.student_id:
                 user = rec.student_id.name
@@ -104,7 +103,8 @@ class LibraryCard(models.Model):
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
-    gt_name = fields.Char(compute="get_name", method=True, string='Name')
+    gt_name = fields.Char(compute="_compute_get_name", method=True,
+                          string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
     roll_no = fields.Integer('Roll No')
@@ -119,7 +119,7 @@ class LibraryBookIssue(models.Model):
 
     @api.one
     @api.depends('date_issue', 'day_to_return_book')
-    def _calc_retunr_date(self):
+    def _compute_retunr_date(self):
         ''' This method calculate a book return date.
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -137,9 +137,8 @@ class LibraryBookIssue(models.Model):
                                       0.0))
             self.date_return = ret_date
 
-    @api.one
     @api.depends('date_return', 'day_to_return_book')
-    def _calc_penalty(self):
+    def _compute_penalty(self):
         ''' This method calculate a penalty on book .
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -164,9 +163,8 @@ class LibraryBookIssue(models.Model):
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
 
-    @api.one
     @api.depends('state')
-    def _calc_lost_penalty(self):
+    def _compute_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -184,7 +182,6 @@ class LibraryBookIssue(models.Model):
                 fine = self.name.list_price
                 self.lost_penalty = fine
 
-    @api.one
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
         ''' This method used how many book can issue as per user type  .
@@ -223,16 +220,16 @@ class LibraryBookIssue(models.Model):
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
                                  time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_return = fields.Datetime(compute="_calc_retunr_date",
+    date_return = fields.Datetime(compute="_compute_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
                                          help="Actual Return Date of Book")
-    penalty = fields.Float(compute="_calc_penalty",
+    penalty = fields.Float(compute="_compute_penalty",
                            string='Penalty', method=True,
                            help='It show the late book return penalty')
-    lost_penalty = fields.Float(compute="_calc_lost_penalty", string='Fine',
+    lost_penalty = fields.Float(compute="_compute_lost_penalty", string='Fine',
                                 method=True, store=True,
                                 help='It show the penalty for lost book')
     day_to_return_book = fields.Many2one('library.book.returnday',
@@ -273,8 +270,8 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def draft_book(self):
-        '''method for WorkFlow'''
-        ''' This method for books in draft state.'''
+        '''method for WorkFlow
+           This method for books which are draft.'''
 
         self.write({'state': 'draft'})
         return True
@@ -428,9 +425,8 @@ class LibraryBookRequest(models.Model):
     _name = "library.book.request"
     _rec_name = 'req_id'
 
-    @api.one
     @api.depends('type')
-    def gt_bname(self):
+    def _compute_bname(self):
         if self.type:
             if self.type.title() == 'Existing':
                 book = self.name.name
@@ -446,4 +442,5 @@ class LibraryBookRequest(models.Model):
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
     new1 = fields.Char('Book Name',)
-    bk_nm = fields.Char('Name', compute="gt_bname", method=True, store=True)
+    bk_nm = fields.Char('Name', compute="_compute_bname", method=True,
+                        store=True)

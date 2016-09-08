@@ -4,7 +4,6 @@
 from . import account
 from . import library_editor_supplier
 from . import library
-from . import mrp
 from . import product
 from . import purchase
 from . import sale

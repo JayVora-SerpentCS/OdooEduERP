@@ -11,7 +11,6 @@ from openerp import models, api
 
 class QrCodeLabel(report_sxw.rml_parse):
 
-    @api.v7
     def __init__(self, cr, uid, name, context):
         super(QrCodeLabel, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -19,7 +18,6 @@ class QrCodeLabel(report_sxw.rml_parse):
             'get_qr_code': self.get_qr_code,
         })
 
-    @api.v7
     def get_qr_code(self, number):
         qr_img = qrcode.make(number)
         filename = str(tempfile.gettempdir()) + '/Book_QRCode.png'

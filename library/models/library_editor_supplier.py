@@ -36,7 +36,7 @@ class LibraryEditorSupplier(models.Model):
             raise UserError(_("Error ! No book to apply this relation"))
 
         sup_info = self.env['product.supplierinfo']
-        last_id = 0
+        last_id = super(LibraryEditorSupplier, self).create(vals)
         for book_id in self._cr.fetchall():
             params = {'name': vals['supplier_id'],
                       'product_tmpl_id': book_id[0],
@@ -44,12 +44,11 @@ class LibraryEditorSupplier(models.Model):
                       'delay': vals['delay'],
                       'min_qty': vals['min_qty']}
             tmp_id = sup_info.create(params)
-            last_id = last_id < tmp_id.id and last_id or tmp_id.id
+            last_id = last_id.id < tmp_id.id and last_id.id or tmp_id.id
         return last_id
 
     @api.multi
     def write(self, vals):
-        res = {}
         update_sequence = "update product_supplierinfo\
                            set sequence = %s where name = %s"
         update_delay = "update product_supplierinfo\
@@ -79,5 +78,4 @@ class LibraryEditorSupplier(models.Model):
                 if 'delay' in vals:
                     params = [vals.get('delay', 0), original_supplier_id]
                     self._cr.execute(update_delay, params)
-                res[str(idn)] = {}
-        return res
+        return super(LibraryEditorSupplier, self).write(vals)
