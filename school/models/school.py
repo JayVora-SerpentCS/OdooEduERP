@@ -160,7 +160,6 @@ class SchoolStandard(models.Model):
     _description = 'School Standards'
     _rec_name = "school_id"
 
-    @api.one
     @api.depends('standard_id')
     def _compute_student(self):
         self.student_ids = False
@@ -284,9 +283,8 @@ class StudentStudent(models.Model):
     _description = 'Student Information'
     _inherits = {'res.users': 'user_id'}
 
-    @api.one
     @api.depends('date_of_birth')
-    def _calc_age(self):
+    def _compute_calc_age(self):
         self.age = 0
         if self.date_of_birth:
             start = datetime.strptime(self.date_of_birth,
@@ -344,7 +342,7 @@ class StudentStudent(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer('Age', compute='_calc_age', readonly=True)
+    age = fields.Integer('Age', compute='_compute_calc_age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
@@ -493,8 +491,7 @@ class StudentGrn(models.Model):
     _name = "student.grn"
     _rec_name = "grn_no"
 
-    @api.one
-    def _grn_no(self):
+    def _compute_grn_no(self):
         for stud_grn in self:
             grn_no1 = " "
             grn_no2 = " "
@@ -536,7 +533,7 @@ class StudentGrn(models.Model):
                                 ('static', 'Static String')], 'Suffix')
     static_prefix = fields.Char('Static String for Prefix')
     static_postfix = fields.Char('Static String for Suffix')
-    grn_no = fields.Char('Generated GR No.', compute='_grn_no')
+    grn_no = fields.Char('Generated GR No.', compute='_compute_grn_no')
 
 
 class MotherTongue(models.Model):
@@ -632,7 +629,6 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     _description = 'Teacher Information'
 
-    @api.one
     def _compute_subject(self):
         ''' This function will automatically computes the subjects related to\
             particular teacher.'''

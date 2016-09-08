@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Exam Management',
- 'version': '1.4',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.1.4',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+            Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
  'license': '',
@@ -11,6 +12,7 @@
  'complexity': 'easy',
  'depends': ['timetable'],
  'data': ['security/ir.model.access.csv',
+          'security/exam_security.xml',
           'views/exam_view.xml',
           'views/exam_sequence.xml',
           'views/exam_result_report.xml',
