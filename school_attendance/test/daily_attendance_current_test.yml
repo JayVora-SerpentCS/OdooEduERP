@@ -6,3 +6,4 @@
       "active_model": "daily.attendance", "active_ids": ['active_ids'],
       "tz": False, "active_id": ['active_id'], })
 
+

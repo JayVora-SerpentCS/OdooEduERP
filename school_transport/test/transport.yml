@@ -182,3 +182,4 @@
 -
     !python {model: transfer.vehicle}: |
      self.vehicle_transfer(cr,uid,[ref('transfer_vehicle_0')])
+

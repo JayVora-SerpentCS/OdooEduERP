@@ -145,7 +145,7 @@ class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
     @api.multi
-    def attendance_percentage(self):
+    def _compute_attendance_percentage(self):
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -259,7 +259,8 @@ class AttendanceSheetLine(models.Model):
     two_9 = fields.Boolean('29')
     two_0 = fields.Boolean('30')
     three_1 = fields.Boolean('31')
-    percentage = fields.Float(compute="attendance_percentage", method=True,
+    percentage = fields.Float(compute="_compute_attendance_percentage",
+                              method=True,
                               string='Attendance (%)', store=False)
 
 
@@ -268,9 +269,8 @@ class DailyAttendance(models.Model):
     _description = 'Daily Attendance'
     _name = 'daily.attendance'
 
-    @api.one
     @api.depends('student_ids')
-    def _total(self):
+    def _compute_total(self):
         count = 0
         if self.student_ids:
             count += 1
@@ -278,9 +278,8 @@ class DailyAttendance(models.Model):
         else:
             self.total_student = count
 
-    @api.one
     @api.depends('student_ids')
-    def _present(self):
+    def _compute_present(self):
         count = 0
         if self.student_ids:
             for att in self.student_ids:
@@ -290,9 +289,8 @@ class DailyAttendance(models.Model):
         else:
             self.total_presence = count
 
-    @api.one
     @api.depends('student_ids')
-    def _absent(self):
+    def _compute_absent(self):
         count_fail = 0
         if self.student_ids:
             for att in self.student_ids:
@@ -315,12 +313,12 @@ class DailyAttendance(models.Model):
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
-    total_student = fields.Integer(compute="_total", method=True, store=True,
-                                   string='Total Students')
-    total_presence = fields.Integer(compute="_present", method=True,
+    total_student = fields.Integer(compute="_compute_total", method=True,
+                                   store=True, string='Total Students')
+    total_presence = fields.Integer(compute="_compute_present", method=True,
                                     store=True, string='Present Students')
-    total_absent = fields.Integer(compute="_absent", method=True, store=True,
-                                  string='Absent Students')
+    total_absent = fields.Integer(compute="_compute_absent", method=True,
+                                  store=True, string='Absent Students')
 
     @api.model
     def create(self, vals):

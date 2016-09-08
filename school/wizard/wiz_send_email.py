@@ -4,7 +4,7 @@
 from openerp import models, fields, api
 
 
-class MailTemplate(models.TransientModel):
+class MailTemplate(models.Model):
     _inherit = "mail.template"
 
     @api.multi

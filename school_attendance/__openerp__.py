@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Attendance Management',
- 'version': '3.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.3.0',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+             Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
  'license': '',
@@ -16,5 +17,9 @@
           'wizard/attendance_sheet_wizard_view.xml',
           'wizard/student_attendance_by_month_view.xml'],
  'demo': ['demo/school_attendance_demo.xml'],
+ 'test': ['test/school_attendance_test.yml',
+          'attendance_by_month_student_report_test.yml',
+          'monthly_attendance_sheet_wizard_test.yml'
+          ],
  'installable': True,
  'application': True}

@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Transport Management',
- 'version': '3.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.1.3',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+             Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
  'license': '',
  'category': 'School Management',
@@ -12,6 +13,7 @@
  'depends': ['hr', 'school'],
  'demo': ['demo/transport_demo.xml'],
  'data': ['security/ir.model.access.csv',
+          'security/transport_security.xml',
           'views/transport_view.xml',
           'views/report_view.xml',
           'views/vehicle.xml',

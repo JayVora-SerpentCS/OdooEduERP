@@ -45,9 +45,8 @@ class TransportPoint(models.Model):
 class TransportVehicle(models.Model):
     '''for vehicle detail'''
 
-    @api.one
     @api.depends('vehi_participants_ids')
-    def _participants(self):
+    def _compute_participants(self):
         if self.vehi_participants_ids:
             participate_list = []
             for vehi in self.vehi_participants_ids:
@@ -63,7 +62,7 @@ class TransportVehicle(models.Model):
     driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
     vehicle = fields.Char('Vehicle No', required=True)
     capacity = fields.Integer('Capacity')
-    participant = fields.Integer(compute='_participants',
+    participant = fields.Integer(compute='_compute_participants',
                                  string='Total Participants', readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
                                              'vehicle_participant_student_rel',
@@ -123,9 +122,8 @@ class StudentTransports(models.Model):
     _name = 'student.transport'
     _description = 'Student Transport Information'
 
-    @api.one
     @api.depends('trans_participants_ids')
-    def _total_participantes(self):
+    def _compute_total_participants(self):
         if self.trans_participants_ids:
             tot_list = []
             for root in self.trans_participants_ids:
@@ -138,7 +136,7 @@ class StudentTransports(models.Model):
     start_date = fields.Date('Start Date', required=True)
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
     end_date = fields.Date('End Date', required=True)
-    total_participantes = fields.Integer(compute='_total_participantes',
+    total_participantes = fields.Integer(compute='_compute_total_participants',
                                          method=True,
                                          string='Total Participants',
                                          readonly=True)
@@ -168,8 +166,8 @@ class StudentTransports(models.Model):
         self.write({'state': 'close'})
         return True
 
-    @api.v7
-    def delet_entry(self, cr, uid, transport_ids=None, context=None):
+    @api.multi
+    def delet_entry(self):
         ''' This method delete entry of participants
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -178,18 +176,16 @@ class StudentTransports(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        prt_obj = self.pool.get('transport.participant')
         vehi_obj = self.pool.get('transport.vehicle')
-        trans_ids = self.search(cr, uid, [('state', '=', 'open')],
-                                context=context)
-        vehi_ids = vehi_obj.search(cr, uid, [], context=context)
+        trans_ids = self.search([('state', '=', 'open')])
+        vehi_ids = vehi_obj.search([])
 
-        for trans in self.browse(cr, uid, trans_ids, context=context):
-            stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
+        for trans in trans_ids:
+            stu_ids = [stu_id for stu_id in trans.trans_participants_ids]
             participants = []
             trans_parti = []
 
-            for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
+            for prt_data in stu_ids:
                 date = time.strftime("%Y-%m-%d")
 
                 if date > prt_data.tr_end_date:
@@ -199,22 +195,18 @@ class StudentTransports(models.Model):
                     participants.append(prt_data.id)
 
             if trans_parti:
-                prt_obj.write(cr, uid, prt_data.id, {'state': 'over'},
-                              context=context)
+                prt_data.write({'state': 'over'})
 
             if participants:
-                self.write(cr, uid, trans.id, {
-                    'trans_participants_ids': [(6, 0, participants)]},
-                    context=context)
+                trans.write({'trans_participants_ids': [(6, 0, participants)]})
 
-        for vehicle in vehi_obj.browse(cr, uid, vehi_ids, context=context):
-            stu_ids = [stu_id.id for stu_id in vehicle.vehi_participants_ids]
+        for vehicle in vehi_ids:
+            stu_ids = [stu_id for stu_id in vehicle.vehi_participants_ids]
             list1 = []
-            for prt_data in prt_obj.browse(cr, uid, stu_ids, context=context):
+            for prt_data in stu_ids:
                 if prt_data.state != 'over':
                     list1.append(prt_data.id)
-            vehi_obj.write(cr, uid, vehicle.id, {
-                'vehi_participants_ids': [(6, 0, list1)]}, context=context)
+            vehicle.write({'vehi_participants_ids': [(6, 0, list1)]})
         return True
 
 
