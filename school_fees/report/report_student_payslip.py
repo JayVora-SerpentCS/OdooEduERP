@@ -3,7 +3,7 @@
 
 import time
 from datetime import datetime
-from openerp import models, api
+from openerp import models
 from openerp.report import report_sxw
 
 
