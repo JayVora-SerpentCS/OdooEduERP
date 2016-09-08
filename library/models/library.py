@@ -279,8 +279,7 @@ class LibraryBookIssue(models.Model):
          @param cr : Database Cursor
          @param uid : Current Logged in User
          @param ids : Current Records
-         @param context : standard Dictionary
-         @return : True'''
+         @param context : standard Dictionary'''
 
         self.write({'state': 'draft'})
         return True

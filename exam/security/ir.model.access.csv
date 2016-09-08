@@ -9,8 +9,6 @@ access_time_table_line_admin,time.table.line,model_time_table_line,school.group_
 access_exam_grade_line_admin,exam.grade.line,model_exam_grade_line,school.group_school_administration,1,1,1,1
 access_exam_batchwise_result_admin,exam.batchwise.result,model_exam_batchwise_result,school.group_school_administration,1,1,1,1
 access_student_student_admin,student.student,model_student_student,school.group_school_administration,1,1,1,1
-,,,,,,,
-,,,,,,,
 access_exam_exam_student,exam.exam,model_exam_exam,school.group_school_student,1,1,0,0
 access_additional_exam_student,additional.exam,model_additional_exam,school.group_school_student,1,1,0,0
 access_exm_subject_student,exam.subject,exam.model_exam_subject,school.group_school_student,1,0,0,0
@@ -21,8 +19,6 @@ access_exam_grade_line_student,exam.grade.line,model_exam_grade_line,school.grou
 access_exam_batchwise_result_student,exam.batchwise.result,model_exam_batchwise_result,school.group_school_student,1,0,0,0
 access_student_student_student,student.student,model_student_student,school.group_school_student,1,1,0,0
 access_exam_result_student,exam.result,exam.model_exam_result,school.group_school_student,1,0,0,0
-,,,,,,,
-,,,,,,,
 access_exam_result_teacher,exam.result,model_exam_result,school.group_school_teacher,1,1,1,1
 access_exam_exam_teacher,exam.exam,model_exam_exam,school.group_school_teacher,1,1,1,1
 access_additional_exam_teacher,additional.exam,model_additional_exam,school.group_school_teacher,1,1,1,1
@@ -33,9 +29,6 @@ access_time_table_line_teacher,time.table.line,model_time_table_line,school.grou
 access_exam_grade_line_teacher,exam.grade.line,model_exam_grade_line,school.group_school_teacher,1,1,1,1
 access_exam_batchwise_result_teacher,exam.batchwise.result,model_exam_batchwise_result,school.group_school_teacher,1,1,1,1
 access_student_student_teacher,student.student,model_student_student,school.group_school_teacher,1,1,1,1
-,,,,,,,
-,,,,,,,
-,,,,,,,
 access_exam_result_parent,exam.result,model_exam_result,school.group_school_parent,1,0,0,0
 access_exam_parent,exam.exam,model_exam_exam,school.group_school_parent,1,1,0,0
 access_additional_exam_parent,additional.exam,model_additional_exam,school.group_school_parent,1,1,0,0

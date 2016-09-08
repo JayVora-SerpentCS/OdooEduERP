@@ -157,7 +157,6 @@ class ExamResult(models.Model):
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
 
-    @api.one
     @api.depends('result_ids')
     def _compute_total(self):
         total = 0.0
@@ -196,7 +195,6 @@ class ExamResult(models.Model):
                 res[result.id] = {'percentage': per, 'grade': grd}
         return res
 
-    @api.one
     @api.depends('result_ids', 'student_id')
     def _compute_result(self):
         flag = 'Pass'
@@ -359,9 +357,8 @@ class ExamSubject(models.Model):
             raise UserError(_('The obtained marks and minimum marks\
                              should not extend maximum marks.'))
 
-    @api.one
     @api.depends('exam_id', 'obtain_marks')
-    def _get_grade(self):
+    def _compute_get_grade(self):
         if (self.exam_id and self.exam_id.student_id and
                 self.exam_id.student_id.year.grade_id.grade_ids):
             for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
@@ -384,7 +381,8 @@ class ExamSubject(models.Model):
     marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_id = fields.Many2one('grade.master', "Grade")
-    grade = fields.Char(compute='_get_grade', string='Grade', type="char")
+    grade = fields.Char(compute='_compute_get_grade', string='Grade',
+                        type="char")
 
 
 class ExamResultBatchwise(models.Model):
@@ -392,9 +390,8 @@ class ExamResultBatchwise(models.Model):
     _rec_name = 'standard_id'
     _description = 'exam result Information by Batch wise'
 
-    @api.one
     @api.depends('standard_id', 'year')
-    def compute_grade(self):
+    def _compute_grade(self):
         fina_tot = 0
         count = 0
         divi = 0
@@ -417,7 +414,7 @@ class ExamResultBatchwise(models.Model):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
-    grade = fields.Char(compute='compute_grade', string='Grade', method=True,
+    grade = fields.Char(compute='_compute_grade', string='Grade', method=True,
                         store=True)
 
 
@@ -425,9 +422,8 @@ class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'
 
-    @api.one
     @api.depends('a_exam_id', 'obtain_marks')
-    def _calc_result(self):
+    def _compute_result(self):
         if (self.a_exam_id and self.a_exam_id.subject_id and
                 self.a_exam_id.subject_id.minimum_marks):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
@@ -460,4 +456,5 @@ class AdditionalExamResult(models.Model):
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_calc_result', string='Result', method=True)
+    result = fields.Char(compute='_compute_result', string='Result',
+                         method=True)
