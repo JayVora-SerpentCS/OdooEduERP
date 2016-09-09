@@ -117,7 +117,6 @@ class LibraryBookIssue(models.Model):
     _description = "Library information"
     _rec_name = "standard_id"
 
-    @api.one
     @api.depends('date_issue', 'day_to_return_book')
     def _compute_retunr_date(self):
         ''' This method calculate a book return date.

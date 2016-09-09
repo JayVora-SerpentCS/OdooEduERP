@@ -333,7 +333,7 @@
                             <field name="for_month" on_change="onchange_for_month(for_month)"/>
                             <field name="reg_date"/>
                             <field name="reg_end_date" context="{'for_month':for_month}"/>
-	                    </group>
+                        </group>
                    </sheet>
                 </form>
             </field>

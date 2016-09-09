@@ -100,4 +100,4 @@
      self.event_cancel(cr, uid, [ref("event_cricket_0")], {"lang": 'en_US', "active_model":
       "school.event", "tz": False
       })
--
+
