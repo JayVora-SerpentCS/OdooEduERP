@@ -6,7 +6,7 @@ import qrcode
 import base64
 import tempfile
 from openerp.report import report_sxw
-from openerp import models, api
+from openerp import models
 
 
 class QrCodeLabel(report_sxw.rml_parse):

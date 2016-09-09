@@ -20,7 +20,6 @@ class TimeTable(models.Model):
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
     do_not_create = fields.Boolean('Do not Create')
 
-    @api.one
     @api.constrains('timetable_ids')
     def _check_lecture(self):
         domain = [('table_id', '=', self.ids)]

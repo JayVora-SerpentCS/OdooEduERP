@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Fees Management',
- 'version': '1.5',
+ 'version': '9.0.0.1.5',
  'author': '''Serpent Consulting Services PVT. LTD.,
               Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',

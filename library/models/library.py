@@ -15,7 +15,7 @@ class LibraryPriceCategory(models.Model):
     name = fields.Char('Category', required=True)
     price = fields.Float('Price', required=True, default=0)
     product_ids = fields.One2many('product.product', 'price_cat', 'Books')
-    
+
 
 class LibraryRack(models.Model):
     _name = 'library.rack'
