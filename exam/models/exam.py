@@ -359,12 +359,13 @@ class ExamSubject(models.Model):
 
     @api.depends('exam_id', 'obtain_marks')
     def _compute_get_grade(self):
-        if (self.exam_id and self.exam_id.student_id and
-                self.exam_id.student_id.year.grade_id.grade_ids):
-            for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if (self.obtain_marks >= grade_id.from_mark and
-                        self.obtain_marks <= grade_id.to_mark):
-                    self.grade = grade_id.grade
+        for rec in self:
+            if (rec.exam_id and rec.exam_id.student_id and
+                    rec.exam_id.student_id.year.grade_id.grade_ids):
+                for grade_id in rec.exam_id.student_id.year.grade_id.grade_ids:
+                    if (rec.obtain_marks >= grade_id.from_mark and
+                            rec.obtain_marks <= grade_id.to_mark):
+                        rec.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
