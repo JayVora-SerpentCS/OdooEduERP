@@ -18,5 +18,7 @@
           'views/participants.xml',
           'views/report_view.xml'],
  'demo': ['demo/event_demo.xml'],
+ 'test': ['test/event.yml',
+          'test/event_report.yml'],
  'installable': True,
  'application': True}
