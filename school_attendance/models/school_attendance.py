@@ -320,16 +320,16 @@ class DailyAttendance(models.Model):
     total_absent = fields.Integer(compute="_compute_absent", method=True,
                                   store=True, string='Absent Students')
 
-#    @api.model
-#    def create(self, vals):
-#        child = ''
-#        if vals:
-#            if 'student_ids' in vals.keys():
-#                child = vals.pop('student_ids')
-#        ret_val = super(DailyAttendance, self).create(vals)
-#        if child != '':
-#            ret_val.write({'student_ids': child})
-#        return ret_val
+    @api.model
+    def create(self, vals):
+        child = ''
+        if vals:
+            if 'student_ids' in vals.keys():
+                child = vals.pop('student_ids')
+        ret_val = super(DailyAttendance, self).create(vals)
+        if child != '':
+            ret_val.write({'student_ids': child})
+        return ret_val
 
     @api.multi
     def onchange_standard_id(self, standard_id):
@@ -876,7 +876,7 @@ class DailyAttendanceLine(models.Model):
     _order = 'roll_no'
     _rec_name = 'roll_no'
 
-    roll_no = fields.Integer('Roll No.', required=True, help='Roll Number')
+    roll_no = fields.Integer('Roll No.', required=False, help='Roll Number')
     standard_id = fields.Many2one('daily.attendance', 'Standard')
     stud_id = fields.Many2one('student.student', 'Name', required=True)
     is_present = fields.Boolean('Present')

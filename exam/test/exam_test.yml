@@ -63,12 +63,6 @@
     obtain_marks: 50.00
     
 -
-  In order to test the additional exam result, I will test _calc_result() method
--
-  !python {model: additional.exam.result}:  |
-    self._calc_result(cr, uid, [ref("additional_exam_result_100")], 'result', None, context=None)
-    
--
   Testing additional.exam.result Report
 -
   !report {string: Additional Exam Result Report,

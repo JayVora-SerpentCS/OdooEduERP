@@ -29,12 +29,6 @@
     self.admission_done(cr, uid, [ref("student_student_0")], None)
 
 -
-  I cancel 'admission' using Cancel button
--
-  !python {model: student.student}: |
-    self.admission_cancel(cr, uid, [ref("student_student_0")], None)
-
--
   I Reset the 'admission' using Reset To Draft button
 -
   !python {model: student.student}: |
