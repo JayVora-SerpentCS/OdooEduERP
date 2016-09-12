@@ -1,22 +1,4 @@
 -
-  I check '_check_academic_year' and '_check_duration' constraint
--
-  !record {model: academic.year, id: academic_year_0}:
-    name: Academic Year 2011
-    code: 2011
-    date_start: 2012-01-01
-    date_stop: 2012-12-31
--
-  I check '_check_year_limit' and '_check_duration' constraint
--
-  !record {model: academic.month, id: academic_month_0}:
-    name: January
-    code: 1
-    date_start: 2012-01-01
-    date_stop: 2012-01-31
-    year_id: academic_year_0
-
--
   I Create School
 -
   !record {model: school.school, id: school_demo_1}:
