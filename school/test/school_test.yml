@@ -9,7 +9,7 @@
 -
   !record {model: student.student, id: student_student_0}:
     year: demo_academic_year_1
-    class_id: demo_standard_standard_1
+    standard_id: demo_standard_standard_1
     medium_id: demo_standard_medium_1
     division_id: demo_standard_division_1
     roll_no: 2

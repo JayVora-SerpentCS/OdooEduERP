@@ -7,7 +7,6 @@
     exam_code: !eval time.strftime('%Y /%m')+'/003'
     exam_timetable_ids:
       - class_id: school.demo_school_standard_1
-        division_id: school.demo_standard_division_1
         medium_id: school.demo_standard_medium_1
         name: Final Exam Timetable
         timetable_type: exam

@@ -177,9 +177,8 @@ class StudentTransports(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        vehi_obj = self.pool.get('transport.vehicle')
         trans_ids = self.search([('state', '=', 'open')])
-        vehi_ids = vehi_obj.search([])
+        vehi_ids = self.env['transport.vehicle'].search([])
 
         for trans in trans_ids:
             stu_ids = [stu_id for stu_id in trans.trans_participants_ids]
