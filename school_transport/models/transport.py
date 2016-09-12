@@ -47,13 +47,14 @@ class TransportVehicle(models.Model):
 
     @api.depends('vehi_participants_ids')
     def _compute_participants(self):
-        if self.vehi_participants_ids:
-            participate_list = []
-            for vehi in self.vehi_participants_ids:
-                participate_list.append(vehi.id)
-            self.participant = len(participate_list)
-        else:
-            self.participant = 0
+        for rec in self:
+            if rec.vehi_participants_ids:
+                participate_list = []
+                for vehi in rec.vehi_participants_ids:
+                    participate_list.append(vehi.id)
+                rec.participant = len(participate_list)
+            else:
+                rec.participant = 0
 
     _name = 'transport.vehicle'
     _rec_name = 'vehicle'

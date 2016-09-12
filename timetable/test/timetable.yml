@@ -15,7 +15,6 @@
   !record {model: time.table, id: time_table_01}:
     name: 'Second'
     class_id: school.demo_school_standard_2
-    division_id: school.demo_standard_division_2
     medium_id: school.demo_standard_medium_1 
     year_id: school.demo_academic_year_1
 -

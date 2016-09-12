@@ -1195,36 +1195,6 @@
             </field>
         </record>
 
-        <!-- Inherited Form View Of Sale Order -->
-
-        <record id="view_order_form" model="ir.ui.view">
-            <field name="name">sale.order.form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <field name="product_id" position="after">
-                    <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
-            </field>
-        </record>
-
-        <!-- Inherited Form View Of Sale Order Line -->
-
-        <!-- <record id="view_order_line_form2" model="ir.ui.view"><field name="name">Sale line</field><field name="model">sale.order.line</field><field name="inherit_id" ref="sale.view_order_line_form2"/><field name="arch" type="xml"><field name="product_id" position="after"><field name="customer_ref" select="1"/><field name="production_lot_id" select="1"/></field></field></record> -->
-
-        <!-- Inherited Tree View Of Sale Order Line -->
-
-        <record id="view_order_line_tree2" model="ir.ui.view">
-            <field name="name">Sale Lines</field>
-            <field name="model">sale.order.line</field>
-            <field name="inherit_id" ref="sale.view_order_line_tree"/>
-            <field name="arch" type="xml">
-                <field name="price_subtotal" position="after">
-                    <field name="customer_ref" select="1"/>
-                    <field name="production_lot_id" select="1"/></field>
-            </field>
-        </record>
-
         <!-- Search View Of Product Book Search -->
 
         <record id="view_product_book_search" model="ir.ui.view">
