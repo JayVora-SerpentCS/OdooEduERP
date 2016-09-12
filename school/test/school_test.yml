@@ -34,23 +34,6 @@
   !python {model: student.student}: |
     self.admission_draft(cr, uid, [ref("student_student_0")], None)
 
--
-  I computes the subjects related to particular teacher
--
-  !python {model: hr.employee}: |
-    self._compute_subject(cr, uid, [ref("school.demo_student_student_6")], 'subject_ids', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
-
--
-  I computes the subjects related to particular standard
--
-  !python {model: school.standard}: |
-    self._compute_subject(cr, uid, [ref("school.demo_school_standard_1")], 'subject_ids', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
 
 -
   I computes the student related to particular standard
