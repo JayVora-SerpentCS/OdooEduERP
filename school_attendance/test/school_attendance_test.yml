@@ -3,6 +3,7 @@
 -
   !record {model: daily.attendance, id: daily_attendance_1}:
     date: !eval time.strftime('2011-08-01')
+    standard_id: school.demo_standard_standard_1
     state: draft
 
 -
@@ -11,6 +12,7 @@
   !record {model: daily.attendance, id: daily_attendance_2}:
     date: !eval time.strftime('2011-08-02')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -18,6 +20,7 @@
   !record {model: daily.attendance, id: daily_attendance_3}:
     date: !eval time.strftime('2011-08-03')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -25,6 +28,7 @@
   !record {model: daily.attendance, id: daily_attendance_4}:
     date: !eval time.strftime('2011-08-04')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -32,6 +36,7 @@
   !record {model: daily.attendance, id: daily_attendance_5}:
     date: !eval time.strftime('2011-08-05')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -39,6 +44,7 @@
   !record {model: daily.attendance, id: daily_attendance_6}:
     date: !eval time.strftime('2011-08-06')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -46,6 +52,7 @@
   !record {model: daily.attendance, id: daily_attendance_7}:
     date: !eval time.strftime('2011-08-07')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -53,6 +60,7 @@
   !record {model: daily.attendance, id: daily_attendance_8}:
     date: !eval time.strftime('2011-08-08')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -60,6 +68,7 @@
   !record {model: daily.attendance, id: daily_attendance_9}:
     date: !eval time.strftime('2011-08-09')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -67,6 +76,7 @@
   !record {model: daily.attendance, id: daily_attendance_10}:
     date: !eval time.strftime('2011-08-10')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -74,6 +84,7 @@
   !record {model: daily.attendance, id: daily_attendance_11}:
     date: !eval time.strftime('2011-08-11')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -81,6 +92,7 @@
   !record {model: daily.attendance, id: daily_attendance_12}:
     date: !eval time.strftime('2011-08-12')
     user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'daily.attendance' record with 'draft' state
@@ -88,141 +100,7 @@
   !record {model: daily.attendance, id: daily_attendance_13}:
     date: !eval time.strftime('2011-08-13')
     user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_14}:
-    date: !eval time.strftime('2011-08-14')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_15}:
-    date: !eval time.strftime('2011-08-15')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_16}:
-    date: !eval time.strftime('2011-08-16')
-    medium_id: school.demo_standard_medium_1
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_17}:
-    date: !eval time.strftime('2011-08-17')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_18}:
-    date: !eval time.strftime('2011-08-18')
-    medium_id: school.demo_standard_medium_1
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_19}:
-    date: !eval time.strftime('2011-08-19')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
-
--
-  !record {model: daily.attendance, id: daily_attendance_20}:
-    date: !eval time.strftime('2011-08-20')
-    user_id: base.user_root
-    state: draft
-
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_21}:
-    date: !eval time.strftime('2011-08-21')
-    medium_id: school.demo_standard_medium_1
-    user_id: base.user_root
-    state: draft
-
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_22}:
-    date: !eval time.strftime('2011-08-22')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_23}:
-    date: !eval time.strftime('2011-08-23')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_24}:
-    date: !eval time.strftime('2011-08-24')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_25}:
-    date: !eval time.strftime('2011-08-25')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_26}:
-    date: !eval time.strftime('2011-08-26')
-    user_id: base.user_root
-    state: draft
-
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_27}:
-    date: !eval time.strftime('2011-08-27')
-    user_id: base.user_root
-    state: draft
-
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_28}:
-    date: !eval time.strftime('2011-08-28')
-    user_id: base.user_root
-    state: draft
-
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_29}:
-    date: !eval time.strftime('2011-08-29')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_30}:
-    date: !eval time.strftime('2011-08-30')
-    user_id: base.user_root
-    state: draft
--
-  I create the 'daily.attendance' record with 'draft' state
--
-  !record {model: daily.attendance, id: daily_attendance_31}:
-    date: !eval time.strftime('2011-08-31')
-    user_id: base.user_root
+    standard_id: school.demo_standard_standard_1
     state: draft
 -
   I create the 'attendance.sheet' record

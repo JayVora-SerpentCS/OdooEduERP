@@ -177,9 +177,4 @@
 -
     !python {model: transfer.vehicle}: |
      self.default_get(cr,uid,['old_vehicle_id', 'new_vehicle_id', 'name', 'participation_id', 'root_id'],{'lang': 'en_US', 'tz': False, 'active_model': 'student.student', 'department_id': False, 'active_ids': [5], 'active_id': 5})
--
-    call vehicle_transfer
--
-    !python {model: transfer.vehicle}: |
-     self.vehicle_transfer([ref('transfer_vehicle_0')])
 

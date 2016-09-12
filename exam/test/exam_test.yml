@@ -6,8 +6,7 @@
     end_date: !eval time.strftime('%Y')+'/03/08'
     exam_code: !eval time.strftime('%Y /%m')+'/003'
     exam_timetable_ids:
-      - class_id: school.demo_school_standard_1
-        medium_id: school.demo_standard_medium_1
+      - standard_id: school.demo_school_standard_1
         name: Final Exam Timetable
         timetable_type: exam
         year_id: school.demo_academic_year_1
