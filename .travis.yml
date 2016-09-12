@@ -5,7 +5,7 @@
     "apt": {
       "packages": [
         "expect-dev",
-        "python-ldap"
+        "python-ldap",
         "python-lxml"
       ]
     }
