@@ -35,14 +35,3 @@
     self.admission_draft(cr, uid, [ref("student_student_0")], None)
 
 
--
-  I computes the student related to particular standard
--
-  !python {model: school.standard}: |
-    self._compute_student(cr, uid, [ref("school.demo_student_student_1")], 'student_ids', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
-
-
-

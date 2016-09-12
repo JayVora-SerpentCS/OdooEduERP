@@ -109,7 +109,6 @@
     name: Attendance Sheet Of Aug-2011
     class_id: school.demo_standard_standard_1
     medium_id: school.demo_standard_medium_1
-    division_id: school.demo_standard_division_1
     year_id: school.demo_academic_year_1
     month_id: school.demo_academic_month_2
    
