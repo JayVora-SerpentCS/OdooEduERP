@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Assignment Management',
- 'version': '3.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.1.4',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+             Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
  'license': '',
  'category': 'School Management',
