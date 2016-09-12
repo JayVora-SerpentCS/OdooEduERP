@@ -23,12 +23,6 @@
     state: done
 
 -
-  I confirm 'admission' using Confirm button
--
-  !python {model: student.student}: |
-    self.admission_confirm(cr, uid, [ref("student_student_0")], None)
-
--
   I done 'admission' using Done button
 -
   !python {model: student.student}: |

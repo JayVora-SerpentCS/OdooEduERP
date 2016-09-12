@@ -11,7 +11,6 @@
             <field name="name">Final Exam</field>
             <field name="end_date" eval="time.strftime('%Y')+'/03/09'"/>
             <field eval="100" name="maximum_marks"/>
-            <field name="created_at" eval="time.strftime('%Y')+'/03/03'"/>
             <field eval="40" name="minimum_marks"/>
             <field name="start_date" eval="time.strftime('%Y')+'/03/06'"/>
             <field eval="[(6,0,[])]" name="standard_id"/>
@@ -188,7 +187,6 @@
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="exam_date" eval="time.strftime('%Y')+'/03/17'"/>
-            <field name="created_at" eval="time.strftime('%Y')+'/03/09'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
 
@@ -200,7 +198,6 @@
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
             <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
-            <field name="created_at" eval="time.strftime('%Y')+'/08/29'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
 
