@@ -1,4 +1,12 @@
 -
+  I create an timetable
+-
+  !record {model: time.table, id: time_table_01}:
+    name: 'Second'
+    standard_id: school.demo_school_standard_2
+    year_id: school.demo_academic_year_1
+
+-
   I create an time table line
 -
   !record {model: time.table.line, id: time_line_01}:
@@ -8,10 +16,4 @@
     end_time: '10.0'
     week_day: 'monday'
    
--
-  I create an timetable
--
-  !record {model: time.table, id: time_table_01}:
-    name: 'Second'
-    standard_id: school.demo_school_standard_2
-    year_id: school.demo_academic_year_1
+

@@ -45,25 +45,6 @@
     total: 363.0
     
 -
-  In order to test the exam result, I will test _compute_total() method
--
-  !python {model: exam.result}:  |
-    self._compute_total(cr, uid, [ref("exam_result_10")], 'total', None, context=None)
-
-
--
-  In order to test the exam result, I will test _compute_per() method
--
-  !python {model: exam.result}:  |
-    self._compute_per(cr, uid, [ref("exam_result_10")], 'percentage', None, context=None)    
-    
--
-  In order to test the exam result, I will test _compute_result() method
--
-  !python {model: exam.result}:  |
-    self._compute_result(cr, uid, [ref("exam_result_10")], 'result', None, context=None)
-  
--
   In order to test the additional exam result, I will test _compute_total() method
 -
   !report {string: Result Report,
