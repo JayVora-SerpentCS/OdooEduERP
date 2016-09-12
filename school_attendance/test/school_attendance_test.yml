@@ -3,7 +3,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_1}:
     date: !eval time.strftime('2011-08-01')
-    medium_id: school.demo_standard_medium_1
     state: draft
 
 -
@@ -11,7 +10,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_2}:
     date: !eval time.strftime('2011-08-02')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -19,7 +17,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_3}:
     date: !eval time.strftime('2011-08-03')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -27,7 +24,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_4}:
     date: !eval time.strftime('2011-08-04')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -35,7 +31,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_5}:
     date: !eval time.strftime('2011-08-05')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -43,7 +38,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_6}:
     date: !eval time.strftime('2011-08-06')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -51,7 +45,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_7}:
     date: !eval time.strftime('2011-08-07')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -59,7 +52,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_8}:
     date: !eval time.strftime('2011-08-08')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -67,7 +59,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_9}:
     date: !eval time.strftime('2011-08-09')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -75,7 +66,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_10}:
     date: !eval time.strftime('2011-08-10')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -83,7 +73,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_11}:
     date: !eval time.strftime('2011-08-11')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -91,7 +80,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_12}:
     date: !eval time.strftime('2011-08-12')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -99,7 +87,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_13}:
     date: !eval time.strftime('2011-08-13')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -107,7 +94,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_14}:
     date: !eval time.strftime('2011-08-14')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -115,7 +101,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_15}:
     date: !eval time.strftime('2011-08-15')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -131,7 +116,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_17}:
     date: !eval time.strftime('2011-08-17')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -147,7 +131,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_19}:
     date: !eval time.strftime('2011-08-19')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -173,7 +156,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_22}:
     date: !eval time.strftime('2011-08-22')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -181,7 +163,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_23}:
     date: !eval time.strftime('2011-08-23')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -189,7 +170,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_24}:
     date: !eval time.strftime('2011-08-24')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -197,7 +177,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_25}:
     date: !eval time.strftime('2011-08-25')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -205,7 +184,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_26}:
     date: !eval time.strftime('2011-08-26')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 
@@ -214,7 +192,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_27}:
     date: !eval time.strftime('2011-08-27')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 
@@ -223,7 +200,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_28}:
     date: !eval time.strftime('2011-08-28')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 
@@ -232,7 +208,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_29}:
     date: !eval time.strftime('2011-08-29')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -240,7 +215,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_30}:
     date: !eval time.strftime('2011-08-30')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -
@@ -248,7 +222,6 @@
 -
   !record {model: daily.attendance, id: daily_attendance_31}:
     date: !eval time.strftime('2011-08-31')
-    medium_id: school.demo_standard_medium_1
     user_id: base.user_root
     state: draft
 -

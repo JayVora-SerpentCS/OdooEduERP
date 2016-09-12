@@ -5,7 +5,7 @@
     name: Swaminarayan Gurukul
     code: GRL
 -
-  I called '_calc_age' function
+  I called '_compute_age' function
 -
   !record {model: student.student, id: student_student_0}:
     year: demo_academic_year_1
@@ -26,7 +26,7 @@
   I compute the age of a student
 -
   !python {model: student.student}: |
-    self._calc_age(cr, uid, [ref("student_student_0")], 'age', None, {"lang": "en_US",
+    self._compute_age(cr, uid, [ref("student_student_0")], 'age', None, {"lang": "en_US",
       "tz": False, "active_model": "ir.ui.menu", "section_id":
       False, "active_ids": ['active_ids'],
       "active_id": ['active_id'], })

@@ -8,7 +8,6 @@
   !record {model: school.teacher.assignment, id: school_teacher_assignment_abcexercise0}:
     assign_date: !eval time.strftime('%Y-%m-%d')
     due_date: !eval time.strftime('%Y-%m-%d')
-    medium_id: school.demo_standard_medium_1
     name: First Exercise
     standard_id: school.demo_standard_standard_1
     subject_id: school.demo_subject_subject_1
@@ -20,7 +19,6 @@
   !record {model: school.teacher.assignment, id: school_teacher_assignment_secondpractice0}:
     assign_date: !eval time.strftime('%Y-%m-%d')
     due_date: !eval time.strftime('%Y-%m-%d')
-    medium_id: school.demo_standard_medium_1
     name: Second practice
     standard_id: school.demo_standard_standard_3
     subject_id: school.demo_subject_subject_2

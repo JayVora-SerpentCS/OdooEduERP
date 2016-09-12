@@ -15,7 +15,7 @@ class ExtendedTimeTable(models.Model):
 
     timetable_type = fields.Selection([('exam', 'Exam'),
                                        ('regular', 'Regular')],
-                                      'Time Table Type', required=True)
+                                      'Time Table Type', required=False)
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 

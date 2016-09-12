@@ -284,7 +284,7 @@ class StudentStudent(models.Model):
     _inherits = {'res.users': 'user_id'}
 
     @api.depends('date_of_birth')
-    def _compute_calc_age(self):
+    def _compute_age(self):
         self.age = 0
         if self.date_of_birth:
             start = datetime.strptime(self.date_of_birth,
@@ -342,7 +342,7 @@ class StudentStudent(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer('Age', compute='_compute_calc_age', readonly=True)
+    age = fields.Integer('Age', compute='_compute_age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',

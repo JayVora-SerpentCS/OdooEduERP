@@ -181,5 +181,5 @@
     call vehicle_transfer
 -
     !python {model: transfer.vehicle}: |
-     self.vehicle_transfer(cr,uid,[ref('transfer_vehicle_0')])
+     self.vehicle_transfer([ref('transfer_vehicle_0')])
 

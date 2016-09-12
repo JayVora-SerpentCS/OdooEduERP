@@ -53,9 +53,10 @@ class SchoolEvent(models.Model):
     _rec_name = 'name'
 
     def _compute_participants(self):
-        cnt = 0
-        cnt += 1
-        self.participants = cnt
+        for rec in self:
+            cnt = 0
+            cnt += 1
+            rec.participants = cnt
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),

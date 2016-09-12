@@ -13,8 +13,7 @@
 -
   !record {model: time.table, id: time_table_01}:
     name: 'Second'
-    class_id: school.demo_school_standard_2
-    medium_id: school.demo_standard_medium_1 
+    standard_id: school.demo_school_standard_2
     year_id: school.demo_academic_year_1
 -
  Search Method Call
