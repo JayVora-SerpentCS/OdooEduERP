@@ -2,7 +2,8 @@
   Print the Attendance Sheet Report through wizard
 -
   !python {model: student.student}: |
-    import netsvc, tools, os, time
+    from openerp import netsvc, tools
+    import os, time
     ctx={}
     ctx.update({'model': 'student.student','active_ids': [ref('school.demo_student_student_1')]})
     data_dict = {}
