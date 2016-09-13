@@ -20,7 +20,6 @@
  'test': ['test/school_attendance_test.yml',
           'test/attendance_by_month_student_report_test.yml',
           'test/monthly_attendance_sheet_wizard_test.yml',
-          'test/daily_attendance_current_test.yml',
           'test/student_attendance_by_month_wizard_test.yml'
           ],
  'installable': True,

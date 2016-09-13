@@ -227,7 +227,7 @@ class AttendanceSheetLine(models.Model):
     roll_no = fields.Integer('Roll Number', required=True,
                              help='Roll Number of Student')
     standard_id = fields.Many2one('attendance.sheet', 'Standard')
-    name = fields.Char('Student Name', required=True, readonly=True)
+    name = fields.Char('Student Name', readonly=True)
     one = fields.Boolean('1')
     two = fields.Boolean('2')
     three = fields.Boolean('3')

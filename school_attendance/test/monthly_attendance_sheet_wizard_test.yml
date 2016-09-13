@@ -19,9 +19,9 @@
   I create the 'attendance.sheet.line' record
 -
   !record {model: attendance.sheet.line, id: attendance_sheet_line_0}:
+    name: Divyesh
     roll_no: 1
     standard_id: attendance_sheet_0
-    name: Divyesh
 
 -
   I clicked on 'Open Attendance Sheet' Button
