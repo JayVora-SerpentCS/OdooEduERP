@@ -1,11 +1,5 @@
 -
-  I Create School
--
-  !record {model: school.school, id: school_demo_1}:
-    name: Swaminarayan Gurukul
-    code: GRL
--
-  I called '_compute_age' function
+  I create Student
 -
   !record {model: student.student, id: student_student_0}:
     year: demo_academic_year_1
@@ -19,7 +13,6 @@
     gender: male
     date_of_birth: 1988-08-29
     admission_date: 2011-08-09
-    school_id: school_demo_1
     state: done
 
 -
