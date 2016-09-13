@@ -3,8 +3,6 @@
 -
   !record {model: monthly.attendance.sheet, id: monthly_attendance_sheet_0}:
     standard_id: school.demo_standard_standard_1
-    medium_id: school.demo_standard_medium_1
-    division_id: school.demo_standard_division_1
     year_id: school.demo_academic_year_1
     month_id: school.demo_academic_month_1
 
