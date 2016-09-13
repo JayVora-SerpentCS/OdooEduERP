@@ -12,6 +12,8 @@
   !record {model: attendance.sheet, id: attendance_sheet_0}:
     name: Attendance Sheet Of Aug-2011
     standard_id: school.demo_standard_standard_1
+    year_id: school.demo_academic_year_1
+    month_id: school.demo_academic_month_1
 
 -
   I create the 'attendance.sheet.line' record
