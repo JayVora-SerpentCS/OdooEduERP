@@ -19,6 +19,6 @@
           'views/vehicle.xml',
           'views/participants.xml',
           'wizard/transfer_vehicle.xml'],
- 'test': ['test/transport.yml', 'test/transport_report.yml'],
+ 'test': ['test/transport.yml'],
  'installable': True,
  'application': True}
