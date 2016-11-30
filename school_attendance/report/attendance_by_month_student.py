@@ -4,7 +4,7 @@
 import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp import pooler
+#from openerp import pooler
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
 from openerp.report import report_sxw
@@ -27,8 +27,10 @@ def lengthmonth(year, month):
 class ReportCustom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
-        obj_student = pooler.get_pool(cr.dbname).get('student.student')
-        sheet_obj = pooler.get_pool(cr.dbname).get('attendance.sheet')
+        obj_student = self.env['student.student']
+        sheet_obj = self.env['attendance.sheet']
+#        obj_student = pooler.get_pool(cr.dbname).get('student.student')
+#        sheet_obj = pooler.get_pool(cr.dbname).get('attendance.sheet')
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
@@ -141,8 +143,8 @@ class ReportCustom(report_rml):
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
-
-        rpt_obj = pooler.get_pool(cr.dbname).get('student.student')
+        rpt_obj = self.env['student.student']
+#        rpt_obj = pooler.get_pool(cr.dbname).get('student.student')
         rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name, context)
         header_xml = '''
         <header>
@@ -151,7 +153,7 @@ class ReportCustom(report_rml):
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
                    + ' ' + str(time.strftime("%H:%M")),
-            pooler.get_pool(cr.dbname).get('res.users').browse(
+            self.env['res.users'].browse(
                 cr, uid, uid).company_id.name)
 
         first_date = str(month)
