@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-import openerp
+import odoo
 from datetime import date, datetime
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
-from openerp.exceptions import except_orm, Warning as UserError
+from odoo import models, fields, api
+from odoo.tools.translate import _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
+from odoo.exceptions import except_orm, Warning as UserError
 
 
 class BoardBoard(models.Model):
@@ -310,7 +310,7 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(openerp.modules.get_module_resource('base',
+        image = image_colorize(open(odoo.modules.get_module_resource('base',
                     'static/src/img', 'avatar.png')).read())
         return image_resize_image_big(image.encode('base64'))
 
