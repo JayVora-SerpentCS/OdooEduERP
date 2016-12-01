@@ -7,35 +7,42 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <form string="Student Information">
-                    <sheet style="width: 10%%,height:10%%">
-                        <separator string="Personal Information" />
-                        <div class="col-md-2">
-                            <field name="photo" widget="image" class="oe_avatar oe_left" options="{&quot;size&quot;: [110, 110]}" />
-                        </div>
-                        <div class="oe_title col-md-10">
-                            <field name="pid" invisible="1" />
-                            <field name="reg_code" readonly="1" />
-                            <field name="name" placeholder="First Name" nolabel="1" />
-                            <field name="middle" placeholder="Middle Name" nolabel="1" />
-                            <field name="last" placeholder="Last Name" nolabel="1" />
+                    <sheet>
+                        <div class="oe_inline">
+                            <newline />
+                            <separator string="Personal Information" />
+                            <b>
+                                <field name="reg_code" readonly="1" />
+                            </b>
+                            <br />
+                            <field name="photo" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;" />
+                            <div class="oe_title">
+                                <group>
+                                    <field name="name" placeholder="First Name" nolabel="1" />
+                                    <br />
+                                    <field name="middle" placeholder="Middle Name" nolabel="1" />
+                                    <br />
+                                    <field name="last" placeholder="Last Name" nolabel="1" />
+                                    <br />
+                                    <field name="pid" invisible="1" />
+                                </group>
+                            </div>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons"></div>
-                        <group col="4">
-                            <group col="2">
-                                <separator string="Student Information" colspan="4" />
+                        <group>
+                            <group string="Student Information">
                                 <field name="student_code" readonly="1" />
                                 <field name="roll_no" help="Roll number of Student" />
                                 <field name="year" placeholder="Year" help="Academic year of Student" />
                                 <field name="school_id" widget="selection" help="School of Student" />
                             </group>
-                            <group col="2">
-                                <separator string="Standard Information" colspan="4" />
+                            <group string="Standard Information">
                                 <field name="standard_id" placeholder="Standard" widget="selection" />
                                 <field name="division_id" placeholder="Division" widget="selection" />
                                 <field name="medium_id" placeholder="Medium" widget="selection" />
                             </group>
                         </group>
-                        <group col="4" colspan="4">
+                        <group>
                             <group>
                                 <label for="street" string="Address" />
                                 <div>
@@ -56,24 +63,26 @@
                         <group>
                             <field name="parent_id" />
                         </group>
-                        <notebook colspan="4">
+                        <notebook>
                             <page string="General" name="general">
-                                <group col="4">
-                                    <group colspan="2" col="4">
+                                <group>
+                                    <group>
                                         <field name="cast_id" />
                                         <field name="date_of_birth" widget="date" placeholder="Birthdate" />
                                         <field name="gender" />
                                         <field name="age" />
+                                    </group>
+                                    <group>
                                         <field name="mother_tongue" />
                                         <field name="admission_date" widget="date" placeholder="Admission Date" />
                                         <field name="maritual_status" />
-                                        <newline />
-                                        <separator string="Emergency Contact Details" colspan="4" />
-                                        <newline />
-                                        <group colspan="4" col="4">
-                                            <field name="contact_phone1" />
-                                            <field name="contact_mobile1" />
-                                        </group>
+                                    </group>
+                                    <newline />
+                                    <separator string="Emergency Contact Details" colspan="4" />
+                                    <newline />
+                                    <group colspan="4" col="4">
+                                        <field name="contact_phone1" />
+                                        <field name="contact_mobile1" />
                                     </group>
                                 </group>
                             </page>
@@ -163,14 +172,12 @@
                                 </field>
                             </page>
                             <page string="Medical">
-                                <group col="4">
-                                    <group col="2">
-                                        <separator string="Doctor Information" colspan="4" />
+                                <group>
+                                    <group string="Doctor Information">
                                         <field name="designation" placeholder="Doctor Designation" />
                                         <field name="doctor_phone" placeholder="Doctor's Contact No" />
                                     </group>
-                                    <group col="2">
-                                        <separator string="Physical Information" colspan="4" />
+                                    <group string="Physical Information">
                                         <field name="blood_group" placeholder="e.g.B+,Ab+" />
                                         <field name="height" />
                                         <field name="weight" />
@@ -368,7 +375,7 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit" />
+                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
                                             <a string="Change Color" icon="color-picker" type="color" name="color" />
                                         </div>
                                         <br class="oe_kanban_clear" />
@@ -387,10 +394,10 @@
             <field name="arch" type="xml">
                 <form string="Admission Register">
                     <header>
-                        <button name="set_terminate" string="Terminate" type="object" states="done" icon="gtk-cancel" class="oe_highlight" groups="school.group_school_administration,school.group_school_teacher" />
-                        <button name="set_alumni" string="Alumni" type="object" icon="gtk-execute" states="done" groups="school.group_school_administration,school.group_school_teacher" />
-                        <button name="admission_done" type="object" string="Done" states="draft,terminate" icon="gtk-jump-to" />
-                        <field name="state" widget="statusbar" nolabel="1" />
+                        <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration,school.group_school_teacher" />
+                        <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration,school.group_school_teacher" />
+                        <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft,terminate" />
+                        <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
                         <div class="oe_inline">
@@ -689,7 +696,7 @@
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border                                             oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left" style="margin-left:10px;">
                                         <br />
-                                        <a string="Edit" icon="gtk-edit" type="edit" />
+                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
                                         <a string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear" />
@@ -918,8 +925,8 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit" />
-                                            <a string="Delete" icon="gtk-delete" type="delete" />
+                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
+                                            <a string="Delete" class="btn btn-sm btn-default fa fa-trash" type="delete" />
                                             <a string="Change Color" icon="color-picker" type="color" name="color" />
                                         </div>
                                         <br class="oe_kanban_clear" />
@@ -1550,7 +1557,7 @@
             <field name="arch" type="xml">
                 <form string="News">
                     <header>
-                        <button string="Send Mail" type="object" name="news_update" icon="gtk-ok" colspan="2" />
+                        <button string="Send Mail" class="btn btn-sm btn-default fa fa-envelope" type="object" name="news_update" colspan="2" />
                     </header>
                     <sheet>
                         <group col="4" colspan="4" string="News / Updates">
@@ -1601,7 +1608,7 @@
                                     class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border"><table class="oe_kanban_table"><tr width="300"><td valign="top" align="left" style="padding-left:10px;"><table><tr><t
                                                             t-if="record.date.raw_value and record.date.raw_value lt (new Date())"
                                                             t-set="red">oe_kanban_text_red</t><span t-attf-class="#{red || ''}"><td>Date :</td><td style="padding-left:10px;"><b><field name="date"/></b></td></span></tr><tr><td>Subject : </td><td style="padding-left:10px;"><b><field name="subject"/></b></td></tr></table></td></tr></table></div><div
-                                    class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick"><div class="oe_kanban_left"><a string="Edit" icon="gtk-edit" type="edit" /><a string="Change Color" icon="color-picker" type="color"
+                                    class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick"><div class="oe_kanban_left"><a string="Edit" icon="fa fa-pencil" type="edit" /><a string="Change Color" icon="color-picker" type="color"
                                         name="color" /></div><br class="oe_kanban_clear"/></div></div></t></templates></kanban></field></record> -->
         <!-- Action Of Form, Tree & Kanban Views Of Student News -->
         <record id="view_student_news" model="ir.actions.act_window">
