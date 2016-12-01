@@ -12,7 +12,7 @@
                 <form string="Send Email">
                     <field name='note' nolabel="0" height="350" width="350"/>
                     <newline/>
-                    <button name="send_email" string="Send Email" icon="gtk-execute" type="object"/>
+                    <button name="send_email" string="Send Email" class="btn btn-sm btn-default fa fa-envelope" type="object"/>
                 </form>
             </field>
         </record>

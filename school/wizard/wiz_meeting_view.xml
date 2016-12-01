@@ -12,7 +12,7 @@
                 <form string="Student Meeting">
                     <header>
                         <button name="set_meeting" string="Set Meeting" type="object"/>
-                        <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Cancel"/>
                     </header>
                     <sheet>
                         <label for="name"/>
