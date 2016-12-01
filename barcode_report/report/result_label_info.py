@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.report import report_sxw
-from openerp import models
+from odoo.report import report_sxw
+from odoo import models
 
 
 class ResultLabelInfo(report_sxw.rml_parse):
@@ -21,7 +21,8 @@ class ResultLabelInfo(report_sxw.rml_parse):
                                           ('year', '=', year_id)])
         result = []
         for student in student_obj.browse(self.cr, self.uid, student_ids):
-            name = student.name + " " + student.middle or '' + " " + student.last or ''
+            name = student.name + " " + student.middle or '' + " " + student.\
+            last or ''
             result.append({'name': name,
                            'roll_no': student.roll_no, 'pid': student.pid})
         return result

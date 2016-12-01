@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.report import report_sxw
-from openerp import models
+from odoo.report import report_sxw
+from odoo import models
 
 
 class ResultLabel(report_sxw.rml_parse):

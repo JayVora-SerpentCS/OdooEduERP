@@ -56,7 +56,7 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information" >
                     <header>
-                        <button name = "active_assignment" states="draft" string="Active Assignment" type="object" icon="gtk-ok"/>
+                        <button name = "active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active Assignment" type="object"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
@@ -66,18 +66,17 @@
 	                        <field name="teacher_id" placeholder="Teacher Name"/>
 	                    </group>
 	                    
-	                    <group col="2" string="Standard" colspan="2">
-	                        <separator  colspan="4" col="4"/>
+	                    <group col="2" string="Standard">
 	                        <field name="standard_id" select="1" placeholder="Standard"/>
 	                    </group>
-	                    <group col="2" string="Subject and Dates" colspan="2">
-	                        <separator colspan="4" col="4"/>
+	                    <group col="4" string="Subject and Dates">
 	                        <field name="subject_id" select="1" placeholder="Subject"/>
+	                        <newline/>
 	                        <field name="assign_date" placeholder="Assign Date"/>
 	                        <field name="due_date" placeholder="Due Date"/>
 	                    </group>
 	                    <separator string="Attachements" colspan="4"/>
-	                    <group col="6" colspan="4">
+	                    <group col="2">
 	                        <field name="attached_homework" placeholder="Attachement File"/>
 	                    </group>
                     
@@ -103,29 +102,26 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information">
                     <header>
-                        <button name = "done_assignment" states="active" string="Done" type="object" icon="gtk-ok"/>
+                        <button name = "done_assignment" class="oe_stat_button fa  fa-check" states="active" string="Done" type="object"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                    <sheet>
                     <separator colspan="4"/>
-                    <group col="4" colspan="4" string="Assignment Information">
+                    <group col="4" string="Assignment Information">
                         <field name="student_id" placeholder="Student"/>
                         <field name="name" placeholder="Assignment Name"/>
                         <newline />
                         <field name="teacher_id" placeholder="Teacher"/>
                     </group>
-                    <group col="2" string="Standard and Division" colspan="2">
-                        <separator  colspan="4" col="4"/>
+                    <group col="4" string="Standard and Division">
                         <field name="subject_id"  placeholder="Subject"/>
                         <field name="standard_id" placeholder="Standerd"/>
                     </group>
-                    <group col="2" colspan="2" string="Dates">
-                        <separator colspan="4" col="4"/>
+                    <group col="4" string="Dates">
                         <field name="assign_date" placeholder="Assign Date" />
                         <field name="due_date" placeholder="Due Date"/>
                     </group>
-                    <separator string="Attachements" colspan="4"/>
-                        <group col="6" colspan="4">
+                        <group string="Attachements">
                             <field name="attached_homework" placeholder="Attachment File"/>
                         </group>
                    </sheet>
