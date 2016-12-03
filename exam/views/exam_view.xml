@@ -277,15 +277,15 @@
             <field name="arch" type="xml">
                 <form string="Results">
                     <header>
-                        <button name="result_confirm" string="Confirm" states="draft" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_result_confirm" string="Compute Re-aceess" states="re-access" type="object" icon="gtk-execute" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="result_re_access" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="result_re_evaluation" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" icon="gtk-jump-to" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_evaluation_confirm" string="Compute Re-evaluation" states="re-evaluation" type="object" icon="gtk-execute"/>
+                        <button name="result_confirm" class="oe_stat_button fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="re_result_confirm" class="oe_stat_button fa fa-reply-all" string="Compute Re-aceess" states="re-access" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_re_access" class="oe_stat_button fa fa-repeat" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object"/>
                         <field name="state" widget="statusbar" readonly="1" />
                     </header>
                     <sheet>
-                        <group col="4" string="Exam Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
+                        <group col="2" string="Exam Details" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
                             <field name="s_exam_ids" placeholder="Select or Create Examination"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
@@ -406,7 +406,7 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
@@ -527,7 +527,7 @@
             <field name="arch" type="xml">
                 <form string="Results">
                     <sheet>
-                        <group col="4" string="Result Information" colspan="4">
+                        <group col="2" string="Result Information">
                             <field name="a_exam_id"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">

@@ -18,7 +18,7 @@
                             <field name="obtain_marks"/>
                         </form>
                     </field>
-                    <button name='result_report' type='object' string='Result' icon='gtk-ok'/>
+                    <button class="btn btn-sm btn-default fa fa-book" name='result_report' type='object' string='Result'/>
                </form>
             </field>
         </record>
