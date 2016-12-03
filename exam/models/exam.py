@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import except_orm, Warning as UserError
 
 
-class BoardBoard(models.Model):
+class BoardBoard(models.AbstractModel):
     _inherit = 'board.board'
 
 
@@ -116,7 +116,8 @@ class AdditionalExam(models.Model):
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       readonly=True,
                                       default=lambda obj:
-                                      obj.env['ir.sequence'].get('additional.exam'))
+                                      obj.env['ir.sequence'].\
+                                      get('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -265,6 +266,7 @@ class ExamResult(models.Model):
         total = 0.0
         per = 0.0
         grd = 0.0
+        sum = 0.0
         for result in self.browse(self.ids):
             for sub_line in result.result_ids:
                 opt_marks.append(sub_line.obtain_marks)
@@ -407,6 +409,7 @@ class ExamResultBatchwise(models.Model):
 class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'
+    _rec_name = 'a_exam_id'
 
     @api.one
     @api.depends('a_exam_id', 'obtain_marks')

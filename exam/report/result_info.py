@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from openerp.report import report_sxw
-from openerp import models, api
+from odoo.report import report_sxw
+from odoo import models, api
 
 
 class Result(report_sxw.rml_parse):

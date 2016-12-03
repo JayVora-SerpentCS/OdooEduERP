@@ -7,7 +7,7 @@
  'category': 'School Management',
  'license': '',
  'summary': 'A Module For BarCode System For School',
- 'depends': ['timetable'],
+ 'depends': ['timetable', 'exam'],
  'data': ['views/result_report.xml',
           'views/result_label.xml',
           'views/result_lable_info.xml'],

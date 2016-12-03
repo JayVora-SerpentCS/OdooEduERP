@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <!-- Form View 1 Of Student's Profiles -->
         <record id="view_student_student_form_1" model="ir.ui.view">
@@ -1814,4 +1814,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>

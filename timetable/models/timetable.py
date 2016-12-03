@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
 
 
-class BoardBoard(models.Model):
+class BoardBoard(models.AbstractModel):
     _inherit = 'board.board'
 
 
