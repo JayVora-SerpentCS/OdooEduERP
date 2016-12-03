@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <report id="report_student_student"
@@ -11,4 +11,4 @@
                 name="school.identity_card"/>
 
     </data>
-</openerp>
+</odoo>

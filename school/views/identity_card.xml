@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <template id="identity_card">
@@ -115,4 +115,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>
