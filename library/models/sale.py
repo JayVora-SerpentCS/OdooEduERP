@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from mx import DateTime
-from openerp import models, fields, api
-from openerp import workflow
+from odoo import models, fields, api
 
 
 class SaleOrderLine(models.Model):
@@ -64,8 +63,7 @@ class SaleOrder(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(SaleOrder, self).default_get(fields_list)
-        res.update({'picking_policy': 'direct',
-                    'order_policy': 'picking'})
+        res.update({'picking_policy': 'direct'})
         return res
 
     @api.multi
@@ -105,7 +103,8 @@ class SaleOrder(models.Model):
                                      'sale_id': order.id,
                                      'address_id': address_id,
                                      'note': order.note,
-                                     'invoice_state': (order.order_policy == 'picking'
+                                     'invoice_state': (order.order_policy ==\
+                                                       'picking'
                                                        and '2binvoiced')
                                                        or 'none',
                                      'carrier_id': order.carrier_id.id,
@@ -146,9 +145,7 @@ class SaleOrder(models.Model):
                                 'production_lot_id': line.production_lot_id.id,
                                 'customer_ref': line.customer_ref}
                     proc_id = procurment_obj.create(prc_dict)
-                    workflow.trg_validate(self._uid, 'procurement.order',
-                                          proc_id.id, 'button_confirm',
-                                          self._cr)
+                    proc_id.signal_workflow('button_confirm')
                     line.write({'procurement_id': proc_id.id})
                 elif (line.product_id
                         and line.product_id.product_tmpl_id.type == 'service'):
@@ -162,18 +159,14 @@ class SaleOrder(models.Model):
                                 'location_id': location_id,
                                 'procure_method': line.type}
                     proc_id = procurment_obj.create(prc_dict)
-                    workflow.trg_validate(self._uid, 'procurement.order',
-                                          proc_id.id, 'button_confirm',
-                                          self._cr)
+                    proc_id.signal_workflow('button_confirm')
                     line.write({'procurement_id': proc_id.id})
                 else:
                     # No procurement because no product in the sale.order.line.
                     pass
             val = {}
             if picking_id:
-                workflow.trg_validate(self._uid, 'stock.picking',
-                                      picking_id.id, 'button_confirm',
-                                      self._cr)
+                picking_id.signal_workflow('button_confirm')
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'

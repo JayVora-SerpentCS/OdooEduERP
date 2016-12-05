@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <report id="reportqrcode_label_qweb"
@@ -11,4 +11,4 @@
             name="library.qrcode_label" />
 
     </data>
-</openerp>
+</odoo>

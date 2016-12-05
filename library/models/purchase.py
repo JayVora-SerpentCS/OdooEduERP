@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp import workflow
+from odoo import models, fields, api
 
 
 class PurchaseOrderLine(models.Model):
@@ -61,8 +60,7 @@ class PurchaseOrder(models.Model):
                                      'purchase_line_id': order_line.id})
             purchase_order_dict = {'picking_ids': [(4, picking_id.id)]}
             order.write(purchase_order_dict)
-            workflow.trg_validate(self._uid, 'stock.picking', picking_id.id,
-                                  'button_confirm', self._cr)
+            picking_id.signal_workflow('button_confirm')
         return picking_id.id
 
     @api.multi
@@ -86,5 +84,7 @@ class PurchaseOrder(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(PurchaseOrder, self).default_get(fields_list)
-        res.update({'invoice_method': 'picking'})
+        '''invoice_method field not availble in v10 this field is\
+         available in v8.'''
+#        res.update({'invoice_method': 'picking'})
         return res

@@ -4,8 +4,8 @@
 import time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 
 
 class LibraryPriceCategory(models.Model):

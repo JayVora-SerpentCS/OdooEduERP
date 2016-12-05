@@ -6,7 +6,8 @@ import odoo
 from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize,\
+    image_resize_image_big
 from odoo.exceptions import except_orm, Warning as UserError
 
 
@@ -310,8 +311,10 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(odoo.modules.get_module_resource('base',
-                    'static/src/img', 'avatar.png')).read())
+        image = image_colorize(open(odoo.modules.
+                                    get_module_resource('base',
+                                                        'static/src/img',
+                                                        'avatar.png')).read())
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
@@ -327,8 +330,7 @@ class StudentStudent(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self:\
-                          self._get_default_image
+    photo = fields.Binary('Photo', default=lambda self: self._get_default_image
                           (self._context.get('default_is_company',
                                              False)))
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
@@ -474,16 +476,15 @@ class StudentStudent(models.Model):
                 self.write({'roll_no': number})
                 number += 1
             reg_code = self.env['ir.sequence'].\
-            next_by_code('student.registration')
+                next_by_code('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
-                                + str('/') + str(student_data.school_id.city)\
-                                + str('/')\
-                                + str(student_data.school_id.name) + str('/')\
-                                + str(reg_code)
+                + str('/') + str(student_data.school_id.city)\
+                + str('/')\
+                + str(student_data.school_id.name) + str('/')\
+                + str(reg_code)
             stu_code = self.env['ir.sequence'].next_by_code('student.code')
             student_code = str(student_data.school_id.code) + str('/')\
-                            + str(student_data.year.code) + str('/')\
-                            + str(stu_code)
+                + str(student_data.year.code) + str('/') + str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -569,7 +570,7 @@ class StudentDocument(models.Model):
 
     doc_id = fields.Many2one('student.student', 'Student')
     file_no = fields.Char('File No', readonly="1", default=lambda obj:
-                          obj.env['ir.sequence'].\
+                          obj.env['ir.sequence'].
                           next_by_code('student.document'))
     submited_date = fields.Date('Submitted Date')
     doc_type = fields.Many2one('document.type', 'Document Type', required=True)
