@@ -17,7 +17,3 @@ class SubjectResultWiz(models.TransientModel):
         data = self.read()[0]
         return self.env['report'].get_action([], 'exam.exam_result_report',
                                              data=data)
-
-#        return self.pool['report'].get_action([],
-#                                              'exam.exam_result_report',
-#                                              data=data)
