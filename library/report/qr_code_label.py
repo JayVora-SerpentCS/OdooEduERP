@@ -5,8 +5,8 @@ import time
 import qrcode
 import base64
 import tempfile
-from openerp.report import report_sxw
-from openerp import models, api
+from odoo.report import report_sxw
+from odoo import models, api
 
 
 class QrCodeLabel(report_sxw.rml_parse):

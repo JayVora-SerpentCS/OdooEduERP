@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Update Book Name Wizard -->
@@ -10,8 +10,15 @@
             <field name="model">book.name</field>
             <field name="arch" type="xml">
                 <form string="Book Name">
-                    <field name="name"/>
-                    <button name='create_new_books' type='object' string='Book' icon='gtk-ok'/>
+                   <group>
+                        <field name="name"/>
+                   </group>
+                   <footer>
+                       <group col="2">
+                            <button class="fa fa-file" name='create_new_books' type='object' string='Book'/>
+                            <button class="fa fa-ban" special='cancel' string='Cancel'/>
+                       </group>
+                   </footer>
                </form>
             </field>
         </record>
@@ -28,4 +35,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

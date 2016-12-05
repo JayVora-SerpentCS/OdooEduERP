@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Library Author -->
@@ -541,19 +541,19 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <header>
-                        <button name="return_book" string="Book Return" icon="terp-gtk-jump-to-rtl" states="issue,reissue"
+                        <button name="return_book" class="fa fa fa-undo" string="Book Return" states="issue,reissue"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="issue_book" string="Book Issue" icon="terp-gtk-jump-to-ltr" states="draft"
+                        <button name="issue_book" string="Book Issue" class="fa fa-check-circle" states="draft"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="reissue_book" string="Book Reissue" icon="terp-gtk-jump-to-ltr" states="issue"
+                        <button name="reissue_book" class="fa fa-reply" string="Book Reissue" states="issue"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="cancel_book" string="Cancel" icon="gtk-cancel" states="draft,issue"
+                        <button name="cancel_book" class="fa fa fa-ban" string="Cancel" states="draft,issue"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="draft_book" string="Draft" icon="terp-document-new" states="cancel"
+                        <button name="draft_book" class="fa fa-file-code-o" string="Draft" states="cancel"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="lost_book" string="Book Lost" icon="terp-gdu-smart-failing" states="issue,reissue"
+                        <button name="lost_book" class="fa fa-snowflake-o" string="Book Lost" states="issue,reissue"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
-                        <button name="user_fine" string="Fine" type="object" icon="terp-dolar_ok!" states="return,lost"
+                        <button name="user_fine" class="fa fa-circle" string="Fine" type="object" states="return,lost"
                                 attrs="{'invisible':[('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
                                 groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
                         <field name="state" widget="statusbar" align="right" readonly="1"/>
@@ -1157,12 +1157,14 @@
                 <tree string="Moves" editable="bottom">
                     <field name="product_id"/>
                     <field name="origin_ref"/>
-                    <field name="product_qty" on_change="onchange_qty(product_qty)"/>
+                    <field name="product_uom_qty"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
                     <field name="date"/>
                     <field name="state"/>
-                </tree>
+                    <field name="product_uom"/>
+                    <field name="name"/>
+                    </tree>
             </field>
         </record>
 
@@ -1297,7 +1299,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" string="UoM" />
-                                    <button name="%(stock.move_scrap)d" string="Scrap Products" type="action" icon="gtk-convert"
+                                    <button name="%(stock.stock_move_action)d" string="Scrap Products" type="action" icon="gtk-convert"
                                             context="{'scrap': True}"
                                             states="draft,waiting,confirmed,assigned" groups="base.group_extended"/>
                                     <field name="scrapped" invisible="1"/>
@@ -1318,7 +1320,7 @@
                                         <field name="product_qty"
                                             on_change="onchange_quantity(product_id, product_qty, product_uom)"
                                             colspan="3"/>
-                                        <button name="%(stock.move_scrap)d" string="Scrap"
+                                        <button name="%(stock.stock_move_action)d" string="Scrap"
                                             type="action" groups="base.group_extended" icon="gtk-convert"
                                             context="{'scrap': True}" states="draft,waiting,confirmed,assigned"
                                             colspan="1"/>
@@ -1398,7 +1400,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom)"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <button name="%(stock.move_scrap)d" string="Scrap Products" type="action" icon="gtk-convert"
+                                    <button name="%(stock.stock_move_action)d" string="Scrap Products" type="action" icon="gtk-convert"
                                             context="{'scrap': True}" states="draft,waiting,confirmed,assigned"/>
                                     <field name="scrapped" invisible="1"/>
                                     <button name="setlast_tracking" string="Put in current pack"
@@ -1418,7 +1420,7 @@
                                             colspan="4"/>
                                         <field name="product_qty"
                                             on_change="onchange_quantity(product_id, product_qty, product_uom)" colspan="3"/>
-                                        <button name="%(stock.move_scrap)d" string="Scrap" type="action" icon="gtk-convert"
+                                        <button name="%(stock.stock_move_action)d" string="Scrap" type="action" icon="gtk-convert"
                                             context="{'scrap': True}" states="draft,waiting,confirmed,assigned" colspan="1"
                                             groups="base.group_extended" />
                                         <field name="product_uom" string="Unit Of Measure"
@@ -1476,4 +1478,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

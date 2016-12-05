@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields
+from odoo import models, fields
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    use_parent_address = fields.Boolean('Use Parent Address')
 
 
 class AccountInvoiceLine(models.Model):

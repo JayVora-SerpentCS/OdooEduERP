@@ -2,13 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
+from odoo.exceptions import Warning as UserError
 
 
 class LibraryEditorSupplier(models.Model):
     _name = "library.editor.supplier"
     _description = "Editor Relations"
-    _auto = False
 
     name = fields.Many2one('res.partner', 'Editor')
     supplier_id = fields.Many2one('res.partner', 'Supplier')
