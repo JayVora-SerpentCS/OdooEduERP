@@ -9,6 +9,7 @@ from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
 from openerp.report import report_sxw
 from openerp.tools import ustr
+import odoo
 
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
@@ -27,10 +28,9 @@ def lengthmonth(year, month):
 class ReportCustom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
-        obj_student = self.env['student.student']
-        sheet_obj = self.env['attendance.sheet']
-#        obj_student = pooler.get_pool(cr.dbname).get('student.student')
-#        sheet_obj = pooler.get_pool(cr.dbname).get('attendance.sheet')
+        env = odoo.api.Environment(cr, uid, context or {})
+        obj_student = env['student.student']
+        sheet_obj = env['attendance.sheet']
         if context is None:
             context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
@@ -39,8 +39,8 @@ class ReportCustom(report_rml):
         user_xml = ['<month>%s</month>' % month2name[month.month],
                     '<year>%s</year>' % month.year]
         if stu_ids:
-            for student in obj_student.read(cr, uid, stu_ids,
-                                            ['name', 'standard_id']):
+            for student in obj_student.browse(stu_ids).\
+            read(['name', 'standard_id']):
                 days_xml = []
                 user_repr = '''
                 <user>
@@ -49,21 +49,16 @@ class ReportCustom(report_rml):
                 </user>
                 ''' % (ustr(toxml(student['name'])))
                 today, tomor = month, month + one_day
-
                 while today.month == month.month:
                     day = today.day
                     domain = [('standard_id', '=', student['standard_id'][0]),
                               ('month_id', '=', today.month)]
-                    sheet_ids = sheet_obj.search(cr, uid, domain,
-                                                 context=context)
-
+                    sheet_ids = sheet_obj.search(domain)
                     if not sheet_ids:
                         var = 'A'
                     else:
 
-                        for attendance_sheet_data in\
-                        sheet_obj.browse(cr, uid, sheet_ids,
-                                         context=context):
+                        for attendance_sheet_data in sheet_ids:
 
                             for line in attendance_sheet_data.attendance_ids:
 
@@ -143,8 +138,8 @@ class ReportCustom(report_rml):
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
-        rpt_obj = self.env['student.student']
-#        rpt_obj = pooler.get_pool(cr.dbname).get('student.student')
+
+        rpt_obj = env['student.student']
         rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name, context)
         header_xml = '''
         <header>
@@ -153,8 +148,7 @@ class ReportCustom(report_rml):
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
                    + ' ' + str(time.strftime("%H:%M")),
-            self.env['res.users'].browse(
-                cr, uid, uid).company_id.name)
+            env['res.users'].browse(uid).company_id.name)
 
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')

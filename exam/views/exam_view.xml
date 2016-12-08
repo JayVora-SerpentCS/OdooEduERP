@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Actions Of Form & Tree Views Of Student Result -->
@@ -609,4 +609,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

@@ -23,9 +23,9 @@ class AcademicYear(models.Model):
 
     sequence = fields.Integer('Sequence', required=True,
                               help="Sequence order you want to see this year.")
-    name = fields.Char('Name', required=True, select=1,
+    name = fields.Char('Name', required=True,
                        help='Name of academic year')
-    code = fields.Char('Code', required=True, select=1,
+    code = fields.Char('Code', required=True,
                        help='Code of academic year')
     date_start = fields.Date('Start Date', required=True,
                              help='Starting date of academic year')
@@ -222,7 +222,7 @@ class SchoolSchool(models.Model):
                                  required=True)
     com_name = fields.Char('School Name', related='company_id.name',
                            store=True)
-    code = fields.Char('Code', required=True, select=1)
+    code = fields.Char('Code', required=True)
     standards = fields.One2many('school.standard', 'school_id',
                                 'Standards')
     lang = fields.Selection(_lang_get, 'Language',
@@ -318,7 +318,7 @@ class StudentStudent(models.Model):
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              select=True, required=True)
+                              required=True)
     student_name = fields.Char('Student Name', related='user_id.name',
                                store=True, readonly=True)
     pid = fields.Char('Student ID', required=True, default=lambda obj:
@@ -714,7 +714,7 @@ class StudentFamilyContact(models.Model):
                                 'Related Student', help="Select Name",
                                 required=True)
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              select=True, required=True)
+                              required=True)
     stu_name = fields.Char('Name', related='user_id.name',
                            help="Select Student From Existing List")
     name = fields.Char('Name')
@@ -736,7 +736,7 @@ class StudentRelationMaster(models.Model):
 class GradeMaster(models.Model):
     _name = 'grade.master'
 
-    name = fields.Char('Grade', select=1, required=True)
+    name = fields.Char('Grade', required=True)
     grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Name')
 
 

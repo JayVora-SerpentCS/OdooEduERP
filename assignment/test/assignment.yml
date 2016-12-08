@@ -7,9 +7,7 @@
 - 
   !record {model: school.teacher.assignment, id: school_teacher_assignment_abcexercise0}:
     assign_date: !eval time.strftime('%Y-%m-%d')
-    division_id: school.demo_standard_division_1
     due_date: !eval time.strftime('%Y-%m-%d')
-    medium_id: school.demo_standard_medium_1
     name: First Exercise
     standard_id: school.demo_standard_standard_1
     subject_id: school.demo_subject_subject_1
@@ -20,9 +18,7 @@
 - 
   !record {model: school.teacher.assignment, id: school_teacher_assignment_secondpractice0}:
     assign_date: !eval time.strftime('%Y-%m-%d')
-    division_id: school.demo_standard_division_1
     due_date: !eval time.strftime('%Y-%m-%d')
-    medium_id: school.demo_standard_medium_1
     name: Second practice
     standard_id: school.demo_standard_standard_3
     subject_id: school.demo_subject_subject_2
@@ -32,10 +28,11 @@
  I Press active button on "First Exercise" Assignment
 -
  !python {model: school.teacher.assignment}: |
-    self.active_assignment(cr, uid, [ref('school_teacher_assignment_abcexercise0')])
-
+    self.browse(ref("school_teacher_assignment_abcexercise0")).active_assignment()
+ 
 -
  I Press active button on "Second Practice" Assignment 
 -
  !python {model: school.teacher.assignment}: |
-    self.active_assignment(cr, uid, [ref('school_teacher_assignment_secondpractice0')])
+    self.browse(ref("school_teacher_assignment_secondpractice0")).active_assignment()
+ 

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="school_teacher_assignment_firstexercise0" model="school.teacher.assignment">
@@ -97,4 +97,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

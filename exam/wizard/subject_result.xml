@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Subject Result -->
@@ -45,4 +45,4 @@
             view_type="form" />
 
     </data>
-</openerp>
+</odoo>

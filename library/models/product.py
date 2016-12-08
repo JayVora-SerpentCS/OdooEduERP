@@ -9,9 +9,9 @@ class ProductState(models.Model):
     _name = "product.state"
     _description = "States of Books"
 
-    name = fields.Char('State', select=1, required=True)
+    name = fields.Char('State', required=True)
     code = fields.Char('Code', required=True)
-    active = fields.Boolean('Active', select=2)
+    active = fields.Boolean('Active')
 
 
 class Many2manySym(fields.Many2many):
@@ -40,7 +40,7 @@ class Many2manySym(fields.Many2many):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    name = fields.Char('Name', required=True, select=True)
+    name = fields.Char('Name', required=True)
 
     @api.multi
     def _state_get(self):
@@ -52,8 +52,8 @@ class ProductLang(models.Model):
     '''Book language'''
     _name = "product.lang"
 
-    code = fields.Char('Code', required=True, select=True)
-    name = fields.Char('Name', required=True, select=True, translate=True)
+    code = fields.Char('Code', required=True)
+    name = fields.Char('Name', required=True, translate=True)
 
     _sql_constraints = [('name_uniq', 'unique (name)',
                          'The name of the product must be unique !')]
@@ -81,11 +81,11 @@ class ProductProduct(models.Model):
 
         def _name_get(d):
             name = d.get('name', '')
-            ean = d.get('ean13', False)
-            if ean:
-                name = '[%s] %s' % (ean or '', name)
+            barcode = d.get('barcode', False)
+            if barcode:
+                name = '[%s] %s' % (barcode or '', name)
             return (d['id'], name)
-        return map(_name_get, self.read(['name', 'ean13']))
+        return map(_name_get, self.read(['name', 'barcode']))
 
     @api.multi
     def _default_categ(self):
@@ -279,8 +279,8 @@ class ProductProduct(models.Model):
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
 
-    _sql_constraints = [('unique_ean13', 'unique(ean13)',
-                         'ean13 field must be unique across all the products'),
+    _sql_constraints = [('unique_barcode', 'unique(barcode)',
+                         'barcode field must be unique across all the products'),
                         ('code_uniq', 'unique (code)',
                          'Code of the product must be unique !')]
 
@@ -300,4 +300,4 @@ class LibraryAuthor(models.Model):
     _inherit = 'library.author'
 
     book_ids = fields.Many2many('product.product', 'author_book_rel',
-                                'author_id', 'product_id', 'Books', select=1)
+                                'author_id', 'product_id', 'Books')

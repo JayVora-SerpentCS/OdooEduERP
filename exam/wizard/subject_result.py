@@ -9,8 +9,7 @@ class SubjectResultWiz(models.TransientModel):
     _description = 'Subject Wise Result'
 
     result_ids = fields.Many2many("exam.subject", 'subject_result_wiz_rel',
-                                  'result_id', "exam_id", "Exam Subjects",
-                                  select=1)
+                                  'result_id', "exam_id", "Exam Subjects")
 
     @api.multi
     def result_report(self):

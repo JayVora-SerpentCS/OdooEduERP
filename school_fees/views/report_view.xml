@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <report id="report_student_payslip_qweb"
@@ -18,4 +18,4 @@
                 name="school_fees.student_fees_register" />
 
     </data>
-</openerp>
+</odoo>

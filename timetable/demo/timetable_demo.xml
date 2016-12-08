@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="demo_subject_subject_9" model="subject.subject">
@@ -343,4 +343,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

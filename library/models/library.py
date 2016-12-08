@@ -51,14 +51,13 @@ class LibraryAuthor(models.Model):
     _name = 'library.author'
     _description = "Author"
 
-    name = fields.Char('Name', required=True, select=True)
+    name = fields.Char('Name', required=True)
     born_date = fields.Date('Date of Birth')
     death_date = fields.Date('Date of Death')
     biography = fields.Text('Biography')
     note = fields.Text('Notes')
     editor_ids = fields.Many2many('res.partner', 'author_editor_rel',
-                                  'author_id', 'parent_id', 'Editors',
-                                  select=1)
+                                  'author_id', 'parent_id', 'Editors')
 
     _sql_constraints = [('name_uniq', 'unique (name)',
                          'The name of the author must be unique !')]

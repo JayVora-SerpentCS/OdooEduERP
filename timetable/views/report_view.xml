@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
          <report id="report_time_table_qweb"
@@ -10,4 +10,4 @@
                 name="timetable.timetable" />
 
     </data>
-</openerp>
+</odoo>

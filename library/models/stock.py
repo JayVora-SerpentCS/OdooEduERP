@@ -44,8 +44,8 @@ class StockPicking(models.Model):
     _order = "create_date desc"
 
     sale_id = fields.Many2one('sale.order', 'Sale Order', ondelete='set null',
-                              select=True, readonly=True, default=False)
+                              readonly=True, default=False)
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order',
                                   ondelete='set null', readonly=True,
-                                  select=True, default=False)
+                                  default=False)
     date_done = fields.Datetime('Picking date', readonly=True)

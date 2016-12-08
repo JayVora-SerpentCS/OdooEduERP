@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
     <data>
 
         <!-- Event Rule For Teacher -->
@@ -28,4 +28,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

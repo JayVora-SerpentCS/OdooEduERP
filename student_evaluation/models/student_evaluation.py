@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class StudentEvaluation(models.Model):

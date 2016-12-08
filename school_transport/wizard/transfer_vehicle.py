@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.exceptions import except_orm
+from odoo import models, fields, api
+from odoo.tools.translate import _
+from odoo.exceptions import except_orm
 
 
 class TransferVehicle(models.TransientModel):

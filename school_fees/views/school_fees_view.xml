@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Search View Of Student PaySlip Line Information -->
@@ -82,17 +82,15 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip Line">
                     <sheet>
-                        <group col="4" colspan="4">
+                        <group col="4">
                             <field name="name" placeholder="Name"/>
                             <field name="code" placeholder="Code"/>
                         </group>
-                        <separator string="Calculations" colspan="4"/>
-                        <group col="4" colspan="4">
+                        <group col="4" string="Calculations">
                             <field name="type"/>
                             <field name="amount"/>
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible':[('type','=','range')]}">
-                            <separator string="Description" colspan="4"/>
+                        <group col="4" attrs="{'invisible':[('type','=','range')]}" string="Description">
                             <field name="description" />
                         </group>
                         <notebook colspan="4"  attrs="{'invisible':[('type','!=','range')]}">
@@ -136,12 +134,11 @@
             <field name="model">student.fees.structure.line</field>
             <field name="arch" type="xml">
                 <form string="Student Payslip Line">
-                    <group col="6" colspan="4">
+                    <group col="4">
                         <field name="name"/>
                         <field name="code"/>
                     </group>
-                    <separator string="Calculations" colspan="4"/>
-                    <group col="6" colspan="4">
+                    <group col="4" string="Calculations">
                         <field name="type"/>
                         <field name="amount"/>
                     </group>
@@ -188,20 +185,18 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip">
                     <header>
-                        <button name="payslip_confirm" string="Confirm" states="draft" icon="gtk-execute" type="workflow" groups="school.group_school_administration"/>
-                        <button name="student_pay_fees" string="Payment" states="confirm" type="object" icon="gtk-go-forward" groups="school.group_school_administration"/>
+                        <button name="payslip_confirm" class="fa fa-check" string="Confirm" states="draft" type="workflow" groups="school.group_school_administration"/>
+                        <button name="student_pay_fees" class="fa fa-share" string="Payment" states="confirm" type="object" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-                        <group col="4">
-                            <group col="2">
-                                <separator string="Information" colspan="2"/>
+                        <group>
+                            <group col="2" string="Information">
                                 <field name="name" placeholder="Description"/>
                                 <field name="number" />
                                 <field name="date"/>
                             </group>
-                            <group col="2">
-                                <separator string="Standard Information" colspan="2"/>
+                            <group col="2" string="Standard Information">
                                 <field name="standard_id" placeholder="Standard" widget="selection"/>
                                 <field name="division_id" placeholder="Division" widget="selection"/>
                                 <field name="medium_id" placeholder="Medium" widget="selection"/>
@@ -290,7 +285,7 @@
             <field name="arch" type="xml">
                 <form string="Student Fees Register">
                     <header>
-                        <button name="fees_register_confirm" string="Confirm" states="draft" icon="gtk-execute" groups="school.group_school_administration"/>
+                        <button name="fees_register_confirm" class="fa fa-check" string="Confirm" states="draft" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
@@ -463,4 +458,4 @@
                   action="action_student_payslip_line_form" sequence="2"/>
 
     </data>
-</openerp>
+</odoo>

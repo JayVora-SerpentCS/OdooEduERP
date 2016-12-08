@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Action Of Form & Tree Views Of Student Evaluation -->
@@ -78,10 +78,10 @@
             <field name="arch" type="xml">
                 <form string="Student Evaluation">
                     <header>
-                        <button name="set_start" string="Start" type="object" states="draft" icon="gtk-execute" class="oe_highlight"/>
-                        <button name="set_finish" string="Finish" type="object" states="start" icon="gtk-jump-to"/>
-                        <button name="set_cancel" string="Cancel" type="object" states="start,draft" icon="gtk-cancel"/>
-                        <button name="set_draft" string="Set to Draft" type="object" states="cancelled" icon="gtk-execute"/>
+                        <button name="set_start" string="Start" type="object" states="draft" class="oe_highlight fa fa-play"/>
+                        <button name="set_finish" string="Finish" class="fa fa-step-forward" type="object" states="start"/>
+                        <button name="set_cancel" string="Cancel" class="fa fa-ban" type="object" states="start,draft"/>
+                        <button name="set_draft" string="Set to Draft" class="fa fa-play" type="object" states="cancelled"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -259,4 +259,4 @@
         <menuitem id="menu_rating" name="Rating" parent="school.menu_configuration" action="action_student_rating"/>
 
     </data>
-</openerp>
+</odoo>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Inherited Form View Of Student Information -->
@@ -221,8 +221,8 @@
             <field name="arch" type="xml">
                 <form string="Transport Information">
                     <header>
-                        <button name="transport_open" icon="terp-gtk-go-back-rtl" string="Open" states="draft"  type='object' groups="school.group_school_administration"/>
-                        <button name="transport_close" icon="gtk-close" string="Close" states="open" type='object' groups="school.group_school_administration"/>
+                        <button name="transport_open" class="fa fa-folder-open" string="Open" states="draft"  type='object' groups="school.group_school_administration"/>
+                        <button name="transport_close" class="fa fa-folder-close" string="Close" states="open" type='object' groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" nolabel="1"/>
                     </header>
                     <sheet style="width: 90%%,height:90%%">
@@ -318,8 +318,8 @@
             <field name="arch" type="xml">
                 <form string="Transport Registration">
                     <header>
-                        <button name="trans_regi_confirm" icon="gtk-apply" string="Confirm" states="draft" type='object'/>
-                        <button name="trans_regi_cancel" icon="gtk-cancel" string="Cancel" states="draft" type='object'/>
+                        <button name="trans_regi_confirm" class="fa fa-check" string="Confirm" states="draft" type='object'/>
+                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" states="draft" type='object'/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
@@ -494,4 +494,4 @@
                   sequence="3"/>
 
     </data>
-</openerp>
+</odoo>

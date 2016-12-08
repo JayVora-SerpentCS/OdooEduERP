@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Inherited Form View Of Student Information -->
@@ -149,11 +149,11 @@
             <field name="arch" type="xml">
                 <form string="Event Information">
                     <header>
-                        <button name="event_open" icon="terp-gtk-go-back-rtl" type="object"
-                            string="Open" states="draft" groups="school.group_school_administration,school.group_school_teacher" />
-                        <button name="event_draft" icon="terp-gtk-go-back-ltr" type="object"
+                        <button name="event_open" type="object"
+                            string="Open" class="fa fa-folder-open-o" states="draft" groups="school.group_school_administration,school.group_school_teacher" />
+                        <button name="event_draft" class="fa fa-file-text" icon="terp-gtk-go-back-ltr" type="object"
                             string="Draft" states="cancel" groups="school.group_school_administration,school.group_school_teacher" />
-                        <button name="event_close" type="object" icon="gtk-cancel" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="event_close" type="object" class="fa fa-ban" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
                         <field name="state" nolabel="1" widget="statusbar" />
                     </header>
                     <sheet>
@@ -180,7 +180,7 @@
                                 <field name="part_standard_ids" nolabel='1' />
                             </page>
                             <page string="Participants">
-                                <field name="part_ids" nolabel='1'>
+                                <field name="part_ids">
                                     <tree string="Participant Information">
                                         <field name="stu_pid" />
                                         <field name="name" />
@@ -231,8 +231,8 @@
                 <search string="Search">
                     <group string="Filter" col="10" colspan="4">
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-camera_test" />
-                        <filter string="Close" domain="[('state','=','close')]" icon="gtk-close" />
-                        <filter string="Cancel" domain="[('state','=','cancel')]" icon="gtk-cancel" />
+                        <filter string="Close" domain="[('state','=','close')]" class="fa fa-ban"/>
+                        <filter string="Cancel" domain="[('state','=','cancel')]" class="fa fa-ban" />
                         <field name="name" select="1" />
                         <separator orientation="vertical" />
                         <field name="contact_per_id" select="1" />
@@ -351,7 +351,7 @@
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left" style="padding-left:10px;">
-                                        <a string="Edit" icon="gtk-edit" type="edit" />
+                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
                                         <a string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear"/>
@@ -380,9 +380,9 @@
             <field name="arch" type="xml">
                 <form string="Event Registration">
                     <header>
-                        <button name="regi_confirm" string="Confirm" icon="gtk-apply" 
+                        <button name="regi_confirm" class="btn btn-sm btn-default fa fa-check" string="Confirm" 
                                 states="draft" type='object' groups="school.group_school_administration,school.group_school_teacher" />
-                        <button name="regi_cancel" string="Cancel" icon="gtk-cancel" 
+                        <button name="regi_cancel" string="Cancel" class="btn btn-sm btn-default fa fa-ban" 
                                 states="draft,confirm" type='object' groups="school.group_school_administration,school.group_school_teacher" />
                         <field name="state" widget="statusbar" nolabel="1" />
                     </header>
@@ -508,4 +508,4 @@
                   action="action_event_parameter"/>
 
     </data>
-</openerp>
+</odoo>

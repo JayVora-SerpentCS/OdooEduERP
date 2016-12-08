@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Student Attendance By Month -->
@@ -15,12 +15,12 @@
                         <field name="month" width="200" />
                         <field name="year" width="200" />
                     </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4">
-                        <label string="" colspan="2" />
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="1" />
-                        <button name="print_report" icon="gtk-print" string="Print" type="object" colspan="1" />
-                    </group>
+                    <footer>
+	                    <group colspan="4">
+	                        <button name="print_report" class="fa fa-check" string="Print" type="object" colspan="1" />
+	                        <button class="fa fa-ban" special="cancel" string="Cancel" colspan="1" />
+	                    </group>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -49,4 +49,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
