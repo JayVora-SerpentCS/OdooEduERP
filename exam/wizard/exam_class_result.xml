@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Student wizard  -->
@@ -43,4 +43,4 @@
                   groups="school.group_school_administration,school.group_school_teacher"/>
 
     </data>
-</openerp>
+</odoo>

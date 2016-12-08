@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <template id="additional_exam_result_report">
@@ -131,4 +131,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>

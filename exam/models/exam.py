@@ -3,7 +3,7 @@
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import except_orm, Warning as UserError
+from odoo.exceptions import UserError, Warning as UserError
 
 
 class BoardBoard(models.AbstractModel):
@@ -49,10 +49,10 @@ class ExtendedTimeTableLine(models.Model):
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
-                    raise except_orm(_('Invalid Date Error !'),
-                                     _('Either you have selected wrong day'
-                                       'for the date or you have selected'
-                                       'invalid date.'))
+                    raise UserError(_('Invalid Date Error !\
+                        Either you have selected wrong day\
+                                       for the date or you have selected\
+                                       invalid date.'))
         return True
 
 
@@ -63,7 +63,7 @@ class ExamExam(models.Model):
     name = fields.Char("Exam Name", required=True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             default=lambda obj:
-                            obj.env['ir.sequence'].get('exam.exam'))
+                            obj.env['ir.sequence'].next_by_code('exam.exam'))
     standard_id = fields.Many2many('school.standard',
                                    'school_standard_exam_rel', 'standard_id',
                                    'event_id', 'Participant Standards')
@@ -89,8 +89,8 @@ class ExamExam(models.Model):
         if self.exam_timetable_ids:
             self.write({'state': 'running'})
         else:
-            raise except_orm(_('Exam Schedule'),
-                             _('You must add one Exam Schedule'))
+            raise UserError(_('Exam Schedule\
+                             You must add one Exam Schedule'))
 
     @api.multi
     def set_finish(self):
@@ -117,7 +117,7 @@ class AdditionalExam(models.Model):
                                       readonly=True,
                                       default=lambda obj:
                                       obj.env['ir.sequence'].\
-                                      get('additional.exam'))
+                                      next_by_code('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -196,8 +196,8 @@ class ExamResult(models.Model):
                         else:
                             flag = True
             else:
-                raise except_orm(_('Configuration Error !'),
-                                 _('First Select Grade System in'
+                raise UserError(_('Configuration Error !\
+                                 First Select Grade System in'
                                    'Student->year->.'))
         if flag:
             self.result = 'Fail'
@@ -208,7 +208,7 @@ class ExamResult(models.Model):
         if not student:
             return {}
         if not exam_id:
-            raise except_orm(_('Input Error !'), _('First Select Exam.'))
+            raise UserError(_('Input Error ! First Select Exam.'))
         student_obj = self.env['student.student']
         student_data = student_obj.browse(student)
         val.update({'standard_id': student_data.standard_id.id,
@@ -246,8 +246,8 @@ class ExamResult(models.Model):
         vals = {}
         res = self._compute_per()
         if not res:
-            raise except_orm(_('Warning!'),
-                             _('Please Enter the students Marks.'))
+            raise UserError(_('Warning!\
+                             Please Enter the students Marks.'))
         vals.update({'grade': res[self.id]['grade'],
                      'percentage': res[self.id]['percentage'],
                      'state': 'confirm'})

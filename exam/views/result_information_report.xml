@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <template id="result_information_report">
@@ -48,7 +48,7 @@
                                     <b>:</b>
                                 </td>
                                 <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.standard_id.name"></span>
+                                    <span t-field="result.standard_id"></span>
                                 </td>
                             </tr>
                             <tr>
@@ -168,4 +168,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>
