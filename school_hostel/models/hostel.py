@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
+from odoo import models, fields, api, _
+from odoo.exceptions import except_orm
 
 
 class HostelType(models.Model):
@@ -66,6 +66,7 @@ class HostelRoom(models.Model):
 class HostelStudent(models.Model):
 
     _name = 'hostel.student'
+    _rec_name = 'student_id'
 
     @api.one
     @api.depends('room_rent', 'paid_amount')
@@ -100,7 +101,8 @@ class HostelStudent(models.Model):
     hostel_room_id = fields.Many2one('hostel.room', 'HOSTEL Room')
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda obj:
-                            obj.env['ir.sequence'].get('hostel.student'))
+                            obj.env['ir.sequence'].
+                            next_by_code('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', required=True)
