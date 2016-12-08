@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Tree View Of Teacher Assignment Information -->
@@ -229,4 +229,4 @@
                 groups="school.group_school_administration,school.group_school_teacher"/>
 
     </data>
-</openerp>
+</odoo>
