@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="module_category_school" model="ir.module.category">
@@ -108,4 +108,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
