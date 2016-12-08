@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from openerp import models, fields, api, _
-from openerp import workflow
-from openerp.exceptions import Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 
 
 class StudentFeesRegister(models.Model):
@@ -19,7 +18,7 @@ class StudentFeesRegister(models.Model):
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
-                         get('student.fees.register'))
+                         next_by_code('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id',
                                'PaySlips',
                                states={'confirm': [('readonly', True)]})
@@ -53,10 +52,7 @@ class StudentFeesRegister(models.Model):
                     if old_slips:
                         old_slips.write({'register_id': vals.id})
                         for sid in old_slips:
-                            workflow.trg_validate(self._uid,
-                                                  'student.fees.register',
-                                                  sid.id, 'fees_register'
-                                                  '_confirm', self._cr)
+                            sid.signal_workflow('_confirm')
                     else:
                         res = {'student_id': stu.id,
                                'register_id': vals.id,
@@ -65,10 +61,7 @@ class StudentFeesRegister(models.Model):
                                'journal_id': vals.journal_id.id,
                                'company_id': vals.company_id.id}
                         slip_id = slip_pool.create(res)
-                        workflow.trg_validate(self._uid,
-                                              'student.fees.register',
-                                              slip_id.id, 'fees_register'
-                                              '_confirm', self._cr)
+                        slip_id.signal_workflow('_confirm')
                 amount = 0
                 for datas in fees_obj.browse(self.ids):
                     for data in datas.line_ids:
@@ -89,7 +82,7 @@ class StudentPayslipLine(models.Model):
     type = fields.Selection([('month', 'Monthly'),
                              ('year', 'Yearly'),
                              ('range', 'Range')],
-                            'Duration', select=True, required=True)
+                            'Duration', required=True)
     amount = fields.Float('Amount', digits=(16, 4))
     line_ids = fields.One2many('student.payslip.line.line', 'slipline_id',
                                'Calculations')
@@ -108,7 +101,7 @@ class StudentFeesStructureLine(models.Model):
     type = fields.Selection([('month', 'Monthly'),
                              ('year', 'Yearly'),
                              ('range', 'Range')],
-                            'Duration', select=True, required=True)
+                            'Duration', required=True)
     amount = fields.Float('Amount', digits=(16, 4))
     sequence = fields.Integer('Sequence')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline1_id',
@@ -187,7 +180,7 @@ class StudentPayslip(models.Model):
                        states={'paid': [('readonly', True)]})
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
-                         get('student.payslip'))
+                         next_by_code('student.payslip'))
     student_id = fields.Many2one('student.student', 'Student', required=True,
                                  states={'paid': [('readonly', True)]})
     date = fields.Date('Date', readonly=True,
@@ -203,18 +196,17 @@ class StudentPayslip(models.Model):
                                  states={'paid': [('readonly', True)]})
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
-                              select=1, ondelete='restrict',
+                             ondelete='restrict',
                               help='Link to the automatically'
                               'generated Journal Items.')
     payment_date = fields.Date('Payment Date', readonly=True,
                                states={'draft': [('readonly', False)]},
-                               select=True,
                                help='Keep empty to use the current date')
     type = fields.Selection([('out_invoice', 'Customer Invoice'),
                              ('in_invoice', 'Supplier Invoice'),
                              ('out_refund', 'Customer Refund'),
                              ('in_refund', 'Supplier Refund'),
-                             ], 'Type', required=True, select=True,
+                             ], 'Type', required=True,
                             change_default=True, default='out_invoice')
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
@@ -246,7 +238,8 @@ class StudentPayslip(models.Model):
         result = {}
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
-            currency_id = journal.currency and journal.currency.id\
+            currency_id = journal and journal.currency_id and\
+                journal.currency_id.id\
                             or journal.company_id.currency_id.id
             result = {'value': {'currency_id': currency_id}}
         return result

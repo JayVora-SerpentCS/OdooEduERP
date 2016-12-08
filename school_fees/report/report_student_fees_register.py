@@ -3,8 +3,8 @@
 
 import time
 from datetime import datetime
-from openerp import models, api
-from openerp.report import report_sxw
+from odoo import models, api
+from odoo.report import report_sxw
 
 
 class StudentFeesRegister(report_sxw.rml_parse):
