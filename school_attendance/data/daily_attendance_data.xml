@@ -1,6 +1,6 @@
 <?xml version="1.0"  encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <record id="ir_actions_server_attendance" model="ir.actions.server">
@@ -22,4 +22,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

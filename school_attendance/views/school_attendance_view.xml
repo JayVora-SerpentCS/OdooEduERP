@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- From View Of Attendance Sheet Information -->
@@ -10,10 +10,8 @@
             <field name="model">attendance.sheet</field>
             <field name="arch" type="xml">
                 <form string="Attendance Sheet" >
-                    <group col="6" colspan="6">
+                    <group>
                         <field name="name" />
-                    </group>
-                    <group col="6" colspan="4">
                         <field name="standard_id" widget="selection" on_change="onchange_class_info(standard_id)" />
                     </group>
                     <newline />
@@ -253,4 +251,4 @@
                   action="action_daily_attendance_form" />
 
     </data>
-</openerp>
+</odoo>

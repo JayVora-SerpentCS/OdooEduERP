@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Attendance Management',
- 'version': '3.0',
+ 'version': '1.0',
  'author': 'Serpent Consulting Services PVT. LTD.',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Monthly Attendance Sheet -->
@@ -52,4 +52,4 @@
                   action="action_monthly_attendance_sheet" icon="STOCK_INDENT"/>
 
     </data>
-</openerp>
+</odoo>
