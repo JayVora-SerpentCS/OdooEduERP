@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <report id="report_transport_vehicle_qweb"
@@ -18,4 +18,4 @@
                 file="school_transport.participants"/>
 
     </data>
-</openerp>
+</odoo>

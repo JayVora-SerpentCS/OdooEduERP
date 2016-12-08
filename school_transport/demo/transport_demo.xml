@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- HR Department -->
@@ -8,7 +8,7 @@
         <record id="dep_school" model="hr.department">
             <field name="name">school</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="manager_id" ref="hr.employee_fp"/>
+            <field name="manager_id" ref="hr.employee_fpi"/>
         </record>
 
         <!-- HR Jobs -->
@@ -228,7 +228,6 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_1"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_1"/>
             <field name="for_month">5</field>
             <field name="vehicle_id" ref="transport_vehicle_1"/>
@@ -238,7 +237,6 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_2"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_2"/>
             <field name="for_month">4</field>
             <field name="vehicle_id" ref="transport_vehicle_2"/>
@@ -248,7 +246,6 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_3"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_3"/>
             <field name="for_month">3</field>
             <field name="vehicle_id" ref="transport_vehicle_1"/>
@@ -258,7 +255,6 @@
             <field name="name" ref="student_transport_2"/>
             <field name="part_name" ref="school.demo_student_student_4"/>
             <field name="reg_date">2011-07-05 13:42:43</field>
-            <field name="reg_state">confirm</field>
             <field name="point_id" ref="transport_point_4"/>
             <field name="for_month">2</field> 
             <field name="vehicle_id" ref="transport_vehicle_3"/>
@@ -316,4 +312,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

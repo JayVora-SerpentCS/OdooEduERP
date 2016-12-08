@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
     <data>
 
         <!-- Rule Of Personal Transport Registration Record -->
@@ -32,4 +32,4 @@
          </record>
 
     </data>
-</openerp>
+</odoo>
