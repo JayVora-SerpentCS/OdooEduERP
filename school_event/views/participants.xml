@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <template id="participants">
@@ -165,7 +165,7 @@
                                                     <span t-field="part_ids.name.last" />
                                                 </td>
                                                 <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
-                                                    <span t-field="part_ids.name.standard_id.name" />
+                                                    <span t-field="part_ids.name.standard_id"/>
                                                     <span> (</span>
                                                     <span t-field="part_ids.name.medium_id.code" />
                                                     <span> - </span>
@@ -190,4 +190,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>

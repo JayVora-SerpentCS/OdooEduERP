@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 
 
-class BoardBoard(models.Model):
+class BoardBoard(models.AbstractModel):
     _inherit = "board.board"
 
 
@@ -108,8 +108,8 @@ class SchoolEvent(models.Model):
         if (self.start_date
                 and self.end_date
                 and self.start_date > self.end_date):
-            raise UserError(_('Error! Event start-date must be lower\
-                             then Event end-date.'))
+            raise UserError(_('Error! Event start-date must be lower'
+                             'then Event end-date.'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
                     'last_reg_date')
@@ -144,8 +144,8 @@ class SchoolEvent(models.Model):
         if self.part_ids and self.part_ids[0].id:
             self.write({'state': 'open'})
         else:
-            raise except_orm(_('No Participants !'),
-                             _('No Participants to open the Event.'))
+            raise UserError(_('No Participants ! \
+                             No Participants to open the Event.'))
 
     @api.multi
     def event_close(self):
@@ -252,14 +252,13 @@ class SchoolEventRegistration(models.Model):
 
             # check participation is full or not.
             if participants > event_data.maximum_participants:
-                raise except_orm(_('Error !'),
-                                 _('Participation in this Event is Full.'))
+                raise UserError(_('Error ! \
+                                 Participation in this Event is Full.'))
 
             # check last registration date is over or not
             if reg_data.reg_date > event_data.last_reg_date:
-                raise except_orm(_('Error !'),
-                                 _('Last Registration date is over'
-                                   'for this Event.'))
+                raise UserError(_('Error ! Last Registration date is over \
+                                   for this Event.'))
             # make entry in participant
             val = {'stu_pid': str(prt_data.pid),
                    'score': 0,
