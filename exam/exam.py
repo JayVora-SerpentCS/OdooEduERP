@@ -164,6 +164,7 @@ class ExamResult(models.Model):
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
 
+    @api.one
     @api.depends('result_ids')
     def _compute_total(self):
         total = 0.0
@@ -180,7 +181,7 @@ class ExamResult(models.Model):
     @api.multi
     def _compute_per(self):
         res = {}
-        for result in self.browse(self.ids):
+        for result in self:
             total = 0.0
             obtained_total = 0.0
             obtain_marks = 0.0
@@ -202,6 +203,7 @@ class ExamResult(models.Model):
                 res[result.id] = {'percentage': per, 'grade': grd}
         return res
 
+    @api.one
     @api.depends('result_ids', 'student_id')
     def _compute_result(self):
         flag = False
@@ -281,7 +283,7 @@ class ExamResult(models.Model):
     @api.multi
     def re_result_confirm(self):
         res = {}
-        for result in self.browse(self.ids):
+        for result in self:
             opt_marks = []
             acc_mark = []
             sum_temp = 0.0
@@ -310,7 +312,7 @@ class ExamResult(models.Model):
     @api.multi
     def re_evaluation_confirm(self):
         res = {}
-        for result in self.browse(self.ids):
+        for result in self:
             opt_marks = []
             eve_marks = []
             sum_temp = 0.0
@@ -367,6 +369,7 @@ class ExamSubject(models.Model):
             raise UserError(_('The obtained marks and minimum marks should not\
                              extend maximum marks.'))
 
+    @api.one
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
         if self.exam_id and self.exam_id.student_id:
@@ -401,6 +404,7 @@ class ExamResultBatchwise(models.Model):
     _rec_name = 'standard_id'
     _description = 'exam result Information by Batch wise'
 
+    @api.one
     @api.depends('standard_id', 'year')
     def compute_grade(self):
         fina_tot = 0
@@ -434,6 +438,7 @@ class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'
 
+    @api.one
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
         if self.a_exam_id and self.a_exam_id.subject_id:
