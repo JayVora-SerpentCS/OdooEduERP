@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from reportlab.lib.units import inch
-from barcode_report.barcode.common import MultiWidthBarcode
+from odoo.addons.barcode_report.barcode.common import MultiWidthBarcode
 from string import digits
 
 _patterns = {0: 'BaBbBb', 1: 'BbBaBb', 2: 'BbBbBa',
