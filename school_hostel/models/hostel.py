@@ -22,9 +22,8 @@ class HostelRoom(models.Model):
 
     _name = 'hostel.room'
 
-    @api.one
     @api.depends('student_ids')
-    def _check_availability(self):
+    def _compute_availability(self):
         room_availability = 0
         for data in self:
             count = 0
@@ -41,7 +40,7 @@ class HostelRoom(models.Model):
     floor_no = fields.Integer('Floor No.', default=1)
     room_no = fields.Char('Room No.', required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
-    availability = fields.Float(compute='_check_availability',
+    availability = fields.Float(compute='_compute_availability',
                                 string="Availability")
     student_ids = fields.One2many('hostel.student',
                                   'hostel_room_id', 'Student')
@@ -67,13 +66,13 @@ class HostelStudent(models.Model):
 
     _name = 'hostel.student'
 
-    @api.one
     @api.depends('room_rent', 'paid_amount')
-    def _get_remaining_fee_amt(self):
-        if self.room_rent and self.paid_amount:
-            self.remaining_amount = self.room_rent - self.paid_amount
-        else:
-            self.remaining_amount = 0.0
+    def _compute_remaining_fee_amt(self):
+        for rec in self:
+            if rec.room_rent and rec.paid_amount:
+                rec.remaining_amount = rec.room_rent - rec.paid_amount
+            else:
+                rec.remaining_amount = 0.0
 
     @api.multi
     def confirm_state(self):
@@ -100,7 +99,8 @@ class HostelStudent(models.Model):
     hostel_room_id = fields.Many2one('hostel.room', 'HOSTEL Room')
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda obj:
-                            obj.env['ir.sequence'].get('hostel.student'))
+                            obj.env['ir.sequence'].
+                            next_by_code('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', required=True)
@@ -108,7 +108,7 @@ class HostelStudent(models.Model):
     admission_date = fields.Datetime('Admission Date')
     discharge_date = fields.Datetime('Discharge Date')
     paid_amount = fields.Float('Paid Amount')
-    remaining_amount = fields.Float(compute='_get_remaining_fee_amt',
+    remaining_amount = fields.Float(compute='_compute_remaining_fee_amt',
                                     string='Remaining Amount')
     status = fields.Selection([('draft', 'Draft'),
                                ('reservation', 'Reservation'),

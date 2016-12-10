@@ -18,7 +18,6 @@ class ExamCreateResult(models.TransientModel):
         result_subject_obj = self.env['exam.subject']
 
         for exam in exam_obj.browse(self._context.get('active_ids')):
-
             if exam.standard_id:
 
                 for school_std_rec in exam.standard_id:
@@ -46,20 +45,20 @@ class ExamCreateResult(models.TransientModel):
                                        'student_id': student.id,
                                        'standard_id': standard_id,
                                        'division_id': division_id,
-                                       'medium_id': school_std_rec.medium_id.id}
+                                       'medium_id': school_std_rec.medium_id.id
+                                       }
                             result_id = result_obj.create(rs_dict)
 
                             for line in exam.standard_id:
+                                sub = line.subject_id
+                                sub_min = sub.minimum_marks or 0.0
+                                sub_max = sub.maximum_marks or 0.0
+                                std = line.standard_id
                                 sub_dict = {'exam_id': result_id.id,
-                                            'subject_id':
-                                             line.standard_id.subject_id
-                                             and line.subject_id.id or False,
-                                            'minimum_marks': line.subject_id
-                                             and line.subject_id.minimum_marks
-                                             or 0.0,
-                                            'maximum_marks': line.subject_id
-                                             and line.subject_id.maximum_marks
-                                             or 0.0}
+                                            'subject_id': (std.subject_id and
+                                                           sub.id or False),
+                                            'minimum_marks': sub_min,
+                                            'maximum_marks': sub_max}
                                 result_subject_obj.create(sub_dict)
             else:
                 raise except_orm(_('Error !'),

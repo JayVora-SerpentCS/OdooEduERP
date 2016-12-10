@@ -19,7 +19,6 @@
         </record>
 
         <record id="time_table_firsts0" model="time.table">
-            <field name="division_id" ref="school.demo_standard_division_2"/>
             <field name="name">First</field>
             <field name="standard_id" ref="school.demo_standard_standard_2"/>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>

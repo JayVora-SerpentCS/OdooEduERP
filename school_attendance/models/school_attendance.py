@@ -56,18 +56,48 @@ class AttendanceSheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['tree'
+                                          ]['fields'
+                                            ]['three_1'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['form'
+                                          ]['fields'
+                                            ]['three_1'
+                                              ].update({'invisible': 1})
             elif no_of_days == 29:
 
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['tree'
+                                          ]['fields'
+                                            ]['three_1'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['form'
+                                          ]['fields'
+                                            ]['three_1'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['tree'
+                                          ]['fields'
+                                            ]['two_0'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['form'
+                                          ]['fields'
+                                            ]['two_0'
+                                              ].update({'invisible': 1})
 
             else:
 
@@ -75,12 +105,39 @@ class AttendanceSheet(models.Model):
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_9'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_9'].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['tree'
+                                          ]['fields'
+                                            ]['three_1'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['form'
+                                          ]['fields'
+                                            ]['three_1'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['tree'
+                                          ]['fields'
+                                            ]['two_0'].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['form'
+                                          ]['fields'
+                                            ]['two_0'
+                                              ].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['tree'
+                                          ]['fields'
+                                            ]['two_9'].update({'invisible': 1})
+                        res['fields']['attendance_ids'
+                                      ]['views'
+                                        ]['form'
+                                          ]['fields'
+                                            ]['two_9'].update({'invisible': 1})
         return res
 
 
@@ -88,7 +145,7 @@ class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
     @api.multi
-    def attendance_percentage(self):
+    def _compute_attendance_percentage(self):
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -170,7 +227,7 @@ class AttendanceSheetLine(models.Model):
     roll_no = fields.Integer('Roll Number', required=True,
                              help='Roll Number of Student')
     standard_id = fields.Many2one('attendance.sheet', 'Standard')
-    name = fields.Char('Student Name', required=True, readonly=True)
+    name = fields.Char('Student Name', readonly=True)
     one = fields.Boolean('1')
     two = fields.Boolean('2')
     three = fields.Boolean('3')
@@ -202,7 +259,8 @@ class AttendanceSheetLine(models.Model):
     two_9 = fields.Boolean('29')
     two_0 = fields.Boolean('30')
     three_1 = fields.Boolean('31')
-    percentage = fields.Float(compute="attendance_percentage", method=True,
+    percentage = fields.Float(compute="_compute_attendance_percentage",
+                              method=True,
                               string='Attendance (%)', store=False)
 
 
@@ -211,9 +269,8 @@ class DailyAttendance(models.Model):
     _description = 'Daily Attendance'
     _name = 'daily.attendance'
 
-    @api.one
     @api.depends('student_ids')
-    def _total(self):
+    def _compute_total(self):
         count = 0
         if self.student_ids:
             count += 1
@@ -221,9 +278,8 @@ class DailyAttendance(models.Model):
         else:
             self.total_student = count
 
-    @api.one
     @api.depends('student_ids')
-    def _present(self):
+    def _compute_present(self):
         count = 0
         if self.student_ids:
             for att in self.student_ids:
@@ -233,9 +289,8 @@ class DailyAttendance(models.Model):
         else:
             self.total_presence = count
 
-    @api.one
     @api.depends('student_ids')
-    def _absent(self):
+    def _compute_absent(self):
         count_fail = 0
         if self.student_ids:
             for att in self.student_ids:
@@ -258,12 +313,12 @@ class DailyAttendance(models.Model):
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
-    total_student = fields.Integer(compute="_total", method=True, store=True,
-                                   string='Total Students')
-    total_presence = fields.Integer(compute="_present", method=True,
+    total_student = fields.Integer(compute="_compute_total", method=True,
+                                   store=True, string='Total Students')
+    total_presence = fields.Integer(compute="_compute_present", method=True,
                                     store=True, string='Present Students')
-    total_absent = fields.Integer(compute="_absent", method=True, store=True,
-                                  string='Absent Students')
+    total_absent = fields.Integer(compute="_compute_absent", method=True,
+                                  store=True, string='Absent Students')
 
     @api.model
     def create(self, vals):
@@ -405,16 +460,15 @@ class DailyAttendance(models.Model):
                 domain = [('month_id', 'in', month_ids.ids),
                           ('year_id', 'in', year_ids.ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
-                attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
-                                      or False
+                attendance_sheet_id = (att_sheet_ids and att_sheet_ids[0] or
+                                       False)
                 if not attendance_sheet_id:
-                    sheet = {'name': 'Month ' + month_data.name
-                                     + "-Year " + str(year),
+                    sheet = {'name': ('Month ' + month_data.name + "-Year " +
+                                      str(year)),
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
-                             'year_id': year_ids and year_ids.id
-                                            or False}
+                             'year_id': year_ids and year_ids.id or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
                         line_dict = {'roll_no': student_id.roll_no,
@@ -822,7 +876,7 @@ class DailyAttendanceLine(models.Model):
     _order = 'roll_no'
     _rec_name = 'roll_no'
 
-    roll_no = fields.Integer('Roll No.', required=True, help='Roll Number')
+    roll_no = fields.Integer('Roll No.', required=False, help='Roll Number')
     standard_id = fields.Many2one('daily.attendance', 'Standard')
     stud_id = fields.Many2one('student.student', 'Name', required=True)
     is_present = fields.Boolean('Present')

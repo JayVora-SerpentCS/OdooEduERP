@@ -31,7 +31,11 @@ class StudentAttendanceByMonth(models.TransientModel):
         @param context : standard Dictionary
         @return : printed report
         '''
-        data = self.read([])[0]
+        data = self.read([])
+        if data:
+            data = data[0]
+        else:
+            return True
         data.update({'stud_ids': self._context.get('active_ids', [])})
         datas = {'ids': [],
                  'model': 'student.student',

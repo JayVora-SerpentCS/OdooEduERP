@@ -9,7 +9,6 @@ class StudentEvaluation(models.Model):
     _name = "student.evaluation"
     _rec_name = 'student_id'
 
-    @api.one
     def get_record(self):
         eval_line_obj = self.env['student.evaluation.line']
         eval_temp_obj = self.env['student.evaluation.template']
@@ -28,7 +27,6 @@ class StudentEvaluation(models.Model):
                                       'eval_id': self.id})
         return True
 
-    @api.one
     @api.depends('eval_line')
     def _compute_total_points(self):
         total = 0

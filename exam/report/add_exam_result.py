@@ -3,19 +3,17 @@
 
 import time
 from openerp.report import report_sxw
-from openerp import models, api
+from openerp import models
 
 
 class AddExamResult(report_sxw.rml_parse):
 
-    @api.v7
     def __init__(self, cr, uid, name, context=None):
         super(AddExamResult, self).__init__(cr, uid, name, context=context)
         get_result_detail = self._get_result_detail
         self.localcontext.update({'time': time,
                                   'get_result_detail': get_result_detail})
 
-    @api.v7
     def _get_result_detail(self, subject_ids, result):
         sub_list = []
         result_data = []

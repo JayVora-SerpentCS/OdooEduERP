@@ -2,9 +2,7 @@
   I called the 'monthly_attendance_sheet' wizard
 -
   !record {model: monthly.attendance.sheet, id: monthly_attendance_sheet_0}:
-    class_id: school.demo_standard_standard_1
-    medium_id: school.demo_standard_medium_1
-    division_id: school.demo_standard_division_1
+    standard_id: school.demo_standard_standard_1
     year_id: school.demo_academic_year_1
     month_id: school.demo_academic_month_1
 
@@ -13,9 +11,7 @@
 -
   !record {model: attendance.sheet, id: attendance_sheet_0}:
     name: Attendance Sheet Of Aug-2011
-    class_id: school.demo_standard_standard_1
-    medium_id: school.demo_standard_medium_1
-    division_id: school.demo_standard_division_1
+    standard_id: school.demo_standard_standard_1
     year_id: school.demo_academic_year_1
     month_id: school.demo_academic_month_1
 
@@ -23,9 +19,9 @@
   I create the 'attendance.sheet.line' record
 -
   !record {model: attendance.sheet.line, id: attendance_sheet_line_0}:
+    name: Divyesh
     roll_no: 1
     standard_id: attendance_sheet_0
-    name: Divyesh
 
 -
   I clicked on 'Open Attendance Sheet' Button

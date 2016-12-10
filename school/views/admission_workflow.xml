@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <openerp>
-	<data>
+    <data>
 
         <!-- General Structure Of A WorkFlow XML File -->
 
@@ -62,5 +62,5 @@
             <field name="signal">admission_done</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

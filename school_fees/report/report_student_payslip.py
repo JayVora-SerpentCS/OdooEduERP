@@ -3,13 +3,12 @@
 
 import time
 from datetime import datetime
-from openerp import models, api
+from openerp import models
 from openerp.report import report_sxw
 
 
 class StudentPayslip(report_sxw.rml_parse):
 
-    @api.v7
     def __init__(self, cr, uid, name, context):
         super(StudentPayslip, self).__init__(cr, uid, name, context)
 
@@ -20,12 +19,10 @@ class StudentPayslip(report_sxw.rml_parse):
         })
         self.no = 0
 
-    @api.v7
     def get_no(self):
         self.no += 1
         return self.no
 
-    @api.v7
     def get_month(self, indate):
         new_date = datetime.strptime(indate, '%Y-%m-%d')
         out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')

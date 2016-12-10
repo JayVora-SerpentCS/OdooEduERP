@@ -19,11 +19,11 @@
                         <h1>
                             <field name="name" placeholder="Enter Name"/>
                         </h1>
-	                    <group col="4" colspan="4">
-	                        <field name="meeting_date" placeholder="Enter Meeting Start Time"/>
-	                        <field name="deadline" placeholder="Enter Deadline"/>
-	                        <field name="description" colspan="4" placeholder="Description"/>
-	                    </group>
+                        <group col="4" colspan="4">
+                            <field name="meeting_date" placeholder="Enter Meeting Start Time"/>
+                            <field name="deadline" placeholder="Enter Deadline"/>
+                            <field name="description" colspan="4" placeholder="Description"/>
+                        </group>
                     </sheet>
                </form>
             </field>

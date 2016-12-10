@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Fees Management',
- 'version': '2.2',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.1.5',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+              Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
  'license': '',
@@ -12,6 +13,7 @@
  'depends': ['school', 'account_voucher'],
  'demo': ['demo/school_fees_demo.xml'],
  'data': ['security/ir.model.access.csv',
+          'security/fees_security.xml',
           'views/school_fees_view.xml',
           'views/school_fees_sequence.xml',
           'views/student_fees_register_workflow.xml',

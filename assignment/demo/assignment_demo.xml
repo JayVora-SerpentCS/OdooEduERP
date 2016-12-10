@@ -4,7 +4,6 @@
     <data noupdate="1">
 
         <record id="school_teacher_assignment_firstexercise0" model="school.teacher.assignment">
-            <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="teacher_id" ref="hr.employee_al"/>
             <field name="name">First Exercise</field>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>
@@ -15,7 +14,6 @@
         </record>
 
         <record id="school_teacher_assignment_secondpractice0" model="school.teacher.assignment">
-            <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="teacher_id" ref="hr.employee_mit"/>
             <field name="name">Second practice</field>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>
@@ -26,7 +24,6 @@
         </record>
 
         <record id="school_teacher_assignment_firstexercise1" model="school.teacher.assignment">
-            <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="teacher_id" ref="hr.employee_mit"/>
             <field name="name">First Exercise</field>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>
@@ -37,7 +34,6 @@
         </record>
 
         <record id="school_teacher_assignment_secondexercise0" model="school.teacher.assignment">
-            <field name="division_id" ref="school.demo_standard_division_2"/>
             <field name="teacher_id" ref="hr.employee_mit"/>
             <field name="name">Second Exercise</field>
             <field name="medium_id" ref="school.demo_standard_medium_1"/>
@@ -48,7 +44,6 @@
         </record>
 
         <record id="school_teacher_assignment_thirdexercise0" model="school.teacher.assignment">
-            <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="teacher_id" ref="hr.employee_jth"/>
             <field name="name">Third Exercise</field>
             <field name="medium_id" ref="school.demo_standard_medium_3"/>

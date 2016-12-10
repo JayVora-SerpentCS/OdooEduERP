@@ -252,6 +252,10 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_ids" 
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('library.view_product_book_tree')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('library.view_product_book_form')})]"/>
             <field name="context">{'search_default_book':1}</field>
         </record>
 
@@ -265,21 +269,21 @@
 
         <!-- Action Of Form View Of View Book -->
 
-        <record id="action_view_book" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2" />
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_product_book_form"/>
-            <field name="act_window_id" ref="action_product_book_list"/>
-        </record>
+<!--         <record id="action_view_book" model="ir.actions.act_window.view"> -->
+<!--             <field name="sequence" eval="2" /> -->
+<!--             <field name="view_mode">form</field> -->
+<!--             <field name="view_id" ref="view_product_book_form"/> -->
+<!--             <field name="act_window_id" ref="action_product_book_list"/> -->
+<!--         </record> -->
 
         <!-- Action Of Tree View Of View Book -->
 
-        <record id="action_view_book2" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1" />
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_product_book_tree"/>
-            <field name="act_window_id" ref="action_product_book_list"/>
-        </record>
+<!--         <record id="action_view_book2" model="ir.actions.act_window.view"> -->
+<!--             <field name="sequence" eval="1" /> -->
+<!--             <field name="view_mode">tree</field> -->
+<!--             <field name="view_id" ref="view_product_book_tree"/> -->
+<!--             <field name="act_window_id" ref="action_product_book_list"/> -->
+<!--         </record> -->
 
         <!-- Action Of Form & Tree Views Of Product Book 30 Days -->
 
@@ -295,7 +299,7 @@
 
         <!-- Menu Item Of Books To Return Before 30 Days -->
 
-        <menuitem id="menu_action_book_30days" name="Books to return before 30 days" parent="menu_library"
+        <menuitem id="menu_action_book_30days" name="Books to return before 30 days" sequence = "5" parent="menu_library"
                   action="action_product_book_30days"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
@@ -330,7 +334,7 @@
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="sale_order_day" name="Orders of the day" parent="menu_library" action="action_order_today_tree"
+        <menuitem id="sale_order_day" name="Sale orders of the day" parent="menu_library" sequence="6" action="action_order_today_tree"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Purchase Order -->
@@ -367,8 +371,8 @@
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
-                  sequence="2"
+        <menuitem id="purchase_order_day" name="Purchase orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
+                  sequence="6"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Tree View Of Account Invoice -->
@@ -530,7 +534,7 @@
 
         <!-- Menu Item Of Library Card -->
 
-        <menuitem id="menu_card_main" parent="menu_library" action="action_card_info"
+        <menuitem id="menu_card_main" parent="menu_library" sequence="5" action="action_card_info"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian" />
 
         <!-- Form View Of Library Book Issue -->
@@ -943,7 +947,7 @@
                             </h1>
                             <field name="parent_id" placeholder="Company"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                                attrs="{'invisible': [('is_company','=', True)]}" on_change="onchange_address(use_parent_address, parent_id)" />
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons"></div>
@@ -953,8 +957,7 @@
                                 <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
                                     <field class="oe_inline" name="type"/>
                                     <label for="use_parent_address" class="oe_edit_only"/>
-                                    <field name="use_parent_address" class="oe_edit_only oe_inline"
-                                           on_change="onchange_address(use_parent_address, parent_id)"/>
+                                    <field name="use_parent_address" class="oe_edit_only oe_inline"/>
                                 </div>
                                 <label for="street" string="Address"/>
                                 <div>
@@ -1131,21 +1134,21 @@
 
         <!-- Menu Item Of Library Editor Supplier -->
 
-        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" action="action_editor_supplier" parent="menu_library"
+        <menuitem name="Editor - Suppliers Relations" id="menu_editor_supplier" sequence = "5" action="action_editor_supplier" parent="menu_library"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of MRP Procurement Order -->
 
-        <record id="mrp_procurement_form_view" model="ir.ui.view">
-            <field name="name">procurement.order.form</field>
-            <field name="model">procurement.order</field>
-            <field name="inherit_id" ref="mrp.view_procurement_form_inherit"/>
-            <field name="arch" type="xml">
-                <field name="origin" position="after">
-                    <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
-            </field>
-        </record>
+<!--         <record id="mrp_procurement_form_view" model="ir.ui.view"> -->
+<!--             <field name="name">procurement.order.form</field> -->
+<!--             <field name="model">procurement.order</field> -->
+<!--             <field name="inherit_id" ref="mrp.view_procurement_form_inherit"/> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <field name="origin" position="after"> -->
+<!--                     <field name="customer_ref"/> -->
+<!--                 </field> -->
+<!--             </field> -->
+<!--         </record> -->
 
         <!-- Overwritten Tree View Of Stock Move -->
 
@@ -1192,36 +1195,6 @@
             </field>
         </record>
 
-        <!-- Inherited Form View Of Sale Order -->
-
-        <record id="view_order_form" model="ir.ui.view">
-            <field name="name">sale.order.form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <field name="product_id" position="after">
-                    <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
-            </field>
-        </record>
-
-        <!-- Inherited Form View Of Sale Order Line -->
-
-        <!-- <record id="view_order_line_form2" model="ir.ui.view"><field name="name">Sale line</field><field name="model">sale.order.line</field><field name="inherit_id" ref="sale.view_order_line_form2"/><field name="arch" type="xml"><field name="product_id" position="after"><field name="customer_ref" select="1"/><field name="production_lot_id" select="1"/></field></field></record> -->
-
-        <!-- Inherited Tree View Of Sale Order Line -->
-
-        <record id="view_order_line_tree2" model="ir.ui.view">
-            <field name="name">Sale Lines</field>
-            <field name="model">sale.order.line</field>
-            <field name="inherit_id" ref="sale.view_order_line_tree"/>
-            <field name="arch" type="xml">
-                <field name="price_subtotal" position="after">
-                    <field name="customer_ref" select="1"/>
-                    <field name="production_lot_id" select="1"/></field>
-            </field>
-        </record>
-
         <!-- Search View Of Product Book Search -->
 
         <record id="view_product_book_search" model="ir.ui.view">
@@ -1243,8 +1216,9 @@
             <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
-                <field name="name" position="replace">
-                    <field name="name" domain="[('supplier','=',True)]"/></field>
+                <field name="name" position="attributes">
+                    <attribute name="domain">[('supplier','=',True)]</attribute>
+                </field>
             </field>
         </record>
 

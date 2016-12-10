@@ -12,9 +12,11 @@ class SubjectResultWiz(models.TransientModel):
                                   'result_id', "exam_id", "Exam Subjects",
                                   select=1)
 
-    @api.v7
-    def result_report(self, cr, uid, ids, context):
-        data = self.read(cr, uid, ids)[0]
-        return self.pool['report'].get_action(cr, uid, [],
+    @api.multi
+    def result_report(self):
+        data = self.read(self._ids)[0]
+        return self.pool['report'].get_action(self._cr,
+                                              self._uid, [],
                                               'exam.exam_result_report',
-                                              data=data, context=context)
+                                              data=data,
+                                              context=self._context)

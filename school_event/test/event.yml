@@ -43,7 +43,7 @@
 -
     I confirm the Event registration.
 -
-    !python {model: schoool.event.registration}: |
+    !python {model: school.event.registration}: |
      self.regi_confirm(cr,uid,[ref('event_registration_0')])
 -
     I cancel the Event registration.
@@ -100,4 +100,4 @@
      self.event_cancel(cr, uid, [ref("event_cricket_0")], {"lang": 'en_US', "active_model":
       "school.event", "tz": False
       })
--
+

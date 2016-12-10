@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'School Event Management',
- 'version': '3.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': '9.0.0.1.4',
+ 'author': '''Serpent Consulting Services PVT. LTD.,
+             Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
  'license': '',
@@ -17,5 +18,7 @@
           'views/participants.xml',
           'views/report_view.xml'],
  'demo': ['demo/event_demo.xml'],
+ 'test': ['test/event.yml',
+          'test/event_report.yml'],
  'installable': True,
  'application': True}
