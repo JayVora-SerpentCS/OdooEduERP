@@ -253,6 +253,6 @@ class ReportCustom(report_rml):
               ''' % (header_xml, '\n'.join(user_xml), date_xml)
         return xml
 
-      
+
 ReportCustom('report.attendance.by.month.student', 'student.student', '',
              'addons/school_attendance/report/attendance_by_month.xsl')
