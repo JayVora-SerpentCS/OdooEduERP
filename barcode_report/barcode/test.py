@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.barcode_report.barcode.common as Common
+from odoo.addons.barcode_report.barcode import common as Common
 from odoo.addons.barcode_report.barcode.code39 import Standard39, Extended39
 from odoo.addons.barcode_report.barcode.code93 import Standard93, Extended93
 from odoo.addons.barcode_report.barcode.code128 import Code128
