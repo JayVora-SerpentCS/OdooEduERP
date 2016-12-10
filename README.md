@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/JayVora-SerpentCS/EduERPv8.svg?branch=10)](https://travis-ci.org/JayVora-SerpentCS/EduERPv8)
+[![Build Status](https://travis-ci.org/JayVora-SerpentCS/EduERPv8.svg?branch=10.0)](https://travis-ci.org/JayVora-SerpentCS/EduERPv8)
 
 # EduERPv8
 Education ERP v10
