@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of HOSTEL Type -->
@@ -10,11 +10,11 @@
             <field name="model">hostel.type</field>
             <field name="arch" type="xml">
                 <form string="Hostel Type">
-                    <sheet style="width: 10%%,height:10%%">
-                        <separator string="Hostel"/>
-                        <group col="6">
+                    <sheet>
+                        <group col="4">
                             <field name="name" placeholder="Hostel Name"/>
                             <field name="type"/>
+                            <newline/>
                             <field name="rector"/>
                         </group>
                         <group col="2">
@@ -305,7 +305,7 @@
             <field name="arch" type="xml">
                 <form string="Bad Type Form">
                     <sheet>
-                        <group col="4" colspan="4">
+                        <group col="2">
                             <field name="name"/>
                             <newline/>
                             <field name="description"/>
@@ -344,4 +344,4 @@
         <menuitem id="menu_bed_type" name="Bed Type" parent="menu_hostel" action="action_bed_type"/>
 
     </data>
-</openerp>
+</odoo>

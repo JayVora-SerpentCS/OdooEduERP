@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Transfer Vehicle -->
@@ -19,12 +19,13 @@
                         <field name='new_vehicle_id' context="{'name':root_id}"/>
                     </group>
                     <separator colspan="4"/>
-                    <group colspan="4">
-                        <label string="" colspan="2"/>
-                        <button special="cancel" string="Close" icon="gtk-close" colspan="1"/>
-                        <button  name="vehicle_transfer"  string="Transfer" icon="gtk-ok" type="object" colspan="1"/>
-                    </group>
-                </form>
+                    <footer>
+	                    <group>
+	                        <button  name="vehicle_transfer"  string="Transfer" class="fa fa-check" type="object" colspan="1"/>
+	                        <button special="cancel" string="Close" class="fa fa-ban" colspan="1"/>
+	                    </group>
+                    </footer>
+                    </form>
             </field>
         </record>
 
@@ -41,4 +42,4 @@
             view_type="form"/>
 
     </data>
-</openerp>
+</odoo>

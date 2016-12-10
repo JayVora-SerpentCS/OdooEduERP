@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="product_category_1" model="product.category">
@@ -15,4 +15,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

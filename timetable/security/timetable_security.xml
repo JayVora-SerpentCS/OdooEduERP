@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
     <data>
 
         <!-- Record Rule Of TimeTable For All Users -->
@@ -22,4 +22,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

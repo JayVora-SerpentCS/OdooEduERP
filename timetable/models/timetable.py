@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 
 
-class BoardBoard(models.Model):
+class BoardBoard(models.AbstractModel):
     _inherit = 'board.board'
 
 

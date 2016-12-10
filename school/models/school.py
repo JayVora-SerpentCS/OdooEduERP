@@ -2,16 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-import openerp
+import odoo
 from datetime import date, datetime
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, image_resize_image_big
-from openerp.exceptions import except_orm, Warning as UserError
+from odoo import models, fields, api
+from odoo.tools.translate import _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize,\
+    image_resize_image_big
+from odoo.exceptions import except_orm, Warning as UserError
 
 
-class BoardBoard(models.Model):
-    _inherit = "board.board"
+class BoardBoard(models.AbstractModel):
+    _name = "board.board"
 
 
 class AcademicYear(models.Model):
@@ -22,9 +23,9 @@ class AcademicYear(models.Model):
 
     sequence = fields.Integer('Sequence', required=True,
                               help="Sequence order you want to see this year.")
-    name = fields.Char('Name', required=True, select=1,
+    name = fields.Char('Name', required=True,
                        help='Name of academic year')
-    code = fields.Char('Code', required=True, select=1,
+    code = fields.Char('Code', required=True,
                        help='Code of academic year')
     date_start = fields.Date('Start Date', required=True,
                              help='Starting date of academic year')
@@ -188,7 +189,7 @@ class SchoolStandard(models.Model):
     user_id = fields.Many2one('hr.employee', 'Class Teacher')
     student_ids = fields.One2many('student.student', 'standard_id',
                                   'Student In Class',
-                                  compute='_compute_student')
+                                  compute='_compute_student', store=True)
     color = fields.Integer('Color Index')
     passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id = fields.Many2one('res.company', 'Company Name',
@@ -221,7 +222,7 @@ class SchoolSchool(models.Model):
                                  required=True)
     com_name = fields.Char('School Name', related='company_id.name',
                            store=True)
-    code = fields.Char('Code', required=True, select=1)
+    code = fields.Char('Code', required=True)
     standards = fields.One2many('school.standard', 'school_id',
                                 'Standards')
     lang = fields.Selection(_lang_get, 'Language',
@@ -310,16 +311,18 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(openerp.modules.get_module_resource('base',
-                    'static/src/img', 'avatar.png')).read())
+        image = image_colorize(open(odoo.modules.
+                                    get_module_resource('base',
+                                                        'static/src/img',
+                                                        'avatar.png')).read())
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              select=True, required=True)
+                              required=True)
     student_name = fields.Char('Student Name', related='user_id.name',
                                store=True, readonly=True)
     pid = fields.Char('Student ID', required=True, default=lambda obj:
-                      obj.env['ir.sequence'].get('student.student'),
+                      obj.env['ir.sequence'].next_by_code('student.student'),
                       help='Personal IDentification Number')
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
@@ -327,8 +330,7 @@ class StudentStudent(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self:\
-                          self._get_default_image
+    photo = fields.Binary('Photo', default=lambda self: self._get_default_image
                           (self._context.get('default_is_company',
                                              False)))
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
@@ -473,16 +475,16 @@ class StudentStudent(models.Model):
             if student_search_ids:
                 self.write({'roll_no': number})
                 number += 1
-            reg_code = self.env['ir.sequence'].get('student.registration')
+            reg_code = self.env['ir.sequence'].\
+                next_by_code('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
-                                + str('/') + str(student_data.school_id.city)\
-                                + str('/')\
-                                + str(student_data.school_id.name) + str('/')\
-                                + str(reg_code)
-            stu_code = self.env['ir.sequence'].get('student.code')
+                + str('/') + str(student_data.school_id.city)\
+                + str('/')\
+                + str(student_data.school_id.name) + str('/')\
+                + str(reg_code)
+            stu_code = self.env['ir.sequence'].next_by_code('student.code')
             student_code = str(student_data.school_id.code) + str('/')\
-                            + str(student_data.year.code) + str('/')\
-                            + str(stu_code)
+                + str(student_data.year.code) + str('/') + str(stu_code)
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -523,7 +525,7 @@ class StudentGrn(models.Model):
 
     grn = fields.Char('GR no', help='General Reg Number', readonly=True,
                       default=lambda obj:
-                      obj.env['ir.sequence'].get('student.grn'))
+                      obj.env['ir.sequence'].next_by_code('student.grn'))
     name = fields.Char('GRN Format Name', required=True)
     prefix = fields.Selection([('school', 'School Name'),
                                ('year', 'Year'), ('month', 'Month'),
@@ -568,7 +570,8 @@ class StudentDocument(models.Model):
 
     doc_id = fields.Many2one('student.student', 'Student')
     file_no = fields.Char('File No', readonly="1", default=lambda obj:
-                          obj.env['ir.sequence'].get('student.document'))
+                          obj.env['ir.sequence'].
+                          next_by_code('student.document'))
     submited_date = fields.Date('Submitted Date')
     doc_type = fields.Many2one('document.type', 'Document Type', required=True)
     file_name = fields.Char('File Name',)
@@ -584,7 +587,7 @@ class DocumentType(models.Model):
     _order = "seq_no"
 
     seq_no = fields.Char('Sequence', readonly=True, default=lambda obj:
-                         obj.env['ir.sequence'].get('document.type'))
+                         obj.env['ir.sequence'].next_by_code('document.type'))
     doc_type = fields.Char('Document Type', required=True)
 
 
@@ -711,7 +714,7 @@ class StudentFamilyContact(models.Model):
                                 'Related Student', help="Select Name",
                                 required=True)
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              select=True, required=True)
+                              required=True)
     stu_name = fields.Char('Name', related='user_id.name',
                            help="Select Student From Existing List")
     name = fields.Char('Name')
@@ -733,7 +736,7 @@ class StudentRelationMaster(models.Model):
 class GradeMaster(models.Model):
     _name = 'grade.master'
 
-    name = fields.Char('Grade', select=1, required=True)
+    name = fields.Char('Grade', required=True)
     grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Name')
 
 

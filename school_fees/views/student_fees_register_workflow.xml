@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- General Structure Of A WorkFlow XML File -->
@@ -38,4 +38,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from openerp.report import report_sxw
-from openerp import models, api
+from odoo.report import report_sxw
+from odoo import models, api
+import odoo
 
 
 class AddExamResult(report_sxw.rml_parse):
@@ -21,11 +22,11 @@ class AddExamResult(report_sxw.rml_parse):
         result_data = []
         for sub in subject_ids:
             sub_list.append(sub.id)
-        sub_obj = self.pool.get('exam.subject')
-        subject_exam_ids = sub_obj.search(self.cr, self.uid,
-                                          [('id', 'in', sub_list),
+        env = odoo.api.Environment(self.cr, self.uid, {})
+        sub_obj = env['exam.subject']
+        subject_exam_ids = sub_obj.search([('id', 'in', sub_list),
                                            ('exam_id', '=', result.id)])
-        for subject in sub_obj.browse(self.cr, self.uid, subject_exam_ids):
+        for subject in subject_exam_ids:
             subj = subject.subject_id and subject.subject_id.name or ''
             result_data.append({'subject': subj,
                                 'max_mark': subject.maximum_marks or '',

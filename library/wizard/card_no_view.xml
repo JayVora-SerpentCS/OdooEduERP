@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Card Number Wizard -->
@@ -10,12 +10,15 @@
             <field name="model">card.number</field>
             <field name="arch" type="xml">
                 <form string="Card Number">
-                        <field name="card_id"/>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <label string="" colspan="2"/>
-                        <button type='object' name='card_number_ok' string='Card No' icon='gtk-ok'/>
+                    <group>
+                       <field name="card_id"/>
                    </group>
+                   <footer>
+                       <group col="2">
+                            <button type='object' class="fa fa-id-card-o" name='card_number_ok' string='Card No'/>
+                            <button class="fa fa-ban" special='cancel' string='Cancel'/>
+                       </group>
+                   </footer>
                </form>
             </field>
         </record>
@@ -31,4 +34,4 @@
             view_type="form"/>
 
     </data>
-</openerp>
+</odoo>

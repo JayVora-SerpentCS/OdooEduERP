@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <template id="identity_card">
@@ -68,10 +68,7 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.standard_id.name" />
-                                                    (
-                                                    <span t-field="student.division_id.name" />
-                                                    )
+                                                    <span t-field="student.standard_id" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -118,4 +115,4 @@
         </template>
 
     </data>
-</openerp>
+</odoo>

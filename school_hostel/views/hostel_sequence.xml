@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="sequence_hos_stu" model="ir.sequence">
@@ -12,4 +12,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

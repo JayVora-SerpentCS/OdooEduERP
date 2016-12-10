@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!--Fees Head Information-->
@@ -73,7 +73,6 @@
         <record id="demo_student_fees_structure_line_1" model="student.fees.structure.line">
             <field name="name">Educational Fees</field>
             <field name="code">01</field>
-            <field name="sequence">01</field>
             <field name="type">month</field>
             <field name="amount">4000.00</field>
         </record>
@@ -81,7 +80,6 @@
         <record id="demo_student_fees_structure_line_2" model="student.fees.structure.line">
             <field name="name">Library Fees</field>
             <field name="code">02</field>
-            <field name="sequence">02</field>
             <field name="type">month</field>
             <field name="amount">2000.00</field>
         </record>
@@ -89,7 +87,6 @@
         <record id="demo_student_fees_structure_line_3" model="student.fees.structure.line">
             <field name="name">Laboratory Fees</field>
             <field name="code">03</field>
-            <field name="sequence">03</field>
             <field name="type">month</field>
             <field name="amount">3000.00</field>
         </record>
@@ -172,4 +169,4 @@
          </record>
 
     </data>
-</openerp>
+</odoo>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of View Daily Attendance Wizard -->
@@ -15,7 +15,7 @@
                         <field name="standard_id"  widget="selection"  />
                     </group>
                     <group colspan="4" col="6">
-                        <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button  class="fa fa-ban" special="cancel" string="Cancel"/>
                         <button name="print_report" string="Print Report" type="object"/>
                     </group>
                 </form>
@@ -42,4 +42,4 @@
         <menuitem id="menu_attendance_sheet_form" parent="menu_attendance_report" action="action_attendance"/>
 
     </data>
-</openerp>
+</odoo>

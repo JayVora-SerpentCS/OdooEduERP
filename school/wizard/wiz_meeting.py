@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
+from odoo import models, fields, api, _
+from odoo.exceptions import except_orm
 
 
 class StudentMeeting(models.TransientModel):
@@ -25,8 +25,7 @@ class StudentMeeting(models.TransientModel):
             if not student.email:
                 flag = True
                 error_student += student.pid + " : " + student.name\
-                                  + " "\
-                                  + student.middle + " " + student.last + "\n"
+                    + " " + student.middle + " " + student.last + "\n"
             else:
                 attendee_ids.append((0, 0, {'user_id': student.user_id.id,
                                             'email': student.email}))

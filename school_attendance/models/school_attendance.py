@@ -4,8 +4,8 @@
 import time
 from calendar import monthrange
 from datetime import datetime
-from openerp import models, fields, api, _
-from openerp.exceptions import Warning as UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import Warning as UserError
 
 
 class AttendanceSheet(models.Model):
@@ -37,16 +37,16 @@ class AttendanceSheet(models.Model):
         return res
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', context=None,
-                        toolbar=False, submenu=False):
-        res = super(AttendanceSheet, self).fields_view_get(view_id=view_id,
-                                                           view_type=view_type,
-                                                           context=context,
-                                                           toolbar=toolbar,
-                                                           submenu=submenu)
-        if context is None:
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False,
+                        submenu=False):
+        res = super(AttendanceSheet, self).fields_view_get(
+            view_id=view_id, view_type=view_type, toolbar=toolbar,
+             submenu=submenu)
+
+        context = self._context
+        if self._context is None:
             context = {}
-        if context.get('month_id', False):
+        if self._context.get('month_id', False):
             no_of_days = monthrange(context['year_id'][0],
                                     context['month_id'][0])[1]
             if no_of_days == 31:
@@ -56,18 +56,24 @@ class AttendanceSheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['three_1'].update({'invisible': 1})
             elif no_of_days == 29:
 
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['two_0'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['two_0'].update({'invisible': 1})
 
             else:
 
@@ -75,12 +81,18 @@ class AttendanceSheet(models.Model):
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']['fields']['two_9'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']['fields']['two_9'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['three_1'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['two_0'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['two_0'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['tree']
+                        ['fields']['two_9'].update({'invisible': 1})
+                        res['fields']['attendance_ids']['views']['form']
+                        ['fields']['two_9'].update({'invisible': 1})
         return res
 
 
@@ -210,6 +222,7 @@ class DailyAttendance(models.Model):
     ''' Defining Daily Attendance Information '''
     _description = 'Daily Attendance'
     _name = 'daily.attendance'
+    _rec_name = 'standard_id'
 
     @api.one
     @api.depends('student_ids')

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.report import report_sxw
-from openerp import models
+from odoo.report import report_sxw
+from odoo import models
+import odoo
 
 
 class ResultLabel(report_sxw.rml_parse):
@@ -12,14 +13,14 @@ class ResultLabel(report_sxw.rml_parse):
         self.localcontext.update({'get_student_info': self.get_student_info})
 
     def get_student_info(self, standard_id, division_id, medium_id, year_id):
-        student_obj = self.pool.get('student.student')
-        student_ids = student_obj.search(self.cr, self.uid,
-                                         [('standard_id', '=', standard_id),
+        env = odoo.api.Environment(self.cr, self.uid, {})
+        student_obj = env['student.student']
+        student_ids = student_obj.search([('standard_id', '=', standard_id),
                                           ('division_id', '=', division_id),
                                           ('medium_id', '=', medium_id),
                                           ('year', '=', year_id)])
         result = []
-        for student in student_obj.browse(self.cr, self.uid, student_ids):
+        for student in student_ids:
             result.append(student.pid)
         return result
 

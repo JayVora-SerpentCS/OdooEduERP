@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 
 class MonthlyAttendanceSheet(models.TransientModel):
@@ -27,8 +27,12 @@ class MonthlyAttendanceSheet(models.TransientModel):
         data = self.read([])[0]
         models_data = self.env['ir.model.data']
         # Get opportunity views
-        dummy, form_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_form')
-        dummy, tree_view = models_data.get_object_reference('school_attendance', 'view_attendance_sheet_tree')
+        dummy, form_view = models_data.\
+            get_object_reference('school_attendance',
+                                 'view_attendance_sheet_form')
+        dummy, tree_view = models_data.\
+            get_object_reference('school_attendance',
+                                 'view_attendance_sheet_tree')
         return {'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': 'attendance.sheet',

@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
     <data>
 
         <!-- Record Rule For Personal Fees Register -->
@@ -22,4 +22,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

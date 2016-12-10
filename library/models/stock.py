@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api
+from odoo import models, fields, api
 from openerp import workflow
 
 
@@ -11,10 +11,10 @@ class StockMove(models.Model):
     customer_ref = fields.Char('Customer reference')
     origin_ref = fields.Char('Origin')
 
-    @api.multi
-    def onchange_qty(self):
-        return {'value': {'product_uos_qty': self.product_uos_qty,
-                          'product_qty': self.product_qty}}
+#    @api.multi
+#    def onchange_qty(self, product_qty):
+#        return {'value': {'product_uom_qty': self.product_uom_qty,
+#                          'product_qty': self.product_qty}}
 
     @api.multi
     def action_cancel(self):
@@ -27,14 +27,15 @@ class StockMove(models.Model):
                     pickings[move.picking_id.id] = True
         self.write({'state': 'cancel'})
         for pick_id in pickings:
+#            pick_id.signal_workflow('button_confirm')
             workflow.trg_validate(self._uid, 'stock.picking', pick_id,
                                   'button_cancel', self._cr)
         ids2 = []
         for res in self.read(['move_dest_id']):
             if res['move_dest_id']:
                 ids2.append(res['move_dest_id'][0])
-        for stock_id in self.ids:
-            workflow.trg_trigger(self._uid, 'stock.move', stock_id, self._cr)
+#        for stock_id in self.ids:
+            self.trg_trigger()
         return True
 
 
@@ -43,8 +44,8 @@ class StockPicking(models.Model):
     _order = "create_date desc"
 
     sale_id = fields.Many2one('sale.order', 'Sale Order', ondelete='set null',
-                              select=True, readonly=True, default=False)
+                              readonly=True, default=False)
     purchase_id = fields.Many2one('purchase.order', 'Purchase Order',
                                   ondelete='set null', readonly=True,
-                                  select=True, default=False)
+                                  default=False)
     date_done = fields.Datetime('Picking date', readonly=True)

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="demo_subject_subject_9" model="subject.subject">
@@ -19,16 +19,16 @@
         </record>
 
         <record id="time_table_firsts0" model="time.table">
-            <field name="division_id" ref="school.demo_standard_division_2"/>
+            <!-- <field name="division_id" ref="school.demo_standard_division_2"/> -->
             <field name="name">First</field>
             <field name="standard_id" ref="school.demo_standard_standard_2"/>
-            <field name="medium_id" ref="school.demo_standard_medium_1"/>
-            <field name="class_id" ref="school.demo_school_standard_2"/>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_1"/>
+            <field name="class_id" ref="school.demo_school_standard_2"/> -->
             <field name="year_id" ref="school.demo_academic_year_1"/>
         </record>
 
         <record id="time_table_line_0" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_fp"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="9.0" name="start_time"/>
             <field name="week_day">monday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -127,7 +127,7 @@
         </record>
 
         <record id="time_table_line_11" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_fp"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="15.0" name="start_time"/>
             <field name="week_day">tuesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -199,7 +199,7 @@
         </record>
 
         <record id="time_table_line_19" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_fp"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="10.0" name="start_time"/>
             <field name="week_day">thursday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -244,7 +244,7 @@
         </record>
 
         <record id="time_table_line_24" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_fp"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="9.0" name="start_time"/>
             <field name="week_day">friday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -334,7 +334,7 @@
         </record>
 
         <record id="time_table_line_34" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_fp"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="14.0" name="start_time"/>
             <field name="week_day">saturday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -343,4 +343,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

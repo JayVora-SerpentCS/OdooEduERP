@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Assign Roll Number Wizard Form View  -->
@@ -14,8 +14,8 @@
                     <separator string="" colspan="4"/>
                     <group colspan="4" col="6">
                         <label string="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Close"/>
-                        <button icon="gtk-go-forward" name="move_start" string="Move" type="object"/>
+                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
+                        <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
                    </group>
                </form>
             </field>
@@ -31,4 +31,4 @@
             view_type="form"/>
 
     </data>
-</openerp>
+</odoo>

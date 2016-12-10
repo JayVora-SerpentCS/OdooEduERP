@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <report id="report_time_table_label_qweb"
@@ -18,4 +18,4 @@
                 name="barcode_report.result_label_info" />
 
     </data>
-</openerp>
+</odoo>

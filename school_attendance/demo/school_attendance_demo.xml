@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- Daily Attendance Information-->
@@ -8,9 +8,6 @@
         <record id="demo_daily_attendance_1" model="daily.attendance">
             <field name="date">2011-08-11</field>
             <field name="student_ids" eval="[]"/>
-            <field name="class_id" ref="school.demo_standard_standard_1"/>
-            <field name="medium_id" ref="school.demo_standard_medium_1"/>
-            <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="standard_id" ref="school.demo_school_standard_1" />
             <field name="state">draft</field>
         </record>
@@ -53,4 +50,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

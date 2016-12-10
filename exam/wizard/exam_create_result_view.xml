@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<openerp>
+<odoo>
     <data>
 
         <!-- Form View Of Student Wizard -->
@@ -13,8 +13,8 @@
                     <separator string="Generate Results" colspan="4"/>
                     <group colspan="4">
                         <label string="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Close"/>
-                        <button icon="gtk-execute" name="generate_result" string="Create Result" type="object"/>
+                        <button class="btn btn-sm btn-default fa fa-times" special="cancel" string="Close"/>
+                        <button class="btn btn-sm btn-default fa fa-check-circle" name="generate_result" string="Create Result" type="object"/>
                    </group>
                </form>
             </field>
@@ -39,4 +39,4 @@
             view_mode="form" target="new" view_type="form" />
 
     </data>
-</openerp>
+</odoo>
