@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.barcode_report import barcode as BarCode
-from BarCode.common import I2of5, MSI, Codabar, Code11
-from BarCode.code39 import Standard39, Extended39
-from BarCode.code93 import Standard93, Extended93
-from BarCode.code128 import Code128
-from BarCode.usps import FIM, POSTNET, inch
+from odoo.addons.barcode_report.barcode.common as Common
+from odoo.addons.barcode_report.barcode.code39 import Standard39, Extended39
+from odoo.addons.barcode_report.barcode.code93 import Standard93, Extended93
+from odoo.addons.barcode_report.barcode.code128 import Code128
+from odoo.addons.barcode_report.barcode.usps import FIM, POSTNET, inch
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, Frame
@@ -18,13 +17,13 @@ def run():
     styleN = styles['Normal']
     story = []
     story.append(Paragraph('I2of5', styleN))
-    story.append(I2of5(1234, xdim=inch * 0.02, checksum=0))
+    story.append(Common.I2of5(1234, xdim=inch * 0.02, checksum=0))
     story.append(Paragraph('MSI', styleN))
-    story.append(MSI(1234, xdim=inch * 0.02))
+    story.append(Common.MSI(1234, xdim=inch * 0.02))
     story.append(Paragraph('Codabar', styleN))
-    story.append(Codabar("A012345B", xdim=inch * 0.02))
+    story.append(Common.Codabar("A012345B", xdim=inch * 0.02))
     story.append(Paragraph('Code 11', styleN))
-    story.append(Code11("01234545634563"))
+    story.append(Common.Code11("01234545634563"))
     story.append(Paragraph('Code 39', styleN))
     story.append(Standard39("A012345B%R"))
     story.append(Paragraph('Extended Code 39', styleN))
