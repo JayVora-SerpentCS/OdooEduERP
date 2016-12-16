@@ -42,7 +42,6 @@ class AttendanceSheet(models.Model):
         res = super(AttendanceSheet, self).fields_view_get(
             view_id=view_id, view_type=view_type, toolbar=toolbar,
              submenu=submenu)
-
         context = self._context
         if self._context is None:
             context = {}
@@ -419,7 +418,7 @@ class DailyAttendance(models.Model):
                           ('year_id', 'in', year_ids.ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
-                                      or False
+                or False
                 if not attendance_sheet_id:
                     sheet = {'name': 'Month ' + month_data.name
                                      + "-Year " + str(year),
@@ -427,7 +426,7 @@ class DailyAttendance(models.Model):
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
                              'year_id': year_ids and year_ids.id
-                                            or False}
+                             or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
                         line_dict = {'roll_no': student_id.roll_no,

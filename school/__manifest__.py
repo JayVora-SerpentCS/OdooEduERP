@@ -9,7 +9,7 @@
  'license': '',
  'complexity': 'easy',
  'Summary': 'A Module For School Management',
- 'depends': ['hr', 'mail', 'crm', 'report', 'board'],
+ 'depends': ['hr', 'crm', 'report', 'board'],
  'data': ['wizard/wiz_send_email_view.xml',
           'security/school_security.xml',
           'views/school_view.xml',

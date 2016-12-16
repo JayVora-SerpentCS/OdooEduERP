@@ -64,7 +64,8 @@ class LibraryEditorSupplier(models.Model):
                                 'Please create a new relation.'))
             new_supplier_id = vals.get('supplier_id', 0)
             supplier_change = new_supplier_id != 0 and (idn < 0
-                              or (original_supplier_id != new_supplier_id))
+                                                        or (original_supplier_id
+                                                            != new_supplier_id))
 
             if supplier_change:
                 raise UserError(_('Warning ! Cannot set supplier in this form.'

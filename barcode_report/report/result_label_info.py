@@ -23,7 +23,7 @@ class ResultLabelInfo(report_sxw.rml_parse):
         result = []
         for student in student_ids:
             name = student.name + " " + student.middle or '' + " " + student.\
-            last or ''
+                                                                     last or ''
             result.append({'name': name,
                            'roll_no': student.roll_no, 'pid': student.pid})
         return result

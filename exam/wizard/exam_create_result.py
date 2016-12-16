@@ -49,11 +49,11 @@ class ExamCreateResult(models.TransientModel):
                                 for subject in line.subject_ids:
                                     sub_dict = {'exam_id': result_id.id,
                                                 'subject_id': subject.id or
-                                                False,
+                                                 False,
                                                 'minimum_marks': subject.\
-                                                minimum_marks or 0.0,
-                                                'maximum_marks': subject.\
-                                                maximum_marks or 0.0}
+                                                 minimum_marks or 0.0,
+                                                 'maximum_marks': subject.\
+                                                 maximum_marks or 0.0}
                                     result_subject_obj.create(sub_dict)
             else:
                 raise except_orm(_('Error !'),
