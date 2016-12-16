@@ -4,7 +4,6 @@
 import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-#from openerp import pooler
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
 from openerp.report import report_sxw
@@ -18,9 +17,9 @@ month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
 
 def lengthmonth(year, month):
     if ((month == 2)
-            and ((year % 4 == 0)
-            and ((year % 100 != 0)
-            or (year % 400 == 0)))):
+        and ((year % 4 == 0)
+             and ((year % 100 != 0)
+                  or (year % 400 == 0)))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
@@ -147,9 +146,8 @@ class ReportCustom(report_rml):
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
-                   + ' ' + str(time.strftime("%H:%M")),
-            env['res.users'].browse(uid).company_id.name)
-
+                   + ' ' + str(time.strftime("%H:%M")), env['res.users'].
+                   browse(uid).company_id.name)
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
         eom = som + timedelta(int(dy) - 1)
@@ -175,7 +173,7 @@ class ReportCustom(report_rml):
                 date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                              (x, som.replace(day=x).strftime('%a'),
                               x - som.day + 1)
-                             for x in range(som.day, eom.day + 1)]
+                              for x in range(som.day, eom.day + 1)]
         cell = x - som.day + 1
         day_diff1 = day_diff.days - cell + 1
         width_dict = {}
@@ -190,8 +188,8 @@ class ReportCustom(report_rml):
         while day_diff1 > 0:
             if month + i <= 12:
                 if day_diff1 > lengthmonth(year, i + month):
-                # Not on 30 else you have problems when
-                # entering 01-01-2009 for example
+                    # Not on 30 else you have problems when
+                    # entering 01-01-2009 for example
                     som1 = datetime.date(year, month + i, 1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                                  (x, som1.replace(day=x).strftime('%a'),
@@ -253,6 +251,7 @@ class ReportCustom(report_rml):
                  </report>
               ''' % (header_xml, '\n'.join(user_xml), date_xml)
         return xml
+
 
 ReportCustom('report.attendance.by.month.student', 'student.student', '',
               'addons/school_attendance/report/attendance_by_month.xsl')

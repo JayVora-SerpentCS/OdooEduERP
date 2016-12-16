@@ -249,7 +249,7 @@ class I2of5(Barcode):
         # checksum included
 
         if (((len(self.validated) % 2 == 0) and self.checksum)
-                or ((len(self.validated) % 2 == 1) and not self.checksum)):
+            or ((len(self.validated) % 2 == 1) and not self.checksum)):
             s = '0' + s
 
         if self.checksum:
@@ -329,8 +329,7 @@ class MSI(Barcode):
                 '2': 'bSbSBsbS', '3': 'bSbSBsBs',
                 '4': 'bSBsbSbS', '5': 'bSBsbSBs',
                 '6': 'bSBsBsbS', '7': 'bSBsBsBs',
-                '8': 'BsbSbSbS', '9': 'BsbSbSBs'
-               }
+                '8': 'BsbSbSbS', '9': 'BsbSbSBs'}
 
     def __init__(self, value="", **args):
         self.height = None

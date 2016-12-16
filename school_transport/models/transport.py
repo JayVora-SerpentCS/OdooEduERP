@@ -45,7 +45,7 @@ class TransportPoint(models.Model):
 class TransportVehicle(models.Model):
     '''for vehicle detail'''
 
-    @api.one
+    @api.multi
     @api.depends('vehi_participants_ids')
     def _participants(self):
         if self.vehi_participants_ids:
@@ -111,8 +111,8 @@ class TransportParticipant(models.Model):
             student_obj = self.env['student.student']
             for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
-                                 for transport_id
-                                    in student_data.transport_ids]
+                                 for transport_id in
+                                 student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
         return super(TransportParticipant, self).search(args, offset, limit,
                                                         order, count=count)
@@ -120,10 +120,11 @@ class TransportParticipant(models.Model):
 
 class StudentTransports(models.Model):
     '''for root detail'''
+
     _name = 'student.transport'
     _description = 'Student Transport Information'
 
-    @api.one
+    @api.multi
     @api.depends('trans_participants_ids')
     def _total_participantes(self):
         if self.trans_participants_ids:
@@ -168,7 +169,7 @@ class StudentTransports(models.Model):
         self.write({'state': 'close'})
         return True
 
-    @api.v7
+    @api.multi
     def delet_entry(self, cr, uid, transport_ids=None, context=None):
         ''' This method delete entry of participants
         @param self : Object Pointer
@@ -277,7 +278,7 @@ class TransportRegistration(models.Model):
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
         tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
-                      + relativedelta(months=+month)
+                       + relativedelta(months=+month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 

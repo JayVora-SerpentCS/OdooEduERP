@@ -198,7 +198,7 @@ class ExamResult(models.Model):
             else:
                 raise UserError(_('Configuration Error !\
                                  First Select Grade System in'
-                                   'Student->year->.'))
+                                 'Student->year->.'))
         if flag:
             self.result = 'Fail'
 
@@ -340,7 +340,7 @@ class ExamSubject(models.Model):
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
         if (self.obtain_marks > self.maximum_marks
-                or self.minimum_marks > self.maximum_marks):
+            or self.minimum_marks > self.maximum_marks):
             raise UserError(_('The obtained marks and minimum marks\
                              should not extend maximum marks.'))
 
@@ -348,10 +348,10 @@ class ExamSubject(models.Model):
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
         if (self.exam_id and self.exam_id.student_id
-                and self.exam_id.student_id.year.grade_id.grade_ids):
+            and self.exam_id.student_id.year.grade_id.grade_ids):
             for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
                 if (self.obtain_marks >= grade_id.from_mark
-                        and self.obtain_marks <= grade_id.to_mark):
+                    and self.obtain_marks <= grade_id.to_mark):
                     self.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
@@ -398,7 +398,7 @@ class ExamResultBatchwise(models.Model):
                 if year_ob.grade_id.grade_ids:
                     for grade_id in year_ob.grade_id.grade_ids:
                         if (divi >= grade_id.from_mark
-                                and divi <= grade_id.to_mark):
+                            and divi <= grade_id.to_mark):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
@@ -415,7 +415,7 @@ class AdditionalExamResult(models.Model):
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
         if (self.a_exam_id and self.a_exam_id.subject_id
-                and self.a_exam_id.subject_id.minimum_marks):
+            and self.a_exam_id.subject_id.minimum_marks):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
