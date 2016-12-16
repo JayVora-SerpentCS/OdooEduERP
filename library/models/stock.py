@@ -27,7 +27,6 @@ class StockMove(models.Model):
                     pickings[move.picking_id.id] = True
         self.write({'state': 'cancel'})
         for pick_id in pickings:
-#            pick_id.signal_workflow('button_confirm')
             workflow.trg_validate(self._uid, 'stock.picking', pick_id,
                                   'button_cancel', self._cr)
         ids2 = []
