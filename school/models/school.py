@@ -70,7 +70,7 @@ class AcademicYear(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if (self.date_stop and self.date_start
-                and self.date_stop < self.date_start):
+            and self.date_stop < self.date_start):
             raise UserError(_('Error! The duration of the academic year\
                              is invalid.'))
 
@@ -94,8 +94,8 @@ class AcademicMonth(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         if (self.date_stop
-                and self.date_start
-                and self.date_stop < self.date_start):
+            and self.date_start
+            and self.date_stop < self.date_start):
             raise UserError(_('Error ! The duration of the Month(s)\
                              is/are invalid.'))
 
@@ -103,9 +103,9 @@ class AcademicMonth(models.Model):
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
             if (self.year_id.date_stop < self.date_stop
-                    or self.year_id.date_stop < self.date_start
-                    or self.year_id.date_start > self.date_start
-                    or self.year_id.date_start > self.date_stop):
+                or self.year_id.date_stop < self.date_start
+                or self.year_id.date_start > self.date_start
+                or self.year_id.date_start > self.date_stop):
                 raise UserError(_('Invalid Months ! Some months overlap or\
                                    the date period is not in the scope of the\
                                    academic year.'))
