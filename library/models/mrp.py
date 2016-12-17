@@ -66,7 +66,7 @@ class ProcurementOrder(models.Model):
             context.update({'lang': partner.lang, 'partner_id': partner_id})
             product = prod_obj.browse(procurement.product_id.id)
             taxes_ids = procurement.product_id.product_tmpl_id.\
-                        supplier_taxes_id
+                            supplier_taxes_id
             taxes = acc_pos_obj.map_tax(partner.property_account_position,
                                         taxes_ids)
             date = schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -98,10 +98,11 @@ class ProcurementOrder(models.Model):
                        'fiscal_position': partner.property_account_position
                        and partner.property_account_position.id
                        or False}
-            res[procurement.id] = self.create_procurement_purchase_order(procurement,
-                                                                         po_vals,
-                                                                         line_vals,
-                                                                         context=context)
+            res[procurement.id] = self.create_procurement_purchase_order(
+                                                        procurement,
+                                                        po_vals,
+                                                        line_vals,
+                                                        context=context)
             self.write([procurement.id],
                        {'state': 'running',
                         'purchase_id': res[procurement.id]})

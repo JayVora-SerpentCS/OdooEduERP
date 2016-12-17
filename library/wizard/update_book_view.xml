@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Update Book Wizard -->
 
@@ -33,5 +33,4 @@
             target="new"
             view_type="form"/>
 
-    </data>
 </odoo>
