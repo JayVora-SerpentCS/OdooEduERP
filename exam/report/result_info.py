@@ -9,8 +9,8 @@ from odoo import models, api
 class Result(report_sxw.rml_parse):
 
     @api.model
-    def __init__(self, cr, uid, name, context=None):
-        super(Result, self).__init__(cr, uid, name, context=context)
+    def __init__(self):
+        super(Result, self).__init__()
         self.localcontext.update({'time': time,
                                   'get_lines': self.get_lines,
                                   'get_exam_data': self.get_exam_data,
