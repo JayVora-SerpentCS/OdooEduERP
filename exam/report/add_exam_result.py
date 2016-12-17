@@ -10,8 +10,8 @@ import odoo
 class AddExamResult(report_sxw.rml_parse):
 
     @api.model
-    def __init__(self, cr, uid, name, context=None):
-        super(AddExamResult, self).__init__(cr, uid, name, context=context)
+    def __init__(self):
+        super(AddExamResult, self).__init__()
         get_result_detail = self._get_result_detail
         self.localcontext.update({'time': time,
                                   'get_result_detail': get_result_detail})

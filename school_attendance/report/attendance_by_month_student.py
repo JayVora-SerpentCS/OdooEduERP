@@ -27,7 +27,7 @@ def lengthmonth(year, month):
 
 class ReportCustom(report_rml):
 
-    @api.model
+    @api.multi
     def create_xml(self, cr, uid, ids, datas, context=None):
         env = odoo.api.Environment(cr, uid, context or {})
         obj_student = env['student.student']

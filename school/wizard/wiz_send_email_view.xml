@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Send Mail -->
 
@@ -28,5 +27,4 @@
             target="new"
             view_type="form"/>
 
-    </data>
 </odoo>

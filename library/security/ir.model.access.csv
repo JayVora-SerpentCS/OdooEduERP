@@ -1,4 +1,5 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
 "access_library_price_category_manager","library.price.category","model_library_price_category","library.group_librarian",1,1,1,1
 "access_library_rack_manager","library.rack","model_library_rack","library.group_librarian",1,1,1,1
 "access_library_collection_manager","library.collection","model_library_collection","library.group_librarian",1,1,1,1
@@ -67,3 +68,4 @@
 "access_library_book_request_student","library.book.request","model_library_book_request","school.group_school_student",1,1,1,0
 "access_library_card_student","library.card","model_library_card","school.group_school_student",1,0,0,0
 "access_library_book_issue_student","library.book.issue","model_library_book_issue","school.group_school_student",1,0,0,0
+

@@ -8,8 +8,8 @@ import odoo
 
 class ResultLabelInfo(report_sxw.rml_parse):
 
-    def __init__(self, cr, uid, name, context=None):
-        super(ResultLabelInfo, self).__init__(cr, uid, name, context=context)
+    def __init__(self):
+        super(ResultLabelInfo, self).__init__()
         get_stud_info = self.get_student_info
         self.localcontext.update({'get_student_all_info': get_stud_info})
 
@@ -21,11 +21,10 @@ class ResultLabelInfo(report_sxw.rml_parse):
                                           ('medium_id', '=', medium_id),
                                           ('year', '=', year_id)])
         result = []
-        for student in student_ids:
-            name = student.name + " " + student.middle or '' + " " + student.\
-                    last or ''
+        for stud in student_ids:
+            name = stud.name + " " + stud.middle or '' + " " + stud.last or ''
             result.append({'name': name,
-                           'roll_no': student.roll_no, 'pid': student.pid})
+                           'roll_no': stud.roll_no, 'pid': stud.pid})
         return result
 
 

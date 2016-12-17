@@ -19,6 +19,23 @@ class ExtendedTimeTable(models.Model):
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 
+class StudentStudent(models.Model):
+    _name = 'student.student'
+    _inherit = 'student.student'
+    _description = 'Student Information'
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        if self._context.get('exam'):
+            exam_obj = self.env['exam.exam']
+            exam_data = exam_obj.browse(self._context['exam'])
+            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            args.append(('class_id', 'in', std_ids))
+        return super(StudentStudent, self).search(args=args, offset=offset,
+                                                  limit=limit, order=order,
+                                                  count=count)
+
+
 class ExtendedStudentStudent(models.Model):
     _inherit = 'student.student'
 
@@ -402,7 +419,7 @@ class ExamResultBatchwise(models.Model):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
-    grade = fields.Char(compute='compute_grade', string='Grade', method=True,
+    grade = fields.Char(_compute_='compute_grade', string='Grade', method=True,
                         store=True)
 
 
@@ -446,21 +463,5 @@ class AdditionalExamResult(models.Model):
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_calc_result', string='Result', method=True)
-
-
-class StudentStudent(models.Model):
-    _name = 'student.student'
-    _inherit = 'student.student'
-    _description = 'Student Information'
-
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('exam'):
-            exam_obj = self.env['exam.exam']
-            exam_data = exam_obj.browse(self._context['exam'])
-            std_ids = [std_id.id for std_id in exam_data.standard_id]
-            args.append(('class_id', 'in', std_ids))
-        return super(StudentStudent, self).search(args=args, offset=offset,
-                                                  limit=limit, order=order,
-                                                  count=count)
+    result = fields.Char(_compute_='_calc_result', string='Result',
+                         method=True)

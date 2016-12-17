@@ -37,7 +37,7 @@ class TransferVehicle(models.TransientModel):
         return {'value': {'root_id': transport_obj.transport_id.id,
                           'old_vehicle_id': transport_obj.vehicle_id.id}}
 
-    @api.one
+    @api.multi
     def vehicle_transfer(self):
         stu_prt_obj = self.env['transport.participant']
         vehi_obj = self.env['transport.vehicle']

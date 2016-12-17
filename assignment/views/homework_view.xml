@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Tree View Of Teacher Assignment Information -->
 
@@ -60,26 +60,24 @@
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-	                    <separator string="Teacher Assignment" colspan="4"/>
-	                    <group col="4" colspan="4">
-	                        <field name="name" placeholder="Assignment Name"/>
-	                        <field name="teacher_id" placeholder="Teacher Name"/>
-	                    </group>
-	                    
-	                    <group col="2" string="Standard">
-	                        <field name="standard_id" select="1" placeholder="Standard"/>
-	                    </group>
-	                    <group col="4" string="Subject and Dates">
-	                        <field name="subject_id" select="1" placeholder="Subject"/>
-	                        <newline/>
-	                        <field name="assign_date" placeholder="Assign Date"/>
-	                        <field name="due_date" placeholder="Due Date"/>
-	                    </group>
-	                    <separator string="Attachements" colspan="4"/>
-	                    <group col="2">
-	                        <field name="attached_homework" placeholder="Attachement File"/>
-	                    </group>
-                    
+                    <separator string="Teacher Assignment" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <field name="name" placeholder="Assignment Name"/>
+                        <field name="teacher_id" placeholder="Teacher Name"/>
+                    </group>
+                    <group col="2" string="Standard">
+                        <field name="standard_id" select="1" placeholder="Standard"/>
+                    </group>
+                    <group col="4" string="Subject and Dates">
+                        <field name="subject_id" select="1" placeholder="Subject"/>
+                        <newline/>
+                        <field name="assign_date" placeholder="Assign Date"/>
+                        <field name="due_date" placeholder="Due Date"/>
+                    </group>
+                    <separator string="Attachements" colspan="4"/>
+                    <group col="2">
+                        <field name="attached_homework" placeholder="Attachement File"/>
+                    </group>
                     </sheet>
                 </form>
             </field>
@@ -228,5 +226,4 @@
                 action="action_school_teacher_assignment_form"
                 groups="school.group_school_administration,school.group_school_teacher"/>
 
-    </data>
 </odoo>

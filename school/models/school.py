@@ -344,7 +344,7 @@ class StudentStudent(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer('Age', compute='_calc_age', readonly=True)
+    age = fields.Integer('Age', _compute_='_calc_age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
@@ -537,7 +537,7 @@ class StudentGrn(models.Model):
                                 ('static', 'Static String')], 'Suffix')
     static_prefix = fields.Char('Static String for Prefix')
     static_postfix = fields.Char('Static String for Suffix')
-    grn_no = fields.Char('Generated GR No.', compute='_grn_no')
+    grn_no = fields.Char('Generated GR No.', _compute_='_grn_no')
 
 
 class MotherTongue(models.Model):
@@ -634,7 +634,7 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     _description = 'Teacher Information'
 
-    @api.one
+    @api.multi
     def _compute_subject(self):
         ''' This function will automatically computes the subjects related to\
             particular teacher.'''

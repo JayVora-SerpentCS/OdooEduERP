@@ -7,9 +7,8 @@ from odoo import models
 
 class HostelFeeReceipt(report_sxw.rml_parse):
 
-    def __init__(self, cr, uid, name, context):
-        super(HostelFeeReceipt, self).__init__(cr, uid, name,
-                                               context=context)
+    def __init__(self):
+        super(HostelFeeReceipt, self).__init__()
 
 
 class ReportAddExamResult(models.AbstractModel):

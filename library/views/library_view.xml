@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Library Author -->
 
@@ -1477,5 +1477,4 @@
             </field>
         </record>
 
-    </data>
 </odoo>

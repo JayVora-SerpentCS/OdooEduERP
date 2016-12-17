@@ -8,8 +8,8 @@ import odoo
 
 class ResultLabel(report_sxw.rml_parse):
 
-    def __init__(self, cr, uid, name, context=None):
-        super(ResultLabel, self).__init__(cr, uid, name, context=context)
+    def __init__(self):
+        super(ResultLabel, self).__init__()
         self.localcontext.update({'get_student_info': self.get_student_info})
 
     def get_student_info(self, standard_id, division_id, medium_id, year_id):
