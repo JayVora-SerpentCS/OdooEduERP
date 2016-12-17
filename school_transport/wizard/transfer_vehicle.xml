@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Transfer Vehicle -->
 
@@ -20,10 +20,10 @@
                     </group>
                     <separator colspan="4"/>
                     <footer>
-	                    <group>
-	                        <button  name="vehicle_transfer"  string="Transfer" class="fa fa-check" type="object" colspan="1"/>
-	                        <button special="cancel" string="Close" class="fa fa-ban" colspan="1"/>
-	                    </group>
+                        <group>
+                            <button  name="vehicle_transfer"  string="Transfer" class="fa fa-check" type="object" colspan="1"/>
+                           <button special="cancel" string="Close" class="fa fa-ban" colspan="1"/>
+                        </group>
                     </footer>
                     </form>
             </field>
@@ -41,5 +41,4 @@
             target="new" 
             view_type="form"/>
 
-    </data>
 </odoo>

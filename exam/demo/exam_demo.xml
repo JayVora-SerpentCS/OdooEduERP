@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
 
 <odoo>
     <data noupdate="1">
@@ -209,7 +210,7 @@
         <record id="additional_exam_result_0" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
-       	    <field eval="60.0" name="obtain_marks"/>
+            <field eval="60.0" name="obtain_marks"/>
         </record>
 
         <record id="additional_exam_result_1" model="additional.exam.result">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <template id="result_label_info">
             <t t-call="report.html_container">
@@ -104,5 +104,4 @@
             </t>
         </template>
 
-    </data>
 </odoo>

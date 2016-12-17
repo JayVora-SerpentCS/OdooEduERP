@@ -53,7 +53,7 @@ class PurchaseOrder(models.Model):
                                      'location_dest_id': dest,
                                      'picking_id': picking_id.id,
                                      'move_dest_id': order.location_id
-                                      and order.location_id.id,
+                                                    and order.location_id.id,
                                      'state': 'assigned',
                                      'prodlot_id': prodlot_id,
                                      'customer_ref': order_line.customer_ref,
@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
                     continue
                 l_id += 1
                 name = line.order_id and (str(line.order_id.name)
-                                          + '/Line' + str(l_id)) or False
+                                           + '/Line' + str(l_id)) or False
                 production_lot_dict = {'product_id': line.product_id.id,
                                        'name': name}
                 production_lot_id = production_obj.create(production_lot_dict)
@@ -84,6 +84,5 @@ class PurchaseOrder(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(PurchaseOrder, self).default_get(fields_list)
-        '''invoice_method field not availble in v10 this field is\
-         available in v8.'''
+        "invoice_method field not availble in v10 It is available in v8."
         return res

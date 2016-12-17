@@ -278,7 +278,7 @@ class TransportRegistration(models.Model):
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
         tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
-                       + relativedelta(months=+month)
+                      + relativedelta(months=+month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 

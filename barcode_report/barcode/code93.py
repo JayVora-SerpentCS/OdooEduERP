@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    from reportlab.lib.units import inch
-    from barcode_report.barcode.common import MultiWidthBarcode
-    import string
-except (ImportError, IOError) as err:
-    _logger.debug(err)
-    
+
+from reportlab.lib.units import inch
+from barcode_report.barcode.common import MultiWidthBarcode
+import string
+
 _patterns = {'0': ('AcAaAb', 0), '1': ('AaAbAc', 1), '2': ('AaAcAb', 2),
              '3': ('AaAdAa', 3), '4': ('AbAaAc', 4), '5': ('AbAbAb', 5),
              '6': ('AbAcAa', 6), '7': ('AaAaAd', 7), '8': ('AcAbAa', 8),

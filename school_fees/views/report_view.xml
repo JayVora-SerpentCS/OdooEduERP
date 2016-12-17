@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <report id="report_student_payslip_qweb"
                 string="Student Payslip"
@@ -17,5 +17,4 @@
                 file="school_fees.student_fees_register"
                 name="school_fees.student_fees_register" />
 
-    </data>
 </odoo>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Student Wizard -->
 
@@ -38,5 +38,4 @@
             res_model="exam.create.result" src_model="exam.exam"
             view_mode="form" target="new" view_type="form" />
 
-    </data>
 </odoo>

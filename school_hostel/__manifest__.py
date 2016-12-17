@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'HOSTEL',
- 'version': '1.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': "10.0.1.0.0",
+ 'author': "Serpent Consulting Services Pvt. Ltd., OpenERP SA,\
+    Odoo Community Association (OCA)",
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',
- 'license': '',
+ 'license': "AGPL-3",
  'complexity': 'easy',
  'summary': 'Module For HOSTEL Management In School',
  'depends': ['school'],

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-	<data>
-
         <!-- General Structure Of A WorkFlow XML File -->
 
         <record id="wkf_event" model="workflow">
@@ -61,6 +60,4 @@
             <field name="act_to" ref="act_done"/>
             <field name="signal">admission_done</field>
         </record>
-
-	</data>
 </odoo>

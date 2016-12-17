@@ -8,7 +8,7 @@ from odoo import models, api
 
 class Result(report_sxw.rml_parse):
 
-    @api.v7
+    @api.model
     def __init__(self, cr, uid, name, context=None):
         super(Result, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({'time': time,
@@ -16,7 +16,7 @@ class Result(report_sxw.rml_parse):
                                   'get_exam_data': self.get_exam_data,
                                   'get_grade': self.get_grade})
 
-    @api.v7
+    @api.model
     def get_grade(self, result_id, student):
         list_fail = []
         value = {}
@@ -25,7 +25,7 @@ class Result(report_sxw.rml_parse):
         list_fail.append(value)
         return list_fail
 
-    @api.v7
+    @api.model
     def get_lines(self, result_id, student):
         list_result = []
         for sub_id in result_id:
@@ -40,7 +40,7 @@ class Result(report_sxw.rml_parse):
                                     's_exam_ids': sub_id.s_exam_ids.name})
         return list_result
 
-    @api.v7
+    @api.model
     def get_exam_data(self, result_id, student):
         list_exam = []
         value = {}

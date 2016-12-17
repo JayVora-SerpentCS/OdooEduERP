@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
+from odoo import models, fields, api
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp.report.interface import report_rml
@@ -17,15 +18,16 @@ month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
 
 def lengthmonth(year, month):
     if ((month == 2)
-        and ((year % 4 == 0)
-             and ((year % 100 != 0)
-                  or (year % 400 == 0)))):
+          and ((year % 4 == 0)
+                 and ((year % 100 != 0)
+                        or (year % 400 == 0)))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
 
 class ReportCustom(report_rml):
 
+    @api.model
     def create_xml(self, cr, uid, ids, datas, context=None):
         env = odoo.api.Environment(cr, uid, context or {})
         obj_student = env['student.student']
@@ -39,7 +41,7 @@ class ReportCustom(report_rml):
                     '<year>%s</year>' % month.year]
         if stu_ids:
             for student in obj_student.browse(stu_ids).\
-            read(['name', 'standard_id']):
+                    read(['name', 'standard_id']):
                 days_xml = []
                 user_repr = '''
                 <user>
@@ -168,12 +170,12 @@ class ReportCustom(report_rml):
                               x - som.day + 1)
                              for x in range(som.day,
                                             lengthmonth(som.year, som.month)
-                                            + 1)]
+                                             + 1)]
             else:
                 date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                              (x, som.replace(day=x).strftime('%a'),
                               x - som.day + 1)
-                              for x in range(som.day, eom.day + 1)]
+                               for x in range(som.day, eom.day + 1)]
         cell = x - som.day + 1
         day_diff1 = day_diff.days - cell + 1
         width_dict = {}
@@ -254,4 +256,4 @@ class ReportCustom(report_rml):
 
 
 ReportCustom('report.attendance.by.month.student', 'student.student', '',
-              'addons/school_attendance/report/attendance_by_month.xsl')
+             'addons/school_attendance/report/attendance_by_month.xsl')

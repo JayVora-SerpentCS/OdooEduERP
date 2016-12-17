@@ -8,13 +8,13 @@ from odoo import models, api
 
 class TimeTable(report_sxw.rml_parse):
 
-    @api.v7
+    @api.multi
     def __init__(self, cr, uid, name, context=None):
         super(TimeTable, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({'time': time,
                                   'get_timetable': self._get_timetable})
 
-    @api.v7
+    @api.multi
     def _get_timetable(self, timetable_id):
         timetable_detail = []
         self.cr.execute("select t.start_time,t.end_time,s.name,week_day,r.name\
@@ -32,14 +32,14 @@ class TimeTable(report_sxw.rml_parse):
         for time_detail in time_data:
             for data in res:
                 if ((time_detail['start_time'] == data['start_time'])
-                    and (time_detail['end_time'] == data['end_time'])):
+                        and (time_detail['end_time'] == data['end_time'])):
                     if (data['name'] == 'Recess'):
                         time_detail[data['week_day']] = data['name']
                     else:
                         time_detail[data['week_day']] = data['name']\
-                                                        + '\n('\
-                                                        + data['teacher']\
-                                                        + ')'
+                                                          + '\n('\
+                                                          + data['teacher']\
+                                                          + ')'
             timetable_detail.append(time_detail)
         return timetable_detail
 

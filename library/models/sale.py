@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-try:
-    from mx import DateTime
-    from odoo import models, fields, api
-except (ImportError, IOError) as err:
-    _logger.debug(err)
+
+from mx import DateTime
+from odoo import models, fields, api
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -87,7 +86,8 @@ class SaleOrder(models.Model):
                 proc_id = False
                 date_planned = (DateTime.now()
                                 + DateTime.RelativeDateTime(days=line.delay or
-                                                            0.0)).strftime('%Y-%m-%d')
+                                                            0.0)
+                                ).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if (line.product_id
@@ -109,9 +109,9 @@ class SaleOrder(models.Model):
                                                        or 'none',
                                      'carrier_id': order.carrier_id.id,
                                      'picking_type_id': order.warehouse_id
-                                      and order.warehouse_id.out_type_id
-                                      and order.warehouse_id.out_type_id.id
-                                      or False}
+                                          and order.warehouse_id.out_type_id
+                                          and order.warehouse_id.out_type_id.id
+                                          or False}
                         picking_id = picking_obj.create(pick_dict)
                     mv_dict = {'name': 'SO:' + order.name or '',
                                'picking_id': picking_id.id,
@@ -122,8 +122,8 @@ class SaleOrder(models.Model):
                                'product_uom': line.product_uom.id,
                                'product_uos': line.product_uos.id,
                                'product_packaging': line.product_packaging.id,
-                               'address_id': line.address_allotment_id.id
-                               or order.partner_shipping_id.id,
+                               'address_id': line.address_allotment_id.id or
+                                                order.partner_shipping_id.id,
                                'location_id': location_id,
                                'location_dest_id': output_id,
                                'sale_line_id': line.id,
@@ -147,8 +147,8 @@ class SaleOrder(models.Model):
                     proc_id = procurment_obj.create(prc_dict)
                     proc_id.signal_workflow('button_confirm')
                     line.write({'procurement_id': proc_id.id})
-                elif (line.product_id
-                        and line.product_id.product_tmpl_id.type == 'service'):
+                elif (line.product_id and line.product_id.product_tmpl_id.type
+                            == 'service'):
                     location_id = order.warehouse_id.lot_stock_id.id
                     prc_dict = {'name': line.name,
                                 'origin': order.name,

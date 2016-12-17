@@ -69,8 +69,8 @@ class AcademicYear(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if (self.date_stop and self.date_start
-            and self.date_stop < self.date_start):
+        if (self.date_stop and self.date_start and
+                self.date_stop < self.date_start):
             raise UserError(_('Error! The duration of the academic year\
                              is invalid.'))
 
@@ -93,9 +93,8 @@ class AcademicMonth(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if (self.date_stop
-            and self.date_start
-            and self.date_stop < self.date_start):
+        if (self.date_stop and self.date_start and self.date_stop <
+                self.date_start):
             raise UserError(_('Error ! The duration of the Month(s)\
                              is/are invalid.'))
 
@@ -103,9 +102,9 @@ class AcademicMonth(models.Model):
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
             if (self.year_id.date_stop < self.date_stop
-                or self.year_id.date_stop < self.date_start
-                or self.year_id.date_start > self.date_start
-                or self.year_id.date_start > self.date_stop):
+                    or self.year_id.date_stop < self.date_start
+                    or self.year_id.date_start > self.date_start
+                    or self.year_id.date_start > self.date_stop):
                 raise UserError(_('Invalid Months ! Some months overlap or\
                                    the date period is not in the scope of the\
                                    academic year.'))
@@ -161,7 +160,7 @@ class SchoolStandard(models.Model):
     _description = 'School Standards'
     _rec_name = "school_id"
 
-    @api.one
+    @api.multi
     @api.depends('standard_id')
     def _compute_student(self):
         self.student_ids = False
@@ -200,8 +199,7 @@ class SchoolStandard(models.Model):
         res = []
         for standard in self:
             name = standard.standard_id.name\
-                   + "[" + standard.division_id.name\
-                   + "]"
+                   + "[" + standard.division_id.name + "]"
             res.append((standard.id, name))
         return res
 
@@ -286,7 +284,7 @@ class StudentStudent(models.Model):
     _description = 'Student Information'
     _inherits = {'res.users': 'user_id'}
 
-    @api.one
+    @api.multi
     @api.depends('date_of_birth')
     def _calc_age(self):
         self.age = 0
@@ -496,7 +494,7 @@ class StudentGrn(models.Model):
     _name = "student.grn"
     _rec_name = "grn_no"
 
-    @api.one
+    @api.multi
     def _grn_no(self):
         for stud_grn in self:
             grn_no1 = " "

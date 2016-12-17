@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-try:
-    from barcode_report.barcode.common import I2of5, MSI, Codabar, Code11
-    from barcode_report.barcode.code39 import Standard39, Extended39
-    from barcode_report.barcode.code93 import Standard93, Extended93
-    from barcode_report.barcode.code128 import Code128
-    from barcode_report.barcode.usps import FIM, POSTNET, inch
-    from reportlab.pdfgen.canvas import Canvas
-    from reportlab.lib.styles import getSampleStyleSheet
-    from reportlab.platypus import Paragraph, Frame
-    from reportlab.platypus.flowables import XBox
-except (ImportError, IOError) as err:
-    _logger.debug(err)
+from barcode_report.barcode.common import I2of5, MSI, Codabar, Code11
+from barcode_report.barcode.code39 import Standard39, Extended39
+from barcode_report.barcode.code93 import Standard93, Extended93
+from barcode_report.barcode.code128 import Code128
+from barcode_report.barcode.usps import FIM, POSTNET, inch
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, Frame
+from reportlab.platypus.flowables import XBox
 
 
 def run():

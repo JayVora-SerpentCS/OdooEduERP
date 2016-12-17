@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
 <odoo>
-    <data>
 
         <!-- Record Rule For Personal Fees Register -->
 
@@ -21,5 +23,4 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
 
-    </data>
 </odoo>

@@ -2,10 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'School BarCode',
- 'version': '1.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': "10.0.1.0.0",
+ 'author': "Serpent Consulting Services Pvt. Ltd., OpenERP SA,\
+    Odoo Community Association (OCA)",
  'category': 'School Management',
- 'license': '',
+ 'license': "AGPL-3",
  'summary': 'A Module For BarCode System For School',
  'depends': ['timetable', 'exam'],
  'data': ['views/result_report.xml',
