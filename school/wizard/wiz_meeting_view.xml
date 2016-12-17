@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Student Meeting Wizard  -->
 
@@ -41,5 +40,4 @@
             target="new"
             view_type="form"/>
 
-    </data>
 </odoo>

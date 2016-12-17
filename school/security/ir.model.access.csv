@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
 ,,,,,,,
 access_academic_year_admin,academic.year,model_academic_year,group_school_administration,1,1,1,1
 access_academic_month_admin,academic.month,model_academic_month,group_school_administration,1,1,1,1

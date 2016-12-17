@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Assign Roll Number Wizard Form View  -->
 
@@ -39,5 +38,4 @@
             target="new"
             view_type="form"/>
 
-    </data>
 </odoo>
