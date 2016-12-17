@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Inherited Form View Of Student Information -->
 
@@ -507,5 +507,4 @@
         <menuitem id="menu_event_sub_parameter" name="Event Parameter" parent="menu_event_parameter"
                   action="action_event_parameter"/>
 
-    </data>
 </odoo>
