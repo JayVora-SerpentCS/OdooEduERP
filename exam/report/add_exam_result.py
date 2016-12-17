@@ -9,14 +9,14 @@ import odoo
 
 class AddExamResult(report_sxw.rml_parse):
 
-    @api.v7
+    @api.model
     def __init__(self, cr, uid, name, context=None):
         super(AddExamResult, self).__init__(cr, uid, name, context=context)
         get_result_detail = self._get_result_detail
         self.localcontext.update({'time': time,
                                   'get_result_detail': get_result_detail})
 
-    @api.v7
+    @api.model
     def _get_result_detail(self, subject_ids, result):
         sub_list = []
         result_data = []

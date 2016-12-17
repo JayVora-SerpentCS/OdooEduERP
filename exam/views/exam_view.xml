@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Actions Of Form & Tree Views Of Student Result -->
 
@@ -608,5 +608,4 @@
             </field>
         </record>
 
-    </data>
 </odoo>
