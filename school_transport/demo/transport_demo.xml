@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
     <data noupdate="1">
@@ -91,7 +92,7 @@
             <field name="participant">1</field>
         </record>
 
-        <record id="transport_vehicle_3" model="transport.vehicle">
+        <record id="transport_vehicle_34" model="transport.vehicle">
             <field name="vehicle"> GJV-2 9666</field>
             <field name="driver_id" ref="hr_employee_driver_3"/>
             <field name="capacity">56</field>
@@ -107,7 +108,7 @@
         
         <!--student.transport-->
 
-        <record id="student_transport_1" model="student.transport">
+        <record id="student_transport_12" model="student.transport">
             <field name="name"> Transport Point-1 to Transport Point-4</field>
             <field name="start_date">2011-07-02 13:42:43</field>
             <field name="end_date">2012-07-02 13:42:43</field>
@@ -153,7 +154,7 @@
         <record id="transport_participant_1" model="transport.participant">
             <field name="name" ref="school.demo_student_student_1"/>
             <field name="stu_pid_id">2011/07/001</field>
-            <field name="transport_id" ref="student_transport_1"/>
+            <field name="transport_id" ref="student_transport_12"/>
             <field name="tr_reg_date">2011-07-05 13:42:43</field>
             <field name="tr_end_date">2011-09-05 13:42:43</field>
             <field name="point_id" ref="transport_point_1"/>
@@ -211,7 +212,7 @@
 
         <record id="student_transport_2" model="student.transport">
             <field name="trans_vehicle_ids" 
-                eval="[(6, 0,[ref('transport_vehicle_3'),
+                eval="[(6, 0,[ref('transport_vehicle_34'),
                 ref('transport_vehicle_4')])]" />
             <field name="trans_participants_ids" 
                 eval="[(6, 0,[ref('transport_participant_3'),
