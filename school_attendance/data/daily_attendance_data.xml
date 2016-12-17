@@ -1,7 +1,7 @@
 <?xml version="1.0"  encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <record id="ir_actions_server_attendance" model="ir.actions.server">
             <field eval="5" name="sequence"/>
@@ -21,5 +21,4 @@
             <field name="action" ref="ir_actions_server_attendance"/>
         </record>
 
-    </data>
 </odoo>
