@@ -195,8 +195,8 @@
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
                         <button name="%(action_school_student_assignment_form_btn)d" type="action" class="oe_inline oe_stat_button">
-                      		<img src="/assignment/static/description/Assign.png" style="height:25px;width:50px;float:left;"/>
-                      		<lable style = "">Assignment</lable>
+                        <img src="/assignment/static/description/Assign.png" style="height:25px;width:50px;float:left;"/>
+                        <lable style = "">Assignment</lable>
                         </button>
                     </xpath>
                 </data>

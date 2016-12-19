@@ -14,3 +14,4 @@
     (data, format) = netsvc.LocalService('report.transport.vehicle').create(cr, uid, [ref('school_transport.transport_vehicle_0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'school_transport-transport_vehicle.'+format), 'wb+').write(data)
+

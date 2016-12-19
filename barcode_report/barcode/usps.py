@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 #
-try:
-    from reportlab.lib.units import inch
-    from barcode_report.barcode.common import Barcode
-    import string
-except (ImportError, IOError) as err:
-    _logger.debug(err)
+
+from reportlab.lib.units import inch
+from barcode_report.barcode.common import Barcode
+import string
 
 _fim_patterns = {'A': "||  |  ||",
                  'B': "| || || |",

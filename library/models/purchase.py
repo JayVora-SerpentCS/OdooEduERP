@@ -84,5 +84,5 @@ class PurchaseOrder(models.Model):
     @api.model
     def default_get(self, fields_list):
         res = super(PurchaseOrder, self).default_get(fields_list)
-        "invoice_method field not availble in v10 It is available in v8."
+        ''' invoice_method field not availble in v10 It's available in v8 '''
         return res

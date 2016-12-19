@@ -99,7 +99,7 @@
             <field name="participant">1</field>
         </record>
 
-        <record id="transport_vehicle_4" model="transport.vehicle">
+        <record id="transport_vehicle_41" model="transport.vehicle">
             <field name="vehicle"> GJ-1 1906</field>
             <field name="driver_id" ref="hr_employee_driver_4"/>
             <field name="capacity">56</field>
@@ -213,7 +213,7 @@
         <record id="student_transport_2" model="student.transport">
             <field name="trans_vehicle_ids" 
                 eval="[(6, 0,[ref('transport_vehicle_34'),
-                ref('transport_vehicle_4')])]" />
+                ref('transport_vehicle_41')])]" />
             <field name="trans_participants_ids" 
                 eval="[(6, 0,[ref('transport_participant_3'),
                 ref('transport_participant_4')])]" />
