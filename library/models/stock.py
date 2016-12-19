@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
-from openerp import workflow
+from odoo import workflow
 
 
 class StockMove(models.Model):
@@ -10,11 +10,6 @@ class StockMove(models.Model):
 
     customer_ref = fields.Char('Customer reference')
     origin_ref = fields.Char('Origin')
-
-#    @api.multi
-#    def onchange_qty(self, product_qty):
-#        return {'value': {'product_uom_qty': self.product_uom_qty,
-#                          'product_qty': self.product_qty}}
 
     @api.multi
     def action_cancel(self):

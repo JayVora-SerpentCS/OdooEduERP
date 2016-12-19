@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
+from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
 
 
