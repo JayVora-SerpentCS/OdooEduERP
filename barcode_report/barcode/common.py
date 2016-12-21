@@ -248,8 +248,8 @@ class I2of5(Barcode):
         # make sure result will be a multiple of 2 digits long,
         # checksum included
 
-        if (((len(self.validated) % 2 == 0) and self.checksum)
-                or ((len(self.validated) % 2 == 1) and not self.checksum)):
+        if (((len(self.validated) % 2 == 0) and self.checksum) or 
+              ((len(self.validated) % 2 == 1) and not self.checksum)):
             s = '0' + s
 
         if self.checksum:
@@ -352,9 +352,8 @@ class MSI(Barcode):
                 self.rquiet = max(inch * 0.25, self.xdim * 10.0)
         else:
             self.lquiet = self.rquiet = 0.0
-
-        Barcode.__init__(self, value)
-
+            Barcode.__init__(self, value)
+            
     def validate(self):
         vval = ""
         self.valid = 1
