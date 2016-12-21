@@ -3,7 +3,7 @@
 
 
 from reportlab.lib.units import inch
-from barcode_report.barcode.common import MultiWidthBarcode
+from . import MultiWidthBarcode
 from . import string
 
 _patterns = {'0': ('AcAaAb', 0), '1': ('AaAbAc', 1), '2': ('AaAcAb', 2),

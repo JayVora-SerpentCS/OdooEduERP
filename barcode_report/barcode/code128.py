@@ -3,7 +3,7 @@
 
 
 from reportlab.lib.units import inch
-from barcode_report.barcode.common import MultiWidthBarcode
+from . import MultiWidthBarcode
 from string import digits
 
 

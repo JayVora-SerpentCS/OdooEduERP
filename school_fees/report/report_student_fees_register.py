@@ -10,8 +10,8 @@ from odoo.report import report_sxw
 class StudentFeesRegister(report_sxw.rml_parse):
 
     @api.multi
-    def __init__(self, cr, uid, name, context):
-        super(StudentFeesRegister, self).__init__(cr, uid, name, context)
+    def __init__(self):
+        super(StudentFeesRegister, self).__init__()
 
         self.localcontext.update({
             'time': time,

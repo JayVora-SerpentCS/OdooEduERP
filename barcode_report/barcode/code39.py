@@ -3,7 +3,7 @@
 
 
 from reportlab.lib.units import inch
-from barcode_report.barcode.common import Barcode
+from . import Barcode
 from . import string
 
 _patterns = {'0': ("bsbSBsBsb", 0), '1': ("BsbSbsbsB", 1),
