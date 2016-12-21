@@ -11,7 +11,7 @@
  'complexity': 'easy',
  'summary': 'A Module For Transport & Vehicle Management In School',
  'depends': ['hr', 'school'],
- 'demo': ['demo/transport_demo.xml'],
+ # 'demo': ['demo/transport_demo.xml'],
  'data': ['security/ir.model.access.csv',
           'views/transport_view.xml',
           'views/report_view.xml',
