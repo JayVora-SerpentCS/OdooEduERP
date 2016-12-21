@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from mx import DateTime
+from datetime import datetime
 from odoo import models, fields, api, _
 
 
@@ -84,8 +84,8 @@ class SaleOrder(models.Model):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = (DateTime.now()
-                                + DateTime.RelativeDateTime(days=line.delay or
+                date_planned = (datetime.now()
+                                + datetime.RelativeDateTime(days=line.delay or
                                                             0.0)
                                 ).strftime('%Y-%m-%d')
                 if line.state == 'done':

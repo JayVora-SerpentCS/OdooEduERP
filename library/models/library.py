@@ -277,8 +277,8 @@ class LibraryBookIssue(models.Model):
         @param uid : Current Logged in User
         @param ids : Current Records
         @param context : standard Dictionary
-        @return : True'''
-        self.state = 'draft'
+        @return : True '''
+        self.write({'state': 'draft'})
         return True
 
     @api.multi
