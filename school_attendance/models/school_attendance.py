@@ -43,6 +43,8 @@ class AttendanceSheet(models.Model):
                 view_id=view_id, view_type=view_type, toolbar=toolbar,
                 submenu=submenu)
         context = self._context
+        a=res['fields']['attendance_ids']['views']['tree']['fields']['three_1']
+        b = res['fields']['attendance_ids']['views']['tree']['fields']['two_0']
         if self._context is None:
             context = {}
         if self._context.get('month_id', False):
@@ -55,24 +57,18 @@ class AttendanceSheet(models.Model):
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['three_1'].update({'invisible': 1})
+                        a.update({'invisible': 1})
+                        a.update({'invisible': 1})
             elif no_of_days == 29:
 
                 if 'attendance_ids' in res['fields']:
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['two_0'].update({'invisible': 1})
+                        a.update({'invisible': 1})
+                        a.update({'invisible': 1})
+                        b.update({'invisible': 1})
+                        b.update({'invisible': 1})
 
             else:
 
@@ -80,18 +76,12 @@ class AttendanceSheet(models.Model):
                     att = res['fields']['attendance_ids']
 
                     if 'views' in att:
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['three_1'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['two_0'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['tree']
-                        ['fields']['two_9'].update({'invisible': 1})
-                        res['fields']['attendance_ids']['views']['form']
-                        ['fields']['two_9'].update({'invisible': 1})
+                        a.update({'invisible': 1})
+                        a.update({'invisible': 1})
+                        b.update({'invisible': 1})
+                        b.update({'invisible': 1})
+                        a.update({'invisible': 1})
+                        b.update({'invisible': 1})
         return res
 
 
