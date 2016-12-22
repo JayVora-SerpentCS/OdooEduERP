@@ -128,9 +128,10 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
+        t = "%Y-%m-%d %H:%M:%S"
+        rd = relativedelta(days=self.day_to_return_book.day or 0.0)
         if self.date_issue and self.day_to_return_book:
-            ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
-                      + relativedelta(days=self.day_to_return_book.day or 0.0)
+            ret_date = datetime.strptime(self.date_issue, t) + rd
             self.date_return = ret_date
 
     @api.multi
@@ -154,9 +155,8 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days) * 24 + (float
-                                                        (diff.seconds) /
-                                                         3600)
+                    sec =  float(diff.seconds) / 3600
+                    duration = float(diff.days) * 24 + sec
                     day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
@@ -207,8 +207,9 @@ class LibraryBookIssue(models.Model):
                     raise UserError(_('Book issue limit is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
-    issue_code = fields.Char('Issue No.', required=True, default=lambda self:
-                             self.env['ir.sequence'].get('library.book.issue')\
+    issue_code = fields.Char('Issue No.', required=True,
+                             default=lambda self: 
+                             self.env['ir.sequence'].get('library.book.issue')
                              or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
@@ -217,9 +218,9 @@ class LibraryBookIssue(models.Model):
     roll_no = fields.Integer('Roll No')
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
-                                  help="Release(Issue) date of the book",
-                                  default=lambda
-                                  *a: time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 help="Release(Issue) date of the book",
+                                 default=lambda
+                                 *a: time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(_compute_="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
