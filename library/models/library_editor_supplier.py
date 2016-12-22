@@ -34,7 +34,6 @@ class LibraryEditorSupplier(models.Model):
 #         self._cr.execute(select)
 #         if not self._cr.rowcount:
 #             raise UserError(_("Error ! No book to apply this relation"))
-# 
 #         sup_info = self.env['product.supplierinfo']
 #         last_id = 0
 #         for book_id in self._cr.fetchall():
@@ -46,7 +45,6 @@ class LibraryEditorSupplier(models.Model):
 #             tmp_id = sup_info.create(params)
 #             last_id = last_id < tmp_id.id and last_id or tmp_id.id
 #         return last_id
-# 
 #     @api.multi
 #     def write(self, vals):
 #         res = {}
@@ -56,12 +54,11 @@ class LibraryEditorSupplier(models.Model):
 #                         set delay = %s where name = %s"
 # 
 #         for rel, idn in zip(self, self.ids):
-#             # cannot change supplier here. Must create a new relation:
 #             original_supplier_id = rel.supplier_id.id
 # 
 #             if not original_supplier_id:
-#                 raise UserError(_('Warning ! Cannot set supplier in this form.'
-#                                 'Please create a new relation.'))
+#                 raise UserError(_('Warning ! Cannot set supplier in this form\
+#                                 Please create a new relation.'))
 #             new_supplier_id = vals.get('supplier_id', 0)
 #             check_supp = (idn < 0 or (original_supplier_id != new_supplier_id))
 #             supplier_change = new_supplier_id != 0 and check_supp

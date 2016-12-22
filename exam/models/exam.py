@@ -132,8 +132,8 @@ class AdditionalExam(models.Model):
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       readonly=True,
                                       default=lambda obj:
-                                        obj.env['ir.sequence'].\
-                                        next_by_code('additional.exam'))
+                                      obj.env['ir.sequence'].
+                                      next_by_code('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
@@ -212,9 +212,8 @@ class ExamResult(models.Model):
                         else:
                             flag = True
             else:
-                raise UserError(_('Configuration Error !\
-                                 First Select Grade System in'
-                                 'Student->year->.'))
+                raise UserError(_('Configuration Error ! First Select Grade\
+                                  System in Student->year->.'))
         if flag:
             self.result = 'Fail'
 
@@ -355,19 +354,19 @@ class ExamSubject(models.Model):
 
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
-        if (self.obtain_marks > self.maximum_marks
-            or self.minimum_marks > self.maximum_marks):
+        min_mark = self.minimum_marks > self.maximum_marks
+        if (self.obtain_marks > self.maximum_marks or min_mark):
             raise UserError(_('The obtained marks and minimum marks\
-                             should not extend maximum marks.'))
+                              should not extend maximum marks.'))
 
     @api.multi
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
-        if (self.exam_id and self.exam_id.student_id
-            and self.exam_id.student_id.year.grade_id.grade_ids):
-            for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if (self.obtain_marks >= grade_id.from_mark
-                    and self.obtain_marks <= grade_id.to_mark):
+        s_id = self.exam_id.student_id.year.grade_id.grade_ids
+        if (self.exam_id and self.exam_id.student_id and s_id):
+            for grade_id in s_id:
+                b_id = self.obtain_marks <= grade_id.to_mark
+                if (self.obtain_marks >= grade_id.from_mark and b_id):
                     self.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
@@ -412,9 +411,9 @@ class ExamResultBatchwise(models.Model):
                     fina_tot += student_ids.total
                 divi = fina_tot / count  # Total_obtained mark of all student
                 if year_ob.grade_id.grade_ids:
+                    divis = divi <= grade_id.to_mark
                     for grade_id in year_ob.grade_id.grade_ids:
-                        if (divi >= grade_id.from_mark
-                                and divi <= grade_id.to_mark):
+                        if (divi >= grade_id.from_mark and divis):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
@@ -430,8 +429,8 @@ class AdditionalExamResult(models.Model):
     @api.multi
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
-        if (self.a_exam_id and self.a_exam_id.subject_id
-                and self.a_exam_id.subject_id.minimum_marks):
+        min_m = self.a_exam_id.subject_id.minimum_marks
+        if (self.a_exam_id and self.a_exam_id.subject_id and min_m):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:

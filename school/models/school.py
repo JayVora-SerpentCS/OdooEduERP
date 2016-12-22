@@ -198,8 +198,8 @@ class SchoolStandard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name +\
-            "[" + standard.division_id.name + "]"
+            div_n = "[" + standard.division_id.name + "]"
+            name = standard.standard_id.name + div_n
             res.append((standard.id, name))
         return res
 

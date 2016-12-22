@@ -39,9 +39,10 @@ class AttendanceSheet(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False,
                         submenu=False):
-        res = super(AttendanceSheet, self).fields_view_get(
-                view_id=view_id, view_type=view_type, toolbar=toolbar,
-                submenu=submenu)
+        res = super(AttendanceSheet, self).fields_view_get(view_id=view_id,
+                                                           view_type=view_type,
+                                                           toolbar=toolbar,
+                                                           submenu=submenu)
         context = self._context
         a=res['fields']['attendance_ids']['views']['tree']['fields']['three_1']
         b = res['fields']['attendance_ids']['views']['tree']['fields']['two_0']
@@ -410,13 +411,12 @@ class DailyAttendance(models.Model):
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
                     or False
                 if not attendance_sheet_id:
-                    sheet = {'name': 'Month ' + month_data.name
-                                        + "-Year " + str(year),
+                    sheet = {'name': 'Month ' + month_data.name + "-Year " + 
+                             str(year),
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
-                             'year_id': year_ids and year_ids.id
-                                or False}
+                             'year_id': year_ids and year_ids.id or False}
                     attendance_sheet_id = attendance_sheet_obj.create(sheet)
                     for student_id in line.student_ids:
                         line_dict = {'roll_no': student_id.roll_no,
