@@ -202,8 +202,8 @@ class StudentTransports(models.Model):
                 prt_obj.write(prt_data.id, {'state': 'over'})
 
             if participants:
-                self.write(trans.id, {'trans_participants_ids': [(6, 0,
-                                                        participants)]},)
+                self.write(trans.id, {'trans_participants_ids': 
+                                      [(6, 0, participants)]},)
 
         for vehicle in vehi_obj.browse(vehi_ids):
             stu_ids = [stu_id.id for stu_id in vehicle.vehi_participants_ids]
@@ -274,8 +274,8 @@ class TransportRegistration(models.Model):
         if not month:
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
-        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
-                      + relativedelta(months=+month)
+        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')+\
+                      relativedelta(months=+month)
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
 
@@ -305,8 +305,8 @@ class TransportRegistration(models.Model):
             amount = reg_data.point_id.amount * reg_data.for_month
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
-            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')\
-                          + relativedelta(months=+month)
+            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d')+\
+                          relativedelta(months=+month)
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise UserError(_('For this much Months\
