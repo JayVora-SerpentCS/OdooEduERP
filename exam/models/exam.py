@@ -20,8 +20,11 @@ class ExtendedTimeTable(models.Model):
 
 
 class StudentStudent(models.Model):
-    _name = 'student.student'
+    _inherit = 'student.student'
     _description = 'Student Information'
+
+    exam_results_ids = fields.One2many('exam.result', 'student_id',
+                                       'Exam History', readonly=True)
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -33,13 +36,6 @@ class StudentStudent(models.Model):
         return super(StudentStudent, self).search(args=args, offset=offset,
                                                   limit=limit, order=order,
                                                   count=count)
-
-
-class ExtendedStudentStudent(models.Model):
-    _inherit = 'student.student'
-
-    exam_results_ids = fields.One2many('exam.result', 'student_id',
-                                       'Exam History', readonly=True)
 
 
 class ExtendedTimeTableLine(models.Model):
