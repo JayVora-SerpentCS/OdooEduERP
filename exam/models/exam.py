@@ -21,7 +21,6 @@ class ExtendedTimeTable(models.Model):
 
 class StudentStudent(models.Model):
     _name = 'student.student'
-    _inherit = 'student.student'
     _description = 'Student Information'
 
     @api.model
