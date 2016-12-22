@@ -101,10 +101,10 @@ class AcademicMonth(models.Model):
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
-            if (self.year_id.date_stop < self.date_stop
-                    or self.year_id.date_stop < self.date_start
-                    or self.year_id.date_start > self.date_start
-                    or self.year_id.date_start > self.date_stop):
+            if (self.year_id.date_stop < self.date_stop or
+                    self.year_id.date_stop < self.date_start or
+                    self.year_id.date_start > self.date_start or
+                    self.year_id.date_start > self.date_stop):
                 raise UserError(_('Invalid Months ! Some months overlap or\
                                    the date period is not in the scope of the\
                                    academic year.'))
@@ -198,8 +198,8 @@ class SchoolStandard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name\
-                   + "[" + standard.division_id.name + "]"
+            name = standard.standard_id.name +\
+            "[" + standard.division_id.name + "]"
             res.append((standard.id, name))
         return res
 

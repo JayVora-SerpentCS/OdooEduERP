@@ -49,11 +49,9 @@ class MoveStandards(models.TransientModel):
                         result_exists = result_obj.search(result_domain)
                         if result_exists:
                             result_data = result_obj.browse(result_exists.id)
+                            a = standards.standard_id.sequence
                             if result_data.result == "Pass":
-                                next_class_id = standard_obj.next_standard(
-                                                                standards.
-                                                                standard_id.
-                                                                sequence)
+                                next_class_id = standard_obj.next_standard(a)
                                 if next_class_id:
                                     student_id = student_obj.browse(student.id)
                                     d_one = {'year': data.academic_year_id.id,
