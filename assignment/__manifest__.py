@@ -6,7 +6,7 @@
  'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA,\
     Odoo Community Association (OCA)",
  'website': 'http://www.serpentcs.com',
-  'license': "AGPL-3",
+ 'license': "AGPL-3",
  'category': 'School Management',
  'summary': 'A Module For Assignment Management In School',
  'complexity': 'easy',
