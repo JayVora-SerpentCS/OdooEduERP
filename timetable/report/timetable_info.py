@@ -31,8 +31,8 @@ class TimeTable(report_sxw.rml_parse):
         time_data = self.cr.dictfetchall()
         for time_detail in time_data:
             for data in res:
-                if ((time_detail['start_time'] == data['start_time'])
-                        and (time_detail['end_time'] == data['end_time'])):
+                if ((time_detail['start_time'] == data['start_time']) and
+                        (time_detail['end_time'] == data['end_time'])):
                     if (data['name'] == 'Recess'):
                         time_detail[data['week_day']] = data['name']
                     else:
