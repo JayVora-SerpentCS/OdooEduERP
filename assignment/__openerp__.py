@@ -22,7 +22,7 @@
 
 {
     "name": "Assignment Management",
-    "version": "3.0",
+    "version": "10.0.3.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
     "category": "School Management",
