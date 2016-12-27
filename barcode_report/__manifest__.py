@@ -3,8 +3,7 @@
 
 {'name': 'School BarCode',
  'version': "10.0.1.0.0",
- 'author': "Serpent Consulting Services Pvt. Ltd., Odooo SA,\
-    Odoo Community Association (OCA)",
+ 'author': "Serpent Consulting Services Pvt. Ltd., Odooo SA",
  'category': 'School Management',
  'license': "AGPL-3",
  'summary': 'A Module For BarCode System For School',
