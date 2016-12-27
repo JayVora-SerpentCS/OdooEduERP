@@ -6,6 +6,7 @@ import odoo
 from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
+from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize,\
     image_resize_image_big
 from odoo.exceptions import except_orm, Warning as UserError
@@ -309,10 +310,11 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
-        image = image_colorize(open(odoo.modules.
-                                    get_module_resource('base',
-                                                        'static/src/img',
-                                                        'avatar.png')).read())
+        img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
+        image = None
+        with open(img_path, 'rb') as f:
+            image = f.read()
+        image = image_colorize(image)
         return image_resize_image_big(image.encode('base64'))
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
