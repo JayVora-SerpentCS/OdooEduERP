@@ -3,8 +3,7 @@
 
 {'name': 'Assignment Management',
  'version': "10.0.1.0.0",
- 'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA,\
-    Odoo Community Association (OCA)",
+ 'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA",
  'website': 'http://www.serpentcs.com',
  'license': "AGPL-3",
  'category': 'School Management',
@@ -15,4 +14,6 @@
  'demo': ['demo/assignment_demo.xml'],
  'test': ['test/assignment.yml'],
  'installable': True,
- 'application': True}
+ 'application': True,
+ 'auto_install' : False
+}
