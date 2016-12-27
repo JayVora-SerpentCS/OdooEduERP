@@ -27,11 +27,10 @@ class Many2manySym(fields.Many2many):
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         for (self._id2, self._id1) in [(self._id2, self._id1),
                                        (self._id1, self._id2)]:
-            self._cr.execute('select ' + self._id2 + ',' + self._id1
-                             + ' from ' + self._rel + ' where ' + self._id1
-                             + ' in ('
-                             + ids_s + ')' + limit_str + ' offset %s',
-                             (offset,))
+            self._cr.execute('select ' + self._id2 + ',' + self._id1 +
+                             ' from ' + self._rel + ' where ' + self._id1 +
+                             ' in (' + ids_s + ')' + limit_str +
+                             ' offset %s', (offset,))
             for r in self._cr.fetchall():
                 res[r[1]].append(r[0])
         return res
@@ -231,12 +230,12 @@ class ProductProduct(models.Model):
     isbn = fields.Char('ISBN Code', unique=True,
                        help="Shows International Standard Book Number")
     catalog_num = fields.Char('Catalog number',
-                       help="Shows Identification number of books")
+                              help="Shows Identification number of books")
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
-    code = fields.Char(compute="_product_code", method=True, string='Acronym',
-                       store=True)
+    code = fields.Char(_compute_="_product_code", method=True,
+                       string='Acronym', store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
     date_parution = fields.Date('Release date',
@@ -246,10 +245,9 @@ class ProductProduct(models.Model):
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Date('Return Date', readonly=True,
-                            help='Book Return date',
-                            default=lambda *a:
-                                str(int(time.strftime("%Y")))
-                                + time.strftime("-%m-%d"))
+                              help='Book Return date', default=lambda *a:
+                              str(int(time.strftime("%Y"))) + 
+                              time.strftime("-%m-%d"))
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')
@@ -264,8 +262,8 @@ class ProductProduct(models.Model):
                             'Binding Type', help="Shows books-binding type",
                             default='paper')
     collection = fields.Many2one('library.collection', 'Collection',
-                                 help='Show collection in which'
-                                      'book is resides')
+                                 help='Show collection in which\
+                                 book is resides')
     pocket = fields.Char('Pocket')
     num_pocket = fields.Char('Collection No.',
                              help='Shows collection number in which'
@@ -280,7 +278,8 @@ class ProductProduct(models.Model):
                                     'Book Attachments')
 
     _sql_constraints = [('unique_barcode', 'unique(barcode)',
-                         'barcode field must be unique across all the products'),
+                         'barcode field must be unique across\
+                          all the products'),
                         ('code_uniq', 'unique (code)',
                          'Code of the product must be unique !')]
 

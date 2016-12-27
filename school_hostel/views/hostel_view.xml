@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of HOSTEL Type -->
 
@@ -343,5 +343,4 @@
 
         <menuitem id="menu_bed_type" name="Bed Type" parent="menu_hostel" action="action_bed_type"/>
 
-    </data>
 </odoo>

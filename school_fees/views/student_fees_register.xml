@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <template id="student_fees_register">
             <t t-call="report.html_container">
@@ -113,5 +113,4 @@
             </t>
         </template>
 
-    </data>
 </odoo>

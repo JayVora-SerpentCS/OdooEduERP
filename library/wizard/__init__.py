@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import update_prices
-import update_book
-import book_issue_no
-import card_no
+from . import update_prices
+from . import update_book
+from . import book_issue_no
+from . import card_no

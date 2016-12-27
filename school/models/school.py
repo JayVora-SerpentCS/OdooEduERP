@@ -69,8 +69,8 @@ class AcademicYear(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if (self.date_stop and self.date_start
-                and self.date_stop < self.date_start):
+        if (self.date_stop and self.date_start and
+                self.date_stop < self.date_start):
             raise UserError(_('Error! The duration of the academic year\
                              is invalid.'))
 
@@ -93,19 +93,18 @@ class AcademicMonth(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
-        if (self.date_stop
-                and self.date_start
-                and self.date_stop < self.date_start):
+        if (self.date_stop and self.date_start and self.date_stop <
+                self.date_start):
             raise UserError(_('Error ! The duration of the Month(s)\
                              is/are invalid.'))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         if self.year_id and self.date_start and self.date_stop:
-            if (self.year_id.date_stop < self.date_stop
-                    or self.year_id.date_stop < self.date_start
-                    or self.year_id.date_start > self.date_start
-                    or self.year_id.date_start > self.date_stop):
+            if (self.year_id.date_stop < self.date_stop or
+                    self.year_id.date_stop < self.date_start or
+                    self.year_id.date_start > self.date_start or
+                    self.year_id.date_start > self.date_stop):
                 raise UserError(_('Invalid Months ! Some months overlap or\
                                    the date period is not in the scope of the\
                                    academic year.'))
@@ -161,7 +160,7 @@ class SchoolStandard(models.Model):
     _description = 'School Standards'
     _rec_name = "school_id"
 
-    @api.one
+    @api.multi
     @api.depends('standard_id')
     def _compute_student(self):
         self.student_ids = False
@@ -199,9 +198,8 @@ class SchoolStandard(models.Model):
     def name_get(self):
         res = []
         for standard in self:
-            name = standard.standard_id.name\
-                   + "[" + standard.division_id.name\
-                   + "]"
+            div_n = "[" + standard.division_id.name + "]"
+            name = standard.standard_id.name + div_n
             res.append((standard.id, name))
         return res
 
@@ -286,7 +284,7 @@ class StudentStudent(models.Model):
     _description = 'Student Information'
     _inherits = {'res.users': 'user_id'}
 
-    @api.one
+    @api.multi
     @api.depends('date_of_birth')
     def _calc_age(self):
         self.age = 0
@@ -346,7 +344,7 @@ class StudentStudent(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer('Age', compute='_calc_age', readonly=True)
+    age = fields.Integer('Age', _compute_='_calc_age', readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
@@ -496,7 +494,7 @@ class StudentGrn(models.Model):
     _name = "student.grn"
     _rec_name = "grn_no"
 
-    @api.one
+    @api.multi
     def _grn_no(self):
         for stud_grn in self:
             grn_no1 = " "
@@ -539,7 +537,7 @@ class StudentGrn(models.Model):
                                 ('static', 'Static String')], 'Suffix')
     static_prefix = fields.Char('Static String for Prefix')
     static_postfix = fields.Char('Static String for Suffix')
-    grn_no = fields.Char('Generated GR No.', compute='_grn_no')
+    grn_no = fields.Char('Generated GR No.', _compute_='_grn_no')
 
 
 class MotherTongue(models.Model):
@@ -636,7 +634,7 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
     _description = 'Teacher Information'
 
-    @api.one
+    @api.multi
     def _compute_subject(self):
         ''' This function will automatically computes the subjects related to\
             particular teacher.'''

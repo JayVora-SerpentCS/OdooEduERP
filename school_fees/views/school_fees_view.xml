@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Search View Of Student PaySlip Line Information -->
 
@@ -457,5 +457,4 @@
         <menuitem id="menu_student_payslip_line_form" name="Fees Head" parent="menu_student_fees_structure_form"
                   action="action_student_payslip_line_form" sequence="2"/>
 
-    </data>
 </odoo>

@@ -20,16 +20,16 @@ class TimeTable(models.Model):
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
     do_not_create = fields.Boolean('Do not Create')
 
-    @api.one
+    @api.multi
     @api.constrains('timetable_ids')
     def _check_lecture(self):
         domain = [('table_id', '=', self.ids)]
         line_ids = self.env['time.table.line'].search(domain)
         for rec in line_ids:
-            records = [rec_check.id for rec_check in line_ids\
-                           if (rec.week_day == rec_check.week_day\
-                                    and rec.start_time == rec_check.start_time
-                                    and rec.end_time == rec_check.end_time)]
+            records = [rec_check.id for rec_check in line_ids
+                       if (rec.week_day == rec_check.week_day and 
+                           rec.start_time == rec_check.start_time and 
+                           rec.end_time == rec_check.end_time)]
             if len(records) > 1:
                 raise UserError(_("You can Not set lecture at same time\
                                  at same day..!!!"))

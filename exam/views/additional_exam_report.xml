@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <template id="additional_exam_result_report">
             <t t-call="report.html_container">
@@ -130,5 +130,4 @@
             </t>
         </template>
 
-    </data>
 </odoo>

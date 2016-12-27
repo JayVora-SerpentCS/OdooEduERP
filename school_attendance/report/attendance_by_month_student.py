@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
+from odoo import models, fields, api
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-#from openerp import pooler
-from openerp.report.interface import report_rml
-from openerp.report.interface import toxml
-from openerp.report import report_sxw
-from openerp.tools import ustr
+from odoo.report.interface import report_rml
+from odoo.report.interface import toxml
+from odoo.report import report_sxw
+from odoo.tools import ustr
 import odoo
 
 one_day = relativedelta(days=1)
@@ -17,30 +17,26 @@ month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
 
 
 def lengthmonth(year, month):
-    if ((month == 2)
-            and ((year % 4 == 0)
-            and ((year % 100 != 0)
-            or (year % 400 == 0)))):
+    if ((month == 2) and ((year % 4 == 0) and ((year % 100 != 0) or 
+                                               (year % 400 == 0)))):
         return 29
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
 
 class ReportCustom(report_rml):
 
-    def create_xml(self, cr, uid, ids, datas, context=None):
-        env = odoo.api.Environment(cr, uid, context or {})
+    @api.multi
+    def create_xml(self, datas):
+        env = odoo.api.Environment({})
         obj_student = env['student.student']
         sheet_obj = env['attendance.sheet']
-        if context is None:
-            context = {}
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
-        # stu_ids = context.get('active_ids', [])
         stu_ids = datas['form']['stud_ids']
         user_xml = ['<month>%s</month>' % month2name[month.month],
                     '<year>%s</year>' % month.year]
         if stu_ids:
             for student in obj_student.browse(stu_ids).\
-            read(['name', 'standard_id']):
+                    read(['name', 'standard_id']):
                 days_xml = []
                 user_repr = '''
                 <user>
@@ -140,16 +136,15 @@ class ReportCustom(report_rml):
                 user_xml.append(user_repr % '\n'.join(days_xml))
 
         rpt_obj = env['student.student']
-        rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name, context)
+        rml_obj = report_sxw.rml_parse(rpt_obj._name)
+        cid = company_id.name
         header_xml = '''
         <header>
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True))
-                   + ' ' + str(time.strftime("%H:%M")),
-            env['res.users'].browse(uid).company_id.name)
-
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"), date=True)) +
+               ' ' + str(time.strftime("%H:%M")), env['res.users'].browse().cid)
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
         eom = som + timedelta(int(dy) - 1)
@@ -170,12 +165,12 @@ class ReportCustom(report_rml):
                               x - som.day + 1)
                              for x in range(som.day,
                                             lengthmonth(som.year, som.month)
-                                            + 1)]
+                                             + 1)]
             else:
                 date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
-                             (x, som.replace(day=x).strftime('%a'),
-                              x - som.day + 1)
-                             for x in range(som.day, eom.day + 1)]
+                            (x, som.replace(day=x).strftime('%a'),
+                            x - som.day + 1)
+                            for x in range(som.day, eom.day + 1)]
         cell = x - som.day + 1
         day_diff1 = day_diff.days - cell + 1
         width_dict = {}
@@ -190,15 +185,14 @@ class ReportCustom(report_rml):
         while day_diff1 > 0:
             if month + i <= 12:
                 if day_diff1 > lengthmonth(year, i + month):
-                # Not on 30 else you have problems when
-                # entering 01-01-2009 for example
+                    # Not on 30 else you have problems when
+                    # entering 01-01-2009 for example
                     som1 = datetime.date(year, month + i, 1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
-                                 (x, som1.replace(day=x).strftime('%a'),
-                                  cell + x)
-                                 for x in range(1,
-                                                lengthmonth(year, i + month)
-                                                + 1)]
+                                (x, som1.replace(day=x).strftime('%a'),
+                                cell + x) 
+                                for x in range(1,lengthmonth(year,
+                                                             i + month)+ 1)]
                     i = i + 1
                     j = j + 1
                     month_dict[j] = som1.strftime('%B')
@@ -254,5 +248,6 @@ class ReportCustom(report_rml):
               ''' % (header_xml, '\n'.join(user_xml), date_xml)
         return xml
 
+
 ReportCustom('report.attendance.by.month.student', 'student.student', '',
-              'addons/school_attendance/report/attendance_by_month.xsl')
+             'addons/school_attendance/report/attendance_by_month.xsl')

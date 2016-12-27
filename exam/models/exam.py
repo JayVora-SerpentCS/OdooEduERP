@@ -19,11 +19,23 @@ class ExtendedTimeTable(models.Model):
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 
-class ExtendedStudentStudent(models.Model):
+class StudentStudent(models.Model):
     _inherit = 'student.student'
+    _description = 'Student Information'
 
     exam_results_ids = fields.One2many('exam.result', 'student_id',
                                        'Exam History', readonly=True)
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        if self._context.get('exam'):
+            exam_obj = self.env['exam.exam']
+            exam_data = exam_obj.browse(self._context['exam'])
+            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            args.append(('class_id', 'in', std_ids))
+        return super(StudentStudent, self).search(args=args, offset=offset,
+                                                  limit=limit, order=order,
+                                                  count=count)
 
 
 class ExtendedTimeTableLine(models.Model):
@@ -116,7 +128,7 @@ class AdditionalExam(models.Model):
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       readonly=True,
                                       default=lambda obj:
-                                      obj.env['ir.sequence'].\
+                                      obj.env['ir.sequence'].
                                       next_by_code('additional.exam'))
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
@@ -144,7 +156,7 @@ class ExamResult(models.Model):
     _rec_name = 's_exam_ids'
     _description = 'exam result Information'
 
-    @api.one
+    @api.multi
     @api.depends('result_ids')
     def _compute_total(self):
         total = 0.0
@@ -183,7 +195,7 @@ class ExamResult(models.Model):
                 res[result.id] = {'percentage': per, 'grade': grd}
         return res
 
-    @api.one
+    @api.multi
     @api.depends('result_ids', 'student_id')
     def _compute_result(self):
         flag = False
@@ -196,9 +208,8 @@ class ExamResult(models.Model):
                         else:
                             flag = True
             else:
-                raise UserError(_('Configuration Error !\
-                                 First Select Grade System in'
-                                   'Student->year->.'))
+                raise UserError(_('Configuration Error ! First Select Grade\
+                                  System in Student->year->.'))
         if flag:
             self.result = 'Fail'
 
@@ -224,11 +235,11 @@ class ExamResult(models.Model):
                       readonly=True)
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
-    total = fields.Float(compute='_compute_total', string='Obtain Total',
+    total = fields.Float(_compute_='_compute_total', string='Obtain Total',
                          method=True, store=True)
     re_total = fields.Float('Re-access Obtain Total', readonly=True)
     percentage = fields.Float("Percentage", readonly=True)
-    result = fields.Char(compute='_compute_result', string='Result',
+    result = fields.Char(_compute_='_compute_result', string='Result',
                          readonly=True, method=True, store=True)
     grade = fields.Char("Grade", readonly=True)
     state = fields.Selection([('draft', 'Draft'),
@@ -266,7 +277,7 @@ class ExamResult(models.Model):
         total = 0.0
         per = 0.0
         grd = 0.0
-        sum = 0.0
+        add = 0.0
         for result in self.browse(self.ids):
             for sub_line in result.result_ids:
                 opt_marks.append(sub_line.obtain_marks)
@@ -275,15 +286,15 @@ class ExamResult(models.Model):
                 if acc_mark[i] != 0.0:
                     opt_marks[i] = acc_mark[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                add = add + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum / total) * 100
+                per = (add / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res.update({'grade': grd, 'percentage': per,
-                            'state': 're-access_confirm', 're_total': sum})
+                            'state': 're-access_confirm', 're_total': add})
             self.write(res)
         return True
 
@@ -292,7 +303,7 @@ class ExamResult(models.Model):
         res = {}
         opt_marks = []
         eve_marks = []
-        sum = 0.0
+        add = 0.0
         total = 0.0
         per = 0.0
         grd = 0.0
@@ -304,7 +315,7 @@ class ExamResult(models.Model):
                 if eve_marks[i] != 0.0:
                     opt_marks[i] = eve_marks[i]
             for i in range(0, len(opt_marks)):
-                sum = sum + opt_marks[i]
+                add = add + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
                 per = (sum / total) * 100
@@ -312,7 +323,7 @@ class ExamResult(models.Model):
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
                 res.update({'grade': grd, 'percentage': per,
-                            'state': 're-evaluation_confirm', 're_total': sum})
+                            'state': 're-evaluation_confirm', 're_total': add})
             self.write(res)
         return True
 
@@ -339,19 +350,19 @@ class ExamSubject(models.Model):
 
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
-        if (self.obtain_marks > self.maximum_marks
-                or self.minimum_marks > self.maximum_marks):
+        min_mark = self.minimum_marks > self.maximum_marks
+        if (self.obtain_marks > self.maximum_marks or min_mark):
             raise UserError(_('The obtained marks and minimum marks\
-                             should not extend maximum marks.'))
+                              should not extend maximum marks.'))
 
-    @api.one
+    @api.multi
     @api.depends('exam_id', 'obtain_marks')
     def _get_grade(self):
-        if (self.exam_id and self.exam_id.student_id
-                and self.exam_id.student_id.year.grade_id.grade_ids):
-            for grade_id in self.exam_id.student_id.year.grade_id.grade_ids:
-                if (self.obtain_marks >= grade_id.from_mark
-                        and self.obtain_marks <= grade_id.to_mark):
+        s_id = self.exam_id.student_id.year.grade_id.grade_ids
+        if (self.exam_id and self.exam_id.student_id and s_id):
+            for grade_id in s_id:
+                b_id = self.obtain_marks <= grade_id.to_mark
+                if (self.obtain_marks >= grade_id.from_mark and b_id):
                     self.grade = grade_id.grade
 
     exam_id = fields.Many2one('exam.result', 'Result')
@@ -369,7 +380,7 @@ class ExamSubject(models.Model):
     marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_id = fields.Many2one('grade.master', "Grade")
-    grade = fields.Char(compute='_get_grade', string='Grade', type="char")
+    grade = fields.Char(_compute_='_get_grade', string='Grade', type="char")
 
 
 class ExamResultBatchwise(models.Model):
@@ -377,7 +388,7 @@ class ExamResultBatchwise(models.Model):
     _rec_name = 'standard_id'
     _description = 'exam result Information by Batch wise'
 
-    @api.one
+    @api.multi
     @api.depends('standard_id', 'year')
     def compute_grade(self):
         fina_tot = 0
@@ -396,13 +407,13 @@ class ExamResultBatchwise(models.Model):
                     fina_tot += student_ids.total
                 divi = fina_tot / count  # Total_obtained mark of all student
                 if year_ob.grade_id.grade_ids:
+                    divis = divi <= grade_id.to_mark
                     for grade_id in year_ob.grade_id.grade_ids:
-                        if (divi >= grade_id.from_mark
-                                and divi <= grade_id.to_mark):
+                        if (divi >= grade_id.from_mark and divis):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
-    grade = fields.Char(compute='compute_grade', string='Grade', method=True,
+    grade = fields.Char(_compute_='compute_grade', string='Grade', method=True,
                         store=True)
 
 
@@ -411,11 +422,11 @@ class AdditionalExamResult(models.Model):
     _description = 'subject result Information'
     _rec_name = 'a_exam_id'
 
-    @api.one
+    @api.multi
     @api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
-        if (self.a_exam_id and self.a_exam_id.subject_id
-                and self.a_exam_id.subject_id.minimum_marks):
+        min_m = self.a_exam_id.subject_id.minimum_marks
+        if (self.a_exam_id and self.a_exam_id.subject_id and min_m):
             if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
                 self.result = 'Pass'
             else:
@@ -446,21 +457,5 @@ class AdditionalExamResult(models.Model):
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_calc_result', string='Result', method=True)
-
-
-class StudentStudent(models.Model):
-    _name = 'student.student'
-    _inherit = 'student.student'
-    _description = 'Student Information'
-
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        if self._context.get('exam'):
-            exam_obj = self.env['exam.exam']
-            exam_data = exam_obj.browse(self._context['exam'])
-            std_ids = [std_id.id for std_id in exam_data.standard_id]
-            args.append(('class_id', 'in', std_ids))
-        return super(StudentStudent, self).search(args=args, offset=offset,
-                                                  limit=limit, order=order,
-                                                  count=count)
+    result = fields.Char(_compute_='_calc_result', string='Result',
+                         method=True)

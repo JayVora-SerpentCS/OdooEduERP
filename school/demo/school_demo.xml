@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
     <data noupdate="1">
@@ -93,7 +94,7 @@
             <field name="sequence">1</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
             <field name="date_start">01/01/2011</field>
-            <field name="date_stop">12/31/2011</field>
+            <field name="date_stop">31/12/2011</field>
         </record>
 
         <record id="demo_academic_year_2" model="academic.year">
@@ -102,7 +103,7 @@
             <field name="sequence">2</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
             <field name="date_start">01/01/2012</field>
-            <field name="date_stop">12/31/2012</field>
+            <field name="date_stop">31/12/2012</field>
         </record>
 
         <record id="demo_academic_year_3" model="academic.year">
@@ -111,7 +112,7 @@
             <field name="sequence">3</field>
             <field name="grade_id" ref="demo_student_grade_1"/>
             <field name="date_start">01/01/2013</field>
-            <field name="date_stop">12/31/2013</field>
+            <field name="date_stop">31/12/2013</field>
         </record>
 
         <!-- Academic Month -->
@@ -121,7 +122,7 @@
             <field name="code">JAN</field>
             <field name="year_id" ref="school.demo_academic_year_1"/>
             <field name="date_start">01/01/2011</field>
-            <field name="date_stop">12/31/2011</field>
+            <field name="date_stop">31/12/2011</field>
         </record>
 
         <record id="demo_academic_month_3" model="academic.month">
@@ -129,7 +130,7 @@
             <field name="code">FEB</field>
             <field name="year_id" ref="school.demo_academic_year_1"/>
             <field name="date_start">02/01/2011</field>
-            <field name="date_stop">02/28/2011</field>
+            <field name="date_stop">28/02/2011</field>
         </record>
 
         <record id="demo_academic_month_4" model="academic.month">
@@ -137,7 +138,7 @@
             <field name="code">JAN</field>
             <field name="year_id" ref="school.demo_academic_year_2"/>
             <field name="date_start">01/01/2012</field>
-            <field name="date_stop">01/31/2012</field>
+            <field name="date_stop">31/01/2012</field>
         </record>
 
         <record id="demo_academic_month_2" model="academic.month">
@@ -145,7 +146,7 @@
             <field name="code">FEB</field>
             <field name="year_id" ref="school.demo_academic_year_2"/>
             <field name="date_start">02/01/2012</field>
-            <field name="date_stop">02/29/2012</field>
+            <field name="date_stop">29/02/2012</field>
         </record>
 
         <record id="demo_academic_month_5" model="academic.month">
@@ -153,7 +154,7 @@
             <field name="code">JAN</field>
             <field name="year_id" ref="school.demo_academic_year_3"/>
             <field name="date_start">01/01/2013</field>
-            <field name="date_stop">12/31/2013</field>
+            <field name="date_stop">31/12/2013</field>
         </record>
 
         <record id="demo_academic_month_6" model="academic.month">
@@ -161,7 +162,7 @@
             <field name="code">FEB</field>
             <field name="year_id" ref="school.demo_academic_year_3"/>
             <field name="date_start">02/01/2013</field>
-            <field name="date_stop">02/28/2013</field>
+            <field name="date_stop">28/02/2013</field>
         </record>
 
         <!--Standard Information-->

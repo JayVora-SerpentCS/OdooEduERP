@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Update Prices Wizard -->
 
@@ -14,8 +14,8 @@
                         Update prices for this category?
                     </p>
                     <footer>
-	                    <button type='object' class="fa fa-check" name='action_update_prices' string='Update Price'/>
-	                    <button special='cancel' class='fa fa-ban' string='Cancel'/>
+                        <button type='object' class="fa fa-check" name='action_update_prices' string='Update Price'/>
+                        <button special='cancel' class='fa fa-ban' string='Cancel'/>
                     </footer>
                 </form>
             </field>
@@ -31,5 +31,4 @@
             target="new"
             view_type="form"/>
 
-    </data>
 </odoo>

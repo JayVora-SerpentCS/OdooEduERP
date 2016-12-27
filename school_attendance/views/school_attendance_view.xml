@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- From View Of Attendance Sheet Information -->
 
@@ -250,5 +250,4 @@
         <menuitem id="menu_daily_attendances" name="Daily Attendance Sheets" parent="menu_attendance"
                   action="action_daily_attendance_form" />
 
-    </data>
 </odoo>

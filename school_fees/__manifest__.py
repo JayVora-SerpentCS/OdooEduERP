@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'Fees Management',
- 'version': '1.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': "10.0.1.0.0",
+ 'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA,\
+    Odoo Community Association (OCA)",
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
- 'license': '',
+ 'license': "AGPL-3",
  'complexity': 'easy',
  'summary': 'A Module For Fees Management In School',
  'depends': ['school', 'account_voucher'],

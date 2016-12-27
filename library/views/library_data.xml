@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
     <record id="intra_book" model="report.intrastat.code">
         <field name="name">49019900</field>
@@ -13,5 +13,4 @@
         <field name="description">Dictionnaire</field>
     </record>
 
-    </data>
 </odoo>

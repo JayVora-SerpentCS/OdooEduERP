@@ -65,10 +65,8 @@ class ProcurementOrder(models.Model):
             # for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
             product = prod_obj.browse(procurement.product_id.id)
-            taxes_ids = procurement.product_id.product_tmpl_id.\
-                        supplier_taxes_id
-            taxes = acc_pos_obj.map_tax(partner.property_account_position,
-                                        taxes_ids)
+            tax_id = procurement.product_id.product_tmpl_id.supplier_taxes_id
+            tax = acc_pos_obj.map_tax(partner.property_account_position,tax_id)
             date = schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             line_vals = {'name': product.partner_ref,
                          'product_qty': qty,
@@ -78,12 +76,11 @@ class ProcurementOrder(models.Model):
                          'date_planned': date,
                          'move_dest_id': res_id,
                          'notes': product.description_purchase,
-                         'taxes_id': [(6, 0, taxes)],
+                         'taxes_id': [(6, 0, tax)],
                          'production_lot_id': procurement.production_lot_id
-                             and procurement.production_lot_id.id or False,
+                          and procurement.production_lot_id.id or False,
                          'customer_ref': procurement.customer_ref}
-            name = seq_obj.next_by_code('purchase.order')\
-                    or _('PO: %s') % procurement.name
+            name = seq_obj.next_by_code('purchase.order') or _('PO: %s') % procurement.name
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             warehouse_id = warehouse_id and warehouse_id[0] or False
             po_vals = {'name': name,
@@ -96,11 +93,10 @@ class ProcurementOrder(models.Model):
                        'date_order': date,
                        'company_id': procurement.company_id.id,
                        'fiscal_position': partner.property_account_position
-                                    and partner.property_account_position.id
-                                    or False}
-            res[procurement.id] = self.create_procurement_purchase_order(
-                                        procurement, po_vals, line_vals,
-                                        context=context)
+                       and partner.property_account_position.id
+                       or False}
+            proc = procurement, po_vals, line_vals, context=context
+            res[procurement.id] = self.create_procurement_purchase_order(proc)
             self.write([procurement.id],
                        {'state': 'running',
                         'purchase_id': res[procurement.id]})

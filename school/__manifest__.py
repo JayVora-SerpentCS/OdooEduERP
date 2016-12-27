@@ -2,14 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {'name': 'School',
- 'version': '1.0',
- 'author': 'Serpent Consulting Services PVT. LTD.',
+ 'version': "10.0.1.0.0",
+ 'author': "Serpent Consulting Services Pvt. Ltd., OpenERP SA,\
+    Odoo Community Association (OCA)",
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
- 'license': '',
+ 'license': "AGPL-3",
  'complexity': 'easy',
  'Summary': 'A Module For School Management',
- 'depends': ['hr', 'mail', 'crm', 'report', 'board'],
+ 'depends': ['hr', 'crm', 'report', 'board'],
  'data': ['wizard/wiz_send_email_view.xml',
           'security/school_security.xml',
           'views/school_view.xml',

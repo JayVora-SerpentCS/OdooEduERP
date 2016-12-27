@@ -87,7 +87,7 @@ class LibraryCard(models.Model):
                'roll_no': student_data.roll_no}
         return {'value': val}
 
-    @api.one
+    @api.multi
     @api.depends('student_id')
     def get_name(self):
         for rec in self:
@@ -102,7 +102,7 @@ class LibraryCard(models.Model):
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
-    gt_name = fields.Char(compute="get_name", method=True, string='Name')
+    gt_name = fields.Char(_compute_="get_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
     roll_no = fields.Integer('Roll No')
@@ -115,7 +115,7 @@ class LibraryBookIssue(models.Model):
     _description = "Library information"
     _rec_name = "standard_id"
 
-    @api.one
+    @api.multi
     @api.depends('date_issue', 'day_to_return_book')
     def _calc_retunr_date(self):
         ''' This method calculate a book return date.
@@ -128,12 +128,13 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
+        t = "%Y-%m-%d %H:%M:%S"
+        rd = relativedelta(days=self.day_to_return_book.day or 0.0)
         if self.date_issue and self.day_to_return_book:
-            ret_date = datetime.strptime(self.date_issue, "%Y-%m-%d %H:%M:%S")\
-                       + relativedelta(days=self.day_to_return_book.day or 0.0)
+            ret_date = datetime.strptime(self.date_issue, t) + rd
             self.date_return = ret_date
 
-    @api.one
+    @api.multi
     @api.depends('date_return', 'day_to_return_book')
     def _calc_penalty(self):
         ''' This method calculate a penalty on book .
@@ -154,14 +155,13 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    duration = float(diff.days)\
-                               * 24\
-                               + (float(diff.seconds) / 3600)
+                    sec =  float(diff.seconds) / 3600
+                    duration = float(diff.days) * 24 + sec
                     day = duration / 24
                     if line.day_to_return_book:
                         line.penalty = day * line.day_to_return_book.fine_amt
 
-    @api.one
+    @api.multi
     @api.depends('state')
     def _calc_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
@@ -181,7 +181,7 @@ class LibraryBookIssue(models.Model):
                 fine = self.name.list_price
                 self.lost_penalty = fine
 
-    @api.one
+    @api.multi
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
         ''' This method used how many book can issue as per user type  .
@@ -207,8 +207,9 @@ class LibraryBookIssue(models.Model):
                     raise UserError(_('Book issue limit is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
-    issue_code = fields.Char('Issue No.', required=True, default=lambda self:
-                             self.env['ir.sequence'].get('library.book.issue')\
+    issue_code = fields.Char('Issue No.', required=True,
+                             default=lambda self: 
+                             self.env['ir.sequence'].get('library.book.issue')
                              or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
@@ -218,18 +219,18 @@ class LibraryBookIssue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=lambda *a:
-                                    time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_return = fields.Datetime(compute="_calc_retunr_date",
+                                 default=lambda
+                                 *a: time.strftime('%Y-%m-%d %H:%M:%S'))
+    date_return = fields.Datetime(_compute_="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
                                          help="Actual Return Date of Book")
-    penalty = fields.Float(compute="_calc_penalty",
+    penalty = fields.Float(_compute_="_calc_penalty",
                            string='Penalty', method=True,
                            help='It show the late book return penalty')
-    lost_penalty = fields.Float(compute="_calc_lost_penalty", string='Fine',
+    lost_penalty = fields.Float(_compute_="_calc_lost_penalty", string='Fine',
                                 method=True, store=True,
                                 help='It show the penalty for lost book')
     day_to_return_book = fields.Many2one('library.book.returnday',
@@ -270,15 +271,15 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def draft_book(self):
-#         '''method for WorkFlow'''
-#         ''' This method for books in draft state.
-#         @param self : Object Pointer
-#         @param cr : Database Cursor
-#         @param uid : Current Logged in User
-#         @param ids : Current Records
-#         @param context : standard Dictionary
-#         @return : True'''
-
+        '''
+        This method for books in draft state.
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param ids : Current Records
+        @param context : standard Dictionary
+        @return : True
+        '''
         self.write({'state': 'draft'})
         return True
 
@@ -313,7 +314,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'reissue'})
+        self.state = 'reissue'
         self.write({'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
@@ -346,7 +347,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'lost'})
+        self.state = 'lost'
         return True
 
     @api.multi
@@ -392,7 +393,7 @@ class LibraryBookIssue(models.Model):
                     raise UserError(_('Error !'
                                     'The Teacher must have a Home address.'))
                 addr = record.teacher_id.address_home_id\
-                        and record.teacher_id.address_home_id.id
+                    and record.teacher_id.address_home_id.id
             vals_invoice = {'partner_id': usr,
                             'address_invoice_id': addr,
                             'account_id': 12}
@@ -431,7 +432,7 @@ class LibraryBookRequest(models.Model):
     _name = "library.book.request"
     _rec_name = 'req_id'
 
-    @api.one
+    @api.multi
     @api.depends('type')
     def gt_bname(self):
         if self.type:
@@ -442,11 +443,11 @@ class LibraryBookRequest(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                         self.env['ir.sequence'].get('library.book.request')
-                         or '/')
+                            self.env['ir.sequence'].get('library.book.request')
+                            or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
     new1 = fields.Char('Book Name',)
-    bk_nm = fields.Char('Name', compute="gt_bname", method=True, store=True)
+    bk_nm = fields.Char('Name', _compute_="gt_bname", method=True, store=True)

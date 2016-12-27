@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Library Author -->
 
@@ -1245,8 +1245,7 @@
             <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
-                <field name="name" position="replace">
-                    <field name="name" domain="[('supplier','=',True)]"/></field>
+                <field name="name" domain="[('supplier','=',True)]"/>
             </field>
         </record>
 
@@ -1477,5 +1476,4 @@
             </field>
         </record>
 
-    </data>
 </odoo>

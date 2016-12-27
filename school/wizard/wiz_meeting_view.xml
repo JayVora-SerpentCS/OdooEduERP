@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Student Meeting Wizard  -->
 
@@ -9,23 +9,23 @@
             <field name="name">student.meeting.form</field>
             <field name="model">student.meeting</field>
             <field name="arch" type="xml">
-                <form string="Student Meeting">
-                    <header>
-                        <button name="set_meeting" string="Set Meeting" type="object"/>
-                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Cancel"/>
-                    </header>
-                    <sheet>
-                        <label for="name"/>
-                        <h1>
-                            <field name="name" placeholder="Enter Name"/>
-                        </h1>
-	                    <group col="4" colspan="4">
-	                        <field name="meeting_date" placeholder="Enter Meeting Start Time"/>
-	                        <field name="deadline" placeholder="Enter Deadline"/>
-	                        <field name="description" colspan="4" placeholder="Description"/>
-	                    </group>
-                    </sheet>
-               </form>
+            <form string="Student Meeting">
+                <header>
+                    <button name="set_meeting" string="Set Meeting" type="object"/>
+                    <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Cancel"/>
+                </header>
+                <sheet>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="Enter Name"/>
+                    </h1>
+                    <group col="4" colspan="4">
+                        <field name="meeting_date" placeholder="Enter Meeting Start Time"/>
+                        <field name="deadline" placeholder="Enter Deadline"/>
+                        <field name="description" colspan="4" placeholder="Description"/>
+                    </group>
+                </sheet>
+            </form>
             </field>
         </record>
 
@@ -40,5 +40,4 @@
             target="new"
             view_type="form"/>
 
-    </data>
 </odoo>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- General Structure Of A WorkFlow XML File -->
 
@@ -50,5 +50,4 @@
             <field name="signal">student_pay_fees</field>
         </record>
 
-    </data>
 </odoo>

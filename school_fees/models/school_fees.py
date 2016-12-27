@@ -196,7 +196,7 @@ class StudentPayslip(models.Model):
                                  states={'paid': [('readonly', True)]})
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
-                             ondelete='restrict',
+                              ondelete='restrict',
                               help='Link to the automatically'
                               'generated Journal Items.')
     payment_date = fields.Date('Payment Date', readonly=True,
@@ -240,7 +240,7 @@ class StudentPayslip(models.Model):
             journal = self.env['account.journal'].browse(journal_id)
             currency_id = journal and journal.currency_id and\
                 journal.currency_id.id\
-                            or journal.company_id.currency_id.id
+                or journal.company_id.currency_id.id
             result = {'value': {'currency_id': currency_id}}
         return result
 
@@ -252,8 +252,8 @@ class StudentPayslip(models.Model):
         for fees in self.browse(self.ids):
             if not fees.journal_id.sequence_id:
                 raise UserError(_('Please define sequence on'
-                                'the journal related to this'
-                                'invoice.'))
+                                  'the journal related to this'
+                                  'invoice.'))
             if fees.move_id:
                 continue
             ctx = self._context.copy()
@@ -264,17 +264,17 @@ class StudentPayslip(models.Model):
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = fees.currency_id and fees.currency_id.id\
-                                or company_currency
+                or company_currency
             account_id = False
             comapny_ac_id = False
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
                 comapny_ac_id = fees.company_id.partner_id.\
-                                property_account_receivable.id
+                                    property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
                 comapny_ac_id = fees.company_id.\
-                                partner_id.property_account_payable.id
+                                    partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
                 raise UserError(_('You cannot create an invoice on a'
                                   'centralized'

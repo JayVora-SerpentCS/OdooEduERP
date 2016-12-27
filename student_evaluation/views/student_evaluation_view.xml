@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Action Of Form & Tree Views Of Student Evaluation -->
 
@@ -258,5 +258,4 @@
 
         <menuitem id="menu_rating" name="Rating" parent="school.menu_configuration" action="action_student_rating"/>
 
-    </data>
 </odoo>

@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Inherited Form View Of Student Information -->
 
@@ -333,7 +333,7 @@
                             <field name="for_month" on_change="onchange_for_month(for_month)"/>
                             <field name="reg_date"/>
                             <field name="reg_end_date" context="{'for_month':for_month}"/>
-	                    </group>
+                        </group>
                    </sheet>
                 </form>
             </field>
@@ -493,5 +493,4 @@
                   action="action_transport_point"
                   sequence="3"/>
 
-    </data>
 </odoo>

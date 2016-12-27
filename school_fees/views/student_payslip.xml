@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <template id="student_payslip">
             <t t-call="report.html_container">
@@ -119,5 +119,4 @@
             </t>
         </template>
 
-    </data>
 </odoo>

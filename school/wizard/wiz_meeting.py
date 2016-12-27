@@ -32,9 +32,9 @@ class StudentMeeting(models.TransientModel):
         if flag:
             raise except_orm(_('Error !'),
                              _('Following Student'
-                               'does not have Email ID.\n\n'
-                               + error_student
-                               + '\nMeeting cannot be scheduled.'))
+                               'does not have Email ID.\n'
+                               '\n' + error_student +
+                               '\nMeeting cannot be scheduled.'))
         cal_event_obj.create({'name': cur_rec.name,
                               'start': cur_rec.meeting_date,
                               'stop': cur_rec.deadline,

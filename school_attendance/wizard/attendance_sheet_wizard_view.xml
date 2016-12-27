@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
 
 <odoo>
-    <data>
 
         <!-- Form View Of Monthly Attendance Sheet -->
 
@@ -51,5 +51,4 @@
         <menuitem id="menu_monthly_attendance_sheet_sub_form" parent="school_attendance.menu_attendance"
                   action="action_monthly_attendance_sheet" icon="STOCK_INDENT"/>
 
-    </data>
 </odoo>

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
+
 <odoo>
-    <data>
 
         <!-- Form View Of Time Table Information -->
 
@@ -109,5 +110,4 @@
 
         <menuitem id="menu_timetable_1" name="TimeTable" parent="school.menu_ems" action="action_time_table_form" sequence="9"/>
 
-    </data>
 </odoo>
