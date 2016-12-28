@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
 from odoo import models, fields, api, _
@@ -270,11 +270,11 @@ class StudentPayslip(models.Model):
             if fees.type in ('in_invoice', 'out_refund'):
                 account_id = fees.student_id.property_account_payable.id
                 comapny_ac_id = fees.company_id.partner_id.\
-                                    property_account_receivable.id
+                property_account_receivable.id
             elif fees.type in ('out_invoice', 'in_refund'):
                 account_id = fees.student_id.property_account_receivable.id
                 comapny_ac_id = fees.company_id.\
-                                    partner_id.property_account_payable.id
+                partner_id.property_account_payable.id
             if fees.journal_id.centralisation:
                 raise UserError(_('You cannot create an invoice on a'
                                   'centralized'
