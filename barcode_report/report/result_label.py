@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
-from odoo.report import report_sxw
 from odoo import models, api
 import odoo
 
 
 class ReportLabel(models.AbstractModel):
-    
+
     _name = 'report.barcode_report.result_label'
 
     def __init__(self):
@@ -25,7 +24,7 @@ class ReportLabel(models.AbstractModel):
         for student in student_ids:
             result.append(student.pid)
         return result
-    
+
     @api.model
     def render_html(self, docids, data=None):
         self.model = self.env.context.get('active_model')
@@ -36,7 +35,8 @@ class ReportLabel(models.AbstractModel):
         medium_id = data.get('medium_id')
         year_id = data.get('year_id')
         rm_act = self.with_context(data['form'].get('used_context', {}))
-        get_student_info = rm_act.get_student_info(standard_id, division_id, medium_id, year_id)
+        get_student_info = rm_act.get_student_info(standard_id, division_id,
+                                                   medium_id, year_id)
         docargs = {
             'doc_ids': docids,
             'doc_model': self.model,
@@ -56,4 +56,3 @@ class ReportLabel(models.AbstractModel):
         docargs['data'].update({'year_id': year_id})
         render_model = 'barcode_report.result_label'
         return self.env['report'].render(render_model, docargs)
-

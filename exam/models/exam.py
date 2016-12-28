@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
@@ -413,6 +413,7 @@ class ExamResultBatchwise(models.Model):
                             self.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
+    grade_id = fields.Many2one('grade.master', "Grade")
     grade = fields.Char(_compute_='compute_grade', string='Grade', method=True,
                         store=True)
 

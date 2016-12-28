@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
 from dateutil import parser
@@ -39,7 +39,8 @@ class ReportLabelInfo(models.AbstractModel):
         medium_id = data.get('medium_id')
         year_id = data.get('year_id')
         rm_act = self.with_context(data['form'].get('used_context', {}))
-        get_student_info = rm_act.get_student_info(standard_id, division_id, medium_id, year_id)
+        get_student_info = rm_act.get_student_info(standard_id, division_id,
+                                                   medium_id, year_id)
         docargs = {
             'doc_ids': docids,
             'doc_model': self.model,

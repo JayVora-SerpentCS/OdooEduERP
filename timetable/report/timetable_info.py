@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
-from odoo.report import report_sxw
 from odoo import models, api
 
 
@@ -23,11 +22,11 @@ class TimeTable(report_sxw.rml_parse):
                          t.subject_id= s.id and t.teacher_id= hr.id\
                          and hr.resource_id = r.id  and table_id = %d\
                          group by start_time,end_time,s.name,week_day,r.name\
-                         order by start_time" %(timetable_id.id))
+                         order by start_time" % (timetable_id.id))
         res = self.cr.dictfetchall()
         self.cr.execute("select start_time,end_time from time_table_line\
                          where table_id=%d group by start_time,end_time\
-                         order by start_time" %(timetable_id.id))
+                         order by start_time" % (timetable_id.id))
         time_data = self.cr.dictfetchall()
         for time_detail in time_data:
             for data in res:

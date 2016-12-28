@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
 from odoo.tools.translate import _
@@ -66,7 +66,8 @@ class ProcurementOrder(models.Model):
             context.update({'lang': partner.lang, 'partner_id': partner_id})
             product = prod_obj.browse(procurement.product_id.id)
             tax_id = procurement.product_id.product_tmpl_id.supplier_taxes_id
-            tax = acc_pos_obj.map_tax(partner.property_account_position,tax_id)
+            tax = acc_pos_obj.map_tax(partner.property_account_position,
+                                      tax_id)
             date = schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             line_vals = {'name': product.partner_ref,
                          'product_qty': qty,
@@ -78,7 +79,7 @@ class ProcurementOrder(models.Model):
                          'notes': product.description_purchase,
                          'taxes_id': [(6, 0, tax)],
                          'production_lot_id': procurement.production_lot_id
-                          and procurement.production_lot_id.id or False,
+                         and procurement.production_lot_id.id or False,
                          'customer_ref': procurement.customer_ref}
             name = seq_obj.next_by_code('purchase.order') or _('PO: %s') % procurement.name
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -93,8 +94,7 @@ class ProcurementOrder(models.Model):
                        'date_order': date,
                        'company_id': procurement.company_id.id,
                        'fiscal_position': partner.property_account_position
-                       and partner.property_account_position.id
-                       or False}
+                       and partner.property_account_position.id or False}
             proc = procurement, po_vals, line_vals, context=context
             res[procurement.id] = self.create_procurement_purchase_order(proc)
             self.write([procurement.id],

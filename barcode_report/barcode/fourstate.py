@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 _rm_patterns = {"0": "--||", "1": "-',|", "2": "-'|,", "3": "'-,|",
                 "4": "'-|,", "5": "'',,", "6": "-,'|", "7": "-|-|",
