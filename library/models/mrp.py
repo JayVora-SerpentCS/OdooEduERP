@@ -78,10 +78,12 @@ class ProcurementOrder(models.Model):
                          'move_dest_id': res_id,
                          'notes': product.description_purchase,
                          'taxes_id': [(6, 0, tax)],
-                         'production_lot_id': procurement.production_lot_id
-                         and procurement.production_lot_id.id or False,
+                         'production_lot_id':\
+                          procurement.production_lot_id
+                          and procurement.production_lot_id.id or False,
                          'customer_ref': procurement.customer_ref}
-            name = seq_obj.next_by_code('purchase.order') or _('PO: %s') % procurement.name
+            name = seq_obj.next_by_code('purchase.order') or _('PO: %s') %\
+            procurement.name
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             warehouse_id = warehouse_id and warehouse_id[0] or False
             po_vals = {'name': name,
@@ -95,7 +97,7 @@ class ProcurementOrder(models.Model):
                        'company_id': procurement.company_id.id,
                        'fiscal_position': partner.property_account_position
                        and partner.property_account_position.id or False}
-            proc = procurement, po_vals, line_vals, context=context
+            proc = procurement, po_vals, line_vals
             res[procurement.id] = self.create_procurement_purchase_order(proc)
             self.write([procurement.id],
                        {'state': 'running',

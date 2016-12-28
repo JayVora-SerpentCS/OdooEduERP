@@ -5,19 +5,12 @@ import time
 import qrcode
 import base64
 import tempfile
-from odoo.report import report_sxw
 from odoo import models, api
 
 
-class QrCodeLabel(report_sxw.rml_parse):
+class ReportQrcodeLable(models.AbstractModel):
 
-    @api.multi
-    def __init__(self):
-        super(QrCodeLabel, self).__init__()
-        self.localcontext.update({
-            'time': time,
-            'get_qr_code': self.get_qr_code,
-        })
+    _name = 'report.library.qrcode_label'
 
     @api.multi
     def get_qr_code(self, number):
@@ -26,10 +19,22 @@ class QrCodeLabel(report_sxw.rml_parse):
         qr_img.save(filename)
         return base64.encodestring(file(filename, 'rb').read())
 
+    @api.model
+    def render_html(self, docids, data=None):
+        self.model = self.env.context.get('active_model')
 
-class ReportQrcodeLable(models.AbstractModel):
-
-    _name = 'report.library.qrcode_label'
-    _inherit = 'report.abstract_report'
-    _template = 'library.qrcode_label'
-    _wrapped_report_class = QrCodeLabel
+        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+                                                                []))
+        number = data['form'].get('number')[0]
+        get_student = self.with_context(data['form'].get('used_context', {}))
+        get_qr_code = get_student.get_qr_code(number)
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': self.model,
+            'data': data['form'],
+            'docs': docs,
+            'time': time,
+            'get_qr_code': get_qr_code,
+        }
+        render_model = 'library.qrcode_label'
+        return self.env['report'].render(render_model, docargs)
