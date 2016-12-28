@@ -4,21 +4,10 @@
 import time
 from datetime import datetime
 from odoo import models, api
-from odoo.report import report_sxw
 
 
-class StudentFeesRegister(report_sxw.rml_parse):
-
-    @api.multi
-    def __init__(self):
-        super(StudentFeesRegister, self).__init__()
-
-        self.localcontext.update({
-            'time': time,
-            'get_month': self.get_month,
-            'get_no': self.get_no,
-        })
-        self.no = 0
+class ReportStudentFeesRegister(models.AbstractModel):
+    _name = 'report.school_fees.student_fees_register'
 
     @api.multi
     def get_no(self):
@@ -31,9 +20,24 @@ class StudentFeesRegister(report_sxw.rml_parse):
         out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
         return out_date
 
+    @api.model
+    def render_html(self, docids, data=None):
+        self.model = self.env.context.get('active_model')
 
-class ReportStudentFeesRegister(models.AbstractModel):
-    _name = 'report.school_fees.student_fees_register'
-    _inherit = 'report.abstract_report'
-    _template = 'school_fees.student_fees_register'
-    _wrapped_report_class = StudentFeesRegister
+        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+                                                                []))
+        indate = data['form'].get('indate')
+        get_student = self.with_context(data['form'].get('used_context', {}))
+        get_no = get_student.get_no()
+        get_month = get_student.get_month(indate)
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': self.model,
+            'data': data['form'],
+            'docs': docs,
+            'time': time,
+            'get_no': get_no,
+            'get_month': get_month,
+        }
+        render_model = 'school_fees.student_fees_register'
+        return self.env['report'].render(render_model, docargs)
