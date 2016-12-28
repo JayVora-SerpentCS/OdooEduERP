@@ -16,7 +16,7 @@ class ReportLabelInfo(models.AbstractModel):
         self.with_context.update({'get_student_all_info': get_stud_info})
 
     def get_student_info(self, standard_id, division_id, medium_id, year_id):
-        student_obj = self.pool.get('student.student')
+        student_obj = self.env['student.student']
         student_ids = student_obj.search([('standard_id', '=', standard_id),
                                           ('division_id', '=', division_id),
                                           ('medium_id', '=', medium_id),
