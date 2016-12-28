@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
 
@@ -53,7 +53,7 @@ class PurchaseOrder(models.Model):
                                      'location_dest_id': dest,
                                      'picking_id': picking_id.id,
                                      'move_dest_id': order.location_id and
-                                                     order.location_id.id,
+                                     order.location_id.id,
                                      'state': 'assigned',
                                      'prodlot_id': prodlot_id,
                                      'customer_ref': order_line.customer_ref,
