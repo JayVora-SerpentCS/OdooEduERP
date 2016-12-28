@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-import time
-from odoo.report import report_sxw
 from odoo import models, api
 
 
-class Result(report_sxw.rml_parse):
-
-    @api.model
-    def __init__(self):
-        super(Result, self).__init__()
-        self.localcontext.update({'time': time,
-                                  'get_lines': self.get_lines,
-                                  'get_exam_data': self.get_exam_data,
-                                  'get_grade': self.get_grade})
+class ReportResultInfo(models.AbstractModel):
+    _name = 'report.exam.result_information_report'
 
     @api.model
     def get_grade(self, result_id, student):
@@ -57,10 +48,29 @@ class Result(report_sxw.rml_parse):
                           'total': final_total})
         list_exam.append(value)
         return list_exam
+    
+    @api.model
+    def render_html(self, docids, data=None):
+        self.model = self.env.context.get('active_model')
 
-
-class ReportResultInfo(models.AbstractModel):
-    _name = 'report.exam.result_information_report'
-    _inherit = 'report.abstract_report'
-    _template = 'exam.result_information_report'
-    _wrapped_report_class = Result
+        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+                                                                []))
+        result_id = data['form'].get('result_id')[0]
+        student = data['form'].get('student')
+        get_grades = self.with_context(data['form'].get('used_context', {}))
+        get_grade = get_grades.get_grade(result_id, student)
+        get_lines = get_grades.get_lines(result_id, student)
+        get_exam_data = get_grades.get_exam_data(result_id, student)
+        
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': self.model,
+            'data': data['form'],
+            'docs': docs,
+            'time': time,
+            'get_grade': get_grade,
+            'get_lines': get_lines,
+            'get_exam_data': get_exam_data
+        }
+        render_model = 'exam.result_information_report'
+        return self.env['report'].render(render_model, docargs)
