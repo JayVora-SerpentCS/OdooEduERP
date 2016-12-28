@@ -2,6 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 
+import time
 from odoo import api, fields, models
 
 
@@ -28,12 +29,11 @@ class ReportLabel(models.AbstractModel):
         docs = self.env[self.model].browse(self.env.context.get('active_ids',
                                                                 []))
         standard_id = data['form'].get('standard_id')[0]
-        division_id = data['form'].get('division_id')[0]
-        medium_id = data['form'].get('medium_id')[0]
         year_id = data['form'].get('year_id')[0]
         get_student = self.with_context(data['form'].get('used_context', {}))
         get_student_info = get_student.get_student_info(standard_id,
-                                                        division_id, medium_id,
+                                                        standard_id.div_id,
+                                                        standard_id.medium_id,
                                                         year_id)
         docargs = {
             'doc_ids': docids,
