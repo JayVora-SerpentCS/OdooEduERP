@@ -5,13 +5,8 @@ import time
 from odoo import models, api
 
 
-class TimeTable(report_sxw.rml_parse):
-
-    @api.multi
-    def __init__(self):
-        super(TimeTable, self).__init__()
-        self.localcontext.update({'time': time,
-                                  'get_timetable': self._get_timetable})
+class ReportTimetableInfo(models.AbstractModel):
+    _name = 'report.timetable.timetable'
 
     @api.multi
     def _get_timetable(self, timetable_id):
@@ -40,9 +35,22 @@ class TimeTable(report_sxw.rml_parse):
             timetable_detail.append(time_detail)
         return timetable_detail
 
+    @api.model
+    def render_html(self, docids, data=None):
+        self.model = self.env.context.get('active_model')
 
-class ReportTimetableInfo(models.AbstractModel):
-    _name = 'report.timetable.timetable'
-    _inherit = 'report.abstract_report'
-    _template = 'timetable.timetable'
-    _wrapped_report_class = TimeTable
+        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+                                                                []))
+        timetable_id = data['form'].get('timetable_id')[0]
+        get_student = self.with_context(data['form'].get('used_context', {}))
+        _get_timetable = get_student._get_timetable(timetable_id)
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': self.model,
+            'data': data['form'],
+            'docs': docs,
+            'time': time,
+            '_get_timetable': _get_timetable,
+        }
+        render_model = 'timetable.timetable'
+        return self.env['report'].render(render_model, docargs)
