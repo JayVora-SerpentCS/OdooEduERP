@@ -155,7 +155,7 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    sec =  float(diff.seconds) / 3600
+                    sec = float(diff.seconds) / 3600
                     duration = float(diff.days) * 24 + sec
                     day = duration / 24
                     if line.day_to_return_book:

@@ -190,8 +190,8 @@ class ReportCustom(report_rml):
                     som1 = datetime.date(year, month + i, 1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                                 (x, som1.replace(day=x).strftime('%a'),
-                                 cell + x) for x in range(1,lengthmonth\
-                                                          (year, i + month)+
+                                 cell + x) for x in range(1, lengthmonth
+                                                          (year, i + month) +
                                                            1)]
                     i = i + 1
                     j = j + 1

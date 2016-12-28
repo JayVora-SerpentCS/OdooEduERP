@@ -3,17 +3,11 @@
 
 
 from odoo import api, fields, models
-from dateutil import parser
 
 
 class ReportLabel(models.AbstractModel):
 
     _name = 'report.barcode_report.result_label'
-
-    def __init__(self):
-        super(ResultLabel, self).__init__()
-        get_stud_info = self.get_student_info
-        self.with_context.update({'get_student_all_info': get_stud_info})
 
     def get_student_info(self, standard_id, division_id, medium_id, year_id):
         student_obj = self.env['student.student']

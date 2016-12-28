@@ -44,7 +44,8 @@ class AttendanceSheet(models.Model):
                                                            toolbar=toolbar,
                                                            submenu=submenu)
         context = self._context
-        a = res['fields']['attendance_ids']['views']['tree']['fields']['three_1']
+        a = res['fields']['attendance_ids']['views']['tree']['fields']\
+         ['three_1']
         b = res['fields']['attendance_ids']['views']['tree']['fields']['two_0']
         if self._context is None:
             context = {}
