@@ -48,7 +48,7 @@ class ReportResultInfo(models.AbstractModel):
                           'total': final_total})
         list_exam.append(value)
         return list_exam
-    
+
     @api.model
     def render_html(self, docids, data=None):
         self.model = self.env.context.get('active_model')
@@ -61,13 +61,11 @@ class ReportResultInfo(models.AbstractModel):
         get_grade = get_grades.get_grade(result_id, student)
         get_lines = get_grades.get_lines(result_id, student)
         get_exam_data = get_grades.get_exam_data(result_id, student)
-        
         docargs = {
             'doc_ids': docids,
             'doc_model': self.model,
             'data': data['form'],
             'docs': docs,
-            'time': time,
             'get_grade': get_grade,
             'get_lines': get_lines,
             'get_exam_data': get_exam_data
