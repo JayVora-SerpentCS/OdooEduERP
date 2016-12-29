@@ -10,7 +10,6 @@
  'summary': 'A Module For Library Management For School',
  'complexity': 'easy',
  'depends': ['report_intrastat', 'mrp', 'delivery', 'school'],
- 'demo': ['demo/library_demo.xml'],
  'data': ['security/library_security.xml',
           'security/ir.model.access.csv',
           'views/report_view.xml',

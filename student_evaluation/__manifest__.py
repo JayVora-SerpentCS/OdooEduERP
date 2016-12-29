@@ -11,6 +11,5 @@
  'summary': 'A Module For Evaluation Management In School',
  'depends': ['hr', 'school'],
  'data': ['views/student_evaluation_view.xml', 'security/ir.model.access.csv'],
- 'demo': ['demo/student_evaluation_demo.xml'],
  'installable': True,
  'application': True}
