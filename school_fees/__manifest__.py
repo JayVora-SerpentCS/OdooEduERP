@@ -10,7 +10,6 @@
  'complexity': 'easy',
  'summary': 'A Module For Fees Management In School',
  'depends': ['school', 'account_voucher'],
- 'demo': ['demo/school_fees_demo.xml'],
  'data': ['security/ir.model.access.csv',
           'views/school_fees_view.xml',
           'views/school_fees_sequence.xml',
