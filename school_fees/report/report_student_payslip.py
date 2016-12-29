@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-import time
 from datetime import datetime
 from odoo import models, api
 
@@ -35,7 +34,6 @@ class ReportStudentPayslip(models.AbstractModel):
             'doc_model': self.model,
             'data': data['form'],
             'docs': docs,
-            'time': time,
             'get_no': get_no,
             'get_month': get_month,
         }
