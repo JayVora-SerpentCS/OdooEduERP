@@ -96,8 +96,8 @@
             <field name="date_start">01/01/2011</field>
             <field name="date_stop">31/12/2011</field>
         </record>
- 
-         <record id="demo_academic_year_2" model="academic.year">
+
+        <record id="demo_academic_year_2" model="academic.year">
             <field name="name">Academic Year 2012</field>
             <field name="code">2012</field>
             <field name="sequence">2</field>
@@ -115,7 +115,7 @@
             <field name="date_stop">31/12/2013</field>
         </record>
 
-        <!-- Academic Month --> 
+        <!-- Academic Month -->
 
         <record id="demo_academic_month_1" model="academic.month">
             <field name="name">January</field>
@@ -164,8 +164,8 @@
             <field name="date_start">02/01/2013</field>
             <field name="date_stop">28/02/2013</field>
         </record>
-        
-       <!--  Standard Information -->
+
+        <!--Standard Information-->
 
         <record id="demo_standard_standard_1" model="standard.standard">
             <field name="name">10th</field>
@@ -182,7 +182,7 @@
             <field name="name">12th</field>
             <field name="code">THR</field>
             <field name="sequence">3</field>
-        </record> 
+        </record>
 
         <!--Standard Medium Information-->
 

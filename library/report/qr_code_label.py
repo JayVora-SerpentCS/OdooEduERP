@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-import time
-import qrcode
 import base64
 import tempfile
 from odoo import models, api
+import qrcode
 
 
 class ReportQrcodeLable(models.AbstractModel):
@@ -33,7 +32,6 @@ class ReportQrcodeLable(models.AbstractModel):
             'doc_model': self.model,
             'data': data['form'],
             'docs': docs,
-            'time': time,
             'get_qr_code': get_qr_code,
         }
         render_model = 'library.qrcode_label'
