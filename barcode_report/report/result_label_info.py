@@ -2,14 +2,14 @@
 # See LICENSE file for full copyright and licensing details.
 
 
-import time
 from odoo import api, fields, models
 
 
 class ReportLabelInfo(models.AbstractModel):
     _name = 'report.barcode_report.result_label_info'
 
-    def get_student_info(self, standard_id, division_id, medium_id, year_id):
+    def get_student_all_info(self, standard_id, division_id, medium_id,
+                             year_id):
         student_obj = self.env['student.student']
         student_ids = student_obj.search([('standard_id', '=', standard_id),
                                           ('division_id', '=', division_id),
@@ -25,24 +25,13 @@ class ReportLabelInfo(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        self.model = self.env.context.get('active_model')
-
-        docs = self.env[self.model].browse(self.env.context.get('active_ids',
-                                                                []))
-        standard_id = data['form'].get('standard_id')[0]
-        year_id = data['form'].get('year_id')[0]
-        get_student = self.with_context(data['form'].get('used_context', {}))
-        get_student_info = get_student.get_student_info(standard_id,
-                                                        standard_id.div_id,
-                                                        standard_id.medium_id,
-                                                        year_id)
+        docs = self.env['student.student'].browse(docids)
         docargs = {
             'doc_ids': docids,
-            'doc_model': self.model,
-            'data': data['form'],
+            'doc_model': self.env['time.table'],
+            'data': data,
             'docs': docs,
-            'time': time,
-            'get_student_info': get_student_info,
+            'get_student_all_info': self.get_student_all_info,
         }
-        render_model = 'barcode_report.result_label_info'
-        return self.env['report'].render(render_model, docargs)
+        return self.env['report'].render('barcode_report.result_label_info',
+                                         docargs)
