@@ -51,24 +51,14 @@ class ReportResultInfo(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        self.model = self.env.context.get('active_model')
-
-        docs = self.env[self.model].browse(self.env.context.get('active_ids',
-                                                                []))
-        result_id = data['form'].get('result_id')[0]
-        student = data['form'].get('student')
-        get_grades = self.with_context(data['form'].get('used_context', {}))
-        get_grade = get_grades.get_grade(result_id, student)
-        get_lines = get_grades.get_lines(result_id, student)
-        get_exam_data = get_grades.get_exam_data(result_id, student)
+        docs = self.env['student.student'].browse(docids)
         docargs = {
             'doc_ids': docids,
-            'doc_model': self.model,
-            'data': data['form'],
+            'doc_model': self.env['student.student'],
+            'data': data,
             'docs': docs,
-            'get_grade': get_grade,
-            'get_lines': get_lines,
-            'get_exam_data': get_exam_data
+            'get_lines': self.get_lines,
+            'get_exam_data': self.get_exam_data,
         }
-        render_model = 'exam.result_information_report'
-        return self.env['report'].render(render_model, docargs)
+        return self.env['report'].render('exam.result_information_report',
+                                         docargs)
