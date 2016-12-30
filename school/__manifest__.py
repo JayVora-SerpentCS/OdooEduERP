@@ -3,7 +3,7 @@
 
 {'name': 'School',
  'version': '10.0.1.0.0',
- 'author': 'Serpent Consulting Services Pvt. Ltd., ODOO SA',
+ 'author': 'Serpent Consulting Services Pvt. Ltd., OpenERP SA',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
  'license': "AGPL-3",
