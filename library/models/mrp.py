@@ -81,8 +81,8 @@ class ProcurementOrder(models.Model):
                          'taxes_id': [(6, 0, tax)],
                          'production_lot_id': proc_id and proc_id.id or False,
                          'customer_ref': procurement.customer_ref}
-            name = seq_obj.next_by_code('purchase.order') or _('PO: %s') %\
-            procurement.name
+            ncode = seq_obj.next_by_code('purchase.order')
+            name = ncode or _('PO: %s') % procurement.name
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             warehouse_id = warehouse_id and warehouse_id[0] or False
             partpro_id = partner.property_account_position
