@@ -167,10 +167,10 @@ class ReportCustom(report_rml):
                                             lengthmonth(som.year, som.month) +
                                             1)]
             else:
-                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %\
+                date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                              (x, som.replace(day=x).strftime('%a'),
-                              x - som.day + 1)
-                              for x in range(som.day, eom.day + 1)]
+                              x - som.day + 1) for x in range(som.day,
+                                                              eom.day + 1)]
         cell = x - som.day + 1
         day_diff1 = day_diff.days - cell + 1
         width_dict = {}
@@ -191,8 +191,8 @@ class ReportCustom(report_rml):
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' %
                                  (x, som1.replace(day=x).strftime('%a'),
                                   cell + x) for x in range(1, lengthmonth
-                                                           (year, i + month) +
-                                                            1)]
+                                                           (year, i +
+                                                            month) + 1)]
                     i = i + 1
                     j = j + 1
                     month_dict[j] = som1.strftime('%B')
