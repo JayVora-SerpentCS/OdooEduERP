@@ -99,6 +99,7 @@ class SaleOrder(models.Model):
                         a_id = order.warehouse_id.out_type_id
                         a_ids = order.warehouse_id.out_type_id.id
                         address_id = order.partner_shipping_id.id
+                        order.order_po = 'picking' and '2binvoiced'
                         pick_dict = {'origin': order.name,
                                      'type': 'out',
                                      'state': 'draft',
@@ -106,13 +107,13 @@ class SaleOrder(models.Model):
                                      'sale_id': order.id,
                                      'address_id': address_id,
                                      'note': order.note,
-                                     'invoice_state': (order.order_policy ==\
-                                                      'picking' and
-                                                      '2binvoiced') or 'none',
+                                     'invoice_state': order.order_po or 'none',
                                      'carrier_id': order.carrier_id.id,
                                      'picking_type_id': order.warehouse_id and
                                      a_id and a_ids or False}
                         picking_id = picking_obj.create(pick_dict)
+                        lnallot_id = line.address_allotment_id.id
+                        odrshipp_id = order.partner_shipping_id.id
                     mv_dict = {'name': 'SO:' + order.name or '',
                                'picking_id': picking_id.id,
                                'origin_ref': order.name,
@@ -122,8 +123,7 @@ class SaleOrder(models.Model):
                                'product_uom': line.product_uom.id,
                                'product_uos': line.product_uos.id,
                                'product_packaging': line.product_packaging.id,
-                               'address_id': line.address_allotment_id.id or
-                                                order.partner_shipping_id.id,
+                               'address_id': lnallot_id or odrshipp_id,
                                'location_id': location_id,
                                'location_dest_id': output_id,
                                'sale_line_id': line.id,
