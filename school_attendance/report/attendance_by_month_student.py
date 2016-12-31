@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from odoo import models, fields, api
+from odoo import api
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.report.interface import report_rml
