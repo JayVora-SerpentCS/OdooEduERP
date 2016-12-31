@@ -44,9 +44,9 @@ class AttendanceSheet(models.Model):
                                                            toolbar=toolbar,
                                                            submenu=submenu)
         context = self._context
-        a = res['fields']['attendance_ids']['views']['tree']['fields']\
-         ['three_1']
-        b = res['fields']['attendance_ids']['views']['tree']['fields']['two_0']
+        c = res['fields']['attendance_ids']['views']['tree']
+        a = c['fields']['three_1']
+        b = c['fields']['two_0']
         if self._context is None:
             context = {}
         if self._context.get('month_id', False):

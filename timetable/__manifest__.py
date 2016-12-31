@@ -17,5 +17,4 @@
           'views/timetable.xml'],
  'test': ['test/timetable.yml'],
  'installable': True,
- 'application': True
-}
+ 'application': True}
