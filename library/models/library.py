@@ -209,7 +209,7 @@ class LibraryBookIssue(models.Model):
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
                              default=lambda self:
-                             self.env['ir.sequence'].\
+                             self.env['ir.sequence'].
                              get('library.book.issue') or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
@@ -443,7 +443,7 @@ class LibraryBookRequest(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                         self.env['ir.sequence'].\
+                         self.env['ir.sequence'].
                          get('library.book.request') or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
