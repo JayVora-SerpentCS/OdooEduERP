@@ -15,7 +15,7 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def make_po(self):
-        """ Make purchase order from procurement
+        """ Make purchase order from procurement0.bit_length()
         @param self : Object Pointer
         @param cr : Database Cursor
         @param uid : Current Logged in User
@@ -69,6 +69,7 @@ class ProcurementOrder(models.Model):
             tax = acc_pos_obj.map_tax(partner.property_account_position,
                                       tax_id)
             date = schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            proc_id = procurement.production_lot_id
             line_vals = {'name': product.partner_ref,
                          'product_qty': qty,
                          'product_id': procurement.product_id.id,
@@ -78,14 +79,14 @@ class ProcurementOrder(models.Model):
                          'move_dest_id': res_id,
                          'notes': product.description_purchase,
                          'taxes_id': [(6, 0, tax)],
-                         'production_lot_id':\
-                          procurement.production_lot_id
-                          and procurement.production_lot_id.id or False,
+                         'production_lot_id': proc_id and proc_id.id or False,
                          'customer_ref': procurement.customer_ref}
             name = seq_obj.next_by_code('purchase.order') or _('PO: %s') %\
             procurement.name
             date = purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             warehouse_id = warehouse_id and warehouse_id[0] or False
+            partpro_id = partner.property_account_position
+            acct_id = partner.property_account_position.id
             po_vals = {'name': name,
                        'origin': procurement.origin,
                        'partner_id': partner_id,
@@ -95,8 +96,7 @@ class ProcurementOrder(models.Model):
                        'pricelist_id': pricelist_id,
                        'date_order': date,
                        'company_id': procurement.company_id.id,
-                       'fiscal_position': partner.property_account_position
-                       and partner.property_account_position.id or False}
+                       'fiscal_position': partpro_id and acct_id or False}
             proc = procurement, po_vals, line_vals
             res[procurement.id] = self.create_procurement_purchase_order(proc)
             self.write([procurement.id],

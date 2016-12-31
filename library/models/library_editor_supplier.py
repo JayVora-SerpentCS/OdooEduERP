@@ -54,13 +54,14 @@ class LibraryEditorSupplier(models.Model):
 #         for rel, idn in zip(self, self.ids):
 #             original_supplier_id = rel.supplier_id.id
 #             if not original_supplier_id:
-#                 raise UserError(_('Warning ! Cannot set supplier in this form\
-#                                 Please create a new relation.'))
+#                 raise UserError(_('Warning ! Cannot set supplier in this\
+#                                     form Please create a new relation.'))
 #             new_supplier_id = vals.get('supplier_id', 0)
-#             check_supp = (idn < 0 or (original_supplier_id != new_supplier_id))
+#             check_supp = (idn < 0 or (original_supplier_id !=\
+#                                         new_supplier_id))
 #             supplier_change = new_supplier_id != 0 and check_supp
 #             if supplier_change:
-#                 raise UserError(_('Warning ! Cannot set supplier in this form.'
+#                 raise UserError(_('Warning!Cannot set supplier in this form.'
 #                                   'Please create a new relation.'))
 #             else:
 #                 if 'sequence' in vals:
