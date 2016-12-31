@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-{
- 'name': 'Timetable Management',
- 'version': "10.0.1.0.0",
- 'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA",
+{'name': 'Timetable Management',
+ 'version': '10.0.1.0.0',
+ 'author': 'Serpent Consulting Services Pvt. Ltd., Odoo SA',
  'website': 'http://www.serpentcs.com',
  'license': "AGPL-3",
  'category': 'School Management',
