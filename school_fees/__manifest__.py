@@ -9,7 +9,7 @@
  'license': "AGPL-3",
  'complexity': 'easy',
  'summary': 'A Module For Fees Management In School',
- 'depends': ['school'],
+ 'depends': ['school', 'account_voucher'],
  'data': ['security/ir.model.access.csv',
           'views/school_fees_view.xml',
           'views/school_fees_sequence.xml',

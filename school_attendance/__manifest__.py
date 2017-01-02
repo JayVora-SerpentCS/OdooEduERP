@@ -9,7 +9,7 @@
  'license': "AGPL-3",
  'summary': 'A Module For Attendance Management In School',
  'complexity': 'easy',
- 'depends': ['school'],
+ 'depends': ['school', 'hr'],
  'data': ['security/ir.model.access.csv',
           'views/school_attendance_view.xml',
           'views/attendance_workflow.xml',
