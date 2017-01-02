@@ -9,7 +9,7 @@
  'license': "AGPL-3",
  'summary': 'A Module For Library Management For School',
  'complexity': 'easy',
- 'depends': ['report_intrastat', 'mrp', 'delivery', 'school'],
+ 'depends': ['school'],
  'data': ['security/library_security.xml',
           'security/ir.model.access.csv',
           'views/report_view.xml',
