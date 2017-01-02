@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 {'name': 'HOSTEL',
  'version': "10.0.1.0.0",
@@ -10,7 +10,6 @@
  'complexity': 'easy',
  'summary': 'Module For HOSTEL Management In School',
  'depends': ['school'],
- 'demo': ['demo/school_hostel_demo.xml'],
  'data': ['security/hostel_security.xml',
           'security/ir.model.access.csv',
           'views/hostel_view.xml',

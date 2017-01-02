@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
-import time
-from odoo.report import report_sxw
 from odoo import models, api
 
 
-class Result(report_sxw.rml_parse):
-
-    @api.model
-    def __init__(self):
-        super(Result, self).__init__()
-        self.localcontext.update({'time': time,
-                                  'get_lines': self.get_lines,
-                                  'get_exam_data': self.get_exam_data,
-                                  'get_grade': self.get_grade})
+class ReportResultInfo(models.AbstractModel):
+    _name = 'report.exam.result_information_report'
 
     @api.model
     def get_grade(self, result_id, student):
@@ -58,9 +49,16 @@ class Result(report_sxw.rml_parse):
         list_exam.append(value)
         return list_exam
 
-
-class ReportResultInfo(models.AbstractModel):
-    _name = 'report.exam.result_information_report'
-    _inherit = 'report.abstract_report'
-    _template = 'exam.result_information_report'
-    _wrapped_report_class = Result
+    @api.model
+    def render_html(self, docids, data=None):
+        docs = self.env['student.student'].browse(docids)
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': self.env['student.student'],
+            'data': data,
+            'docs': docs,
+            'get_lines': self.get_lines,
+            'get_exam_data': self.get_exam_data,
+        }
+        return self.env['report'].render('exam.result_information_report',
+                                         docargs)

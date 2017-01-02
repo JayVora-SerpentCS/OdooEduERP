@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
-import odoo
 from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _

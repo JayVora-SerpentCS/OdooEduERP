@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
-from odoo.report import report_sxw
 from odoo import models, api
 import odoo
 
 
-class AddExamResult(report_sxw.rml_parse):
-
-    @api.model
-    def __init__(self):
-        super(AddExamResult, self).__init__()
-        get_result_detail = self._get_result_detail
-        self.localcontext.update({'time': time,
-                                  'get_result_detail': get_result_detail})
+class ReportAddExamResult(models.AbstractModel):
+    _name = 'report.exam.exam_result_report'
 
     @api.model
     def _get_result_detail(self, subject_ids, result):
@@ -22,7 +15,7 @@ class AddExamResult(report_sxw.rml_parse):
         result_data = []
         for sub in subject_ids:
             sub_list.append(sub.id)
-        env = odoo.api.Environment(self.cr, self.uid, {})
+        env = odoo.api.Environment({})
         sub_obj = env['exam.subject']
         subject_exam_ids = sub_obj.search([('id', 'in', sub_list),
                                            ('exam_id', '=', result.id)])
@@ -34,9 +27,25 @@ class AddExamResult(report_sxw.rml_parse):
                                 'obt_marks': subject.obtain_marks or ''})
         return result_data
 
+    @api.model
+    def render_html(self, docids, data=None):
+        self.model = self.env.context.get('active_model')
 
-class ReportAddExamResult(models.AbstractModel):
-    _name = 'report.exam.exam_result_report'
-    _inherit = 'report.abstract_report'
-    _template = 'exam.exam_result_report'
-    _wrapped_report_class = AddExamResult
+        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+                                                                []))
+        subject_ids = data['form'].get('subject_ids')
+        result = data['form'].get('result')
+        _get_result = self.with_context(data['form'].get('used_context', {}))
+        _get_result_detail = _get_result._get_result_detail(subject_ids,
+                                                            result
+                                                            )
+        docargs = {
+            'doc_ids': docids,
+            'doc_model': self.model,
+            'data': data['form'],
+            'docs': docs,
+            'time': time,
+            '_get_result_detail': _get_result_detail,
+        }
+        render_model = 'report.abstract_report'
+        return self.env['report'].render(render_model, docargs)

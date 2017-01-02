@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 {'name': 'Library Management',
  'version': "10.0.1.0.0",
@@ -10,7 +10,6 @@
  'summary': 'A Module For Library Management For School',
  'complexity': 'easy',
  'depends': ['report_intrastat', 'mrp', 'delivery', 'school'],
- 'demo': ['demo/library_demo.xml'],
  'data': ['security/library_security.xml',
           'security/ir.model.access.csv',
           'views/report_view.xml',

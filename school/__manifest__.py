@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 {'name': 'School',
- 'version': "10.0.1.0.0",
- 'author': "Serpent Consulting Services Pvt. Ltd., ODOO SA",
+
+ 'version': '10.0.1.0.0',
+ 'author': 'Serpent Consulting Services Pvt. Ltd., Odoo SA',
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
  'license': "AGPL-3",
@@ -21,7 +22,6 @@
           'wizard/wiz_meeting_view.xml',
           'views/report_view.xml',
           'views/identity_card.xml'],
-    'demo': ['demo/school_demo.xml'],
     'test': ['test/school_test.yml', 'test/assign_roll_no_test.yml'],
     'installable': True,
     'application': True}

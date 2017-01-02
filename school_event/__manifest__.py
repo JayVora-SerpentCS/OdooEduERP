@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 {'name': 'School Event Management',
  'version': "10.0.1.0.0",
@@ -16,6 +16,5 @@
           'security/ir.model.access.csv',
           'views/participants.xml',
           'views/report_view.xml'],
- 'demo': ['demo/event_demo.xml'],
  'installable': True,
  'application': True}

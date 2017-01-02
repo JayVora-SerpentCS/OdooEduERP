@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
@@ -407,7 +407,7 @@ class ExamResultBatchwise(models.Model):
                     fina_tot += student_ids.total
                 divi = fina_tot / count  # Total_obtained mark of all student
                 if year_ob.grade_id.grade_ids:
-                    divis = divi <= grade_id.to_mark
+                    divis = divi <= year_ob.grade_id.to_mark
                     for grade_id in year_ob.grade_id.grade_ids:
                         if (divi >= grade_id.from_mark and divis):
                             self.grade = grade_id.grade

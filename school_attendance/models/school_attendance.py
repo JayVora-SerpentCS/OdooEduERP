@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
 from calendar import monthrange
@@ -44,8 +44,9 @@ class AttendanceSheet(models.Model):
                                                            toolbar=toolbar,
                                                            submenu=submenu)
         context = self._context
-        a=res['fields']['attendance_ids']['views']['tree']['fields']['three_1']
-        b = res['fields']['attendance_ids']['views']['tree']['fields']['two_0']
+        c = res['fields']['attendance_ids']['views']['tree']
+        a = c['fields']['three_1']
+        b = c['fields']['two_0']
         if self._context is None:
             context = {}
         if self._context.get('month_id', False):
@@ -411,7 +412,7 @@ class DailyAttendance(models.Model):
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
                     or False
                 if not attendance_sheet_id:
-                    sheet = {'name': 'Month ' + month_data.name + "-Year " + 
+                    sheet = {'name': 'Month ' + month_data.name + "-Year " +
                              str(year),
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,

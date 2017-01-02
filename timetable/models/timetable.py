@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
@@ -27,8 +27,8 @@ class TimeTable(models.Model):
         line_ids = self.env['time.table.line'].search(domain)
         for rec in line_ids:
             records = [rec_check.id for rec_check in line_ids
-                       if (rec.week_day == rec_check.week_day and 
-                           rec.start_time == rec_check.start_time and 
+                       if (rec.week_day == rec_check.week_day and
+                           rec.start_time == rec_check.start_time and
                            rec.end_time == rec_check.end_time)]
             if len(records) > 1:
                 raise UserError(_("You can Not set lecture at same time\

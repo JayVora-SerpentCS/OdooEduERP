@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
 from dateutil.relativedelta import relativedelta
@@ -155,7 +155,7 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    sec =  float(diff.seconds) / 3600
+                    sec = float(diff.seconds) / 3600
                     duration = float(diff.days) * 24 + sec
                     day = duration / 24
                     if line.day_to_return_book:
@@ -208,9 +208,9 @@ class LibraryBookIssue(models.Model):
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
-                             default=lambda self: 
-                             self.env['ir.sequence'].get('library.book.issue')
-                             or '/')
+                             default=lambda self:
+                             self.env['ir.sequence'].
+                             get('library.book.issue') or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
@@ -219,8 +219,8 @@ class LibraryBookIssue(models.Model):
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
-                                 default=lambda
-                                 *a: time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 default=lambda *a:
+                                 time.strftime('%Y-%m-%d %H:%M:%S'))
     date_return = fields.Datetime(_compute_="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
@@ -443,8 +443,8 @@ class LibraryBookRequest(models.Model):
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                            self.env['ir.sequence'].get('library.book.request')
-                            or '/')
+                         self.env['ir.sequence'].
+                         get('library.book.request') or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')

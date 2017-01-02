@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 import time
 from odoo import models, fields, api, _
@@ -110,11 +110,12 @@ class SchoolEvent(models.Model):
             raise UserError(_('Error! Event start-date must be lower\
                               then Event end-date.'))
 
-    @api.constrains('start_date', 'end_date', 'start_reg_date', 'last_reg_date')
+    @api.constrains('start_date', 'end_date', 'start_reg_date',
+                    'last_reg_date')
     def _check_all_dates(self):
 
-        if (self.start_date and self.end_date and self.start_reg_date and
-              self.last_reg_date):
+        dt = self.start_reg_date and self.last_reg_date
+        if (self.start_date and self.end_date and dt):
 
             if self.start_reg_date > self.last_reg_date:
                 raise UserError(_('Error! Event Registration StartDate must be\

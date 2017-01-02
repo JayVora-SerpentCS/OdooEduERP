@@ -6,7 +6,7 @@
         <template id="result_information_report">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="result">
-                    <!-- <t t-call="report.external_layout"> -->
+                    <t t-call="report.external_layout">
                     <div class="page">
                         <div class="oe_structure" />
                         <div class="row" align="center">
@@ -163,6 +163,7 @@
                             </table>
                         </t>
                     </div>
+                    </t>
                 </t>
             </t>
         </template>

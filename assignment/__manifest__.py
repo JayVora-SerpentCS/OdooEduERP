@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# See LICENSE file for full copyright and licensing details.
 
 {'name': 'Assignment Management',
  'version': "10.0.1.0.0",
@@ -11,9 +11,7 @@
  'complexity': 'easy',
  'depends': ['school'],
  'data': ['views/homework_view.xml', 'security/ir.model.access.csv'],
- 'demo': ['demo/assignment_demo.xml'],
  'test': ['test/assignment.yml'],
  'installable': True,
  'application': True,
- 'auto_install' : False
-}
+ 'auto_install': False}
