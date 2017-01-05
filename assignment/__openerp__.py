@@ -15,5 +15,5 @@
  'demo': ['demo/assignment_demo.xml'],
 #  'test': ['test/assignment.yml'],
  'installable': True,
-#  'application': True
+'application': True
  }
