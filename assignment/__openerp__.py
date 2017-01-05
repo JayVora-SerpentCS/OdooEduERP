@@ -13,7 +13,6 @@
  'depends': ['school'],
  'data': ['views/homework_view.xml', 'security/ir.model.access.csv'],
  'demo': ['demo/assignment_demo.xml'],
-#  'test': ['test/assignment.yml'],
  'installable': True,
-'application': True
+ 'application': True
  }

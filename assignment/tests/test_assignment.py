@@ -14,6 +14,3 @@ class AssignmentTest(common.TransactionCase):
 
         self.res_users_model = self.env['res.users']
         self.partner_model = self.env['res.partner']
-
-    def test_security(self):
-        print "Done"
