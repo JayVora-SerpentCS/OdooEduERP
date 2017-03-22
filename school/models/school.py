@@ -9,6 +9,8 @@ from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize,\
     image_resize_image_big
 from odoo.exceptions import except_orm, Warning as UserError
+from datetime import datetime
+from dateutil.relativedelta import relativedelta as rd
 
 
 class BoardBoard(models.AbstractModel):
@@ -286,14 +288,15 @@ class StudentStudent(models.Model):
 
     @api.multi
     @api.depends('date_of_birth')
-    def _calc_age(self):
-        self.age = 0
-        if self.date_of_birth:
-            start = datetime.strptime(self.date_of_birth,
-                                      DEFAULT_SERVER_DATE_FORMAT)
-            end = datetime.strptime(time.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                                    DEFAULT_SERVER_DATE_FORMAT)
-            self.age = ((end - start).days / 365)
+    def _calc_student_age(self):
+        current_dt = datetime.today()
+        for rec in self:
+            if rec.date_of_birth:
+                start = datetime.strptime(rec.date_of_birth,
+                                          DEFAULT_SERVER_DATE_FORMAT)
+                age_calc = ((current_dt - start).days / 365)
+                if stud_calc > 0.0:
+                    rec.age = age_calc
 
     @api.model
     def create(self, vals):
@@ -345,7 +348,7 @@ class StudentStudent(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer('Age', _compute_='_calc_age', readonly=True)
+    age = fields.Integer(compute='_calc_student_age',string='Age',readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
