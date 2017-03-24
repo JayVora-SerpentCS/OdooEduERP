@@ -116,6 +116,5 @@
             <field name="score">151</field>
             <field name="sequence">10</field>
          </record>
-
     </data>
 </odoo>
