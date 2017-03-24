@@ -318,7 +318,7 @@ class ExamResult(models.Model):
                 add = add + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
-                per = (sum / total) * 100
+                per = (add / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
@@ -423,14 +423,15 @@ class AdditionalExamResult(models.Model):
     _rec_name = 'a_exam_id'
 
     @api.multi
-    @api.depends('a_exam_id', 'obtain_marks')
+    #@api.depends('a_exam_id', 'obtain_marks')
     def _calc_result(self):
-        min_m = self.a_exam_id.subject_id.minimum_marks
-        if (self.a_exam_id and self.a_exam_id.subject_id and min_m):
-            if self.a_exam_id.subject_id.minimum_marks <= self.obtain_marks:
-                self.result = 'Pass'
-            else:
-                self.result = 'Fail'
+        for rec in self:
+            min_m = rec.a_exam_id.subject_id.minimum_marks
+            if (rec.a_exam_id and rec.a_exam_id.subject_id and min_m):
+                if self.a_exam_id.subject_id.minimum_marks <= rec.obtain_marks:
+                    rec.result = 'Pass'
+                else:
+                    rec.result = 'Fail'
 
     @api.multi
     def on_change_student(self, student):
@@ -457,5 +458,5 @@ class AdditionalExamResult(models.Model):
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(_compute_='_calc_result', string='Result',
+    result = fields.Char(compute='_calc_result', string='Result',
                          method=True)
