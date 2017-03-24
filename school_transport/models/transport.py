@@ -63,7 +63,7 @@ class TransportVehicle(models.Model):
     driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
     vehicle = fields.Char('Vehicle No', required=True)
     capacity = fields.Integer('Capacity')
-    participant = fields.Integer(_compute_='_participants',
+    participant = fields.Integer(compute='_participants',
                                  string='Total Participants', readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
                                              'vehicle_participant_student_rel',
@@ -139,7 +139,7 @@ class StudentTransports(models.Model):
     start_date = fields.Date('Start Date', required=True)
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
     end_date = fields.Date('End Date', required=True)
-    total_participantes = fields.Integer(_compute_='_total_participantes',
+    total_participantes = fields.Integer(compute='_total_participantes',
                                          method=True,
                                          string='Total Participants',
                                          readonly=True)
