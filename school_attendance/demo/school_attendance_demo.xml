@@ -49,6 +49,5 @@
             <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
             <field name="stud_id" ref="school.demo_student_student_5"/>
         </record>
-
     </data>
 </odoo>
