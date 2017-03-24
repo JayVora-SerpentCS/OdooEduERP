@@ -24,5 +24,6 @@
           'wizard/update_book_view.xml',
           'wizard/book_issue_no_view.xml',
           'wizard/card_no_view.xml'],
+ 'demo': ['demo/library_demo.xml'],        
  'installable': True,
  'application': True}
