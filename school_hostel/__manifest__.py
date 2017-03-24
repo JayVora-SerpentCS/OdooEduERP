@@ -16,5 +16,6 @@
           'views/hostel_sequence.xml',
           'views/report_view.xml',
           'views/hostel_fee_receipt.xml'],
+ 'demo': ['demo/school_hostel_demo.xml'],        
  'installable': True,
  'auto_install': False}
