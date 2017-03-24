@@ -287,7 +287,7 @@ class StudentStudent(models.Model):
     _inherits = {'res.users': 'user_id'}
 
     @api.multi
-    @api.depends('date_of_birth')
+    #@api.depends('date_of_birth')
     def _calc_student_age(self):
         current_dt = datetime.today()
         for rec in self:
@@ -295,7 +295,7 @@ class StudentStudent(models.Model):
                 start = datetime.strptime(rec.date_of_birth,
                                           DEFAULT_SERVER_DATE_FORMAT)
                 age_calc = ((current_dt - start).days / 365)
-                if stud_calc > 0.0:
+                if age_calc > 0.0:
                     rec.age = age_calc
 
     @api.model

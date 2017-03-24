@@ -21,6 +21,7 @@
           'wizard/wiz_meeting_view.xml',
           'views/report_view.xml',
           'views/identity_card.xml'],
+  'demo': ['demo/school_demo.xml'],        
     'test': ['test/school_test.yml', 'test/assign_roll_no_test.yml'],
     'installable': True,
     'application': True}
