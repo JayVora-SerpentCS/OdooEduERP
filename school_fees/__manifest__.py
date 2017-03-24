@@ -18,5 +18,6 @@
           'views/student_payslip.xml',
           'views/student_fees_register.xml',
           'views/report_view.xml'],
+ 'demo': ['demo/school_fees_demo.xml'],        
  'installable': True,
  'application': True}

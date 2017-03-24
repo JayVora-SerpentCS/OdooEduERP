@@ -136,38 +136,37 @@
 
         <record id="demo_student_fees_registration_1_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>
-            <field name="date">2012-05-25</field>
+            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-01-15'"/>
             <field name="journal_id" ref= "bank_journal"/> 
             <field name="company_id" ref="base.main_company"/>
          </record>
 
          <record id="demo_student_fees_registration_2" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_2"/>
-            <field name="date">2012-01-15</field>
+            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-01-15'"/>
             <field name="journal_id" ref="bank_journal"/> 
             <field name="company_id" ref="base.main_company"/>
          </record>
 
          <record id="demo_student_fees_registration_3" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_3"/>
-            <field name="date">2011-04-09</field>
+            <field name="date" eval="str(int(time.strftime('%Y'))-2) +'-04-09'"/>
             <field name="journal_id" ref="bank_journal"/> 
             <field name="company_id" ref="base.main_company"/>
          </record>
 
          <record id="demo_student_fees_registration_4" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_4"/>
-            <field name="date">2012-03-05</field>
+            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-03-05'"/>
             <field name="journal_id" ref="bank_journal"/> 
             <field name="company_id" ref="base.main_company"/>
          </record>
 
          <record id="demo_student_fees_registration_5" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_5"/>
-            <field name="date">2012-10-10</field>
+            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-10-10'"/>
             <field name="journal_id" ref="bank_journal"/> 
             <field name="company_id" ref="base.main_company"/>
          </record>
-
     </data>
 </odoo>
