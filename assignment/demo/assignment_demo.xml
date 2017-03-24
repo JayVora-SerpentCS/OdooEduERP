@@ -96,6 +96,5 @@
             <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
             <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
         </record>
-
     </data>
 </odoo>
