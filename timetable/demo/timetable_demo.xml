@@ -342,6 +342,5 @@
             <field eval="15.0" name="end_time"/>
             <field name="subject_id" ref="school.demo_subject_subject_4"/>
         </record>
-
     </data>
 </odoo>
