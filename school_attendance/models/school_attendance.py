@@ -205,7 +205,7 @@ class AttendanceSheetLine(models.Model):
     two_9 = fields.Boolean('29')
     two_0 = fields.Boolean('30')
     three_1 = fields.Boolean('31')
-    percentage = fields.Float(_compute_="attendance_percentage", method=True,
+    percentage = fields.Float(compute="attendance_percentage", method=True,
                               string='Attendance (%)', store=False)
 
 
@@ -218,36 +218,39 @@ class DailyAttendance(models.Model):
     @api.multi
     @api.depends('student_ids')
     def _total(self):
-        count = 0
-        if self.student_ids:
-            count += 1
-            self.total_student = count
-        else:
-            self.total_student = count
+        for rec in self:
+            count = 0
+            if rec.student_ids:
+                count += 1
+                rec.total_student = count
+            else:
+                rec.total_student = count
 
     @api.multi
     @api.depends('student_ids')
     def _present(self):
-        count = 0
-        if self.student_ids:
-            for att in self.student_ids:
-                if att.is_present:
-                    count += 1
-            self.total_presence = count
-        else:
-            self.total_presence = count
+        for rec in self:
+            count = 0
+            if rec.student_ids:
+                for att in rec.student_ids:
+                    if att.is_present:
+                        count += 1
+                rec.total_presence = count
+            else:
+                rec.total_presence = count
 
     @api.multi
     @api.depends('student_ids')
     def _absent(self):
-        count_fail = 0
-        if self.student_ids:
-            for att in self.student_ids:
-                if att.is_absent:
-                    count_fail += 1
-            self.total_absent = count_fail
-        else:
-            self.total_absent = count_fail
+        for rec in self:
+            count_fail = 0
+            if rec.student_ids:
+                for att in rec.student_ids:
+                    if att.is_absent:
+                        count_fail += 1
+                rec.total_absent = count_fail
+            else:
+                rec.total_absent = count_fail
 
     date = fields.Date("Today's Date",
                        default=lambda *a: time.strftime('%Y-%m-%d'))
@@ -262,11 +265,11 @@ class DailyAttendance(models.Model):
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
-    total_student = fields.Integer(_compute_="_total", method=True, store=True,
+    total_student = fields.Integer(compute="_total", method=True, store=True,
                                    string='Total Students')
-    total_presence = fields.Integer(_compute_="_present", method=True,
+    total_presence = fields.Integer(compute="_present", method=True,
                                     store=True, string='Present Students')
-    total_absent = fields.Integer(_compute_="_absent", method=True, store=True,
+    total_absent = fields.Integer(compute="_absent", method=True, store=True,
                                   string='Absent Students')
 
     @api.model
