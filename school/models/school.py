@@ -165,10 +165,11 @@ class SchoolStandard(models.Model):
     @api.multi
     @api.depends('standard_id')
     def _compute_student(self):
-        self.student_ids = False
-        domain = [('standard_id', '=', self.standard_id.id)]
-        if self.standard_id:
-            self.student_ids = self.env['student.student'].search(domain)
+        for rec in self:
+            rec.student_ids = False
+            domain = [('standard_id', '=', rec.standard_id.id)]
+            if rec.standard_id:
+                rec.student_ids = self.env['student.student'].search(domain)
 
     @api.multi
     def import_subject(self):
@@ -287,7 +288,7 @@ class StudentStudent(models.Model):
     _inherits = {'res.users': 'user_id'}
 
     @api.multi
-    #@api.depends('date_of_birth')
+    @api.depends('date_of_birth')
     def _calc_student_age(self):
         current_dt = datetime.today()
         for rec in self:
@@ -368,7 +369,7 @@ class StudentStudent(models.Model):
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
-    blood_group = fields.Char('Blood Group',)
+    blood_group = fields.Char('Blood Group')
     height = fields.Float('Height')
     weight = fields.Float('Weight')
     eye = fields.Boolean('Eyes')
@@ -541,7 +542,7 @@ class StudentGrn(models.Model):
                                 ('static', 'Static String')], 'Suffix')
     static_prefix = fields.Char('Static String for Prefix')
     static_postfix = fields.Char('Static String for Suffix')
-    grn_no = fields.Char('Generated GR No.', _compute_='_grn_no')
+    grn_no = fields.Char('Generated GR No.', compute='_grn_no')
 
 
 class MotherTongue(models.Model):
@@ -643,11 +644,12 @@ class HrEmployee(models.Model):
         ''' This function will automatically computes the subjects related to\
             particular teacher.'''
         subject_obj = self.env['subject.subject']
-        subject_ids = subject_obj.search([('teacher_ids', '=', self.id)])
-        sub_list = []
-        for sub_rec in subject_ids:
-            sub_list.append(sub_rec.id)
-        self.subject_ids = sub_list
+        for rec in self:
+            subject_ids = subject_obj.search([('teacher_ids', '=', rec.id)])
+            sub_list = []
+            for sub_rec in subject_ids:
+                sub_list.append(sub_rec.id)
+            rec.subject_ids = sub_list
 
     subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
                                    'Subjects', compute='_compute_subject')
