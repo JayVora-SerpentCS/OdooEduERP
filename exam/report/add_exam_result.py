@@ -48,4 +48,4 @@ class ReportAddExamResult(models.AbstractModel):
             '_get_result_detail': _get_result_detail,
         }
         render_model = 'report.abstract_report'
-        return self.env['report'].render(render_model, docargs)                    
+        return self.env['report'].render(render_model, docargs)
