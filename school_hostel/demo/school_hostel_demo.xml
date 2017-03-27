@@ -67,40 +67,40 @@
 
         <record id="demo_school_hostel_Student_1" model="hostel.student">
             <field name="student_id" ref="school.demo_student_student_1"/>
-            <field name="admission_date" eval="str(int(time.strftime('%Y'))-1) +'-06-01'"/>
-            <field name="discharge_date" eval="str(int(time.strftime('%Y'))-1) +'-12-30'" />
+            <field name="admission_date" eval="str(int(time.strftime('2016'))) +'-06-01'"/>
+            <field name="discharge_date" eval="str(int(time.strftime('2016'))) +'-12-30'" />
             <field name="room_rent">1500</field>
             <field name="paid_amount">1000</field>
         </record>
 
         <record id="demo_school_hostel_Student_2" model="hostel.student">
             <field name="student_id" ref="school.demo_student_student_2"/>
-            <field name="admission_date" eval="str(int(time.strftime('%Y'))-2) +'-06-01'"/>
-            <field name="discharge_date" eval="str(int(time.strftime('%Y'))-2) +'-12-30'"/>
+            <field name="admission_date" eval="str(int(time.strftime('2015'))) +'-06-01'"/>
+            <field name="discharge_date" eval="str(int(time.strftime('2015'))) +'-12-30'"/>
             <field name="room_rent">1250</field>
             <field name="paid_amount">1000</field>
         </record>
 
         <record id="demo_school_hostel_Student_3" model="hostel.student">
             <field name="student_id" ref="school.demo_student_student_3"/>
-            <field name="admission_date" eval="str(int(time.strftime('%Y'))-1) +'-06-01'"/>
-            <field name="discharge_date" eval="str(int(time.strftime('%Y'))-1) +'-12-30'"/>
+            <field name="admission_date" eval="str(int(time.strftime('2016'))) +'-06-01'"/>
+            <field name="discharge_date" eval="str(int(time.strftime('2016'))) +'-12-30'"/>
             <field name="room_rent">1500</field>
             <field name="paid_amount">1000</field>
         </record>
 
         <record id="demo_school_hostel_Student_4" model="hostel.student">
             <field name="student_id" ref="school.demo_student_student_4"/>
-            <field name="admission_date" eval="str(int(time.strftime('%Y'))) +'-06-01'"/>
-            <field name="discharge_date" eval="str(int(time.strftime('%Y'))) +'-12-30'"/>
+            <field name="admission_date" eval="str(int(time.strftime('2017'))) +'-06-01'"/>
+            <field name="discharge_date" eval="str(int(time.strftime('2017'))) +'-12-30'"/>
             <field name="room_rent">2000</field>
             <field name="paid_amount">1500</field>
         </record>
 
         <record id="demo_school_hostel_Student_5" model="hostel.student">
             <field name="student_id" ref="school.demo_student_student_5"/>
-            <field name="admission_date" eval="str(int(time.strftime('%Y'))) +'-06-01'"/>
-            <field name="discharge_date" eval="str(int(time.strftime('%Y'))) +'-12-30'"/>
+            <field name="admission_date" eval="str(int(time.strftime('2017'))) +'-06-01'"/>
+            <field name="discharge_date" eval="str(int(time.strftime('2017'))) +'-12-30'"/>
             <field name="room_rent">2000</field>
             <field name="paid_amount">1000</field>
         </record>

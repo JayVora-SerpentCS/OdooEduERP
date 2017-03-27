@@ -29,14 +29,15 @@ class StudentEvaluation(models.Model):
         return True
 
     @api.multi
+    @api.depends('eval_line')
     def _compute_total_points(self):
         for rec in self:
-            total=0
+            total = 0
             if rec.eval_line:
                 for line in rec.eval_line:
                     if line.point_id.point:
                         total += line.point_id.point
-                    rec.total = total
+                rec.total = total
             else:
                 rec.total = total
 

@@ -28,20 +28,20 @@ class HostelRoom(models.Model):
         room_availability = 0
         for data in self:
             count = 0
-            if self.student_ids:
+            if data.student_ids:
                 count += 1
             room_availability = data.student_per_room - count
             if room_availability < 0:
                 raise except_orm(_("You can not assign room\
                 more than %s student" % data.student_per_room))
             else:
-                self.availability = room_availability
+                data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'HOSTEL')
     floor_no = fields.Integer('Floor No.', default=1)
     room_no = fields.Char('Room No.', required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
-    availability = fields.Float(_compute_='_check_availability',
+    availability = fields.Float(compute='_check_availability',
                                 string="Availability")
     student_ids = fields.One2many('hostel.student',
                                   'hostel_room_id', 'Student')
@@ -71,10 +71,11 @@ class HostelStudent(models.Model):
     @api.multi
     @api.depends('room_rent', 'paid_amount')
     def _get_remaining_fee_amt(self):
-        if self.room_rent and self.paid_amount:
-            self.remaining_amount = self.room_rent - self.paid_amount
-        else:
-            self.remaining_amount = 0.0
+        for rec in self:
+            if rec.room_rent and rec.paid_amount:
+                rec.remaining_amount = rec.room_rent - rec.paid_amount
+            else:
+                rec.remaining_amount = 0.0
 
     @api.multi
     def confirm_state(self):
@@ -110,7 +111,7 @@ class HostelStudent(models.Model):
     admission_date = fields.Datetime('Admission Date')
     discharge_date = fields.Datetime('Discharge Date')
     paid_amount = fields.Float('Paid Amount')
-    remaining_amount = fields.Float(_compute_='_get_remaining_fee_amt',
+    remaining_amount = fields.Float(compute='_get_remaining_fee_amt',
                                     string='Remaining Amount')
     status = fields.Selection([('draft', 'Draft'),
                                ('reservation', 'Reservation'),

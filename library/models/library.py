@@ -95,14 +95,14 @@ class LibraryCard(models.Model):
                 user = rec.student_id.name
             else:
                 user = rec.teacher_id.name
-            self.gt_name = user
+            rec.gt_name = user
 
     code = fields.Char('Card No', required=True, default=lambda self:
                        self.env['ir.sequence'].get('library.card') or '/')
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
-    gt_name = fields.Char(_compute_="get_name", method=True, string='Name')
+    gt_name = fields.Char(compute="get_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
     roll_no = fields.Integer('Roll No')
@@ -175,11 +175,11 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and book lost penalty as value
         '''
-
-        if self.state:
-            if self.state.title() == 'Lost':
-                fine = self.name.list_price
-                self.lost_penalty = fine
+        for rec in self:
+            if rec.state:
+                if rec.state.title() == 'Lost':
+                    fine = rec.name.list_price
+                    rec.lost_penalty = fine
 
     @api.multi
     @api.constrains('card_id', 'state')
@@ -221,16 +221,16 @@ class LibraryBookIssue(models.Model):
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
                                  time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_return = fields.Datetime(_compute_="_calc_retunr_date",
+    date_return = fields.Datetime(compute="_calc_retunr_date",
                                   string='Return Date', method=True,
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
                                          help="Actual Return Date of Book")
-    penalty = fields.Float(_compute_="_calc_penalty",
+    penalty = fields.Float(compute="_calc_penalty",
                            string='Penalty', method=True,
                            help='It show the late book return penalty')
-    lost_penalty = fields.Float(_compute_="_calc_lost_penalty", string='Fine',
+    lost_penalty = fields.Float(compute="_calc_lost_penalty", string='Fine',
                                 method=True, store=True,
                                 help='It show the penalty for lost book')
     day_to_return_book = fields.Many2one('library.book.returnday',

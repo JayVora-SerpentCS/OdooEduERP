@@ -48,13 +48,14 @@ class TransportVehicle(models.Model):
     @api.multi
     @api.depends('vehi_participants_ids')
     def _participants(self):
-        if self.vehi_participants_ids:
-            participate_list = []
-            for vehi in self.vehi_participants_ids:
-                participate_list.append(vehi.id)
-            self.participant = len(participate_list)
-        else:
-            self.participant = 0
+        for rec in self:
+            if rec.vehi_participants_ids:
+                participate_list = []
+                for vehi in rec.vehi_participants_ids:
+                    participate_list.append(vehi.id)
+                rec.participant = len(participate_list)
+            else:
+                rec.participant = 0
 
     _name = 'transport.vehicle'
     _rec_name = 'vehicle'
@@ -127,13 +128,14 @@ class StudentTransports(models.Model):
     @api.multi
     @api.depends('trans_participants_ids')
     def _total_participantes(self):
-        if self.trans_participants_ids:
-            tot_list = []
-            for root in self.trans_participants_ids:
-                tot_list.append(root.id)
-            self.total_participantes = len(tot_list)
-        else:
-            self.total_participantes = 0
+        for rec in self:
+            if rec.trans_participants_ids:
+                tot_list = []
+                for root in rec.trans_participants_ids:
+                    tot_list.append(root.id)
+                rec.total_participantes = len(tot_list)
+            else:
+                rec.total_participantes = 0
 
     name = fields.Char('Transport Root Name', required=True)
     start_date = fields.Date('Start Date', required=True)

@@ -13,7 +13,7 @@ class LibraryEditorSupplier(models.Model):
     sequence = fields.Integer('Sequence')
     delay = fields.Integer('Customer Lead Time')
     min_qty = fields.Float('Minimal Quantity')
-    junk = fields.Text(_compute_=lambda self: dict([(idn, '')
+    junk = fields.Text(compute=lambda self: dict([(idn, '')
                        for idn in self.ids]),
                        method=True, string=" ", type="text")
 

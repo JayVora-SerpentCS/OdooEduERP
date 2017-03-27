@@ -183,6 +183,5 @@
         <record id="library_author_3" model="library.author">
             <field name="name">THOMAS A.D</field>
         </record>
-
     </data>
 </odoo>

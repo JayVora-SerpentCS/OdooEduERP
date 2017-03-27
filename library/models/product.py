@@ -234,7 +234,7 @@ class ProductProduct(models.Model):
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
-    code = fields.Char(_compute_="_product_code", method=True,
+    code = fields.Char(compute="_product_code", method=True,
                        string='Acronym', store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
