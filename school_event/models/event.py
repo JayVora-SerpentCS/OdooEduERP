@@ -54,9 +54,10 @@ class SchoolEvent(models.Model):
 
     @api.multi
     def _participants(self):
-        cnt = 0
-        cnt += 1
-        self.participants = cnt
+        for rec in self:
+            cnt = 0
+            cnt += 1
+            rec.participants = cnt
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),
@@ -80,7 +81,7 @@ class SchoolEvent(models.Model):
     maximum_participants = fields.Integer('Maximum Participants',
                                           help='Maximum Participant\
                                                 of the Event')
-    participants = fields.Integer(_compute_='_participants',
+    participants = fields.Integer(compute='_participants',
                                   string='Participants', readonly=True)
     part_standard_ids = fields.Many2many('school.standard',
                                          'school_standard_event_rel',
