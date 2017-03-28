@@ -169,7 +169,7 @@ class ExamResult(models.Model):
                     elif line.state == "re-access":
                         obtain_marks = line.marks_access
                     total += obtain_marks
-                rec.total = total
+                    rec.total = total
 
     @api.multi
     def _compute_per(self):
@@ -201,7 +201,7 @@ class ExamResult(models.Model):
     def _compute_result(self):
         for rec in self:
             flag = False
-            if rec.result_ids and rec.student_id:
+            if rec.result_ids:
                 if rec.student_id.year.grade_id.grade_ids:
                     for grades in rec.student_id.year.grade_id.grade_ids:
                         if grades.grade:
