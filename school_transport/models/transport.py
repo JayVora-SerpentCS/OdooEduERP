@@ -50,10 +50,7 @@ class TransportVehicle(models.Model):
     def _participants(self):
         for rec in self:
             if rec.vehi_participants_ids:
-                participate_list = []
-                for vehi in rec.vehi_participants_ids:
-                    participate_list.append(vehi.id)
-                rec.participant = len(participate_list)
+                rec.participant = len([vehi.id for vehi in rec.vehi_participants_ids])
             else:
                 rec.participant = 0
 
@@ -130,10 +127,8 @@ class StudentTransports(models.Model):
     def _total_participantes(self):
         for rec in self:
             if rec.trans_participants_ids:
-                tot_list = []
-                for root in rec.trans_participants_ids:
-                    tot_list.append(root.id)
-                rec.total_participantes = len(tot_list)
+                rec.total_participantes = len([root.id for root in
+                                               rec.trans_participants_ids])
             else:
                 rec.total_participantes = 0
 

@@ -23,7 +23,7 @@ class LibraryRack(models.Model):
 
     name = fields.Char('Name', required=True,
                        help="it will be show the position of book")
-    code = fields.Char('Code')
+    code = fields.Char('Code', help="Code of book")
     active = fields.Boolean('Active', default='True')
 
 
@@ -72,14 +72,14 @@ class LibraryCard(models.Model):
     def on_change_student(self, student_id):
         '''  This method automatically fill up student roll number
              and standard field  on student_id field
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @student : Apply method on this Field name
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key
-            and the value of student roll number and standard'''
+             @param self : Object Pointer
+             @param cr : Database Cursor
+             @param uid : Current Logged in User
+             @param ids : Current Records
+             @student : Apply method on this Field name
+             @param context : standard Dictionary
+             @return : Dictionary having identifier of the record as key
+             and the value of student roll number and standard'''
         if not student_id:
             return {'value': {}}
         student_data = self.env['student.student'].browse(student_id)
@@ -105,8 +105,8 @@ class LibraryCard(models.Model):
     gt_name = fields.Char(compute="get_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
-    roll_no = fields.Integer('Roll No')
-    teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
+    roll_no = fields.Integer('Roll No', help="roll number")
+    teacher_id = fields.Many2one('hr.employee', 'Teacher Name', help="Name of Teacher")
 
 
 class LibraryBookIssue(models.Model):
@@ -119,15 +119,15 @@ class LibraryBookIssue(models.Model):
     @api.depends('date_issue', 'day_to_return_book')
     def _calc_retunr_date(self):
         ''' This method calculate a book return date.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key
-                  and the book return date as value'''
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids : Current Records
+            @param name : Functional field's name
+            @param args : Other arguments
+            @param context : standard Dictionary
+            @return : Dictionary having identifier of the record as key
+                      and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
         rd = relativedelta(days=self.day_to_return_book.day or 0.0)
         if self.date_issue and self.day_to_return_book:
@@ -138,15 +138,15 @@ class LibraryBookIssue(models.Model):
     @api.depends('date_return', 'day_to_return_book')
     def _calc_penalty(self):
         ''' This method calculate a penalty on book .
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key
-                  and penalty as value
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids : Current Records
+            @param name : Functional field's name
+            @param args : Other arguments
+            @param context : standard Dictionary
+            @return : Dictionary having identifier of the record as key
+                      and penalty as value
         '''
         for line in self:
             if line.date_return:
@@ -165,15 +165,15 @@ class LibraryBookIssue(models.Model):
     @api.depends('state')
     def _calc_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
-        @return : Dictionary having identifier of the record as key
-                  and book lost penalty as value
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids : Current Records
+            @param name : Functional field's name
+            @param args : Other arguments
+            @param context : standard Dictionary
+            @return : Dictionary having identifier of the record as key
+                      and book lost penalty as value
         '''
         for rec in self:
             if rec.state:
@@ -185,12 +185,12 @@ class LibraryBookIssue(models.Model):
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
         ''' This method used how many book can issue as per user type  .
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True or False
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids : Current Records
+            @param context : standard Dictionary
+            @return : True or False
         '''
         if self.card_id:
             card_ids = self.search([('card_id', '=', self.card_id.id),
@@ -234,7 +234,7 @@ class LibraryBookIssue(models.Model):
                                 method=True, store=True,
                                 help='It show the penalty for lost book')
     day_to_return_book = fields.Many2one('library.book.returnday',
-                                         'Book Return Days')
+                                         'Book Return Days', help="Return day of book")
     card_id = fields.Many2one("library.card", "Card No", required=True)
     state = fields.Selection([('draft', 'Draft'), ('issue', 'Issued'),
                               ('reissue', 'Reissued'), ('cancel', 'Cancelled'),
@@ -435,12 +435,13 @@ class LibraryBookRequest(models.Model):
     @api.multi
     @api.depends('type')
     def gt_bname(self):
-        if self.type:
-            if self.type.title() == 'Existing':
-                book = self.name.name
-            else:
-                book = self.new1
-            self.bk_nm = book
+        for rec in self:
+            if rec.type:
+                if rec.type.title() == 'Existing':
+                    book = rec.name.name
+                else:
+                    book = rec.new1
+                rec.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
                          self.env['ir.sequence'].
@@ -450,4 +451,4 @@ class LibraryBookRequest(models.Model):
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
     new1 = fields.Char('Book Name',)
-    bk_nm = fields.Char('Name', _compute_="gt_bname", method=True, store=True)
+    bk_nm = fields.Char('Name', compute="gt_bname", method=True, store=True)

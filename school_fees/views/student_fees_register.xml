@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <template id="student_fees_register">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
@@ -112,5 +111,4 @@
                 </t>
             </t>
         </template>
-
 </odoo>

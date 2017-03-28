@@ -68,14 +68,10 @@ class HostelStudent(models.Model):
     _name = 'hostel.student'
     _rec_name = 'student_id'
 
-    @api.multi
     @api.depends('room_rent', 'paid_amount')
     def _get_remaining_fee_amt(self):
         for rec in self:
-            if rec.room_rent and rec.paid_amount:
-                rec.remaining_amount = rec.room_rent - rec.paid_amount
-            else:
-                rec.remaining_amount = 0.0
+            rec.remaining_amount = rec.room_rent - (rec.paid_amount or 0.0)
 
     @api.multi
     def confirm_state(self):

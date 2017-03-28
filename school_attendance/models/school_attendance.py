@@ -223,8 +223,8 @@ class DailyAttendance(models.Model):
             if rec.student_ids:
                 count += 1
                 rec.total_student = count
-            else:
-                rec.total_student = count
+#            else:
+#                rec.total_student = count
 
     @api.multi
     @api.depends('student_ids')
@@ -236,8 +236,8 @@ class DailyAttendance(models.Model):
                     if att.is_present:
                         count += 1
                 rec.total_presence = count
-            else:
-                rec.total_presence = count
+#            else:
+#                rec.total_presence = count
 
     @api.multi
     @api.depends('student_ids')
@@ -249,8 +249,8 @@ class DailyAttendance(models.Model):
                     if att.is_absent:
                         count_fail += 1
                 rec.total_absent = count_fail
-            else:
-                rec.total_absent = count_fail
+#            else:
+#                rec.total_absent = count_fail
 
     date = fields.Date("Today's Date",
                        default=lambda *a: time.strftime('%Y-%m-%d'))

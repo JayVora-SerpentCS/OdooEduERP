@@ -370,8 +370,8 @@ class StudentStudent(models.Model):
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
     blood_group = fields.Char('Blood Group')
-    height = fields.Float('Height')
-    weight = fields.Float('Weight')
+    height = fields.Float('Height', help= "Hieght in C.M")
+    weight = fields.Float('Weight', help= "Weight in K.G")
     eye = fields.Boolean('Eyes')
     ear = fields.Boolean('Ears')
     nose_throat = fields.Boolean('Nose & Throat')
@@ -646,9 +646,9 @@ class HrEmployee(models.Model):
         subject_obj = self.env['subject.subject']
         for rec in self:
             subject_ids = subject_obj.search([('teacher_ids', '=', rec.id)])
-            sub_list = []
-            for sub_rec in subject_ids:
-                sub_list.append(sub_rec.id)
+            sub_list = [sub_rec.id for sub_rec in subject_ids]
+#            for sub_rec in subject_ids:
+#                sub_list.append(sub_rec.id)
             rec.subject_ids = sub_list
 
     subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',

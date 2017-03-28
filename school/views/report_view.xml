@@ -2,12 +2,10 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <report id="report_student_student"
                 string="Indentity Card"
                 model="student.student"
                 report_type="qweb-pdf"
                 file="school.identity_card"
                 name="school.identity_card"/>
-
 </odoo>
