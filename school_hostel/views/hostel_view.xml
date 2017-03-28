@@ -2,9 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <!-- Form View Of HOSTEL Type -->
-
         <record id="view_hostel_type_form" model="ir.ui.view">
             <field name="name">view.hostel.type.form</field>
             <field name="model">hostel.type</field>
@@ -57,7 +55,7 @@
                                                 <field name="hostel_id"/>
                                                 <field name="student_id"/>
                                                 <field name="school_id"/>
-                                                <field name="bed_type"  widget="selection"/>
+                                                <field name="bed_type" widget="selection"/>
                                                 <field name="admission_date"/>
                                                 <field name="discharge_date"/>
                                                 <field name="room_rent" />
@@ -80,9 +78,7 @@
                 </form>
             </field>
         </record>
-
         <!-- Tree View Of HOSTEL Type -->
-
         <record id="view_hostel_type_tree" model="ir.ui.view">
             <field name="name">view.hostel.type.tree</field>
             <field name="model">hostel.type</field>
@@ -93,25 +89,22 @@
                 </tree>
             </field>
         </record>
-
+        
         <!-- Actions Of Form & Tree Views Of HOSTEL Type -->
-
         <record id="action_hostel_type" model="ir.actions.act_window">
             <field name="name">HOSTEL Type</field>
             <field name="res_model">hostel.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
+        
         <!-- MenuItem Of HOSTEL -->
-
         <menuitem id="hostel_main_menu" name="Hostel" parent="school.menu_ems" sequence="5"/>
 
         <menuitem id="hostel_type_menu" name="Hostel" parent="hostel_main_menu" action="action_hostel_type"
                   groups="school.group_school_administration,school_hostel.group_hostel_manager"/>
 
         <!-- Form View Of HOSTEL Room -->
-
         <record id="view_hostel_room_form" model="ir.ui.view">
             <field name="name">view.hostel.room.form</field>
             <field name="model">hostel.room</field>
@@ -138,9 +131,7 @@
                 </form>
             </field>
         </record>
-
         <!-- Tree View Of HOSTEL Room -->
-
         <record id="view_hostel_room_tree" model="ir.ui.view">
             <field name="name">view.hostel.room.tree</field>
             <field name="model">hostel.room</field>
@@ -154,9 +145,7 @@
                 </tree>
             </field>
         </record>
-
         <!-- Action Of Form & Tree Views Of HOSTEL Room -->
-
         <record id="action_hostel_room" model="ir.actions.act_window">
             <field name="name">HOSTEL Room</field>
             <field name="res_model">hostel.room</field>
@@ -165,13 +154,11 @@
         </record>
 
         <!-- MenuItem Of HOSTEL Room -->
-
         <menuitem id="hostel_room_menu" name="Hostel Room" parent="hostel_main_menu"
                   action="action_hostel_room"
                   groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user,school.group_school_student"/>
 
         <!-- Form View Of HOSTEL Student -->
-
         <record id="view_hostel_student_form" model="ir.ui.view">
             <field name="name">view.hostel.student.form</field>
             <field name="model">hostel.student</field>
@@ -191,7 +178,7 @@
                             <field name="admission_date" />
                             <field name="discharge_date" />
                             <field name="room_rent" />
-                            <field name="bed_type"  widget="selection"/>
+                            <field name="bed_type" widget="selection"/>
                             <field name="paid_amount" />
                             <field name="remaining_amount" />
                         </group>
@@ -199,9 +186,7 @@
                 </form>
             </field>
         </record>
-
         <!-- Tree View Of HOSTEL Student -->
-
         <record id="view_hostel_student_tree" model="ir.ui.view">
             <field name="name">view.hostel.room.student</field>
             <field name="model">hostel.student</field>
@@ -218,9 +203,7 @@
                 </tree>
             </field>
         </record>
-
         <!-- Search View Of HOSTEL Student -->
-
         <record id="view_hostel_student_search" model="ir.ui.view">
             <field name="name">view.hostel.room.student.search</field>
             <field name="model">hostel.student</field>
@@ -240,9 +223,7 @@
                 </search>
             </field>
         </record>
-
         <!-- Actions Of Form & Tree Views Of HOSTEL Student Button -->
-
         <record id="action_hostel_student_button" model="ir.actions.act_window">
             <field name="name">HOSTEL student</field>
             <field name="res_model">hostel.student</field>
@@ -250,9 +231,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_student_id': active_id}</field>
         </record>
-
         <!-- Inherited Form View Of Student -->
-
         <record id="view_student_student_form2" model="ir.ui.view">
             <field name="name">student.student.form</field>
             <field name="model">student.student</field>
@@ -268,9 +247,7 @@
                 </data>
             </field>
         </record>
-
         <!-- Actions Of Form & Tree Views Of HOSTEL Student -->
-
         <record id="action_hostel_student" model="ir.actions.act_window">
             <field name="name">HOSTEL Student</field>
             <field name="res_model">hostel.student</field>
@@ -279,13 +256,11 @@
         </record>
 
         <!-- MenuItem Of HOSTEL Student -->
-
         <menuitem id="hostel_student_menu" name="Hostel Student" parent="hostel_main_menu"
                   action="action_hostel_student"
                   groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user,school.group_school_student"/>
 
         <!--Search View Of Bed Type -->
-
         <record id="bed_type_search" model="ir.ui.view">
             <field name="name">bed_type_Search</field>
             <field name="model">bed.type</field>
@@ -298,7 +273,6 @@
         </record>
 
         <!-- Form View Of Bed Type -->
-
         <record id="bed_type_form" model="ir.ui.view">
             <field name="name">bed_type_Form</field>
             <field name="model">bed.type</field>
@@ -314,9 +288,7 @@
                 </form>
             </field>
         </record>
-
         <!-- Tree View Of Bed Type -->
-
         <record id="bed_type_tree" model="ir.ui.view">
             <field name="name">bed_type_Tree</field>
             <field name="model">bed.type</field>
@@ -329,7 +301,6 @@
         </record>
 
         <!-- Actions Of Form & Tree Views Of Bed Type-->
-
         <record id="action_bed_type" model="ir.actions.act_window">
             <field name="name">Bed Type</field>
             <field name="res_model">bed.type</field>
@@ -338,9 +309,6 @@
         </record>
 
         <!-- MenuItems Of HOSTEL & HOSTEL->Bed Type -->
-
         <menuitem id="menu_hostel" name="Hostel" parent="school.menu_configuration" sequence="4"/>
-
         <menuitem id="menu_bed_type" name="Bed Type" parent="menu_hostel" action="action_bed_type"/>
-
 </odoo>
