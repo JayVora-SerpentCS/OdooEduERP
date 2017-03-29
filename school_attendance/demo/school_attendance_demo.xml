@@ -5,7 +5,7 @@
     <data noupdate="1">
         <!-- Daily Attendance Information-->
         <record id="demo_daily_attendance_1" model="daily.attendance">
-            <field name="date">2011-08-11</field>
+            <field name="date" eval="str(int(time.strftime('2015')))+'-08-11'"/>
             <field name="student_ids" eval="[]"/>
             <field name="standard_id" ref="school.demo_school_standard_1" />
             <field name="state">draft</field>
