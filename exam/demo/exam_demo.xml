@@ -59,6 +59,7 @@
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
         </record>
+        
         <!-- Exam Result Demo Data -->
         <record id="exam_result_1" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
@@ -100,6 +101,7 @@
             <field eval="30.75" name="percentage"/>
             <field eval="96.0" name="total"/>
         </record>
+        <!-- Exam Subject Demo Data -->
         <record id="exm_subject_0" model="exam.subject">
             <field eval="100.0" name="maximum_marks"/>
             <field name="exam_id" ref="exam.exam_result_1"/>
@@ -156,6 +158,7 @@
             <field eval="42.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
+        
         <!-- Additional Exam Demo Data -->
         <record id="additional_exam_supplementaryexam0" model="additional.exam">
             <field name="weightage">30</field>
@@ -179,6 +182,7 @@
             <field name="created_at" eval="time.strftime('%Y')+'/08/29'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
+        
         <!-- Additional Exam Result Demo Data -->
         <record id="additional_exam_result_0" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
