@@ -17,6 +17,7 @@
              'views/vehicle.xml',
              'views/participants.xml',
              'wizard/transfer_vehicle.xml'],
+    'demo': ['demo/transport_demo.xml'],
     'test': ['test/transport.yml', 'test/transport_report.yml'],
     'installable': True,
     'application': True
