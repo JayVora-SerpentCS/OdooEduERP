@@ -222,6 +222,7 @@
                 </tree>
             </field>
         </record>
+        
         <!-- Action Of Form & Tree Views Of Daily Attendance Information -->
         <record id="action_daily_attendance_form" model="ir.actions.act_window">
             <field name="name">Daily Attendance Information</field>
@@ -229,6 +230,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+        
         <!-- Menu Item Of Daily Attendance Sheets -->
         <menuitem id="menu_daily_attendances" name="Daily Attendance Sheets" parent="menu_attendance"
                   action="action_daily_attendance_form" />
