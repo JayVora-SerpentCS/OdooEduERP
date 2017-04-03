@@ -22,7 +22,7 @@ class LibraryRack(models.Model):
     _description = "Library Rack"
 
     name = fields.Char('Name', required=True,
-                       help="it will be show the position of book")
+                       help="it will show the position of book")
     code = fields.Char('Code', help="Code of book")
     active = fields.Boolean('Active', default='True')
 
