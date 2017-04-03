@@ -51,8 +51,6 @@ class TransportVehicle(models.Model):
         for rec in self:
             if rec.vehi_participants_ids:
                 rec.participant = len([vehi.id for vehi in rec.vehi_participants_ids])
-            else:
-                rec.participant = 0
 
     _name = 'transport.vehicle'
     _rec_name = 'vehicle'
@@ -129,8 +127,6 @@ class StudentTransports(models.Model):
             if rec.trans_participants_ids:
                 rec.total_participantes = len([root.id for root in
                                                rec.trans_participants_ids])
-            else:
-                rec.total_participantes = 0
 
     name = fields.Char('Transport Root Name', required=True)
     start_date = fields.Date('Start Date', required=True)
@@ -169,15 +165,15 @@ class StudentTransports(models.Model):
     @api.multi
     def delet_entry(self, transport_ids=None):
         ''' This method delete entry of participants
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param transport_ids : list of transport ids
-        @param context : standard Dictionary
-        @return : True
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param transport_ids : list of transport ids
+            @param context : standard Dictionary
+            @return : True
         '''
-        prt_obj = self.pool.get('transport.participant')
-        vehi_obj = self.pool.get('transport.vehicle')
+        prt_obj = self.env['transport.participant']
+        vehi_obj = self.env['transport.vehicle']
         trans_ids = self.search([('state', '=', 'open')])
         vehi_ids = vehi_obj.search([])
 
@@ -185,19 +181,15 @@ class StudentTransports(models.Model):
             stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
             participants = []
             trans_parti = []
-
             for prt_data in prt_obj.browse(stu_ids):
                 date = time.strftime("%Y-%m-%d")
-
                 if date > prt_data.tr_end_date:
                     if prt_data.state != 'over':
                         trans_parti.append(prt_data.id)
                 else:
                     participants.append(prt_data.id)
-
             if trans_parti:
                 prt_obj.write(prt_data.id, {'state': 'over'})
-
             if participants:
                 self.write(trans.id, {'trans_participants_ids':
                                       [(6, 0, participants)]},)

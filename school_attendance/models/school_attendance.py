@@ -44,9 +44,9 @@ class AttendanceSheet(models.Model):
                                                            toolbar=toolbar,
                                                            submenu=submenu)
         context = self._context
-#        c = res['fields']['attendance_ids']['views']['tree']
-#        a = c['fields']['three_1']
-#        b = c['fields']['two_0']
+        c = res['fields']['attendance_ids']['views']['tree']
+        a = c['fields']['three_1']
+        b = c['fields']['two_0']
         if self._context is None:
             context = {}
         if self._context.get('month_id', False):
@@ -113,7 +113,6 @@ class AttendanceSheetLine(models.Model):
                 att_count = att_count + 1
             if attendance_sheet_data.ten:
                 att_count = att_count + 1
-
             if attendance_sheet_data.one_1:
                 att_count = att_count + 1
             if attendance_sheet_data.one_2:
@@ -134,7 +133,6 @@ class AttendanceSheetLine(models.Model):
                 att_count = att_count + 1
             if attendance_sheet_data.one_0:
                 att_count = att_count + 1
-
             if attendance_sheet_data.two_1:
                 att_count = att_count + 1
             if attendance_sheet_data.two_2:
@@ -155,10 +153,8 @@ class AttendanceSheetLine(models.Model):
                 att_count = att_count + 1
             if attendance_sheet_data.two_0:
                 att_count = att_count + 1
-
             if attendance_sheet_data.three_1:
                 att_count = att_count + 1
-
             percentage = (float(att_count / 31.00)) * 100
             res[attendance_sheet_data.id] = percentage
         return res

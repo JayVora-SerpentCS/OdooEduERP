@@ -316,6 +316,6 @@ class StudentStudent(models.Model):
             event_obj = self.env['school.event']
             event_data = event_obj.browse(self._context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
-            args.append(('class_id', 'in', std_ids))
+            args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self).search(args, offset, limit, order,
                                                   count=count)
