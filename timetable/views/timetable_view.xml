@@ -76,7 +76,6 @@
                 </search>
             </field>
         </record>
-        
         <!-- Actions Of Form & Tree Views Of Time Table Information -->
         <record id="action_time_table_form" model="ir.actions.act_window">
             <field name="name">Time Table</field>
@@ -84,7 +83,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
         <!-- Inherited Form View Of DashBoard School Timetable -->
         <record id="inherit_dashboard_school_timetable" model="ir.ui.view">
             <field name="name">inherit.darshboard.school.timetable</field>
@@ -97,7 +95,6 @@
                 </xpath>
             </field>
         </record>
-
         <!-- Menu items of Timetable -->
         <menuitem id="menu_timetable_1" name="TimeTable" parent="school.menu_ems" action="action_time_table_form" sequence="9"/>
 </odoo>
