@@ -412,7 +412,6 @@
                 </search>
             </field>
         </record>
-        
         <!-- Action Of Form & Tree Views Of Event Parameter -->
         <record id="action_event_parameter" model="ir.actions.act_window">
             <field name="name"> Event Perameter</field>
@@ -447,7 +446,6 @@
                 </xpath>
             </field>
         </record>
-
         <!-- Menu Items for Event -->
         <menuitem id="menu_event_form_1" name="Events" parent="school.menu_ems" sequence="4" />
         <menuitem id="menu_event_sub_form_1" name="Event Informations" parent="menu_event_form_1"
