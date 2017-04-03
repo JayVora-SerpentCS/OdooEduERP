@@ -169,7 +169,7 @@ class ExamResult(models.Model):
                     elif line.state == "re-access":
                         obtain_marks = line.marks_access
                     total += obtain_marks
-                    rec.total = total
+            rec.total = total
 
     @api.multi
     def _compute_per(self):
@@ -432,7 +432,7 @@ class AdditionalExamResult(models.Model):
         for rec in self:
             min_m = rec.a_exam_id.subject_id.minimum_marks
             if (rec.a_exam_id and rec.a_exam_id.subject_id and min_m):
-                if self.a_exam_id.subject_id.minimum_marks <= rec.obtain_marks:
+                if rec.a_exam_id.subject_id.minimum_marks <= rec.obtain_marks:
                     rec.result = 'Pass'
                 else:
                     rec.result = 'Fail'
