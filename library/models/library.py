@@ -176,12 +176,9 @@ class LibraryBookIssue(models.Model):
                       and book lost penalty as value
         '''
         for rec in self:
-            if rec.state:
-                if rec.state.title() == 'Lost':
-                    fine = rec.name.list_price
-                    rec.lost_penalty = fine
+            if rec.state.title() == 'Lost':
+                rec.lost_penalty = rec.name.list_price
 
-    @api.multi
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
         ''' This method used how many book can issue as per user type  .
@@ -192,19 +189,18 @@ class LibraryBookIssue(models.Model):
             @param context : standard Dictionary
             @return : True or False
         '''
-        if self.card_id:
-            card_ids = self.search([('card_id', '=', self.card_id.id),
-                                    ('state', 'in', ['issue', 'reissue'])])
-            if self.state == 'issue' or self.state == 'reissue':
-                if self.card_id.book_limit > len(card_ids) - 1:
-                    return True
-                else:
-                    raise UserError(_('Book issue limit is over on this card'))
+        card_ids = self.search([('card_id', '=', self.card_id.id),
+                                ('state', 'in', ['issue', 'reissue'])])
+        if self.state == 'issue' or self.state == 'reissue':
+            if self.card_id.book_limit > len(card_ids) - 1:
+                return True
             else:
-                if self.card_id.book_limit > len(card_ids):
-                    return True
-                else:
-                    raise UserError(_('Book issue limit is over on this card'))
+                raise UserError(_('Book issue limit is over on this card'))
+        else:
+            if self.card_id.book_limit > len(card_ids):
+                return True
+            else:
+                raise UserError(_('Book issue limit is over on this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
@@ -280,7 +276,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
@@ -294,14 +290,14 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        if self.card_id:
-            card_ids = self.search([('card_id', '=', self.card_id.id),
-                                    ('state', 'in', ['issue', 'reissue'])])
-            if self.card_id.book_limit > len(card_ids):
-                self.write({'state': 'issue'})
-                product_id = self.name
-                product_id.write({'availability': 'notavailable'})
-        return True
+#        if self.card_id:
+        card_ids = self.search([('card_id', '=', self.card_id.id),
+                                ('state', 'in', ['issue', 'reissue'])])
+        if self.card_id.book_limit > len(card_ids):
+            self.write({'state': 'issue'})
+            product_id = self.name
+            product_id.write({'availability': 'notavailable'})
+            return True
 
     @api.multi
     def reissue_book(self):

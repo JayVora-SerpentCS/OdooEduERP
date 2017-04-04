@@ -49,8 +49,7 @@ class TransportVehicle(models.Model):
     @api.depends('vehi_participants_ids')
     def _participants(self):
         for rec in self:
-            if rec.vehi_participants_ids:
-                rec.participant = len([vehi.id for vehi in rec.vehi_participants_ids])
+            rec.participant = len(rec.vehi_participants_ids)
 
     _name = 'transport.vehicle'
     _rec_name = 'vehicle'
@@ -124,9 +123,7 @@ class StudentTransports(models.Model):
     @api.depends('trans_participants_ids')
     def _total_participantes(self):
         for rec in self:
-            if rec.trans_participants_ids:
-                rec.total_participantes = len([root.id for root in
-                                               rec.trans_participants_ids])
+            rec.total_participantes = len(rec.trans_participants_ids)
 
     name = fields.Char('Transport Root Name', required=True)
     start_date = fields.Date('Start Date', required=True)

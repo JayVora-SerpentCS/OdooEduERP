@@ -36,7 +36,7 @@ class StudentFeesRegister(models.Model):
 
     @api.multi
     def fees_register_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
@@ -128,12 +128,12 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def payslip_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
     def payslip_paid(self):
-        self.write({'state': 'paid'})
+        self.state = 'paid'
         return True
 
     @api.multi

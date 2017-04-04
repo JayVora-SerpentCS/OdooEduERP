@@ -66,12 +66,12 @@ class ProductProduct(models.Model):
     def name_get(self):
         ''' This method Returns the preferred display value
             (text representation) for the records with the given IDs.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param context : context arguments, like language, time zone
-        @return : tuples with the text representation of requested objects
+        `   @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids :list of IDs
+            @param context : context arguments, like language, time zone
+            @return : tuples with the text representation of requested objects
                   for to-many relationships
          '''
 
@@ -89,10 +89,10 @@ class ProductProduct(models.Model):
     @api.multi
     def _default_categ(self):
         ''' This method put default category of product
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param context : context arguments, like language, time zone
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param context : context arguments, like language, time zone
         '''
 
         if self._context is None:
@@ -133,14 +133,14 @@ class ProductProduct(models.Model):
     @api.multi
     def _get_partner_code_name(self, product, parent_id):
         ''' This method get the partner code name
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param product : name of field
-        @param partner_id : name of field
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids :list of IDs
+            @param product : name of field
+            @param partner_id : name of field
+            @param context : context arguments, like language, time zone
+            @return : Dictionary
          '''
         for supinfo in product.seller_ids:
             if supinfo.name.id == parent_id:
@@ -152,14 +152,14 @@ class ProductProduct(models.Model):
     @api.multi
     def _product_code(self):
         ''' This method get the product code
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param name : name of field
-        @param arg : other argument
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids :list of IDs
+            @param name : name of field
+            @param arg : other argument
+            @param context : context arguments, like language, time zone
+            @return : Dictionary
          '''
         res = {}
         parent_id = self._context.get('parent_id', None)
@@ -189,12 +189,12 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         ''' This method is Create new student
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param vals : dictionary of new values to be set
-        @param context : standard Dictionary
-        @return :ID of newly created record.
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param vals : dictionary of new values to be set
+            @param context : standard Dictionary
+            @return :ID of newly created record.
         '''
 
         def _uniq(seq):
