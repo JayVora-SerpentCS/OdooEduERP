@@ -53,11 +53,10 @@ class SchoolEvent(models.Model):
     _rec_name = 'name'
 
     @api.multi
+    @api.depends('part_ids')
     def _participants(self):
         for rec in self:
-            cnt = 0
-            cnt += 1
-            rec.participants = cnt
+            rec.participants = len(rec.part_ids)
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),
@@ -131,14 +130,13 @@ class SchoolEvent(models.Model):
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
+            arg_domain = ('part_standard_ids', 'in', [data.standard_id.id])
             args.append(arg_domain)
         return super(SchoolEvent, self).search(args, offset, limit, order,
                                                count=count)
 
     @api.multi
     def event_open(self):
-
         if self.part_ids and self.part_ids[0].id:
             self.write({'state': 'open'})
         else:
@@ -147,17 +145,17 @@ class SchoolEvent(models.Model):
 
     @api.multi
     def event_close(self):
-        self.write({'state': 'close'})
+        self.state = 'close'
         return True
 
     @api.multi
     def event_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
     def event_cancel(self):
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
         return True
 
 
