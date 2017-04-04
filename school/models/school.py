@@ -48,11 +48,7 @@ class AcademicYear(models.Model):
 
     @api.multi
     def name_get(self):
-        res = []
-        for acd_year_rec in self:
-            name = "[" + acd_year_rec['code'] + "]" + acd_year_rec['name']
-            res.append((acd_year_rec['id'], name))
-        return res
+        return [(rec.id, ' [' + rec.code + ']' + rec.name) for rec in self]
 
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
