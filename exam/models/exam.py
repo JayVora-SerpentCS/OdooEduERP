@@ -72,6 +72,11 @@ class ExamExam(models.Model):
     _name = 'exam.exam'
     _description = 'Exam Information'
 
+    @api.constrains('start_date', 'end_date')
+    def check_date_exam(self):
+        if self.end_date < self.start_date:
+            raise UserError(('End date of Exam should be greater than start date'))
+
     name = fields.Char("Exam Name", required=True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             default=lambda obj:
@@ -94,23 +99,23 @@ class ExamExam(models.Model):
 
     @api.multi
     def set_to_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def set_running(self):
         if self.exam_timetable_ids:
-            self.write({'state': 'running'})
+            self.state = 'running'
         else:
             raise UserError(_('Exam Schedule\
                              You must add one Exam Schedule'))
 
     @api.multi
     def set_finish(self):
-        self.write({'state': 'finished'})
+        self.state = 'finished'
 
     @api.multi
     def set_cancel(self):
-        self.write({'state': 'cancelled'})
+        self.state = 'cancelled'
 
     @api.multi
     def _validate_date(self):
@@ -269,7 +274,7 @@ class ExamResult(models.Model):
 
     @api.multi
     def result_re_access(self):
-        self.write({'state': 're-access'})
+        self.state = 're-access'
 
     @api.multi
     def re_result_confirm(self):
@@ -320,6 +325,7 @@ class ExamResult(models.Model):
                 add = add + opt_marks[i]
                 total += sub_line.maximum_marks or 0
             if total != 0.0:
+                # Sum cannot be used here as it is reserved keyword
                 per = (add / total) * 100
                 for grade_id in result.student_id.year.grade_id.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
@@ -331,7 +337,7 @@ class ExamResult(models.Model):
 
     @api.multi
     def result_re_evaluation(self):
-        self.write({'state': 're-evaluation'})
+        self.state = 're-evaluation'
         return True
 
 
