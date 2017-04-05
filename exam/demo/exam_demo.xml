@@ -158,7 +158,7 @@
             <field eval="42.0" name="obtain_marks"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
-        
+
         <!-- Additional Exam Demo Data -->
         <record id="additional_exam_supplementaryexam0" model="additional.exam">
             <field name="weightage">30</field>
@@ -182,12 +182,11 @@
             <field name="created_at" eval="time.strftime('%Y')+'/08/29'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
-        
         <!-- Additional Exam Result Demo Data -->
         <record id="additional_exam_result_0" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field model="additional.exam" name="a_exam_id" search="[('name', '=', u'Supplementary Exam')]"/>
-       	    <field eval="60.0" name="obtain_marks"/>
+            <field eval="60.0" name="obtain_marks"/>
         </record>
         <record id="additional_exam_result_1" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_2"/>

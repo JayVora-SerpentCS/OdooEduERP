@@ -13,9 +13,6 @@ class ProductState(models.Model):
     code = fields.Char('Code', required=True)
     active = fields.Boolean('Active')
 
-
-class Many2manySym(fields.Many2many):
-
     @api.multi
     def get(self, offset=0):
         res = {}
@@ -214,7 +211,7 @@ class ProductProduct(models.Model):
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
                 supplier = [0, 0,
-                            {'pricelist_ids': [],
+                            {'pricelist_Many2manySymids': [],
                              'name': obj.supplier_id.id,
                              'sequence': obj.sequence,
                              'qty': 0,
@@ -256,7 +253,8 @@ class ProductProduct(models.Model):
     availability = fields.Selection([('available', 'Available'),
                                      ('notavailable', 'Not Available')],
                                     'Book Availability', default='available')
-    link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
+    link_ids = fields.Many2many('product.product', 'book_book_rel',
+                                'product_id1',
                             'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",

@@ -61,22 +61,22 @@ class StudentEvaluation(models.Model):
 
     @api.multi
     def set_start(self):
-        self.write({'state': 'start'})
+        self.state = 'start'
         return True
 
     @api.multi
     def set_finish(self):
-        self.write({'state': 'finished'})
+        self.state = 'finished'
         return True
 
     @api.multi
     def set_cancel(self):
-        self.write({'state': 'cancelled'})
+        self.state = 'cancelled'
         return True
 
     @api.multi
     def set_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
 

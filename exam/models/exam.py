@@ -75,7 +75,8 @@ class ExamExam(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_date_exam(self):
         if self.end_date < self.start_date:
-            raise UserError(('End date of Exam should be greater than start date'))
+            raise UserError(_('End date of Exam should be \
+                              greater than start date'))
 
     name = fields.Char("Exam Name", required=True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
@@ -365,7 +366,7 @@ class ExamSubject(models.Model):
 
     @api.multi
     @api.depends('exam_id', 'obtain_marks')
-    def _get_grade(self):
+    def _compute_grade(self):
         for rec in self:
             s_id = rec.exam_id.student_id.year.grade_id.grade_ids
             if (rec.exam_id and rec.exam_id.student_id and s_id):
@@ -389,7 +390,7 @@ class ExamSubject(models.Model):
     marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_id = fields.Many2one('grade.master', "Grade")
-    grade = fields.Char(compute='_get_grade', string='Grade', type="char")
+    grade = fields.Char(compute='_compute_grade', string='Grade', type="char")
 
 
 class ExamResultBatchwise(models.Model):
@@ -399,7 +400,7 @@ class ExamResultBatchwise(models.Model):
 
     @api.multi
     @api.depends('standard_id', 'year')
-    def compute_grade(self):
+    def _compute_student_grade(self):
         for rec in self:
             fina_tot = 0
             count = 0
@@ -415,15 +416,18 @@ class ExamResultBatchwise(models.Model):
                     if student_ids.result_ids:
                         count += 1
                         fina_tot += student_ids.total
-                    divi = fina_tot / count  # Total_obtained mark of all student
+                    divi = fina_tot / count
+                    # Total_obtained mark of all student
                     if year_ob.grade_id.grade_ids:
-                        #divis = divi <= year_ob.grade_id.to_mark
+                        # divis = divi <= year_ob.grade_id.to_mark
                         for grade_id in year_ob.grade_id.grade_ids:
-                            if (divi >= grade_id.from_mark and divi <= grade_id.to_mark):
+                            if (divi >= grade_id.from_mark and
+                                divi <= grade_id.to_mark):
                                 rec.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
-    grade = fields.Char(compute='compute_grade', string='Grade', method=True,
+    grade = fields.Char(compute='_compute_student_grade', string='Grade',
+                        method=True,
                         store=True)
 
 
@@ -434,7 +438,7 @@ class AdditionalExamResult(models.Model):
 
     @api.multi
     @api.depends('a_exam_id', 'obtain_marks')
-    def _calc_result(self):
+    def _compute_student_result(self):
         for rec in self:
             min_m = rec.a_exam_id.subject_id.minimum_marks
             if (rec.a_exam_id and rec.a_exam_id.subject_id and min_m):
@@ -468,5 +472,5 @@ class AdditionalExamResult(models.Model):
     standard_id = fields.Many2one(related='student_id.standard_id',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_calc_result', string='Result',
+    result = fields.Char(compute='_compute_student_result', string='Result',
                          method=True)
