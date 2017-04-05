@@ -47,7 +47,7 @@ class TransportVehicle(models.Model):
 
     @api.multi
     @api.depends('vehi_participants_ids')
-    def _participants(self):
+    def _compute_participants(self):
         for rec in self:
             rec.participant = len(rec.vehi_participants_ids)
 
@@ -58,7 +58,7 @@ class TransportVehicle(models.Model):
     driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
     vehicle = fields.Char('Vehicle No', required=True)
     capacity = fields.Integer('Capacity')
-    participant = fields.Integer(compute='_participants',
+    participant = fields.Integer(compute='_compute_participants',
                                  string='Total Participants', readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
                                              'vehicle_participant_student_rel',
@@ -121,7 +121,7 @@ class StudentTransports(models.Model):
 
     @api.multi
     @api.depends('trans_participants_ids')
-    def _total_participantes(self):
+    def _compute_total_participants(self):
         for rec in self:
             rec.total_participantes = len(rec.trans_participants_ids)
 
@@ -129,7 +129,7 @@ class StudentTransports(models.Model):
     start_date = fields.Date('Start Date', required=True)
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
     end_date = fields.Date('End Date', required=True)
-    total_participantes = fields.Integer(compute='_total_participantes',
+    total_participantes = fields.Integer(compute='_compute_total_participants',
                                          method=True,
                                          string='Total Participants',
                                          readonly=True)
@@ -151,12 +151,12 @@ class StudentTransports(models.Model):
 
     @api.multi
     def transport_open(self):
-        self.write({'state': 'open'})
+        self.state = 'open'
         return True
 
     @api.multi
     def transport_close(self):
-        self.write({'state': 'close'})
+        self.state = 'close'
         return True
 
     @api.multi
