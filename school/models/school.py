@@ -3,14 +3,12 @@
 
 import time
 from datetime import date, datetime
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize,\
     image_resize_image_big
 from odoo.exceptions import except_orm, Warning as UserError
-from datetime import datetime
-from dateutil.relativedelta import relativedelta as rd
 
 
 class BoardBoard(models.AbstractModel):
@@ -195,12 +193,8 @@ class SchoolStandard(models.Model):
 
     @api.multi
     def name_get(self):
-        res = []
-        for standard in self:
-            div_n = "[" + standard.division_id.name + "]"
-            name = standard.standard_id.name + div_n
-            res.append((standard.id, name))
-        return res
+        return [(rec.id, rec.standard_id.name +
+                 '[' + rec.division_id.name + ']') for rec in self]
 
 
 class SchoolSchool(models.Model):
@@ -285,7 +279,7 @@ class StudentStudent(models.Model):
 
     @api.multi
     @api.depends('date_of_birth')
-    def _calc_student_age(self):
+    def _compute_student_age(self):
         current_dt = datetime.today()
         for rec in self:
             if rec.date_of_birth:
@@ -345,7 +339,8 @@ class StudentStudent(models.Model):
     date_of_birth = fields.Date('BirthDate', required=True,
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer(compute='_calc_student_age',string='Age',readonly=True)
+    age = fields.Integer(compute='_compute_student_age', string='Age',
+                                                      readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
@@ -366,8 +361,8 @@ class StudentStudent(models.Model):
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
     blood_group = fields.Char('Blood Group')
-    height = fields.Float('Height', help= "Hieght in C.M")
-    weight = fields.Float('Weight', help= "Weight in K.G")
+    height = fields.Float('Height', help="Hieght in C.M")
+    weight = fields.Float('Weight', help="Weight in K.G")
     eye = fields.Boolean('Eyes')
     ear = fields.Boolean('Ears')
     nose_throat = fields.Boolean('Nose & Throat')
@@ -432,27 +427,27 @@ class StudentStudent(models.Model):
 
     @api.multi
     def set_to_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
     def set_alumni(self):
-        self.write({'state': 'alumni'})
+        self.state = 'alumni'
         return True
 
     @api.multi
     def set_terminate(self):
-        self.write({'state': 'terminate'})
+        self.state = 'terminate'
         return True
 
     @api.multi
     def set_done(self):
-        self.write({'state': 'done'})
+        self.state = 'done'
         return True
 
     @api.multi
     def admission_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
@@ -496,7 +491,7 @@ class StudentGrn(models.Model):
     _rec_name = "grn_no"
 
     @api.multi
-    def _grn_no(self):
+    def _compute_grn_no(self):
         for stud_grn in self:
             grn_no1 = " "
             grn_no2 = " "
@@ -538,7 +533,7 @@ class StudentGrn(models.Model):
                                 ('static', 'Static String')], 'Suffix')
     static_prefix = fields.Char('Static String for Prefix')
     static_postfix = fields.Char('Static String for Suffix')
-    grn_no = fields.Char('Generated GR No.', compute='_grn_no')
+    grn_no = fields.Char('Generated GR No.', compute='_compute_grn_no')
 
 
 class MotherTongue(models.Model):
@@ -642,10 +637,9 @@ class HrEmployee(models.Model):
         subject_obj = self.env['subject.subject']
         for rec in self:
             subject_ids = subject_obj.search([('teacher_ids', '=', rec.id)])
-            sub_list = [sub_rec.id for sub_rec in subject_ids]
+            rec.subject_ids = [sub_rec.id for sub_rec in subject_ids]
 #            for sub_rec in subject_ids:
 #                sub_list.append(sub_rec.id)
-            rec.subject_ids = sub_list
 
     subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
                                    'Subjects', compute='_compute_subject')
