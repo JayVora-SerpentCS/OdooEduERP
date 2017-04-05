@@ -88,7 +88,7 @@ class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
     @api.multi
-    def attendance_percentage(self):
+    def _compute_attendance_percentage(self):
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -198,7 +198,8 @@ class AttendanceSheetLine(models.Model):
     two_9 = fields.Boolean('29')
     two_0 = fields.Boolean('30')
     three_1 = fields.Boolean('31')
-    percentage = fields.Float(compute="attendance_percentage", method=True,
+    percentage = fields.Float(compute="_compute_attendance_percentage",
+                              method=True,
                               string='Attendance (%)', store=False)
 
 
@@ -210,18 +211,16 @@ class DailyAttendance(models.Model):
 
     @api.multi
     @api.depends('student_ids')
-    def _total(self):
+    def _compute_total(self):
         for rec in self:
             count = 0
             if rec.student_ids:
                 count += 1
                 rec.total_student = count
-#            else:
-#                rec.total_student = count
 
     @api.multi
     @api.depends('student_ids')
-    def _present(self):
+    def _compute_present(self):
         for rec in self:
             count = 0
             if rec.student_ids:
@@ -229,12 +228,10 @@ class DailyAttendance(models.Model):
                     if att.is_present:
                         count += 1
                 rec.total_presence = count
-#            else:
-#                rec.total_presence = count
 
     @api.multi
     @api.depends('student_ids')
-    def _absent(self):
+    def _compute_absent(self):
         for rec in self:
             count_fail = 0
             if rec.student_ids:
@@ -242,8 +239,6 @@ class DailyAttendance(models.Model):
                     if att.is_absent:
                         count_fail += 1
                 rec.total_absent = count_fail
-#            else:
-#                rec.total_absent = count_fail
 
     date = fields.Date("Today's Date",
                        default=lambda *a: time.strftime('%Y-%m-%d'))
@@ -258,11 +253,13 @@ class DailyAttendance(models.Model):
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
-    total_student = fields.Integer(compute="_total", method=True, store=True,
+    total_student = fields.Integer(compute="_compute_total", method=True,
+                                   store=True,
                                    string='Total Students')
-    total_presence = fields.Integer(compute="_present", method=True,
+    total_presence = fields.Integer(compute="_compute_present", method=True,
                                     store=True, string='Present Students')
-    total_absent = fields.Integer(compute="_absent", method=True, store=True,
+    total_absent = fields.Integer(compute="_compute_absent", method=True,
+                                  store=True,
                                   string='Absent Students')
 
     @api.model
@@ -399,12 +396,12 @@ class DailyAttendance(models.Model):
                                                   ('year_id', 'in',
                                                    year_ids.ids)])
             for month in month_ids:
-                month_data = month
+#                month_data = month
                 domain = [('month_id', 'in', month_ids.ids),
                           ('year_id', 'in', year_ids.ids)]
                 att_sheet_ids = attendance_sheet_obj.search(domain)
                 attendance_sheet_id = (att_sheet_ids and att_sheet_ids.id
-                    or False)
+                                       or False)
                 if not attendance_sheet_id:
                     sheet = {'name': ('Month ' + month.name + "-Year " +
                                       str(date.year)),
@@ -554,7 +551,8 @@ class DailyAttendance(models.Model):
                         for student_id in line.student_ids:
                             sheet_line_obj.read([student_id.roll_no])
                             domain = [('roll_no', '=', student_id.roll_no),
-                                      ('standard_id', '=', attendance_sheet_id.id)]
+                                     ('standard_id', '=',
+                                      attendance_sheet_id.id)]
                             search_id = sheet_line_obj.search(domain)
                             if date.day == 1 and student_id.is_absent:
                                 val = {'one': False}
