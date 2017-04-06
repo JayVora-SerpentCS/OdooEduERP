@@ -13,9 +13,6 @@ class ProductState(models.Model):
     code = fields.Char('Code', required=True)
     active = fields.Boolean('Active')
 
-
-class Many2manySym(fields.Many2many):
-
     @api.multi
     def get(self, offset=0):
         res = {}
@@ -66,12 +63,12 @@ class ProductProduct(models.Model):
     def name_get(self):
         ''' This method Returns the preferred display value
             (text representation) for the records with the given IDs.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param context : context arguments, like language, time zone
-        @return : tuples with the text representation of requested objects
+        `   @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids :list of IDs
+            @param context : context arguments, like language, time zone
+            @return : tuples with the text representation of requested objects
                   for to-many relationships
          '''
 
@@ -89,10 +86,10 @@ class ProductProduct(models.Model):
     @api.multi
     def _default_categ(self):
         ''' This method put default category of product
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param context : context arguments, like language, time zone
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param context : context arguments, like language, time zone
         '''
 
         if self._context is None:
@@ -133,14 +130,14 @@ class ProductProduct(models.Model):
     @api.multi
     def _get_partner_code_name(self, product, parent_id):
         ''' This method get the partner code name
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param product : name of field
-        @param partner_id : name of field
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids :list of IDs
+            @param product : name of field
+            @param partner_id : name of field
+            @param context : context arguments, like language, time zone
+            @return : Dictionary
          '''
         for supinfo in product.seller_ids:
             if supinfo.name.id == parent_id:
@@ -152,14 +149,14 @@ class ProductProduct(models.Model):
     @api.multi
     def _product_code(self):
         ''' This method get the product code
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param name : name of field
-        @param arg : other argument
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids :list of IDs
+            @param name : name of field
+            @param arg : other argument
+            @param context : context arguments, like language, time zone
+            @return : Dictionary
          '''
         res = {}
         parent_id = self._context.get('parent_id', None)
@@ -189,12 +186,12 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         ''' This method is Create new student
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param vals : dictionary of new values to be set
-        @param context : standard Dictionary
-        @return :ID of newly created record.
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param vals : dictionary of new values to be set
+            @param context : standard Dictionary
+            @return :ID of newly created record.
         '''
 
         def _uniq(seq):
@@ -214,7 +211,7 @@ class ProductProduct(models.Model):
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
                 supplier = [0, 0,
-                            {'pricelist_ids': [],
+                            {'pricelist_Many2manySymids': [],
                              'name': obj.supplier_id.id,
                              'sequence': obj.sequence,
                              'qty': 0,
@@ -234,7 +231,7 @@ class ProductProduct(models.Model):
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
-    code = fields.Char(_compute_="_product_code", method=True,
+    code = fields.Char(compute="_product_code", method=True,
                        string='Acronym', store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
@@ -256,7 +253,8 @@ class ProductProduct(models.Model):
     availability = fields.Selection([('available', 'Available'),
                                      ('notavailable', 'Not Available')],
                                     'Book Availability', default='available')
-    link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
+    link_ids = fields.Many2many('product.product', 'book_book_rel',
+                                'product_id1',
                             'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",

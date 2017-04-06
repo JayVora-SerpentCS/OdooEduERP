@@ -19,7 +19,7 @@
                             <field name="photo" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;" />
                             <div class="oe_title">
                                 <group>
-                                    <field name="name" placeholder="First Name" nolabel="1" />
+                                    <field name="name" placeholder="First Name" nolabel="1" required="1"/>
                                     <br />
                                     <field name="middle" placeholder="Middle Name" nolabel="1" />
                                     <br />
@@ -38,7 +38,7 @@
                                 <field name="school_id" widget="selection" help="School of Student" />
                             </group>
                             <group string="Standard Information">
-                                <field name="standard_id" placeholder="Standard" widget="selection" />
+                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id)]" widget="selection" />
                                 <field name="division_id" placeholder="Division" widget="selection" />
                                 <field name="medium_id" placeholder="Medium" widget="selection" />
                             </group>
@@ -49,7 +49,7 @@
                                 <div>
                                     <field name="street" placeholder="Street..." />
                                     <field name="street2" placeholder="Street2..." />
-                                    <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" />
+                                    <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
                                     <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
                                     <field name="city" placeholder="City" required="1" />
                                 </div>
@@ -409,7 +409,7 @@
                                 <group>
                                     <field name="pid" nolabel="1" />
                                     <br />
-                                    <field name="name" placeholder="First Name" nolabel="1" />
+                                    <field name="name" placeholder="First Name" nolabel="1" required="1"/>
                                     <br />
                                     <field name="middle" placeholder="Middle Name" nolabel="1" />
                                     <br />
@@ -423,7 +423,7 @@
                                 <field name="year" widget="selection" placeholder="Academic Year" />
                             </group>
                             <group string="Class Information">
-                                <field name="standard_id" placeholder="Standard" widget="selection" />
+                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id)]" widget="selection" />
                                 <field name="division_id" placeholder="Division" widget="selection" />
                                 <field name="medium_id" placeholder="Medium" widget="selection" />
                             </group>
@@ -434,9 +434,9 @@
                                 <div>
                                     <field name="street" placeholder="Street..." />
                                     <field name="street2" placeholder="Street2..." />
-                                    <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" />
-                                    <field name="state_id" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                                    <field name="city" placeholder="City" />
+                                    <field name="country_id" placeholder="Country" required="1" class="oe_no_button" options="{&quot;no_open&quot;: true}" />
+                                    <field name="state_id" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: true}" required="1"/>
+                                    <field name="city" placeholder="City" required="1"/>
                                     <field name="zip" placeholder="ZIP" />
                                 </div>
                             </group>
@@ -488,7 +488,7 @@
                                     </tree>
                                     <form string="Reference">
                                         <group col="4" colspan="4">
-                                            <field name="name" placeholder="First Name" />
+                                            <field name="name" placeholder="First Name" required="True"/>
                                             <field name="middle" placeholder="Middle Name" />
                                             <field name="last" placeholder="Last Name" />
                                             <field name="designation" placeholder="Designation" />
@@ -1814,5 +1814,4 @@
                 </field>
             </field>
         </record>
-
 </odoo>

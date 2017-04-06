@@ -47,14 +47,9 @@ class TransportVehicle(models.Model):
 
     @api.multi
     @api.depends('vehi_participants_ids')
-    def _participants(self):
-        if self.vehi_participants_ids:
-            participate_list = []
-            for vehi in self.vehi_participants_ids:
-                participate_list.append(vehi.id)
-            self.participant = len(participate_list)
-        else:
-            self.participant = 0
+    def _compute_participants(self):
+        for rec in self:
+            rec.participant = len(rec.vehi_participants_ids)
 
     _name = 'transport.vehicle'
     _rec_name = 'vehicle'
@@ -63,7 +58,7 @@ class TransportVehicle(models.Model):
     driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
     vehicle = fields.Char('Vehicle No', required=True)
     capacity = fields.Integer('Capacity')
-    participant = fields.Integer(_compute_='_participants',
+    participant = fields.Integer(compute='_compute_participants',
                                  string='Total Participants', readonly=True)
     vehi_participants_ids = fields.Many2many('transport.participant',
                                              'vehicle_participant_student_rel',
@@ -126,20 +121,15 @@ class StudentTransports(models.Model):
 
     @api.multi
     @api.depends('trans_participants_ids')
-    def _total_participantes(self):
-        if self.trans_participants_ids:
-            tot_list = []
-            for root in self.trans_participants_ids:
-                tot_list.append(root.id)
-            self.total_participantes = len(tot_list)
-        else:
-            self.total_participantes = 0
+    def _compute_total_participants(self):
+        for rec in self:
+            rec.total_participantes = len(rec.trans_participants_ids)
 
     name = fields.Char('Transport Root Name', required=True)
     start_date = fields.Date('Start Date', required=True)
     contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
     end_date = fields.Date('End Date', required=True)
-    total_participantes = fields.Integer(_compute_='_total_participantes',
+    total_participantes = fields.Integer(compute='_compute_total_participants',
                                          method=True,
                                          string='Total Participants',
                                          readonly=True)
@@ -161,26 +151,26 @@ class StudentTransports(models.Model):
 
     @api.multi
     def transport_open(self):
-        self.write({'state': 'open'})
+        self.state = 'open'
         return True
 
     @api.multi
     def transport_close(self):
-        self.write({'state': 'close'})
+        self.state = 'close'
         return True
 
     @api.multi
     def delet_entry(self, transport_ids=None):
         ''' This method delete entry of participants
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param transport_ids : list of transport ids
-        @param context : standard Dictionary
-        @return : True
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param transport_ids : list of transport ids
+            @param context : standard Dictionary
+            @return : True
         '''
-        prt_obj = self.pool.get('transport.participant')
-        vehi_obj = self.pool.get('transport.vehicle')
+        prt_obj = self.env['transport.participant']
+        vehi_obj = self.env['transport.vehicle']
         trans_ids = self.search([('state', '=', 'open')])
         vehi_ids = vehi_obj.search([])
 
@@ -188,19 +178,15 @@ class StudentTransports(models.Model):
             stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
             participants = []
             trans_parti = []
-
             for prt_data in prt_obj.browse(stu_ids):
                 date = time.strftime("%Y-%m-%d")
-
                 if date > prt_data.tr_end_date:
                     if prt_data.state != 'over':
                         trans_parti.append(prt_data.id)
                 else:
                     participants.append(prt_data.id)
-
             if trans_parti:
                 prt_obj.write(prt_data.id, {'state': 'over'})
-
             if participants:
                 self.write(trans.id, {'trans_participants_ids':
                                       [(6, 0, participants)]},)

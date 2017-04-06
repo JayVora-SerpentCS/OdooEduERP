@@ -31,14 +31,12 @@ class StudentEvaluation(models.Model):
     @api.multi
     @api.depends('eval_line')
     def _compute_total_points(self):
-        total = 0
-        if self.eval_line:
-            for line in self.eval_line:
-                if line.point_id.point:
-                    total += line.point_id.point
-            self.total = total
-        else:
-            self.total = total
+        for rec in self:
+            if rec.eval_line:
+                rec.total = sum(line.point_id.point for line in rec.eval_line
+                                if line.point_id.point)
+            else:
+                rec.total = 0.0
 
     @api.model
     def get_user(self):
@@ -63,22 +61,22 @@ class StudentEvaluation(models.Model):
 
     @api.multi
     def set_start(self):
-        self.write({'state': 'start'})
+        self.state = 'start'
         return True
 
     @api.multi
     def set_finish(self):
-        self.write({'state': 'finished'})
+        self.state = 'finished'
         return True
 
     @api.multi
     def set_cancel(self):
-        self.write({'state': 'cancelled'})
+        self.state = 'cancelled'
         return True
 
     @api.multi
     def set_draft(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
 

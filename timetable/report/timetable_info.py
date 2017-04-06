@@ -16,11 +16,11 @@ class ReportTimetableInfo(models.AbstractModel):
                          hr where t.subject_id= s.id and t.teacher_id= hr.id\
                          and hr.resource_id = r.id  and table_id = %d\
                          group by start_time,end_time,s.name,week_day,r.name\
-                         order by start_time" % (timetable_id.id))
+                         order by start_time", (tuple([timetable_id.id]),))
         res = self._cr.dictfetchall()
         self._cr.execute("select start_time,end_time from time_table_line\
                          where table_id=%d group by start_time,end_time\
-                         order by start_time" % (timetable_id.id))
+                         order by start_time", (tuple([timetable_id.id]),))
         time_data = self._cr.dictfetchall()
         for time_detail in time_data:
             for data in res:

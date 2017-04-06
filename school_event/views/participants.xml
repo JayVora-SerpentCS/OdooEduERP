@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <template id="participants">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="event">
@@ -188,5 +187,4 @@
                 </t>
             </t>
         </template>
-
 </odoo>

@@ -2,9 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <!-- Form View Of Time Table Information -->
-
         <record id="view_time_table_form" model="ir.ui.view">
             <field name="name">time.table.form</field>
             <field name="model">time.table</field>
@@ -47,9 +45,7 @@
                 </form>
             </field>
         </record>
-
         <!-- Tree View Of Time Table Information -->
-
         <record id="view_time_table_tree" model="ir.ui.view">
             <field name="name">time.table.tree</field>
             <field name="model">time.table</field>
@@ -61,9 +57,7 @@
                 </tree>
             </field>
         </record>
-
         <!-- Search View Time Table Information -->
-
         <record id="timetable_search" model="ir.ui.view">
             <field name="name">time.table.search</field>
             <field name="model">time.table</field>
@@ -82,18 +76,14 @@
                 </search>
             </field>
         </record>
-
         <!-- Actions Of Form & Tree Views Of Time Table Information -->
-
         <record id="action_time_table_form" model="ir.actions.act_window">
             <field name="name">Time Table</field>
             <field name="res_model">time.table</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
         <!-- Inherited Form View Of DashBoard School Timetable -->
-
         <record id="inherit_dashboard_school_timetable" model="ir.ui.view">
             <field name="name">inherit.darshboard.school.timetable</field>
             <field name="model">board.board</field>
@@ -105,9 +95,6 @@
                 </xpath>
             </field>
         </record>
-
         <!-- Menu items of Timetable -->
-
         <menuitem id="menu_timetable_1" name="TimeTable" parent="school.menu_ems" action="action_time_table_form" sequence="9"/>
-
 </odoo>

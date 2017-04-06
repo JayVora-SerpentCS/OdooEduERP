@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class SchoolTeacherAssignment(models.Model):
     _name = 'school.teacher.assignment'
     _description = 'Teacher Assignment Information'
+
+    @api.constrains('assign_date', 'due_date')
+    def check_date(self):
+        if self.due_date < self.assign_date:
+            raise ValidationError(_('Due date of homework should \
+                                    be greater than assign date'))
 
     name = fields.Char('Assignment Name')
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
@@ -22,17 +29,11 @@ class SchoolTeacherAssignment(models.Model):
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id')
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super(SchoolTeacherAssignment, self).default_get(fields_list)
-        res.update({'state': 'draft'})
-        return res
-
     @api.multi
     def active_assignment(self):
         ''' This method change state as active state
             and create assignment line
-        @return : True
+            @return : True
         '''
         assignment_obj = self.env['school.student.assignment']
         std_ids = []
@@ -69,6 +70,12 @@ class SchoolStudentAssignment(models.Model):
     _name = 'school.student.assignment'
     _description = 'Student Assignment Information'
 
+    @api.constrains('assign_date', 'due_date')
+    def check_date(self):
+        if self.due_date < self.assign_date:
+            raise ValidationError(_('Due date of homework should be greater \
+                                   than Assign date'))
+
     name = fields.Char('Assignment Name')
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
     standard_id = fields.Many2one('school.standard', 'Standard', required=True)
@@ -84,7 +91,7 @@ class SchoolStudentAssignment(models.Model):
     def done_assignment(self):
         ''' This method change state as done
             for school student assignment
-        @return : True
+            @return : True
         '''
-        self.write({'state': 'done'})
+        self.state = 'done'
         return True

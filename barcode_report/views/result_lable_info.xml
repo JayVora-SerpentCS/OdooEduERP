@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <template id="result_label_info">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
@@ -103,5 +102,4 @@
                 </t>
             </t>
         </template>
-
 </odoo>

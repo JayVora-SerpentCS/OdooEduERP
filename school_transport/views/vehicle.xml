@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <template id="vehicle">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="vehicle">
@@ -117,5 +116,4 @@
                 </t>
             </t>
         </template>
-
 </odoo>
