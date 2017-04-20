@@ -2,7 +2,11 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from odoo import models, fields, api
+from dateutil.relativedelta import relativedelta
+from odoo import models, fields, api, _
+from datetime import datetime
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.exceptions import Warning as UserError
 
 
 class ProductState(models.Model):
@@ -12,6 +16,9 @@ class ProductState(models.Model):
     name = fields.Char('State', required=True)
     code = fields.Char('Code', required=True)
     active = fields.Boolean('Active')
+
+
+class Many2manySym(fields.Many2many):
 
     @api.multi
     def get(self, offset=0):
@@ -63,12 +70,12 @@ class ProductProduct(models.Model):
     def name_get(self):
         ''' This method Returns the preferred display value
             (text representation) for the records with the given IDs.
-        `   @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param ids :list of IDs
-            @param context : context arguments, like language, time zone
-            @return : tuples with the text representation of requested objects
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param ids :list of IDs
+        @param context : context arguments, like language, time zone
+        @return : tuples with the text representation of requested objects
                   for to-many relationships
          '''
 
@@ -86,10 +93,10 @@ class ProductProduct(models.Model):
     @api.multi
     def _default_categ(self):
         ''' This method put default category of product
-            @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param context : context arguments, like language, time zone
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param context : context arguments, like language, time zone
         '''
 
         if self._context is None:
@@ -130,14 +137,14 @@ class ProductProduct(models.Model):
     @api.multi
     def _get_partner_code_name(self, product, parent_id):
         ''' This method get the partner code name
-            @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param ids :list of IDs
-            @param product : name of field
-            @param partner_id : name of field
-            @param context : context arguments, like language, time zone
-            @return : Dictionary
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param ids :list of IDs
+        @param product : name of field
+        @param partner_id : name of field
+        @param context : context arguments, like language, time zone
+        @return : Dictionary
          '''
         for supinfo in product.seller_ids:
             if supinfo.name.id == parent_id:
@@ -149,14 +156,14 @@ class ProductProduct(models.Model):
     @api.multi
     def _product_code(self):
         ''' This method get the product code
-            @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param ids :list of IDs
-            @param name : name of field
-            @param arg : other argument
-            @param context : context arguments, like language, time zone
-            @return : Dictionary
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param ids :list of IDs
+        @param name : name of field
+        @param arg : other argument
+        @param context : context arguments, like language, time zone
+        @return : Dictionary
          '''
         res = {}
         parent_id = self._context.get('parent_id', None)
@@ -186,12 +193,12 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         ''' This method is Create new student
-            @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param vals : dictionary of new values to be set
-            @param context : standard Dictionary
-            @return :ID of newly created record.
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param vals : dictionary of new values to be set
+        @param context : standard Dictionary
+        @return :ID of newly created record.
         '''
 
         def _uniq(seq):
@@ -211,7 +218,7 @@ class ProductProduct(models.Model):
             suppliers = supplier_model.browse(supplier_ids)
             for obj in suppliers:
                 supplier = [0, 0,
-                            {'pricelist_Many2manySymids': [],
+                            {'pricelist_ids': [],
                              'name': obj.supplier_id.id,
                              'sequence': obj.sequence,
                              'qty': 0,
@@ -224,6 +231,38 @@ class ProductProduct(models.Model):
                     vals['seller_ids'].append(supplier)
         return super(ProductProduct, self).create(vals)
 
+    @api.onchange('day_to_return_book')
+    def onchange_day_to_return_book(self):
+        t = "%Y-%m-%d %H:%M:%S"
+        rd = relativedelta(days=self.day_to_return_book.day or 0.0)
+        if self.day_to_return_book:
+            ret_date = datetime.strptime(self.creation_date, t) + rd
+            self.date_retour = ret_date
+
+    @api.multi
+    @api.depends('qty_available')
+    def _get_books_available(self):
+        library_book_issue_obj = self.env['library.book.issue']
+        for rec in self:
+            issue_ids = library_book_issue_obj.search(
+                                            [('name', '=', rec.id),
+                                   ('state', 'in', ('issue', 'reissue'))])
+            occupied_no = 0.0
+            if issue_ids:
+                occupied_no = len(issue_ids)
+            rec.books_available = rec.qty_available - occupied_no
+        return True
+
+    @api.multi
+    @api.depends('availability')
+    def _check_books_availablity(self):
+        for rec in self:
+            if rec.books_available >= 1:
+                rec.availability = 'available'
+            else:
+                rec.availability = 'notavailable'
+        return True
+
     isbn = fields.Char('ISBN Code', unique=True,
                        help="Shows International Standard Book Number")
     catalog_num = fields.Char('Catalog number',
@@ -231,7 +270,7 @@ class ProductProduct(models.Model):
     lang = fields.Many2one('product.lang', 'Language')
     editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
-    code = fields.Char(compute="_product_code", method=True,
+    code = fields.Char(compute_="_product_code", method=True,
                        string='Acronym', store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
@@ -241,20 +280,21 @@ class ProductProduct(models.Model):
                                     help="Record creation date",
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_retour = fields.Date('Return Date', readonly=True,
-                              help='Book Return date', default=lambda *a:
-                              str(int(time.strftime("%Y"))) +
-                              time.strftime("-%m-%d"))
+    date_retour = fields.Datetime('Return Date',
+                              help='Book Return date')
+    book_price = fields.Float('Book Price')
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')
     rack = fields.Many2one('library.rack', 'Rack',
                            help="Shows position of book")
+    books_available = fields.Float("Books Available",
+                                   compute="_get_books_available")
     availability = fields.Selection([('available', 'Available'),
                                      ('notavailable', 'Not Available')],
-                                    'Book Availability', default='available')
-    link_ids = fields.Many2many('product.product', 'book_book_rel',
-                                'product_id1',
+                                    'Book Availability', default='available',
+                                    compute="_check_books_availablity")
+    link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
                             'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",
@@ -280,6 +320,49 @@ class ProductProduct(models.Model):
                           all the products'),
                         ('code_uniq', 'unique (code)',
                          'Code of the product must be unique !')]
+
+    @api.multi
+    def action_purchase_order(self):
+        purchase_line_obj = self.env['purchase.order.line']
+        purchase_obj = purchase_line_obj.search([('product_id', '=', self.id)])
+        action = self.env.ref('library.action_purchase_order_today_tree')
+        result = action.read()[0]
+        if not purchase_obj:
+            raise UserError(('There is no Books Purchase'))
+        order = []
+        [order.append(order_rec.order_id.id) for order_rec in purchase_obj]
+        if len(order) != 1:
+            result['domain'] = "[('id', 'in', " + str(order) + ")]"
+        else:
+            res = self.env.ref('purchase.purchase_order_form', False)
+            result['views'] = [(res and res.id or False, 'form')]
+            result['res_id'] = purchase_obj.order_id.id
+        return result
+
+    @api.multi
+    def action_book_req(self):
+        for product_rec in self:
+            book_req = self.env['library.book.request'].search([('name', '=',
+                                                             product_rec.id)])
+            action = self.env.ref('library.action_lib_book_req')
+            result = (action.read()[0])
+            if not book_req:
+                raise UserError(('There is no Book requested'))
+            req = []
+            [req.append(request_rec.id) for request_rec in book_req]
+            if len(req) != 1:
+                result['domain'] = "[('id', 'in', " + str(req) + ")]"
+            else:
+                res = self.env.ref('library.view_book_library_req_form', False)
+                result['views'] = [(res and res.id or False, 'form')]
+                result['res_id'] = book_req.id
+            return result
+#
+#    @api.multi
+#    def _cal_book_return_date(self):
+#        for x in self:
+#            issue_date=datetime.strftime(x.creation_date,
+#                    DEFAULT_SERVER_DATE_FORMAT)
 
 
 class BookAttachment(models.Model):

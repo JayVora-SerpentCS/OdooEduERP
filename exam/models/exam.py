@@ -97,6 +97,7 @@ class ExamExam(models.Model):
                               ('finished', 'Finished'),
                               ('cancelled', 'Cancelled')], 'State',
                              readonly=True, default='draft')
+    grade_system = fields.Many2one('grade.master', "Grade System")
 
     @api.multi
     def set_to_draft(self):
@@ -163,7 +164,7 @@ class ExamResult(models.Model):
     _description = 'exam result Information'
 
     @api.multi
-    @api.depends('result_ids')
+    @api.depends('result_ids', 'result_ids.obtain_marks')
     def _compute_total(self):
         for rec in self:
             total = 0.0
@@ -178,14 +179,13 @@ class ExamResult(models.Model):
             rec.total = total
 
     @api.multi
+    @api.depends('result_ids', 'result_ids.obtain_marks')
     def _compute_per(self):
-        res = {}
         total = 0.0
         obtained_total = 0.0
         obtain_marks = 0.0
         per = 0.0
-        grd = ""
-        for result in self.browse(self.ids):
+        for result in self:
             for sub_line in result.result_ids:
                 if sub_line.state == "re-evaluation":
                     obtain_marks = sub_line.marks_reeval
@@ -194,45 +194,41 @@ class ExamResult(models.Model):
                 obtain_marks = sub_line.obtain_marks
                 total += sub_line.maximum_marks or 0
                 obtained_total += obtain_marks
-            if total != 0.0:
+            if total > 1.0:
                 per = (obtained_total / total) * 100
-                for grade_id in result.student_id.year.grade_id.grade_ids:
-                    if per >= grade_id.from_mark and per <= grade_id.to_mark:
-                        grd = grade_id.grade
-                res[result.id] = {'percentage': per, 'grade': grd}
-        return res
+                if result.grade_system:
+                    for grade_id in result.grade_system.grade_ids:
+                        if per >= grade_id.from_mark\
+                            and per <= grade_id.to_mark:
+                            result.grade = grade_id.grade or ''
+                result.percentage = per
+        return True
 
     @api.multi
-    @api.depends('result_ids', 'student_id')
+    @api.depends('result_ids')
     def _compute_result(self):
         for rec in self:
             flag = False
             if rec.result_ids:
-                if rec.student_id.year.grade_id.grade_ids:
-                    for grades in rec.student_id.year.grade_id.grade_ids:
-                        if grades.grade:
-                            if not grades.fail:
-                                rec.result = 'Pass'
-                            else:
-                                flag = True
-                else:
-                    raise UserError(_('Configuration Error ! First Select Grade\
-                                      System in Student->year->.'))
+                for grade in rec.result_ids:
+                    if not grade.grade_line_id.fail:
+                            rec.result = 'Pass'
+                    else:
+                        flag = True
             if flag:
                 rec.result = 'Fail'
 
     @api.multi
     def on_change_student(self, student, exam_id, standard_id):
-        val = {}
         if not student:
-            return {}
+            return True
         if not exam_id:
             raise UserError(_('Input Error ! First Select Exam.'))
         student_obj = self.env['student.student']
         student_data = student_obj.browse(student)
-        val.update({'standard_id': student_data.standard_id.id,
-                    'roll_no_id': student_data.roll_no})
-        return {'value': val}
+        self.standard_id = student_data.standard_id.id
+        self.roll_no_id = student_data.roll_no
+        return True
 
     s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True)
     student_id = fields.Many2one("student.student", "Student Name",
@@ -246,31 +242,46 @@ class ExamResult(models.Model):
     total = fields.Float(compute='_compute_total', string='Obtain Total',
                          method=True, store=True)
     re_total = fields.Float('Re-access Obtain Total', readonly=True)
-    percentage = fields.Float("Percentage", readonly=True)
+    percentage = fields.Float("Percentage", compute="_compute_per",
+                              readonly=True, store=True)
     result = fields.Char(compute='_compute_result', string='Result',
                          readonly=True, method=True, store=True)
-    grade = fields.Char("Grade", readonly=True)
+    grade = fields.Char("Grade", compute="_compute_per",
+                              readonly=True, store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('re-access', 'Re-Access'),
                               ('re-access_confirm', 'Re-Access-Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
                               ('re-evaluation_confirm',
-                               'Re-Evaluation Confirm')],
+                               'Re-Evaluation Confirm'),
+                              ('done', 'Done')],
                              'State', readonly=True, default='draft')
     color = fields.Integer('Color')
+    grade_system = fields.Many2one('grade.master', "Grade System")
 
     @api.multi
     def result_confirm(self):
-        vals = {}
-        res = self._compute_per()
-        if not res:
-            raise UserError(_('Warning!\
-                             Please Enter the students Marks.'))
-        vals.update({'grade': res[self.id]['grade'],
-                     'percentage': res[self.id]['percentage'],
-                     'state': 'confirm'})
-        self.write(vals)
+        for rec in self:
+            for line in rec.result_ids:
+                if line.maximum_marks == 0:
+                    raise UserError(_('Warning!'),
+                             _('Kindly add maximum marks of subject\
+                             "%s".') % (line.subject_id.name))
+                elif line.minimum_marks == 0:
+                    raise UserError(_('Warning!'),
+                             _('Kindly add minimum marks of subject\
+                             "%s".') % (line.subject_id.name))
+                elif ((line.maximum_marks == 0 or
+                       line.minimum_marks == 0)
+                      and line.obtain_marks):
+                    raise UserError(_('Warning!'),
+                            _('Kindly add marks details of subject \
+                                   "%s".') % (line.subject_id.name))
+            vals = {'grade': rec.grade,
+                     'percentage': rec.percentage,
+                     'state': 'confirm'}
+            self.write(vals)
         return True
 
     @api.multi
@@ -286,23 +297,26 @@ class ExamResult(models.Model):
         per = 0.0
         grd = 0.0
         add = 0.0
-        for result in self.browse(self.ids):
+        for result in self:
             for sub_line in result.result_ids:
                 opt_marks.append(sub_line.obtain_marks)
                 acc_mark.append(sub_line.marks_access)
+                total += sub_line.maximum_marks or 0.0
             for i in range(0, len(opt_marks)):
                 if acc_mark[i] != 0.0:
                     opt_marks[i] = acc_mark[i]
             for i in range(0, len(opt_marks)):
                 add = add + opt_marks[i]
-                total += sub_line.maximum_marks or 0
-            if total != 0.0:
+
+            if total > 1.0:
                 per = (add / total) * 100
-                for grade_id in result.student_id.year.grade_id.grade_ids:
+                for grade_id in result.grade_system.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
-                res.update({'grade': grd, 'percentage': per,
-                            'state': 're-access_confirm', 're_total': add})
+                res.update({'grade': grd,
+                            'percentage': per,
+                            'state': 're-access_confirm',
+                            're_total': add})
             self.write(res)
         return True
 
@@ -315,30 +329,46 @@ class ExamResult(models.Model):
         total = 0.0
         per = 0.0
         grd = 0.0
-        for result in self.browse(self.ids):
+        for result in self:
             for sub_line in result.result_ids:
                 opt_marks.append(sub_line.obtain_marks)
                 eve_marks.append(sub_line.marks_reeval)
+                total += sub_line.maximum_marks or 0.0
             for i in range(0, len(opt_marks)):
                 if eve_marks[i] != 0.0:
                     opt_marks[i] = eve_marks[i]
             for i in range(0, len(opt_marks)):
-                add = add + opt_marks[i]
-                total += sub_line.maximum_marks or 0
-            if total != 0.0:
+                add += opt_marks[i]
+
+            if total > 1.0:
                 # Sum cannot be used here as it is reserved keyword
                 per = (add / total) * 100
-                for grade_id in result.student_id.year.grade_id.grade_ids:
+                for grade_id in result.grade_system.grade_ids:
                     if per >= grade_id.from_mark and per <= grade_id.to_mark:
                         grd = grade_id.grade
-                res.update({'grade': grd, 'percentage': per,
-                            'state': 're-evaluation_confirm', 're_total': add})
+                res.update({'grade': grd,
+                            'percentage': per,
+                            'state': 're-evaluation_confirm',
+                            're_total': add})
             self.write(res)
         return True
 
     @api.multi
     def result_re_evaluation(self):
         self.state = 're-evaluation'
+        return True
+
+    @api.multi
+    def set_done(self):
+        history_obj = self.env['student.history']
+        for rec in self:
+            vals = {'student_id': rec.student_id.id,
+                    'academice_year_id': rec.student_id.year.id,
+                    'standard_id': rec.standard_id.id,
+                    'percentage': rec.percentage,
+                    'result': rec.result}
+            history_obj.create(vals)
+            rec.write({'state': 'done'})
         return True
 
 
@@ -349,7 +379,7 @@ class ExamGradeLine(models.Model):
 
     standard_id = fields.Many2one('standard.standard', 'Standard')
     exam_id = fields.Many2one('exam.result', 'Result')
-    grade = fields.Char(string='Grade')
+    grade = fields.Char('Grade')
 
 
 class ExamSubject(models.Model):
@@ -368,12 +398,13 @@ class ExamSubject(models.Model):
     @api.depends('exam_id', 'obtain_marks')
     def _compute_grade(self):
         for rec in self:
-            s_id = rec.exam_id.student_id.year.grade_id.grade_ids
-            if (rec.exam_id and rec.exam_id.student_id and s_id):
-                for grade_id in s_id:
+            grade_lines = rec.exam_id.grade_system.grade_ids
+            if (rec.exam_id and rec.exam_id.student_id and grade_lines):
+                for grade_id in grade_lines:
                     b_id = rec.obtain_marks <= grade_id.to_mark
                     if (rec.obtain_marks >= grade_id.from_mark and b_id):
-                        rec.grade = grade_id.grade
+                        # rec.grade = grade_id.grade
+                        rec.grade_line_id = grade_id
 
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
@@ -389,8 +420,9 @@ class ExamSubject(models.Model):
     maximum_marks = fields.Float("Maximum Marks")
     marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
-    grade_id = fields.Many2one('grade.master', "Grade")
-    grade = fields.Char(compute='_compute_grade', string='Grade', type="char")
+    grade_line_id = fields.Many2one('grade.line', "Grade",
+                                    compute='_compute_grade')
+    # grade = fields.Char(compute='_compute_grade', string='Grade')
 
 
 class ExamResultBatchwise(models.Model):

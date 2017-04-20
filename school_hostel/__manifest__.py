@@ -3,7 +3,7 @@
 
 {
     'name': 'HOSTEL',
-    'version': "10.0.1.0.0",
+    'version': "1.0.1",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'category': 'School Management',
@@ -12,7 +12,8 @@
     'complexity': 'easy',
     'summary': 'Module For HOSTEL Management In School',
     'depends': ['school'],
-    'data': ['security/hostel_security.xml',
+    'data': [
+             'security/hostel_security.xml',
              'security/ir.model.access.csv',
              'views/hostel_view.xml',
              'views/hostel_sequence.xml',

@@ -2,11 +2,13 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import except_orm
+from openerp.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta as rd
+from datetime import datetime
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class HostelType(models.Model):
-
     _name = 'hostel.type'
 
     name = fields.Char('HOSTEL Name', required=True)
@@ -16,36 +18,42 @@ class HostelType(models.Model):
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('res.partner', 'Rector')
     room_ids = fields.One2many('hostel.room', 'name', 'Room')
+    student_ids = fields.One2many('hostel.student', 'hostel_info_id',
+                                  string='Students')
 
 
 class HostelRoom(models.Model):
 
     _name = 'hostel.room'
+    _rec_name = 'room_no'
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_check_availability(self):
         room_availability = 0
         for data in self:
+#            room_availability = 0
             count = 0
+#            if data.availability > 1.0:
             if data.student_ids:
                 count += 1
             room_availability = data.student_per_room - count
-            if room_availability < 0:
-                raise except_orm(_("You can not assign room\
-                more than %s student" % data.student_per_room))
-            else:
-                data.availability = room_availability
+            data.availability = room_availability
+#            if room_availability < 0:
+#                raise ValidationError(_("You can not assign room\
+#                more than %s student" % data.student_per_room))
+#            else:
+#                data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'HOSTEL')
     floor_no = fields.Integer('Floor No.', default=1)
     room_no = fields.Char('Room No.', required=True)
     student_per_room = fields.Integer('Student Per Room', required=True)
     availability = fields.Float(compute='_compute_check_availability',
-                                string="Availability")
-    student_ids = fields.One2many('hostel.student',
-                                  'hostel_room_id', 'Student')
+                                store=True, string="Availability")
+#    student_ids = fields.One2many('hostel.student',
+#                                  'hostel_room_id', 'Student')
     telephone = fields.Boolean('Telephone access')
+    rent_amount = fields.Float('Rent Amount Per Month')
     ac = fields.Boolean('Air Conditioning')
     private_bathroom = fields.Boolean('Private Bathroom')
     guest_sofa = fields.Boolean('Guest sofa-bed')
@@ -53,6 +61,8 @@ class HostelRoom(models.Model):
     internet = fields.Boolean('Internet Access')
     refrigerator = fields.Boolean('Refrigerator')
     microwave = fields.Boolean('Microwave')
+    student_ids = fields.One2many('hostel.student', 'room_id',
+                                  string="Students")
 
     _sql_constraints = [('room_no_unique', 'unique(room_no)',
                          'Room number must be unique!')]
@@ -64,7 +74,6 @@ class HostelRoom(models.Model):
 
 
 class HostelStudent(models.Model):
-
     _name = 'hostel.student'
     _rec_name = 'student_id'
 
@@ -74,44 +83,131 @@ class HostelStudent(models.Model):
             rec.remaining_amount = rec.room_rent - (rec.paid_amount or 0.0)
 
     @api.multi
-    def confirm_state(self):
-        self.status = 'confirm'
+    def cancel_state(self):
+        for rec in self:
+            rec.status = 'cancel'
+            rec.room_id.availability += 1
         return True
 
     @api.multi
     def reservation_state(self):
-        self.status = 'reservation'
+        for rec in self:
+            rec.status = 'reservation'
+            rec.room_id.availability -= 1
         return True
+
+    @api.depends('admission_date', 'duration')
+    @api.multi
+    def _compute_discharge_date(self):
+        for rec in self:
+            if rec.admission_date:
+                hostel_addmission_date = datetime.strptime(rec.admission_date,
+                                                DEFAULT_SERVER_DATETIME_FORMAT)
+                hostel_discharge_date = hostel_addmission_date + rd(
+                                                        months=rec.duration)
+                rec.discharge_date = hostel_discharge_date
+
+    @api.constrains('duration')
+    def check_duration(self):
+        if self.duration <= 0:
+            raise ValidationError(_('Duration should be greater than 0'))
+
+    @api.multi
+    def discharge_state(self):
+        curr_date = datetime.now()
+        for rec in self:
+            rec.status = 'discharge'
+            rec.room_id.availability -= 1
+            rec.acutal_discharge_date = curr_date
+
+    @api.multi
+    def invoice_view(self):
+        invoice_search = self.env['account.invoice'].search([(
+                                                'hostel_student_id', '=',
+                                                 self.id)])
+        invoice_form = self.env.ref('account.invoice_form')
+        return {'name': _("View Invoice"),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.invoice',
+                'res_id': invoice_search.id,
+                'view_id': invoice_form.id,
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'current',
+                }
+
+    @api.multi
+    def pay_fees(self):
+        for rec in self:
+            rec.write({'status': 'pending'})
+            hostel_fees = rec.browse(rec.id)
+            vals = {'partner_id': hostel_fees.student_id.partner_id.id,
+                    'account_id': hostel_fees.student_id.partner_id.
+                                  property_account_receivable_id.id,
+                    'hostel_student_id': hostel_fees.id,
+                    'hostel_ref': hostel_fees.hostel_id,
+                  }
+            account_inv_id = self.env['account.invoice'].create(vals)
+            acc_id = account_inv_id.journal_id.default_credit_account_id.id
+            account_view_id = self.env.ref('account.invoice_form')
+            invoice_lines = []
+            line_vals = {'name': hostel_fees.hostel_info_id.name,
+                         'account_id': acc_id,
+                         'quantity': hostel_fees.duration,
+                         'price_unit': hostel_fees.room_rent,
+                         }
+            invoice_lines.append((0, 0, line_vals))
+            account_inv_id.write({'invoice_line_ids': invoice_lines})
+            return {'name': _("Pay Hostel Fees"),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'account.invoice',
+                    'view_id': account_view_id.id,
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'current',
+                    'res_id': account_inv_id.id,
+                    'context': {}}
 
     @api.multi
     def print_fee_receipt(self):
-        data = self.read([])[0]
-        datas = {
-            'ids': [data['id']],
-            'form': data,
-            'model': 'hostel.student',
-        }
-        return {'type': 'ir.actions.report.xml',
-                'report_name': 'school_hostel.hostel_fee_reciept',
-                'datas': datas}
+        return self.env['report'].get_action(self,
+                                 'school_hostel.hostel_fee_reciept1')
 
-    hostel_room_id = fields.Many2one('hostel.room', 'HOSTEL Room')
+    @api.depends('duration')
+    def _compute_rent(self):
+        for rec in self:
+            amt = rec.room_id.rent_amount or 0.0
+            rec.room_rent = rec.duration * amt
+
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda obj:
                             obj.env['ir.sequence'].
                             next_by_code('hostel.student'))
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
-    room_rent = fields.Float('Total Room Rent', required=True)
+    room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
+                             required=True)
     bed_type = fields.Many2one('bed.type', 'Bed Type')
     admission_date = fields.Datetime('Admission Date')
-    discharge_date = fields.Datetime('Discharge Date')
+    discharge_date = fields.Datetime('Discharge Date',
+                                     compute="_compute_discharge_date")
     paid_amount = fields.Float('Paid Amount')
+    hostel_info_id = fields.Many2one('hostel.type', string="Hostel")
+    room_id = fields.Many2one('hostel.room', string="Room")
+    duration = fields.Integer('Duration')
+    rent_pay = fields.Float('Rent')
+    acutal_discharge_date = fields.Datetime('Actual Discharge Date')
     remaining_amount = fields.Float(compute='_compute_remaining_fee_amt',
                                     string='Remaining Amount')
     status = fields.Selection([('draft', 'Draft'),
                                ('reservation', 'Reservation'),
-                               ('confirm', 'Confirm')], 'Status',
+                               ('pending', 'Pending'),
+                               ('paid', 'Done'),
+                               ('discharge', 'Discharge'),
+                               ('cancel', 'Cancel')],
+                               string='Status',
                               default='draft')
 
     _sql_constraints = [('admission_date_greater',
@@ -127,3 +223,26 @@ class BedType(models.Model):
 
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
+
+
+class AccountInvoice(models.Model):
+
+    _inherit = "account.invoice"
+
+    hostel_student_id = fields.Many2one('hostel.student',
+                                        string="Hostel Student")
+    hostel_ref = fields.Char('Hostel Fees Refrence')
+
+
+class AccountPayment(models.Model):
+    _inherit = "account.payment"
+
+    @api.multi
+    def post(self):
+        res = super(AccountPayment, self).post()
+        for invoice in self.invoice_ids:
+            if invoice.hostel_student_id:
+                invoice.hostel_student_id.write(
+                                    {'status': 'paid',
+                                     'paid_amount': invoice.amount_total})
+        return res

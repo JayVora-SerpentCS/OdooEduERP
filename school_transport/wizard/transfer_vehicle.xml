@@ -39,6 +39,7 @@
             src_model="student.student"
             view_mode="form" 
             target="new" 
-            view_type="form"/>
+            view_type="form"
+            groups="school_transport.group_transportation_manager"/>
 
 </odoo>

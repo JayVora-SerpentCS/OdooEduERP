@@ -161,7 +161,8 @@ class SchoolStandard(models.Model):
     def _compute_student(self):
         for rec in self:
             rec.student_ids = False
-            domain = [('standard_id', '=', rec.standard_id.id)]
+            domain = [('standard_id', '=', rec.standard_id.id),
+                      ('state', '=', 'done')]
             if rec.standard_id:
                 rec.student_ids = self.env['student.student'].search(domain)
 
@@ -298,8 +299,16 @@ class StudentStudent(models.Model):
             raise except_orm(_('Error!'),
                              _('PID not valid'
                                'so record will not be saved.'))
-        result = super(StudentStudent, self).create(vals)
-        return result
+        if vals.get('cmp_id', False):
+            h = {'company_ids': [(4, vals.get('cmp_id'))],
+                 'company_id': vals.get('cmp_id')}
+            vals.update(h)
+        admission_group = self.env.ref('school.group_is_admission')
+        emp_grp = self.env.ref('base.group_user')
+        new_grp_list = [admission_group.id, emp_grp.id]
+        res = super(StudentStudent, self).create(vals)
+        res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
+        return res
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
@@ -310,6 +319,10 @@ class StudentStudent(models.Model):
         image = image_colorize(image)
         return image_resize_image_big(image.encode('base64'))
 
+    family_con_ids = fields.One2many('student.family.contact',
+                                     'family_contact_id',
+                                     'Family Contact Detail',
+                                     states={'done': [('readonly', True)]})
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
                               required=True)
     student_name = fields.Char('Student Name', related='user_id.name',
@@ -329,6 +342,8 @@ class StudentStudent(models.Model):
     year = fields.Many2one('academic.year', 'Academic Year', required=True,
                            states={'done': [('readonly', True)]})
     cast_id = fields.Many2one('student.cast', 'Religion')
+    relation = fields.Many2one('student.relation.master', 'Relation')
+
     admission_date = fields.Date('Admission Date', default=date.today())
     middle = fields.Char('Middle Name', required=True,
                          states={'done': [('readonly', True)]})
@@ -353,7 +368,7 @@ class StudentStudent(models.Model):
                                           'Previous School Detail',
                                           states={'done': [('readonly',
                                                             True)]})
-    family_con_ids = fields.One2many('student.family.contact',
+    family_con_icmp_idds = fields.One2many('student.family.contact',
                                      'family_contact_id',
                                      'Family Contact Detail',
                                      states={'done': [('readonly', True)]})
@@ -389,9 +404,9 @@ class StudentStudent(models.Model):
     document = fields.One2many('student.document', 'doc_id', 'Documents')
     description = fields.One2many('student.description', 'des_id',
                                   'Description')
-    student_id = fields.Many2one('student.student', 'name')
-    contact_phone = fields.Char('Phone No', related='student_id.phone')
-    contact_mobile = fields.Char('Mobile No', related='student_id.mobile')
+#    student_id = fields.Many2one('student.student', 'name')
+#    contact_phone = fields.Char('Phone No', related='student_id.phone')
+#    contact_mobile = fields.Char('Mobile No', related='student_id.mobile')
     student_id = fields.Many2one('student.student', 'Name')
     contact_phone = fields.Char('Phone No', related='student_id.phone',
                                 readonly=True)
@@ -454,6 +469,10 @@ class StudentStudent(models.Model):
     def admission_done(self):
         school_standard_obj = self.env['school.standard']
         for student_data in self:
+            student_group = self.env.ref('school.group_school_student')
+            emp_group = self.env.ref('base.group_user')
+            new_list = [emp_group.id, student_group.id]
+            student_data.user_id.write({'groups_id': [(6, 0, new_list)]})
             if student_data.age <= 5:
                 raise except_orm(_('Warning'),
                                  _('The student is not eligible.'
@@ -652,7 +671,7 @@ class ResPartner(models.Model):
 
     student_id = fields.Many2one('student.student', 'Student')
     parent_school = fields.Boolean('Is A Parent')
-    student_ids = fields.Many2many('student.student', 'res_partner_rel',
+    student_ids = fields.Many2many('student.student', 'student_parent_rel',
                                    'parent_id', 'student_id', 'Children')
 
 

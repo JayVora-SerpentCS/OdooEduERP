@@ -45,7 +45,7 @@
                                         <b>:</b>
                                     </td>
                                     <td width="80%" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <span t-esc="formatLang(time.strftime( '%Y-%m-%d'), date=True)"></span>
+                                        <span t-esc="time.strftime('%Y-%m-%d')"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -71,16 +71,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <t t-set="counter" t-value="0"/>
                                     <t t-foreach="o.line_ids" t-as="l">
+                                        <t t-set="counter" t-value="counter+1"/>
                                         <tr>
+                                            <td>
+                                                <span><t t-esc="counter"></t></span>
+                                            </td>
                                             <td width="5%" align="center" style="font-family: 'Helvetica';font-size: 16px;">
-                                                <span t-esc="get_no()"></span>
+<!--                                                 <span t-esc="get_no()"></span> -->
                                             </td>
                                             <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 16px;">
                                                 <span t-field="l.name"></span>
                                             </td>
                                             <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
-                                                <span t-esc="formatLang(l.amount)"></span>
+                                                <span t-esc="l.amount"></span>
                                             </td>
                                         </tr>
                                     </t>
@@ -93,7 +98,7 @@
                                         <b>Total Fees</b>
                                     </td>
                                     <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <b t-esc="formatLang(o.total)"></b>
+                                        <b t-esc="o.total"></b>
                                     </td>
                                 </tr>
                             </table>

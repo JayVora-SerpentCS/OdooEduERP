@@ -1,0 +1,11 @@
+==============================================================================
+ Version Change Log (school)
+===============================================================================
+
+1.0.1 --> 17 April 2017 : Vimal Patel
+    * Improvement the school security and record rule and added hook .
+ 1.0.2 --> 19 April 2017 : Arpit Joshi
+    * Added new security group is admission.
+    *View level changes
+    * Assigned group of admission when student in draft state.
+    * Assigned groups of school student when student in done state.

@@ -16,12 +16,12 @@ class ProcurementOrder(models.Model):
     @api.multi
     def make_po(self):
         """ Make purchase order from procurement0.bit_length()
-            @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param ids :list of IDs
-            @param context : context arguments, like language, time zone
-            @return: New created Purchase Orders procurement wise
+        @param self : Object Pointer
+        @param cr : Database Cursor
+        @param uid : Current Logged in User
+        @param ids :list of IDs
+        @param context : context arguments, like language, time zone
+        @return: New created Purchase Orders procurement wise
         """
         res = {}
         if self._context is None:

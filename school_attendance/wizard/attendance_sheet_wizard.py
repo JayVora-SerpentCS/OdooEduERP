@@ -17,12 +17,12 @@ class MonthlyAttendanceSheet(models.TransientModel):
     @api.multi
     def monthly_attendance_sheet_open_window(self):
         ''' This method open new window with monthly attendance sheet
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : record of monthly attendance sheet
+            @param self : Object Pointer
+            @param cr : Database Cursor
+            @param uid : Current Logged in User
+            @param ids : Current Records
+            @param context : standard Dictionary
+            @return : record of monthly attendance sheet
         '''
         data = self.read([])[0]
         models_data = self.env['ir.model.data']

@@ -3,7 +3,7 @@
 
 {
     'name': 'Fees Management',
-    'version': "10.0.1.0.0",
+    'version': "1.0.1",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
@@ -11,8 +11,9 @@
     'license': "AGPL-3",
     'complexity': 'easy',
     'summary': 'A Module For Fees Management In School',
-    'depends': ['school', 'account_voucher'],
+    'depends': ['account', 'account_accountant', 'school', 'account_voucher'],
     'data': ['security/ir.model.access.csv',
+             'security/security_fees.xml',
              'views/school_fees_view.xml',
              'views/school_fees_sequence.xml',
              'views/student_fees_register_workflow.xml',

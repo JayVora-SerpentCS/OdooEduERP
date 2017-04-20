@@ -9,7 +9,7 @@
                 model="exam.result" 
                 report_type="qweb-pdf"
                 file="exam.exam_result_report"
-                name="exam.exam_result_report" />
+                name="exam.exam_result_report"/>
 
         <report id="additional_exam_result_id_qweb" 
                 string="Additional Exam Result"
@@ -23,6 +23,7 @@
                 model="student.student" 
                 report_type="qweb-pdf" 
                 file="exam.result_information_report" 
-                name="exam.result_information_report" />
+                name="exam.result_information_report"
+                groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
 </odoo>

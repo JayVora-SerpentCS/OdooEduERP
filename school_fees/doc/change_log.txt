@@ -1,0 +1,7 @@
+==============================================================================
+ Version Change Log (School Fees)
+===============================================================================
+
+1.0.1 --> 13 April 2017 : Arpit Joshi
+        * Fix issue of report and improvement the fees payment flow
+        

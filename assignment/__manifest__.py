@@ -3,7 +3,7 @@
 
 {
     'name': 'Assignment Management',
-    'version': "10.0.1.0.0",
+    'version': "1.0.1",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
@@ -12,7 +12,9 @@
     'summary': 'A Module For Assignment Management In School',
     'complexity': 'easy',
     'depends': ['school'],
-    'data': ['views/homework_view.xml', 'security/ir.model.access.csv'],
+    'data': ['security/assignment_security.xml',
+             'views/homework_view.xml',
+             'security/ir.model.access.csv'],
     'test': ['test/assignment.yml'],
     'demo': ['demo/assignment_demo.xml'],
     'installable': True,

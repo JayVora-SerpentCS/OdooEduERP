@@ -11,11 +11,10 @@
             <field name="arch" type="xml">
                 <form string="Result Genereate">
                     <separator string="Generate Results" colspan="4"/>
-                    <group colspan="4">
-                        <label string="" colspan="2"/>
-                        <button class="btn btn-sm btn-default fa fa-times" special="cancel" string="Close"/>
-                        <button class="btn btn-sm btn-default fa fa-check-circle" name="generate_result" string="Create Result" type="object"/>
-                   </group>
+                   <footer>
+                       <button class="btn btn-sm btn-default fa fa-times" special="cancel" string="Close"/>
+                       <button class="btn btn-sm btn-default fa fa-check-circle" name="generate_result" string="Create Result" type="object"/>
+                   </footer>
                </form>
             </field>
         </record>
@@ -35,7 +34,11 @@
         <act_window id="action_exam_create_result_confirm"
             name="Create Results"
             key2="client_action_multi"
-            res_model="exam.create.result" src_model="exam.exam"
-            view_mode="form" target="new" view_type="form" />
+            res_model="exam.create.result"
+            src_model="exam.exam"
+            view_mode="form"
+            target="new"
+            view_type="form"
+            groups="school.group_school_teacher,school.group_school_administration"/>
 
 </odoo>

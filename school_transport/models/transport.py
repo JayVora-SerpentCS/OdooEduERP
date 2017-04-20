@@ -19,6 +19,7 @@ class HrEmployee(models.Model):
     _description = 'Driver Information'
 
     licence_no = fields.Char('License No')
+    is_driver = fields.Boolean('IS driver')
 
 
 class TransportPoint(models.Model):
@@ -260,7 +261,7 @@ class TransportRegistration(models.Model):
         if not month:
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
-        mon = relativedelta(months=+month)
+        mon = relativedelta(months= +month)
         tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
@@ -291,7 +292,7 @@ class TransportRegistration(models.Model):
             amount = reg_data.point_id.amount * reg_data.for_month
             tr_start_date = (reg_data.reg_date)
             month = reg_data.for_month
-            mon1 = relativedelta(months=+month)
+            mon1 = relativedelta(months= +month)
             tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon1
             date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
@@ -308,7 +309,7 @@ class TransportRegistration(models.Model):
                         'tr_reg_date': reg_data.reg_date,
                         'point_id': reg_data.point_id.id,
                         'vehicle_id': reg_data.vehicle_id.id}
-            temp = stu_prt_obj.create(dict_prt)
+            temp = stu_prt_obj.sudo().create(dict_prt)
             # make entry in Transport vehicle.
             list1 = []
             for prt in reg_data.vehicle_id.vehi_participants_ids:
@@ -321,19 +322,20 @@ class TransportRegistration(models.Model):
             if flag:
                 list1.append(temp.id)
             vehicle_id = vehi_obj.browse(reg_data.vehicle_id.id)
-            vehicle_id.write({'vehi_participants_ids': [(6, 0, list1)]})
+            vehicle_id.sudo().write({'vehi_participants_ids': [(6, 0, list1)]})
             # make entry in student.
             list1 = []
             for root in reg_data.part_name.transport_ids:
                 list1.append(root.id)
             list1.append(temp.id)
             part_name_id = prt_obj.browse(reg_data.part_name.id)
-            part_name_id.write({'transport_ids': [(6, 0, list1)]})
+            part_name_id.sudo().write({'transport_ids': [(6, 0, list1)]})
             # make entry in transport.
             list1 = []
             for prt in reg_data.name.trans_participants_ids:
                 list1.append(prt.id)
             list1.append(temp.id)
             stu_tran_id = trans_obj.browse(reg_data.name.id)
-            stu_tran_id.write({'trans_participants_ids': [(6, 0, list1)]})
+            stu_tran_id.sudo().write({'trans_participants_ids':
+                                      [(6, 0, list1)]})
         return True

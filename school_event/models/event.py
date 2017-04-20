@@ -52,11 +52,14 @@ class SchoolEvent(models.Model):
     _description = 'Event Information'
     _rec_name = 'name'
 
-    @api.multi
     @api.depends('part_ids')
-    def _compute_participants(self):
+    def _participants(self):
         for rec in self:
-            rec.participants = len(rec.part_ids)
+            count = 0
+            if rec.part_ids:
+                for no in rec.part_ids:
+                    count += 1
+                rec.participants = count
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),
@@ -80,7 +83,7 @@ class SchoolEvent(models.Model):
     maximum_participants = fields.Integer('Maximum Participants',
                                           help='Maximum Participant\
                                                 of the Event')
-    participants = fields.Integer(compute='_compute_participants',
+    participants = fields.Integer(compute='_participants',
                                   string='Participants', readonly=True)
     part_standard_ids = fields.Many2many('school.standard',
                                          'school_standard_event_rel',
@@ -130,13 +133,14 @@ class SchoolEvent(models.Model):
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            arg_domain = ('part_standard_ids', 'in', [data.standard_id.id])
+            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
             args.append(arg_domain)
         return super(SchoolEvent, self).search(args, offset, limit, order,
                                                count=count)
 
     @api.multi
     def event_open(self):
+
         if self.part_ids and self.part_ids[0].id:
             self.write({'state': 'open'})
         else:
@@ -145,17 +149,17 @@ class SchoolEvent(models.Model):
 
     @api.multi
     def event_close(self):
-        self.state = 'close'
+        self.write({'state': 'close'})
         return True
 
     @api.multi
     def event_draft(self):
-        self.state = 'draft'
+        self.write({'state': 'draft'})
         return True
 
     @api.multi
     def event_cancel(self):
-        self.state = 'cancel'
+        self.write({'state': 'cancel'})
         return True
 
 
@@ -193,7 +197,7 @@ class SchoolEventRegistration(models.Model):
                       ('event_id', '=', reg_data.name.id),
                       ('name', '=', reg_data.part_name_id.id)]
             stu_prt_data = event_part_obj.search(domain)
-            stu_prt_data.unlink()
+            stu_prt_data.sudo().unlink()
             # remove entry of event from student
             list1 = []
 
@@ -210,7 +214,7 @@ class SchoolEventRegistration(models.Model):
             if not flag:
                 list1.remove(part)
             stu_part_id = student_obj.browse(reg_data.part_name_id.id)
-            stu_part_id.write({'event_ids': [(6, 0, list1)]})
+            stu_part_id.sudo().write({'event_ids': [(6, 0, list1)]})
             list1 = []
             # remove entry of participant from event
             flag = True
@@ -230,7 +234,7 @@ class SchoolEventRegistration(models.Model):
                 list1.remove(parii)
             participants = int(event_data.participants) - 1
             event_reg_id = event_obj.browse(reg_data.name.id)
-            event_reg_id.write({'part_ids': [(6, 0, list1)],
+            event_reg_id.sudo().write({'part_ids': [(6, 0, list1)],
                                 'participants': participants})
         return True
 
@@ -261,7 +265,7 @@ class SchoolEventRegistration(models.Model):
                    'win_parameter_id': event_data.parameter_id.id,
                    'event_id': reg_data.name.id,
                    'name': reg_data.part_name_id.id}
-            temp = event_part_obj.create(val)
+            temp = event_part_obj.sudo().create(val)
             # make entry of event in student
             list1 = []
 
@@ -278,7 +282,7 @@ class SchoolEventRegistration(models.Model):
             if flag:
                 list1.append(temp.id)
             stu_part_id = student_obj.browse(reg_data.part_name_id.id)
-            stu_part_id.write({'event_ids': [(6, 0, list1)]})
+            stu_part_id.sudo().write({'event_ids': [(6, 0, list1)]})
             # make entry of participant in event
             list1 = []
             flag = True
@@ -295,7 +299,7 @@ class SchoolEventRegistration(models.Model):
             if flag:
                 list1.append(temp.id)
             evnt_reg_id = event_obj.browse(reg_data.name.id)
-            evnt_reg_id.write({'part_ids': [(6, 0, list1)]})
+            evnt_reg_id.sudo().write({'part_ids': [(6, 0, list1)]})
         return True
 
 

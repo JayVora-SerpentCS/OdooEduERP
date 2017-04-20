@@ -69,26 +69,31 @@
             <field name="arch" type="xml">
                 <form string="Student Evaluation">
                     <header>
-                        <button name="set_start" string="Start" type="object" states="draft" class="oe_highlight fa fa-play"/>
-                        <button name="set_finish" string="Finish" class="fa fa-step-forward" type="object" states="start"/>
-                        <button name="set_cancel" string="Cancel" class="fa fa-ban" type="object" states="start,draft"/>
-                        <button name="set_draft" string="Set to Draft" class="fa fa-play" type="object" states="cancelled"/>
+                        <button name="set_start" string="Start" type="object" states="draft" class="oe_highlight fa fa-play" groups="school.group_school_administration"/>
+                        <button name="set_finish" string="Finish" class="fa fa-step-forward" type="object" states="start" groups="school.group_school_administration"/>
+                        <button name="set_cancel" string="Cancel" class="fa fa-ban" type="object" states="start,draft" groups="school.group_school_administration"/>
+                        <button name="set_draft" string="Set to Draft" class="fa fa-play" type="object" states="cancelled" groups="school.group_school_administration"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <sheet>
                         <separator string="Student Evaluation"/>
-                        <group col="4" colspan="2" attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
-                            <field name="student_id" placeholder="Select Or Create Student Name"/>
-                            <field name="type"/>
-                            <field name="date" style="width: 84%%"/>
-                            <field name="user_id"/>
-                            <field name="evaluator_id" attrs="{'invisible': [('type','=','student')]}"
-                                   placeholder="Select Or Create Faculty Name" />
-                            <button name="get_record" type='object' class="oe_inline oe_stat_button"
-                                    attrs="{'invisible' : [('state', '!=', 'draft')]}">
+                        <group attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
+                            <group>
+                                 <field name="student_id" placeholder="Select Or Create Student Name"/>
+                                 <field name="date" style="width: 84%%"/>
+                                 <field name="evaluator_id" attrs="{'invisible': [('type','=','student')]}"
+                                        placeholder="Select Or Create Faculty Name" />
+                            </group>
+                            <group>
+                                 <field name="type"/>
+                                 <field name="user_id"/>
+                                 <button name="get_record" type='object' class="oe_inline oe_stat_button"
+                                    attrs="{'invisible' : [('state', '!=', 'draft')]}"
+                                    groups="school.group_school_administration">
                                 <img src="/student_evaluation/static/description/index1.png" style="height:25px;width:50px;float:left;"/>
                                 <lable style="">Get Question</lable>
                             </button>
+                            </group>
                         </group>
                         <newline />
                         <notebook colspan="4">
@@ -227,6 +232,6 @@
         <menuitem id="menu_evals" name="Evaluations" parent="menu_stu_eval" action="action_student_eval"
                   groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
         <menuitem id="menu_eval_temps" name="Evaluation Templates" parent="menu_stu_eval" action="action_student_eval_temp"
-                  groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" />
+                  groups="school.group_school_administration" />
         <menuitem id="menu_rating" name="Rating" parent="school.menu_configuration" action="action_student_rating"/>
 </odoo>

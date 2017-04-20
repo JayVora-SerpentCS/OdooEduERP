@@ -15,6 +15,6 @@
                 string="Transport Root Detail"
                 model="student.transport"
                 report_type = "qweb-pdf"
-                file="school_transport.participants"/>
-
+                file="school_transport.participants"
+                groups="school_transport.group_transportation_manager"/>
 </odoo>

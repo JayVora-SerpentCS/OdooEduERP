@@ -15,7 +15,7 @@
                         <br />
                         <br />
                         <table width="100%">
-                            <t t-esc="result.exam_results_ids.result=='Fail' "></t>
+<!--                             <t t-esc="result.exam_results_ids.result=='Fail' "></t> -->
                             <tr>
                                 <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
                                     <b>Student Name</b>
