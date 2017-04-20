@@ -1,0 +1,6 @@
+==============================================================================
+ Version Change Log (assignment)
+===============================================================================
+
+1.0.1 --> 12 April 2017 : Vimal Patel
+    * Added record rule for Parents can see only own student record and groups assign to parents .
