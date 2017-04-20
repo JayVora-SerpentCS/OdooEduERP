@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 {
     'name': 'School',
-    'version': '10.0.1.0.0',
+    'version': '1.0.2',
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
@@ -23,6 +23,7 @@
              'views/report_view.xml',
              'views/identity_card.xml'],
     'demo': ['demo/school_demo.xml'],
+    'post_init_hook': 'post_init_hook',
     'test': ['test/school_test.yml', 'test/assign_roll_no_test.yml'],
     'installable': True,
     'application': True
