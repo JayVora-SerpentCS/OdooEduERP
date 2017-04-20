@@ -1,0 +1,10 @@
+Version Change Log (library)
+===============================================================================
+
+1.0.1 --> 12 April 2017 : Hetal Zala
+     *Improved book request flow and fine penalty payment flow.
+     
+1.0.2 --> 17 April 2017 : Vimal Patel
+    * improvement flow of the penaly and book lost
+    
+     

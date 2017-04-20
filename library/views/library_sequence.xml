@@ -3,7 +3,9 @@
 
 <odoo>
     <data noupdate="1">
+
         <!-- Sequences for library card number -->
+
         <record id="seq_lib_card_no" model="ir.sequence">
             <field name="name">Library Card No</field>
             <field name="code">library.card</field>
@@ -11,7 +13,9 @@
             <field name="number_next">1</field>
             <field name="padding">3</field>
         </record>
+
         <!-- Sequences For Library Issue Number -->
+
         <record id="seq_lib_issue" model="ir.sequence">
             <field name="name">Library Issue No</field>
             <field name="code">library.book.issue</field>
@@ -19,6 +23,7 @@
             <field name="number_next">1</field>
             <field name="padding">3</field>
         </record>
+
         <record id="seq_lib_req" model="ir.sequence">
             <field name="name">Library Request No</field>
             <field name="code">library.book.request</field>
@@ -26,5 +31,6 @@
             <field name="number_next">1</field>
             <field name="padding">3</field>
         </record>
+
     </data>
 </odoo>

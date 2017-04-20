@@ -14,12 +14,13 @@
                                     <td align="center" width="30%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <span t-field="o.name"></span>
                                     </td>
-                                    <td width="35%">
+                                  <!--   <td width="35%">
+                                    
                                         <img width="100px" height="100px" t-att-src="'data:image/png;base64, %s' % get_qr_code(o.description)" />
-                                    </td>
-                                    <td width="35%">
+                                    </td> -->
+                                   <!--  <td width="35%">
                                         <img width="100px" height="100px" t-att-src="'data:image/png;base64, %s' % get_qr_code(o.description)" />
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </table>
                         </div>
