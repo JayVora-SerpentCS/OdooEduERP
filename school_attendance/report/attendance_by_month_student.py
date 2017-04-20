@@ -25,9 +25,11 @@ def lengthmonth(year, month):
 
 class ReportCustom(report_rml):
 
-    @api.multi
-    def create_xml(self, datas):
-        env = odoo.api.Environment({})
+#    @api.multi
+    def create_xml(self, cr, uid, ids, datas, context=None):
+
+#        env = odoo.api.Environment({})
+        env = odoo.api.Environment(cr, uid, context or {})
         obj_student = env['student.student']
         sheet_obj = env['attendance.sheet']
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
@@ -136,7 +138,8 @@ class ReportCustom(report_rml):
                 user_xml.append(user_repr % '\n'.join(days_xml))
 
         rpt_obj = env['student.student']
-        rml_obj = report_sxw.rml_parse(rpt_obj._name)
+        rml_obj = report_sxw.rml_parse(
+                                    cr, uid, ids, rpt_obj._name, context=None)
         header_xml = '''
         <header>
         <date>%s</date>

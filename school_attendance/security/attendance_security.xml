@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data>
+        <record id="evaluation_rule_student" model="ir.rule">
+            <field name="name">Teacher Attendance Record Rule</field>
+            <field name="model_id" ref="model_daily_attendance"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('user_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
+        </record>
+    </data>
+</odoo>

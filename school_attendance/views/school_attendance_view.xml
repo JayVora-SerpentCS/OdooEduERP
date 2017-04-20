@@ -2,7 +2,9 @@
 <!DOCTYPE html>
 
 <odoo>
+
         <!-- From View Of Attendance Sheet Information -->
+
         <record id="view_attendance_sheet_form" model="ir.ui.view">
             <field name="name">attendance.sheet.form</field>
             <field name="model">attendance.sheet</field>
@@ -99,7 +101,9 @@
                 </form>
             </field>
         </record>
+
         <!--  Tree View Of Attendance Sheet Information -->
+
         <record id="view_attendance_sheet_tree" model="ir.ui.view">
             <field name="name">attendance.sheet.tree</field>
             <field name="model">attendance.sheet</field>
@@ -112,7 +116,9 @@
                 </tree>
             </field>
         </record>
+
         <!-- Search View Of Attendance Sheets Information -->
+
         <record id="view_attendance_sheet_search" model="ir.ui.view">
             <field name="name">attendance.sheet.search</field>
             <field name="model">attendance.sheet</field>
@@ -129,8 +135,9 @@
                 </search>
             </field>
         </record>
-        
+
         <!-- Action Of Form & Tree Views Of Attendance Sheet Information -->
+
         <record id="action_attendance_sheet_form" model="ir.actions.act_window">
             <field name="name">Attendance Sheet</field>
             <field name="res_model">attendance.sheet</field>
@@ -139,9 +146,11 @@
         </record>
 
         <!-- Menu Item Of Attendance -->
-        <menuitem id="menu_attendance" name="Attendance" parent="school.menu_ems" sequence="8" />
+
+        <menuitem id="menu_attendance" name="Attendance" parent="school.menu_ems" sequence="8" groups="school.group_school_administration,school.group_school_teacher"/>
 
         <!-- Form View Of Daily Attendance Information -->
+
         <record id="view_daily_attendance_form_1" model="ir.ui.view">
             <field name="name">daily.attendance.form</field>
             <field name="model">daily.attendance</field>
@@ -157,7 +166,7 @@
                         <group colspan="4" col="4">
                             <field name="user_id" placeholder="Select Or Create Faculty" />
                             <field name="standard_id" on_change="onchange_standard_id(standard_id)" widget="selection" />
-                            <field name="date" />
+                            <field name="date" attrs="{'readonly':[('state','not in','draft')]}" />
                         </group>
                         <notebook colspan="4">
                             <page string="Students">
@@ -188,7 +197,9 @@
                 </form>
             </field>
         </record>
+
         <!-- Search View Of Standard Student Information -->
+
         <record id="view_daily_attendance_search" model="ir.ui.view">
             <field name="name">daily.attendance.search</field>
             <field name="model">daily.attendance</field>
@@ -205,7 +216,9 @@
                 </search>
             </field>
         </record>
+
         <!-- Tree View Of Daily Attendance Information -->
+
         <record id="view_daily_attendance_tree" model="ir.ui.view">
             <field name="name">daily.attendance.tree</field>
             <field name="model">daily.attendance</field>
@@ -222,16 +235,19 @@
                 </tree>
             </field>
         </record>
-        
+
         <!-- Action Of Form & Tree Views Of Daily Attendance Information -->
+
         <record id="action_daily_attendance_form" model="ir.actions.act_window">
             <field name="name">Daily Attendance Information</field>
             <field name="res_model">daily.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
         <!-- Menu Item Of Daily Attendance Sheets -->
+
         <menuitem id="menu_daily_attendances" name="Daily Attendance Sheets" parent="menu_attendance"
-                  action="action_daily_attendance_form" />
+                  action="action_daily_attendance_form" groups="school.group_school_administration,school.group_school_teacher" />
+
 </odoo>
