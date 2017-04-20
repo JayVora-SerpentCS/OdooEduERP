@@ -4,6 +4,7 @@
 import time
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from datetime import datetime
 
 
 class StudentFeesRegister(models.Model):
@@ -11,26 +12,21 @@ class StudentFeesRegister(models.Model):
     _name = 'student.fees.register'
     _description = 'Student fees Register'
 
-    name = fields.Char('Name', required=True,
-                       states={'confirm': [('readonly', True)]})
+    name = fields.Char('Name', required=True,)
     date = fields.Date('Date', required=True,
-                       states={'confirm': [('readonly', True)]},
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
                          next_by_code('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id',
-                               'PaySlips',
-                               states={'confirm': [('readonly', True)]})
+                               'PaySlips')
     total_amount = fields.Float("Total", readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal',
-                                 required=True,
-                                 states={'confirm': [('readonly', True)]})
+                                 required=True)
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
-                                 states={'draft': [('readonly', False)]},
                                  default=lambda obj_c: obj_c.env['res.users'].
                                  browse([obj_c._uid])[0].company_id)
 
@@ -88,6 +84,7 @@ class StudentPayslipLine(models.Model):
                                'Calculations')
     slip_id = fields.Many2one('student.payslip', 'Pay Slip')
     description = fields.Text('Description')
+    account_id = fields.Many2one('account.account', string="Account")
 
 
 class StudentFeesStructureLine(models.Model):
@@ -106,6 +103,7 @@ class StudentFeesStructureLine(models.Model):
     sequence = fields.Integer('Sequence')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline1_id',
                                'Calculations')
+    account_id = fields.Many2one('account.account', string="Account")
 
 
 class StudentFeesStructure(models.Model):
@@ -154,6 +152,7 @@ class StudentPayslip(models.Model):
                                      'code': data.code,
                                      'sequence': data.sequence,
                                      'type': data.type,
+                                     'account_id': data.account_id.id,
                                      'amount': data.amount}
                         student_payslip_line_obj.create(line_vals)
                 amount = 0
@@ -174,26 +173,22 @@ class StudentPayslip(models.Model):
     standard_id = fields.Many2one('standard.standard', 'Class')
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
-    register_id = fields.Many2one('student.fees.register', 'Register',
-                                  states={'paid': [('readonly', True)]})
-    name = fields.Char('Description',
-                       states={'paid': [('readonly', True)]})
+    register_id = fields.Many2one('student.fees.register', 'Register')
+    name = fields.Char('Description')
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
                          next_by_code('student.payslip'))
-    student_id = fields.Many2one('student.student', 'Student', required=True,
-                                 states={'paid': [('readonly', True)]})
+    student_id = fields.Many2one('student.student', 'Student', required=True)
     date = fields.Date('Date', readonly=True,
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     line_ids = fields.One2many('student.payslip.line', 'slip_id',
-                               'PaySlip Line',
-                               states={'paid': [('readonly', True)]})
+                               'PaySlip Line')
     total = fields.Float("Total", readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
-                              ('paid', 'Paid')], 'State', readonly=True,
+                              ('pending', 'Pending'), ('paid', 'Paid')],
+                              'State', readonly=True,
                              default='draft')
-    journal_id = fields.Many2one('account.journal', 'Journal', required=True,
-                                 states={'paid': [('readonly', True)]})
+    journal_id = fields.Many2one('account.journal', 'Journal', required=True)
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
                               ondelete='restrict',
@@ -210,7 +205,6 @@ class StudentPayslip(models.Model):
                             change_default=True, default='out_invoice')
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
-                                 states={'draft': [('readonly', False)]},
                                  default=lambda obj_c: obj_c.env['res.users'].
                                  browse([obj_c._uid])[0].company_id)
 
@@ -243,6 +237,23 @@ class StudentPayslip(models.Model):
                 or journal.company_id.currency_id.id
             result = {'value': {'currency_id': currency_id}}
         return result
+
+    @api.multi
+    def invoice_view(self):
+        invoice_search = self.env['account.invoice'].search([(
+                                                'student_payslip_id', '=',
+                                                 self.id)])
+        invoice_form = self.env.ref('account.invoice_form')
+        return {'name': _("View Invoice"),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.invoice',
+                'res_id': invoice_search.id,
+                'view_id': invoice_form.id,
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'current',
+                }
 
     @api.multi
     def action_move_create(self):
@@ -341,25 +352,41 @@ class StudentPayslip(models.Model):
     @api.multi
     def student_pay_fees(self):
         for student_obj in self:
-            student_obj.write({'state': 'paid'})
+            student_obj.write({'state': 'pending'})
             if not self.ids:
                 return []
             fees = student_obj.browse(student_obj.id)
+            vals = {'partner_id': fees.student_id.partner_id.id,
+                    'date_invoice': fees.date,
+                    'account_id': fees.student_id.partner_id.
+                                  property_account_receivable_id.id,
+                    'journal_id': fees.journal_id.id,
+                    'slip_ref': fees.number,
+                    'student_payslip_id': fees.id,
+                    'type': 'out_invoice',
+                    }
+            invoice_line = []
+            for line in student_obj.line_ids:
+                invoice_line_vals = {
+                       'name': line.name,
+                       'account_id': line.account_id.id,
+                       'quantity': 1.000,
+                       'price_unit': line.amount
+                       }
+                invoice_line.append((0, 0, invoice_line_vals))
+            vals.update({'invoice_line_ids': invoice_line})
+            account_invoice_id = self.env['account.invoice'].create(vals)
+            invoice_obj = self.env.ref('account.invoice_form')
             return {'name': _("Pay Fees"),
                     'view_mode': 'form',
-                    'view_id': False, 'view_type': 'form',
-                    'res_model': 'account.voucher',
+                    'view_type': 'form',
+                    'res_model': 'account.invoice',
+                    'view_id': invoice_obj.id,
                     'type': 'ir.actions.act_window',
-                    'nodestroy': True, 'target': 'current',
-                    'domain': '[]',
-                    'context': {'default_partner_id':
-                                fees.student_id.partner_id.id,
-                                'default_amount': fees.total,
-                                'default_name': fees.name,
-                                'close_after_process': True,
-                                'invoice_type': 'out_invoice',
-                                'default_type': 'receipt',
-                                'type': 'receipt'}}
+                    'nodestroy': True,
+                    'target': 'current',
+                    'res_id': account_invoice_id.id,
+                    'context': {}}
 
 
 class StudentPayslipLineLine(models.Model):
@@ -373,3 +400,27 @@ class StudentPayslipLineLine(models.Model):
     sequence = fields.Integer('Sequence')
     from_month = fields.Many2one('academic.month', 'From Month')
     to_month = fields.Many2one('academic.month', 'To Month')
+
+
+class AccountInvoice(models.Model):
+    _inherit = "account.invoice"
+
+    slip_ref = fields.Char('Fees Slip Refrence')
+    student_payslip_id = fields.Many2one('student.payslip',
+                                         string="Student Payslip")
+
+
+class AccountPayment(models.Model):
+    _inherit = "account.payment"
+
+    @api.multi
+    def post(self):
+        res = super(AccountPayment, self).post()
+        curr_date = datetime.now()
+        for invoice in self.invoice_ids:
+            if invoice.student_payslip_id:
+                invoice.student_payslip_id.write(
+                                    {'state': 'paid',
+                                     'payment_date': curr_date,
+                                     'move_id': invoice.move_id.id or False})
+        return res

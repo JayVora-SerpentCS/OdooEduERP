@@ -9,11 +9,6 @@ class ReportStudentFeesRegister(models.AbstractModel):
     _name = 'report.school_fees.student_fees_register'
 
     @api.multi
-    def get_no(self):
-        self.no += 1
-        return self.no
-
-    @api.multi
     def get_month(self, indate):
         new_date = datetime.strptime(indate, '%Y-%m-%d')
         out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
@@ -21,21 +16,12 @@ class ReportStudentFeesRegister(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        self.model = self.env.context.get('active_model')
-
-        docs = self.env[self.model].browse(self.env.context.get('active_ids',
-                                                                []))
-        indate = data['form'].get('indate')
-        get_student = self.with_context(data['form'].get('used_context', {}))
-        get_no = get_student.get_no()
-        get_month = get_student.get_month(indate)
+        ans1 = self.env['student.fees.register'].search([('id', 'in', docids)])
         docargs = {
             'doc_ids': docids,
-            'doc_model': self.model,
-            'data': data['form'],
-            'docs': docs,
-            'get_no': get_no,
-            'get_month': get_month,
+            'doc_model': ans1,
+            'docs': ans1,
+            'get_month': self.get_month,
         }
         render_model = 'school_fees.student_fees_register'
         return self.env['report'].render(render_model, docargs)

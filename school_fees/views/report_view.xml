@@ -15,6 +15,7 @@
                 model="student.fees.register"
                 report_type = "qweb-pdf"
                 file="school_fees.student_fees_register"
-                name="school_fees.student_fees_register" />
+                name="school_fees.student_fees_register"
+                groups="school.group_school_administration"/>
 
 </odoo>
