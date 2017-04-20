@@ -3,7 +3,7 @@
 
 {
     'name': 'Exam Management',
-    'version': "10.0.1.0.0",
+    'version': "1.0.2",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
@@ -12,7 +12,8 @@
     'summary': 'A Module For Exams Management Taken In School',
     'complexity': 'easy',
     'depends': ['timetable'],
-    'data': ['security/ir.model.access.csv',
+    'data': ['security/exam_security.xml',
+             'security/ir.model.access.csv',
              'views/exam_view.xml',
              'views/exam_sequence.xml',
              'views/exam_result_report.xml',

@@ -91,6 +91,7 @@
                             <separator colspan="4" col="4" />
                             <field name="exam_code"/>
                             <field name="name" placeholder="Exam Name"/>
+                            <field name="grade_system" required="1"/>
                         </group>
                         <group col="4" colspan="2">
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
@@ -281,26 +282,36 @@
                         <button name="re_result_confirm" class="oe_stat_button fa fa-reply-all" string="Compute Re-aceess" states="re-access" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_access" class="oe_stat_button fa fa-repeat" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object"/>
-                        <field name="state" widget="statusbar" readonly="1" />
+                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_done" string="Mark as Done" type="object" class="fa fa-check-circle-o" aria-hidden="true" states="confirm,re-evaluation_confirm,re-access_confirm"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" readonly="1" />
                     </header>
                     <sheet>
-                        <group col="2" string="Exam Details" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="s_exam_ids" placeholder="Select or Create Examination"/>
+                        <group col="2" string="Exam Details">
+                            <field name="s_exam_ids" placeholder="Select or Create Examination"
+                                    attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                         </group>
-                        <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="student_id" placeholder="Select or Create Student" on_change="on_change_student(student_id, s_exam_ids, standard_id)" context="{'exam':s_exam_ids}"/>
-                            <field name="roll_no_id" />
-                            <field name="standard_id" placeholder="Select or Create Standard"/>
+                        <group col="4" string="Student Details" colspan="4">
+                            <field name="student_id" placeholder="Select or Create Student" 
+                                on_change="on_change_student(student_id, s_exam_ids, standard_id)" 
+                                context="{'exam':s_exam_ids}"
+                                attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
+                            <field name="roll_no_id" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
+                            <field name="standard_id" placeholder="Select or Create Standard"
+                                                    attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
+                            <field name="grade_system" required="1"
+                                                    attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                         </group>
-                        <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
-                            <tree string="Subjects" >
+                        <field name="result_ids" nolabel="1" colspan="4"
+                            attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm','done'])]}">
+                            <tree string="Subjects" editable="bottom">
                                 <field name="subject_id" placeholder="Select or Create Subject"/>
                                 <field name="maximum_marks"/>
                                 <field name="minimum_marks"/>
                                 <field name="obtain_marks"/>
-                                <field name="grade"/>
+<!--                                 <field name="grade"/> -->
                                 <field name="state" invisible="1"/>
+                                <field name="grade_line_id" readonly="1"/>
                                 <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/>
                                 <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
                             </tree>
@@ -316,13 +327,16 @@
                                 </group>
                             </form>
                         </field>
-                        <group col="4" colspan="4">
-                            <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
-                            <field name="grade"/>
-                            <field name="percentage"/>
-                            <field name="result"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                        <group>
+                            <group>
+                                <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
+                                <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                                <field name="percentage"/>
+                            </group>
+                            <group>
+                                <field name="grade"/>
+                                <field name="result"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -500,7 +514,7 @@
         <!-- Menu Item Of Batchwise Result -->
 
         <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam"
-                  action="action_batchwise_exam_result_form" />
+                  action="action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher"/>
 
         <!-- Tree View Of Additional Result Information -->
 
