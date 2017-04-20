@@ -5,5 +5,5 @@
 # A Module to HOSTEL Management System
 # ----------------------------------------------------------
 
-from . import report
+#from . import report
 from . import models

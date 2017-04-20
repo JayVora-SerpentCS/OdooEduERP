@@ -20,7 +20,6 @@
         </record>
 
         <!-- Record Rule Of Personal HOSTEL Student Record -->
-
         <record id="student_hostel_student_record" model="ir.rule">
             <field name="name">Personal HOSTEL Student Record</field>
             <field ref="school_hostel.model_hostel_student" name="model_id"/>
@@ -29,5 +28,13 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
 
+        <!-- Record Rule Parent can see hostel record of own children -->
+        <record id="student_hostel_parent_record" model="ir.rule">
+            <field name="name">Parent Student Hostel Record</field>
+            <field ref="school_hostel.model_hostel_student" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('student_id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
     </data>
 </odoo>
