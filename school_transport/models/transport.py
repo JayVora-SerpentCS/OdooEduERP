@@ -228,6 +228,8 @@ class TransportRegistration(models.Model):
     for_month = fields.Integer('Registration For Months')
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
+                              ('pending', 'Pending'),
+                              ('paid', 'Paid'),
                               ('cancel', 'Cancel')], 'State', readonly=True,
                              default='draft')
     vehicle_id = fields.Many2one('transport.vehicle', 'Vehicle No',
@@ -235,6 +237,8 @@ class TransportRegistration(models.Model):
     point_id = fields.Many2one('transport.point', 'Point', widget='selection',
                                required=True)
     m_amount = fields.Float('Monthly Amount', readonly=True)
+    transport_fees = fields.Float(compute="_compute_transport_fees",
+                                  string="Transport Fees")
     amount = fields.Float('Final Amount', readonly=True)
 
     @api.model
@@ -248,6 +252,59 @@ class TransportRegistration(models.Model):
         else:
             ret_val.write({'m_amount': m_amt['value']['m_amount']})
         return ret_val
+
+    @api.depends('m_amount', 'for_month')
+    def _compute_transport_fees(self):
+        for rec in self:
+            rec.transport_fees = rec.m_amount * rec.for_month
+
+    @api.multi
+    def transport_fees_pay(self):
+        for rec in self:
+            rec.state = 'pending'
+            transport = rec.browse(rec.id)
+            vals = {'partner_id': transport.part_name.partner_id.id,
+                    'account_id': transport.part_name.partner_id.
+                                  property_account_receivable_id.id,
+                    'transport_student_id': transport.id}
+            account_object = self.env['account.invoice'].create(vals)
+            acct_journal_id = account_object.journal_id.default_credit_account_id.id
+            account_view_id = self.env.ref('account.invoice_form')
+            inv_line = []
+            line_vals = {'name': 'Transport Fees',
+                         'account_id': acct_journal_id,
+                         'quantity': transport.for_month,
+                         'price_unit': transport.m_amount,
+                         }
+            inv_line.append((0, 0, line_vals))
+            account_object.write({'invoice_line_ids': inv_line})
+            return {'name': _("Pay Transport Fees"),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'account.invoice',
+                    'view_id': account_view_id.id,
+                    'type': 'ir.actions.act_window',
+                    'nodestroy': True,
+                    'target': 'current',
+                    'res_id': account_object.id,
+                    'context': {}}
+
+    @api.multi
+    def view_invoice(self):
+        invoice_search = self.env['account.invoice'].search([(
+                                                'transport_student_id', '=',
+                                                 self.id)])
+        invoice_form = self.env.ref('account.invoice_form')
+        return {'name': _("View Invoice"),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'account.invoice',
+                'res_id': invoice_search.id,
+                'view_id': invoice_form.id,
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'current',
+                }
 
     @api.multi
     def onchange_point_id(self, point):
@@ -268,7 +325,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def trans_regi_cancel(self):
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
         return True
 
     @api.multi
@@ -339,3 +396,23 @@ class TransportRegistration(models.Model):
             stu_tran_id.sudo().write({'trans_participants_ids':
                                       [(6, 0, list1)]})
         return True
+
+
+class AccountInvoice(models.Model):
+    _inherit = "account.invoice"
+
+    transport_student_id = fields.Many2one('transport.registration',
+                                           string="Transport Student")
+
+
+class AccountPayment(models.Model):
+    _inherit = "account.payment"
+
+    @api.multi
+    def post(self):
+        res = super(AccountPayment, self).post()
+        for invoice in self.invoice_ids:
+            if invoice.transport_student_id:
+                invoice.transport_student_id.write(
+                                    {'state': 'paid'})
+        return res

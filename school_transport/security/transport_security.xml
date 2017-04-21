@@ -16,7 +16,7 @@
             <field name="category_id" ref="module_category_school_transortation"/>
         </record>
 
-        <!-- Record Rule student can see transport details of own child -->
+        <!-- Record Rule parents can see transport details of own child -->
         <record id="parent_transport_record_rule" model="ir.rule">
             <field name="name">Parent Transport Record Rule</field>
             <field name="model_id" ref="model_transport_participant"/>
