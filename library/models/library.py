@@ -493,7 +493,7 @@ class LibraryBookRequest(models.Model):
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
                          self.env['ir.sequence'].
-                         get('library.book.request') or '/')
+                         next_by_code('library.book.request') or '/')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')

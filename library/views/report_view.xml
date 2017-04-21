@@ -8,6 +8,7 @@
             model="product.product"
             report_type = "qweb-pdf"
             file="library.qrcode_label"
-            name="library.qrcode_label" />
+            name="library.qrcode_label"
+            groups="library.group_librarian"/>
 
 </odoo>

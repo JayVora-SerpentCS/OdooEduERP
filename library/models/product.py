@@ -254,7 +254,7 @@ class ProductProduct(models.Model):
         return True
 
     @api.multi
-    @api.depends('availability')
+    @api.depends('qty_available', 'availability')
     def _check_books_availablity(self):
         for rec in self:
             if rec.books_available >= 1:
