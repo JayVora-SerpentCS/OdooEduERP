@@ -6,7 +6,7 @@ from datetime import date, datetime
 from odoo import models, fields, api, _
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize,\
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, \
     image_resize_image_big
 from odoo.exceptions import except_orm, Warning as UserError
 
@@ -660,8 +660,53 @@ class HrEmployee(models.Model):
 #            for sub_rec in subject_ids:
 #                sub_list.append(sub_rec.id)
 
+    is_school_teacher = fields.Boolean('School Teacher')
     subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
                                    'Subjects', compute='_compute_subject')
+
+    @api.model
+    def create(self, vals):
+        res = super(HrEmployee, self).create(vals)
+        if vals.get('is_school_teacher') or \
+                self.context.get('default_is_school_teacher'):
+
+            user_vals = {
+                         'name': vals.get('name'),
+                         'login': vals.get('work_email', False),
+                         'password': vals.get('work_email', False)
+                         }
+            user = self.env['res.users'].create(user_vals)
+            if user and user.partner_id:
+                user.partner_id.write({
+                                       'email': vals.get('work_email', False)
+                                       })
+            if res and user:
+                res.write({'address_home_id': user.partner_id.id,
+                           'user_id': user and user.id or False})
+                teacher_group = self.env.ref('school.group_school_teacher')
+                emp_group = self.env.ref('base.group_user')
+                new_list = [emp_group.id, teacher_group.id]
+                user.write({'groups_id': [(6, 0, new_list)]})
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(HrEmployee, self).write(vals)
+        if res and vals.get('work_email'):
+            if self.user_id:
+                self.user_id.write({'login': vals.get('work_email'),
+                                    })
+            if self.user_id and self.user_id.partner_id:
+                self.user_id.partner_id.write({'email': vals.get('work_email')
+                                               })
+        if res and vals.get('name'):
+            if self.user_id:
+                self.user_id.write({'name': vals.get('name'),
+                                    })
+            if self.user_id and self.user_id.partner_id:
+                self.user_id.partner_id.write({'name': vals.get('name')
+                                               })
+        return res
 
 
 class ResPartner(models.Model):
@@ -673,6 +718,23 @@ class ResPartner(models.Model):
     parent_school = fields.Boolean('Is A Parent')
     student_ids = fields.Many2many('student.student', 'student_parent_rel',
                                    'parent_id', 'student_id', 'Children')
+
+    @api.model
+    def create(self, vals):
+        res = super(ResPartner, self).create(vals)
+        if res and vals.get('parent_school'):
+            user_vals = {'name': vals.get('name'),
+                         'login': vals.get('email', False),
+                          'password': vals.get('email', False),
+                          'partner_id': res.id
+                          }
+            user = self.env['res.users'].create(user_vals)
+            emp_grp = self.env.ref('base.group_user')
+            parent_group = self.env.ref('school.group_school_parent')
+            new_grp_list = [emp_grp.id, parent_group.id]
+            if user:
+                user.write({'groups_id': [(6, 0, new_grp_list)]})
+        return res
 
 
 class StudentReference(models.Model):

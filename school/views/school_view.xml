@@ -1400,6 +1400,17 @@
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//label[@for='name']" position="before">
+                        <group>
+                            <field name="is_school_teacher"/>
+                        </group>
+                    </xpath>
+                    <field name="work_email" position="attributes">
+                        <attribute name="required">1</attribute>
+                    </field>
+                    <field name="user_id" position="attributes">
+                        <attribute name="readonly">1</attribute>
+                    </field>
                     <xpath expr="//page[@name='public']" position="after">
                         <page string="Subjects">
                             <field name="subject_ids" nolabel="1" />
@@ -1427,8 +1438,11 @@
             <field name="name">Teachers</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
+            <field name="domain">[('is_school_teacher','=',True)]</field>
+            <field name="context">{'search_default_is_school_teacher': 1,'default_is_school_teacher': 1}</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
+        
         <!-- Action Of Form, Tree & Kanban View Of Admission Register Information -->
         <record id="action_student_student_form_2" model="ir.actions.act_window">
             <field name="name">Admission Register</field>
@@ -1651,7 +1665,7 @@
                                     <field name="phone" placeholder="Phone Number" />
                                     <field name="mobile" placeholder="Mobile Number" />
                                     <field name="fax" placeholder="Fax" />
-                                    <field name="email" widget="email" />
+                                    <field name="email" widget="email" required="1"/>
                                 </group>
                             </group>
                         </form>
@@ -1702,7 +1716,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_res_partner_parent_filter" />
-            <field name="domain">[]</field>
+            <field name="domain">[('parent_school','=',True)]</field>
             <field name="context">{'search_default_parent_school': 1,'default_customer': 0,'default_supplier': 0, 'default_parent_school': 1}</field>
             <field name="filter" eval="True" />
         </record>
@@ -1720,6 +1734,7 @@
             <field name="view_id" ref="view_parent_form" />
             <field name="act_window_id" ref="action_parent_form" />
         </record>
+        
         <!--Form View Of My Dashboard -->
         <record id="board_my_dash_view" model="ir.ui.view">
             <field name="name">My Dashboard</field>
@@ -1780,6 +1795,7 @@
         <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="2" />
         <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_res_partner_form" name="Parents Profiles" parent="menu_students_parents" action="action_parent_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent" />
+        <menuitem id="menu_teachers_profiles" name="Teachers Profiles" parent="menu_students_parents" action="action_teacher_teacher_form_1" groups="school.group_school_administration,school.group_school_teacher" />
         <!-- MenuItem For Reminders -->
         <menuitem id="menu_reminders" name="Reminders" parent="menu_ems" action="action_student_reminder" sequence="8" />
         <!-- MenuItem For Configurations -->
