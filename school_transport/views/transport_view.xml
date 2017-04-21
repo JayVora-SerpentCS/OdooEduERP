@@ -76,7 +76,7 @@
                     <field name="months"/>
                     <field name="tr_reg_date"/>
                     <field name="tr_end_date"/>
-                    <field name="amount"/>
+<!--                     <field name="amount"/> -->
                     <field name="state"/>
                 </tree>
             </field>
@@ -209,24 +209,24 @@
                     <sheet style="width: 90%%,height:90%%">
                     <separator string="Transport Information"/>
                     <group col="4">
-                    <field name="name" placeholder="Root Name"/>
-                    <field name="contact_per_id" placeholder="Contact Person"/>
-                    <field name="start_date" placeholder="Start Date Of Journey"/>
-                    <field name="end_date" placeholder="End Date Of Journey"/>
-                    <field name="total_participantes"/>
+                    <field name="name" placeholder="Root Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                    <field name="contact_per_id" placeholder="Contact Person" attrs="{'readonly':[('state','not in','draft')]}"/>
+                    <field name="start_date" placeholder="Start Date Of Journey" attrs="{'readonly':[('state','not in','draft')]}"/>
+                    <field name="end_date" placeholder="End Date Of Journey" attrs="{'readonly':[('state','not in','draft')]}"/>
+                    <field name="total_participantes" readonly="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Vehicles" >
                                 <separator string="Transport Vehicle Details" colspan="4"/>
-                                <field name="trans_vehicle_ids" nolabel='1'/>
+                                <field name="trans_vehicle_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
                         </page>
                         <page string="Root Points" >
                              <separator string="Transport Point Details" colspan="4"/>
-                             <field name="trans_point_ids" nolabel='1'/>
+                             <field name="trans_point_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
                         </page>
                         <page string="Participants" >
                             <separator string="Participants Details" colspan="4"/>
-                            <field name="trans_participants_ids" nolabel='1'>
+                            <field name="trans_participants_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}">
                                 <tree string="Subject Information">
                                     <field name="stu_pid_id"/>
                                     <field name="name"/>
@@ -295,18 +295,22 @@
                 <form string="Transport Registration">
                     <header>
                         <button name="trans_regi_confirm" class="fa fa-check" string="Confirm" states="draft" type='object'/>
-                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" states="draft" type='object'/>
-                        <field name="state" widget="statusbar" readonly="1"/>
+                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' states="draft,confirm,pending,paid"/>
+                        <button name="transport_fees_pay" string="Payment" type="object" states="confirm,pending" groups="school_transport.group_transportation_manager"/>
+                        <button name="view_invoice" string="View Invoice" type="object" states="paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> 
+<!--                         <button name="cancel_ref" string="Cancel" type="object" states="confirm,pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> -->
+                        <field name="state" widget="statusbar" readonly="1" />
                     </header>
                     <sheet>
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
                            <separator string="Transport Registration" colspan="4"/>
-                            <field name="part_name" placeholder="Enter Participant Name"/>
-                            <field name="name" placeholder="Enter Transport Root Name"/>
-                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
-                            <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)]}" context="{'name':name}"/>
+                            <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
+                            <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
                             <field name="m_amount"/>
-                            <field name="for_month" on_change="onchange_for_month(for_month)"/>
+                            <field name="transport_fees"/>
+                            <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="reg_date"/>
                             <field name="reg_end_date" context="{'for_month':for_month}"/>
                         </group>
@@ -366,6 +370,17 @@
                         <filter icon="terp-stock_symbol-selection" string="Driver Name" help="By Driver Name" context="{'group_by':'driver_id'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+        <!-- Inherited View of Account Invoice -->
+        <record id="account_invoice_inherited" model="ir.ui.view">
+            <field name="name">Account Invoice Iherits</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']/group/group[1]/field[@name='journal_id']" position="before">
+                    <field name="transport_student_id" invisible="1"/>
+                </xpath>
             </field>
         </record>
 

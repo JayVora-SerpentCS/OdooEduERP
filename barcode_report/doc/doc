@@ -1,0 +1,5 @@
+Install library barcode
+Install library reportlab
+Download this pfbfer.zip, and extract it.
+Now put all the files of this pfbfer in /usr/lib/python2.7/dist-packages/reportlab/fonts/(put the files)
+If the fonts folder is not available in reportlab directory then create it and put all the font-files in fonts from the extract folder pfbfer.

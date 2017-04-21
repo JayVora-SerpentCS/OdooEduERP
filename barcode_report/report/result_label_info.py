@@ -11,24 +11,27 @@ class ReportLabelInfo(models.AbstractModel):
     def get_student_all_info(self, standard_id, division_id, medium_id,
                              year_id):
         student_obj = self.env['student.student']
-        student_ids = student_obj.search([('standard_id', '=', standard_id),
-                                          ('division_id', '=', division_id),
-                                          ('medium_id', '=', medium_id),
-                                          ('year', '=', year_id)])
+        domain = [('standard_id', '=', standard_id.id),
+                                          ('division_id', '=', division_id.id),
+                                          ('medium_id', '=', medium_id.id),
+                                          ('year', '=', year_id.id),
+                                          ('state', '=', 'done')]
+        student_ids = student_obj.search(domain)
         result = []
-        for student in student_obj.browse(student_ids):
+        for student in student_ids:
             name = (student.name + " " + student.middle or '' + " " +
                     student.last or '')
             result.append({'name': name,
-                           'roll_no': student.roll_no, 'pid': student.pid})
+                           'roll_no': student.roll_no,
+                           'pid': student.pid})
         return result
 
     @api.model
     def render_html(self, docids, data=None):
-        docs = self.env['student.student'].browse(docids)
+        docs = self.env['time.table'].browse(docids)
         docargs = {
             'doc_ids': docids,
-            'doc_model': self.env['time.table'],
+            'doc_model': docs,
             'data': data,
             'docs': docs,
             'get_student_all_info': self.get_student_all_info,

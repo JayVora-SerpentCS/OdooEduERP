@@ -13,5 +13,5 @@
                 model="time.table"
                 report_type = "qweb-pdf"
                 file="barcode_report.result_label_info"
-                name="barcode_report.result_label_info" />
+                name="barcode_report.result_label_info" groups="school.group_school_administration"/>
 </odoo>
