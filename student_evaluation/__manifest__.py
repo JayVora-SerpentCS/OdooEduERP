@@ -3,7 +3,7 @@
 
 {
     'name': 'Evaluation Management',
-    'version': "10.0.1.0.0",
+    'version': "1.0.1",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.almisnadtechnology.com',

@@ -147,7 +147,8 @@
                             <button name="action_purchase_order"
                                 type="object"
                                 class="oe_stat_button"
-                                icon="fa-pencil-square-o">
+                                icon="fa-pencil-square-o"
+                                groups="library.group_librarian">
                                 <field string="Actual Qty" name="qty_available" widget="statinfo" />
                             </button>
                             <button name="action_book_req"

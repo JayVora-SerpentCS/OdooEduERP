@@ -7,7 +7,7 @@ from odoo import models, fields, api
 
 class StudentEvaluation(models.Model):
     _name = "student.evaluation"
-    _rec_name = 'student_id'
+    _rec_name = 'type'
 
     @api.multi
     def get_record(self):
@@ -38,10 +38,6 @@ class StudentEvaluation(models.Model):
             else:
                 rec.total = 0.0
 
-    @api.model
-    def get_user(self):
-        return self._uid
-
     student_id = fields.Many2one('student.student', 'Student Name',
                                  required=True)
     type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')],
@@ -56,8 +52,8 @@ class StudentEvaluation(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
-    user_id = fields.Many2one('res.users', 'User', readonly=True,
-                              default=get_user)
+    username = fields.Many2one('res.users', 'User', readonly=True,
+                              default=lambda self: self.env.user)
 
     @api.multi
     def set_start(self):

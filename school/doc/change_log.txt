@@ -4,6 +4,7 @@
 
 1.0.1 --> 17 April 2017 : Vimal Patel
     * Improvement the school security and record rule and added hook .
+
  1.0.2 --> 19 April 2017 : Arpit Joshi
     * Added new security group is admission.
     *View level changes

@@ -86,7 +86,7 @@
                             </group>
                             <group>
                                  <field name="type"/>
-                                 <field name="user_id"/>
+                                 <field name="username"/>
                                  <button name="get_record" type='object' class="oe_inline oe_stat_button"
                                     attrs="{'invisible' : [('state', '!=', 'draft')]}"
                                     groups="school.group_school_administration">

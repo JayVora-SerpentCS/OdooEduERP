@@ -34,6 +34,8 @@ access_student_cast_admin,student.cast,model_student_cast,group_school_administr
 access_student_grn_admin,student.grn,model_student_grn,group_school_administration,1,1,1,1
 access_res_users_admin,res.users,base.model_res_users,group_school_administration,1,1,1,1
 access_subject_syllabus_admin,subject.syllabus,model_subject_syllabus,group_school_administration,1,1,1,1
+access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,1,1
+access_res_partner_teacher,res.partner,base.model_res_partner,group_school_teacher,1,1,1,1
 ,,,,,,,
 access_academic_year_parent,academic.year,model_academic_year,group_school_parent,1,0,0,0
 access_academic_month_parent,academic.month,model_academic_month,group_school_parent,1,0,0,0
@@ -54,7 +56,7 @@ access_student_description_parent,student.description,model_student_description,
 access_student_descipline_parent,student.descipline,model_student_descipline,group_school_parent,1,0,0,0
 access_student_history_parent,student.history,model_student_history,group_school_parent,1,0,0,0
 access_student_certificate_parent,student.certificate,model_student_certificate,group_school_parent,1,0,0,0
-access_res_partner_parent,res.partner,model_res_partner,group_school_parent,1,0,0,0
+access_res_partner_parent,res.partner,model_res_partner,group_school_parent,1,1,0,0
 access_academic_subject_parent,academic.subject,model_academic_subject,group_school_parent,1,0,0,0
 access_student_family_contact_parent,student.family.contact,model_student_family_contact,group_school_parent,1,0,0,0
 access_student_relation_master_parent,student.relation.master,model_student_relation_master,group_school_parent,1,0,0,0
@@ -136,7 +138,9 @@ access_teacher_news_teacher,student.news,model_student_news,group_school_teacher
 access_teacher_reminder_teacher,student.reminder,model_student_reminder,group_school_teacher,1,1,1,1
 access_student_grn_teacher,student.grn,model_student_grn,group_school_teacher,1,1,1,0
 access_subject_syllabus_teacher,subject.syllabus,model_subject_syllabus,group_school_teacher,1,1,1,0
-
+access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,0,0
+access_res_partner_teacher,res.partner,base.model_res_partner,group_school_teacher,1,1,0,0
+,,,,,,,
 access_student_in_admission,student.student,model_student_student,group_is_admission,1,0,0,0
 access_standard_medium_student_is_admission,standard.medium,school.model_standard_medium,group_is_admission,1,0,0,0
 access_subject_subject_student_is_admission,subject.subject,school.model_subject_subject,group_is_admission,1,0,0,0
