@@ -15,6 +15,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="buttons"></div>
                         <div class="oe_inline">
                             <newline />
                             <separator string="Personal Information" />
@@ -35,7 +36,9 @@
                                 </group>
                             </div>
                         </div>
-                        <div class="oe_right oe_button_box" name="buttons"></div>
+<!--                         <div class="oe_right oe_button_box" name="buttons"></div> -->
+                        
+                        
                         <group>
                             <group string="Student Information">
                                 <field name="student_code" readonly="1" />
@@ -67,9 +70,6 @@
                                 <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" />
                             </group>
                         </group>
-<!--                         <group> -->
-<!--                             <field name="parent_id" /> -->
-<!--                         </group> -->
                         <notebook>
                             <page string="General" name="general">
                                 <group>
@@ -92,6 +92,10 @@
                                         <field name="contact_mobile1" />
                                     </group>
                                 </group>
+                            </page>
+                            <page string="Parents">
+                                <field name="parent_id" domain="[('parent_school','=',True)]" 
+                                            attrs="{'readonly':[('state','=','alumni')]}" context="{'form_view_ref':'school.view_parent_form','default_parent_school':1}"/>
                             </page>
                             <page string="References">
                                 <field name="reference_ids" nolabel="1" colspan="4">
@@ -234,9 +238,6 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Parents">
-                                <field name="parent_id"/>
-                            </page>
                             <page string="History" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent,school.group_school_student">
                                 <field name="history_ids" nolabel="1" colspan="4" readonly="1">
                                     <tree string="History">
@@ -256,7 +257,7 @@
                                 </field>
                             </page>
                         </notebook>
-                        <field name="state" invisible="1" />
+<!--                         <field name="state" invisible="1" /> -->
                     </sheet>
                 </form>
             </field>
@@ -299,7 +300,9 @@
                         <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
                     </group>
                     <separator/>
-                    <filter string="Done" name="done_student" domain="[('state','=','done')]"/>
+                    <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
+                    <filter icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
+                    <filter icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
                 </search>
             </field>
         </record>
@@ -459,9 +462,6 @@
                                 <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" attrs="{'readonly':[('state','=','alumni')]}"/>
                             </group>
                         </group>
-<!--                         <group> -->
-<!--                             <field name="parent_id" attrs="{'readonly':[('state','=','alumni')]}"/> -->
-<!--                         </group> -->
                         <notebook colspan="4">
                             <page string="General">
                                 <form string="General">
@@ -487,6 +487,10 @@
                                         </group>
                                     </sheet>
                                 </form>
+                            </page>
+                            <page string="Parents">
+                                <field name="parent_id" domain="[('parent_school','=',True)]"
+                                        attrs="{'readonly':[('state','=','alumni')]}" context="{'form_view_ref':'school.view_parent_form','default_parent_school':1}"/>
                             </page>
                             <page string="References">
                                 <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
@@ -564,9 +568,6 @@
                                     <field name="remark" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 </form>
                             </page>
-                            <page string="Parents">
-                                <field name="parent_id" attrs="{'readonly':[('state','=','alumni')]}"/>
-                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -596,10 +597,10 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <search string="Admission Register">
-<!--                     <filter icon="terp-project" string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" /> -->
-                    <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State" />
-                    <filter icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State" />
-                    <filter icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State" />
+                    <filter icon="terp-project" string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" />
+<!--                     <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State" /> -->
+<!--                     <filter icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State" /> -->
+<!--                     <filter icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State" /> -->
                     <separator orientation="vertical" />
                     <field name="student_name" invisible="1" />
                     <field name="year" />
@@ -646,7 +647,7 @@
                     <field name="color" />
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}                                                oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}                                                oe_kanban_global_click_edit oe_semantic_html_override">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}} oe_kanban_global_click_edit oe_semantic_html_override">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <ul class="oe_dropdown_menu">
                                         <li>
@@ -709,7 +710,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border                                             oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left" style="margin-left:10px;">
                                         <br />
                                         <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
@@ -1024,8 +1025,6 @@
                                     <field name="from_mark" />
                                     <field name="to_mark" />
                                     <field name="grade" />
-<!--                                     <field name="name" /> -->
-<!--                                     <field name="grade" /> -->
 	                             </tree>
 	                             <form>
 	                                 <group>
@@ -1039,7 +1038,6 @@
 	                                 </group>
 	                             </form>
 	                         </field>
-<!--                         </group> -->
                     </sheet>
                 </form>
             </field>
@@ -1610,19 +1608,22 @@
                         <button string="Send Mail" class="btn btn-sm btn-default fa fa-envelope" type="object" name="news_update" colspan="2" />
                     </header>
                     <sheet>
-                        <group col="4" colspan="4" string="News / Updates">
+                        <group col="4" colspan="2" string="News / Updates">
                             <field name="subject" />
-                            <newline />
                             <field name="date" />
+                        </group>
+                        <group>
+                            <field name="description" colspan="4" />
+                        </group>
                             <notebook colspan="4">
-                                <page string="Description">
-                                    <field name="description" nolabel="1" colspan="4" />
-                                </page>
+<!--                                 <page string="Description"> -->
+<!--                                     <field name="description" nolabel="1" colspan="4" /> -->
+<!--                                 </page> -->
                                 <page string="Users">
                                     <field name="user_ids" nolabel="1" colspan="4" />
                                 </page>
                             </notebook>
-                        </group>
+                        
                     </sheet>
                 </form>
             </field>
@@ -1690,10 +1691,10 @@
                                     <field name="type" string="Type" colspan="2" placeholder="Address Type"/>
                                     <label for="street" string="Address" />
                                     <div>
-                                        <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
-                                        <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
                                         <field name="street" placeholder="Street..." />
                                         <field name="street2" placeholder="Street2..." />
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
+                                        <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
                                         <field name="city" placeholder="City" required="1" />
                                         <field name="zip" placeholder="Zip"/>
                                     </div>
@@ -1707,7 +1708,7 @@
                                 </group>
                              </group>
                             <notebook>
-                                <page string="Children">
+                                <page string="Childs">
                                     <field name="student_ids" />
                                 </page>
                                 <page string="Notes">
