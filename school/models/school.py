@@ -313,7 +313,6 @@ class StudentStudent(models.Model):
     @api.model
     def _get_default_image(self, is_company, colorize=False):
         img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
-        image = None
         with open(img_path, 'rb') as f:
             image = f.read()
         image = image_colorize(image)
@@ -817,6 +816,7 @@ class GradeMaster(models.Model):
 
 class GradeLine(models.Model):
     _name = 'grade.line'
+    _rec_name = 'grade'
 
     from_mark = fields.Integer('From Marks', required=True,
                                help='The grade will starts from this marks.')
@@ -857,9 +857,8 @@ class StudentNews(models.Model):
         email_list = []
         for news in self:
             if news.user_ids:
-                for user in news.user_ids:
-                    if user.email:
-                        email_list.append(user.email)
+                email_list = [
+                        user.email for user in news.user_ids if user.email]
                 if not email_list:
                     raise except_orm(_('User Email Configuration '),
                                      _("Email not found in users !"))
@@ -872,28 +871,25 @@ class StudentNews(models.Model):
                 if not email_list:
                     raise except_orm(_('Mail Error'), _("Email not defined!"))
             t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
-            body = 'Hi,<br/><br/> \
-                    This is a news update from <b>%s</b>posted at %s<br/><br/>\
-                    %s <br/><br/>\
-                    Thank you.' % (self._cr.dbname,
+            company = user.company_id.name or ''
+            body = """Hi,<br/><br/>
+                    This is a news update from <b>%s</b> posted at %s<br/>
+                    <br/> %s <br/><br/>
+                    Thank you.""" % (company,
                                    t.strftime('%d-%m-%Y %H:%M:%S'),
-                                   news.description)
-            smtp_user = mail_server_record.smtp_user
+                                   news.description or '')
+            smtp_user = mail_server_record.smtp_user or False
+            if not smtp_user:
+                raise except_orm(_('Email Configuration '),
+                    _("Kindly,Configure the Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             message = obj_mail_server.build_email(email_from=smtp_user,
                                                   email_to=email_list,
                                                   subject=notification,
                                                   body=body,
                                                   body_alternative=body,
-                                                  email_cc=None,
-                                                  email_bcc=None,
                                                   reply_to=smtp_user,
-                                                  attachments=None,
-                                                  references=None,
-                                                  object_id=None,
-                                                  subtype='html',
-                                                  subtype_alternative=None,
-                                                  headers=None)
+                                                  subtype='html')
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
