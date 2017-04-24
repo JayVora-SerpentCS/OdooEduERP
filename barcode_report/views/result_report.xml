@@ -7,7 +7,7 @@
                 model="time.table"
                 report_type = "qweb-pdf"
                 file="barcode_report.result_label"
-                name="barcode_report.result_label" />
+                name="barcode_report.result_label" groups="school.group_school_administration"/>
         <report id="report_time_table_info_qweb"
                 string="Student Labels Information"
                 model="time.table"

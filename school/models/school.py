@@ -394,7 +394,7 @@ class StudentStudent(models.Model):
                               ('done', 'Done'),
                               ('terminate', 'Terminate'),
                               ('alumni', 'Alumni')],
-                             'State', readonly=True, default='draft')
+                             'State', readonly=True, default="draft")
     history_ids = fields.One2many('student.history', 'student_id', 'History')
     certificate_ids = fields.One2many('student.certificate', 'student_id',
                                       'Certificate')

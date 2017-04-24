@@ -26,10 +26,9 @@ class ReportLabel(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         docs = self.env['time.table'].browse(docids)
-        ans = self.env['time.table'].search([('id', 'in', docids)])
         docargs = {
             'doc_ids': docids,
-            'doc_model': docs,          #self.env['time.table'],
+            'doc_model': docs,
             'data': data,
             'docs': docs,
             'get_student_info': self.get_student_info,
