@@ -1,6 +1,8 @@
 ==============================================================================
  Version Change Log (school)
 ===============================================================================
+1.0.4 --> 24 April 2017 : Arpit Joshi
+    * View level changes in school module.
 
 1.0.3 --> 24 April 2017 : Vimal Patel
     * code optimized and fix error in new/update model

@@ -3,7 +3,7 @@
 
 {
     'name': 'School',
-    'version': '1.0.3',
+    'version': '1.0.4',
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
