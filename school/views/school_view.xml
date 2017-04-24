@@ -8,6 +8,12 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <form string="Student Information">
+                    <header>
+                        <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration" />
+                        <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
+                        <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft" groups="school.group_school_administration" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <div class="oe_inline">
                             <newline />
@@ -61,9 +67,9 @@
                                 <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" />
                             </group>
                         </group>
-                        <group>
-                            <field name="parent_id" />
-                        </group>
+<!--                         <group> -->
+<!--                             <field name="parent_id" /> -->
+<!--                         </group> -->
                         <notebook>
                             <page string="General" name="general">
                                 <group>
@@ -228,6 +234,9 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Parents">
+                                <field name="parent_id"/>
+                            </page>
                             <page string="History" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent,school.group_school_student">
                                 <field name="history_ids" nolabel="1" colspan="4" readonly="1">
                                     <tree string="History">
@@ -289,6 +298,8 @@
                         <filter icon="terp-project" string="Name" help="By Class" context="{'group_by':'student_name'}" />
                         <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
                     </group>
+                    <separator/>
+                    <filter string="Done" name="done_student" domain="[('state','=','done')]"/>
                 </search>
             </field>
         </record>
@@ -448,9 +459,9 @@
                                 <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" attrs="{'readonly':[('state','=','alumni')]}"/>
                             </group>
                         </group>
-                        <group>
-                            <field name="parent_id" attrs="{'readonly':[('state','=','alumni')]}"/>
-                        </group>
+<!--                         <group> -->
+<!--                             <field name="parent_id" attrs="{'readonly':[('state','=','alumni')]}"/> -->
+<!--                         </group> -->
                         <notebook colspan="4">
                             <page string="General">
                                 <form string="General">
@@ -553,6 +564,9 @@
                                     <field name="remark" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 </form>
                             </page>
+                            <page string="Parents">
+                                <field name="parent_id" attrs="{'readonly':[('state','=','alumni')]}"/>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -582,7 +596,7 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <search string="Admission Register">
-                    <filter icon="terp-project" string="Draft" domain="[('state','=', 'draft')]" help="Admission In Draft State" />
+<!--                     <filter icon="terp-project" string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" /> -->
                     <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State" />
                     <filter icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State" />
                     <filter icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State" />
@@ -763,7 +777,7 @@
                 <form string="School Information">
                     <sheet>
                         <separator string="School Configuration" />
-                        <group col="6" colspan="4">
+                        <group col="4" colspan="4">
                             <field name="name" string="School Name" placeholder="School Name" />
                             <field name="code" placeholder="Code" />
                         </group>
@@ -778,7 +792,7 @@
                                 <field name="zip" placeholder="ZIP" />
                             </div>
                         </group>
-                        <group col="4" colspan="2">
+                        <group col="4" colspan="4">
                             <field name="currency_id" placeholder="Select Or Create Currency" />
                             <field name="lang" />
                         </group>
@@ -829,7 +843,7 @@
                             <field name="division_id" widget="selection" />
                             <field name="medium_id" widget="selection" />
                             <field name="school_id" widget="selection" />
-                            <field name="user_id" placeholder="Create Or Select Faculty Name" />
+                            <field name="user_id" placeholder="Create Or Select Faculty Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher': True}"/>
                             <field name="passing" placeholder="No Of ATKT Allowed" />
                         </group>
                         <notebook colspan="4">
@@ -1000,28 +1014,32 @@
             <field name="arch" type="xml">
                 <form string="Grade">
                     <sheet>
-                        <group col="4" string="Grade" colspan="4">
+                        <group col="2" colspan="2" string="Grade">
                             <field name="name" string="Grade Names" />
+                        </group>
                             <newline />
                             <field name="grade_ids" nolabel="1" colspan="4">
                                 <tree>
                                     <field name="sequence" />
-                                    <field name="name" />
+                                    <field name="from_mark" />
+                                    <field name="to_mark" />
                                     <field name="grade" />
-                                </tree>
-                                <form>
-                                    <group>
-                                        <field name="sequence" colspan="2" />
-                                        <newline />
-                                        <field name="grade" />
-                                        <newline />
-                                        <field name="from_mark" />
-                                        <field name="to_mark" />
-                                        <field name="fail" />
-                                    </group>
-                                </form>
-                            </field>
-                        </group>
+<!--                                     <field name="name" /> -->
+<!--                                     <field name="grade" /> -->
+	                             </tree>
+	                             <form>
+	                                 <group>
+	                                     <field name="sequence" colspan="2" />
+	                                     <newline />
+	                                     <field name="grade" />
+	                                     <newline />
+	                                     <field name="from_mark" />
+	                                     <field name="to_mark" />
+	                                     <field name="fail" />
+	                                 </group>
+	                             </form>
+	                         </field>
+<!--                         </group> -->
                     </sheet>
                 </form>
             </field>
@@ -1322,7 +1340,7 @@
                                 </field>
                             </page>
                             <page string="Teachers">
-                                <field name="teacher_ids" nolabel="1" colspan="4" />
+                                <field name="teacher_ids" nolabel="1" colspan="4" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':True}"/>
                             </page>
                             <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">
                                 <field name="student_ids" nolabel="1" />
@@ -1419,6 +1437,18 @@
                 </data>
             </field>
         </record>
+        <!-- Inherit Search View of hr employee -->
+        <record id="school_hr_inherit_search" model="ir.ui.view">
+             <field name="name">hr.employee.form</field>
+             <field name="model">hr.employee</field>
+             <field name="inherit_id" ref="hr.view_employee_filter" />
+             <field name="arch" type="xml">
+                 <xpath expr="//search/field[@name='job_id']" position="after">
+                     <filter string="Teacher" name="is_teacher" domain="[('is_school_teacher','=',True)]"/>
+                 </xpath>
+                 
+             </field>
+        </record>
         <!-- Actions Of Form & Kanban Views Of Student Reminder -->
         <record id="action_student_reminder" model="ir.actions.act_window">
             <field name="name">Students Reminder</field>
@@ -1439,7 +1469,7 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="domain">[('is_school_teacher','=',True)]</field>
-            <field name="context">{'search_default_is_school_teacher': 1,'default_is_school_teacher': 1}</field>
+            <field name="context">{'search_default_is_teacher': 1,'default_is_school_teacher': 1}</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
         
@@ -1448,6 +1478,7 @@
             <field name="name">Admission Register</field>
             <field name="res_model">student.student</field>
             <field name="domain">[('state','=','draft')]</field>
+<!--             <field name="context">{'search_default_state_student': 1}</field> -->
             <field name="view_type">form</field>
             <field name="view_id" ref="view_student_student_form_2" />
             <field name="search_view_id" ref="view_student_student_search_2" />
@@ -1471,6 +1502,7 @@
         <record id="action_student_student_form_12" model="ir.actions.act_window">
             <field name="name">Students</field>
             <field name="domain">[('state', '!=', 'draft')]</field>
+            <field name="context">{'search_default_done_student':1}</field>
             <field name="res_model">student.student</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_student_student_form_1" />
@@ -1478,20 +1510,21 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
         <!-- Action View 1 Of Tree View Of Student Information -->
-        <record id="action_view_student_student_tree_1" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
-            <field eval="20" name="sequence" />
-            <field name="view_id" ref="view_student_student_tree_1" />
-            <field name="act_window_id" ref="action_student_student_form_12" />
-        </record>
-        <!-- Action View 1 Of Form View Of Student Information -->
-        <record id="action_view_student_student_form_1" model="ir.actions.act_window.view">
-            <field name="view_mode">form</field>
-            <field eval="30" name="sequence" />
-            <field name="view_id" ref="view_student_student_form_1" />
-            <field name="act_window_id" ref="action_student_student_form_12" />
-        </record>
-        <!-- Action View 1 Of Kanban View Of Student Information -->
+<!--         <record id="action_view_student_student_tree_1" model="ir.actions.act_window.view"> -->
+<!--             <field name="view_type">tree</field> -->
+ <!--             <field name="view_mode">kanban,tree,form</field> -->
+<!--             <field eval="20" name="sequence" /> -->
+<!--             <field name="view_id" ref="view_student_student_tree_1" /> -->
+<!--             <field name="act_window_id" ref="action_student_student_form_12" /> -->
+<!--         </record> -->
+        <!--  Action View 1 Of Form View Of Student Information-->
+<!--         <record id="action_view_student_student_form_1" model="ir.actions.act_window.view"> -->
+<!--             <field name="view_mode">form</field> -->
+<!--             <field eval="30" name="sequence" /> -->
+<!--             <field name="view_id" ref="view_student_student_form_1" /> -->
+<!--             <field name="act_window_id" ref="action_student_student_form_12" /> -->
+<!--         </record> -->
+       <!-- Action View 1 Of Kanban View Of Student Information-->
         <record id="action_view_student_student_kanban_1" model="ir.actions.act_window.view">
             <field name="view_mode">kanban</field>
             <field eval="31" name="sequence" />
@@ -1645,36 +1678,45 @@
                         <form string="Partner Contacts">
                             <newline />
                             <group>
-                                <field name="parent_school" />
-                                <field name="student_ids" />
+                                <field name="parent_school"/>
                             </group>
-                            <group colspan="2" col="4">
-                                <separator string="Postal Address" colspan="4" col="4" />
-                                <field name="name" placeholder="Name" required="1"/>
-                                <field name="type" string="Type" colspan="2" placeholder="Address Type" />
-                                <field name="street" placeholder="Street" />
-                                <field name="street2" placeholder="Street2" />
-                                <field name="zip" placeholder="Zip" />
-                                <field name="city" placeholder="City" />
-                                <field name="country_id" completion="1" placeholder="Country" required="1"/>
-                                <field name="state_id" placeholder="State" domain="[('country_id','=',country_id)]" required="1"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Communication" colspan="2" col="2" />
-                                <group colspan="4" col="4">
-                                    <field name="phone" placeholder="Phone Number" />
-                                    <field name="mobile" placeholder="Mobile Number" />
-                                    <field name="fax" placeholder="Fax" />
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name" placeholder="Name" required="1"/>
+                                </h1>
+                           </div>
+                            <group cols="4">
+                                <group string="Postal Address">
+                                    <field name="type" string="Type" colspan="2" placeholder="Address Type"/>
+                                    <label for="street" string="Address" />
+                                    <div>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
+                                        <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                        <field name="street" placeholder="Street..." />
+                                        <field name="street2" placeholder="Street2..." />
+                                        <field name="city" placeholder="City" required="1" />
+                                        <field name="zip" placeholder="Zip"/>
+                                    </div>
+                                </group>
+                                <group string="Communication">
+                                    
+                                    <field name="phone" placeholder="Phone Number"/>
+                                    <field name="mobile" placeholder="Mobile Number"/>
+                                    <field name="fax" placeholder="Fax"/>
                                     <field name="email" widget="email" required="1"/>
                                 </group>
-                            </group>
+                             </group>
+                            <notebook>
+                                <page string="Children">
+                                    <field name="student_ids" />
+                                </page>
+                                <page string="Notes">
+                                    <field name="comment" nolabel="1" />
+                                </page>
+                            </notebook>
                         </form>
                         <group groups="base.group_extended">
                             <separator colspan="4" string="Categories" />
-                        </group>
-                        <group colspan="4" col="4">
-                            <separator string="Notes" colspan="4" col="4" />
-                            <field colspan="4" name="comment" nolabel="1" />
                         </group>
                     </sheet>
                 </form>
@@ -1690,6 +1732,8 @@
                         <field name="name" select="1" />
                         <field name="country_id" select="1" />
                     </group>
+                    <separator/>
+                    <filter string="Parents" name="parent_school" domain="[('parent_school','=',True)]"/>
                 </search>
             </field>
         </record>
