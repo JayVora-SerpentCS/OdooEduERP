@@ -22,12 +22,23 @@ class SchoolTeacherAssignment(models.Model):
     assign_date = fields.Date('Assign Date', required=True)
     due_date = fields.Date('Due Date', required=True)
     attached_homework = fields.Binary('Attached Home work')
-    state = fields.Selection([('draft', 'Draft'), ('active', 'Active')],
+    state = fields.Selection([('draft', 'Draft'), ('active', 'Active'),
+                              ('done', 'Done')],
                              'Status', readonly=True, default='draft')
     school_id = fields.Many2one('school.school', 'School Name',
                                 related='standard_id.school_id')
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id')
+    student_assign_ids = fields.One2many('school.student.assignment',
+                                         'teacher_assignment_id',
+                                         string="Studnet Assignments")
+
+    
+
+    @api.multi
+    def complete_assign(self):
+        print"self>>>>>>>>.", self
+        return True
 
     @api.multi
     def active_assignment(self):
@@ -53,6 +64,7 @@ class SchoolTeacherAssignment(models.Model):
                             'state': 'active',
                             'attached_homework': self.attached_homework,
                             'teacher_id': self.teacher_id.id,
+                            'teacher_assignment_id': self.id,
                             'student_id': std}
                 assignment_id = assignment_obj.create(ass_dict)
                 if self.attached_homework:
@@ -79,13 +91,19 @@ class SchoolStudentAssignment(models.Model):
     name = fields.Char('Assignment Name')
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
     standard_id = fields.Many2one('school.standard', 'Standard', required=True)
+    reject_assignment = fields.Text('Reject Reason')
     teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True)
     assign_date = fields.Date('Assign Date', required=True)
     due_date = fields.Date('Due Date', required=True)
     state = fields.Selection([('draft', 'Draft'), ('active', 'Active'),
+                              ('reject', 'Reject'),
                               ('done', 'done')], 'Status', readonly=True)
     student_id = fields.Many2one('student.student', 'Student', required=True)
+    stud_roll_no = fields.Integer(related='student_id.roll_no',
+                                  string="Roll no")
     attached_homework = fields.Binary('Attached Home work')
+    teacher_assignment_id = fields.Many2one('school.teacher.assignment',
+                                            string="Teachers")
 
     @api.multi
     def done_assignment(self):
@@ -95,3 +113,15 @@ class SchoolStudentAssignment(models.Model):
         '''
         self.state = 'done'
         return True
+
+    @api.multi
+    def reject_assign(self):
+        self.state = 'reject'
+        return True
+
+
+    @api.multi
+    def complete_assign(self):
+        self.state = 'done'
+        return True
+

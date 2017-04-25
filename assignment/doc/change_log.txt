@@ -4,3 +4,6 @@
 
 1.0.1 --> 12 April 2017 : Vimal Patel
     * Added record rule for Parents can see only own student record and groups assign to parents .
+
+1.0.2 --> 24 April 2017 : Arpit Joshi
+    * Change in the flow of assignment module. 
