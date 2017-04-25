@@ -15,8 +15,7 @@
     'data': ['security/assignment_security.xml',
              'wizard/reason_wiz_view.xml',
              'views/homework_view.xml',
-             'security/ir.model.access.csv',
-             'views/templates.xml'
+             'security/ir.model.access.csv'
              ],
     'test': ['test/assignment.yml'],
     'demo': ['demo/assignment_demo.xml'],
