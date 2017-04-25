@@ -6,24 +6,23 @@
         <field name="name">Reject Homework Wizard</field>
         <field name="model">reject.reason</field>
         <field name="arch" type="xml">
-            <form string="reject_wizard">
+            <form string="Assigment Rejection Reason">
                 <sheet>
-                    <group>
-	                   <field name="reasons" required="1"/>
-	                </group>
-	                <footer>
-	                    <button name="save_reason" string="Save" type="object"/>
-	                    <button special="cancel" string="Cancel"/>
-	                </footer>
-	             </sheet>
+                    <field name="reasons" required="1"/>
+                    <footer>
+                        <button name="save_reason" string="Save" type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                 </sheet>
             </form>
         </field>
     </record>
     <!-- Action -->
     <record id="student_homework_reject" model="ir.actions.act_window">
-        <field name="name">Reject Assignment Action</field>
+        <field name="name">Assigment Rejection Reason</field>
         <field name="res_model">reject.reason</field>
-        <field name="view_type">form</field><field name="view_mode">form</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
         <field name="target">new</field>
      </record>
 </odoo>
