@@ -660,6 +660,7 @@ class HrEmployee(models.Model):
 #                sub_list.append(sub_rec.id)
 
     is_school_teacher = fields.Boolean('School Teacher')
+    school = fields.Many2one('school.school', 'School')
     subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
                                    'Subjects', compute='_compute_subject')
 
@@ -668,12 +669,17 @@ class HrEmployee(models.Model):
         res = super(HrEmployee, self).create(vals)
         if vals.get('is_school_teacher') or \
                 self.context.get('default_is_school_teacher'):
-
             user_vals = {
                          'name': vals.get('name'),
                          'login': vals.get('work_email', False),
                          'password': vals.get('work_email', False)
                          }
+            if vals.get('school'):
+                school = self.env['school.school'].browse(vals.get('school'))
+                if school and school.company_id:
+                    user_vals.update({
+                                    'company_ids': [(4, school.company_id.id)],
+                                    'company_id': school.company_id.id})
             user = self.env['res.users'].create(user_vals)
             if user and user.partner_id:
                 user.partner_id.write({
@@ -705,6 +711,12 @@ class HrEmployee(models.Model):
             if self.user_id and self.user_id.partner_id:
                 self.user_id.partner_id.write({'name': vals.get('name')
                                                })
+        if vals.get('school'):
+            school = self.env['school.school'].browse(vals.get('school'))
+            if school and school.company_id:
+                self.user_id.write({
+                                'company_ids': [(4, school.company_id.id)],
+                                'company_id': school.company_id.id})
         return res
 
 

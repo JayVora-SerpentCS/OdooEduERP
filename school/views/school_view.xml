@@ -1422,6 +1422,9 @@
                             <field name="is_school_teacher"/>
                         </group>
                     </xpath>
+                    <field name="address_id" position="before">
+                        <field name="school" required="1"/>
+                    </field>
                     <field name="work_email" position="attributes">
                         <attribute name="required">1</attribute>
                     </field>

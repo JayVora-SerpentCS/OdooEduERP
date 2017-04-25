@@ -140,6 +140,7 @@ access_student_grn_teacher,student.grn,model_student_grn,group_school_teacher,1,
 access_subject_syllabus_teacher,subject.syllabus,model_subject_syllabus,group_school_teacher,1,1,1,0
 access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,0,0
 access_res_partner_teacher,res.partner,base.model_res_partner,group_school_teacher,1,1,0,0
+access_res_users_teacher,res.users,base.model_res_users,group_school_teacher,1,1,0,0
 ,,,,,,,
 access_student_in_admission,student.student,model_student_student,group_is_admission,1,0,0,0
 access_standard_medium_student_is_admission,standard.medium,school.model_standard_medium,group_is_admission,1,0,0,0

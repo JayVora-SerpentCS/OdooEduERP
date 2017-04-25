@@ -12,6 +12,7 @@
             <field name="prefix">C</field>
             <field name="number_next">1</field>
             <field name="padding">3</field>
+            <field name="company_id">False</field>
         </record>
 
         <!-- Sequences For Library Issue Number -->
@@ -22,6 +23,7 @@
             <field name="prefix">L</field>
             <field name="number_next">1</field>
             <field name="padding">3</field>
+            <field name="company_id">False</field>
         </record>
 
         <record id="seq_lib_req" model="ir.sequence">
@@ -30,6 +32,7 @@
             <field name="prefix">REQ</field>
             <field name="number_next">1</field>
             <field name="padding">3</field>
+            <field name="company_id">False</field>
         </record>
 
     </data>

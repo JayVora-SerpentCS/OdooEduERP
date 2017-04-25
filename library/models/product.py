@@ -244,17 +244,17 @@ class ProductProduct(models.Model):
     def _get_books_available(self):
         library_book_issue_obj = self.env['library.book.issue']
         for rec in self:
-            issue_ids = library_book_issue_obj.search(
+            issue_ids = library_book_issue_obj.sudo().search(
                                             [('name', '=', rec.id),
                                    ('state', 'in', ('issue', 'reissue'))])
             occupied_no = 0.0
             if issue_ids:
                 occupied_no = len(issue_ids)
-            rec.books_available = rec.qty_available - occupied_no
+            rec.books_available = rec.sudo().qty_available - occupied_no
         return True
 
     @api.multi
-    @api.depends('qty_available', 'availability')
+    @api.depends('books_available')
     def _check_books_availablity(self):
         for rec in self:
             if rec.books_available >= 1:
