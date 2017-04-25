@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 {
     'name': 'School',
-    'version': '1.0.4',
+    'version': '1.0.5',
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
