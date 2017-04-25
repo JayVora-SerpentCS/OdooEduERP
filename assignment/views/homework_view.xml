@@ -24,7 +24,7 @@
             <field name="model">school.teacher.assignment</field>
             <field name="arch" type="xml">
                 <search string="Assignment Information">
-                    <filter string="Active" domain="[('state','=','active')]" icon="terp-camera_test"/>
+                    <filter string="Active" name="active_assign" domain="[('state','=','active')]" icon="terp-camera_test"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="teacher_id"/>
@@ -51,27 +51,38 @@
                 <form string="Assignment Information" >
                     <header>
                         <button name = "active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active Assignment" type="object"/>
+                        <button name="done_assignments" states="active" string="Done" type="object"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
                     <separator string="Teacher Assignment" colspan="4"/>
                     <group col="4" colspan="4">
-                        <field name="name" placeholder="Assignment Name"/>
-                        <field name="teacher_id" placeholder="Teacher Name"/>
-                    </group>
-                    <group col="2" string="Standard">
-                        <field name="standard_id" select="1" placeholder="Standard"/>
+                        <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                     <group col="4" string="Subject and Dates">
-                        <field name="subject_id" select="1" placeholder="Subject"/>
-                        <newline/>
-                        <field name="assign_date" placeholder="Assign Date"/>
-                        <field name="due_date" placeholder="Due Date"/>
+                        <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                     <separator string="Attachements" colspan="4"/>
                     <group col="2">
-                        <field name="attached_homework" placeholder="Attachement File"/>
+                        <field name="attached_homework" placeholder="Attachement File" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
+                    <notebook>
+                        <page string="Student Assignment Details">
+                            <field name="student_assign_ids">
+                                <tree>
+                                    <field name="stud_roll_no"/>
+                                    <field name="student_id"/>
+                                    <field name="state"/>
+                                    <button name="complete_assign" class="fa fa-check-square-o" type="object" attrs="{'invisible':[('state','=','done')]}"/>
+                                    <button name="%(assignment.student_homework_reject)d" class="oe_assignment_btn" string="Reject" type="action" attrs="{'invisible':[('state','=','reject')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                     </sheet>
                 </form>
             </field>
@@ -82,6 +93,7 @@
             <field name="res_model">school.teacher.assignment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active_assign':1}</field>
         </record>
         <!-- From View Of Student Assignment Information -->
         <record id="view_school_student_assignment_form" model="ir.ui.view">
@@ -90,28 +102,34 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information">
                     <header>
-                        <button name = "done_assignment" class="oe_stat_button fa  fa-check" states="active" string="Done" type="object"/>
+                        <button name = "done_assignment" class="oe_stat_button fa  fa-check" states="active,reject" string="Done" type="object"/>
+                        <button name="reject_assign" string="Reject" type="object" states="active"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                    <sheet>
                     <separator colspan="4"/>
                     <group col="4" string="Assignment Information">
-                        <field name="student_id" placeholder="Student"/>
-                        <field name="name" placeholder="Assignment Name"/>
+                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="stud_roll_no" invisible="1"/>
+                        <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
                         <newline />
-                        <field name="teacher_id" placeholder="Teacher"/>
+                        <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                     <group col="4" string="Standard and Division">
-                        <field name="subject_id"  placeholder="Subject"/>
-                        <field name="standard_id" placeholder="Standerd"/>
+                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="standard_id" placeholder="Standerd" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                     <group col="4" string="Dates">
-                        <field name="assign_date" placeholder="Assign Date" />
-                        <field name="due_date" placeholder="Due Date"/>
+                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                         <group string="Attachements">
-                            <field name="attached_homework" placeholder="Attachment File"/>
+                            <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
+                        <group string="Reject Assignment" attrs="{'invisible':[('state','in',['draft','active','done'])]}">
+                            <field name="reject_assignment" attrs="{'invisible':[('state','in',['draft','active','done'])]}"/>
+                        </group>
+                        <field name="teacher_assignment_id" invisible="1"/>
                    </sheet>
                 </form>
             </field>
