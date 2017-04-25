@@ -116,11 +116,6 @@ class SchoolStudentAssignment(models.Model):
         return True
 
     @api.multi
-    def reject_assign(self):
-        self.state = 'reject'
-        return True
-
-    @api.multi
     def complete_assign(self):
         self.state = 'done'
         return True

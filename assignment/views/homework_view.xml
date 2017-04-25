@@ -108,7 +108,7 @@
                     <header>
                         <button name="done_assignment" class="oe_stat_button fa fa-check" states="active,reject" string="Done" 
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
-                        <button name="reject_assign" string="Reject" type="object" states="active"
+                        <button name="%(assignment.student_homework_reject)d" string="Reject" type="action" states="active"
                                 groups="school.group_school_teacher,school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
@@ -183,6 +183,9 @@
                         <filter string="Standard" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'standard_id'}"/>
                         <filter string="Assign Date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
                     </group>
+                    <group string="Filter By">
+                        <filter string="Active" name="active_assigns" domain="[('state','=','active')]"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -219,6 +222,7 @@
             <field name="res_model">school.student.assignment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active_assigns':1}</field>
         </record>
 
         <!-- Menu items for Assignment-->
