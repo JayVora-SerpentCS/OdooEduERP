@@ -55,12 +55,13 @@
                         <group>
                             <group>
                                 <label for="street" string="Address" />
-                                <div>
-                                    <field name="street" placeholder="Street..." />
-                                    <field name="street2" placeholder="Street2..." />
-                                    <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
-                                    <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                                    <field name="city" placeholder="City" required="1" />
+                                <div class="o_address_format">
+                                    <field name="street" class="o_address_street" placeholder="Street..." />
+                                    <field name="street2" class="o_address_street" placeholder="Street2..." />
+                                    <field name="city" placeholder="City" class="o_address_city" required="1" />
+                                    <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
                                 </div>
                             </group>
                             <group>
@@ -446,13 +447,13 @@
                         <group colspan="4">
                             <group>
                                 <label for="street" string="Address" />
-                                <div>
-                                    <field name="street" placeholder="Street..." attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="street2" placeholder="Street2..." attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="country_id" placeholder="Country" required="1" class="oe_no_button" options="{&quot;no_open&quot;: true}" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="state_id" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: true}" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="city" placeholder="City" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="zip" placeholder="ZIP" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="street2" placeholder="Street2..." class="o_address_street" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: true}" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" required="1" options="{&quot;no_open&quot;: true}" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 </div>
                             </group>
                             <group>
@@ -1453,6 +1454,15 @@
             <field name="res_model">student.reminder</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Reminder.
+                </p>
+                <p>
+                 This structure is used to create and manage all Remainders
+                related to students regarding exams, events etc.
+              </p>
+            </field>
         </record>
         <!-- Action View Of Kanban View Of Student Reminder -->
         <record id="action_view_student_reminder_kanban" model="ir.actions.act_window.view">
@@ -1690,13 +1700,13 @@
                                 <group string="Postal Address">
                                     <field name="type" string="Type" colspan="2" placeholder="Address Type"/>
                                     <label for="street" string="Address" />
-                                    <div>
-                                        <field name="street" placeholder="Street..." />
-                                        <field name="street2" placeholder="Street2..." />
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street" />
+                                        <field name="street2" placeholder="Street2..." class="o_address_street" />
+                                        <field name="city" placeholder="City" required="1" class="o_address_city"/>
+                                        <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                        <field name="zip" placeholder="Zip" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
-                                        <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                                        <field name="city" placeholder="City" required="1" />
-                                        <field name="zip" placeholder="Zip"/>
                                     </div>
                                 </group>
                                 <group string="Communication">

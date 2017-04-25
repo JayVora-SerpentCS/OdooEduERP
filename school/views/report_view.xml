@@ -7,5 +7,5 @@
                 model="student.student"
                 report_type="qweb-pdf"
                 file="school.identity_card"
-                name="school.identity_card"/>
+                name="school.identity_card" groups="school.group_school_administration,school.group_school_teacher"/>
 </odoo>
