@@ -165,10 +165,10 @@
             <field name="model">school.student.assignment</field>
             <field name="arch" type="xml">
                 <search string="Assignment Information">
-                    <filter string="Active" domain="[('state','=','active')]" icon="terp-camera_test"/>
+<!--                     <filter string="Active" domain="[('state','=','active')]" icon="terp-camera_test"/> -->
                     <separator orientation="vertical"/>
                     <field name="name" />
-                    <!-- <field name="student_id"/> -->
+                    <field name="student_id"/>
                     <field name="teacher_id"/>
                     <field name="standard_id"/>
                     <field name="subject_id" />
@@ -177,11 +177,11 @@
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
-                        <filter string="Student" icon="terp-folder-orange" domain="" context="{'group_by':'student_id'}"/>
-                        <filter string="Teacher" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'teacher_id'}"/>
-                        <filter string="Subject" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'subject_id'}"/>
-                        <filter string="Standard" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'standard_id'}"/>
-                        <filter string="Assign Date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
+                        <filter string="Student" name="student_id" icon="terp-folder-orange" domain="" context="{'group_by':'student_id'}"/>
+                        <filter string="Teacher" name="teacher_id" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'teacher_id'}"/>
+                        <filter string="Subject" name="subject_id" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'subject_id'}"/>
+                        <filter string="Standard" name="standard_id" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'standard_id'}"/>
+                        <filter string="Assign Date" name="assign_date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
                     </group>
                     <group string="Filter By">
                         <filter string="Active" name="active_assigns" domain="[('state','=','active')]"/>

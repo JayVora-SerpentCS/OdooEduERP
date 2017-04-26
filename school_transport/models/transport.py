@@ -20,6 +20,8 @@ class HrEmployee(models.Model):
 
     licence_no = fields.Char('License No')
     is_driver = fields.Boolean('IS driver')
+    transport_vehicle = fields.One2many('transport.vehicle',
+                                        'driver_id', 'Vehicles')
 
 
 class TransportPoint(models.Model):
@@ -268,7 +270,8 @@ class TransportRegistration(models.Model):
                                   property_account_receivable_id.id,
                     'transport_student_id': transport.id}
             account_object = self.env['account.invoice'].create(vals)
-            acct_journal_id = account_object.journal_id.default_credit_account_id.id
+            acct_journal_id = \
+                account_object.journal_id.default_credit_account_id.id
             account_view_id = self.env.ref('account.invoice_form')
             inv_line = []
             line_vals = {'name': 'Transport Fees',

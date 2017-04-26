@@ -70,6 +70,7 @@ access_student_previous_school_parent,student.previous.school,model_student_prev
 access_parent_news_parent,student.news,model_student_news,group_school_parent,1,0,0,0
 access_student_grn_parent,student.grn,model_student_grn,group_school_parent,1,0,0,0
 access_subject_syllabus_parent,subject.syllabus,model_subject_syllabus,group_school_parent,1,0,0,0
+access_res_users_parents,res.users,base.model_res_users,group_school_parent,1,0,0,0
 ,,,,,,,
 access_standard_medium_student,standard.medium,school.model_standard_medium,group_school_student,1,0,0,0
 access_subject_subject_student,subject.subject,school.model_subject_subject,group_school_student,1,0,0,0
