@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//filter[4]" position="after">
-                        <filter icon="terp-personal+" domain="[('job_id','=','Driver')]" name="job_id" string="Driver"/>
+                        <filter icon="terp-personal" domain="[('job_id','=','Driver')]" name="job_id" string="Driver"/>
                     </xpath>
                 </data>
             </field>
@@ -58,6 +58,11 @@
                         <group>
                             <field name="is_driver" string="Is Driver"/>
                         </group>
+                    </xpath>
+                    <xpath expr="//page[@name='hr_settings']" position="after">
+                        <page name="vehicle_details" string="Vehicles Details">
+                            <field name="transport_vehicle" readonly="1"/>
+                        </page>
                     </xpath>
                 </data>
             </field>
