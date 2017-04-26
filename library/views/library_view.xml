@@ -326,6 +326,11 @@
                                                 </table>
                                                 <br />
                                             </td>
+                                            <td align="right" style="padding-left: 100px;">
+                                                <a type="open">
+                                                     <img t-att-src="kanban_image('product.product','image_medium', record.id.value)" class="oe_avatar"/>
+                                                </a>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -379,7 +384,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
            <field name="view_mode">kanban,tree,form</field>
-           <!--  <field name="view_id" ref="books_kanban_view"></field> -->
+            <field name="view_id" ref="books_kanban_view"></field>
             <field name="context">{'search_default_book':1}</field>
         </record>
 
@@ -388,20 +393,28 @@
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"  />
         <menuitem id="menu_books_student" parent="menu_library" action="action_product_book_list" sequence="1"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
-        
+
         <!-- Action Of Form View Of View Book -->
 
         <record id="action_view_book" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2" />
+            <field name="sequence" eval="3" />
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_product_book_form"/>
+            <field name="act_window_id" ref="action_product_book_list"/>
+        </record>
+
+        <!--  Action of Kanban View -->
+        <record id="action_viewbook3_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="books_kanban_view"/>
             <field name="act_window_id" ref="action_product_book_list"/>
         </record>
 
         <!-- Action Of Tree View Of View Book -->
 
         <record id="action_view_book2" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1" />
+            <field name="sequence" eval="2" />
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_product_book_tree"/>
             <field name="act_window_id" ref="action_product_book_list"/>
@@ -607,8 +620,8 @@
                             <field name="roll_no" />
                             <field name="standard_id"/>
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible':[('user','!=','teacher')]}">
-                            <separator colspan="4" col="4"/>
+                        <group col="2" colspan="2" attrs="{'invisible':[('user','!=','teacher')]}">
+                            <separator colspan="2" col="2"/>
                             <field name="teacher_id"/>
                         </group>
                     </sheet>
