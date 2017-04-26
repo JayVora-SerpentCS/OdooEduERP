@@ -143,26 +143,31 @@
             <field name="arch" type="xml">
                 <form string="Books">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="action_purchase_order"
-                                type="object"
-                                class="oe_stat_button"
-                                icon="fa-pencil-square-o"
-                                groups="library.group_librarian">
-                                <field string="Actual Qty" name="qty_available" widget="statinfo" />
-                            </button>
-                            <button name="action_book_req"
-                                type="object"
-                                class="oe_stat_button"
-                                icon="fa-pencil-square-o">
-                               <field string="Remaining Qty" name="books_available" widget="statinfo" />
-                            </button>
-                        </div>
+                        <group>
+                            <group>
+                                <h1><field name="name" placeholder="Book Name" nolabel="1"/></h1>
+                            </group>
+                            <group>
+                                <div class="oe_button_box" name="button_box">
+                                    <button name="action_purchase_order"
+                                        type="object"
+                                        class="oe_stat_button"
+                                        icon="fa-pencil-square-o"
+                                        groups="library.group_librarian">
+                                        <field string="Actual Qty" name="qty_available" widget="statinfo" />
+                                    </button>
+                                    <button name="action_book_req"
+                                        type="object"
+                                        class="oe_stat_button"
+                                        icon="fa-pencil-square-o">
+                                       <field string="Remaining Qty" name="books_available" widget="statinfo" />
+                                    </button>
+                                </div>
+                            </group>
+                        </group>
                         <group col="3" colspan="3">
-                            <group col="2" colspan="2">
-                                <h1>
-                                    <field name="name" placeholder="Enter Book Name" nolabel="1" />
-                              </h1>
+                            <group col="1" colspan="1">
+                                <field name="image_medium" class="oe_avatar" style="height: 150px;width: 150px;" widget='image' nolabel="1"/>
                             </group>
                             <group col="2" colspan="2">
                                <field name="isbn" placeholder="ISBN Number"/>
@@ -170,9 +175,6 @@
                                <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
                                <field name="categ_id" placeholder="Select or Create Book"/>
                                <field name="author" placeholder="Name of Author"/>
-                            </group>
-                            <group col="1" colspan="1">
-                                <field name="image_medium" widget='image' style="{height: 261px;width: 234px;}" nolabel="1"/>
                             </group>
 	                    </group>
                         <notebook>
