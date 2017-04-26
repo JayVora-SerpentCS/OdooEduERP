@@ -158,21 +158,23 @@
                                <field string="Remaining Qty" name="books_available" widget="statinfo" />
                             </button>
                         </div>
-                        <separator string="Book Information"/>
-                        <group col="4" colspan="2">
-                            <field name="name" placeholder="Enter Book Name"/>
-                            <field name="default_code" placeholder="Enter Book Default code"/>
-                            <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
-                            <field name="catalog_num" placeholder="Enter Catalog No"/>
-                            <field name="isbn" placeholder="International Standard Book Number"/>
-                            <field name="rack" placeholder="Position of book"/>
-                            <field name="categ_id" placeholder="Select or Create Book"/>
-                            <field name="editor" placeholder="Editor" required="1"
-                                   context="{'form_view_ref':'library.view_partner_form_11'}"/>
-                            <field name="author" placeholder="Name of Author"/>
-                            <field name="collection" placeholder="Collection Name"/>
-                            <field name="virtual_available"/>
-                        </group>
+                        <group col="3" colspan="3">
+                            <group col="2" colspan="2">
+                                <h1>
+                                    <field name="name" placeholder="Enter Book Name" nolabel="1" />
+                              </h1>
+                            </group>
+                            <group col="2" colspan="2">
+                               <field name="isbn" placeholder="ISBN Number"/>
+                               <field name="default_code" placeholder="Enter Book Default code"/>
+                               <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
+                               <field name="categ_id" placeholder="Select or Create Book"/>
+                               <field name="author" placeholder="Name of Author"/>
+                            </group>
+                            <group col="1" colspan="1">
+                                <field name="image_medium" widget='image' style="{height: 261px;width: 234px;}" nolabel="1"/>
+                            </group>
+	                    </group>
                         <notebook>
                             <page string="Details">
                                 <group col="4" colspan="2">
@@ -181,15 +183,19 @@
                                     <field name="day_to_return_book" placeholder="Days of Returnning"/>
                                     <field name="creation_date"/>
                                     <field name="date_parution" placeholder="Book Release Date"/>
-                                    <field name="date_retour"/>
                                     <field name="tome"/>
                                     <field name="format" placeholder="Format of Book"/>
                                     <field name="weight"/>
+                                    <field name="rack" placeholder="Position of book"/>
                                     <field name="back"/>
                                     <field name="num_edition" placeholder="No of Addition of Book"/>
                                     <field name="intrastat_id"/>
+                                    <field name="editor" placeholder="Editor" required="1"
+                                      context="{'form_view_ref':'library.view_partner_form_11'}"/>
+                                    <field name="collection" placeholder="Collection Name"/>
                                  <!--    <field name="price_cat" placeholder="Select or Create Price Category"/> -->
                                     <field name="book_price"/>
+                                    <field name="catalog_num" placeholder="Enter Catalog No"/>
                                     <field name="lang" placeholder="Language of Book"/>
                                 </group>
                                 <newline/>
@@ -225,7 +231,6 @@
                     <field name="categ_id"/>
                     <field name="barcode"/>
                     <field name="catalog_num"/>
-                    <field name="virtual_available"/>
                     <field name="date_retour"/>
                     <field name="availability"/>
                 </tree>
@@ -379,11 +384,6 @@
         <!-- Menu Items Of Library Books -->
 
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"  />
-
-        <menuitem id="menu_book_products" name="Books" parent="menu_library_config"
-                  action="action_product_book_list"
-                  groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian" />
-
         <menuitem id="menu_books_student" parent="menu_library" action="action_product_book_list" sequence="1"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
         
@@ -687,35 +687,35 @@
                     <sheet>
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
-                            <field name="issue_code" />
-                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]"/>
+                            <field name="issue_code" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]" attrs="{'readonly':[('state','not in','draft')]}"/>
                         </group>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
-                            <field name="card_id"/>
-                            <field name="user"/>
+                            <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="user" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
                         <group col="4" colspan="4"
                                attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Student Details" colspan="4" col="4"/>
-                            <field name="student_id" />
-                            <field name="roll_no"/>
-                            <field name="standard_id"/>
+                            <field name="student_id" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="roll_no" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="standard_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                         </group>
                         <group col="2" colspan="4"
                                attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Teacher Details" colspan="3" col="2"/>
-                            <field name="teacher_id"/>
+                            <field name="teacher_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                         </group>
                         <group col="4" colspan="4"
                                attrs="{'invisible':[('state','=','draft')], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
                             <separator string="Issue Date" colspan="4" col="4" />
-                            <field name="day_to_return_book" attrs="{'required':[('state','=','issue')]}"/>
-                            <field name="date_issue"/>
+                            <field name="day_to_return_book" attrs="{'required':[('state','=','issue')],'readonly':[('state','not in','issue')]}"/>
+                            <field name="date_issue" attrs="{'readonly':[('state','not in','issue')]}"/>
                             <field name="date_return"/>
                             <field name="actual_return_date"/>
-                            <field name="penalty" attrs="{'invisible':[('penalty','&lt;',1.0)]}"/>
-                            <field name="lost_penalty" attrs="{'invisible':[('lost_penalty','&lt;',1.0)]}"/>
+                            <field name="penalty" attrs="{'invisible':[('penalty','&lt;',1.0)],'readonly':[('state','not in','issue')]}"/>
+                            <field name="lost_penalty" attrs="{'invisible':[('lost_penalty','&lt;',1.0)],'readonly':[('state','not in','issue')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -881,13 +881,13 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <separator string="Book Request" colspan="4" col="4"/>
-                            <field name="req_id"/>
-                            <field name="card_id" placeholder="Card Id" widget="selection"/>
-                            <field name="type"/>
+                            <field name="req_id" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="card_id" placeholder="Card Id" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="type" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="bk_nm" invisible="True"/>
-                            <field name="new1" attrs="{'invisible':[('type','!=','new')],'required':[('type','!=','existing')]}" />
+                            <field name="new1" attrs="{'invisible':[('type','!=','new')],'required':[('type','!=','existing')],'readonly':[('state','not in','draft')]}" />
                             <field name="new2" invisible="1"/>
-                            <field name="name" attrs="{'invisible':[('type','!=','existing')],'required':[('type','!=','new')]}" 
+                            <field name="name" attrs="{'invisible':[('type','!=','existing')],'required':[('type','!=','new')],'readonly':[('state','not in','draft')]}" 
                                     domain="[('availability','=','available'),
                                             ('categ_id.name', '=', 'Books')]"
                                     widget="selection"/>

@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {'name': 'Library Management',
- 'version': "1.0.2",
+ 'version': "1.0.3",
  'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA",
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',
