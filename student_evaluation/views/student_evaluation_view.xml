@@ -8,9 +8,17 @@
             <field name="res_model">student.evaluation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','student')]</field>
             <field name="context">{'search_default_student_id': active_id}</field>
         </record>
-        
+        <!-- Action of Teacher Evaluation -->
+        <record id="action_teacher_eval" model="ir.actions.act_window">
+            <field name="name">Teacher Evaluation</field>
+             <field name="res_model">teacher.evaluation</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="domain">[('type','=','faculty')]</field>
+        </record>
         <!-- Inherited Form View Of Student -->
         <record id="view_student_student_form2" model="ir.ui.view">
             <field name="name">student.student.form</field>
@@ -79,13 +87,13 @@
                         <separator string="Student Evaluation"/>
                         <group attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
                             <group>
-                                 <field name="student_id" placeholder="Select Or Create Student Name"/>
-                                 <field name="date" style="width: 84%%"/>
-                                 <field name="evaluator_id" attrs="{'invisible': [('type','=','student')]}"
-                                        placeholder="Select Or Create Faculty Name" />
+                                 <field name="student_id" placeholder="Select Or Create Student Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <field name="date" style="width: 84%%" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <field name="evaluator_id" attrs="{'invisible':[('type','=','student')],'readonly':[('state','not in','draft')]}"
+                                        placeholder="Select Or Create Faculty Name"/>
                             </group>
                             <group>
-                                 <field name="type"/>
+                                 <field name="type" readonly="1"/>
                                  <field name="username"/>
                                  <button name="get_record" type='object' class="oe_inline oe_stat_button"
                                     attrs="{'invisible' : [('state', '!=', 'draft')]}"
@@ -98,7 +106,7 @@
                         <newline />
                         <notebook colspan="4">
                             <page string="General">
-                                <field name="eval_line" nolabel='1'>
+                                <field name="eval_line" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
                                         <field name="stu_eval_id"/>
                                         <field name="point_id" on_change="onchange_point(point_id)"/>
@@ -118,6 +126,75 @@
                         </notebook>
                     </sheet>
                 </form>
+            </field>
+        </record>
+        <!-- Teacher Evaluation Form View -->
+        <record id="teacher_evaluation_form" model="ir.ui.view">
+            <field name="name">teacher.evaluation.form</field>
+            <field name="model">teacher.evaluation</field>
+            <field name="arch" type="xml">
+                <form string="Teacher Evaluation">
+                    <header>
+                        <button name="set_start" string="Start" type="object" states="draft" class="oe_highlight fa fa-play" groups="school.group_school_administration"/>
+                        <button name="set_finish" string="Finish" class="fa fa-step-forward" type="object" states="start" groups="school.group_school_administration"/>
+                        <button name="set_cancel" string="Cancel" class="fa fa-ban" type="object" states="start,draft" groups="school.group_school_administration"/>
+                        <button name="set_draft" string="Set to Draft" class="fa fa-play" type="object" states="cancelled" groups="school.group_school_administration"/>
+                        <field name="state" readonly="1" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <separator string="Teacher Evaluation"/>
+                        <group attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
+                            <group>
+                                <field name="teacher_id" placeholder="Select Or Create Teacher Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':1}" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="date" style="width: 84%%" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            </group>
+                            <group>
+                                 <field name="type" readonly="1"/>
+                                 <field name="username" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <button name="get_record" type='object' class="oe_inline oe_stat_button"
+                                    attrs="{'invisible' : [('state', '!=', 'draft')]}"
+                                    groups="school.group_school_administration">
+                                <img src="/student_evaluation/static/description/index1.png" style="height:25px;width:50px;float:left;"/>
+                                <lable style="">Get Question</lable>
+                                </button>
+                            </group>
+                        </group>
+                        <newline/>
+                        <notebook colspan="4">
+                            <page string="General">
+                                <field name="teacher_eval_line" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}">
+                                    <tree string="Evaluation Line" editable='top'>
+                                        <field name="stu_eval_id"/>
+                                        <field name="point_id" on_change="onchange_point(point_id)"/>
+                                        <field name="rating"/>
+                                    </tree>
+                                    <form string="Evaluation Line">
+                                        <field name="stu_eval_id" placeholder="Select Or Create Question"/>
+                                        <field name="point_id" placeholder="Select Or Create Rating"/>
+                                        <field name="rating" placeholder="Enter Remarks"/>
+                                    </form>
+                                </field>
+                                <group colspan="4">
+                                    <field name="total"/>
+                                    <newline/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Tree View of Teacher Evaluation -->
+        <record id="view_teacher_evaluation_tree" model="ir.ui.view">
+            <field name="name">teacher.evaluation.tree</field>
+            <field name="model">teacher.evaluation</field>
+            <field name="arch" type="xml">
+                <tree string="Student Evaluation">
+                    <field name="teacher_id"/>
+                    <field name="type"/>
+                    <field name="date"/>
+                    <field name="total"/>
+                </tree>
             </field>
         </record>
         <!-- Student Evaluation Template Search View -->
@@ -227,11 +304,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <!-- Menu Items of Student Evaluation -->
-        <menuitem id="menu_stu_eval" name="Student Evaluations" parent="school.menu_ems" sequence="8"/>
-        <menuitem id="menu_evals" name="Evaluations" parent="menu_stu_eval" action="action_student_eval"
-                  groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
+        <!-- Menu Items of Student and Teacher Evaluation -->
+        <menuitem id="menu_stu_eval" name="Evaluations" parent="school.menu_ems" sequence="8"/>
+        <menuitem id="menu_evals" name="Student Evaluation" parent="menu_stu_eval" action="action_student_eval"
+                  groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" sequence="9"/>
+        <menuitem id="menu_teacher_eval" name="Teacher Evaluation" parent="menu_stu_eval" action="action_teacher_eval" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/>
         <menuitem id="menu_eval_temps" name="Evaluation Templates" parent="menu_stu_eval" action="action_student_eval_temp"
-                  groups="school.group_school_administration" />
+                  groups="school.group_school_administration" sequence="11"/>
         <menuitem id="menu_rating" name="Rating" parent="school.menu_configuration" action="action_student_rating"/>
 </odoo>

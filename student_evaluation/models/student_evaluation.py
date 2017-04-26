@@ -40,13 +40,85 @@ class StudentEvaluation(models.Model):
 
     student_id = fields.Many2one('student.student', 'Student Name',
                                  required=True)
-    type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')],
-                            'User Type', required=True)
+    type = fields.Selection([('student', 'Student')],
+                            'User Type', required=True, default="student")
     date = fields.Date('Evaluation Date', required=True,
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
     eval_line = fields.One2many('student.evaluation.line', 'eval_id',
                                 'Questionnaire')
+    total = fields.Float('Total Points', compute='_compute_total_points',
+                         method=True)
+    state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
+                              ('finished', 'Finish'), ('cancelled', 'Cancel')],
+                             'State', readonly=True, default='draft')
+    username = fields.Many2one('res.users', 'User', readonly=True,
+                              default=lambda self: self.env.user)
+
+    @api.multi
+    def set_start(self):
+        self.state = 'start'
+        return True
+
+    @api.multi
+    def set_finish(self):
+        self.state = 'finished'
+        return True
+
+    @api.multi
+    def set_cancel(self):
+        self.state = 'cancelled'
+        return True
+
+    @api.multi
+    def set_draft(self):
+        self.state = 'draft'
+        return True
+
+
+class TeacherEvaluation(models.Model):
+    _name = 'teacher.evaluation'
+    _rec_name = 'type'
+
+    @api.multi
+    def get_record(self):
+        eval_line_obj = self.env['student.evaluation.line']
+        eval_temp_obj = self.env['student.evaluation.template']
+        eval_list = []
+        for stu_eval_rec in self.browse(self.ids):
+            if stu_eval_rec.teacher_eval_line:
+                self._cr.execute('delete from student_evaluation_line\
+                                  where teacher_eval_id=%s',
+                                  (stu_eval_rec.id,))
+            type_eval = stu_eval_rec.type
+            domain = [('type', '=', type_eval)]
+            eval_temp_ids = eval_temp_obj.search(domain)
+            for eval_temp_id in eval_temp_ids:
+                eval_list.append(eval_temp_id.id)
+            for i in range(0, len(eval_list)):
+                eval_line_obj.create({'stu_eval_id': eval_list[i],
+                                      'teacher_eval_id': self.id})
+        return True
+
+    @api.multi
+    @api.depends('teacher_eval_line')
+    def _compute_total_points(self):
+        for rec in self:
+            if rec.teacher_eval_line:
+                rec.total = sum(line.point_id.point for line in
+                                rec.teacher_eval_line
+                                if line.point_id.point)
+            else:
+                rec.total = 0.0
+
+    teacher_id = fields.Many2one('hr.employee', string="Teacher")
+    type = fields.Selection([('faculty', 'Faculty')],
+                            'User Type', required=True, default="faculty")
+    date = fields.Date('Evaluation Date', required=True,
+                       default=lambda * a: time.strftime('%Y-%m-%d'))
+    teacher_eval_line = fields.One2many('student.evaluation.line',
+                                        'teacher_eval_id',
+                               string='Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
                          method=True)
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
@@ -86,6 +158,8 @@ class StudentEvaluationLine(models.Model):
                 return {'value': {'rating': point_obj.rating}}
 
     eval_id = fields.Many2one('student.evaluation', 'Evaluation id')
+    teacher_eval_id = fields.Many2one('teacher.evaluation',
+                                      'Teacher Evaluation id')
     stu_eval_id = fields.Many2one('student.evaluation.template', 'Question')
     point_id = fields.Many2one('rating.rating', 'Rating',
                                domain="[('rating_id', '=', stu_eval_id)]")

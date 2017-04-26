@@ -1,7 +1,8 @@
 ==============================================================================
  Version Change Log (School Evaluation)
 ===============================================================================
+1.0.2 --> 26 April 2017
+    * Added new model for teacher evaluation.View level changes in evaluation module.
 
 1.0.1 --> 13 April 2017 : Vimal Patel
         * Fix issue student evaluation and improvement the security
-        
