@@ -2,6 +2,7 @@ Version Change Log (library)
 ===============================================================================
 1.0.3 --> 26 April 2017 : Arpit Joshi
     * View level changes in library view. Improve code of penalty on books.
+      View level changes. 
 
 1.0.1 --> 12 April 2017 : Hetal Zala
      *Improved book request flow and fine penalty payment flow.
