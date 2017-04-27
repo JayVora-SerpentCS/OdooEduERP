@@ -14,6 +14,7 @@
     'depends': ['hr', 'school'],
     'data': ['security/evaluation_security.xml',
              'views/student_evaluation_view.xml',
+             'views/templates.xml',
              'security/ir.model.access.csv'],
     'demo': ['demo/student_evaluation_demo.xml'],
     'installable': True,
