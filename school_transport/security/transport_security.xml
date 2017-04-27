@@ -24,5 +24,14 @@
             <field name="domain_force">[('name','in',[stud.id for stud in user.partner_id.student_ids])]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
+
+        <!-- Record Rule Student can see own Registration -->
+        <record id="transport_registration_student" model="ir.rule">
+            <field name="name">Student Registration Record Rule</field>
+            <field name="model_id" ref="model_transport_registration"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('part_name.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
     </data>
 </odoo>

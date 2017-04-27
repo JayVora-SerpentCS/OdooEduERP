@@ -32,7 +32,7 @@ class StudentStudent(models.Model):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
-            args.append(('class_id', 'in', std_ids))
+            args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self).search(args=args, offset=offset,
                                                   limit=limit, order=order,
                                                   count=count)
@@ -218,17 +218,12 @@ class ExamResult(models.Model):
             if flag:
                 rec.result = 'Fail'
 
-    @api.multi
-    def on_change_student(self, student, exam_id, standard_id):
-        if not student:
-            return True
-        if not exam_id:
-            raise UserError(_('Input Error ! First Select Exam.'))
-        student_obj = self.env['student.student']
-        student_data = student_obj.browse(student)
-        self.standard_id = student_data.standard_id.id
-        self.roll_no_id = student_data.roll_no
-        return True
+    @api.onchange('student_id', 's_exam_ids', 'standard_id')
+    def onchange_student(self):
+        if self.student_id:
+            self.standard_id = self.student_id.standard_id.id
+            print"self standard id>>>>>>>.", self.standard_id
+            self.roll_no_id = self.student_id.roll_no
 
     s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True)
     student_id = fields.Many2one("student.student", "Student Name",

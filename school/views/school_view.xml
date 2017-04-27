@@ -1417,11 +1417,11 @@
             <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//label[@for='name']" position="before">
+                    <field name="category_ids" position="after">
                         <group>
                             <field name="is_school_teacher"/>
                         </group>
-                    </xpath>
+                    </field>
                     <field name="address_id" position="before">
                         <field name="school" required="1"/>
                     </field>

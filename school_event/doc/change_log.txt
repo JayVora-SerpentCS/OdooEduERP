@@ -1,6 +1,8 @@
 ==============================================================================
  Version Change Log (school event)
 ===============================================================================
+1.0.2 --> 27 April 2017 : Arpit Joshi
+    * View level changes in event registration.
 
 1.0.1 --> 17 April 2017 : Hetal Zala
     * Improvement the event security and testing.

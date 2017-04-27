@@ -236,7 +236,8 @@ class DailyAttendance(models.Model):
             for stud_id in stud_ids:
                 student_ids = stud_obj.browse(stud_id)
                 student_list.append({'roll_no': student_ids.roll_no,
-                                     'stud_id': stud_id})
+                                     'stud_id': stud_id,
+                                     'is_present': True})
             res.update({'value': {'student_ids': student_list}})
         return res
 
