@@ -308,10 +308,27 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Language : </td>
+                                                        <td>Language:</td>
                                                         <td style="padding-left:10px;">
                                                             <b>
                                                                 <field name="lang"/>
+                                                            </b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Availability:</td>
+                                                        <td style="padding-left:10px;">
+                                                            <b>
+                                                                <field name="availability"/>
+                                                            </b>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Qty:</td>
+                                                        <td style="padding-left:10px">
+                                                            <b>
+                                                                <field name="qty_available"/>
                                                             </b>
                                                         </td>
                                                     </tr>
@@ -326,7 +343,7 @@
                                                 </table>
                                                 <br />
                                             </td>
-                                            <td align="right" style="padding-left: 100px;">
+                                            <td align="right" style="padding-left: 50px;">
                                                 <a type="open">
                                                      <img t-att-src="kanban_image('product.product','image_medium', record.id.value)" class="oe_avatar"/>
                                                 </a>
