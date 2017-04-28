@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {'name': 'School Event Management',
- 'version': "1.0.1",
+ 'version': "1.0.2",
  'author': "Serpent Consulting Services Pvt. Ltd., Odoo SA",
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
