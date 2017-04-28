@@ -159,25 +159,25 @@
                     <sheet>
                         <separator string="Event Information" />
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="name" placeholder="Enter Event Name" />
-                            <field name="code" string="Organiser school" placeholder="Select Or Create School" />
+                            <field name="name" placeholder="Enter Event Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="code" string="Organiser school" placeholder="Select Or Create School" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <group colspan="4" col="4">
-                                <field name="start_reg_date" placeholder="Enter Start Date Of Registration" />
-                                <field name="last_reg_date" placeholder="Enter Last Date Of Registration" />
-                                <field name="start_date" placeholder="Start Date Of Event" />
-                                <field name="end_date" placeholder="End Date Of Event" />
-                                <field name="contact_per_id" placeholder="Select Or Create Organiser Name" />
-                                <field name="supervisor_id" placeholder="Select Or Create Supervisor Name" />
-                                <field name="maximum_participants" />
-                                <field name="parameter_id" widget="selection" />
-                                <field name="is_holiday" />
+                                <field name="start_reg_date" placeholder="Enter Start Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="last_reg_date" placeholder="Enter Last Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="start_date" placeholder="Start Date Of Event" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="end_date" placeholder="End Date Of Event" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="contact_per_id" placeholder="Select Or Create Organiser Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="supervisor_id" placeholder="Select Or Create Supervisor Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="maximum_participants" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="parameter_id" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="is_holiday" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="participants" readonly="1" />
                             </group>
                         </group>
                         <notebook colspan="4">
                             <page string="Participated Standards"
                             attrs="{'readonly':[('state','!=','draft')]}">
-                                <field name="part_standard_ids" nolabel='1' />
+                                <field name="part_standard_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
                             </page>
                             <page string="Participants">
                                 <field name="part_ids">
@@ -370,6 +370,14 @@
             <field name="res_model">school.event</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form,calendar</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Event.
+                </p>
+                <p>
+                 This structure is used to create and manage all Events
+              </p>
+            </field>
         </record>
 
         <!--Form View Of School Event Registration -->

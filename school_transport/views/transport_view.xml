@@ -51,7 +51,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//label[@for='name']" position="before">
+                    <xpath expr="//field[@name='category_ids']" position="after">
                         <group>
                             <field name="is_driver" string="Is Driver"/>
                         </group>
@@ -337,6 +337,21 @@
                 </tree>
             </field>
         </record>
+        <!-- Search view of transport registration-->
+        <record id="transport_regis_search" model="ir.ui.view">
+            <field name="name">transport.registration</field>
+            <field name="model">transport.registration</field>
+            <field name="arch" type="xml">
+                <search string="Transport Registration Search">
+                    <group col="10" colspan="4">
+                        <field name="state"/>
+                    </group>
+                    <group expand="0" string="Filter..." colspan="12" col="10">
+                        <filter string="Draft" name="draft_state" domain="[('state','=','draft')]"/>
+                     </group>
+                </search>
+            </field>
+        </record>
        <!-- Tree View Of Transport vehicle Information -->
        <record id="view_transport_vehicle_tree" model="ir.ui.view">
             <field name="name">transport.vehicle.tree</field>
@@ -415,6 +430,7 @@
         <record id="action_student_transport_registration_form" model="ir.actions.act_window">
             <field name="name">Transport Registration</field>
             <field name="res_model">transport.registration</field>
+            <field name="context">{'search_default_draft_state':1}</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="transport_registration_tree"/>
             <field name="view_mode">tree,form</field>

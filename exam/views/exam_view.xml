@@ -292,8 +292,7 @@
                                     attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4">
-                            <field name="student_id" placeholder="Select or Create Student" 
-                                on_change="on_change_student(student_id, s_exam_ids, standard_id)" 
+                            <field name="student_id" placeholder="Select or Create Student"  
                                 context="{'exam':s_exam_ids}"
                                 attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                             <field name="roll_no_id" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>

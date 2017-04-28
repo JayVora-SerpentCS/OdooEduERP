@@ -186,7 +186,7 @@ class SchoolStandard(models.Model):
     user_id = fields.Many2one('hr.employee', 'Class Teacher')
     student_ids = fields.One2many('student.student', 'standard_id',
                                   'Student In Class',
-                                  compute='_compute_student', store=True)
+                                  compute='_compute_student')
     color = fields.Integer('Color Index')
     passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id = fields.Many2one('res.company', 'Company Name',
@@ -484,9 +484,9 @@ class StudentStudent(models.Model):
                                    'in a school'))
             student_search_ids = self.search(domain)
             number = 1
-            if student_search_ids:
-                self.write({'roll_no': number})
+            for rec in student_search_ids:
                 number += 1
+                rec.roll_no = number
             reg_code = self.env['ir.sequence'].\
                 next_by_code('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
