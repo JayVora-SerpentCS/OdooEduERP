@@ -416,7 +416,7 @@
             <field name="name">Transport Registration</field>
             <field name="res_model">transport.registration</field>
             <field name="view_type">form</field>
-<!--             <field name="view_id" ref="transport_registration_tree"/> -->
+            <field name="view_id" ref="transport_registration_tree"/>
             <field name="view_mode">tree,form</field>
         </record>
 

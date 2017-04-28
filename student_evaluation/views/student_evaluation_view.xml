@@ -44,7 +44,7 @@
                     <field name="student_id"/>
                     <field name="type"/>
                     <field name="date"/>
-                    <field name="evaluator_id"/>
+<!--                     <field name="evaluator_id"/> -->
                     <field name="total"/>
                 </tree>
             </field>
@@ -57,14 +57,14 @@
                 <search string="Student Evaluation Search">
                     <group colspan="6" col="4">
                         <field name="student_id"/>
-                        <field name="evaluator_id"/>
+<!--                         <field name="evaluator_id"/> -->
                         <field name="date"/>
                     </group>
                     <separator orientation="vertical"/>
                     <newline />
                     <group expand="0" string="Group By..." colspan="6" col="4">
                         <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
-                        <filter string="Faculty" icon="terp-personal" name="faculty_id" context="{'group_by':'evaluator_id'}"/>
+<!--                         <filter string="Faculty" icon="terp-personal" name="faculty_id" context="{'group_by':'evaluator_id'}"/> -->
                         <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
                     </group>
                 </search>
@@ -77,27 +77,28 @@
             <field name="arch" type="xml">
                 <form string="Student Evaluation">
                     <header>
-                        <button name="set_start" string="Start" type="object" states="draft" class="oe_highlight fa fa-play" groups="school.group_school_administration"/>
-                        <button name="set_finish" string="Finish" class="fa fa-step-forward" type="object" states="start" groups="school.group_school_administration"/>
-                        <button name="set_cancel" string="Cancel" class="fa fa-ban" type="object" states="start,draft" groups="school.group_school_administration"/>
-                        <button name="set_draft" string="Set to Draft" class="fa fa-play" type="object" states="cancelled" groups="school.group_school_administration"/>
+                        <button name="set_start" string="Start" type="object" states="draft" class="oe_highlight fa fa-play" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_finish" string="Finish" class="fa fa-step-forward" type="object" states="start" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_cancel" string="Cancel" class="fa fa-ban" type="object" states="start,draft" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_draft" string="Set to Draft" class="fa fa-play" type="object" states="cancelled" groups="school.group_school_administration,school.group_school_teacher"/>
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <sheet>
                         <separator string="Student Evaluation"/>
                         <group attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
                             <group>
-                                 <field name="student_id" placeholder="Select Or Create Student Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <field name="student_id" placeholder="Select Or Create Student Name" domain="[('state','=','done')]"
+                                     attrs="{'readonly':[('state','not in','draft')]}"/>
                                  <field name="date" style="width: 84%%" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                 <field name="evaluator_id" attrs="{'invisible':[('type','=','student')],'readonly':[('state','not in','draft')]}"
-                                        placeholder="Select Or Create Faculty Name"/>
+<!--                                  <field name="evaluator_id" attrs="{'invisible':[('type','=','student')],'readonly':[('state','not in','draft')]}" -->
+<!--                                         placeholder="Select Or Create Faculty Name"/> -->
                             </group>
                             <group>
                                  <field name="type" readonly="1"/>
                                  <field name="username"/>
                                  <button name="get_record" type='object' class="oe_inline oe_stat_button"
                                     attrs="{'invisible' : [('state', '!=', 'draft')]}"
-                                    groups="school.group_school_administration">
+                                    groups="school.group_school_administration,school.group_school_teacher">
                                 <img src="/student_evaluation/static/description/index1.png" style="height:25px;width:50px;float:left;"/>
                                 <lable style="">Get Question</lable>
                             </button>
@@ -106,9 +107,9 @@
                         <newline />
                         <notebook colspan="4">
                             <page string="General">
-                                <field name="eval_line" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}">
+                                <field name="eval_line" nolabel='1'  context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
-                                        <field name="stu_eval_id"/>
+                                        <field name="stu_eval_id" domain="[('type','=',context.get('type'))]"/>
                                         <field name="point_id" on_change="onchange_point(point_id)"/>
                                         <field name="rating"/>
                                     </tree>
@@ -162,9 +163,9 @@
                         <newline/>
                         <notebook colspan="4">
                             <page string="General">
-                                <field name="teacher_eval_line" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}">
+                                <field name="teacher_eval_line" nolabel='1' context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
-                                        <field name="stu_eval_id"/>
+                                        <field name="stu_eval_id" domain="[('type','=',context.get('type'))]"/>
                                         <field name="point_id" on_change="onchange_point(point_id)"/>
                                         <field name="rating"/>
                                     </tree>

@@ -44,7 +44,7 @@ class StudentEvaluation(models.Model):
                             'User Type', required=True, default="student")
     date = fields.Date('Evaluation Date', required=True,
                        default=lambda * a: time.strftime('%Y-%m-%d'))
-    evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
+#    evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
     eval_line = fields.One2many('student.evaluation.line', 'eval_id',
                                 'Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
