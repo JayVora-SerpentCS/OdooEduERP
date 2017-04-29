@@ -4,6 +4,7 @@
 from datetime import date, datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, Warning as UserError
+from odoo.exceptions import except_orm
 
 
 class BoardBoard(models.AbstractModel):
@@ -126,6 +127,74 @@ class ExamExam(models.Model):
                 return False
         return True
 
+    @api.multi
+    def generate_result(self):
+        exam_obj = self.env['exam.exam']
+        student_obj = self.env['student.student']
+        result_obj = self.env['exam.result']
+        result_list = []
+        for exam in exam_obj.browse(self.id):
+            if exam.standard_id:
+                for school_std_rec in exam.standard_id:
+                    domain = [('standard_id', '=',
+                               school_std_rec.standard_id.id),
+                              ('division_id', '=',
+                               school_std_rec.division_id.id),
+                              ('medium_id', '=', school_std_rec.medium_id.id)]
+                    student_ids = student_obj.search(domain)
+                    for student in student_ids:
+                        domain = [('standard_id', '=',
+                                   school_std_rec.standard_id.id),
+                                  ('student_id.division_id', '=',
+                                   school_std_rec.division_id.id),
+                                  ('student_id.medium_id', '=',
+                                   school_std_rec.medium_id.id),
+                                  ('student_id', '=', student.id),
+                                  ('s_exam_ids', '=', exam.id)]
+                        result_exists = result_obj.search(domain)
+                        if result_exists:
+                            [result_list.append(res.id) for res in\
+                                        result_exists]
+
+                        if not result_exists:
+                            standard_id = school_std_rec.standard_id.id
+                            division_id = school_std_rec.division_id.id
+                            rs_dict = {'s_exam_ids': exam.id,
+                                       'student_id': student.id,
+                                       'standard_id': standard_id,
+                                       'division_id': division_id,
+                                       'medium_id':
+                                            school_std_rec.medium_id.id,
+                                       'grade_system': exam.grade_system.id
+                                       }
+                            exam_line = []
+                            for line in exam.exam_timetable_ids:
+                                for sub_line in line.timetable_ids:
+                                    sub_vals = {'subject_id': sub_line.
+                                                              subject_id.id,
+                                                'minimum_marks': sub_line
+                                                                .subject_id
+                                                                .minimum_marks,
+                                                'maximum_marks': sub_line
+                                                               .subject_id
+                                                               .maximum_marks,
+                                              }
+                                    exam_line.append((0, 0, sub_vals))
+                            rs_dict.update({'result_ids': exam_line})
+                            result = result_obj.create(rs_dict)
+                            result_list.append(result.id)
+
+            else:
+                raise except_orm(_('Error !'),
+                                 _('Please Select Standard Id.'))
+
+            return {'name': _('Result Info'),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'exam.result',
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', result_list)]}
+
 
 class AdditionalExam(models.Model):
     _name = 'additional.exam'
@@ -222,7 +291,6 @@ class ExamResult(models.Model):
     def onchange_student(self):
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
-            print"self standard id>>>>>>>.", self.standard_id
             self.roll_no_id = self.student_id.roll_no
 
     s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True)
@@ -245,8 +313,6 @@ class ExamResult(models.Model):
                               readonly=True, store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
-                              ('re-access', 'Re-Access'),
-                              ('re-access_confirm', 'Re-Access-Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
                               ('re-evaluation_confirm',
                                'Re-Evaluation Confirm'),
@@ -277,42 +343,6 @@ class ExamResult(models.Model):
                      'percentage': rec.percentage,
                      'state': 'confirm'}
             self.write(vals)
-        return True
-
-    @api.multi
-    def result_re_access(self):
-        self.state = 're-access'
-
-    @api.multi
-    def re_result_confirm(self):
-        res = {}
-        opt_marks = []
-        acc_mark = []
-        total = 0.0
-        per = 0.0
-        grd = 0.0
-        add = 0.0
-        for result in self:
-            for sub_line in result.result_ids:
-                opt_marks.append(sub_line.obtain_marks)
-                acc_mark.append(sub_line.marks_access)
-                total += sub_line.maximum_marks or 0.0
-            for i in range(0, len(opt_marks)):
-                if acc_mark[i] != 0.0:
-                    opt_marks[i] = acc_mark[i]
-            for i in range(0, len(opt_marks)):
-                add = add + opt_marks[i]
-
-            if total > 1.0:
-                per = (add / total) * 100
-                for grade_id in result.grade_system.grade_ids:
-                    if per >= grade_id.from_mark and per <= grade_id.to_mark:
-                        grd = grade_id.grade
-                res.update({'grade': grd,
-                            'percentage': per,
-                            'state': 're-access_confirm',
-                            're_total': add})
-            self.write(res)
         return True
 
     @api.multi
@@ -390,21 +420,24 @@ class ExamSubject(models.Model):
                               should not extend maximum marks.'))
 
     @api.multi
-    @api.depends('exam_id', 'obtain_marks')
+    @api.depends('exam_id', 'obtain_marks', 'marks_reeval')
     def _compute_grade(self):
         for rec in self:
             grade_lines = rec.exam_id.grade_system.grade_ids
             if (rec.exam_id and rec.exam_id.student_id and grade_lines):
                 for grade_id in grade_lines:
                     b_id = rec.obtain_marks <= grade_id.to_mark
-                    if (rec.obtain_marks >= grade_id.from_mark and b_id):
-                        # rec.grade = grade_id.grade
-                        rec.grade_line_id = grade_id
+#                    r_id = rec.marks_reeval <= grade_id.to_mark
+                    if rec.obtain_marks >0:
+                        if (rec.obtain_marks >= grade_id.from_mark and b_id):
+                            rec.grade_line_id = grade_id
+                    if rec.marks_reeval > 0:
+                        rec.obtain_marks = rec.marks_reeval
+#                        if(rec.marks_reeval >= grade_id.from_mark and b_id):
+#                            rec.grade_line_id = grade_id
 
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
-                              ('re-access', 'Re-Access'),
-                              ('re-access_confirm', 'Re-Access-Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
                               ('re-evaluation_confirm',
                                'Re-Evaluation Confirm')],

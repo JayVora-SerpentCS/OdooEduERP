@@ -20,19 +20,20 @@
                                 <field name="timetable_ids" nolabel="1" colspan="4">
                                     <tree string="TimeTable">
                                         <field name="week_day"/>
+                                        <field name="subject_id"/>
                                         <field name="start_time"/>
                                         <field name="end_time"/>
                                         <field name="teacher_id"/>
-                                        <field name="subject_id"/>
+                                        
                                     </tree>
                                     <form string="TimeTable">
                                         <group col="4" colspan="4">
                                             <field name="week_day"/>
-                                            <field name="start_time"/>
-                                            <field name="end_time"/>
                                             <field name="subject_id" attrs="{'invisible':[('is_break','=',True)]}"
                                                    placeholder="Create Or Select Subject"/>
-                                            <field name="teacher_id" context="{'subject_id':subject_id}"
+                                            <field name="start_time"/>
+                                            <field name="end_time"/>
+                                            <field name="teacher_id" domain="[('is_school_teacher','=',True)]" context="{'subject_id':subject_id,'default_is_school_teacher':1}"
                                                    attrs="{'invisible':[('is_break','=',True)]}"
                                                    placeholder="Create Or Select Supervisior" />
                                             <field name="is_break" on_change="onchange_recess(is_break)"/>
