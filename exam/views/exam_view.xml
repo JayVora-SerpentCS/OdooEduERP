@@ -86,12 +86,19 @@
                         <field name="state" nolabel="1" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <separator string="Exam Detail"/>
-                        <group col="4" colspan="6" attrs="{'readonly': [('state','!=','draft')]}">
+                        <div class="row">
+                            <div class="col-xs-10 col-md-10">
+                                <separator string="Exam Detail"/>
+                            </div>
+                            <div class="col-xs-2 col-md-2">
+                                <button name="generate_result" string="Genrate result" type="object" class="fa fa-graduation-cap" attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}" groups="school.group_school_teacher,school.group_school_administration"/>
+                            </div>
+                        </div>
+                        <group col="4" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
                             <separator colspan="4" col="4" />
                             <field name="exam_code"/>
-                            <field name="name" placeholder="Exam Name"/>
-                            <field name="grade_system" required="1"/>
+                            <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                         <group col="4" colspan="2">
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
@@ -101,13 +108,13 @@
                                     <field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 </page>
                                 <page string="Standard">
-                                    <field name="standard_id" nolabel="1" colspan="4"/>
+                                    <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 </page>
                             </notebook>
                         </group>
                         <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
-                            <field name="create_date" placeholder="Created Date"/>
-                            <field name="write_date" placeholder="Last Update Date"/>
+                            <field name="create_date" placeholder="Created Date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="write_date" placeholder="Last Update Date" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -279,8 +286,8 @@
                 <form string="Results">
                     <header>
                         <button name="result_confirm" class="oe_stat_button fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_result_confirm" class="oe_stat_button fa fa-reply-all" string="Compute Re-aceess" states="re-access" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="result_re_access" class="oe_stat_button fa fa-repeat" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+<!--                         <button name="re_result_confirm" class="oe_stat_button fa fa-reply-all" string="Compute Re-aceess" states="re-access" type="object" groups="school.group_school_administration,school.group_school_teacher"/> -->
+<!--                         <button name="result_re_access" class="oe_stat_button fa fa-repeat" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/> -->
                         <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_done" string="Mark as Done" type="object" class="fa fa-check-circle-o" aria-hidden="true" states="confirm,re-evaluation_confirm,re-access_confirm"/>
@@ -304,23 +311,23 @@
                         <field name="result_ids" nolabel="1" colspan="4"
                             attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm','done'])]}">
                             <tree string="Subjects" editable="bottom">
-                                <field name="subject_id" placeholder="Select or Create Subject"/>
-                                <field name="maximum_marks"/>
-                                <field name="minimum_marks"/>
-                                <field name="obtain_marks"/>
+                                <field name="subject_id" placeholder="Select or Create Subject" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
 <!--                                 <field name="grade"/> -->
                                 <field name="state" invisible="1"/>
                                 <field name="grade_line_id" readonly="1"/>
-                                <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/>
+<!--                                 <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/> -->
                                 <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
                             </tree>
                             <form string="Subjects">
                                 <group col = "4">
-                                    <field name="subject_id"/>
-                                    <field name="maximum_marks"/>
-                                    <field name="minimum_marks"/>
-                                    <field name="obtain_marks"/>
-                                    <field name="marks_access" attrs="{'invisible':[('state','!=','re-access')]}"/>
+                                    <field name="subject_id" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+<!--                                     <field name="marks_access" attrs="{'invisible':[('state','!=','re-access')]}"/> -->
                                     <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
                                     <field name="state" invisible="1"/>
                                 </group>

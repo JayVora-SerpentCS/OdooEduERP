@@ -21,7 +21,7 @@
              'views/result_information_report.xml',
              'views/report_view.xml',
              'wizard/exam_class_result.xml',
-             'wizard/exam_create_result_view.xml',
+             #'wizard/exam_create_result_view.xml',
              'wizard/subject_result.xml'],
     'demo': ['demo/exam_demo.xml'],
     'installable': True,
