@@ -667,10 +667,14 @@ class HrEmployee(models.Model):
     @api.model
     def create(self, vals):
         res = super(HrEmployee, self).create(vals)
-        if vals.get('is_school_teacher'):
+        if vals.get('is_school_teacher') and vals.get('school'):
+            school = self.env['school.school'].browse(vals.get('school'))
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('work_email', False),
-                         'password': vals.get('work_email', False)
+                         'password': vals.get('work_email', False),
+                         'partner_id': self.id,
+                         'company_id': school.company_id.id,
+                         'company_ids': [(4, school.company_id.id)]
                          }
             user = self.env['res.users'].create(user_vals)
             if user and user.partner_id:
@@ -684,12 +688,6 @@ class HrEmployee(models.Model):
                 emp_group = self.env.ref('base.group_user')
                 new_list = [emp_group.id, teacher_group.id]
                 user.write({'groups_id': [(6, 0, new_list)]})
-            if vals.get('school'):
-                school = self.env['school.school'].browse(vals.get('school'))
-                if school and school.company_id:
-                    user_vals.update({
-                                    'company_ids': [(4, school.company_id.id)],
-                                    'company_id': school.company_id.id})
         return res
 
     @api.multi
