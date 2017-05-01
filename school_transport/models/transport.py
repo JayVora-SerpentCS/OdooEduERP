@@ -100,7 +100,7 @@ class TransportParticipant(models.Model):
     point_id = fields.Many2one('transport.point', 'Point Name')
     state = fields.Selection([('running', 'Running'),
                               ('over', 'Over')],
-                             'State', readonly=True, defalt='running')
+                             'State', readonly=True,)
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -368,6 +368,7 @@ class TransportRegistration(models.Model):
                         'months': reg_data.for_month,
                         'tr_reg_date': reg_data.reg_date,
                         'point_id': reg_data.point_id.id,
+                        'state': 'running',
                         'vehicle_id': reg_data.vehicle_id.id}
             temp = stu_prt_obj.sudo().create(dict_prt)
             # make entry in Transport vehicle.

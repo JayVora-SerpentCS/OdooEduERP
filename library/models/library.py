@@ -167,8 +167,8 @@ class LibraryBookIssue(models.Model):
                   and penalty as value
         '''
         for line in self:
-            if line.date_return and\
-                line.state not in ('fine', 'paid', 'cancel'):
+            if line.date_return: #and\
+#                line.state not in ('fine', 'paid', 'cancel'):
                 start_day = datetime.now()
                 end_day = datetime.strptime(line.date_return,
                                             "%Y-%m-%d %H:%M:%S")

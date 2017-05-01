@@ -712,7 +712,7 @@
                         <button name="user_fine" class="fa fa-circle" string="Fine" type="object" states="return,lost"
                                 attrs="{'invisible':['|','|',('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0),('state','=','fine')]}"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="view_invoice" string="View Invoice" type="object" states="fine,paid"
+                        <button name="view_invoice" string="Invoice" icon="fa-credit-card" type="object" states="fine,paid"
                                 groups="library.group_librarian"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,issue,fine,cancel" align="right" readonly="1"/>
                     </header>
@@ -721,8 +721,8 @@
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="issue_code" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        </group>
-                        <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+<!--                         </group> -->
+<!--                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}"> -->
                             <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="user" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="gt_name" invisible="True"/>
@@ -734,9 +734,9 @@
                             <field name="roll_no" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="standard_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                         </group>
-                        <group col="2" colspan="4"
+                        <group col="2" colspan="2"
                                attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
-                            <separator string="Teacher Details" colspan="3" col="2"/>
+                            <separator string="Teacher Details" colspan="2" col="2"/>
                             <field name="teacher_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                         </group>
                         <group col="4" colspan="4"
@@ -746,8 +746,8 @@
                             <field name="date_issue" attrs="{'readonly':[('state','not in','issue')]}"/>
                             <field name="date_return"/>
                             <field name="actual_return_date"/>
-                            <field name="penalty" attrs="{'invisible':[('penalty','&lt;',1.0)],'readonly':[('state','not in','issue')]}"/>
-                            <field name="lost_penalty" attrs="{'invisible':[('lost_penalty','&lt;',1.0)],'readonly':[('state','not in','issue')]}"/>
+                            <field name="penalty" attrs="{'invisible':[('penalty','&lt;',1.0),('state','in','draft,issue')],'readonly':[('state','not in','issue')]}"/>
+                            <field name="lost_penalty" attrs="{'invisible':[('lost_penalty','&lt;',1.0),('state','in','draft,issue')],'readonly':[('state','not in','issue')]}"/>
                         </group>
                     </sheet>
                 </form>
