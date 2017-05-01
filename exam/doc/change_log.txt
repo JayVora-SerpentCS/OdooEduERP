@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.4 --> 1 May 2017: Arpit Joshi
+    * Optimize code of default get method in wizard.
+
 1.0.3 --> 26 April 2017: Arpit Joshi
     * Fix issue of report and onchange method.
 

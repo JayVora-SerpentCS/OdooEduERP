@@ -14,13 +14,9 @@ class SubjectResultWiz(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(SubjectResultWiz, self).default_get(fields)
-        s = self._context.get('active_id')
-        exams = self.env['exam.result'].browse(s)
-        newlist = []
-        for rec in exams.result_ids:
-            name = rec.subject_id.id
-            newlist.append(name)
-        res.update({'result_ids': newlist})
+        exams = self.env['exam.result'].browse(self._context.get('active_id'))
+        subjectlist = [rec.subject_id.id for rec in exams.result_ids]
+        res.update({'result_ids': subjectlist})
         return res
 
     @api.multi
