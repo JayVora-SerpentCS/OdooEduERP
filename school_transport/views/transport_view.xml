@@ -86,28 +86,31 @@
                 </tree>
             </field>
         </record>
-         <!-- Tree View Of Transport Participation -->
+         <!-- Form View Of Transport Participation -->
         <record id="view_transport_participation_form" model="ir.ui.view">
             <field name="name">transport.participant.form</field>
             <field name="model">transport.participant</field>
             <field name="arch" type="xml">
                 <form create="false" string="Transport Participants Information" colors="blue:state=='running';red:state in ('over')" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                     <separator string="Personal Detail" orientation="vertical"/>
                     <group col="4" colspan="2">
-                        <field name="stu_pid_id"/>
-                        <field name="name"/>
+                        <field name="stu_pid_id" readonly="1"/>
+                        <field name="name" readonly="1"/>
                     </group>
                     <separator string="Transportation Detail" orientation="vertical"/>
                     <group col="4" colspan="4">
-                        <field name="transport_id"/>
-                        <field name="vehicle_id"/>
-                        <field name="point_id"/>
-                        <field name="months"/>
-                        <field name="tr_reg_date"/>
-                        <field name="tr_end_date"/>
+                        <field name="transport_id" readonly="1"/>
+                        <field name="vehicle_id" readonly="1"/>
+                        <field name="point_id" readonly="1"/>
+                        <field name="months" readonly="1"/>
+                        <field name="tr_reg_date" readonly="1"/>
+                        <field name="tr_end_date" readonly="1"/>
                         <field name="amount"/>
-                        <field name="state"/>
+<!--                         <field name="state"/> -->
                     </group>
                     </sheet>
                 </form>
@@ -304,12 +307,12 @@
                         <button name="transport_fees_pay" string="Payment" type="object" states="confirm,pending" groups="school_transport.group_transportation_manager"/>
                         <button name="view_invoice" string="View Invoice" type="object" states="paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> 
 <!--                         <button name="cancel_ref" string="Cancel" type="object" states="confirm,pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> -->
-                        <field name="state" widget="statusbar" readonly="1" />
+                        <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,confirm,paid"/>
                     </header>
                     <sheet>
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
                            <separator string="Transport Registration" colspan="4"/>
-                            <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]"/>
                             <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
                             <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
@@ -347,7 +350,7 @@
                         <field name="state"/>
                     </group>
                     <group expand="0" string="Filter..." colspan="12" col="10">
-                        <filter string="Draft" name="draft_state" domain="[('state','=','draft')]"/>
+                        <filter string="Confirm" name="draft_state" domain="[('state','=','confirm')]"/>
                      </group>
                 </search>
             </field>
@@ -381,7 +384,7 @@
                     <notebook colspan="4">
                         <page string="Participant" >
                             <separator string="Vehicle Participant Details" colspan="4"/>
-                            <field name="vehi_participants_ids" nolabel='1'/>
+                            <field name="vehi_participants_ids" nolabel='1' domain="[('state','=','running')]"/>
                         </page> 
                     </notebook>
                     </sheet>   
