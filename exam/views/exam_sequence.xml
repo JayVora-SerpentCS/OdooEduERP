@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="1">
+    <data>
 
         <!-- Sequences For Exam -->
 
@@ -11,6 +11,7 @@
             <field name="code">exam.exam</field>
             <field name="prefix">%(year)s/%(month)s/</field>
             <field name="padding">3</field>
+            <field name="company_id">False</field>
         </record>
 
         <!-- Sequences For Additional Exam -->
@@ -20,6 +21,7 @@
             <field name="code">additional.exam</field>
             <field name="prefix">%(year)s/%(month)s/</field>
             <field name="padding">3</field>
+            <field name="company_id">False</field>
         </record>
 
     </data>

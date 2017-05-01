@@ -286,8 +286,6 @@
                 <form string="Results">
                     <header>
                         <button name="result_confirm" class="oe_stat_button fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-<!--                         <button name="re_result_confirm" class="oe_stat_button fa fa-reply-all" string="Compute Re-aceess" states="re-access" type="object" groups="school.group_school_administration,school.group_school_teacher"/> -->
-<!--                         <button name="result_re_access" class="oe_stat_button fa fa-repeat" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/> -->
                         <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_done" string="Mark as Done" type="object" class="fa fa-check-circle-o" aria-hidden="true" states="confirm,re-evaluation_confirm,re-access_confirm"/>
@@ -318,7 +316,6 @@
 <!--                                 <field name="grade"/> -->
                                 <field name="state" invisible="1"/>
                                 <field name="grade_line_id" readonly="1"/>
-<!--                                 <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/> -->
                                 <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
                             </tree>
                             <form string="Subjects">
@@ -327,7 +324,6 @@
                                     <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                     <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                     <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-<!--                                     <field name="marks_access" attrs="{'invisible':[('state','!=','re-access')]}"/> -->
                                     <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
                                     <field name="state" invisible="1"/>
                                 </group>
