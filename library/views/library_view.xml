@@ -328,7 +328,7 @@
                                                         <td>Qty:</td>
                                                         <td style="padding-left:10px">
                                                             <b>
-                                                                <field name="qty_available"/>
+                                                                <field name="books_available"/>
                                                             </b>
                                                         </td>
                                                     </tr>
