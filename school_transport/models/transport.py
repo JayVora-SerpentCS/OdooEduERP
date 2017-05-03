@@ -177,7 +177,7 @@ class StudentTransports(models.Model):
         trans_ids = self.search([('state', '=', 'open')])
         vehi_ids = vehi_obj.search([])
 
-        for trans in self.browse(trans_ids,):
+        for trans in self.browse(trans_ids):
             stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
             participants = []
             trans_parti = []
@@ -239,9 +239,12 @@ class TransportRegistration(models.Model):
     point_id = fields.Many2one('transport.point', 'Point', widget='selection',
                                required=True)
     m_amount = fields.Float('Monthly Amount', readonly=True)
+    paid_amount = fields.Float('Paid Amount')
+    remain_amt = fields.Float('Due Amount')
     transport_fees = fields.Float(compute="_compute_transport_fees",
                                   string="Transport Fees")
     amount = fields.Float('Final Amount', readonly=True)
+    count_inv = fields.Integer('Invoice Count', compute="_compute_invoice")
 
     @api.model
     def create(self, vals):
@@ -294,20 +297,26 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def view_invoice(self):
-        invoice_search = self.env['account.invoice'].search([(
-                                                'transport_student_id', '=',
-                                                 self.id)])
-        invoice_form = self.env.ref('account.invoice_form')
-        return {'name': _("View Invoice"),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.invoice',
-                'res_id': invoice_search.id,
-                'view_id': invoice_form.id,
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'current',
-                }
+        invoices = self.env['account.invoice'].search([('transport_student_id',
+                                                        '=', self.id)])
+        action = self.env.ref('account.action_invoice_tree1').read()[0]
+        if len(invoices) > 1:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        elif len(invoices) == 1:
+            action['views'] = [(self.env.ref('account.invoice_form').id,
+                                                            'form')]
+            action['res_id'] = invoices.ids[0]
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
+
+    @api.multi
+    def _compute_invoice(self):
+        for rec in self:
+            invoice_count = self.env['account.invoice'].search_count([(
+                                                'transport_student_id',
+                                                '=', rec.id)])
+            rec.count_inv = invoice_count
 
     @api.multi
     def onchange_point_id(self, point):
@@ -416,7 +425,20 @@ class AccountPayment(models.Model):
     def post(self):
         res = super(AccountPayment, self).post()
         for invoice in self.invoice_ids:
-            if invoice.transport_student_id:
+            if invoice.transport_student_id and\
+            invoice.state == 'paid':
+                fees_payment = invoice.transport_student_id.paid_amount
+                fees_payment += self.amount
                 invoice.transport_student_id.write(
-                                    {'state': 'paid'})
+                                    {'state': 'paid',
+                                     'paid_amount': fees_payment,
+                                     'remain_amt': invoice.residual})
+            if invoice.transport_student_id and\
+            invoice.state == 'open':
+                fees_payment = invoice.hostel_student_id.paid_amount
+                fees_payment += self.amount
+                invoice.transport_student_id.write(
+                                    {'status': 'pending',
+                                     'paid_amount': fees_payment,
+                                     'remain_amt': invoice.residual})
         return res
