@@ -16,12 +16,16 @@
                         <field name="medium_id" widget="selection"  />
                         <field name="division_id" widget="selection" />
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <label string="" colspan="2"/>
-                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
-                        <button class="btn btn-sm btn-default fa fa-plus" name="assign_rollno" string="Finish" type="object"/>
-                   </group>
+<!--                     <separator string="" colspan="4"/> -->
+<!--                     <group colspan="4" col="6"> -->
+<!--                         <label string="" colspan="2"/> -->
+<!--                         <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/> -->
+<!--                         <button class="btn btn-sm btn-default fa fa-plus" name="assign_rollno" string="Finish" type="object"/> -->
+<!--                    </group> -->
+                   <footer>
+                       <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
+                       <button class="btn btn-sm btn-default fa fa-plus" name="assign_rollno" string="Finish" type="object"/>
+                   </footer>
                </form>
             </field>
         </record>
