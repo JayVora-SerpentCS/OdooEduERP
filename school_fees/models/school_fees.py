@@ -189,6 +189,10 @@ class StudentPayslip(models.Model):
                               'State', readonly=True,
                              default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=True)
+    invoice_count = fields.Integer(string="# of Invoices",
+                                   compute="_compute_invoice")
+    paid_amount = fields.Float('Paid Amount')
+    due_amount = fields.Float('Due Amount')
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
                               ondelete='restrict',
@@ -239,21 +243,28 @@ class StudentPayslip(models.Model):
         return result
 
     @api.multi
+    def _compute_invoice(self):
+        for rec in self:
+            inv_search = self.env['account.invoice'].search_count([
+                                                    ('student_payslip_id',
+                                                     '=', rec.id),
+                                                    ])
+            rec.invoice_count = inv_search
+
+    @api.multi
     def invoice_view(self):
-        invoice_search = self.env['account.invoice'].search([(
-                                                'student_payslip_id', '=',
-                                                 self.id)])
-        invoice_form = self.env.ref('account.invoice_form')
-        return {'name': _("View Invoice"),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.invoice',
-                'res_id': invoice_search.id,
-                'view_id': invoice_form.id,
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'current',
-                }
+        invoices = self.env['account.invoice'].search([('student_payslip_id',
+                                                        '=', self.id)])
+        action = self.env.ref('account.action_invoice_tree1').read()[0]
+        if len(invoices) > 1:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        elif len(invoices) == 1:
+            action['views'] = [(self.env.ref('account.invoice_form').id,
+                                                            'form')]
+            action['res_id'] = invoices.ids[0]
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
 
     @api.multi
     def action_move_create(self):
@@ -418,9 +429,23 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self).post()
         curr_date = datetime.now()
         for invoice in self.invoice_ids:
-            if invoice.student_payslip_id:
+            if invoice.student_payslip_id and\
+            invoice.state == 'paid':
+                fees_payment = invoice.student_payslip_id.paid_amount
+                fees_payment += self.amount
                 invoice.student_payslip_id.write(
                                     {'state': 'paid',
                                      'payment_date': curr_date,
-                                     'move_id': invoice.move_id.id or False})
+                                     'move_id': invoice.move_id.id or False,
+                                     'due_amount': invoice.residual,
+                                     'paid_amount': fees_payment})
+            if invoice.student_payslip_id and invoice.state == 'open':
+                fees_payment = invoice.student_payslip_id.paid_amount
+                fees_payment += self.amount
+                invoice.student_payslip_id.write({'state': 'pending',
+                                                  'due_amount':
+                                                  invoice.residual,
+                                                  'paid_amount': fees_payment
+                                                  })
+
         return res
