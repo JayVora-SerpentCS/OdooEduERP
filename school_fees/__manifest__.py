@@ -3,7 +3,7 @@
 
 {
     'name': 'Fees Management',
-    'version': "1.0.1",
+    'version': "1.0.2",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',

@@ -712,11 +712,16 @@
                         <button name="user_fine" class="fa fa-circle" string="Fine" type="object" states="return,lost"
                                 attrs="{'invisible':['|','|',('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0),('state','=','fine')]}"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="view_invoice" string="Invoice" icon="fa-credit-card" type="object" states="fine,paid"
-                                groups="library.group_librarian"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,issue,fine,cancel" align="right" readonly="1"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_invoice" string="Invoice" icon="fa-credit-card" type="object" states="fine,paid"
+                                groups="library.group_librarian">
+                                <field name="compute_inv"/>
+                            </button>
+                         </div>
+                            
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="issue_code" attrs="{'readonly':[('state','not in','draft')]}"/>

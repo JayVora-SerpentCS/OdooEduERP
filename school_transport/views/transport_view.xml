@@ -123,7 +123,7 @@
             <field name="arch" type="xml">
                 <search string="Search">
                 <group string="Filter" col="10" colspan="4">
-                    <filter icon="terp-personal" string="Running" help="Running" domain="[('state','=','running')]"/>
+                    <filter icon="terp-personal" string="Running" name="state_running" help="Running" domain="[('state','=','running')]"/>
                     <filter icon="gtk-close" string="Over" help="Over" domain="[('state','=','over')]"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
@@ -305,11 +305,15 @@
                         <button name="trans_regi_confirm" class="fa fa-check" string="Confirm" states="draft" type='object'/>
                         <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' states="draft,confirm,pending,paid"/>
                         <button name="transport_fees_pay" string="Payment" type="object" states="confirm,pending" groups="school_transport.group_transportation_manager"/>
-                        <button name="view_invoice" string="View Invoice" type="object" states="paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> 
 <!--                         <button name="cancel_ref" string="Cancel" type="object" states="confirm,pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> -->
                         <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,confirm,paid"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_invoice" icon="fa-pencil-square-o" string="Invoice" type="object" states="pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user">
+                                <field name="count_inv"/>
+                            </button>
+                       </div>
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
                            <separator string="Transport Registration" colspan="4"/>
                             <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]"/>
@@ -317,8 +321,13 @@
                             <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
                             <field name="point_id" widget="selection" on_change="onchange_point_id(point_id)" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
                             <field name="m_amount"/>
-                            <field name="transport_fees"/>
                             <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="transport_fees"/>
+                            <field name="paid_amount" readonly="1"/>
+                            <field name="remain_amt" readonly="1"/>
+                        </group>
+                        <separator string="Transport Duration"/>
+                        <group col="4" colspan="4">
                             <field name="reg_date"/>
                             <field name="reg_end_date" context="{'for_month':for_month}"/>
                         </group>
@@ -443,6 +452,7 @@
         <record id="action_school_transport_participant_form" model="ir.actions.act_window">
             <field name="name">Transport Participant</field>
             <field name="res_model">transport.participant</field>
+            <field name="context">{'search_default_state_running':1}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>

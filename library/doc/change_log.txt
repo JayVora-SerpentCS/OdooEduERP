@@ -1,5 +1,8 @@
 Version Change Log (library)
 ===============================================================================
+1.0.4 --> 03 May 2017 : Arpit Joshi
+    * Fix issue of qr code report.
+
 1.0.3 --> 26 April 2017 : Arpit Joshi
     * View level changes in library view. Improve code of penalty on books.
       View level changes. 
@@ -8,6 +11,6 @@ Version Change Log (library)
      *Improved book request flow and fine penalty payment flow.
      
 1.0.2 --> 17 April 2017 : Vimal Patel
-    * improvement flow of the penaly and book lost
+    * improvement flow of the penalty and book lost
     
      
