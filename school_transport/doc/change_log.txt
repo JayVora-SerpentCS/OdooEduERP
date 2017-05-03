@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (School Transport)
 ===============================================================================
+1.0.3 --> 3 May 2017: Arpit Joshi
+    * Improvement in flow of payment
+
 1.0.2 --> 26 April 2017 : Arpit Joshi
     *View level changes
 

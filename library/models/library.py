@@ -167,7 +167,7 @@ class LibraryBookIssue(models.Model):
                   and penalty as value
         '''
         for line in self:
-            if line.date_return: #and\
+            if line.date_return:  #and\
 #                line.state not in ('fine', 'paid', 'cancel'):
                 start_day = datetime.now()
                 end_day = datetime.strptime(line.date_return,
@@ -255,9 +255,12 @@ class LibraryBookIssue(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('issue', 'Issued'),
                               ('reissue', 'Reissued'), ('cancel', 'Cancelled'),
                               ('return', 'Returned'), ('lost', 'Lost'),
-                              ('fine', 'Fined'), ('paid', 'Fined Paid')],
+                              ('fine', 'Fined'),
+                              ('paid', 'Fined Paid')],
                              "State", default='draft')
     user = fields.Char("User")
+    compute_inv = fields.Integer('Number of invoice',
+                                 compute="_compute_invoices")
     color = fields.Integer("Color Index")
 
     @api.onchange('card_id')
@@ -461,17 +464,26 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def view_invoice(self):
-        invoice_obj = self.env['account.invoice']
-        invoice = invoice_obj.search([('book_issue', '=', self.id)])
-        return {'name': _("View Invoice"),
-                'view_mode': 'form',
-                'view_type': 'form',
-                'res_model': 'account.invoice',
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'res_id': invoice.id or False,
-                'target': 'current'
-                }
+        invoices = self.env['account.invoice'].search([('book_issue',
+                                                        '=', self.id)])
+        action = self.env.ref('account.action_invoice_tree1').read()[0]
+        if len(invoices) > 1:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        elif len(invoices) == 1:
+            action['views'] = [(self.env.ref('account.invoice_form').id,
+                                                            'form')]
+            action['res_id'] = invoices.ids[0]
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
+
+    @api.multi
+    def _compute_invoices(self):
+        for rec in self:
+            count_invoice = self.env['account.invoice'].search_count([
+                                                ('book_issue', '=',
+                                                 rec.id)])
+            rec.compute_inv = count_invoice
 
 
 class LibraryBookRequest(models.Model):

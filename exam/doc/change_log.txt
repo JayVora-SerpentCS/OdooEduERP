@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.5 --> 3 May 2017: Arpit Joshi
+    * Solved issue of grade after re evaluation marks enter.
+
 1.0.4 --> 1 May 2017: Arpit Joshi
     * Optimize code of default get method in wizard.
 

@@ -16,7 +16,6 @@ class ReportStudentPayslip(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        print'render html called'
         ans = self.env['student.payslip'].search([('id', 'in', docids)])
         docargs = {
             'doc_ids': docids,

@@ -173,10 +173,14 @@
                     <header>
                         <button name="payslip_confirm" class="fa fa-check" string="Confirm" states="draft" type="workflow" groups="school.group_school_administration"/>
                         <button name="student_pay_fees" class="fa fa-share" string="Payment" states="confirm" type="object" groups="school.group_school_administration"/>
-                        <button name="invoice_view" string="View Invoice" states="pending,paid" type="object" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" states="pending,paid" type="object" groups="school.group_school_administration">
+                                <field name="invoice_count"/>
+                            </button>
+                        </div>
                         <group>
                             <group col="2" string="Information">
                                 <field name="name" placeholder="Description" attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -199,8 +203,10 @@
                                 <page string="Fees Structure">
                                     <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}"/>
                                     <separator string="" colspan="4"/>
-                                    <group col="8" colspan="4">
+                                    <group col="4" colspan="4">
                                         <field name="total"/>
+                                        <field name="paid_amount" readonly="1"/>
+                                        <field name="due_amount" readonly="1"/>
                                     </group>
                                 </page>
                                 <page string="Other Information">
