@@ -422,8 +422,9 @@ class ExamSubject(models.Model):
             grade_lines = rec.exam_id.grade_system.grade_ids
             if (rec.exam_id and rec.exam_id.student_id and grade_lines):
                 for grade_id in grade_lines:
-                    if rec.obtain_marks and rec.marks_reeval <= 0.0:
-                        b_id = rec.obtain_marks <= grade_id.to_mark
+                    b_id = rec.obtain_marks <= grade_id.to_mark
+#                    r_id = rec.marks_reeval <= grade_id.to_mark
+                    if rec.obtain_marks > 0:
                         if (rec.obtain_marks >= grade_id.from_mark and b_id):
                             rec.grade_line_id = grade_id
                     if rec.marks_reeval and rec.obtain_marks >= 0.0:
@@ -495,9 +496,9 @@ class AdditionalExamResult(models.Model):
     @api.depends('a_exam_id', 'obtain_marks')
     def _compute_student_result(self):
         for rec in self:
-            min_m = rec.a_exam_id.subject_id.minimum_marks
-            if (rec.a_exam_id and rec.a_exam_id.subject_id and min_m):
-                if rec.a_exam_id.subject_id.minimum_marks <= rec.obtain_marks:
+            if rec.a_exam_id and rec.a_exam_id:
+                if rec.a_exam_id.minimum_marks < \
+                        rec.obtain_marks:
                     rec.result = 'Pass'
                 else:
                     rec.result = 'Fail'
