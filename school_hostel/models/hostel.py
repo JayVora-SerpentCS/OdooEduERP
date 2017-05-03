@@ -122,20 +122,25 @@ class HostelStudent(models.Model):
 
     @api.multi
     def invoice_view(self):
-        invoice_search = self.env['account.invoice'].search([(
-                                                'hostel_student_id', '=',
-                                                 self.id)])
-        invoice_form = self.env.ref('account.invoice_form')
-        return {'name': _("View Invoice"),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'account.invoice',
-                'res_id': invoice_search.id,
-                'view_id': invoice_form.id,
-                'type': 'ir.actions.act_window',
-                'nodestroy': True,
-                'target': 'current',
-                }
+        invoices = self.env['account.invoice'].search([('hostel_student_id',
+                                                        '=', self.id)])
+        action = self.env.ref('account.action_invoice_tree1').read()[0]
+        if len(invoices) > 1:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        elif len(invoices) == 1:
+            action['views'] = [(self.env.ref('account.invoice_form').id,
+                                                            'form')]
+            action['res_id'] = invoices.ids[0]
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
+
+    @api.multi
+    def _compute_invoices(self):
+        for rec in self:
+            invoices_count = self.env['account.invoice'].search_count([(
+                                        'hostel_student_id', '=', self.id)])
+            rec.compute_inv = invoices_count
 
     @api.multi
     def pay_fees(self):
@@ -155,7 +160,7 @@ class HostelStudent(models.Model):
             line_vals = {'name': hostel_fees.hostel_info_id.name,
                          'account_id': acc_id,
                          'quantity': hostel_fees.duration,
-                         'price_unit': hostel_fees.room_rent,
+                         'price_unit': hostel_fees.room_id.rent_amount,
                          }
             invoice_lines.append((0, 0, line_vals))
             account_inv_id.write({'invoice_line_ids': invoice_lines})
@@ -185,6 +190,8 @@ class HostelStudent(models.Model):
                             default=lambda obj:
                             obj.env['ir.sequence'].
                             next_by_code('hostel.student'))
+    compute_inv = fields.Integer('Number of invoice',
+                                 compute="_compute_invoices")
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
@@ -241,8 +248,20 @@ class AccountPayment(models.Model):
     def post(self):
         res = super(AccountPayment, self).post()
         for invoice in self.invoice_ids:
-            if invoice.hostel_student_id:
+            if invoice.hostel_student_id and\
+            invoice.state == 'paid':
+                fees_payment = invoice.hostel_student_id.paid_amount
+                fees_payment += self.amount
                 invoice.hostel_student_id.write(
                                     {'status': 'paid',
-                                     'paid_amount': invoice.amount_total})
+                                     'paid_amount': fees_payment,
+                                     'remaining_amount': invoice.residual})
+            if invoice.hostel_student_id and\
+            invoice.state == 'open':
+                fees_payment = invoice.hostel_student_id.paid_amount
+                fees_payment += self.amount
+                invoice.hostel_student_id.write(
+                                    {'status': 'pending',
+                                     'paid_amount': fees_payment,
+                                     'remaining_amount': invoice.residual})
         return res
