@@ -242,8 +242,6 @@ class ExamResult(models.Model):
                     obtain_marks = line.obtain_marks
                     if line.state == "re-evaluation":
                         obtain_marks = line.marks_reeval
-                    elif line.state == "re-access":
-                        obtain_marks = line.marks_access
                     total += obtain_marks
             rec.total = total
 
@@ -258,8 +256,6 @@ class ExamResult(models.Model):
             for sub_line in result.result_ids:
                 if sub_line.state == "re-evaluation":
                     obtain_marks = sub_line.marks_reeval
-                elif sub_line.state == "re-access":
-                    obtain_marks = sub_line.marks_access
                 obtain_marks = sub_line.obtain_marks
                 total += sub_line.maximum_marks or 0
                 obtained_total += obtain_marks
@@ -304,7 +300,7 @@ class ExamResult(models.Model):
     result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
     total = fields.Float(compute='_compute_total', string='Obtain Total',
                          method=True, store=True)
-    re_total = fields.Float('Re-access Obtain Total', readonly=True)
+    re_total = fields.Float('Re-evaluation Obtain Total', readonly=True)
     percentage = fields.Float("Percentage", compute="_compute_per",
                               readonly=True, store=True)
     result = fields.Char(compute='_compute_result', string='Result',
@@ -426,15 +422,14 @@ class ExamSubject(models.Model):
             grade_lines = rec.exam_id.grade_system.grade_ids
             if (rec.exam_id and rec.exam_id.student_id and grade_lines):
                 for grade_id in grade_lines:
-                    b_id = rec.obtain_marks <= grade_id.to_mark
-#                    r_id = rec.marks_reeval <= grade_id.to_mark
-                    if rec.obtain_marks >0:
+                    if rec.obtain_marks and rec.marks_reeval <= 0.0:
+                        b_id = rec.obtain_marks <= grade_id.to_mark
                         if (rec.obtain_marks >= grade_id.from_mark and b_id):
                             rec.grade_line_id = grade_id
-                    if rec.marks_reeval > 0:
-                        rec.obtain_marks = rec.marks_reeval
-#                        if(rec.marks_reeval >= grade_id.from_mark and b_id):
-#                            rec.grade_line_id = grade_id
+                    if rec.marks_reeval and rec.obtain_marks >= 0.0:
+                        r_id = rec.marks_reeval <= grade_id.to_mark
+                        if (rec.marks_reeval >= grade_id.from_mark and r_id):
+                            rec.grade_line_id = grade_id
 
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
