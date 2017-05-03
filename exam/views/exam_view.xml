@@ -212,6 +212,8 @@
                             <field name="name"  placeholder="Exam Name"/>
                             <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
                             <field name="subject_id" placeholder="Select or Create Subject"/>
+                            <field name="maximum_marks" required="1"/>
+                            <field name="minimum_marks" required="1"/>
                         </group>
                         <group col="4" string="Examination Dates" colspan="4">
                             <field name="exam_date" placeholder="Exam Date"/>
