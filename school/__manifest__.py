@@ -14,6 +14,7 @@
     'depends': ['hr', 'crm', 'report', 'board'],
     'data': ['security/school_security.xml',
              'security/ir.model.access.csv',
+             'wizard/terminate_reason_view.xml',
              'wizard/wiz_send_email_view.xml',
              'views/school_view.xml',
              'views/admission_workflow.xml',

@@ -299,7 +299,7 @@ class StudentStudent(models.Model):
                                           DEFAULT_SERVER_DATE_FORMAT)
             age_calc = ((current_dt - start).days / 365)
             if age_calc < 5:
-                raise ValidationError(_('Age should be more than 5'))
+                raise ValidationError(_('Age should be greater than 5 years.'))
 
     @api.model
     def create(self, vals):
@@ -446,6 +446,7 @@ class StudentStudent(models.Model):
     parent_id = fields.Many2many('res.partner', 'student_parent_rel',
                                  'student_id', 'parent_id', 'Parent(s)',
                                  states={'done': [('readonly', True)]})
+    terminate_reason = fields.Text('Reason')
 
 #    _sql_constraints = [('grn_unique', 'unique(grn_number)',
 #                         'GRN Number must be unique!')]
@@ -460,10 +461,10 @@ class StudentStudent(models.Model):
         self.state = 'alumni'
         return True
 
-    @api.multi
-    def set_terminate(self):
-        self.state = 'terminate'
-        return True
+#    @api.multi
+#    def set_terminate(self):
+#        self.state = 'terminate'
+#        return True
 
     @api.multi
     def set_done(self):
