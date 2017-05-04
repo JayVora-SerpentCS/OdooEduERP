@@ -9,10 +9,10 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <header>
-                        <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration" />
+                        <button class="oe_highlight oe_stat_button" name="%(school.action_terminate_wizard)d" string="Terminate" type="action" icon="fa-ban" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft" groups="school.group_school_administration" />
-                        <field name="state" widget="statusbar" statusbar_visible="alumni,terminate"/>
+                        <field name="state" widget="statusbar" statusbar_visible="alumni,terminate" attrs="{'invisible':[('state','=','done')]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="buttons"></div>
@@ -92,7 +92,13 @@
                                         <field name="contact_phone1" />
                                         <field name="contact_mobile1" />
                                     </group>
+                                    <newline />
                                 </group>
+                                <newline/>
+                                <separator string="Terminate Reason" attrs="{'invisible':[('state','in',['draft','done','alumni'])]}"/>
+                                <group>
+                                        <field name="terminate_reason" attrs="{'invisible':[('state','in',['draft','done','alumni'])]}" readonly="1"/>
+                                  </group>
                             </page>
                             <page string="Parents">
                                 <field name="parent_id" domain="[('parent_school','=',True)]" 
@@ -983,7 +989,7 @@
             <field name="name">student.cast.tree</field>
             <field name="model">student.cast</field>
             <field name="arch" type="xml">
-                <tree string="Cast Information">
+                <tree string="Cast Information" editable="bottom">
                     <field name="name" />
                 </tree>
             </field>
