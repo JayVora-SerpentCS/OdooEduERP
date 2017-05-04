@@ -23,14 +23,14 @@
                                 <field name="reg_code" readonly="1" />
                             </b>
                             <br />
-                            <field name="photo" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
+                            <field name="photo" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
                             <div class="oe_title">
                                 <group>
-                                    <field name="name" placeholder="First Name" nolabel="1" required="1"/>
+                                    <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     <br />
-                                    <field name="middle" placeholder="Middle Name" nolabel="1"/>
+                                    <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     <br />
-                                    <field name="last" placeholder="Last Name" nolabel="1"/>
+                                    <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     <br />
                                     <field name="pid" invisible="1"/>
                                 </group>
@@ -42,70 +42,70 @@
                         <group>
                             <group string="Student Information">
                                 <field name="student_code" readonly="1" />
-                                <field name="roll_no" help="Roll number of Student" />
-                                <field name="year" placeholder="Year" help="Academic year of Student" />
-                                <field name="school_id" widget="selection" help="School of Student" />
+                                <field name="roll_no" help="Roll number of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="year" placeholder="Year" help="Academic year of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="school_id" placeholder="School" widget="selection" help="School of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                             <group string="Standard Information">
-                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id)]" widget="selection" />
-                                <field name="division_id" placeholder="Division" widget="selection" />
-                                <field name="medium_id" placeholder="Medium" widget="selection" />
+                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                         </group>
                         <group>
                             <group>
                                 <label for="street" string="Address" />
                                 <div class="o_address_format">
-                                    <field name="street" class="o_address_street" placeholder="Street..." />
-                                    <field name="street2" class="o_address_street" placeholder="Street2..." />
-                                    <field name="city" placeholder="City" class="o_address_city" required="1" />
-                                    <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
+                                    <field name="street" class="o_address_street" placeholder="Street..." attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="street2" class="o_address_street" placeholder="Street2..." attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: true}" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="phone" placeholder="Phone Number" />
-                                <field name="mobile" placeholder="Mobile Number" />
-                                <field name="email" placeholder="Email Address" String="Email" />
-                                <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" />
+                                <field name="phone" placeholder="Phone Number" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="mobile" placeholder="Mobile Number" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="email" placeholder="Email Address" String="Email" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="website" widget="url" placeholder="e.g. www.serpentcs.com" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="General" name="general">
                                 <group>
                                     <group>
-                                        <field name="cast_id" />
-                                        <field name="date_of_birth" widget="date" placeholder="Birthdate" />
-                                        <field name="gender" />
-                                        <field name="age" />
+                                        <field name="cast_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Cast"/>
+                                        <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                        <field name="gender" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Gender"/>
+                                        <field name="age"/>
                                     </group>
                                     <group>
-                                        <field name="mother_tongue" />
-                                        <field name="admission_date" widget="date" placeholder="Admission Date" />
-                                        <field name="maritual_status" />
+                                        <field name="mother_tongue" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Mother Tounge"/>
+                                        <field name="admission_date" widget="date" placeholder="Admission Date" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                        <field name="maritual_status" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Maritial Status"/>
                                     </group>
                                     <newline />
                                     <separator string="Emergency Contact Details" colspan="4" />
                                     <newline />
                                     <group colspan="4" col="4">
-                                        <field name="contact_phone1" />
-                                        <field name="contact_mobile1" />
+                                        <field name="contact_phone1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Phone Number"/>
+                                        <field name="contact_mobile1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Mobile Number"/>
                                     </group>
                                     <newline />
                                 </group>
                                 <newline/>
-                                <separator string="Terminate Reason" attrs="{'invisible':[('state','in',['draft','done','alumni'])]}"/>
+                                <separator string="Termination Reason" attrs="{'invisible':[('state','in',['draft','done','alumni'])]}"/>
                                 <group>
                                         <field name="terminate_reason" attrs="{'invisible':[('state','in',['draft','done','alumni'])]}" readonly="1"/>
                                   </group>
                             </page>
                             <page string="Parents">
                                 <field name="parent_id" domain="[('parent_school','=',True)]" 
-                                            attrs="{'readonly':[('state','=','alumni')]}" context="{'form_view_ref':'school.view_parent_form','default_parent_school':1}"/>
+                                            attrs="{'readonly':[('state','in',['alumni','terminate'])]}" context="{'form_view_ref':'school.view_parent_form','default_parent_school':1}"/>
                             </page>
                             <page string="References">
-                                <field name="reference_ids" nolabel="1" colspan="4">
+                                <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <tree string="Reference">
                                         <field name="name" />
                                         <field name="middle" />
@@ -116,18 +116,18 @@
                                     </tree>
                                     <form string="Reference">
                                         <group col="4" colspan="4">
-                                            <field name="name" placeholder="First Name" />
-                                            <field name="gender" />
-                                            <field name="middle" placeholder="Middle Name" />
-                                            <field name="designation" placeholder="Designation" />
-                                            <field name="last" placeholder="Last Name" />
-                                            <field name="phone" placeholder="Phone Number" />
+                                            <field name="name" placeholder="First Name"/>
+                                            <field name="gender"/>
+                                            <field name="middle" placeholder="Middle Name"/>
+                                            <field name="designation" placeholder="Designation"/>
+                                            <field name="last" placeholder="Last Name"/>
+                                            <field name="phone" placeholder="Phone Number"/>
                                         </group>
                                     </form>
                                 </field>
                             </page>
                             <page string="Previous School">
-                                <field name="previous_school_ids" nolabel="1" colspan="4">
+                                <field name="previous_school_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <tree string="Previous School Details">
                                         <field name="name" />
                                         <field name="registration_no" />
@@ -150,7 +150,7 @@
                                 </field>
                             </page>
                             <page string="Award Info">
-                                <field name="award_list" nolabel="1" colspan="4">
+                                <field name="award_list" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <tree string="Reference">
                                         <field name="name" />
                                         <field name="description" />
@@ -164,7 +164,7 @@
                                 </field>
                             </page>
                             <page string="Family Info">
-                                <field name="family_con_ids" nolabel="1" colspan="4">
+                                <field name="family_con_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <form string="Family Contact Details">
                                         <group col="4">
                                             <group col="2">
@@ -192,34 +192,34 @@
                             <page string="Medical">
                                 <group>
                                     <group string="Doctor Information">
-                                        <field name="designation" placeholder="Doctor Designation" />
-                                        <field name="doctor_phone" placeholder="Doctor's Contact No" />
+                                        <field name="designation" placeholder="Doctor Designation" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                        <field name="doctor_phone" placeholder="Doctor's Contact No" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     </group>
                                     <group string="Physical Information">
-                                        <field name="blood_group" placeholder="e.g.B+,Ab+" />
-                                        <field name="height" />
-                                        <field name="weight" />
+                                        <field name="blood_group" placeholder="e.g.B+,Ab+" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                        <field name="height" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Height"/>
+                                        <field name="weight" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Weight"/>
                                     </group>
                                 </group>
                                 <separator string="Does the applicant have any Disabilities?" colspan="4" />
                                 <group col="6" colspan="4">
-                                    <field name="eye" />
-                                    <field name="ear" />
-                                    <field name="nose_throat" />
-                                    <field name="respiratory" />
-                                    <field name="cardiovascular" />
-                                    <field name="neurological" />
-                                    <field name="muskoskeletal" />
-                                    <field name="dermatological" />
-                                    <field name="blood_pressure" />
+                                    <field name="eye" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="ear" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="nose_throat" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="respiratory" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="cardiovascular" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="neurological" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="muskoskeletal" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="dermatological" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="blood_pressure" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 </group>
                                 <separator string="Notes" colspan="4" />
                                 <group col="6" colspan="4">
-                                    <field name="comment" placeholder="Notes About Medical.." nolabel="1" />
+                                    <field name="comment" placeholder="Notes About Medical.." nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 </group>
                             </page>
                             <page string="Certificates">
-                                <field name="certificate_ids" nolabel="1" colspan="4">
+                                <field name="certificate_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <form string="Certificate">
                                         <group col="4">
                                             <field name="description" placeholder="Description About Certificate" />
@@ -232,7 +232,7 @@
                                 </field>
                             </page>
                             <page string="Remarks">
-                                <field name="description" nolabel="1" colspan="4">
+                                <field name="description" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <form string="Extra Details">
                                         <group col="4" colspan="2">
                                             <field name="name" placeholder="Field Name" />
@@ -246,7 +246,7 @@
                                 </field>
                             </page>
                             <page string="History" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent,school.group_school_student">
-                                <field name="history_ids" nolabel="1" colspan="4" readonly="1">
+                                <field name="history_ids" nolabel="1" colspan="4" readonly="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
                                     <tree string="History">
                                         <field name="academice_year_id" />
                                         <field name="standard_id" />
@@ -297,7 +297,7 @@
                         <field name="student_name" invisible="1" />
                         <field name="year" />
                         <field name="gender" />
-                        <field name="school_id" />
+                        <field name="school_id" placeholder="School"/>
                     </group>
                     <newline />
                     <group expand="0" string="Group By..." colspan="12" col="10">
@@ -488,8 +488,8 @@
                                             <separator string="Emergency Contact Details" colspan="4" />
                                             <newline />
                                             <group colspan="4" col="4">
-                                                <field name="contact_phone1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                                <field name="contact_mobile1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                                <field name="contact_phone1" attrs="{'readonly':[('state','=','alumni')]}" placeholder="Phone Number"/>
+                                                <field name="contact_mobile1" attrs="{'readonly':[('state','=','alumni')]}" placeholder="Mobile Number"/>
                                             </group>
                                         </group>
                                     </sheet>
@@ -516,7 +516,7 @@
                                             <field name="last" placeholder="Last Name" />
                                             <field name="designation" placeholder="Designation" />
                                             <field name="phone" placeholder="Phone Number" />
-                                            <field name="gender" />
+                                            <field name="gender" placeholder="Gender"/>
                                         </group>
                                     </form>
                                 </field>
@@ -535,9 +535,9 @@
                                         <group col="4" colspan="4">
                                             <field name="name" placeholder="School Name" />
                                             <field name="registration_no" placeholder="Registration No" />
-                                            <field name="admission_date" />
-                                            <field name="exit_date" />
-                                            <field name="course_id" />
+                                            <field name="admission_date" placeholder="Admission Date"/>
+                                            <field name="exit_date" placeholder="Exit Date"/>
+                                            <field name="course_id" placeholder="Course"/>
                                             <newline />
                                             <field name="add_sub" colspan="4" />
                                         </group>
@@ -572,7 +572,7 @@
                             </page>
                             <page string="Remarks">
                                 <form string="Remarks">
-                                    <field name="remark" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="remark" placeholder="Remark" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 </form>
                             </page>
                         </notebook>
@@ -637,7 +637,7 @@
                             <field name="date" placeholder="Select Date" />
                             <field name="name" placeholder="Reminder Title" />
                             <newline />
-                            <field name="description" colspan="4" />
+                            <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                     </sheet>
                 </form>
@@ -802,7 +802,7 @@
                         </group>
                         <group col="4" colspan="4">
                             <field name="currency_id" placeholder="Select Or Create Currency" />
-                            <field name="lang" />
+                            <field name="lang" placeholder="Language"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Standards">
@@ -832,8 +832,8 @@
                 <form string="Standard Information">
                     <separator string="Attendance Type" />
                     <group col="4" colspan="2">
-                        <field name="name" />
-                        <field name="code" />
+                        <field name="name" placeholder="name"/>
+                        <field name="code" placeholder="code"/>
                     </group>
                 </form>
             </field>
@@ -847,10 +847,10 @@
                     <sheet>
                         <separator string="Standard Information" />
                         <group col="4" colspan="4">
-                            <field name="standard_id" widget="selection" />
-                            <field name="division_id" widget="selection" />
-                            <field name="medium_id" widget="selection" />
-                            <field name="school_id" widget="selection" />
+                            <field name="standard_id" widget="selection" placeholder="Standard"/>
+                            <field name="division_id" widget="selection" placeholder="Division"/>
+                            <field name="medium_id" widget="selection" placeholder="Medium"/>
+                            <field name="school_id" widget="selection" placeholder="School"/>
                             <field name="user_id" placeholder="Create Or Select Faculty Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher': True}"/>
                             <field name="passing" placeholder="No Of ATKT Allowed" />
                         </group>
@@ -1037,10 +1037,10 @@
 	                                 <group>
 	                                     <field name="sequence" colspan="2" />
 	                                     <newline />
-	                                     <field name="grade" />
+	                                     <field name="grade" placeholder="Grade"/>
 	                                     <newline />
-	                                     <field name="from_mark" />
-	                                     <field name="to_mark" />
+	                                     <field name="from_mark" placeholder="From Mark"/>
+	                                     <field name="to_mark" placeholder="To Mark"/>
 	                                     <field name="fail" />
 	                                 </group>
 	                             </form>
@@ -1128,8 +1128,8 @@
                             <field name="code" placeholder="Code" />
                             <field name="date_start" placeholder="Start Date" />
                             <field name="date_stop" placeholder="Stop Date" />
-                            <field name="year_id" colspan="4" />
-                            <field name="description" colspan="4" />
+                            <field name="year_id" colspan="4" placeholder="Year"/>
+                            <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                     </sheet>
                 </form>
@@ -1161,7 +1161,7 @@
                             <field name="name" placeholder="Name" />
                             <field name="code" placeholder="Code" />
                             <newline />
-                            <field name="description" colspan="4" />
+                            <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                     </sheet>
                 </form>
@@ -1224,7 +1224,7 @@
                             <field name="name" placeholder="Name" />
                             <field name="code" placeholder="Code" />
                             <newline />
-                            <field name="description" colspan="4" />
+                            <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                     </sheet>
                 </form>
@@ -1257,9 +1257,9 @@
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="Name" />
                                         <field name="code" placeholder="Code" />
-                                        <field name="maximum_marks" />
-                                        <field name="minimum_marks" />
-                                        <field name="weightage" />
+                                        <field name="maximum_marks" placeholder="Maximum Marks"/>
+                                        <field name="minimum_marks" placeholder="Minimum Marks"/>
+                                        <field name="weightage" placeholder="Weightage"/>
                                         <field name="is_practical" />
                                         <field name="no_exam" />
                                         <field name="elective_id" string="Elective Group" invisible="1" />
@@ -1294,7 +1294,7 @@
                                                         <field name="duration" />
                                                         <field name="topic" />
                                                     </tree>
-                                                    <form string="Syllabs">
+                                                    <form string="Syllabus">
                                                         <field name="duration" />
                                                         <newline />
                                                         <field name="topic" colspan="4" />
@@ -1320,9 +1320,9 @@
                         <group col="4" colspan="4">
                             <field name="name" placeholder="Name" />
                             <field name="code" placeholder="Code" />
-                            <field name="maximum_marks" />
-                            <field name="minimum_marks" />
-                            <field name="weightage" />
+                            <field name="maximum_marks" placeholder="Maximum Marks"/>
+                            <field name="minimum_marks" placeholder="Minimum Marks"/>
+                            <field name="weightage" placeholder="Weightage"/>
                             <field name="is_practical" />
                             <field name="no_exam" />
                             <field name="elective_id" string="Elective Group" readonly="1" />
@@ -1358,7 +1358,7 @@
                                             <field name="topic" />
                                         </tree>
                                         <form string="Syllabs">
-                                            <field name="duration" />
+                                            <field name="duration" placeholder="Duration"/>
                                             <newline />
                                             <field name="topic" colspan="4" />
                                         </form>
@@ -1398,7 +1398,7 @@
                             <field name="name" placeholder="Name" />
                             <field name="code" placeholder="Code" />
                             <newline />
-                            <field name="description" colspan="4" />
+                            <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                     </sheet>
                 </form>
@@ -1425,11 +1425,11 @@
                 <data>
                     <field name="category_ids" position="after">
                         <group>
-                            <field name="is_school_teacher"/>
+                            <field name="is_school_teacher" readonly="1"/>
                         </group>
                     </field>
                     <field name="address_id" position="before">
-                        <field name="school" required="1"/>
+                        <field name="school" required="1" placeholder="School"/>
                     </field>
                     <field name="work_email" position="attributes">
                         <attribute name="required">1</attribute>
@@ -1522,7 +1522,7 @@
             <field name="context">{'search_default_done_student':1}</field>
             <field name="res_model">student.student</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_student_student_form_1" />
+            <field name="view_id" ref="" />
             <field name="search_view_id" ref="view_student_student_search_1" />
             <field name="view_mode">kanban,tree,form</field>
         </record>
@@ -1644,11 +1644,11 @@
                     </header>
                     <sheet>
                         <group col="4" colspan="2" string="News / Updates">
-                            <field name="subject" />
-                            <field name="date" />
+                            <field name="subject" placeholder="Subject"/>
+                            <field name="date" placeholder="Date"/>
                         </group>
                         <group>
-                            <field name="description" colspan="4" />
+                            <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                             <notebook colspan="4">
 <!--                                 <page string="Description"> -->
@@ -1714,7 +1714,7 @@
                         <form string="Partner Contacts">
                             <newline />
                             <group>
-                                <field name="parent_school"/>
+                                <field name="parent_school" readonly="1"/>
                             </group>
                             <div class="oe_title">
                                 <h1>
@@ -1735,11 +1735,10 @@
                                     </div>
                                 </group>
                                 <group string="Communication">
-                                    
                                     <field name="phone" placeholder="Phone Number"/>
                                     <field name="mobile" placeholder="Mobile Number"/>
                                     <field name="fax" placeholder="Fax"/>
-                                    <field name="email" widget="email" required="1"/>
+                                    <field name="email" widget="email" required="1" placeholder="Email"/>
                                 </group>
                              </group>
                             <notebook>
