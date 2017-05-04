@@ -3,7 +3,7 @@
 
 import time
 from datetime import date, datetime
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, \
@@ -296,7 +296,7 @@ class StudentStudent(models.Model):
         current_dt = datetime.today()
         if self.date_of_birth:
             start = datetime.strptime(self.date_of_birth,
-                                          DEFAULT_SERVER_DATE_FORMAT)
+                                      DEFAULT_SERVER_DATE_FORMAT)
             age_calc = ((current_dt - start).days / 365)
             if age_calc < 5:
                 raise ValidationError(_('Age should be greater than 5 years.'))
@@ -365,7 +365,7 @@ class StudentStudent(models.Model):
                                 states={'done': [('readonly', True)]})
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
     age = fields.Integer(compute='_compute_student_age', string='Age',
-                                                      readonly=True)
+                         readonly=True)
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
@@ -378,10 +378,11 @@ class StudentStudent(models.Model):
                                           'Previous School Detail',
                                           states={'done': [('readonly',
                                                             True)]})
-    family_con_icmp_idds = fields.One2many('student.family.contact',
-                                     'family_contact_id',
-                                     'Family Contact Detail',
-                                     states={'done': [('readonly', True)]})
+    family_con_icmp_idds = fields.One2many(
+        'student.family.contact',
+        'family_contact_id',
+        'Family Contact Detail',
+        states={'done': [('readonly', True)]})
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
@@ -516,7 +517,7 @@ class StudentStudent(models.Model):
         return True
 
 
-#class StudentGrn(models.Model):
+# class StudentGrn(models.Model):
 #    _name = "student.grn"
 #    _rec_name = "grn_no"
 #
@@ -744,9 +745,9 @@ class ResPartner(models.Model):
         if res and vals.get('parent_school'):
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('email', False),
-                          'password': vals.get('email', False),
-                          'partner_id': res.id
-                          }
+                         'password': vals.get('email', False),
+                         'partner_id': res.id
+                        }
             user = self.env['res.users'].create(user_vals)
             emp_grp = self.env.ref('base.group_user')
             parent_group = self.env.ref('school.group_school_parent')
@@ -896,11 +897,12 @@ class StudentNews(models.Model):
                     This is a news update from <b>%s</b> posted at %s<br/>
                     <br/> %s <br/><br/>
                     Thank you.""" % (company,
-                                   t.strftime('%d-%m-%Y %H:%M:%S'),
-                                   news.description or '')
+                                     t.strftime('%d-%m-%Y %H:%M:%S'),
+                                     news.description or '')
             smtp_user = mail_server_record.smtp_user or False
             if not smtp_user:
-                raise except_orm(_('Email Configuration '),
+                raise except_orm(
+                    _('Email Configuration '),
                     _("Kindly,Configure the Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             message = obj_mail_server.build_email(email_from=smtp_user,
