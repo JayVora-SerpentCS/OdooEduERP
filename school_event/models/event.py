@@ -55,11 +55,7 @@ class SchoolEvent(models.Model):
     @api.depends('part_ids')
     def _participants(self):
         for rec in self:
-            count = 0
-            if rec.part_ids:
-                for no in rec.part_ids:
-                    count += 1
-                rec.participants = count
+            rec.participants = len(rec.part_ids)
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),
