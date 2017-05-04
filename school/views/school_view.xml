@@ -12,7 +12,7 @@
                         <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft" groups="school.group_school_administration" />
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" widget="statusbar" statusbar_visible="alumni,terminate"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="buttons"></div>
@@ -413,7 +413,7 @@
                         <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft,terminate" groups="school.group_school_administration" />
-                        <field name="state" widget="statusbar" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft"/>
                     </header>
                     <sheet>
                         <div class="oe_inline">
@@ -726,51 +726,51 @@
             </field>
         </record>
         <!-- Form View Of Student GRN -->
-        <record id="view_student_GRN_form" model="ir.ui.view">
-            <field name="name">student.grn.form</field>
-            <field name="model">student.grn</field>
-            <field name="arch" type="xml">
-                <form string="Student GRN format">
-                    <sheet>
-                        <group col="4" colspan="4">
-                            <field name="grn" />
-                            <newline />
-                            <field name="name" />
-                            <newline />
-                            <field name="prefix" placeholder="Prefix" />
-                            <field name="static_prefix" attrs="{'invisible':[('prefix','!=','static')],'required':[('prefix','=','static')]}" />
-                            <newline />
-                            <field name="schoolprefix_id" attrs="{'invisible':[('prefix','!=','school')],'required':[('prefix','=','school')]}" />
-                            <newline />
-                            <field name="postfix" placeholder="Suffix" />
-                            <field name="schoolpostfix_id" attrs="{'invisible':[('postfix','!=','school')],'required':[('postfix','=','school')]}" />
-                            <newline />
-                            <field name="static_postfix" attrs="{'invisible':[('postfix','!=','static')],'required':[('postfix','=','static')]}" />
-                            <newline />
-                            <field name="grn_no" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+<!--         <record id="view_student_GRN_form" model="ir.ui.view"> -->
+<!--             <field name="name">student.grn.form</field> -->
+<!--             <field name="model">student.grn</field> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <form string="Student GRN format"> -->
+<!--                     <sheet> -->
+<!--                         <group col="4" colspan="4"> -->
+<!--                             <field name="grn" /> -->
+<!--                             <newline /> -->
+<!--                             <field name="name" /> -->
+<!--                             <newline /> -->
+<!--                             <field name="prefix" placeholder="Prefix" /> -->
+<!--                             <field name="static_prefix" attrs="{'invisible':[('prefix','!=','static')],'required':[('prefix','=','static')]}" /> -->
+<!--                             <newline /> -->
+<!--                             <field name="schoolprefix_id" attrs="{'invisible':[('prefix','!=','school')],'required':[('prefix','=','school')]}" /> -->
+<!--                             <newline /> -->
+<!--                             <field name="postfix" placeholder="Suffix" /> -->
+<!--                             <field name="schoolpostfix_id" attrs="{'invisible':[('postfix','!=','school')],'required':[('postfix','=','school')]}" /> -->
+<!--                             <newline /> -->
+<!--                             <field name="static_postfix" attrs="{'invisible':[('postfix','!=','static')],'required':[('postfix','=','static')]}" /> -->
+<!--                             <newline /> -->
+<!--                             <field name="grn_no" /> -->
+<!--                         </group> -->
+<!--                     </sheet> -->
+<!--                 </form> -->
+<!--             </field> -->
+<!--         </record> -->
         <!-- Tree View Of Student GRN -->
-        <record id="view_student_GRN_tree" model="ir.ui.view">
-            <field name="name">student.grn.tree</field>
-            <field name="model">student.grn</field>
-            <field name="arch" type="xml">
-                <tree string="Student GRN format">
-                    <field name="grn" />
-                    <field name="name" />
-                </tree>
-            </field>
-        </record>
+<!--         <record id="view_student_GRN_tree" model="ir.ui.view"> -->
+<!--             <field name="name">student.grn.tree</field> -->
+<!--             <field name="model">student.grn</field> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <tree string="Student GRN format"> -->
+<!--                     <field name="grn" /> -->
+<!--                     <field name="name" /> -->
+<!--                 </tree> -->
+<!--             </field> -->
+<!--         </record> -->
         <!-- Actions Of Form & Tree Views Of Student GRN -->
-        <record id="action_student_grn_form" model="ir.actions.act_window">
-            <field name="name">GR No.</field>
-            <field name="res_model">student.grn</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
+<!--         <record id="action_student_grn_form" model="ir.actions.act_window"> -->
+<!--             <field name="name">GR No.</field> -->
+<!--             <field name="res_model">student.grn</field> -->
+<!--             <field name="view_type">form</field> -->
+<!--             <field name="view_mode">tree,form</field> -->
+<!--         </record> -->
         <!-- Form View Of School Information -->
         <record id="view_school_school_form" model="ir.ui.view">
             <field name="name">school.school.form</field>
@@ -785,13 +785,13 @@
                         </group>
                         <group>
                             <label for="street" string="Address" />
-                            <div>
-                                <field name="street" placeholder="Street..." />
-                                <field name="street2" placeholder="Street2..." />
-                                <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" />
-                                <field name="state_id" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
-                                <field name="city" placeholder="City" required="1" />
-                                <field name="zip" placeholder="ZIP" />
+                            <div class="o_address_format">
+                                <field name="street" class="o_address_street" placeholder="Street..." />
+                                <field name="street2" class="o_address_street" placeholder="Street2..." />
+                                <field name="city" class="o_address_city" placeholder="City" required="1" />
+                                <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                                <field name="zip" class="o_address_zip" placeholder="ZIP" />
+                                <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country"  options="{&quot;no_open&quot;: true}" required="1"/>
                             </div>
                         </group>
                         <group col="4" colspan="4">
@@ -1512,7 +1512,7 @@
         <!-- Action Of Form, Tree & Kanban Views Of Student Information -->
         <record id="action_student_student_form_12" model="ir.actions.act_window">
             <field name="name">Students</field>
-            <field name="domain">[('state', '!=', 'draft')]</field>
+            <field name="domain">[('state', '=', 'done')]</field>
             <field name="context">{'search_default_done_student':1}</field>
             <field name="res_model">student.student</field>
             <field name="view_type">form</field>
@@ -1520,6 +1520,22 @@
             <field name="search_view_id" ref="view_student_student_search_1" />
             <field name="view_mode">kanban,tree,form</field>
         </record>
+        <!-- Action of Alumni state -->
+        <record id="action_student_alumni" model="ir.actions.act_window">
+            <field name="name">Student Alumni</field>
+            <field name="domain">['|',('state','=','alumni'),('state','=','terminate')]</field>
+            <field name="res_model">student.student</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        <!-- Action of Alumni -->
+<!--         <record id="action_student_terminate" model="ir.actions.act_window"> -->
+<!--             <field name="name">Student Terminate</field> -->
+<!--             <field name="domain">[('state','=','terminate')]</field> -->
+<!--             <field name="res_model">student.student</field> -->
+<!--             <field name="view_type">form</field> -->
+<!--             <field name="view_mode">kanban,tree,form</field> -->
+<!--         </record> -->
         <!-- Action View 1 Of Tree View Of Student Information -->
 <!--         <record id="action_view_student_student_tree_1" model="ir.actions.act_window.view"> -->
 <!--             <field name="view_type">tree</field> -->
@@ -1860,7 +1876,7 @@
         <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="10" groups="group_school_administration" />
         <!-- MenuItem For Configurations->School Configurations -->
         <menuitem id="menu_school_config_form1" name="School Configurations" parent="menu_configuration" />
-        <menuitem id="menu_grno" name="GR No." parent="menu_school_config_form1" action="action_student_grn_form" />
+<!--         <menuitem id="menu_grno" name="GR No." parent="menu_school_config_form1" action="action_student_grn_form" /> -->
         <menuitem id="menu_cast" name="Cast" parent="menu_school_config_form1" action="action_student_cast_form_7" />
         <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1" action="action_document_type_form" />
         <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1" action="action_grade_master_form" />
@@ -1880,6 +1896,9 @@
         <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
         <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
         <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" />
+        <!-- Menuitem of alumni and terminate -->
+        <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="admission_register"/>
+<!--         <menuitem id="menu_student_terminate" name="Terminate Student" action="action_student_terminate" parent="admission_register"/> -->
         <!-- Inherited Form View Of Company -->
         <record id="view_company_form_inherit" model="ir.ui.view">
             <field name="name">res.company.form</field>

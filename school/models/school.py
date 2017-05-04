@@ -9,6 +9,7 @@ from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, \
     image_resize_image_big
 from odoo.exceptions import except_orm, Warning as UserError
+from openerp.exceptions import ValidationError
 
 
 class BoardBoard(models.AbstractModel):
@@ -290,6 +291,16 @@ class StudentStudent(models.Model):
                 if age_calc > 0.0:
                     rec.age = age_calc
 
+    @api.constrains('date_of_birth')
+    def check_age(self):
+        current_dt = datetime.today()
+        if self.date_of_birth:
+            start = datetime.strptime(self.date_of_birth,
+                                          DEFAULT_SERVER_DATE_FORMAT)
+            age_calc = ((current_dt - start).days / 365)
+            if age_calc < 5:
+                raise ValidationError(_('Age should be more than 5'))
+
     @api.model
     def create(self, vals):
         if vals.get('pid', False):
@@ -424,8 +435,8 @@ class StudentStudent(models.Model):
                            readonly=True)
     Acadamic_year = fields.Char('Academic Year', related='year.name',
                                 help='Academic Year', readonly=True)
-    grn_number = fields.Many2one('student.grn', 'GR No.',
-                                 help="General Register No.")
+#    grn_number = fields.Many2one('student.grn', 'GR No.',
+#                                 help="General Register No.")
     standard_id = fields.Many2one('standard.standard', 'Class')
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
@@ -436,8 +447,8 @@ class StudentStudent(models.Model):
                                  'student_id', 'parent_id', 'Parent(s)',
                                  states={'done': [('readonly', True)]})
 
-    _sql_constraints = [('grn_unique', 'unique(grn_number)',
-                         'GRN Number must be unique!')]
+#    _sql_constraints = [('grn_unique', 'unique(grn_number)',
+#                         'GRN Number must be unique!')]
 
     @api.multi
     def set_to_draft(self):
@@ -504,54 +515,54 @@ class StudentStudent(models.Model):
         return True
 
 
-class StudentGrn(models.Model):
-    _name = "student.grn"
-    _rec_name = "grn_no"
-
-    @api.multi
-    def _compute_grn_no(self):
-        for stud_grn in self:
-            grn_no1 = " "
-            grn_no2 = " "
-            grn_no1 = stud_grn['grn']
-            if stud_grn['prefix'] == 'static':
-                grn_no1 = stud_grn['static_prefix'] + stud_grn['grn']
-            elif stud_grn['prefix'] == 'school':
-                a = stud_grn.schoolprefix_id.code
-                grn_no1 = a + stud_grn['grn']
-            elif stud_grn['prefix'] == 'year':
-                grn_no1 = time.strftime('%Y') + stud_grn['grn']
-            elif stud_grn['prefix'] == 'month':
-                grn_no1 = time.strftime('%m') + stud_grn['grn']
-            grn_no2 = grn_no1
-            if stud_grn['postfix'] == 'static':
-                grn_no2 = grn_no1 + stud_grn['static_postfix']
-            elif stud_grn['postfix'] == 'school':
-                b = stud_grn.schoolpostfix_id.code
-                grn_no2 = grn_no1 + b
-            elif stud_grn['postfix'] == 'year':
-                grn_no2 = grn_no1 + time.strftime('%Y')
-            elif stud_grn['postfix'] == 'month':
-                grn_no2 = grn_no1 + time.strftime('%m')
-            self.grn_no = grn_no2
-
-    grn = fields.Char('GR no', help='General Reg Number', readonly=True,
-                      default=lambda obj:
-                      obj.env['ir.sequence'].next_by_code('student.grn'))
-    name = fields.Char('GRN Format Name', required=True)
-    prefix = fields.Selection([('school', 'School Name'),
-                               ('year', 'Year'), ('month', 'Month'),
-                               ('static', 'Static String')], 'Prefix')
-    schoolprefix_id = fields.Many2one('school.school',
-                                      'School Name For Prefix')
-    schoolpostfix_id = fields.Many2one('school.school',
-                                       'School Name For Suffix')
-    postfix = fields.Selection([('school', 'School Name'),
-                                ('year', 'Year'), ('month', 'Month'),
-                                ('static', 'Static String')], 'Suffix')
-    static_prefix = fields.Char('Static String for Prefix')
-    static_postfix = fields.Char('Static String for Suffix')
-    grn_no = fields.Char('Generated GR No.', compute='_compute_grn_no')
+#class StudentGrn(models.Model):
+#    _name = "student.grn"
+#    _rec_name = "grn_no"
+#
+#    @api.multi
+#    def _compute_grn_no(self):
+#        for stud_grn in self:
+#            grn_no1 = " "
+#            grn_no2 = " "
+#            grn_no1 = stud_grn['grn']
+#            if stud_grn['prefix'] == 'static':
+#                grn_no1 = stud_grn['static_prefix'] + stud_grn['grn']
+#            elif stud_grn['prefix'] == 'school':
+#                a = stud_grn.schoolprefix_id.code
+#                grn_no1 = a + stud_grn['grn']
+#            elif stud_grn['prefix'] == 'year':
+#                grn_no1 = time.strftime('%Y') + stud_grn['grn']
+#            elif stud_grn['prefix'] == 'month':
+#                grn_no1 = time.strftime('%m') + stud_grn['grn']
+#            grn_no2 = grn_no1
+#            if stud_grn['postfix'] == 'static':
+#                grn_no2 = grn_no1 + stud_grn['static_postfix']
+#            elif stud_grn['postfix'] == 'school':
+#                b = stud_grn.schoolpostfix_id.code
+#                grn_no2 = grn_no1 + b
+#            elif stud_grn['postfix'] == 'year':
+#                grn_no2 = grn_no1 + time.strftime('%Y')
+#            elif stud_grn['postfix'] == 'month':
+#                grn_no2 = grn_no1 + time.strftime('%m')
+#            self.grn_no = grn_no2
+#
+#    grn = fields.Char('GR no', help='General Reg Number', readonly=True,
+#                      default=lambda obj:
+#                      obj.env['ir.sequence'].next_by_code('student.grn'))
+#    name = fields.Char('GRN Format Name', required=True)
+#    prefix = fields.Selection([('school', 'School Name'),
+#                               ('year', 'Year'), ('month', 'Month'),
+#                               ('static', 'Static String')], 'Prefix')
+#    schoolprefix_id = fields.Many2one('school.school',
+#                                      'School Name For Prefix')
+#    schoolpostfix_id = fields.Many2one('school.school',
+#                                       'School Name For Suffix')
+#    postfix = fields.Selection([('school', 'School Name'),
+#                                ('year', 'Year'), ('month', 'Month'),
+#                                ('static', 'Static String')], 'Suffix')
+#    static_prefix = fields.Char('Static String for Prefix')
+#    static_postfix = fields.Char('Static String for Suffix')
+#    grn_no = fields.Char('Generated GR No.', compute='_compute_grn_no')
 
 
 class MotherTongue(models.Model):
