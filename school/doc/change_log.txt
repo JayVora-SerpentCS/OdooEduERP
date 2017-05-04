@@ -4,7 +4,7 @@
 1.0.6 --> 04/05/2017
     * View level improvements.
     * Added wizard to write reason when terminating the student and other view improvements.
-    * Added PlaceHolders in field of school module
+    * Added PlaceHolders in field of school module and other view level Improvements.
 
 1.0.5 --> 25 April 2017 : Arpit Joshi
     * View level changes in school module

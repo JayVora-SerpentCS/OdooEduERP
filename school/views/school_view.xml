@@ -151,14 +151,14 @@
                             </page>
                             <page string="Award Info">
                                 <field name="award_list" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
-                                    <tree string="Reference">
-                                        <field name="name" />
-                                        <field name="description" />
+                                    <tree string="Reference" editable="top">
+                                        <field name="name" required="1" placeholder="Name"/>
+                                        <field name="description" placeholder="Description"/>
                                     </tree>
                                     <form string="Reference">
                                         <group col="4" colspan="4">
-                                            <field name="name" />
-                                            <field name="description" />
+                                            <field name="name" placeholder="Enter Name"/>
+                                            <field name="description" placeholder="Enter Description"/>
                                         </group>
                                     </form>
                                 </field>
@@ -226,8 +226,9 @@
                                             <field name="certi" />
                                         </group>
                                     </form>
-                                    <tree string="Certifaicate">
-                                        <field name="description" />
+                                    <tree string="Certifaicate" editable="top">
+                                        <field name="description" required="1" placeholder="Enter Description"/>
+                                        <field name="certi" required="1" placeholder="Upload Certi"/>
                                     </tree>
                                 </field>
                             </page>
@@ -239,9 +240,9 @@
                                             <field name="description" placeholder="Description" />
                                         </group>
                                     </form>
-                                    <tree string="Remarks">
-                                        <field name="name" />
-                                        <field name="description" />
+                                    <tree string="Remarks" editable="top">
+                                        <field name="name" required="1" placeholder="Enter Name"/>
+                                        <field name="description" placeholder="Enter Description"/>
                                     </tree>
                                 </field>
                             </page>
@@ -305,6 +306,7 @@
                         <filter icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
                         <filter icon="terp-project" string="Name" help="By Class" context="{'group_by':'student_name'}" />
                         <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
+                        <filter icon="terp-project" string="State" help="By State" context="{'group_by':'state'}"/>
                     </group>
                     <separator/>
                     <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
@@ -502,12 +504,12 @@
                             <page string="References">
                                 <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
                                     <tree string="Reference">
-                                        <field name="name" />
-                                        <field name="middle" />
-                                        <field name="last" />
-                                        <field name="designation" />
-                                        <field name="phone" />
-                                        <field name="gender" />
+                                        <field name="name" placeholder="Name"/>
+                                        <field name="middle" placeholder="Middle Name"/>
+                                        <field name="last" placeholder="LastName"/>
+                                        <field name="designation" placeholder="Designation"/>
+                                        <field name="phone" placeholder="Phone"/>
+                                        <field name="gender" placeholder="Gender"/>
                                     </tree>
                                     <form string="Reference">
                                         <group col="4" colspan="4">
@@ -990,7 +992,7 @@
             <field name="model">student.cast</field>
             <field name="arch" type="xml">
                 <tree string="Cast Information" editable="bottom">
-                    <field name="name" />
+                    <field name="name" placeholder="Enter Name"/>
                 </tree>
             </field>
         </record>
@@ -1023,7 +1025,7 @@
                 <form string="Grade">
                     <sheet>
                         <group col="2" colspan="2" string="Grade">
-                            <field name="name" string="Grade Names" />
+                            <field name="name" string="Grade Names" placeholder="Enter GradeName"/>
                         </group>
                             <newline />
                             <field name="grade_ids" nolabel="1" colspan="4">
