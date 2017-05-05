@@ -1,6 +1,10 @@
 ==============================================================================
  Version Change Log (school)
 ===============================================================================
+1.0.7 --> 05/05/2017
+    * View Improvements
+    * Improve code in wizard
+
 1.0.6 --> 04/05/2017
     * View level improvements.
     * Added wizard to write reason when terminating the student and other view improvements.

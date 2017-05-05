@@ -31,7 +31,6 @@ access_grade_line_admin,grade.line,model_grade_line,group_school_administration,
 access_admin_news_admin,student.news,school.model_student_news,group_school_administration,1,1,1,1
 access_admin_reminder_admin,student.reminder,school.model_student_reminder,group_school_administration,1,1,1,1
 access_student_cast_admin,student.cast,model_student_cast,group_school_administration,1,1,1,1
-access_student_grn_admin,student.grn,model_student_grn,group_school_administration,1,1,1,1
 access_res_users_admin,res.users,base.model_res_users,group_school_administration,1,1,1,1
 access_subject_syllabus_admin,subject.syllabus,model_subject_syllabus,group_school_administration,1,1,1,1
 access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,1,1
@@ -68,7 +67,6 @@ access_hr_employee_parent,hr.employee,model_hr_employee,group_school_parent,1,0,
 access_student_reference_parent,student.reference,model_student_reference,group_school_parent,1,0,0,0
 access_student_previous_school_parent,student.previous.school,model_student_previous_school,group_school_parent,1,0,0,0
 access_parent_news_parent,student.news,model_student_news,group_school_parent,1,0,0,0
-access_student_grn_parent,student.grn,model_student_grn,group_school_parent,1,0,0,0
 access_subject_syllabus_parent,subject.syllabus,model_subject_syllabus,group_school_parent,1,0,0,0
 access_res_users_parents,res.users,base.model_res_users,group_school_parent,1,0,0,0
 ,,,,,,,
@@ -94,7 +92,6 @@ access_student_certificate_studnet,student.certificate,school.model_student_cert
 access_student_award_student,student.award,school.model_student_award,group_school_student,1,0,0,0
 access_student_previous_school_student,student.previous.school,school.model_student_previous_school,group_school_student,1,0,0,0
 access_student_family_contact_student,student.family.contact,school.model_student_family_contact,group_school_student,1,0,0,0
-access_student_grn_stu_user_student,student.grn,school.model_student_grn,group_school_student,1,0,0,0
 access_student_reference_student,student.reference,school.model_student_reference,group_school_student,1,0,0,0
 access_student_student_user,student.student,school.model_student_student,group_school_student,1,1,0,0
 access_academic_month_student,academic.month,school.model_academic_month,group_school_student,1,0,0,0
@@ -137,7 +134,6 @@ access_grade_line_teacher,grade.line,model_grade_line,group_school_teacher,1,1,1
 access_student_cast_teacher,student.cast,model_student_cast,group_school_teacher,1,0,0,0
 access_teacher_news_teacher,student.news,model_student_news,group_school_teacher,1,1,1,1
 access_teacher_reminder_teacher,student.reminder,model_student_reminder,group_school_teacher,1,1,1,1
-access_student_grn_teacher,student.grn,model_student_grn,group_school_teacher,1,1,1,0
 access_subject_syllabus_teacher,subject.syllabus,model_subject_syllabus,group_school_teacher,1,1,1,0
 access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,0,0
 access_res_partner_teacher,res.partner,base.model_res_partner,group_school_teacher,1,1,0,0
@@ -166,7 +162,6 @@ access_student_certificate_studnet_in_admission,student.certificate,school.model
 access_student_award_student_admission,student.award,school.model_student_award,group_is_admission,1,0,0,0
 access_student_previous_school_student_is_admision,student.previous.school,school.model_student_previous_school,group_is_admission,1,0,0,0
 access_student_family_contact_student_isadmission,student.family.contact,school.model_student_family_contact,group_is_admission,1,0,0,0
-access_student_grn_stu_user_student_inadmissions,student.grn,school.model_student_grn,group_is_admission,1,0,0,0
 access_student_reference_student_admissions,student.reference,school.model_student_reference,group_is_admission,1,0,0,0
 access_student_student_user_in_admisions,student.student,school.model_student_student,group_is_admission,1,1,0,0
 access_academic_month_student_is_admission,academic.month,school.model_academic_month,group_is_admission,1,0,0,0

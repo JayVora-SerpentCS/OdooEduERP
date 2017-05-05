@@ -10,13 +10,11 @@
             <field name="model">move.standards</field>
             <field name="arch" type="xml">
                 <form string="Move Standards">
-                    <field name="academic_year_id"/>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <label string="" colspan="2"/>
+                    <field name="academic_year_id" placeholder="Enter Academic Year"/>
+                    <footer>
                         <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
                         <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
-                   </group>
+                    </footer>
                </form>
             </field>
         </record>

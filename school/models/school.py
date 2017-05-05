@@ -92,8 +92,8 @@ class AcademicMonth(models.Model):
     def _check_duration(self):
         if (self.date_stop and self.date_start and self.date_stop <
                 self.date_start):
-            raise UserError(_('Error ! The duration of the Month(s)\
-                             is/are invalid.'))
+            raise UserError(_('''Error ! The duration of the Month(s)
+                             is/are invalid.'''))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
@@ -102,9 +102,9 @@ class AcademicMonth(models.Model):
                     self.year_id.date_stop < self.date_start or
                     self.year_id.date_start > self.date_start or
                     self.year_id.date_start > self.date_stop):
-                raise UserError(_('Invalid Months ! Some months overlap or\
-                                   the date period is not in the scope of the\
-                                   academic year.'))
+                raise UserError(_('''Invalid Months ! Some months overlap or
+                                   the date period is not in the scope of the
+                                   academic year.'''))
 
 
 class StandardMedium(models.Model):
@@ -869,6 +869,7 @@ class StudentNews(models.Model):
     def news_update(self):
         emp_obj = self.env['hr.employee']
         obj_mail_server = self.env['ir.mail_server']
+        user = self.env['res.users'].browse(self._context.get('uid'))
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'),
@@ -877,7 +878,7 @@ class StudentNews(models.Model):
         mail_server_record = mail_server_ids[0]
         email_list = []
         for news in self:
-            if news.user_ids:
+            if news.user_ids and news.date:
                 email_list = [
                         user.email for user in news.user_ids if user.email]
                 if not email_list:
@@ -897,12 +898,11 @@ class StudentNews(models.Model):
                     This is a news update from <b>%s</b> posted at %s<br/>
                     <br/> %s <br/><br/>
                     Thank you.""" % (company,
-                                     t.strftime('%d-%m-%Y %H:%M:%S'),
-                                     news.description or '')
+                                   t.strftime('%d-%m-%Y %H:%M:%S'),
+                                   news.description or '')
             smtp_user = mail_server_record.smtp_user or False
             if not smtp_user:
-                raise except_orm(
-                    _('Email Configuration '),
+                raise except_orm(_('Email Configuration '),
                     _("Kindly,Configure the Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             message = obj_mail_server.build_email(email_from=smtp_user,
