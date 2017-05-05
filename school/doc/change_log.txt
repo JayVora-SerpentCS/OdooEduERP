@@ -5,6 +5,7 @@
     * View Improvements
     * Improve code in wizard
     * Remove delete opition in student profile and terminate/alumni menu.
+    * Made field subject One2many field readonly in subjects and elective subject view.
 
 1.0.6 --> 04/05/2017
     * View level improvements.

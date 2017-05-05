@@ -808,7 +808,7 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Standards">
-                                <field name="standards" nolabel="1" colspan="4" />
+                                <field name="standards" nolabel="1" colspan="4" readonly="1"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -1293,8 +1293,8 @@
                                             <group>
                                                 <field name="syllabus_ids" nolabel="1" colspan="4">
                                                     <tree editable="top" string="Syllabs">
-                                                        <field name="duration" />
-                                                        <field name="topic" />
+                                                        <field name="duration" required="1"/>
+                                                        <field name="topic" required="1"/>
                                                     </tree>
                                                     <form string="Syllabus">
                                                         <field name="duration" />
@@ -1356,8 +1356,8 @@
                                 <group>
                                     <field name="syllabus_ids" nolabel="1" colspan="4">
                                         <tree editable="top" string="Syllabs">
-                                            <field name="duration" />
-                                            <field name="topic" />
+                                            <field name="duration" required="1"/>
+                                            <field name="topic" required="1"/>
                                         </tree>
                                         <form string="Syllabs">
                                             <field name="duration" placeholder="Duration"/>
