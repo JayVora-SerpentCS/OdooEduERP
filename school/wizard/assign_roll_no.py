@@ -22,9 +22,10 @@ class AssignRollNo(models.TransientModel):
             search_student_ids = student_obj.search([
                 ('standard_id', '=', student_data.standard_id.id),
                 ('medium_id', '=', student_data.medium_id.id),
-                ('division_id', '=', student_data.division_id.id)])
+                ('division_id', '=', student_data.division_id.id)],
+                                                    order="name")
         number = 1
         for student in search_student_ids:
-            student.write({'roll_no': number})
             number += 1
+            student.write({'roll_no': number})
         return True
