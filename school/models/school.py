@@ -920,7 +920,13 @@ class StudentNews(models.Model):
 class StudentReminder(models.Model):
     _name = 'student.reminder'
 
-    stu_id = fields.Many2one('student.student', 'Student Name', required=True)
+    @api.model
+    def check_user(self):
+        student = self.env['student.student'].search([('user_id', '=',
+                                            self._uid)])
+        return student.id
+    stu_id = fields.Many2one('student.student', 'Student Name', required=True,
+                             default=check_user)
     name = fields.Char('Title')
     date = fields.Date('Date')
     description = fields.Text('Description')
