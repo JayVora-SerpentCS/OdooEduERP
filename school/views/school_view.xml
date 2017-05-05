@@ -275,7 +275,7 @@
             <field name="name">student.student.tree.1</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <tree string="Student Information" create="false">
+                <tree string="Student Information" create="false" delete="false">
                     <field name="pid" />
                     <field name="name" />
                     <field name="student_name" invisible="1" />
@@ -637,7 +637,7 @@
                         <group col="4" colspan="4">
                             <field name="stu_id" widget="selection" placeholder="Student" />
                             <field name="date" placeholder="Select Date" />
-                            <field name="name" placeholder="Reminder Title" />
+                            <field name="name" placeholder="Reminder Title" required="1"/>
                             <newline />
                             <field name="description" colspan="4" placeholder="Description"/>
                         </group>
