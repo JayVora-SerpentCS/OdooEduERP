@@ -93,7 +93,7 @@ access_student_award_student,student.award,school.model_student_award,group_scho
 access_student_previous_school_student,student.previous.school,school.model_student_previous_school,group_school_student,1,0,0,0
 access_student_family_contact_student,student.family.contact,school.model_student_family_contact,group_school_student,1,0,0,0
 access_student_reference_student,student.reference,school.model_student_reference,group_school_student,1,0,0,0
-access_student_student_user,student.student,school.model_student_student,group_school_student,1,1,0,0
+access_student_student_user,student.student,school.model_student_student,group_school_student,1,0,0,0
 access_academic_month_student,academic.month,school.model_academic_month,group_school_student,1,0,0,0
 access_academic_year_student,academic.year,school.model_academic_year,group_school_student,1,0,0,0
 access_grade_master_sudent,grade.master,school.model_grade_master,group_school_student,1,0,0,0
