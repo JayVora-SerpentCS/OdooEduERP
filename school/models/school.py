@@ -495,7 +495,7 @@ class StudentStudent(models.Model):
                 raise except_orm(_('Warning'),
                                  _('''The standard is not defined
                                    in a school'''))
-            student_search_ids = self.search(domain, order="name")
+            student_search_ids = self.search(domain)
             number = 1
             for rec in student_search_ids:
                 number += 1
