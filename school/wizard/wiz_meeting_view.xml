@@ -10,10 +10,6 @@
             <field name="model">student.meeting</field>
             <field name="arch" type="xml">
             <form string="Student Meeting">
-                <header>
-                    <button name="set_meeting" string="Set Meeting" type="object"/>
-                    <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Cancel"/>
-                </header>
                 <sheet>
                     <label for="name"/>
                     <h1>
@@ -24,6 +20,10 @@
                         <field name="deadline" placeholder="Enter Deadline"/>
                         <field name="description" colspan="4" placeholder="Description"/>
                     </group>
+                    <footer>
+                        <button name="set_meeting" string="Set Meeting" type="object"/>
+                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Cancel"/>
+                    </footer>
                 </sheet>
             </form>
             </field>

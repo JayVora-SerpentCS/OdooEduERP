@@ -7,7 +7,7 @@
             <field name="name">student.student.form.1</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <form string="Student Information">
+                <form string="Student Information" create="false">
                     <header>
                         <button class="oe_highlight oe_stat_button" name="%(school.action_terminate_wizard)d" string="Terminate" type="action" icon="fa-ban" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
@@ -42,7 +42,7 @@
                         <group>
                             <group string="Student Information">
                                 <field name="student_code" readonly="1" />
-                                <field name="roll_no" help="Roll number of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="roll_no" help="Roll number of Student" readonly="1"/>
                                 <field name="year" placeholder="Year" help="Academic year of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 <field name="school_id" placeholder="School" widget="selection" help="School of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
@@ -275,7 +275,7 @@
             <field name="name">student.student.tree.1</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <tree string="Student Information">
+                <tree string="Student Information" create="false">
                     <field name="pid" />
                     <field name="name" />
                     <field name="student_name" invisible="1" />
@@ -320,7 +320,7 @@
             <field name="name">Student KANBAN</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="standard_id">
+                <kanban default_group_by="standard_id" create="false">
                     <field name="color" />
                     <field name="name" />
                     <field name="email" />
@@ -1091,7 +1091,7 @@
                                             <field name="code" placeholder="Code" />
                                             <field name="date_start" placeholder="Start Date" />
                                             <field name="date_stop" placeholder="Stop Date" />
-                                            <field name="description" colspan="4" />
+                                            <field name="description" colspan="4" placeholder="Description"/>
                                         </group>
                                     </form>
                                 </field>
@@ -1099,7 +1099,7 @@
                         </notebook>
                         <newline />
                         <separator string="Description" colspan="4" />
-                        <field name="description" colspan="4" />
+                        <field name="description" colspan="4" placeholder="Description"/>
                     </sheet>
                 </form>
             </field>

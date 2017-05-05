@@ -8,7 +8,7 @@ class TerminateReason(models.TransientModel):
 
     @api.multi
     def save_terminate(self):
-        stud_id = self._context.get('active_id')
-        student = self.env['student.student'].browse(stud_id)
-        student.write({'state': 'terminate',
-                       'terminate_reason': self.reason})
+        self.env['student.student'].browse(self._context.get
+                                          ('active_id')).write({
+                                          'state': 'terminate',
+                                          'terminate_reason': self.reason})
