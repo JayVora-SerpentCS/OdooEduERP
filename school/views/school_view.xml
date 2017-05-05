@@ -7,7 +7,7 @@
             <field name="name">student.student.form.1</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <form string="Student Information" create="false">
+                <form string="Student Information" create="false" delete="false">
                     <header>
                         <button class="oe_highlight oe_stat_button" name="%(school.action_terminate_wizard)d" string="Terminate" type="action" icon="fa-ban" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
@@ -1904,7 +1904,7 @@
         <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
         <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" />
         <!-- Menuitem of alumni and terminate -->
-        <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="admission_register"/>
+        <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="admission_register" groups="school.group_school_administration,school.group_school_teacher"/>
 <!--         <menuitem id="menu_student_terminate" name="Terminate Student" action="action_student_terminate" parent="admission_register"/> -->
         <!-- Inherited Form View Of Company -->
         <record id="view_company_form_inherit" model="ir.ui.view">

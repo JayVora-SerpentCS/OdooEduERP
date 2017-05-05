@@ -4,6 +4,7 @@
 1.0.7 --> 05/05/2017
     * View Improvements
     * Improve code in wizard
+    * Remove delete opition in student profile and terminate/alumni menu.
 
 1.0.6 --> 04/05/2017
     * View level improvements.
