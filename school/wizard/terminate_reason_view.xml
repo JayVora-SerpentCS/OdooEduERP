@@ -1,5 +1,6 @@
 <odoo>
     <data>
+        <!-- Form View of terminate student wizard -->
         <record id="school_terminate_reason" model="ir.ui.view">
             <field name="name">Terminate Reason</field>
             <field name="model">terminate.reason</field>
@@ -17,7 +18,7 @@
                 </form>
             </field>
         </record>
-        <!-- Action of Wizard -->
+        <!-- Action of Terminate Student Wizard -->
         <record id="action_terminate_wizard" model="ir.actions.act_window">
             <field name="name">Termination Reason</field>
             <field name="res_model">terminate.reason</field>

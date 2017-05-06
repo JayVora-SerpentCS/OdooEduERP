@@ -69,6 +69,7 @@
             <field name="grade">F</field>
             <field name="from_mark">00</field>
             <field name="to_mark">34</field>
+            <field name="fail" eval="True"/>
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
         <!--Academic Year  Information-->

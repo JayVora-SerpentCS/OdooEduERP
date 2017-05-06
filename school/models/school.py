@@ -39,6 +39,7 @@ class AcademicYear(models.Model):
 
     @api.model
     def next_year(self, sequence):
+        '''This method assign sequence to years'''
         year_ids = self.search([('sequence', '>', sequence)],
                                order='id ASC', limit=1)
         if year_ids:
@@ -47,10 +48,12 @@ class AcademicYear(models.Model):
 
     @api.multi
     def name_get(self):
+        '''Method to display name and code'''
         return [(rec.id, ' [' + rec.code + ']' + rec.name) for rec in self]
 
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
+        '''Method to check start date should be greater than end date'''
         obj_academic_ids = self.search([])
         academic_list = []
         for rec_academic in obj_academic_ids:
@@ -66,6 +69,7 @@ class AcademicYear(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
+        '''Method to check duration'''
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
             raise UserError(_('Error! The duration of the academic year\
@@ -90,6 +94,7 @@ class AcademicMonth(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
+        '''Method to check duration of date'''
         if (self.date_stop and self.date_start and self.date_stop <
                 self.date_start):
             raise UserError(_('''Error ! The duration of the Month(s)
@@ -97,6 +102,7 @@ class AcademicMonth(models.Model):
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
+        '''Method to check year limit'''
         if self.year_id and self.date_start and self.date_stop:
             if (self.year_id.date_stop < self.date_stop or
                     self.year_id.date_stop < self.date_start or
@@ -144,6 +150,7 @@ class StandardStandard(models.Model):
 
     @api.model
     def next_standard(self, sequence):
+        '''This method check sequence of standard'''
         stand_ids = self.search([('sequence', '>', sequence)],
                                 order='id ASC', limit=1)
         if stand_ids:
@@ -160,6 +167,7 @@ class SchoolStandard(models.Model):
     @api.multi
     @api.depends('standard_id')
     def _compute_student(self):
+        '''Compute student of done state'''
         for rec in self:
             rec.student_ids = False
             domain = [('standard_id', '=', rec.standard_id.id),
@@ -169,6 +177,7 @@ class SchoolStandard(models.Model):
 
     @api.multi
     def import_subject(self):
+        '''Method to import subject'''
         for im_ob in self:
             domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
             import_sub_ids = self.search(domain)
@@ -195,6 +204,7 @@ class SchoolStandard(models.Model):
 
     @api.multi
     def name_get(self):
+        '''Method to display standard and division'''
         return [(rec.id, rec.standard_id.name +
                  '[' + rec.division_id.name + ']') for rec in self]
 
@@ -282,6 +292,7 @@ class StudentStudent(models.Model):
     @api.multi
     @api.depends('date_of_birth')
     def _compute_student_age(self):
+        '''Method to calculate student age'''
         current_dt = datetime.today()
         for rec in self:
             if rec.date_of_birth:
@@ -293,6 +304,7 @@ class StudentStudent(models.Model):
 
     @api.constrains('date_of_birth')
     def check_age(self):
+        '''Method to check age should be greater than 5'''
         current_dt = datetime.today()
         if self.date_of_birth:
             start = datetime.strptime(self.date_of_birth,
@@ -303,6 +315,7 @@ class StudentStudent(models.Model):
 
     @api.model
     def create(self, vals):
+        '''Method to create user when student is created'''
         if vals.get('pid', False):
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
@@ -323,6 +336,7 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
+        '''Method to get default Image'''
         img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
         with open(img_path, 'rb') as f:
             image = f.read()
@@ -454,11 +468,13 @@ class StudentStudent(models.Model):
 
     @api.multi
     def set_to_draft(self):
+        '''Method to change state to draft'''
         self.state = 'draft'
         return True
 
     @api.multi
     def set_alumni(self):
+        '''Method to change state to alumni'''
         self.state = 'alumni'
         return True
 
@@ -469,16 +485,19 @@ class StudentStudent(models.Model):
 
     @api.multi
     def set_done(self):
+        '''Method to change state to done'''
         self.state = 'done'
         return True
 
     @api.multi
     def admission_draft(self):
+        '''Set the state to draft'''
         self.state = 'draft'
         return True
 
     @api.multi
     def admission_done(self):
+        '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
         for student_data in self:
             student_group = self.env.ref('school.group_school_student')
@@ -679,6 +698,7 @@ class HrEmployee(models.Model):
 
     @api.model
     def create(self, vals):
+        '''This method creates teacher user and assign group teacher'''
         res = super(HrEmployee, self).create(vals)
         if vals.get('is_school_teacher') and vals.get('school'):
             school = self.env['school.school'].browse(vals.get('school'))
@@ -705,6 +725,7 @@ class HrEmployee(models.Model):
 
     @api.multi
     def write(self, vals):
+        '''Write method of hr employee'''
         res = super(HrEmployee, self).write(vals)
         if res and vals.get('work_email'):
             if self.user_id:
@@ -741,6 +762,7 @@ class ResPartner(models.Model):
 
     @api.model
     def create(self, vals):
+        '''Method creates parents assign group parents'''
         res = super(ResPartner, self).create(vals)
         if res and vals.get('parent_school'):
             user_vals = {'name': vals.get('name'),
@@ -867,6 +889,7 @@ class StudentNews(models.Model):
 
     @api.multi
     def news_update(self):
+        '''Method to send email to student for news update'''
         emp_obj = self.env['hr.employee']
         obj_mail_server = self.env['ir.mail_server']
         user = self.env['res.users'].browse(self._context.get('uid'))
@@ -922,9 +945,11 @@ class StudentReminder(models.Model):
 
     @api.model
     def check_user(self):
+        '''Method to get default value of user'''
         student = self.env['student.student'].search([('user_id', '=',
                                             self._uid)])
         return student.id
+
     stu_id = fields.Many2one('student.student', 'Student Name', required=True,
                              default=check_user)
     name = fields.Char('Title')
@@ -944,6 +969,7 @@ class ResUsers(models.Model):
 
     @api.model
     def create(self, vals):
+        '''Overide create method to get value of employee id'''
         vals.update({'employee_ids': False})
         res = super(ResUsers, self).create(vals)
         return res

@@ -9,6 +9,7 @@ class MailTemplate(models.Model):
 
     @api.multi
     def generate_email(self, res_ids, fields=None):
+        '''Method to genrate email'''
         ret = super(MailTemplate, self).generate_email(res_ids, fields=fields)
 
         if self._context.get('body_html', False)\
@@ -29,6 +30,7 @@ class SendMail(models.TransientModel):
 
     @api.multi
     def send_email(self):
+        '''Method to send email'''
         body = ''
         email_template_obj = self.env['mail.template']
         domain = [('model', '=', 'student.student')]

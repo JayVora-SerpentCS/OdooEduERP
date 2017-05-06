@@ -15,6 +15,7 @@ class StudentMeeting(models.TransientModel):
 
     @api.multi
     def set_meeting(self):
+        '''Method to set meeting'''
         cur_rec = self.browse(self.id)
         student_obj = self.env['student.student']
         cal_event_obj = self.env['calendar.event']
