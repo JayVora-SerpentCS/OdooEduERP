@@ -218,6 +218,7 @@ class SchoolSchool(models.Model):
 
     @api.model
     def _lang_get(self):
+        '''Method to get language'''
         languages = self.env['res.lang'].search([])
         return [(language.code, language.name) for language in languages]
 
@@ -327,11 +328,18 @@ class StudentStudent(models.Model):
             h = {'company_ids': [(4, vals.get('cmp_id'))],
                  'company_id': vals.get('cmp_id')}
             vals.update(h)
-        admission_group = self.env.ref('school.group_is_admission')
-        emp_grp = self.env.ref('base.group_user')
-        new_grp_list = [admission_group.id, emp_grp.id]
         res = super(StudentStudent, self).create(vals)
-        res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
+        # Assign group to student based on condition
+        if res.state == 'draft':
+            admission_group = self.env.ref('school.group_is_admission')
+            emp_grp = self.env.ref('base.group_user')
+            new_grp_list = [admission_group.id, emp_grp.id]
+            res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
+        elif res.state == 'done':
+            done_student = self.env.ref('school.group_school_student')
+            employee_grp = self.env.ref('base.group_user')
+            group_list = [done_student.id, employee_grp.id]
+            res.user_id.write({'groups_id': [(6, 0, group_list)]})
         return res
 
     @api.model
@@ -500,6 +508,7 @@ class StudentStudent(models.Model):
         '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
         for student_data in self:
+            # Assign group to student
             student_group = self.env.ref('school.group_school_student')
             emp_group = self.env.ref('base.group_user')
             new_list = [emp_group.id, student_group.id]
@@ -510,15 +519,18 @@ class StudentStudent(models.Model):
                                    'Age is not valid.'))
             domain = [('standard_id', '=', student_data.standard_id.id)]
             school_standard_search_ids = school_standard_obj.search(domain)
+            # Checks the standard if not defined raise error
             if not school_standard_search_ids:
                 raise except_orm(_('Warning'),
                                  _('''The standard is not defined
                                    in a school'''))
+            # Assign roll no to student
             student_search_ids = self.search(domain)
             number = 1
             for rec in student_search_ids:
                 number += 1
                 rec.roll_no = number
+            # Assign registration code to student
             reg_code = self.env['ir.sequence'].\
                 next_by_code('student.registration')
             registation_code = str(student_data.school_id.state_id.name)\
@@ -714,6 +726,7 @@ class HrEmployee(models.Model):
                 user.partner_id.write({
                                        'email': vals.get('work_email', False)
                                        })
+            # Assign group to teacher
             if res and user:
                 res.write({'address_home_id': user.partner_id.id,
                            'user_id': user and user.id or False})
@@ -727,6 +740,7 @@ class HrEmployee(models.Model):
     def write(self, vals):
         '''Write method of hr employee'''
         res = super(HrEmployee, self).write(vals)
+        # Assign email
         if res and vals.get('work_email'):
             if self.user_id:
                 self.user_id.write({'login': vals.get('work_email'),
@@ -734,6 +748,7 @@ class HrEmployee(models.Model):
             if self.user_id and self.user_id.partner_id:
                 self.user_id.partner_id.write({'email': vals.get('work_email')
                                                })
+        # Assign name
         if res and vals.get('name'):
             if self.user_id:
                 self.user_id.write({'name': vals.get('name'),
@@ -741,6 +756,7 @@ class HrEmployee(models.Model):
             if self.user_id and self.user_id.partner_id:
                 self.user_id.partner_id.write({'name': vals.get('name')
                                                })
+        # Assign Company
         if vals.get('school'):
             school = self.env['school.school'].browse(vals.get('school'))
             if school and school.company_id:
@@ -771,6 +787,7 @@ class ResPartner(models.Model):
                          'partner_id': res.id
                         }
             user = self.env['res.users'].create(user_vals)
+            # Assign group to parents
             emp_grp = self.env.ref('base.group_user')
             parent_group = self.env.ref('school.group_school_parent')
             new_grp_list = [emp_grp.id, parent_group.id]
@@ -893,6 +910,7 @@ class StudentNews(models.Model):
         emp_obj = self.env['hr.employee']
         obj_mail_server = self.env['ir.mail_server']
         user = self.env['res.users'].browse(self._context.get('uid'))
+        # Check if out going mail configured
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'),
@@ -900,6 +918,7 @@ class StudentNews(models.Model):
                                'specified!'))
         mail_server_record = mail_server_ids[0]
         email_list = []
+        # Check email is defined in student
         for news in self:
             if news.user_ids and news.date:
                 email_list = [
@@ -907,6 +926,7 @@ class StudentNews(models.Model):
                 if not email_list:
                     raise except_orm(_('User Email Configuration '),
                                      _("Email not found in users !"))
+            # Check email is defined in employee
             else:
                 for employee in emp_obj.search([]):
                     if employee.work_email:
@@ -916,6 +936,7 @@ class StudentNews(models.Model):
                 if not email_list:
                     raise except_orm(_('Mail Error'), _("Email not defined!"))
             t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
+            # Add company name while sending email
             company = user.company_id.name or ''
             body = """Hi,<br/><br/>
                     This is a news update from <b>%s</b> posted at %s<br/>
