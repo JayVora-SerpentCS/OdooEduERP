@@ -3,6 +3,8 @@
 ===============================================================================
 1.0.8 --> 06/05/2017
     * Added doc strings
+    * Added comment in method
+    * removed code of meeting in wizard
 
 1.0.7 --> 05/05/2017
     * View Improvements
