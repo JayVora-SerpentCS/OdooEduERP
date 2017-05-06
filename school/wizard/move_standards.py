@@ -13,6 +13,7 @@ class MoveStandards(models.TransientModel):
 
     @api.multi
     def move_start(self):
+        '''Code for moving student to next standard'''
         active_ids = self._context.get('active_ids')
         if not active_ids:
             return {}

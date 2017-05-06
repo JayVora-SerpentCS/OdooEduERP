@@ -17,6 +17,7 @@ class AssignRollNo(models.TransientModel):
 
     @api.multi
     def assign_rollno(self):
+        '''Method to assign roll no to students'''
         student_obj = self.env['student.student']
         for student_data in self:
             search_student_ids = student_obj.search([

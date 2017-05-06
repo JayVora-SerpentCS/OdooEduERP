@@ -21,6 +21,7 @@
             </field>
         </record>
 
+        <!-- Action of Wizard Assigning roll no -->
         <act_window id="action_move_standards_form"
             key2="client_action_multi"
             name="Move Standards"
