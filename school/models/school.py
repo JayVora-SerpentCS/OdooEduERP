@@ -188,6 +188,12 @@ class SchoolStandard(models.Model):
 #            self.write({'subject_ids': [(6, 0, val)]})
 #        return True
 
+    @api.multi
+    @api.depends('subject_ids')
+    def _count_subject(self):
+        for rec in self:
+            rec.total_no_subjects = len(rec.subject_ids)
+
     school_id = fields.Many2one('school.school', 'School', required=True)
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
     division_id = fields.Many2one('standard.division', 'Division',
@@ -205,6 +211,8 @@ class SchoolStandard(models.Model):
                              related='school_id.company_id', store=True)
     syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
                                    'Syllabus')
+    total_no_subjects = fields.Integer('Total No of Subject',
+                                       compute="_count_subject")
 
     @api.multi
     def name_get(self):
