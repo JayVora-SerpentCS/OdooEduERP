@@ -875,7 +875,26 @@
                             </page>
                             <page string="Subjects">
                                 <button name="import_subject" string="Import Previous Standard subject" type="object" class="oe_highlight" />
-                                <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" />
+                                <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                            </page>
+                            <page string="Syllabus">
+                                <group>
+                                    <field name="syllabus_ids" nolabel="1" colspan="4" context="{'default_standard_id':standard_id}">
+                                        <tree editable="top" string="Syllabs">
+                                            <field name="standard_id" invisible="1"/>
+                                            <field name="subject_id" required="1" domain="[('standard_ids','in',standard_id)]"
+                                                            widget="selection"/>
+                                            <field name="syllabus_doc" required="1"/>
+                                        </tree>
+                                        <form string="Syllabus">
+                                            <group>
+                                                <field name="subject_id" required="1"/>
+                                                <field name="syllabus_doc" required="1"/>
+                                            </group>
+                                            
+                                        </form>
+                                    </field>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
@@ -1268,15 +1287,13 @@
                                         <page string="Standards">
                                             <field name="standard_ids" nolabel="1" colspan="4">
                                                 <tree string="Standards">
-                                                    <field name="standard_id" />
-                                                    <field name="division_id" />
-                                                    <field name="medium_id" />
+                                                    <field name="name" />
+                                                    <field name="code" />
                                                 </tree>
                                                 <form string="Standards">
                                                     <group col="4" colspan="4">
-                                                        <field name="standard_id" placeholder="Standard" />
-                                                        <field name="division_id" placeholder="Division" />
-                                                        <field name="medium_id" placeholder="Medium" />
+                                                        <field name="name" placeholder="Name"/>
+                                                        <field name="code" placeholder="Code"/>
                                                     </group>
                                                 </form>
                                             </field>
@@ -1286,21 +1303,6 @@
                                         </page>
                                         <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">
                                             <field name="student_ids" nolabel="1" />
-                                        </page>
-                                        <page string="Syllabus">
-                                            <group>
-                                                <field name="syllabus_ids" nolabel="1" colspan="4">
-                                                    <tree editable="top" string="Syllabs">
-                                                        <field name="duration" required="1"/>
-                                                        <field name="topic" required="1"/>
-                                                    </tree>
-                                                    <form string="Syllabus">
-                                                        <field name="duration" />
-                                                        <newline />
-                                                        <field name="topic" colspan="4" />
-                                                    </form>
-                                                </field>
-                                            </group>
                                         </page>
                                     </notebook>
                                 </form>
@@ -1329,41 +1331,27 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Standards">
-                                <field name="standard_ids" nolabel="1" colspan="4">
+                                <field name="standard_ids" nolabel="1" colspan="4" 
+                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                     <tree string="Standards">
-                                        <field name="standard_id" />
-                                        <field name="division_id" />
-                                        <field name="medium_id" />
+                                        <field name="name" />
+                                        <field name="code" />
                                     </tree>
                                     <form string="Standards">
                                         <group col="4" colspan="4">
-                                            <field name="standard_id" placeholder="Standard" />
-                                            <field name="division_id" placeholder="Division" />
-                                            <field name="medium_id" placeholder="Medium" />
+                                             <field name="name" placeholder="Standard Name"/>
+                                            <field name="code" placeholder="Standard Code"/>
                                         </group>
                                     </form>
                                 </field>
                             </page>
                             <page string="Teachers">
-                                <field name="teacher_ids" nolabel="1" colspan="4" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':True}"/>
+                                <field name="teacher_ids" nolabel="1" colspan="4" 
+                                    domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':True}"
+                                     options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
                             <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">
                                 <field name="student_ids" nolabel="1" />
-                            </page>
-                            <page string="Syllabus">
-                                <group>
-                                    <field name="syllabus_ids" nolabel="1" colspan="4">
-                                        <tree editable="top" string="Syllabs">
-                                            <field name="duration" required="1"/>
-                                            <field name="topic" required="1"/>
-                                        </tree>
-                                        <form string="Syllabs">
-                                            <field name="duration" placeholder="Duration"/>
-                                            <newline />
-                                            <field name="topic" colspan="4" />
-                                        </form>
-                                    </field>
-                                </group>
                             </page>
                         </notebook>
                     </sheet>
