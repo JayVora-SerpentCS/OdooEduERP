@@ -874,7 +874,7 @@
                                 </field>
                             </page>
                             <page string="Subjects">
-                                <button name="import_subject" string="Import Previous Standard subject" type="object" class="oe_highlight" />
+<!--                                 <button name="import_subject" string="Import Previous Standard subject" type="object" class="oe_highlight" /> -->
                                 <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
                             <page string="Syllabus">
@@ -1347,7 +1347,6 @@
                             </page>
                             <page string="Teachers">
                                 <field name="teacher_ids" nolabel="1" colspan="4" 
-                                    domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':True}"
                                      options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
                             <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">

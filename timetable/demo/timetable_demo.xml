@@ -7,7 +7,7 @@
             <field name="name">Economic</field>
             <field name="code">ECO</field>
             <field name="maximum_marks">100</field>
-            <field name="teacher_ids" eval="[(6, 0,[ref('hr.teacher_ids')])]"/>
+            <field name="teacher_ids" eval="[(6, 0,[ref('hr.employee_chs')])]"/>
             
         </record>
         <record id="demo_subject_subject_10" model="subject.subject">
