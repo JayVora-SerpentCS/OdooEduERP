@@ -4,11 +4,10 @@
 <odoo>
     <data noupdate="1">
         <!-- student.evaluation -->
-        <record id="student_evaluation_1" model="student.evaluation">
-            <field name="student_id" ref="school.demo_student_student_1"/>
+        <record id="teacher_evaluation_1" model="teacher.evaluation">
             <field name="type">faculty</field>
             <field name="date" eval="str(int(time.strftime('2015'))) +'-05-25'"/>
-            <field name="evaluator_id" ref="hr.employee_fpi"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
         </record>
         <record id="student_evaluation_2" model="student.evaluation">
             <field name="student_id" ref="school.demo_student_student_2"/>
@@ -16,11 +15,10 @@
             <field name="date" eval="str(int(time.strftime('2016'))) +'-06-25'"/>
             <field name="evaluator_id" ref="hr.employee_al"/>
         </record>
-        <record id="student_evaluation_3" model="student.evaluation">
-            <field name="student_id" ref="school.demo_student_student_3"/>
+        <record id="teacher_evaluation_3" model="teacher.evaluation">
             <field name="type">faculty</field>
             <field name="date" eval="str(int(time.strftime('2017'))) +'-04-15'"/>
-            <field name="evaluator_id" ref="hr.employee_mit"/>
+            <field name="teacher_id" ref="hr.employee_mit"/>
         </record>
         <record id="student_evaluation_4" model="student.evaluation">
             <field name="student_id" ref="school.demo_student_student_4"/>
