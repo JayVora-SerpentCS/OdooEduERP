@@ -853,6 +853,7 @@
                             <field name="school_id" widget="selection" placeholder="School"/>
                             <field name="user_id" placeholder="Create Or Select Faculty Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher': True}"/>
 <!--                             <field name="passing" placeholder="No Of ATKT Allowed" /> -->
+                            <field name="total_no_subjects" invisible="1"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Students" name="students">
@@ -877,7 +878,7 @@
 <!--                                 <button name="import_subject" string="Import Previous Standard subject" type="object" class="oe_highlight" /> -->
                                 <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
-                            <page string="Syllabus">
+                            <page string="Syllabus" attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}">
                                 <group>
                                     <field name="syllabus_ids" nolabel="1" colspan="4" context="{'default_standard_id':standard_id}">
                                         <tree editable="top" string="Syllabs">
