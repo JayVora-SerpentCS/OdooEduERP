@@ -37,8 +37,6 @@
                             </div>
                         </div>
 <!--                         <div class="oe_right oe_button_box" name="buttons"></div> -->
-                        
-                        
                         <group>
                             <group string="Student Information">
                                 <field name="student_code" readonly="1" />
@@ -854,7 +852,7 @@
                             <field name="medium_id" widget="selection" placeholder="Medium"/>
                             <field name="school_id" widget="selection" placeholder="School"/>
                             <field name="user_id" placeholder="Create Or Select Faculty Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher': True}"/>
-                            <field name="passing" placeholder="No Of ATKT Allowed" />
+<!--                             <field name="passing" placeholder="No Of ATKT Allowed" /> -->
                         </group>
                         <notebook colspan="4">
                             <page string="Students" name="students">

@@ -33,6 +33,7 @@ class SendMail(models.TransientModel):
         '''Method to send email'''
         body = ''
         email_template_obj = self.env['mail.template']
+        # search the model student.student
         domain = [('model', '=', 'student.student')]
         template_id = email_template_obj.search(domain, limit=1)
         if template_id:

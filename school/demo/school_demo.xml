@@ -65,7 +65,7 @@
             <field name="grade_id" ref="demo_student_grade_1"/>
         </record>
         <record id="demo_student_grade_line_7" model="grade.line">
-            <field name="sequence">1</field>
+            <field name="sequence">7</field>
             <field name="grade">F</field>
             <field name="from_mark">00</field>
             <field name="to_mark">34</field>
