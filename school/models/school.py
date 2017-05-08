@@ -164,7 +164,7 @@ class SchoolStandard(models.Model):
     ''' Defining a standard related to school '''
     _name = 'school.standard'
     _description = 'School Standards'
-    _rec_name = "school_id"
+    _rec_name = "standard_id"
 
     @api.multi
     @api.depends('standard_id')
@@ -203,6 +203,8 @@ class SchoolStandard(models.Model):
 #    passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
+    syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
+                                   'Syllabus')
 
     @api.multi
     def name_get(self):
@@ -250,7 +252,8 @@ class SubjectSubject(models.Model):
     weightage = fields.Integer("WeightAge")
     teacher_ids = fields.Many2many('hr.employee', 'subject_teacher_rel',
                                    'subject_id', 'teacher_id', 'Teachers')
-    standard_ids = fields.Many2many('school.standard', 'subject_standards_rel',
+    standard_ids = fields.Many2many('standard.standard',
+                                    'subject_standards_rel',
                                     'standard_id', 'subject_id', 'Standards')
     standard_id = fields.Many2one('standard.standard', 'Class')
     is_practical = fields.Boolean('Is Practical',
@@ -261,19 +264,18 @@ class SubjectSubject(models.Model):
     student_ids = fields.Many2many('student.student',
                                    'elective_subject_student_rel',
                                    'subject_id', 'student_id', 'Students')
-    syllabus_ids = fields.One2many('subject.syllabus', 'subject_id',
-                                   'Syllabus')
 
 
 class SubjectSyllabus(models.Model):
     '''Defining a  syllabus'''
     _name = "subject.syllabus"
     _description = "Syllabus"
-    _rec_name = "duration"
+    _rec_name = "subject_id"
 
+    standard_id = fields.Many2one('standard.standard', 'Standard')
     subject_id = fields.Many2one('subject.subject', 'Subject')
-    duration = fields.Char("Duration")
-    topic = fields.Text("Topic")
+    syllabus_doc = fields.Binary("Syllabus Doc",
+                                 help="attache the syllabus pdf file")
 
 
 class SubjectElective(models.Model):
