@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/JayVora-SerpentCS/EduERPv8.svg?branch=9.0)](https://travis-ci.org/JayVora-SerpentCS/EduERPv8)
+[![Build Status](https://travis-ci.org/JayVora-SerpentCS/OdooEduERP.svg?branch=9.0)](https://travis-ci.org/JayVora-SerpentCS/OdooEduERP)
 
 # EduERPv9
 Education ERP v9
