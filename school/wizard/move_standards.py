@@ -25,12 +25,14 @@ class MoveStandards(models.TransientModel):
         for data in self:
             for standards in school_standard_obj.browse(active_ids):
                 for student in standards.student_ids:
+                    # search in student history
                     stud_year_domain = [('academice_year_id',
                                          '=',
                                          data.academic_year_id.id),
                                         ('student_id', '=', student.id)]
                     stud_year_ids = stud_history_obj.search(stud_year_domain)
                     year_id = academic_obj.next_year(student.year.sequence)
+                    # Check if academic year selected or not.
                     if year_id and year_id != data.academic_year_id.id:
                         continue
                     if stud_year_ids:
@@ -39,11 +41,13 @@ class MoveStandards(models.TransientModel):
                                            'Next Academic year.'))
                     a = standards.standard_id.sequence
                     next_class_id = standard_obj.next_standard(a)
+                    # Assign the academic year
                     if next_class_id:
                         student_id = student_obj.browse(student.id)
                         d_one = {'year': data.academic_year_id.id,
                                 'standard_id': next_class_id
                                  }
+                        # Move student to next standard
                         student_id.write(d_one)
                         std_id_id = standards.standard_id.id
                         div_id_id = standards.division_id.id

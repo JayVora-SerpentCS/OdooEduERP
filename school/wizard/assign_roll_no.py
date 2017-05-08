@@ -26,7 +26,7 @@ class AssignRollNo(models.TransientModel):
                 ('medium_id', '=', student_data.medium_id.id),
                 ('division_id', '=', student_data.division_id.id)],
                                                     order="name")
-        # Assign roll no.
+        # Assign roll no according to name.
         number = 1
         for student in search_student_ids:
             number += 1

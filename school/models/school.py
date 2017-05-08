@@ -59,9 +59,11 @@ class AcademicYear(models.Model):
         for rec_academic in obj_academic_ids:
             academic_list.append(rec_academic.id)
         for current_academic_yr in self:
+            # remove current academic year
             academic_list.remove(current_academic_yr.id)
             data_academic_yr = self.browse(academic_list)
             for old_ac in data_academic_yr:
+                # Check start date should be less than stop date
                 if old_ac.date_start <= self.date_start <= old_ac.date_stop\
                    or old_ac.date_start <= self.date_stop <= old_ac.date_stop:
                         raise UserError(_('Error! You cannot define\
@@ -198,7 +200,7 @@ class SchoolStandard(models.Model):
                                   'Student In Class',
                                   compute='_compute_student')
     color = fields.Integer('Color Index')
-    passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
+#    passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
 
@@ -311,6 +313,7 @@ class StudentStudent(models.Model):
             start = datetime.strptime(self.date_of_birth,
                                       DEFAULT_SERVER_DATE_FORMAT)
             age_calc = ((current_dt - start).days / 365)
+            # Check if age less than 5 years
             if age_calc < 5:
                 raise ValidationError(_('Age should be greater than 5 years.'))
 
@@ -698,7 +701,9 @@ class HrEmployee(models.Model):
             particular teacher.'''
         subject_obj = self.env['subject.subject']
         for rec in self:
+            # Search the subject assign to teacher
             subject_ids = subject_obj.search([('teacher_ids', '=', rec.id)])
+            # append the subjects
             rec.subject_ids = [sub_rec.id for sub_rec in subject_ids]
 #            for sub_rec in subject_ids:
 #                sub_list.append(sub_rec.id)
@@ -721,12 +726,13 @@ class HrEmployee(models.Model):
                          'company_id': school.company_id.id,
                          'company_ids': [(4, school.company_id.id)]
                          }
+            # Create user
             user = self.env['res.users'].create(user_vals)
             if user and user.partner_id:
                 user.partner_id.write({
                                        'email': vals.get('work_email', False)
                                        })
-            # Assign group to teacher
+            # Assign group of teacher to user created
             if res and user:
                 res.write({'address_home_id': user.partner_id.id,
                            'user_id': user and user.id or False})
@@ -780,6 +786,7 @@ class ResPartner(models.Model):
     def create(self, vals):
         '''Method creates parents assign group parents'''
         res = super(ResPartner, self).create(vals)
+        # Create user
         if res and vals.get('parent_school'):
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('email', False),
@@ -787,7 +794,7 @@ class ResPartner(models.Model):
                          'partner_id': res.id
                         }
             user = self.env['res.users'].create(user_vals)
-            # Assign group to parents
+            # Assign group of parents to user created
             emp_grp = self.env.ref('base.group_user')
             parent_group = self.env.ref('school.group_school_parent')
             new_grp_list = [emp_grp.id, parent_group.id]
@@ -926,7 +933,7 @@ class StudentNews(models.Model):
                 if not email_list:
                     raise except_orm(_('User Email Configuration '),
                                      _("Email not found in users !"))
-            # Check email is defined in employee
+            # Check email is defined in user created from employee
             else:
                 for employee in emp_obj.search([]):
                     if employee.work_email:
@@ -945,10 +952,12 @@ class StudentNews(models.Model):
                                    t.strftime('%d-%m-%Y %H:%M:%S'),
                                    news.description or '')
             smtp_user = mail_server_record.smtp_user or False
+            # Check if mail of outgoing server configured
             if not smtp_user:
                 raise except_orm(_('Email Configuration '),
                     _("Kindly,Configure the Outgoing Mail Server!"))
             notification = 'Notification for news update.'
+            # Configure the email
             message = obj_mail_server.build_email(email_from=smtp_user,
                                                   email_to=email_list,
                                                   subject=notification,
@@ -966,7 +975,7 @@ class StudentReminder(models.Model):
 
     @api.model
     def check_user(self):
-        '''Method to get default value of user'''
+        '''Method to get default value of logged in user'''
         student = self.env['student.student'].search([('user_id', '=',
                                             self._uid)])
         return student.id
