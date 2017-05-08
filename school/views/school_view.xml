@@ -896,6 +896,24 @@
                                     </field>
                                 </group>
                             </page>
+                            <page string="Syllabus">
+                                <group>
+                                    <field name="syllabus_ids" nolabel="1" colspan="4" context="{'default_standard_id':standard_id}">
+                                        <tree editable="top" string="Syllabs">
+                                            <field name="standard_id"/>
+                                            <field name="subject_id" required="1" domain="[('standard_ids','in',standard_id)]"/>
+                                            <field name="syllabus_doc" required="1"/>
+                                        </tree>
+                                        <form string="Syllabus">
+                                            <group>
+                                                <field name="subject_id" required="1"/>
+                                                <field name="syllabus_doc" required="1"/>
+                                            </group>
+                                            
+                                        </form>
+                                    </field>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
