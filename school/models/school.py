@@ -177,16 +177,16 @@ class SchoolStandard(models.Model):
             if rec.standard_id:
                 rec.student_ids = self.env['student.student'].search(domain)
 
-    @api.multi
-    def import_subject(self):
-        '''Method to import subject'''
-        for im_ob in self:
-            domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
-            import_sub_ids = self.search(domain)
-            val = [last.id for sub in import_sub_ids
-                   for last in sub.subject_ids]
-            self.write({'subject_ids': [(6, 0, val)]})
-        return True
+#    @api.multi
+#    def import_subject(self):
+#        '''Method to import subject'''
+#        for im_ob in self:
+#            domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
+#            import_sub_ids = self.search(domain)
+#            val = [last.id for sub in import_sub_ids
+#                   for last in sub.subject_ids]
+#            self.write({'subject_ids': [(6, 0, val)]})
+#        return True
 
     school_id = fields.Many2one('school.school', 'School', required=True)
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
