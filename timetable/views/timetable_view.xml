@@ -29,14 +29,13 @@
                                     <form string="TimeTable">
                                         <group col="4" colspan="4">
                                             <field name="week_day"/>
-                                            <field name="subject_id" attrs="{'invisible':[('is_break','=',True)]}"
+                                            <field name="subject_id"
                                                    placeholder="Create Or Select Subject"/>
                                             <field name="start_time"/>
                                             <field name="end_time"/>
-                                            <field name="teacher_id" domain="[('is_school_teacher','=',True)]" context="{'subject_id':subject_id,'default_is_school_teacher':1}"
-                                                   attrs="{'invisible':[('is_break','=',True)]}"
-                                                   placeholder="Create Or Select Supervisior" />
-                                            <field name="is_break" on_change="onchange_recess(is_break)"/>
+                                            <field name="teacher_id" context="{'subject_id':subject_id}"
+                                                   placeholder="Select Supervisior" widget="selection"/>
+<!--                                             <field name="is_break" on_change="onchange_recess(is_break)"/> -->
                                         </group>
                                     </form>
                                 </field>

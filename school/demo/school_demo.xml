@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!--  School Information -->
         <record id="demo_school_1" model="school.school">
             <field name="name">West High School</field>
@@ -207,31 +207,38 @@
             <field name="name">Mathematics</field>
             <field name="code">MAT</field>
             <field name="maximum_marks">100</field>
+            <field name="teacher_ids" eval="[(6,0,[ref('hr.employee_fme'),ref('hr.employee_stw')])]"/>
         </record>
         <record id="demo_subject_subject_2" model="subject.subject">
             <field name="name">Science</field>
             <field name="code">SCN</field>
             <field name="maximum_marks">100</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fme'),ref('hr.employee_al')])]"/>
         </record>
         <record id="demo_subject_subject_3" model="subject.subject">
             <field name="name">English</field>
             <field name="code">ENG</field>
             <field name="maximum_marks">100</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp')])]"/>
         </record>
         <record id="demo_subject_subject_4" model="subject.subject">
             <field name="name">Social Science</field>
             <field name="code">SOS</field>
             <field name="maximum_marks">100</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_mit'),ref('hr.employee_chs'),ref('hr.employee_fpi')])]"/>
+            
         </record>
         <record id="demo_subject_subject_5" model="subject.subject">
             <field name="name">Computer</field>
             <field name="code">CMP</field>
             <field name="maximum_marks">100</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_stw'),ref('hr.employee_al')])]"/>
         </record>
         <record id="demo_subject_subject_6" model="subject.subject">
             <field name="name">Sport</field>
             <field name="code">PET</field>
             <field name="maximum_marks">100</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
         </record>
         <!--  Subject elective -->
         <record id="demo_elective_subject_1" model="subject.elective">
@@ -370,6 +377,19 @@
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
+        <!-- Demo Data for teacher -->
+<!--         <record id="school_teacher_1" model="hr.employee"> -->
+<!--             <field name="is_school_teacher" eval="True"/> -->
+<!--             <field name="name">Martin Parker</field> -->
+<!--             <field name="school" ref="school.demo_school_1"/> -->
+<!--             <field name="work_email">Teacher1</field> -->
+<!--         </record> -->
+<!--         <record id="school_teacher_2" model="hr.employee"> -->
+<!--             <field name="is_school_teacher" eval="True"/> -->
+<!--             <field name="name">John Mathews</field> -->
+            
+<!--         </record> -->
+            
         <!-- Student cast -->
         <record id="demo_student_cast_1" model="student.cast">
             <field name="name">Hindu</field>

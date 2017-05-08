@@ -1,0 +1,5 @@
+08 May 2017 : Arpit Joshi
+             * View level changes
+             * Add constraint time should not be greater than 24 hours
+             * Add constraint same lecture not on same day and time.
+             * Add constraint add lecturer to the subject which is not related to him/her.
