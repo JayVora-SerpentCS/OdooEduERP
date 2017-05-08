@@ -3,7 +3,7 @@
 
 {
     'name': 'Timetable Management',
-    'version': '10.0.1.0.0',
+    'version': '10.0.1.0.1',
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
@@ -16,7 +16,7 @@
              'views/timetable_view.xml',
              'views/report_view.xml',
              'views/timetable.xml'],
-#    'demo': ['demo/timetable_demo.xml'],
+    'demo': ['demo/timetable_demo.xml'],
     'test': ['test/timetable.yml'],
     'installable': True,
     'application': True

@@ -3,6 +3,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from odoo.exceptions import ValidationError
 
 
 class BoardBoard(models.AbstractModel):
@@ -33,6 +34,10 @@ class TimeTable(models.Model):
             if len(records) > 1:
                 raise UserError(_("You can Not set lecture at same time\
                                  at same day..!!!"))
+            if rec.start_time > 24:
+                raise UserError(_('Start Time should be less than 24 hours'))
+            if rec.end_time > 24:
+                raise UserError(_('End Time should be less than 24 hours'))
         return True
 
 
@@ -41,23 +46,30 @@ class TimeTableLine(models.Model):
     _name = 'time.table.line'
     _rec_name = 'table_id'
 
-    @api.multi
-    def onchange_recess(self, recess):
-        recess = {}
-        domain = [('name', 'like', 'Recess')]
-        sub_id = self.env['subject.subject'].search(domain)
-        if not sub_id:
-            raise UserError(_("You must have a 'Recess' as a subject"))
-        recess.update({'value': {'subject_id': sub_id.id}})
-        return recess
+#    @api.multi
+#    def onchange_recess(self, recess):
+#        recess = {}
+#        domain = [('name', 'like', 'Recess')]
+#        sub_id = self.env['subject.subject'].search(domain)
+#        if not sub_id:
+#            raise UserError(_("You must have a 'Recess' as a subject"))
+#        recess.update({'value': {'subject_id': sub_id.id}})
+#        return recess
+#    @api.multi
+    @api.constrains('teacher_id')
+    def check_teacher(self):
+        if self.teacher_id.id not in self.subject_id.teacher_ids.ids:
+            raise UserError(_('This subject not assigned to the teacher'))
 
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
                                  required=True)
     table_id = fields.Many2one('time.table', 'TimeTable')
-    start_time = fields.Float('Start Time', required=True)
-    end_time = fields.Float('End Time', required=True)
-    is_break = fields.Boolean('Is Break')
+    start_time = fields.Float('Start Time', required=True,
+                              help="Time according to timeformat of 24 hours")
+    end_time = fields.Float('End Time', required=True,
+                            help="Time according to timeformat of 24 hours")
+#    is_break = fields.Boolean('Is Break')
     week_day = fields.Selection([('monday', 'Monday'),
                                  ('tuesday', 'Tuesday'),
                                  ('wednesday', 'Wednesday'),
