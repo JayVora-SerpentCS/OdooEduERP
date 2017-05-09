@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-#from odoo import models, fields, api, _
-#from odoo.exceptions import except_orm
+# from odoo import models, fields, api, _
+# from odoo.exceptions import except_orm
 #
 #
-#class StudentMeeting(models.TransientModel):
+# class StudentMeeting(models.TransientModel):
 #    _name = "student.meeting"
 #
 #    name = fields.Char('Meeting Subject', size=128, required=True)

@@ -12,9 +12,9 @@ class MailTemplate(models.Model):
         '''Method to genrate email'''
         ret = super(MailTemplate, self).generate_email(res_ids, fields=fields)
 
-        if self._context.get('body_html', False)\
-                or self._context.get('subject', False)\
-                or self._context.get('email_to', False):
+        if (self._context.get('body_html', False) or
+                self._context.get('subject', False) or
+                self._context.get('email_to', False)):
             ret['body_html'] = self._context['body_text']
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']
@@ -34,8 +34,9 @@ class SendMail(models.TransientModel):
         body = ''
         email_template_obj = self.env['mail.template']
         # search the model student.student
-        domain = [('model', '=', 'student.student')]
-        template_id = email_template_obj.search(domain, limit=1)
+        template_id = email_template_obj.search([('model', '=',
+                                                  'student.student')],
+                                                limit=1)
         if template_id:
             for i in self:
                 body += '\n' + i.note

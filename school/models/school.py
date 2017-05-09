@@ -6,14 +6,15 @@ from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, image_colorize, \
-    image_resize_image_big
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import except_orm, Warning as UserError
 from openerp.exceptions import ValidationError
 
-
-class BoardBoard(models.AbstractModel):
-    _name = "board.board"
+try:
+    from odoo.tools import image_colorize, image_resize_image_big
+except:
+    image_colorize = False
+    image_resize_image_big = False
 
 
 class AcademicYear(models.Model):
@@ -40,8 +41,8 @@ class AcademicYear(models.Model):
     @api.model
     def next_year(self, sequence):
         '''This method assign sequence to years'''
-        year_ids = self.search([('sequence', '>', sequence)],
-                               order='id ASC', limit=1)
+        year_ids = self.search([('sequence', '>', sequence)], order='id',
+                               limit=1)
         if year_ids:
             return year_ids.id
         return False
@@ -54,28 +55,25 @@ class AcademicYear(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
         '''Method to check start date should be greater than end date'''
-        obj_academic_ids = self.search([])
-        academic_list = []
-        for rec_academic in obj_academic_ids:
-            academic_list.append(rec_academic.id)
-        for current_academic_yr in self:
+        academic_list = [rec_academic.id for rec_academic in self.search([])]
+        for rec in self:
             # remove current academic year
-            academic_list.remove(current_academic_yr.id)
-            data_academic_yr = self.browse(academic_list)
-            for old_ac in data_academic_yr:
-                # Check start date should be less than stop date
-                if old_ac.date_start <= self.date_start <= old_ac.date_stop\
-                   or old_ac.date_start <= self.date_stop <= old_ac.date_stop:
-                        raise UserError(_('Error! You cannot define\
-                                         overlapping academic years.'))
+            academic_list.remove(rec.id)
+        data_academic_yr = self.browse(academic_list)
+        for old_ac in data_academic_yr:
+            # Check start date should be less than stop date
+            if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
+                old_ac.date_start <= self.date_stop <= old_ac.date_stop):
+                    raise UserError(_('''Error! You cannot define overlapping
+                                        academic years.'''))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         '''Method to check duration'''
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise UserError(_('Error! The duration of the academic year\
-                             is invalid.'))
+            raise UserError(_('''Error! The duration of the academic year
+                                is invalid.'''))
 
 
 class AcademicMonth(models.Model):
@@ -97,22 +95,22 @@ class AcademicMonth(models.Model):
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         '''Method to check duration of date'''
-        if (self.date_stop and self.date_start and self.date_stop <
-                self.date_start):
+        if (self.date_stop and self.date_start and
+            self.date_stop < self.date_start):
             raise UserError(_('''Error ! The duration of the Month(s)
-                             is/are invalid.'''))
+                                 is/are invalid.'''))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         '''Method to check year limit'''
         if self.year_id and self.date_start and self.date_stop:
             if (self.year_id.date_stop < self.date_stop or
-                    self.year_id.date_stop < self.date_start or
-                    self.year_id.date_start > self.date_start or
-                    self.year_id.date_start > self.date_stop):
-                raise UserError(_('''Invalid Months ! Some months overlap or
-                                   the date period is not in the scope of the
-                                   academic year.'''))
+                self.year_id.date_stop < self.date_start or
+                self.year_id.date_start > self.date_start or
+                self.year_id.date_start > self.date_stop):
+                    raise UserError(_('''Invalid Months ! Some months overlap
+                                        or the date period is not in the scope
+                                        of the academic year.'''))
 
 
 class StandardMedium(models.Model):
@@ -153,8 +151,8 @@ class StandardStandard(models.Model):
     @api.model
     def next_standard(self, sequence):
         '''This method check sequence of standard'''
-        stand_ids = self.search([('sequence', '>', sequence)],
-                                order='id ASC', limit=1)
+        stand_ids = self.search([('sequence', '>', sequence)], order='id',
+                                limit=1)
         if stand_ids:
             return stand_ids.id
         return False
@@ -170,12 +168,13 @@ class SchoolStandard(models.Model):
     @api.depends('standard_id')
     def _compute_student(self):
         '''Compute student of done state'''
+        student_obj = self.env['student.student']
         for rec in self:
             rec.student_ids = False
-            domain = [('standard_id', '=', rec.standard_id.id),
-                      ('state', '=', 'done')]
             if rec.standard_id:
-                rec.student_ids = self.env['student.student'].search(domain)
+                rec.student_ids = student_obj.search([('standard_id', '=',
+                                                       rec.standard_id.id),
+                                                      ('state', '=', 'done')])
 
 #    @api.multi
 #    def import_subject(self):
@@ -217,8 +216,8 @@ class SchoolStandard(models.Model):
     @api.multi
     def name_get(self):
         '''Method to display standard and division'''
-        return [(rec.id, rec.standard_id.name +
-                 '[' + rec.division_id.name + ']') for rec in self]
+        return [(rec.id, rec.standard_id.name + '[' + rec.division_id.name +
+                 ']') for rec in self]
 
 
 class SchoolSchool(models.Model):
@@ -242,10 +241,10 @@ class SchoolSchool(models.Model):
     standards = fields.One2many('school.standard', 'school_id',
                                 'Standards')
     lang = fields.Selection(_lang_get, 'Language',
-                            help='If the selected language is loaded\
-                            in the system, all documents related to this\
-                            partner will be printed in this language.\
-                            If not, it will be English.')
+                            help='''If the selected language is loaded in the
+                                system, all documents related to this partner
+                                will be printed in this language.
+                                If not, it will be English.''')
 
 
 class SubjectSubject(models.Model):
@@ -283,7 +282,7 @@ class SubjectSyllabus(models.Model):
     standard_id = fields.Many2one('standard.standard', 'Standard')
     subject_id = fields.Many2one('subject.subject', 'Subject')
     syllabus_doc = fields.Binary("Syllabus Doc",
-                                 help="attache the syllabus pdf file")
+                                 help="Attach syllabus related to Subject")
 
 
 class SubjectElective(models.Model):
@@ -335,34 +334,36 @@ class StudentStudent(models.Model):
             vals['password'] = vals['pid']
         else:
             raise except_orm(_('Error!'),
-                             _('PID not valid'
-                               'so record will not be saved.'))
+                             _('''PID not valid
+                                 so record will not be saved.'''))
         if vals.get('cmp_id', False):
             h = {'company_ids': [(4, vals.get('cmp_id'))],
                  'company_id': vals.get('cmp_id')}
             vals.update(h)
         res = super(StudentStudent, self).create(vals)
         # Assign group to student based on condition
+        emp_grp = self.env.ref('base.group_user')
         if res.state == 'draft':
             admission_group = self.env.ref('school.group_is_admission')
-            emp_grp = self.env.ref('base.group_user')
             new_grp_list = [admission_group.id, emp_grp.id]
             res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
         elif res.state == 'done':
             done_student = self.env.ref('school.group_school_student')
-            employee_grp = self.env.ref('base.group_user')
-            group_list = [done_student.id, employee_grp.id]
+            group_list = [done_student.id, emp_grp.id]
             res.user_id.write({'groups_id': [(6, 0, group_list)]})
         return res
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
         '''Method to get default Image'''
-        img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
-        with open(img_path, 'rb') as f:
-            image = f.read()
-        image = image_colorize(image)
-        return image_resize_image_big(image.encode('base64'))
+        try:
+            img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
+            with open(img_path, 'rb') as f:
+                image = f.read()
+            image = image_colorize(image)
+            return image_resize_image_big(image.encode('base64'))
+        except:
+            return False
 
     family_con_ids = fields.One2many('student.family.contact',
                                      'family_contact_id',
@@ -413,11 +414,11 @@ class StudentStudent(models.Model):
                                           'Previous School Detail',
                                           states={'done': [('readonly',
                                                             True)]})
-    family_con_icmp_idds = fields.One2many(
-        'student.family.contact',
-        'family_contact_id',
-        'Family Contact Detail',
-        states={'done': [('readonly', True)]})
+    family_con_icmp_idds = fields.One2many('student.family.contact',
+                                           'family_contact_id',
+                                           'Family Contact Detail',
+                                           states={'done': [('readonly', True)
+                                                            ]})
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
@@ -499,11 +500,6 @@ class StudentStudent(models.Model):
         self.state = 'alumni'
         return True
 
-#    @api.multi
-#    def set_terminate(self):
-#        self.state = 'terminate'
-#        return True
-
     @api.multi
     def set_done(self):
         '''Method to change state to done'''
@@ -520,40 +516,39 @@ class StudentStudent(models.Model):
     def admission_done(self):
         '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
-        for student_data in self:
+        for rec in self:
             # Assign group to student
             student_group = self.env.ref('school.group_school_student')
             emp_group = self.env.ref('base.group_user')
-            new_list = [emp_group.id, student_group.id]
-            student_data.user_id.write({'groups_id': [(6, 0, new_list)]})
-            if student_data.age <= 5:
+            rec.user_id.write({'groups_id': [(6, 0,
+                                              [emp_group.id, student_group.id]
+                                              )]})
+            if rec.age <= 5:
                 raise except_orm(_('Warning'),
-                                 _('The student is not eligible.'
-                                   'Age is not valid.'))
-            domain = [('standard_id', '=', student_data.standard_id.id)]
-            school_standard_search_ids = school_standard_obj.search(domain)
+                                 _('''The student is not eligible.
+                                   Age is not valid.'''))
+            domain = [('standard_id', '=', rec.standard_id.id)]
             # Checks the standard if not defined raise error
-            if not school_standard_search_ids:
+            if not school_standard_obj.search(domain):
                 raise except_orm(_('Warning'),
-                                 _('''The standard is not defined
-                                   in a school'''))
+                                 _('''The standard is not defined in a
+                                     school'''))
             # Assign roll no to student
-            student_search_ids = self.search(domain)
             number = 1
-            for rec in student_search_ids:
-                number += 1
+            for rec in self.search(domain):
                 rec.roll_no = number
+                number += 1
             # Assign registration code to student
-            reg_code = self.env['ir.sequence'].\
-                next_by_code('student.registration')
-            registation_code = str(student_data.school_id.state_id.name)\
-                + str('/') + str(student_data.school_id.city)\
-                + str('/')\
-                + str(student_data.school_id.name) + str('/')\
-                + str(reg_code)
+            reg_code = self.env['ir.sequence'
+                                ].next_by_code('student.registration')
+            registation_code = (str(rec.school_id.state_id.name) + str('/') +
+                                str(rec.school_id.city) + str('/') +
+                                str(rec.school_id.name) + str('/') +
+                                str(reg_code))
             stu_code = self.env['ir.sequence'].next_by_code('student.code')
-            student_code = str(student_data.school_id.code) + str('/')\
-                + str(student_data.year.code) + str('/') + str(stu_code)
+            student_code = (str(rec.school_id.code) + str('/') +
+                            str(rec.year.code) + str('/') +
+                            str(stu_code))
         self.write({'state': 'done',
                     'admission_date': time.strftime('%Y-%m-%d'),
                     'student_code': student_code,
@@ -613,12 +608,14 @@ class StudentStudent(models.Model):
 
 class MotherTongue(models.Model):
     _name = 'mother.toungue'
+    _description = "Mother Toungue"
 
     name = fields.Char("Mother Tongue")
 
 
 class StudentAward(models.Model):
     _name = 'student.award'
+    _description = "Student Awards"
 
     award_list_id = fields.Many2one('student.student', 'Student')
     name = fields.Char('Award Name')
@@ -707,16 +704,16 @@ class HrEmployee(models.Model):
 
     @api.multi
     def _compute_subject(self):
-        ''' This function will automatically computes the subjects related to\
+        ''' This function will automatically computes the subjects related to
             particular teacher.'''
         subject_obj = self.env['subject.subject']
         for rec in self:
             # Search the subject assign to teacher
             subject_ids = subject_obj.search([('teacher_ids', '=', rec.id)])
             # append the subjects
-            rec.subject_ids = [sub_rec.id for sub_rec in subject_ids]
-#            for sub_rec in subject_ids:
-#                sub_list.append(sub_rec.id)
+            rec.subject_ids = False
+            if subject_ids:
+                rec.subject_ids = [sub_rec.id for sub_rec in subject_ids]
 
     is_school_teacher = fields.Boolean('School Teacher')
     school = fields.Many2one('school.school', 'School')
@@ -739,17 +736,16 @@ class HrEmployee(models.Model):
             # Create user
             user = self.env['res.users'].create(user_vals)
             if user and user.partner_id:
-                user.partner_id.write({
-                                       'email': vals.get('work_email', False)
-                                       })
+                user.partner_id.write({'email': vals.get('work_email', False)}
+                                      )
             # Assign group of teacher to user created
             if res and user:
                 res.write({'address_home_id': user.partner_id.id,
                            'user_id': user and user.id or False})
                 teacher_group = self.env.ref('school.group_school_teacher')
                 emp_group = self.env.ref('base.group_user')
-                new_list = [emp_group.id, teacher_group.id]
-                user.write({'groups_id': [(6, 0, new_list)]})
+                user.write({'groups_id': [(6, 0, [emp_group.id,
+                                                  teacher_group.id])]})
         return res
 
     @api.multi
@@ -759,16 +755,14 @@ class HrEmployee(models.Model):
         # Assign email
         if res and vals.get('work_email'):
             if self.user_id:
-                self.user_id.write({'login': vals.get('work_email'),
-                                    })
+                self.user_id.write({'login': vals.get('work_email')})
             if self.user_id and self.user_id.partner_id:
                 self.user_id.partner_id.write({'email': vals.get('work_email')
                                                })
         # Assign name
         if res and vals.get('name'):
             if self.user_id:
-                self.user_id.write({'name': vals.get('name'),
-                                    })
+                self.user_id.write({'name': vals.get('name')})
             if self.user_id and self.user_id.partner_id:
                 self.user_id.partner_id.write({'name': vals.get('name')
                                                })
@@ -776,9 +770,9 @@ class HrEmployee(models.Model):
         if vals.get('school'):
             school = self.env['school.school'].browse(vals.get('school'))
             if school and school.company_id:
-                self.user_id.write({
-                                'company_ids': [(4, school.company_id.id)],
-                                'company_id': school.company_id.id})
+                self.user_id.write({'company_ids': [(4, school.company_id.id)
+                                                    ],
+                                    'company_id': school.company_id.id})
         return res
 
 
@@ -797,7 +791,7 @@ class ResPartner(models.Model):
         '''Method creates parents assign group parents'''
         res = super(ResPartner, self).create(vals)
         # Create user
-        if res and vals.get('parent_school'):
+        if res and res.parent_school:
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('email', False),
                          'password': vals.get('email', False),
@@ -807,9 +801,9 @@ class ResPartner(models.Model):
             # Assign group of parents to user created
             emp_grp = self.env.ref('base.group_user')
             parent_group = self.env.ref('school.group_school_parent')
-            new_grp_list = [emp_grp.id, parent_group.id]
             if user:
-                user.write({'groups_id': [(6, 0, new_grp_list)]})
+                user.write({'groups_id': [(6, 0, [emp_grp.id, parent_group.id]
+                                           )]})
         return res
 
 
@@ -931,17 +925,17 @@ class StudentNews(models.Model):
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'),
-                             _('No mail outgoing mail server'
-                               'specified!'))
+                             _('''No mail outgoing mail server
+                               specified!'''))
         mail_server_record = mail_server_ids[0]
         email_list = []
         # Check email is defined in student
         for news in self:
             if news.user_ids and news.date:
-                email_list = [
-                        user.email for user in news.user_ids if user.email]
+                email_list = [user.email for user in news.user_ids
+                              if user.email]
                 if not email_list:
-                    raise except_orm(_('User Email Configuration '),
+                    raise except_orm(_('User Email Configuration!'),
                                      _("Email not found in users !"))
             # Check email is defined in user created from employee
             else:
@@ -951,23 +945,25 @@ class StudentNews(models.Model):
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise except_orm(_('Mail Error'), _("Email not defined!"))
-            t = datetime.strptime(news.date, '%Y-%m-%d %H:%M:%S')
+                    raise except_orm(_('Email Configuration!'),
+                                     _("Email not defined!"))
+            news_date = datetime.strptime(news.date,
+                                          DEFAULT_SERVER_DATETIME_FORMAT)
             # Add company name while sending email
             company = user.company_id.name or ''
             body = """Hi,<br/><br/>
                     This is a news update from <b>%s</b> posted at %s<br/>
                     <br/> %s <br/><br/>
                     Thank you.""" % (company,
-                                   t.strftime('%d-%m-%Y %H:%M:%S'),
-                                   news.description or '')
+                                     news_date.strftime('%d-%m-%Y %H:%M:%S'),
+                                     news.description or '')
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
                 raise except_orm(_('Email Configuration '),
-                    _("Kindly,Configure the Outgoing Mail Server!"))
+                                 _("Kindly,Configure Outgoing Mail Server!"))
             notification = 'Notification for news update.'
-            # Configure the email
+            # Configure email
             message = obj_mail_server.build_email(email_from=smtp_user,
                                                   email_to=email_list,
                                                   subject=notification,
@@ -975,6 +971,7 @@ class StudentNews(models.Model):
                                                   body_alternative=body,
                                                   reply_to=smtp_user,
                                                   subtype='html')
+            # Send Email configured above with help of send mail method
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
         return True
@@ -987,7 +984,7 @@ class StudentReminder(models.Model):
     def check_user(self):
         '''Method to get default value of logged in user'''
         student = self.env['student.student'].search([('user_id', '=',
-                                            self._uid)])
+                                                       self._uid)])
         return student.id
 
     stu_id = fields.Many2one('student.student', 'Student Name', required=True,
