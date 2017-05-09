@@ -39,10 +39,11 @@ class TimeTable(models.Model):
                            rec.end_time == rec_check.end_time and
                            rec.teacher_id.id == rec.teacher_id.id)]
             if len(records) > 1:
-                raise ValidationError(_('''You can Not set lecture at same time
-                %s  at same day %s of teacher %s..!!!''')
-                                % (rec.start_time, rec.week_day,
-                                   rec.teacher_id.name))
+                raise ValidationError(_('''You can Not set lecture at same
+                                        time %s  at same day %s of teacher
+                                        %s..!!!''') % (rec.start_time,
+                                                       rec.week_day,
+                                                       rec.teacher_id.name))
             # Checks if time is greater than 24 hours than raise error
             if rec.start_time > 24:
                 raise UserError(_('Start Time should be less than 24 hours'))
