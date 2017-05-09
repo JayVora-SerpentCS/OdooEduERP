@@ -45,8 +45,7 @@ class MoveStandards(models.TransientModel):
                     if next_class_id:
                         student_id = student_obj.browse(student.id)
                         d_one = {'year': data.academic_year_id.id,
-                                'standard_id': next_class_id
-                                 }
+                                 'standard_id': next_class_id}
                         # Move student to next standard
                         student_id.write(d_one)
                         std_id_id = standards.standard_id.id
@@ -102,8 +101,8 @@ class MoveStandards(models.TransientModel):
 #                            if result_data.result == "Pass":
 #                                next_class_id = standard_obj.next_standard(a)
 #                                if next_class_id:
-#                                    student_id = student_obj.browse(student.id)
-#                                    d_one = {'year': data.academic_year_id.id,
+#                                  student_id = student_obj.browse(student.id)
+#                                   d_one = {'year': data.academic_year_id.id,
 #                                             'standard_id': next_class_id}
 #                                    student_id.write(d_one)
 #                                    std_id_id = standards.standard_id.id
