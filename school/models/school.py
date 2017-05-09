@@ -173,12 +173,12 @@ class SchoolStandard(models.Model):
         for rec in self:
             rec.student_ids = False
             if rec.standard_id:
-                rec.student_ids = student_obj.search(
-                            [('standard_id', '=', rec.id),
-                             ('school_id', '=', rec.school_id.id),
-                             ('division_id', '=', rec.division_id.id),
-                             ('medium_id', '=', rec.medium_id.id),
-                            ('state', '=', 'done')])
+                domain = [('standard_id', '=', rec.id),
+                          ('school_id', '=', rec.school_id.id),
+                          ('division_id', '=', rec.division_id.id),
+                          ('medium_id', '=', rec.medium_id.id),
+                          ('state', '=', 'done')]
+                rec.student_ids = student_obj.search(domain)
 
 #    @api.multi
 #    def import_subject(self):
