@@ -5,7 +5,8 @@
              * Add constraint add lecturer to the subject which is not related to him/her.
              * Imp constraints
 
-1.0.2 --> :  09/05/2017      Arpit Joshi
+1.0.2 -->  09/05/2017      Arpit Joshi
               * View level changes
               * Improve in demo data
+              * Add unique constraint of year and standard
               

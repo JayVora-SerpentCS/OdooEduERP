@@ -95,7 +95,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
         </record>
         <record id="time_table_line_8" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_chs"/>
+            <field name="teacher_id" ref="school.demo_student_student_6"/>
             <field eval="11.0" name="start_time"/>
             <field name="week_day">tuesday</field>
             <field name="table_id" ref="time_table_firsts0"/>

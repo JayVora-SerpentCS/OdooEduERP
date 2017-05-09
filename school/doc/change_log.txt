@@ -11,16 +11,16 @@
     * Added improvements in code as per travis coding standands.
     * Optimised Code.
 
-1.0.9 --> 08/05/2017
+1.0.9 --> 08/05/2017 Arpit Joshi
     * Added comments to methods
     * Change sequence in grade
 
-1.0.8 --> 06/05/2017
+1.0.8 --> 06/05/2017 Arpit Joshi
     * Added doc strings
     * Added comment in method
     * removed code of meeting in wizard
 
-1.0.7 --> 05/05/2017
+1.0.7 --> 05/05/2017 Arpit Joshi
     * View Improvements
     * Improve code in wizard
     * Remove delete opition in student profile and terminate/alumni menu.
