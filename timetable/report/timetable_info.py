@@ -37,11 +37,8 @@ class ReportTimetableInfo(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         docs = self.env['time.table'].browse(docids)
-        docargs = {
-            'doc_ids': docids,
-            'doc_model': self.env['time.table'],
-#            'data': data,
-            'docs': docs,
-            'get_timetable': self._get_timetable,
-        }
+        docargs = {'doc_ids': docids,
+                   'doc_model': self.env['time.table'],
+                   'docs': docs,
+                   'get_timetable': self._get_timetable}
         return self.env['report'].render('timetable.timetable', docargs)

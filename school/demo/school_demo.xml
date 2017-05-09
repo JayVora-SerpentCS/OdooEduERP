@@ -219,7 +219,7 @@
             <field name="name">English</field>
             <field name="code">ENG</field>
             <field name="maximum_marks">100</field>
-            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp')])]"/>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp')]), ref('hr.employee_jep')]"/>
         </record>
         <record id="demo_subject_subject_4" model="subject.subject">
             <field name="name">Social Science</field>
