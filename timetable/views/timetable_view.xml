@@ -23,7 +23,7 @@
                                         <field name="subject_id" widget="selection"/>
                                         <field name="start_time"/>
                                         <field name="end_time"/>
-                                        <field name="teacher_id" widget="selection"/>
+                                        <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]"/>
                                         
                                     </tree>
                                     <form string="TimeTable">
