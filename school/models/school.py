@@ -266,8 +266,8 @@ class SubjectSubject(models.Model):
     standard_id = fields.Many2one('standard.standard', 'Class')
     is_practical = fields.Boolean('Is Practical',
                                   help='Check this if subject is practical.')
-    no_exam = fields.Boolean("No Exam",
-                             help='Check this if subject has no exam.')
+#    no_exam = fields.Boolean("No Exam",
+#                             help='Check this if subject has no exam.')
     elective_id = fields.Many2one('subject.elective')
     student_ids = fields.Many2many('student.student',
                                    'elective_subject_student_rel',
