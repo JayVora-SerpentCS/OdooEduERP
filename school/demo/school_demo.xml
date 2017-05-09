@@ -207,13 +207,13 @@
             <field name="name">Mathematics</field>
             <field name="code">MAT</field>
             <field name="maximum_marks">100</field>
-            <field name="teacher_ids" eval="[(6,0,[ref('hr.employee_fme'),ref('hr.employee_stw')])]"/>
+            <field name="teacher_ids" eval="[(6,0,[ref('hr.employee_fme'),ref('hr.employee_stw'),ref('hr.employee_chs')])]"/>
         </record>
         <record id="demo_subject_subject_2" model="subject.subject">
             <field name="name">Science</field>
             <field name="code">SCN</field>
             <field name="maximum_marks">100</field>
-            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fme'),ref('hr.employee_al')])]"/>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fme'),ref('hr.employee_al'),ref('hr.employee_fpi')])]"/>
         </record>
         <record id="demo_subject_subject_3" model="subject.subject">
             <field name="name">English</field>
@@ -225,8 +225,7 @@
             <field name="name">Social Science</field>
             <field name="code">SOS</field>
             <field name="maximum_marks">100</field>
-            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_mit'),ref('hr.employee_chs'),ref('hr.employee_fpi')])]"/>
-            
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_mit'),ref('hr.employee_chs'),ref('hr.employee_fpi'),ref('hr.employee_stw')])]"/>
         </record>
         <record id="demo_subject_subject_5" model="subject.subject">
             <field name="name">Computer</field>
