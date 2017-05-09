@@ -19,15 +19,17 @@
                </form>
             </field>
         </record>
+        
+        <!-- Action Of Form & Tree Views Of Move Standards -->
+        <record id="action_move_standards_form" model="ir.actions.act_window">
+            <field name="name">Move Standards</field>
+            <field name="res_model">move.standards</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_move_standards_form" />
+        </record>
 
-        <!-- Action of Wizard Assigning roll no -->
-        <act_window id="action_move_standards_form"
-            key2="client_action_multi"
-            name="Move Standards"
-            res_model="move.standards"
-            src_model="school.standard"
-            view_mode="form"
-            target="new"
-            view_type="form"/>
+        <!-- MenuItem For Configurations->Move Standards -->
+        <menuitem id="menu_move_standards_form" name="Move Standards" parent="menu_configuration" action="action_move_standards_form" />
 
 </odoo>

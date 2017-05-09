@@ -45,9 +45,9 @@
                                 <field name="school_id" placeholder="School" widget="selection" help="School of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                             <group string="Standard Information">
-                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="standard_id" placeholder="Standard" readonly="1" domain="[('school_id','=',school_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="division_id" placeholder="Division" invisible="1" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="medium_id" placeholder="Medium"  readonly="1" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                         </group>
                         <group>
@@ -1896,6 +1896,7 @@
         <!-- Menuitem of alumni and terminate -->
         <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="admission_register" groups="school.group_school_administration,school.group_school_teacher"/>
 <!--         <menuitem id="menu_student_terminate" name="Terminate Student" action="action_student_terminate" parent="admission_register"/> -->
+        <!-- MenuItem For Configurations->Subject -->
         <!-- Inherited Form View Of Company -->
         <record id="view_company_form_inherit" model="ir.ui.view">
             <field name="name">res.company.form</field>
