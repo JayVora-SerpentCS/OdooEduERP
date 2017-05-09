@@ -4,19 +4,18 @@
 <odoo>
 
         <!-- Assign Roll Number Wizard Form View  -->
-
         <record id="view_move_standards_form" model="ir.ui.view">
             <field name="name">move_standards.form</field>
             <field name="model">move.standards</field>
             <field name="arch" type="xml">
                 <form string="Move Standards">
-	                    <group>
-	                        <field name="academic_year_id" placeholder="Enter Academic Year"/>
-	                    </group>
-	                    <footer>
-	                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
-	                        <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
-	                    </footer>
+                        <group>
+                            <field name="academic_year_id" placeholder="Enter Academic Year"/>
+                        </group>
+                        <footer>
+                            <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
+                            <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
+                        </footer>
                </form>
             </field>
         </record>

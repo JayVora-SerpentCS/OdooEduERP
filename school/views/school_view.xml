@@ -1053,19 +1053,19 @@
                                     <field name="from_mark" />
                                     <field name="to_mark" />
                                     <field name="grade" />
-	                             </tree>
-	                             <form>
-	                                 <group>
-	                                     <field name="sequence" colspan="2" />
-	                                     <newline />
-	                                     <field name="grade" placeholder="Grade"/>
-	                                     <newline />
-	                                     <field name="from_mark" placeholder="From Mark"/>
-	                                     <field name="to_mark" placeholder="To Mark"/>
-	                                     <field name="fail" />
-	                                 </group>
-	                             </form>
-	                         </field>
+                                 </tree>
+                                 <form>
+                                     <group>
+                                         <field name="sequence" colspan="2" />
+                                         <newline />
+                                         <field name="grade" placeholder="Grade"/>
+                                         <newline />
+                                         <field name="from_mark" placeholder="From Mark"/>
+                                         <field name="to_mark" placeholder="To Mark"/>
+                                         <field name="fail" />
+                                     </group>
+                                 </form>
+                             </field>
                     </sheet>
                 </form>
             </field>

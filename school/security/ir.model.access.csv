@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-,,,,,,,
 access_academic_year_admin,academic.year,model_academic_year,group_school_administration,1,1,1,1
 access_academic_month_admin,academic.month,model_academic_month,group_school_administration,1,1,1,1
 access_standard_medium_admin,standard.medium,model_standard_medium,group_school_administration,1,1,1,1
@@ -33,9 +32,6 @@ access_admin_reminder_admin,student.reminder,school.model_student_reminder,group
 access_student_cast_admin,student.cast,model_student_cast,group_school_administration,1,1,1,1
 access_res_users_admin,res.users,base.model_res_users,group_school_administration,1,1,1,1
 access_subject_syllabus_admin,subject.syllabus,model_subject_syllabus,group_school_administration,1,1,1,1
-access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,1,1
-access_res_partner_teacher,res.partner,base.model_res_partner,group_school_teacher,1,1,1,1
-,,,,,,,
 access_academic_year_parent,academic.year,model_academic_year,group_school_parent,1,0,0,0
 access_academic_month_parent,academic.month,model_academic_month,group_school_parent,1,0,0,0
 access_standard_medium_parent,standard.medium,model_standard_medium,group_school_parent,1,0,0,0
@@ -69,7 +65,6 @@ access_student_previous_school_parent,student.previous.school,model_student_prev
 access_parent_news_parent,student.news,model_student_news,group_school_parent,1,0,0,0
 access_subject_syllabus_parent,subject.syllabus,model_subject_syllabus,group_school_parent,1,0,0,0
 access_res_users_parents,res.users,base.model_res_users,group_school_parent,1,0,0,0
-,,,,,,,
 access_standard_medium_student,standard.medium,school.model_standard_medium,group_school_student,1,0,0,0
 access_subject_subject_student,subject.subject,school.model_subject_subject,group_school_student,1,0,0,0
 access_school_school_student,school.school,school.model_school_school,group_school_student,1,0,0,0
@@ -102,7 +97,6 @@ access_standard_standard_student,standard.standard,school.model_standard_standar
 access_grade_line_student,grade.line,school.model_grade_line,group_school_student,1,0,0,0
 access_school_standard_user_student,school.standard,school.model_school_standard,group_school_student,1,0,0,0
 access_subject_syllabus_student,subject.syllabus,model_subject_syllabus,group_school_student,1,0,0,0
-,,,,,,,
 access_academic_year_teacher,academic.year,model_academic_year,group_school_teacher,1,0,0,0
 access_academic_month_teacher,academic.month,model_academic_month,group_school_teacher,1,0,0,0
 access_standard_medium_teacher,standard.medium,model_standard_medium,group_school_teacher,1,1,1,0
@@ -136,9 +130,7 @@ access_teacher_news_teacher,student.news,model_student_news,group_school_teacher
 access_teacher_reminder_teacher,student.reminder,model_student_reminder,group_school_teacher,1,1,1,1
 access_subject_syllabus_teacher,subject.syllabus,model_subject_syllabus,group_school_teacher,1,1,1,0
 access_resource_resource_teacher,resource.resource,resource.model_resource_resource,group_school_teacher,1,1,0,0
-access_res_partner_teacher,res.partner,base.model_res_partner,group_school_teacher,1,1,0,0
 access_res_users_teacher,res.users,base.model_res_users,group_school_teacher,1,1,0,0
-,,,,,,,
 access_student_in_admission,student.student,model_student_student,group_is_admission,1,0,0,0
 access_standard_medium_student_is_admission,standard.medium,school.model_standard_medium,group_is_admission,1,0,0,0
 access_subject_subject_student_is_admission,subject.subject,school.model_subject_subject,group_is_admission,1,0,0,0

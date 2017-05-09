@@ -1,6 +1,11 @@
 ==============================================================================
  Version Change Log (school)
 ===============================================================================
+
+1.0.10 --> 09/05/2017 Anu Patel
+    * Added improvements in code as per travis coding standands.
+    * Optimised Code.
+
 1.0.9 --> 08/05/2017
     * Added comments to methods
     * Change sequence in grade
