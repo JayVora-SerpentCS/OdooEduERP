@@ -219,7 +219,7 @@
             <field name="name">English</field>
             <field name="code">ENG</field>
             <field name="maximum_marks">100</field>
-            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp')]), ref('hr.employee_jep')]"/>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp'),ref('hr.employee_jep')])]"/>
         </record>
         <record id="demo_subject_subject_4" model="subject.subject">
             <field name="name">Social Science</field>
@@ -254,6 +254,37 @@
 
         <record id="demo_elective_subject_4" model="subject.elective">
             <field name="name">Music</field>
+        </record>
+        <!-- Demo data of teacher -->
+        <record id="hr.employee_root" model="hr.employee">
+          <field name="is_school_teacher" eval="True"/>
+       </record>
+      <record id="hr.employee_al" model="hr.employee">
+          <field name="is_school_teacher" eval="True"/>
+      </record>
+      <record id="hr.employee_mit" model="hr.employee">
+          <field name="is_school_teacher" eval="True"/>
+      </record>
+      <record id="hr.employee_niv" model="hr.employee">
+          <field name="is_school_teacher" eval="True"/>
+       </record>
+       <record id="hr.employee_stw" model="hr.employee">
+           <field name="is_school_teacher" eval="True"/>
+       </record>
+       <record id="hr.employee_chs" model="hr.employee">
+           <field name="is_school_teacher" eval="True"/>
+       </record>
+       <record id="hr.employee_qdp" model="hr.employee">
+           <field name="is_school_teacher" eval="True"/>
+       </record>
+       <record id="hr.employee_fme" model="hr.employee">
+           <field name="is_school_teacher" eval="True"/>
+       </record>
+       <record id="hr.employee_fpi" model="hr.employee">
+           <field name="is_school_teacher" eval="True"/>
+       </record>
+       <record id="hr.employee_jep" model="hr.employee">
+          <field name="is_school_teacher" eval="True"/>
         </record>
         <!-- Student Informations -->
         <record id="demo_student_student_1" model="student.student">
