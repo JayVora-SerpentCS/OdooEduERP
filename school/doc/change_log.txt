@@ -2,6 +2,11 @@
  Version Change Log (school)
 ===============================================================================
 
+1.0.11 --> 09/05/2017 Vimal Patel
+    * Added menu of the move standard wizard and optimized code.
+    * Added menu of the assign roll no wizard.
+    * Resolved the travis error in hook.py file
+
 1.0.10 --> 09/05/2017 Anu Patel
     * Added improvements in code as per travis coding standands.
     * Optimised Code.

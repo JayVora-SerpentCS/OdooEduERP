@@ -166,16 +166,19 @@ class SchoolStandard(models.Model):
     _rec_name = "standard_id"
 
     @api.multi
-    @api.depends('standard_id')
+    @api.depends('standard_id', 'school_id', 'division_id', 'medium_id')
     def _compute_student(self):
         '''Compute student of done state'''
         student_obj = self.env['student.student']
         for rec in self:
             rec.student_ids = False
             if rec.standard_id:
-                rec.student_ids = student_obj.search([('standard_id', '=',
-                                                       rec.standard_id.id),
-                                                      ('state', '=', 'done')])
+                rec.student_ids = student_obj.search(
+                            [('standard_id', '=', rec.id),
+                             ('school_id', '=', rec.school_id.id),
+                             ('division_id', '=', rec.division_id.id),
+                             ('medium_id', '=', rec.medium_id.id),
+                            ('state', '=', 'done')])
 
 #    @api.multi
 #    def import_subject(self):
@@ -476,7 +479,7 @@ class StudentStudent(models.Model):
                                 help='Academic Year', readonly=True)
 #    grn_number = fields.Many2one('student.grn', 'GR No.',
 #                                 help="General Register No.")
-    standard_id = fields.Many2one('standard.standard', 'Class')
+#    standard_id = fields.Many2one('standard.standard', 'Class')
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
     cmp_id = fields.Many2one('res.company', 'Company Name',

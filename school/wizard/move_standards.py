@@ -14,49 +14,40 @@ class MoveStandards(models.TransientModel):
     @api.multi
     def move_start(self):
         '''Code for moving student to next standard'''
-        active_ids = self._context.get('active_ids')
-        if not active_ids:
-            return {}
         academic_obj = self.env['academic.year']
         school_standard_obj = self.env['school.standard']
         standard_obj = self.env["standard.standard"]
-        student_obj = self.env['student.student']
         stud_history_obj = self.env["student.history"]
+        student_obj = self.env['student.student']
         for data in self:
-            for standards in school_standard_obj.browse(active_ids):
-                for student in standards.student_ids:
-                    # search in student history
-                    stud_year_domain = [('academice_year_id',
-                                         '=',
-                                         data.academic_year_id.id),
-                                        ('student_id', '=', student.id)]
-                    stud_year_ids = stud_history_obj.search(stud_year_domain)
-                    year_id = academic_obj.next_year(student.year.sequence)
-                    # Check if academic year selected or not.
-                    if year_id and year_id != data.academic_year_id.id:
-                        continue
-                    if stud_year_ids:
-                        raise except_orm(_('Warning !'),
-                                         _('Please Select'
-                                           'Next Academic year.'))
-                    a = standards.standard_id.sequence
-                    next_class_id = standard_obj.next_standard(a)
-                    # Assign the academic year
-                    if next_class_id:
-                        student_id = student_obj.browse(student.id)
-                        d_one = {'year': data.academic_year_id.id,
-                                 'standard_id': next_class_id}
-                        # Move student to next standard
-                        student_id.write(d_one)
-                        std_id_id = standards.standard_id.id
-                        div_id_id = standards.division_id.id
-                        v = {'student_id': student.id,
-                             'academice_year_id': student.year.id,
-                             'standard_id': std_id_id,
-                             'medium_id': standards.medium_id.id,
-                             'division_id': div_id_id,
-                             }
-                        stud_history_obj.create(v)
+            students = student_obj.search([('state', '=', 'done')])
+            for student in students:
+                year_id = academic_obj.next_year(student.year.sequence)
+                # Check if academic year selected or not.
+                if year_id != data.academic_year_id.id:
+                    continue
+                standard_seq = student.standard_id.standard_id.sequence
+                next_class_id = standard_obj.next_standard(standard_seq)
+
+                # Assign the academic year
+                if next_class_id:
+                    next_school_standard = school_standard_obj.search(
+                            [('standard_id', '=', next_class_id),
+                            ('division_id', '=', student.division_id.id or
+                                        student.standard_id.division_id.id),
+                             ('school_id', '=', student.school_id.id),
+                             ('medium_id', '=', student.medium_id.id)])
+                    std_vals = {'year': data.academic_year_id.id or False,
+                            'standard_id': next_school_standard.id or False}
+                    # Move student to next standard
+                    student.write(std_vals)
+                    vals = {'student_id': student.id,
+                            'academice_year_id': student.year.id,
+                            'standard_id': student.standard_id.id,
+                            'medium_id': student.medium_id.id,
+                            'division_id': student.division_id.id,
+                         }
+                    stud_history_obj.create(vals)
         return True
 
 #    @api.multi
