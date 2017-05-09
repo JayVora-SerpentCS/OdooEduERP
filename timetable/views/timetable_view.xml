@@ -11,8 +11,8 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name" placeholder="Enter Description"/>
-                            <field name="standard_id" placeholder="Create Standard" widget="selection"/>
-                            <field name="year_id" colspan="4" placeholder="Create Year" widget="selection"/>
+                            <field name="standard_id" placeholder="Select Standard" widget="selection"/>
+                            <field name="year_id" colspan="4" placeholder="Select Year" widget="selection"/>
 <!--                             <field name="do_not_create"/> -->
                         </group>
                         <notebook colspan="4">
