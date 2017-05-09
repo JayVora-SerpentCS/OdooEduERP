@@ -1,6 +1,8 @@
 ==============================================================================
  Version Change Log (school)
 ===============================================================================
+1.0.12 --> 09/05/2017 Vimal Patel
+    * Added improvements in all fields to make it only selectable
 
 1.0.11 --> 09/05/2017 Vimal Patel
     * Added menu of the move standard wizard and optimized code.

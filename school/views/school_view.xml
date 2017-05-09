@@ -41,7 +41,7 @@
                             <group string="Student Information">
                                 <field name="student_code" readonly="1" />
                                 <field name="roll_no" help="Roll number of Student" readonly="1"/>
-                                <field name="year" placeholder="Year" help="Academic year of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="year" placeholder="Year" widget="selection" help="Academic year of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 <field name="school_id" placeholder="School" widget="selection" help="School of Student" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                             <group string="Standard Information">
@@ -73,13 +73,13 @@
                             <page string="General" name="general">
                                 <group>
                                     <group>
-                                        <field name="cast_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Cast"/>
+                                        <field name="cast_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" widget="selection" placeholder="Cast"/>
                                         <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                         <field name="gender" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Gender"/>
                                         <field name="age"/>
                                     </group>
                                     <group>
-                                        <field name="mother_tongue" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Mother Tounge"/>
+                                        <field name="mother_tongue" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"  widget="selection" placeholder="Mother Tounge"/>
                                         <field name="admission_date" widget="date" placeholder="Admission Date" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                         <field name="maritual_status" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Maritial Status"/>
                                     </group>
@@ -106,7 +106,7 @@
                             </page>
                             <page string="References">
                                 <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','in',['alumni','terminate'])]}">
-                                    <tree string="Reference">
+                                    <tree string="Reference" editable="top">
                                         <field name="name" />
                                         <field name="middle" />
                                         <field name="last" />
@@ -133,7 +133,7 @@
                                         <field name="registration_no" />
                                         <field name="admission_date" />
                                         <field name="exit_date" />
-                                        <field name="course_id" />
+                                        <field name="course_id" widget="selection" />
                                     </tree>
                                     <form string="Previous School Details">
                                         <separator string="Previous School Details" />
@@ -142,9 +142,10 @@
                                             <field name="registration_no" placeholder="Registration No" />
                                             <field name="admission_date" />
                                             <field name="exit_date" />
-                                            <field name="course_id" />
+                                            <field name="course_id" widget="selection"/>
                                             <newline />
-                                            <field name="add_sub" colspan="4" />
+                                            <separator string="Subjects Details"/>
+                                            <field name="add_sub" nolabel="1" colspan="4" />
                                         </group>
                                     </form>
                                 </field>
@@ -482,7 +483,7 @@
                                                 <field name="age" />
                                             </group>
                                             <group>
-                                                <field name="mother_tongue" placeholder="Mother Tongue" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                                <field name="mother_tongue" widget="selection" placeholder="Mother Tongue" attrs="{'readonly':[('state','=','alumni')]}"/>
                                                 <field name="admission_date" placeholder="Admission Date" attrs="{'readonly':[('state','=','alumni')]}"/>
                                                 <field name="maritual_status" placeholder="Select Maritual Status" attrs="{'readonly':[('state','=','alumni')]}"/>
                                             </group>
@@ -504,7 +505,7 @@
                             </page>
                             <page string="References">
                                 <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
-                                    <tree string="Reference">
+                                    <tree string="Reference" editable="top">
                                         <field name="name" placeholder="Name"/>
                                         <field name="middle" placeholder="Middle Name"/>
                                         <field name="last" placeholder="LastName"/>
@@ -531,7 +532,7 @@
                                         <field name="registration_no" />
                                         <field name="admission_date" />
                                         <field name="exit_date" />
-                                        <field name="course_id" />
+                                        <field name="course_id" widget="selection" />
                                     </tree>
                                     <form string="Previous School Details">
                                         <separator string="Previous School Details" />
@@ -540,9 +541,10 @@
                                             <field name="registration_no" placeholder="Registration No" />
                                             <field name="admission_date" placeholder="Admission Date"/>
                                             <field name="exit_date" placeholder="Exit Date"/>
-                                            <field name="course_id" placeholder="Course"/>
+                                            <field name="course_id" placeholder="Course" widget="selection"/>
                                             <newline />
-                                            <field name="add_sub" colspan="4" />
+                                            <separator string="Subjects Details" />
+                                            <field name="add_sub" nolabel="1" colspan="4"/>
                                         </group>
                                     </form>
                                 </field>
@@ -852,7 +854,10 @@
                             <field name="division_id" widget="selection" placeholder="Division"/>
                             <field name="medium_id" widget="selection" placeholder="Medium"/>
                             <field name="school_id" widget="selection" placeholder="School"/>
-                            <field name="user_id" placeholder="Create Or Select Faculty Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher': True}"/>
+                            <field name="user_id" placeholder="Create Or Select Faculty Name"
+                                domain="[('is_school_teacher','=',True)]"
+                                context="{'default_is_school_teacher': True}"
+                                widget="selection"/>
 <!--                             <field name="passing" placeholder="No Of ATKT Allowed" /> -->
                             <field name="total_no_subjects" invisible="1"/>
                         </group>
@@ -1289,7 +1294,8 @@
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Standards">
-                                            <field name="standard_ids" nolabel="1" colspan="4">
+                                            <field name="standard_ids" nolabel="1" colspan="4"
+                                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                                 <tree string="Standards">
                                                     <field name="name" />
                                                     <field name="code" />
