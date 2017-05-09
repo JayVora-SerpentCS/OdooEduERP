@@ -190,7 +190,7 @@ class SchoolStandard(models.Model):
 
     @api.multi
     @api.depends('subject_ids')
-    def _count_subject(self):
+    def _compute_subject(self):
         for rec in self:
             rec.total_no_subjects = len(rec.subject_ids)
 
@@ -212,7 +212,7 @@ class SchoolStandard(models.Model):
     syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
                                    'Syllabus')
     total_no_subjects = fields.Integer('Total No of Subject',
-                                       compute="_count_subject")
+                                       compute="_compute_subject")
 
     @api.multi
     def name_get(self):
