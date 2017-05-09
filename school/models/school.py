@@ -6,7 +6,8 @@ from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
+    DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import except_orm, Warning as UserError
 from openerp.exceptions import ValidationError
 
@@ -63,9 +64,9 @@ class AcademicYear(models.Model):
         for old_ac in data_academic_yr:
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
-                old_ac.date_start <= self.date_stop <= old_ac.date_stop):
-                    raise UserError(_('''Error! You cannot define overlapping
-                                        academic years.'''))
+                    old_ac.date_start <= self.date_stop <= old_ac.date_stop):
+                raise UserError(_('''Error! You cannot define overlapping
+                                    academic years.'''))
 
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
@@ -96,7 +97,7 @@ class AcademicMonth(models.Model):
     def _check_duration(self):
         '''Method to check duration of date'''
         if (self.date_stop and self.date_start and
-            self.date_stop < self.date_start):
+                self.date_stop < self.date_start):
             raise UserError(_('''Error ! The duration of the Month(s)
                                  is/are invalid.'''))
 
@@ -105,12 +106,12 @@ class AcademicMonth(models.Model):
         '''Method to check year limit'''
         if self.year_id and self.date_start and self.date_stop:
             if (self.year_id.date_stop < self.date_stop or
-                self.year_id.date_stop < self.date_start or
-                self.year_id.date_start > self.date_start or
-                self.year_id.date_start > self.date_stop):
-                    raise UserError(_('''Invalid Months ! Some months overlap
-                                        or the date period is not in the scope
-                                        of the academic year.'''))
+                    self.year_id.date_stop < self.date_start or
+                    self.year_id.date_start > self.date_start or
+                    self.year_id.date_start > self.date_stop):
+                raise UserError(_('''Invalid Months ! Some months overlap
+                                    or the date period is not in the scope
+                                    of the academic year.'''))
 
 
 class StandardMedium(models.Model):
@@ -357,7 +358,8 @@ class StudentStudent(models.Model):
     def _get_default_image(self, is_company, colorize=False):
         '''Method to get default Image'''
         try:
-            img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
+            img_path = get_module_resource('base', 'static/src/img',
+                                           'avatar.png')
             with open(img_path, 'rb') as f:
                 image = f.read()
             image = image_colorize(image)
@@ -795,8 +797,7 @@ class ResPartner(models.Model):
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('email', False),
                          'password': vals.get('email', False),
-                         'partner_id': res.id
-                        }
+                         'partner_id': res.id}
             user = self.env['res.users'].create(user_vals)
             # Assign group of parents to user created
             emp_grp = self.env.ref('base.group_user')
@@ -932,8 +933,8 @@ class StudentNews(models.Model):
         # Check email is defined in student
         for news in self:
             if news.user_ids and news.date:
-                email_list = [user.email for user in news.user_ids
-                              if user.email]
+                email_list = [news_user.email for news_user in news.user_ids
+                              if news_user.email]
                 if not email_list:
                     raise except_orm(_('User Email Configuration!'),
                                      _("Email not found in users !"))
