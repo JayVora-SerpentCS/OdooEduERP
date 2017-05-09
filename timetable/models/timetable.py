@@ -30,10 +30,13 @@ class TimeTable(models.Model):
             records = [rec_check.id for rec_check in line_ids
                        if (rec.week_day == rec_check.week_day and
                            rec.start_time == rec_check.start_time and
-                           rec.end_time == rec_check.end_time)]
+                           rec.end_time == rec_check.end_time and
+                           rec.teacher_id.id == rec.teacher_id.id)]
             if len(records) > 1:
-                raise UserError(_("You can Not set lecture at same time\
-                                 at same day..!!!"))
+                raise ValidationError(_('''You can Not set lecture at same time
+                %s  at same day %s of teacher %s..!!!''')
+                                % (rec.start_time, rec.week_day,
+                                   rec.teacher_id.name))
             if rec.start_time > 24:
                 raise UserError(_('Start Time should be less than 24 hours'))
             if rec.end_time > 24:
@@ -59,7 +62,9 @@ class TimeTableLine(models.Model):
     @api.constrains('teacher_id')
     def check_teacher(self):
         if self.teacher_id.id not in self.subject_id.teacher_ids.ids:
-            raise UserError(_('This subject not assigned to the teacher'))
+            raise ValidationError(_('''The subject %s is not assigned to
+                        teacher %s.''') % (self.subject_id.name,
+                                           self.teacher_id.name))
 
     teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
