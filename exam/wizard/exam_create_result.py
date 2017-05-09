@@ -38,8 +38,8 @@ class ExamCreateResult(models.TransientModel):
                                   ('s_exam_ids', '=', exam.id)]
                         result_exists = result_obj.search(domain)
                         if result_exists:
-                            [result_list.append(res.id) for res in\
-                                        result_exists]
+                            [result_list.append(res.id)
+                                for res in result_exists]
 
                         if not result_exists:
                             standard_id = school_std_rec.standard_id.id
