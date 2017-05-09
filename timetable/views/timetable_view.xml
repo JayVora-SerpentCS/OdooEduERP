@@ -13,24 +13,24 @@
                             <field name="name" placeholder="Enter Description"/>
                             <field name="standard_id" placeholder="Create Standard" widget="selection"/>
                             <field name="year_id" colspan="4" placeholder="Create Year" widget="selection"/>
-                            <field name="do_not_create"/>
+<!--                             <field name="do_not_create"/> -->
                         </group>
                         <notebook colspan="4">
                             <page string="TimeTable">
                                 <field name="timetable_ids" nolabel="1" colspan="4">
-                                    <tree string="TimeTable">
+                                    <tree string="TimeTable" editable="top">
                                         <field name="week_day"/>
-                                        <field name="subject_id"/>
+                                        <field name="subject_id" widget="selection"/>
                                         <field name="start_time"/>
                                         <field name="end_time"/>
-                                        <field name="teacher_id"/>
+                                        <field name="teacher_id" widget="selection"/>
                                         
                                     </tree>
                                     <form string="TimeTable">
                                         <group col="4" colspan="4">
                                             <field name="week_day"/>
                                             <field name="subject_id"
-                                                   placeholder="Create Or Select Subject"/>
+                                                   placeholder="Select Subject" widget="selection"/>
                                             <field name="start_time"/>
                                             <field name="end_time"/>
                                             <field name="teacher_id" context="{'subject_id':subject_id}"

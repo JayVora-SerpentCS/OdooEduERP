@@ -19,7 +19,12 @@ class TimeTable(models.Model):
                                   required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
-    do_not_create = fields.Boolean('Do not Create')
+#    do_not_create = fields.Boolean('Do not Create')
+
+    _sql_constraints = [
+        ('standard_year_unique', 'unique(standard_id,year_id)',
+         'The standard and year should be unique !')
+    ]
 
     @api.multi
     @api.constrains('timetable_ids')
@@ -69,7 +74,7 @@ class TimeTableLine(models.Model):
                         teacher %s.''') % (self.subject_id.name,
                                            self.teacher_id.name))
 
-    teacher_id = fields.Many2one('hr.employee', 'Supervisor Name')
+    teacher_id = fields.Many2one('hr.employee', 'Faculty Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
                                  required=True)
     table_id = fields.Many2one('time.table', 'TimeTable')
