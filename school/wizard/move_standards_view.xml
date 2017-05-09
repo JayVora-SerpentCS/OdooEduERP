@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <form string="Move Standards">
                         <group>
-                            <field name="academic_year_id" placeholder="Enter Academic Year"/>
+                            <field name="academic_year_id" placeholder="Enter Academic Year" widget="selection"/>
                         </group>
                         <footer>
                             <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
