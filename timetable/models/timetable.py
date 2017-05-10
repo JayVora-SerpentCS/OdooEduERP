@@ -19,6 +19,9 @@ class TimeTable(models.Model):
                                   required=True)
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
+    timetable_type = fields.Selection([('regular', 'Regular')],
+                                      'Time Table Type', default="regular",
+                                      inivisible=True)
 #    do_not_create = fields.Boolean('Do not Create')
 
     _sql_constraints = [
@@ -68,11 +71,13 @@ class TimeTableLine(models.Model):
 #            raise UserError(_("You must have a 'Recess' as a subject"))
 #        recess.update({'value': {'subject_id': sub_id.id}})
 #        return recess
-#    @api.multi
-    @api.constrains('teacher_id')
+    @api.multi
+    @api.constrains('teacher_id', 'subject_id')
     def check_teacher(self):
         '''Check if lecture is not related to teacher than raise error'''
-        if self.teacher_id.id not in self.subject_id.teacher_ids.ids:
+        print ""
+        if self.teacher_id.id not in self.subject_id.teacher_ids.ids and\
+            self.table_id.timetable_type == 'regular':
             raise ValidationError(_('''The subject %s is not assigned to
                         teacher %s.''') % (self.subject_id.name,
                                            self.teacher_id.name))
