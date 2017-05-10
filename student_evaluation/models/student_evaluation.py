@@ -88,7 +88,7 @@ class TeacherEvaluation(models.Model):
         for stu_eval_rec in self.browse(self.ids):
             if stu_eval_rec.teacher_eval_line:
                 self._cr.execute('''delete from student_evaluation_line where
-                                    teacher_eval_id=%s''',(stu_eval_rec.id,))
+                                    teacher_eval_id=%s''', (stu_eval_rec.id,))
             type_eval = stu_eval_rec.type
             domain = [('type', '=', type_eval)]
             eval_temp_ids = eval_temp_obj.search(domain)

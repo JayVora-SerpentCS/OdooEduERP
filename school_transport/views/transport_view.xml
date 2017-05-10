@@ -341,11 +341,11 @@
             <field name="model">transport.registration</field>
             <field name="arch" type="xml">
                 <tree string="Transport Registration">
-	                <field name="part_name"/>
-	                <field name="name"/>
-	                <field name="for_month"/>
-	                <field name="reg_end_date"/>
-	                <field name="state"/>
+                    <field name="part_name"/>
+                    <field name="name"/>
+                    <field name="for_month"/>
+                    <field name="reg_end_date"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

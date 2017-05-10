@@ -176,7 +176,7 @@
                                <field name="categ_id" placeholder="Select or Create Book"/>
                                <field name="author" placeholder="Name of Author"/>
                             </group>
-	                    </group>
+                        </group>
                         <notebook>
                             <page string="Details">
                                 <group col="4" colspan="2">
