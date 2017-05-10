@@ -4,8 +4,7 @@
 {
     'name': 'School',
     'version': '10.0.1.0.13',
-    'author': '''Serpent Consulting Services Pvt. Ltd.,
-                 Odoo Community Association (OCA)''',
+    'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'license': "AGPL-3",
