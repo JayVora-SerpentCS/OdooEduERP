@@ -99,24 +99,32 @@
                             <field name="exam_code"/>
                             <field name="grade_system"  widget="selection" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
+                            <field name="academic_year" placeholder="Select Academic Year.." widget="selection" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                         <group col="4" colspan="2">
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
                             <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
                             <notebook colspan="4" >
-                                <page string="Exam Schedule">
-                                    <field name="exam_timetable_ids" nolabel="1" colspan="4" 
-                                        attrs="{'readonly': [('state','!=','draft')]}"/>
-                                </page>
                                 <page string="Standard">
                                     <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
                                         options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                                 </page>
+                                <page string="Exam Schedule">
+                                    <field name="exam_schedule_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
+                                            context="{'standard_id':standard_id}">
+                                        <tree name="exam_schedule" string="Exam Schedule" editable="top">
+                                            <field name="standard_id" required="1" widget="selection" domain="[('id','in',context.get('standard_id'))]"/>
+                                            <field name="timetable_id" required="1" widget="selection" domain="[('timetable_type','=','exam')]"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
                             </notebook>
                         </group>
                         <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
-                            <field name="create_date" placeholder="Created Date" attrs="{'readonly': [('state','!=','draft')]}"/>
-                            <field name="write_date" placeholder="Last Update Date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="create_date" readonly="1" placeholder="Created Date" string="Exam Created Date"/>
+                            <field name="write_date" readonly="1" placeholder="Last Update Date" string="Exam Update Date"/>
                         </group>
                     </sheet>
                 </form>
