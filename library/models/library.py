@@ -167,8 +167,8 @@ class LibraryBookIssue(models.Model):
                   and penalty as value
         '''
         for line in self:
-            if line.date_return:  #and\
-#                line.state not in ('fine', 'paid', 'cancel'):
+            if line.date_return:
+#               and line.state not in ('fine', 'paid', 'cancel')
                 start_day = datetime.now()
                 end_day = datetime.strptime(line.date_return,
                                             "%Y-%m-%d %H:%M:%S")
@@ -317,16 +317,16 @@ class LibraryBookIssue(models.Model):
             if rec.student_id:
                 issue_str = ''
                 book_fines = rec.search([('card_id', '=', rec.card_id.id),
-                                      ('state', '=', 'fine')])
+                                         ('state', '=', 'fine')])
                 if book_fines:
                     for book in book_fines:
                         issue_str += str(book.issue_code) + ', '
-                    raise UserError(_('You can not request for a book until\
-                                the fine is not paid for book issues %s!') %
-                                    issue_str)
+                    raise UserError(_('You can not request for a book until'
+                                      'the fine is not paid for book issues'
+                                      ' %s!') % issue_str)
             if rec.card_id:
                 card_ids = rec.search([('card_id', '=', rec.card_id.id),
-                                        ('state', 'in', ['issue', 'reissue'])])
+                                       ('state', 'in', ['issue', 'reissue'])])
                 if rec.card_id.book_limit > len(card_ids):
                     rec.write({'state': 'issue'})
 #                    product_id = self.name
@@ -422,14 +422,12 @@ class LibraryBookIssue(models.Model):
             else:
                 usr = record.teacher_id.id
                 if not record.teacher_id.address_home_id:
-                    raise UserError(_('Error !'
-                                    'The Teacher must have a Home address.'))
-            vals_invoice = {
-                            'type': 'out_invoice',
+                    raise UserError(_('Error ! Teacher must have a Home'
+                                      'address.'))
+            vals_invoice = {'type': 'out_invoice',
                             'partner_id': usr,
                             'book_issue': record.id,
-                            'book_issue_reference': record.issue_code or ''
-                           }
+                            'book_issue_reference': record.issue_code or ''}
             new_invoice_id = invoice_obj.create(vals_invoice)
             acc_id = new_invoice_id.journal_id.default_credit_account_id.id
             invoice_line_ids = []
@@ -438,8 +436,7 @@ class LibraryBookIssue(models.Model):
                 invoice_line2 = {'name': 'Book Lost Fine',
                                  'price_unit': lost_pen,
                                  'invoice_id': new_invoice_id.id,
-                                 'account_id': acc_id
-                                }
+                                 'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line2))
             if record.penalty:
                 pen = record.penalty
@@ -471,7 +468,7 @@ class LibraryBookIssue(models.Model):
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
             action['views'] = [(self.env.ref('account.invoice_form').id,
-                                                            'form')]
+                                'form')]
             action['res_id'] = invoices.ids[0]
         else:
             action = {'type': 'ir.actions.act_window_close'}
@@ -479,10 +476,10 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def _compute_invoices(self):
+        inv_obj = self.env['account.invoice']
         for rec in self:
-            count_invoice = self.env['account.invoice'].search_count([
-                                                ('book_issue', '=',
-                                                 rec.id)])
+            count_invoice = inv_obj.search_count([('book_issue', '=', rec.id)
+                                                  ])
             rec.compute_inv = count_invoice
 
 
@@ -526,22 +523,18 @@ class LibraryBookRequest(models.Model):
         for book in self:
             book.state = 'confirm'
             book_issue_obj = self.env['library.book.issue']
-            vals = {
-                 'card_id': self.card_id.id,
-                 'type': self.type,
-                 'name': self.name.id
-                 }
+            vals = {'card_id': self.card_id.id,
+                    'type': self.type,
+                    'name': self.name.id}
             issue_id = book_issue_obj.create(vals)
             issue_id.onchange_card_issue()
-            return {
-                'name': ('Book Issue'),
-                'view_mode': 'form',
-                'view_type': 'form',
-                'res_id': issue_id.id,
-                'res_model': 'library.book.issue',
-                'type': 'ir.actions.act_window',
-               'target': 'current',
-                }
+            return {'name': ('Book Issue'),
+                    'view_mode': 'form',
+                    'view_type': 'form',
+                    'res_id': issue_id.id,
+                    'res_model': 'library.book.issue',
+                    'type': 'ir.actions.act_window',
+                    'target': 'current'}
 
     @api.multi
     def cancle_book_request(self):
