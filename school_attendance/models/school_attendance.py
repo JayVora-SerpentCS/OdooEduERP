@@ -40,7 +40,7 @@ class AttendanceSheetLine(models.Model):
     ''' Defining Attendance Sheet Line Information '''
 
     @api.multi
-    def attendance_percentage(self):
+    def _compute_percentage(self):
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -152,7 +152,7 @@ class AttendanceSheetLine(models.Model):
     two_9 = fields.Boolean('29')
     two_0 = fields.Boolean('30')
     three_1 = fields.Boolean('31')
-    percentage = fields.Float(compute="attendance_percentage", method=True,
+    percentage = fields.Float(compute="_compute_percentage", method=True,
                               string='Attendance (%)', store=False)
 
 
