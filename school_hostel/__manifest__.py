@@ -11,8 +11,7 @@
     'complexity': 'easy',
     'summary': 'Module For HOSTEL Management In School',
     'depends': ['school'],
-    'data': [
-             'security/hostel_security.xml',
+    'data': ['security/hostel_security.xml',
              'security/ir.model.access.csv',
              'views/hostel_view.xml',
              'views/hostel_sequence.xml',
