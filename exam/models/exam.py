@@ -3,7 +3,7 @@
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, Warning
+from odoo.exceptions import UserError
 from odoo.exceptions import except_orm
 
 
@@ -159,14 +159,15 @@ class ExamExam(models.Model):
                         if not result_exists:
                             standard_id = school_std_rec.standard_id.id
                             division_id = school_std_rec.division_id.id
+                            medium_id = school_std_rec.medium_id.id
                             rs_dict = {
-                                   's_exam_ids': exam.id,
-                                   'student_id': student.id,
-                                   'standard_id': standard_id,
-                                   'division_id': division_id,
-                                   'medium_id': school_std_rec.medium_id.id,
-                                   'grade_system': exam.grade_system.id
-                                   }
+                                       's_exam_ids': exam.id,
+                                       'student_id': student.id,
+                                       'standard_id': standard_id,
+                                       'division_id': division_id,
+                                       'medium_id': medium_id,
+                                       'grade_system': exam.grade_system.id
+                                       }
                             exam_line = []
                             for exam_lines in exam.exam_timetable_ids:
                                 for line in exam_lines.timetable_ids:
@@ -320,15 +321,14 @@ class ExamResult(models.Model):
         for rec in self:
             for line in rec.result_ids:
                 if line.maximum_marks == 0:
-                    raise UserError(_('Warning!'), _('Kindly add maximum\
+                    raise UserError(_('Kindly add maximum\
                             marks of subject "%s".') % (line.subject_id.name))
                 elif line.minimum_marks == 0:
-                    raise UserError(_('Warning!'), _('Kindly add minimum\
+                    raise UserError(_('Kindly add minimum\
                         marks of subject "%s".') % (line.subject_id.name))
-                elif ((line.maximum_marks == 0 or
-                       line.minimum_marks == 0)
-                      and line.obtain_marks):
-                    raise UserError(_('Warning!'), _('Kindly add marks\
+                elif ((line.maximum_marks == 0 or line.minimum_marks == 0) and
+                      line.obtain_marks):
+                    raise UserError(_('Kindly add marks\
                         details of subject "%s".') % (line.subject_id.name))
             vals = {'grade': rec.grade,
                     'percentage': rec.percentage,
@@ -383,7 +383,17 @@ class ExamResult(models.Model):
                     'standard_id': rec.standard_id.id,
                     'percentage': rec.percentage,
                     'result': rec.result}
-            history_obj.create(vals)
+            history = history_obj.search([('student_id', '=',
+                                           rec.student_id.id),
+                                          ('academice_year_id', '=',
+                                           rec.student_id.year.id),
+                                          ('standard_id', '=',
+                                           rec.standard_id.id)
+                                          ])
+            if history:
+                history_obj.write(vals)
+            elif not history:
+                history_obj.create(vals)
             rec.write({'state': 'done'})
         return True
 
