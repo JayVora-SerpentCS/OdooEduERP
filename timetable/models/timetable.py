@@ -40,8 +40,8 @@ class TimeTable(models.Model):
                 raise ValidationError(_('''You cannot set lecture at same
                                         time %s  at same day %s for teacher
                                         %s..!''') % (rec.start_time,
-                                                       rec.week_day,
-                                                       rec.teacher_id.name))
+                                                     rec.week_day,
+                                                     rec.teacher_id.name))
             # Checks if time is greater than 24 hours than raise error
             if rec.start_time > 24:
                 raise ValidationError(_('''Start Time should be less than
@@ -70,9 +70,8 @@ class TimeTableLine(models.Model):
     @api.constrains('teacher_id', 'subject_id')
     def check_teacher(self):
         '''Check if lecture is not related to teacher than raise error'''
-        print ""
-        if self.teacher_id.id not in self.subject_id.teacher_ids.ids and\
-            self.table_id.timetable_type == 'regular':
+        if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
+                self.table_id.timetable_type == 'regular'):
             raise ValidationError(_('''The subject %s is not assigned to
                                     teacher %s.''') % (self.subject_id.name,
                                                        self.teacher_id.name))
