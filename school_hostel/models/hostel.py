@@ -154,7 +154,7 @@ class HostelStudent(models.Model):
             line_vals = {'name': rec.hostel_info_id.name,
                          'account_id': acc_id,
                          'quantity': rec.duration,
-                         'price_unit': rec.room_id.rent_amount,}
+                         'price_unit': rec.room_id.rent_amount}
             invoice_lines.append((0, 0, line_vals))
             account_inv_id.write({'invoice_line_ids': invoice_lines})
             return {'name': _("Pay Hostel Fees"),
@@ -170,8 +170,9 @@ class HostelStudent(models.Model):
 
     @api.multi
     def print_fee_receipt(self):
-        return self.env['report'].get_action(self,
-                                 'school_hostel.hostel_fee_reciept1')
+        return self.env['report'
+                        ].get_action(self,
+                                     'school_hostel.hostel_fee_reciept1')
 
     @api.depends('duration')
     def _compute_rent(self):
@@ -206,7 +207,7 @@ class HostelStudent(models.Model):
                                ('paid', 'Done'),
                                ('discharge', 'Discharge'),
                                ('cancel', 'Cancel')],
-                               string='Status',
+                              string='Status',
                               default='draft')
 
     _sql_constraints = [('admission_date_greater',
@@ -240,19 +241,17 @@ class AccountPayment(models.Model):
     def post(self):
         res = super(AccountPayment, self).post()
         for inv in self.invoice_ids:
-            if inv.hostel_student_id and\
-            inv.state == 'paid':
-                fees_payment = inv.hostel_student_id.paid_amount
-                fees_payment += self.amount
-                inv.hostel_student_id.write({'status': 'paid',
-                                             'paid_amount': fees_payment,
-                                             'remaining_amount': inv.residual
-                                             })
-            if inv.hostel_student_id and inv.state == 'open':
-                fees_payment = inv.hostel_student_id.paid_amount
-                fees_payment += self.amount
-                inv.hostel_student_id.write({'status': 'pending',
-                                             'paid_amount': fees_payment,
-                                             'remaining_amount': inv.residual}
-                                            )
+            vals = {'remaining_amount': inv.residual}
+            if inv.hostel_student_id and inv.state == 'paid':
+                fees_payment = (inv.hostel_student_id.paid_amount +
+                                self.amount)
+                vals.update({'status': 'paid',
+                              'paid_amount': fees_payment})
+                inv.hostel_student_id.write()
+            elif inv.hostel_student_id and inv.state == 'open':
+                fees_payment = (inv.hostel_student_id.paid_amount +
+                                self.amount)
+                vals.update({'status': 'pending',
+                             'paid_amount': fees_payment})
+            inv.hostel_student_id.write(vals)
         return res

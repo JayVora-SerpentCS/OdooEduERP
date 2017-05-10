@@ -21,75 +21,75 @@
 <!--                         <separator string="Room Detail"/> -->
                         <notebook>
                             <page string="Room Detail">
-		                        <field name="room_ids">
-		                            <tree>
-		                                <field name="floor_no"/>
-		                                <field name="room_no"/>
-		                                <field name="student_per_room"/>
-		                                <field name="availability"/>
-		                            </tree>
-		                            <form>
-		                                <group col="4">
-		                                    <field name="floor_no"/>
-		                                    <field name="room_no"/>
-		                                    <field name="student_per_room"/>
-		                                    <field name="availability"/>
-		                                    <field name="telephone"/>
-		                                    <field name="ac"/>
-		                                    <field name="private_bathroom"/>
-		                                    <field name="guest_sofa"/>
-		                                    <field name="tv"/>
-		                                    <field name="internet"/>
-		                                    <field name="refrigerator"/>
-		                                    <field name="microwave"/>
-		                                </group>
-		<!--                                 <field name="student_ids" colspan="4" nolabel="1"> -->
-		<!--                                     <form string="Hostel Student"> -->
-		<!--                                         <header> -->
-		<!--                                             <button name="confirm_state" string="Confirm" type="object"/> -->
-		<!--                                             <button name="reservation_state" string="Reservation" type="object"/> -->
-		<!--                                             <button name="print_fee_receipt" string="Print Fee Slip" type="object" /> -->
-		<!--                                             <field name="status" widget="statusbar" nolabel="1"/> -->
-		<!--                                         </header> -->
-		<!--                                         <sheet> -->
-		<!--                                             <separator string="Student Detail"/> -->
-		<!--                                             <group col="4"> -->
-		<!--                                                 <field name="hostel_id"/> -->
-		<!--                                                 <field name="student_id"/> -->
-		<!--                                                 <field name="school_id"/> -->
-		<!--                                                 <field name="bed_type" widget="selection"/> -->
-		<!--                                                 <field name="admission_date"/> -->
-		<!--                                                 <field name="discharge_date"/> -->
-		<!--                                                 <field name="room_rent" /> -->
-		<!--                                                 <field name="paid_amount"/> -->
-		<!--                                                 <field name="remaining_amount"/> -->
-		<!--                                             </group> -->
-		<!--                                         </sheet> -->
-		<!--                                     </form> -->
-		<!--                                     <tree> -->
-		<!--                                         <field name="student_id"/> -->
-		<!--                                         <field name="room_rent"/> -->
-		<!--                                         <field name="paid_amount"/> -->
-		<!--                                         <field name="remaining_amount"/> -->
-		<!--                                         <field name="status"/> -->
-		<!--                                     </tree> -->
-		<!--                                 </field> -->
-		                            </form>
-		                        </field>
-		                     </page>
-		                     <page string="Student Details">
-		                         <field name="student_ids" readonly="1">
-		                             <tree>
-		                                 <field name="hostel_id"/>
-		                                 <field name="student_id"/>
-		                                 <field name="room_id"/>
-		                                 <field name="admission_date"/>
-		                                 <field name="discharge_date"/>
-		                                 <field name="status"/>
-		                             </tree>
-		                         </field>
-		                     </page>
-		                 </notebook>
+                                <field name="room_ids">
+                                    <tree>
+                                        <field name="floor_no"/>
+                                        <field name="room_no"/>
+                                        <field name="student_per_room"/>
+                                        <field name="availability"/>
+                                    </tree>
+                                    <form>
+                                        <group col="4">
+                                            <field name="floor_no"/>
+                                            <field name="room_no"/>
+                                            <field name="student_per_room"/>
+                                            <field name="availability"/>
+                                            <field name="telephone"/>
+                                            <field name="ac"/>
+                                            <field name="private_bathroom"/>
+                                            <field name="guest_sofa"/>
+                                            <field name="tv"/>
+                                            <field name="internet"/>
+                                            <field name="refrigerator"/>
+                                            <field name="microwave"/>
+                                        </group>
+        <!--                                 <field name="student_ids" colspan="4" nolabel="1"> -->
+        <!--                                     <form string="Hostel Student"> -->
+        <!--                                         <header> -->
+        <!--                                             <button name="confirm_state" string="Confirm" type="object"/> -->
+        <!--                                             <button name="reservation_state" string="Reservation" type="object"/> -->
+        <!--                                             <button name="print_fee_receipt" string="Print Fee Slip" type="object" /> -->
+        <!--                                             <field name="status" widget="statusbar" nolabel="1"/> -->
+        <!--                                         </header> -->
+        <!--                                         <sheet> -->
+        <!--                                             <separator string="Student Detail"/> -->
+        <!--                                             <group col="4"> -->
+        <!--                                                 <field name="hostel_id"/> -->
+        <!--                                                 <field name="student_id"/> -->
+        <!--                                                 <field name="school_id"/> -->
+        <!--                                                 <field name="bed_type" widget="selection"/> -->
+        <!--                                                 <field name="admission_date"/> -->
+        <!--                                                 <field name="discharge_date"/> -->
+        <!--                                                 <field name="room_rent" /> -->
+        <!--                                                 <field name="paid_amount"/> -->
+        <!--                                                 <field name="remaining_amount"/> -->
+        <!--                                             </group> -->
+        <!--                                         </sheet> -->
+        <!--                                     </form> -->
+        <!--                                     <tree> -->
+        <!--                                         <field name="student_id"/> -->
+        <!--                                         <field name="room_rent"/> -->
+        <!--                                         <field name="paid_amount"/> -->
+        <!--                                         <field name="remaining_amount"/> -->
+        <!--                                         <field name="status"/> -->
+        <!--                                     </tree> -->
+        <!--                                 </field> -->
+                                    </form>
+                                </field>
+                             </page>
+                             <page string="Student Details">
+                                 <field name="student_ids" readonly="1">
+                                     <tree>
+                                         <field name="hostel_id"/>
+                                         <field name="student_id"/>
+                                         <field name="room_id"/>
+                                         <field name="admission_date"/>
+                                         <field name="discharge_date"/>
+                                         <field name="status"/>
+                                     </tree>
+                                 </field>
+                             </page>
+                         </notebook>
                     </sheet>
                 </form>
             </field>
@@ -138,14 +138,14 @@
                         </group>
                         <separator string="Room Facilities"/>
                         <group col="4">
-	                        <field name="telephone"/>
-	                        <field name="ac"/>
-	                        <field name="private_bathroom"/>
-	                        <field name="guest_sofa"/>
-	                        <field name="tv"/>
-	                        <field name="internet"/>
-	                        <field name="refrigerator"/>
-	                        <field name="microwave"/>
+                            <field name="telephone"/>
+                            <field name="ac"/>
+                            <field name="private_bathroom"/>
+                            <field name="guest_sofa"/>
+                            <field name="tv"/>
+                            <field name="internet"/>
+                            <field name="refrigerator"/>
+                            <field name="microwave"/>
                         </group>
                         <notebook>
                             <page string="Students">

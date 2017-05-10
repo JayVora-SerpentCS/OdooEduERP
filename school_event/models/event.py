@@ -53,7 +53,7 @@ class SchoolEvent(models.Model):
     _rec_name = 'name'
 
     @api.depends('part_ids')
-    def _participants(self):
+    def _compute_participants(self):
         for rec in self:
             rec.participants = len(rec.part_ids)
 
@@ -79,7 +79,7 @@ class SchoolEvent(models.Model):
     maximum_participants = fields.Integer('Maximum Participants',
                                           help='Maximum Participant\
                                                 of the Event')
-    participants = fields.Integer(compute='_participants',
+    participants = fields.Integer(compute='_compute_participants',
                                   string='Participants', readonly=True)
     part_standard_ids = fields.Many2many('school.standard',
                                          'school_standard_event_rel',
