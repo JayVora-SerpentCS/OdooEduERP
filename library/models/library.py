@@ -89,7 +89,7 @@ class LibraryCard(models.Model):
 
     @api.multi
     @api.depends('student_id')
-    def get_name(self):
+    def _compute_name(self):
         for rec in self:
             if rec.student_id:
                 user = rec.student_id.name
@@ -102,7 +102,7 @@ class LibraryCard(models.Model):
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
-    gt_name = fields.Char(compute="get_name", method=True, string='Name')
+    gt_name = fields.Char(compute="_compute_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
     roll_no = fields.Integer('Roll No')
@@ -135,7 +135,7 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     @api.depends('date_issue', 'day_to_return_book')
-    def _calc_retunr_date(self):
+    def _compute_return_date(self):
         ''' This method calculate a book return date.
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -154,7 +154,7 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     @api.depends('date_return', 'day_to_return_book')
-    def _calc_penalty(self):
+    def _compute_penalty(self):
         ''' This method calculate a penalty on book .
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -168,7 +168,6 @@ class LibraryBookIssue(models.Model):
         '''
         for line in self:
             if line.date_return:
-#               and line.state not in ('fine', 'paid', 'cancel')
                 start_day = datetime.now()
                 end_day = datetime.strptime(line.date_return,
                                             "%Y-%m-%d %H:%M:%S")
@@ -180,7 +179,7 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     @api.depends('state')
-    def _calc_lost_penalty(self):
+    def _compute_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -236,17 +235,17 @@ class LibraryBookIssue(models.Model):
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
                                  time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_return = fields.Datetime(compute="_calc_retunr_date",
+    date_return = fields.Datetime(compute="_compute_return_date",
                                   string='Return Date',
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
                                          help="Actual Return Date of Book")
-    penalty = fields.Float(compute="_calc_penalty",
+    penalty = fields.Float(compute="_compute_penalty",
                            string='Penalty', method=True,
                            help='It show the late book return penalty')
-    lost_penalty = fields.Float(compute="_calc_lost_penalty", string='Fine',
-                                store=True,
+    lost_penalty = fields.Float(compute="_compute_lost_penalty",
+                                string='Fine', store=True,
                                 help='It show the penalty for lost book')
     return_days = fields.Integer('Return Days')
     day_to_return_book = fields.Many2one('library.book.returnday',
@@ -490,7 +489,7 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     @api.depends('type')
-    def gt_bname(self):
+    def _compute_bname(self):
         if self.type:
             if self.type == 'existing':
                 book = self.name.name
@@ -507,7 +506,7 @@ class LibraryBookRequest(models.Model):
     name = fields.Many2one('product.product', 'Book Name')
     new1 = fields.Char('Book Name',)
     new2 = fields.Char('Book Name')
-    bk_nm = fields.Char('Name', compute="gt_bname", store=True)
+    bk_nm = fields.Char('Name', compute="_compute_bname", store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('cancel', 'Cancelled'),

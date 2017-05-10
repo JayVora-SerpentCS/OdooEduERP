@@ -30,10 +30,10 @@ class Many2manySym(fields.Many2many):
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         for (self._id2, self._id1) in [(self._id2, self._id1),
                                        (self._id1, self._id2)]:
-            self._cr.execute('select ' + self._id2 + ',' + self._id1 +
-                             ' from ' + self._rel + ' where ' + self._id1 +
-                             ' in (' + ids_s + ')' + limit_str +
-                             ' offset %s', (offset,))
+            self._cr.execute('''select %s, %s from %s where %s in (%s)
+                                %s offset %s''',(self._id2, self._id1,
+                                                 self._rel, self._id1, ids_s,
+                                                 limit_str, offset))
             for r in self._cr.fetchall():
                 res[r[1]].append(r[0])
         return res
@@ -240,7 +240,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     @api.depends('qty_available')
-    def _get_books_available(self):
+    def _compute_books_available(self):
         book_issue_obj = self.env['library.book.issue']
         for rec in self:
             issue_ids = book_issue_obj.sudo().search([('name', '=', rec.id),
@@ -254,7 +254,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     @api.depends('books_available')
-    def _check_books_availablity(self):
+    def _compute_books_availablity(self):
         for rec in self:
             if rec.books_available >= 1:
                 rec.availability = 'available'
@@ -287,11 +287,11 @@ class ProductProduct(models.Model):
     rack = fields.Many2one('library.rack', 'Rack',
                            help="Shows position of book")
     books_available = fields.Float("Books Available",
-                                   compute="_get_books_available")
+                                   compute="_compute_books_available")
     availability = fields.Selection([('available', 'Available'),
                                      ('notavailable', 'Not Available')],
                                     'Book Availability', default='available',
-                                    compute="_check_books_availablity")
+                                    compute="_compute_books_availablity")
     link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
                             'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
@@ -326,7 +326,7 @@ class ProductProduct(models.Model):
         action = self.env.ref('library.action_purchase_order_today_tree')
         result = action.read()[0]
         if not purchase_obj:
-            raise UserError(('There is no Books Purchase'))
+            raise UserError(_('There is no Books Purchase'))
         order = []
         [order.append(order_rec.order_id.id) for order_rec in purchase_obj]
         if len(order) != 1:
