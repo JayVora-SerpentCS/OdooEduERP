@@ -268,22 +268,19 @@ class TransportRegistration(models.Model):
         for rec in self:
             rec.state = 'pending'
             transport = rec.browse(rec.id)
-            vals = {'partner_id': transport.part_name.partner_id.id,
-                    'account_id': transport.part_name.partner_id.
-                                  property_account_receivable_id.id,
+            partner = transport.part_name and transport.part_name.partner_id
+            vals = {'partner_id': partner.id,
+                    'account_id': partner.property_account_receivable_id.id,
                     'transport_student_id': transport.id}
             account_object = self.env['account.invoice'].create(vals)
-            acct_journal_id = \
-                account_object.journal_id.default_credit_account_id.id
+            journal = account_object.journal_id
+            acct_journal_id = journal.default_credit_account_id.id
             account_view_id = self.env.ref('account.invoice_form')
-            inv_line = []
             line_vals = {'name': 'Transport Fees',
                          'account_id': acct_journal_id,
                          'quantity': transport.for_month,
-                         'price_unit': transport.m_amount,
-                         }
-            inv_line.append((0, 0, line_vals))
-            account_object.write({'invoice_line_ids': inv_line})
+                         'price_unit': transport.m_amount}
+            account_object.write({'invoice_line_ids': (0, 0, line_vals)})
             return {'name': _("Pay Transport Fees"),
                     'view_type': 'form',
                     'view_mode': 'form',
@@ -297,14 +294,14 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def view_invoice(self):
-        invoices = self.env['account.invoice'].search([('transport_student_id',
-                                                        '=', self.id)])
+        invoices = self.env['account.invoice'
+                            ].search([('transport_student_id', '=', self.id)])
         action = self.env.ref('account.action_invoice_tree1').read()[0]
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
-            action['views'] = [(self.env.ref('account.invoice_form').id,
-                                                            'form')]
+            action['views'] = [(self.env.ref('account.invoice_form'
+                                             ).id, 'form')]
             action['res_id'] = invoices.ids[0]
         else:
             action = {'type': 'ir.actions.act_window_close'}
@@ -312,11 +309,10 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def _compute_invoice(self):
+        inv_obj = self.env['account.invoice']
         for rec in self:
-            invoice_count = self.env['account.invoice'].search_count([(
-                                                'transport_student_id',
-                                                '=', rec.id)])
-            rec.count_inv = invoice_count
+            rec.count_inv = inv_obj.search_count([('transport_student_id',
+                                                   '=', rec.id)])
 
     @api.multi
     def onchange_point_id(self, point):
@@ -330,7 +326,7 @@ class TransportRegistration(models.Model):
         if not month:
             return {}
         tr_start_date = time.strftime("%Y-%m-%d")
-        mon = relativedelta(months= +month)
+        mon = relativedelta(months = + month)
         tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         return {'value': {'reg_end_date': date}}
@@ -347,65 +343,65 @@ class TransportRegistration(models.Model):
         prt_obj = self.env['student.student']
         stu_prt_obj = self.env['transport.participant']
         vehi_obj = self.env['transport.vehicle']
-        for reg_data in self:
+        for rec in self:
             # registration months must one or more then one
-            if reg_data.for_month <= 0:
+            if rec.for_month <= 0:
                 raise UserError(_('Error! Sorry Registration months must be 1'
                                   'or more then one.'))
             # First Check Is there vacancy or not
-            person = int(reg_data.vehicle_id.participant) + 1
-            if reg_data.vehicle_id.capacity < person:
+            person = int(rec.vehicle_id.participant) + 1
+            if rec.vehicle_id.capacity < person:
                 raise UserError(_('There is No More vacancy on this vehicle.'))
 
             # calculate amount and Registration End date
-            amount = reg_data.point_id.amount * reg_data.for_month
-            tr_start_date = (reg_data.reg_date)
-            month = reg_data.for_month
-            mon1 = relativedelta(months= +month)
+            amount = rec.point_id.amount * rec.for_month
+            tr_start_date = (rec.reg_date)
+            month = rec.for_month
+            mon1 = relativedelta(months = + month)
             tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon1
-            date = datetime.strptime(reg_data.name.end_date, '%Y-%m-%d')
+            date = datetime.strptime(rec.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise UserError(_('For this much Months\
                                   Registration is not Possible because\
                                   Root end date is Early.'))
             # make entry in Transport
-            dict_prt = {'stu_pid_id': str(reg_data.part_name.pid),
+            dict_prt = {'stu_pid_id': str(rec.part_name.pid),
                         'amount': amount,
-                        'transport_id': reg_data.name.id,
+                        'transport_id': rec.name.id,
                         'tr_end_date': tr_end_date,
-                        'name': reg_data.part_name.id,
-                        'months': reg_data.for_month,
-                        'tr_reg_date': reg_data.reg_date,
-                        'point_id': reg_data.point_id.id,
+                        'name': rec.part_name.id,
+                        'months': rec.for_month,
+                        'tr_reg_date': rec.reg_date,
+                        'point_id': rec.point_id.id,
                         'state': 'running',
-                        'vehicle_id': reg_data.vehicle_id.id}
+                        'vehicle_id': rec.vehicle_id.id}
             temp = stu_prt_obj.sudo().create(dict_prt)
             # make entry in Transport vehicle.
             list1 = []
-            for prt in reg_data.vehicle_id.vehi_participants_ids:
+            for prt in rec.vehicle_id.vehi_participants_ids:
                 list1.append(prt.id)
             flag = True
             for prt in list1:
                 data = stu_prt_obj.browse(prt)
-                if data.name.id == reg_data.part_name.id:
+                if data.name.id == rec.part_name.id:
                     flag = False
             if flag:
                 list1.append(temp.id)
-            vehicle_id = vehi_obj.browse(reg_data.vehicle_id.id)
+            vehicle_id = vehi_obj.browse(rec.vehicle_id.id)
             vehicle_id.sudo().write({'vehi_participants_ids': [(6, 0, list1)]})
             # make entry in student.
             list1 = []
-            for root in reg_data.part_name.transport_ids:
+            for root in rec.part_name.transport_ids:
                 list1.append(root.id)
             list1.append(temp.id)
-            part_name_id = prt_obj.browse(reg_data.part_name.id)
+            part_name_id = prt_obj.browse(rec.part_name.id)
             part_name_id.sudo().write({'transport_ids': [(6, 0, list1)]})
             # make entry in transport.
             list1 = []
-            for prt in reg_data.name.trans_participants_ids:
+            for prt in rec.name.trans_participants_ids:
                 list1.append(prt.id)
             list1.append(temp.id)
-            stu_tran_id = trans_obj.browse(reg_data.name.id)
+            stu_tran_id = trans_obj.browse(rec.name.id)
             stu_tran_id.sudo().write({'trans_participants_ids':
                                       [(6, 0, list1)]})
         return True
@@ -424,21 +420,18 @@ class AccountPayment(models.Model):
     @api.multi
     def post(self):
         res = super(AccountPayment, self).post()
-        for invoice in self.invoice_ids:
-            if invoice.transport_student_id and\
-            invoice.state == 'paid':
-                fees_payment = invoice.transport_student_id.paid_amount
-                fees_payment += self.amount
-                invoice.transport_student_id.write(
-                                    {'state': 'paid',
-                                     'paid_amount': fees_payment,
-                                     'remain_amt': invoice.residual})
-            if invoice.transport_student_id and\
-            invoice.state == 'open':
-                fees_payment = invoice.hostel_student_id.paid_amount
-                fees_payment += self.amount
-                invoice.transport_student_id.write(
-                                    {'status': 'pending',
-                                     'paid_amount': fees_payment,
-                                     'remain_amt': invoice.residual})
+        for rec in self:
+            for invoice in rec.invoice_ids:
+                vals = {'remain_amt': invoice.residual}
+                if invoice.transport_student_id and invoice.state == 'paid':
+                    fees_payment = (invoice.transport_student_id.paid_amount +
+                                    rec.amount)
+                    vals = {'state': 'paid',
+                            'paid_amount': fees_payment}
+                elif invoice.transport_student_id and invoice.state == 'open':
+                    fees_payment = (invoice.hostel_student_id.paid_amount +
+                                    rec.amount)
+                    vals = {'status': 'pending',
+                            'paid_amount': fees_payment}
+                invoice.transport_student_id.write(vals)
         return res
