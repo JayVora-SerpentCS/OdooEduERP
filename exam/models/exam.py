@@ -11,15 +11,6 @@ class BoardBoard(models.AbstractModel):
     _inherit = 'board.board'
 
 
-class ExtendedTimeTable(models.Model):
-    _inherit = 'time.table'
-
-    timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
-                                      string='Time Table Type', required=True,
-                                      inivisible=False)
-    exam_id = fields.Many2one('exam.exam', 'Exam')
-
-
 class StudentStudent(models.Model):
     _inherit = 'student.student'
     _description = 'Student Information'
@@ -39,6 +30,17 @@ class StudentStudent(models.Model):
                                                   count=count)
 
 
+class ExtendedTimeTable(models.Model):
+    _inherit = 'time.table'
+
+    timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
+                                      string='Time Table Type', required=True,
+                                      inivisible=False)
+    exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
+                                              'TimeTable')
+    exam_id = fields.Many2one('exam.exam', 'Exam')
+
+
 class ExtendedTimeTableLine(models.Model):
     _inherit = 'time.table.line'
 
@@ -46,12 +48,13 @@ class ExtendedTimeTableLine(models.Model):
     day_of_week = fields.Char('Week Day')
 
     @api.multi
-    def on_change_date_day(self, exm_date):
-        val = {}
-        if exm_date:
-            week_day = datetime.strptime(exm_date, "%Y-%m-%d")
-            val['week_day'] = week_day.strftime("%A").lower()
-        return {'value': val}
+    @api.onchange('exm_date')
+    def on_change_date_day(self):
+        for rec in self:
+            if rec.exm_date:
+                week_day = datetime.strptime(rec.exm_date, "%Y-%m-%d")
+                rec.week_day = week_day.strftime("%A").lower()
+        return True
 
     @api.multi
     def _check_date(self):
@@ -83,14 +86,12 @@ class ExamExam(models.Model):
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             default=lambda obj:
                             obj.env['ir.sequence'].next_by_code('exam.exam'))
-    standard_id = fields.Many2many('school.standard',
-                                   'school_standard_exam_rel', 'standard_id',
+    standard_id = fields.Many2many('standard.standard',
+                                   'standard_standard_exam_rel', 'standard_id',
                                    'event_id', 'Participant Standards')
     start_date = fields.Date("Exam Start Date",
                              help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
-    create_date = fields.Date("Exam Created Date", help="Exam Created Date")
-    write_date = fields.Date("Exam Update Date", help="Exam Update Date")
     exam_timetable_ids = fields.One2many('time.table', 'exam_id',
                                          'Exam Schedule')
     state = fields.Selection([('draft', 'Draft'),
@@ -99,6 +100,9 @@ class ExamExam(models.Model):
                               ('cancelled', 'Cancelled')], 'State',
                              readonly=True, default='draft')
     grade_system = fields.Many2one('grade.master', "Grade System")
+    academic_year = fields.Many2one('academic.year', 'Academic Year')
+    exam_schedule_ids = fields.One2many('exam.schedule.line', 'exam_id',
+                                        'Exam Schedule')
 
     @api.multi
     def set_to_draft(self):
@@ -140,7 +144,8 @@ class ExamExam(models.Model):
                 domain = [('standard_id', '=', school_std_rec.standard_id.id),
                           ('division_id', '=', school_std_rec.division_id.id),
                           ('medium_id', '=', school_std_rec.medium_id.id)]
-                for student in student_obj.search(domain):
+                student_ids = student_obj.search(domain)
+                for student in student_ids:
                     domain = [('standard_id', '=',
                                school_std_rec.standard_id.id),
                               ('student_id.division_id', '=',
@@ -151,8 +156,10 @@ class ExamExam(models.Model):
                               ('s_exam_ids', '=', rec.id)]
                     result_exists = result_obj.search(domain)
                     if result_exists:
-                        [result_list.append(res.id) for res in result_exists]
-                    else:
+                        [result_list.append(res.id)
+                            for res in result_exists]
+
+                    if not result_exists:
                         standard_id = school_std_rec.standard_id.id
                         division_id = school_std_rec.division_id.id
                         medium_id = school_std_rec.medium_id.id
@@ -161,25 +168,41 @@ class ExamExam(models.Model):
                                    'standard_id': standard_id,
                                    'division_id': division_id,
                                    'medium_id': medium_id,
-                                   'grade_system': rec.grade_system.id}
+                                   'grade_system': rec.grade_system.id
+                                   }
                         exam_line = []
                         for exam_lines in rec.exam_timetable_ids:
                             for line in exam_lines.timetable_ids:
                                 min_mrks = line.subject_id.minimum_marks
                                 max_mrks = line.subject_id.maximum_marks
-                                sub_vals = {'subject_id': line.subject_id.id,
-                                            'minimum_marks': min_mrks,
-                                            'maximum_marks': max_mrks}
+                                sub_vals = {
+                                        'subject_id': line.subject_id.id,
+                                        'minimum_marks': min_mrks,
+                                        'maximum_marks': max_mrks
+                                        }
                                 exam_line.append((0, 0, sub_vals))
                         rs_dict.update({'result_ids': exam_line})
                         result = result_obj.create(rs_dict)
                         result_list.append(result.id)
+
+            else:
+                raise except_orm(_('Error !'),
+                                 _('Please Select Standard Id.'))
+
             return {'name': _('Result Info'),
                     'view_type': 'form',
                     'view_mode': 'tree,form',
                     'res_model': 'exam.result',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', result_list)]}
+
+
+class ExamScheduleLine(models.Model):
+    _name = 'exam.schedule.line'
+
+    standard_id = fields.Many2one('standard.standard', 'Standard')
+    timetable_id = fields.Many2one('time.table', 'Exam Schedule')
+    exam_id = fields.Many2one('exam.exam', 'Exam')
 
 
 class AdditionalExam(models.Model):
