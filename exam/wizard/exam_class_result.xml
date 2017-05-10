@@ -11,9 +11,9 @@
             <field name="arch" type="xml">
                 <form string="Result Info">
                     <group string="Result info" colspan="4" >
-                         <field name="standard_id" placeholder="Select Standard"/>
-                         <field name="exam_id" placeholder="Select Exam"/>
-                         <field name="year_id" placeholder="Select Academic Year"/>
+                         <field name="standard_id" placeholder="Select Standard" widget="selection"/>
+                         <field name="exam_id" placeholder="Select Exam" widget="selection"/>
+                         <field name="year_id" placeholder="Select Academic Year" widget="selection"/>
                     </group>
                     <footer>
                         <button class="oe_highlight" name="get_result" string="Result Sheet" type="object"/>

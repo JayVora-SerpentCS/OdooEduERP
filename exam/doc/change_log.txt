@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.8 --> 10 May 2017 : Arpit Joshi
+    * View level improvements
+
 1.0.7 --> 10 May 2017: Vimal Patel
     * added the code of the move standard based on the exam result.
     

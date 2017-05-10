@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Exam Demo Data -->
         <record id="exam_exam_finalexam0" model="exam.exam">
             <field eval="30" name="weightage"/>
             <field name="exam_code" eval="time.strftime('%Y /%m')+'/003'"/>
             <field name="name">Final Exam</field>
+            <field name="state">finished</field>
+            <field name="grade_system" ref="school.demo_student_grade_1"/>
+<!--             <field name="standard_id" eval="[(6,0,[ref('school.demo_standard_standard_1')])]"/> -->
             <field name="end_date" eval="time.strftime('%Y')+'/03/09'"/>
             <field eval="100" name="maximum_marks"/>
             <field name="created_at" eval="time.strftime('%Y')+'/03/03'"/>
             <field eval="40" name="minimum_marks"/>
             <field name="start_date" eval="time.strftime('%Y')+'/03/06'"/>
-            <field eval="[(6,0,[])]" name="standard_id"/>
+            <field eval="[(6,0,[ref('school.demo_standard_standard_1')])]" name="standard_id"/>
         </record>
         <record id="time_table_finalexamtimetable0" model="time.table">
             <field name="division_id" ref="school.demo_standard_division_1"/>
@@ -65,41 +68,46 @@
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
-            <field name="result">Pass</field>
-            <field eval="90.75" name="percentage"/>
-            <field eval="363.0" name="total"/>
+            <field name="grade_system" ref="school.demo_student_grade_1"/>
+<!--             <field name="result">Pass</field> -->
+<!--             <field eval="90.75" name="percentage"/> -->
+<!--             <field eval="363.0" name="total"/> -->
         </record>
         <record id="exam_result_2" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_2"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
             <field name="result">Pass</field>
-            <field eval="80.75" name="percentage"/>
-            <field eval="316.0" name="total"/>
+            <field name="grade_system" ref="school.demo_student_grade_1"/>
+<!--             <field eval="80.75" name="percentage"/> -->
+<!--             <field eval="316.0" name="total"/> -->
         </record>
         <record id="exam_result_3" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_3"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
-            <field name="result">fail</field>
-            <field eval="32.75" name="percentage"/>
-            <field eval="103.0" name="total"/>
+            <field name="grade_system" ref="school.demo_student_grade_1"/>
+<!--             <field name="result">fail</field> -->
+<!--             <field eval="32.75" name="percentage"/> -->
+<!--             <field eval="103.0" name="total"/> -->
         </record>
         <record id="exam_result_4" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_4"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
-            <field name="result">Pass</field>
-            <field eval="60.75" name="percentage"/>
-            <field eval="263.0" name="total"/>
+            <field name="grade_system" ref="school.demo_student_grade_1"/>
+<!--             <field name="result">Pass</field> -->
+<!--             <field eval="60.75" name="percentage"/> -->
+<!--             <field eval="263.0" name="total"/> -->
         </record>
         <record id="exam_result_5" model="exam.result">
             <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
-            <field name="result">Fail</field>
-            <field eval="30.75" name="percentage"/>
-            <field eval="96.0" name="total"/>
+            <field name="grade_system" ref="school.demo_student_grade_1"/>
+<!--             <field name="result">Fail</field> -->
+<!--             <field eval="30.75" name="percentage"/> -->
+<!--             <field eval="96.0" name="total"/> -->
         </record>
         <!-- Exam Subject Demo Data -->
         <record id="exm_subject_0" model="exam.subject">
