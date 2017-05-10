@@ -2,12 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
 from odoo.exceptions import ValidationError
-
-
-class BoardBoard(models.AbstractModel):
-    _inherit = 'board.board'
 
 
 class TimeTable(models.Model):
@@ -50,7 +45,7 @@ class TimeTable(models.Model):
             # Checks if time is greater than 24 hours than raise error
             if rec.start_time > 24:
                 raise ValidationError(_('''Start Time should be less than
-                                     24 hours'''))
+                                        24 hours'''))
             if rec.end_time > 24:
                 raise ValidationError(_('''End Time should be less than
                                         24 hours'''))
@@ -79,8 +74,8 @@ class TimeTableLine(models.Model):
         if self.teacher_id.id not in self.subject_id.teacher_ids.ids and\
             self.table_id.timetable_type == 'regular':
             raise ValidationError(_('''The subject %s is not assigned to
-                        teacher %s.''') % (self.subject_id.name,
-                                           self.teacher_id.name))
+                                    teacher %s.''') % (self.subject_id.name,
+                                                       self.teacher_id.name))
 
     teacher_id = fields.Many2one('hr.employee', 'Faculty Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
