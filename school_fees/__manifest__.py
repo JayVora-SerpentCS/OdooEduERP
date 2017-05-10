@@ -3,9 +3,8 @@
 
 {
     'name': 'Fees Management',
-    'version': "1.0.2",
-    'author': '''Serpent Consulting Services Pvt. Ltd.,
-                 Odoo Community Association (OCA)''',
+    'version': "10.0.1.0.2",
+    'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'license': "AGPL-3",
