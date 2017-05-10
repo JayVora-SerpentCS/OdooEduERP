@@ -97,7 +97,7 @@
                         <group col="4" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
                             <separator colspan="4" col="4" />
                             <field name="exam_code"/>
-                            <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="grade_system"  widget="selection" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                         <group col="4" colspan="2">
@@ -105,10 +105,12 @@
                             <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
                             <notebook colspan="4" >
                                 <page string="Exam Schedule">
-                                    <field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="exam_timetable_ids" nolabel="1" colspan="4" 
+                                        attrs="{'readonly': [('state','!=','draft')]}"/>
                                 </page>
                                 <page string="Standard">
-                                    <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                    <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
+                                        options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                                 </page>
                             </notebook>
                         </group>
