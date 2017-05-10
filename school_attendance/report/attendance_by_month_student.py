@@ -2,14 +2,13 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from odoo import api
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.report.interface import report_rml
 from odoo.report.interface import toxml
 from odoo.report import report_sxw
 from odoo.tools import ustr
-import odoo
+from odoo import api
 
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'June',
@@ -25,11 +24,9 @@ def lengthmonth(year, month):
 
 class ReportCustom(report_rml):
 
-#    @api.multi
     def create_xml(self, cr, uid, ids, datas, context=None):
 
-#        env = odoo.api.Environment({})
-        env = odoo.api.Environment(cr, uid, context or {})
+        env = api.Environment(cr, uid, context or {})
         obj_student = env['student.student']
         sheet_obj = env['attendance.sheet']
         month = datetime(datas['form']['year'], datas['form']['month'], 1)
@@ -138,8 +135,8 @@ class ReportCustom(report_rml):
                 user_xml.append(user_repr % '\n'.join(days_xml))
 
         rpt_obj = env['student.student']
-        rml_obj = report_sxw.rml_parse(
-                                    cr, uid, ids, rpt_obj._name, context=None)
+        rml_obj = report_sxw.rml_parse(cr, uid, ids, rpt_obj._name,
+                                       context=None)
         header_xml = '''
         <header>
         <date>%s</date>

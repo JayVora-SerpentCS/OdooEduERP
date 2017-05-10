@@ -3,9 +3,8 @@
 
 import time
 from dateutil.relativedelta import relativedelta
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.exceptions import Warning as UserError
 
 
@@ -242,11 +241,11 @@ class ProductProduct(models.Model):
     @api.multi
     @api.depends('qty_available')
     def _get_books_available(self):
-        library_book_issue_obj = self.env['library.book.issue']
+        book_issue_obj = self.env['library.book.issue']
         for rec in self:
-            issue_ids = library_book_issue_obj.sudo().search(
-                                            [('name', '=', rec.id),
-                                   ('state', 'in', ('issue', 'reissue'))])
+            issue_ids = book_issue_obj.sudo().search([('name', '=', rec.id),
+                                                      ('state', 'in',
+                                                       ('issue', 'reissue'))])
             occupied_no = 0.0
             if issue_ids:
                 occupied_no = len(issue_ids)
@@ -280,8 +279,7 @@ class ProductProduct(models.Model):
                                     help="Record creation date",
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
-    date_retour = fields.Datetime('Return Date',
-                              help='Book Return date')
+    date_retour = fields.Datetime('Return Date', help='Book Return date')
     book_price = fields.Float('Book Price')
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
@@ -341,9 +339,9 @@ class ProductProduct(models.Model):
 
     @api.multi
     def action_book_req(self):
-        for product_rec in self:
+        for rec in self:
             book_req = self.env['library.book.request'].search([('name', '=',
-                                                             product_rec.id)])
+                                                                 rec.id)])
             action = self.env.ref('library.action_lib_book_req')
             result = (action.read()[0])
             if not book_req:

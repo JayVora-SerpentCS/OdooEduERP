@@ -53,7 +53,7 @@ class StudentEvaluation(models.Model):
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
     username = fields.Many2one('res.users', 'User', readonly=True,
-                              default=lambda self: self.env.user)
+                               default=lambda self: self.env.user)
 
     @api.multi
     def set_start(self):
@@ -87,9 +87,8 @@ class TeacherEvaluation(models.Model):
         eval_list = []
         for stu_eval_rec in self.browse(self.ids):
             if stu_eval_rec.teacher_eval_line:
-                self._cr.execute('delete from student_evaluation_line\
-                                  where teacher_eval_id=%s',
-                                  (stu_eval_rec.id,))
+                self._cr.execute('''delete from student_evaluation_line where
+                                    teacher_eval_id=%s''',(stu_eval_rec.id,))
             type_eval = stu_eval_rec.type
             domain = [('type', '=', type_eval)]
             eval_temp_ids = eval_temp_obj.search(domain)
@@ -118,14 +117,14 @@ class TeacherEvaluation(models.Model):
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     teacher_eval_line = fields.One2many('student.evaluation.line',
                                         'teacher_eval_id',
-                               string='Questionnaire')
+                                        string='Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
                          method=True)
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
     username = fields.Many2one('res.users', 'User', readonly=True,
-                              default=lambda self: self.env.user)
+                               default=lambda self: self.env.user)
 
     @api.multi
     def set_start(self):

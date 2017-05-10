@@ -16,8 +16,6 @@
           'views/event_workflow.xml',
           'views/participants.xml',
           'views/report_view.xml'],
-    'demo': [
-            'demo/event_demo.xml'
-            ],
+    'demo': ['demo/event_demo.xml'],
  'installable': True,
  'application': True}

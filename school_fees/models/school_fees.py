@@ -186,8 +186,7 @@ class StudentPayslip(models.Model):
     total = fields.Float("Total", readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('pending', 'Pending'), ('paid', 'Paid')],
-                              'State', readonly=True,
-                             default='draft')
+                             'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=True)
     invoice_count = fields.Integer(string="# of Invoices",
                                    compute="_compute_invoice")
@@ -244,12 +243,10 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def _compute_invoice(self):
+        inv_obj = self.env['account.invoice']
         for rec in self:
-            inv_search = self.env['account.invoice'].search_count([
-                                                    ('student_payslip_id',
-                                                     '=', rec.id),
-                                                    ])
-            rec.invoice_count = inv_search
+            rec.invoice_count = inv_obj.search_count([('student_payslip_id',
+                                                       '=', rec.id)])
 
     @api.multi
     def invoice_view(self):
@@ -260,7 +257,7 @@ class StudentPayslip(models.Model):
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
             action['views'] = [(self.env.ref('account.invoice_form').id,
-                                                            'form')]
+                                'form')]
             action['res_id'] = invoices.ids[0]
         else:
             action = {'type': 'ir.actions.act_window_close'}
@@ -362,28 +359,24 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def student_pay_fees(self):
-        for student_obj in self:
-            student_obj.write({'state': 'pending'})
+        for rec in self:
+            rec.write({'state': 'pending'})
             if not self.ids:
                 return []
-            fees = student_obj.browse(student_obj.id)
-            vals = {'partner_id': fees.student_id.partner_id.id,
-                    'date_invoice': fees.date,
-                    'account_id': fees.student_id.partner_id.
-                                  property_account_receivable_id.id,
-                    'journal_id': fees.journal_id.id,
-                    'slip_ref': fees.number,
-                    'student_payslip_id': fees.id,
-                    'type': 'out_invoice',
-                    }
+            partner = rec.student_id and rec.student_id.partner_id
+            vals = {'partner_id': partner.id,
+                    'date_invoice': rec.date,
+                    'account_id': partner.property_account_receivable_id.id,
+                    'journal_id': rec.journal_id.id,
+                    'slip_ref': rec.number,
+                    'student_payslip_id': rec.id,
+                    'type': 'out_invoice'}
             invoice_line = []
-            for line in student_obj.line_ids:
-                invoice_line_vals = {
-                       'name': line.name,
-                       'account_id': line.account_id.id,
-                       'quantity': 1.000,
-                       'price_unit': line.amount
-                       }
+            for line in rec.line_ids:
+                invoice_line_vals = {'name': line.name,
+                                     'account_id': line.account_id.id,
+                                     'quantity': 1.000,
+                                     'price_unit': line.amount}
                 invoice_line.append((0, 0, invoice_line_vals))
             vals.update({'invoice_line_ids': invoice_line})
             account_invoice_id = self.env['account.invoice'].create(vals)
@@ -429,23 +422,19 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self).post()
         curr_date = datetime.now()
         for invoice in self.invoice_ids:
-            if invoice.student_payslip_id and\
-            invoice.state == 'paid':
-                fees_payment = invoice.student_payslip_id.paid_amount
-                fees_payment += self.amount
-                invoice.student_payslip_id.write(
-                                    {'state': 'paid',
-                                     'payment_date': curr_date,
-                                     'move_id': invoice.move_id.id or False,
-                                     'due_amount': invoice.residual,
-                                     'paid_amount': fees_payment})
+            vals = {'due_amount': invoice.residual}
+            if invoice.student_payslip_id and invoice.state == 'paid':
+                fees_payment = (invoice.student_payslip_id.paid_amount +
+                                self.amount)
+                vals = {'state': 'paid',
+                        'payment_date': curr_date,
+                        'move_id': invoice.move_id.id or False,
+                        'paid_amount': fees_payment}
             if invoice.student_payslip_id and invoice.state == 'open':
-                fees_payment = invoice.student_payslip_id.paid_amount
-                fees_payment += self.amount
-                invoice.student_payslip_id.write({'state': 'pending',
-                                                  'due_amount':
-                                                  invoice.residual,
-                                                  'paid_amount': fees_payment
-                                                  })
-
+                fees_payment = (invoice.student_payslip_id.paid_amount +
+                                self.amount)
+                vals = {'state': 'pending',
+                        'due_amount': invoice.residual,
+                        'paid_amount': fees_payment}
+            invoice.student_payslip_id.write(vals)
         return res

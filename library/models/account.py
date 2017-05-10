@@ -33,8 +33,6 @@ class AccountPayment(models.Model):
     def post(self):
         res = super(AccountPayment, self).post()
         for invoice in self.invoice_ids:
-            if invoice.book_issue and\
-            invoice.state == 'paid':
-                invoice.book_issue.write({'state': 'paid'
-                                          })
+            if invoice.book_issue and invoice.state == 'paid':
+                invoice.book_issue.write({'state': 'paid'})
         return res

@@ -231,7 +231,7 @@ class SchoolEventRegistration(models.Model):
             participants = int(event_data.participants) - 1
             event_reg_id = event_obj.browse(reg_data.name.id)
             event_reg_id.sudo().write({'part_ids': [(6, 0, list1)],
-                                'participants': participants})
+                                       'participants': participants})
         return True
 
     @api.multi
