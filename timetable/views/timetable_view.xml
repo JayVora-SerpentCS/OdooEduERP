@@ -15,6 +15,9 @@
                             <field name="year_id" colspan="4" placeholder="Select Year" widget="selection"/>
 <!--                             <field name="do_not_create"/> -->
                         </group>
+                        <group>
+                            <field name="user_ids" invisible="1"/>
+                        </group>
                         <notebook colspan="4">
                             <page string="TimeTable">
                                 <field name="timetable_ids" nolabel="1" colspan="4">

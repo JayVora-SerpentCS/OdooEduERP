@@ -9,6 +9,14 @@ class TimeTable(models.Model):
     _description = 'Time Table'
     _name = 'time.table'
 
+    @api.multi
+    def _compute_user(self):
+        '''Method to compute student'''
+        for rec in self:
+            for teacher in rec.timetable_ids:
+                rec.user_ids = [teacher.teacher_id.user_id.id]
+        return True
+
     name = fields.Char('Description')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True)
@@ -17,6 +25,8 @@ class TimeTable(models.Model):
     timetable_type = fields.Selection([('regular', 'Regular')],
                                       'Time Table Type', default="regular",
                                       inivisible=True)
+    user_ids = fields.Many2many('res.users', string="Users",
+                                compute="_compute_user", store=True)
 #    do_not_create = fields.Boolean('Do not Create')
 
     _sql_constraints = [
