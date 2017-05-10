@@ -3,9 +3,8 @@
 
 {
     'name': 'HOSTEL',
-    'version': "1.0.1",
-    'author': '''Serpent Consulting Services Pvt. Ltd.,
-                 Odoo Community Association (OCA)''',
+    'version': "10.0.1.0.1",
+    'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
     'license': "AGPL-3",
