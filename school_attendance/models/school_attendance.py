@@ -2,7 +2,6 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from calendar import monthrange
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
