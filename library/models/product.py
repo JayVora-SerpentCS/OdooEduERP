@@ -3,7 +3,7 @@
 
 import time
 from dateutil.relativedelta import relativedelta
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.exceptions import Warning as UserError
 
@@ -31,9 +31,9 @@ class Many2manySym(fields.Many2many):
         for (self._id2, self._id1) in [(self._id2, self._id1),
                                        (self._id1, self._id2)]:
             self._cr.execute('''select %s, %s from %s where %s in (%s)
-                                %s offset %s''',(self._id2, self._id1,
-                                                 self._rel, self._id1, ids_s,
-                                                 limit_str, offset))
+                                %s offset %s''', (self._id2, self._id1,
+                                                  self._rel, self._id1, ids_s,
+                                                  limit_str, offset))
             for r in self._cr.fetchall():
                 res[r[1]].append(r[0])
         return res

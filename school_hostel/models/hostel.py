@@ -246,7 +246,7 @@ class AccountPayment(models.Model):
                 fees_payment = (inv.hostel_student_id.paid_amount +
                                 self.amount)
                 vals.update({'status': 'paid',
-                              'paid_amount': fees_payment})
+                             'paid_amount': fees_payment})
                 inv.hostel_student_id.write()
             elif inv.hostel_student_id and inv.state == 'open':
                 fees_payment = (inv.hostel_student_id.paid_amount +
