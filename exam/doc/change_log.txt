@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.6 --> 10 May 2017: Vimal Patel
+    * Solved travis error and fixed error when installed the module.
+    
 1.0.5 --> 3 May 2017: Arpit Joshi
     * Solved issue of grade after re evaluation marks enter.
 

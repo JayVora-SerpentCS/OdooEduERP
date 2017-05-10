@@ -3,7 +3,7 @@
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError, Warning as UserError
+from odoo.exceptions import UserError, Warning
 from odoo.exceptions import except_orm
 
 
@@ -14,9 +14,9 @@ class BoardBoard(models.AbstractModel):
 class ExtendedTimeTable(models.Model):
     _inherit = 'time.table'
 
-    timetable_type = fields.Selection([('exam', 'Exam'),
-                                       ('regular', 'Regular')],
-                                      'Time Table Type', required=True)
+    timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
+                                      string='Time Table Type', required=True,
+                                      inivisible=False)
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
 
@@ -153,32 +153,30 @@ class ExamExam(models.Model):
                                   ('s_exam_ids', '=', exam.id)]
                         result_exists = result_obj.search(domain)
                         if result_exists:
-                            [result_list.append(res.id) for res in\
-                                        result_exists]
+                            [result_list.append(res.id)
+                                for res in result_exists]
 
                         if not result_exists:
                             standard_id = school_std_rec.standard_id.id
                             division_id = school_std_rec.division_id.id
-                            rs_dict = {'s_exam_ids': exam.id,
-                                       'student_id': student.id,
-                                       'standard_id': standard_id,
-                                       'division_id': division_id,
-                                       'medium_id':
-                                            school_std_rec.medium_id.id,
-                                       'grade_system': exam.grade_system.id
-                                       }
+                            rs_dict = {
+                                   's_exam_ids': exam.id,
+                                   'student_id': student.id,
+                                   'standard_id': standard_id,
+                                   'division_id': division_id,
+                                   'medium_id': school_std_rec.medium_id.id,
+                                   'grade_system': exam.grade_system.id
+                                   }
                             exam_line = []
-                            for line in exam.exam_timetable_ids:
-                                for sub_line in line.timetable_ids:
-                                    sub_vals = {'subject_id': sub_line.
-                                                              subject_id.id,
-                                                'minimum_marks': sub_line
-                                                                .subject_id
-                                                                .minimum_marks,
-                                                'maximum_marks': sub_line
-                                                               .subject_id
-                                                               .maximum_marks,
-                                              }
+                            for exam_lines in exam.exam_timetable_ids:
+                                for line in exam_lines.timetable_ids:
+                                    min_mrks = line.subject_id.minimum_marks
+                                    max_mrks = line.subject_id.maximum_marks
+                                    sub_vals = {
+                                        'subject_id': line.subject_id.id,
+                                        'minimum_marks': min_mrks,
+                                        'maximum_marks': max_mrks,
+                                      }
                                     exam_line.append((0, 0, sub_vals))
                             rs_dict.update({'result_ids': exam_line})
                             result = result_obj.create(rs_dict)
@@ -263,8 +261,8 @@ class ExamResult(models.Model):
                 per = (obtained_total / total) * 100
                 if result.grade_system:
                     for grade_id in result.grade_system.grade_ids:
-                        if per >= grade_id.from_mark\
-                            and per <= grade_id.to_mark:
+                        if per >= grade_id.from_mark and\
+                                per <= grade_id.to_mark:
                             result.grade = grade_id.grade or ''
                 result.percentage = per
         return True
@@ -306,7 +304,7 @@ class ExamResult(models.Model):
     result = fields.Char(compute='_compute_result', string='Result',
                          readonly=True, method=True, store=True)
     grade = fields.Char("Grade", compute="_compute_per",
-                              readonly=True, store=True)
+                        readonly=True, store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
@@ -322,22 +320,19 @@ class ExamResult(models.Model):
         for rec in self:
             for line in rec.result_ids:
                 if line.maximum_marks == 0:
-                    raise UserError(_('Warning!'),
-                             _('Kindly add maximum marks of subject\
-                             "%s".') % (line.subject_id.name))
+                    raise UserError(_('Warning!'), _('Kindly add maximum\
+                            marks of subject "%s".') % (line.subject_id.name))
                 elif line.minimum_marks == 0:
-                    raise UserError(_('Warning!'),
-                             _('Kindly add minimum marks of subject\
-                             "%s".') % (line.subject_id.name))
+                    raise UserError(_('Warning!'), _('Kindly add minimum\
+                        marks of subject "%s".') % (line.subject_id.name))
                 elif ((line.maximum_marks == 0 or
                        line.minimum_marks == 0)
                       and line.obtain_marks):
-                    raise UserError(_('Warning!'),
-                            _('Kindly add marks details of subject \
-                                   "%s".') % (line.subject_id.name))
+                    raise UserError(_('Warning!'), _('Kindly add marks\
+                        details of subject "%s".') % (line.subject_id.name))
             vals = {'grade': rec.grade,
-                     'percentage': rec.percentage,
-                     'state': 'confirm'}
+                    'percentage': rec.percentage,
+                    'state': 'confirm'}
             self.write(vals)
         return True
 
@@ -477,8 +472,8 @@ class ExamResultBatchwise(models.Model):
                     if year_ob.grade_id.grade_ids:
                         # divis = divi <= year_ob.grade_id.to_mark
                         for grade_id in year_ob.grade_id.grade_ids:
-                            if (divi >= grade_id.from_mark and
-                                divi <= grade_id.to_mark):
+                            if divi >= grade_id.from_mark and\
+                                    divi <= grade_id.to_mark:
                                 rec.grade = grade_id.grade
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     year = fields.Many2one('academic.year', 'Academic Year', required=True)
