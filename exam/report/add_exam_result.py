@@ -3,7 +3,6 @@
 
 import time
 from odoo import models, api
-import odoo
 
 
 class ReportAddExamResult(models.AbstractModel):

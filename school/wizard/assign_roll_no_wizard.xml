@@ -30,6 +30,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_assign_roll_no_form" />
+            <field name="target">new</field>
         </record>
 
         <!-- MenuItem For Configurations->Move Standards -->

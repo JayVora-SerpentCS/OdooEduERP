@@ -27,6 +27,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_move_standards_form" />
+            <field name="target">new</field>
         </record>
 
         <!-- MenuItem For Configurations->Move Standards -->
