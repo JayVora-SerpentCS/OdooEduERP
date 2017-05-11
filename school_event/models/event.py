@@ -6,10 +6,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
 
 
-class BoardBoard(models.AbstractModel):
-    _inherit = "board.board"
-
-
 class SchoolStandard(models.Model):
     _name = 'school.standard'
     _inherit = 'school.standard'
