@@ -144,8 +144,7 @@ class ExamExam(models.Model):
                 domain = [('standard_id', '=', school_std_rec.standard_id.id),
                           ('division_id', '=', school_std_rec.division_id.id),
                           ('medium_id', '=', school_std_rec.medium_id.id)]
-                student_ids = student_obj.search(domain)
-                for student in student_ids:
+                for student in student_obj.search(domain):
                     domain = [('standard_id', '=',
                                school_std_rec.standard_id.id),
                               ('student_id.division_id', '=',
@@ -156,10 +155,8 @@ class ExamExam(models.Model):
                               ('s_exam_ids', '=', rec.id)]
                     result_exists = result_obj.search(domain)
                     if result_exists:
-                        [result_list.append(res.id)
-                            for res in result_exists]
-
-                    if not result_exists:
+                        [result_list.append(res.id) for res in result_exists]
+                    else:
                         standard_id = school_std_rec.standard_id.id
                         division_id = school_std_rec.division_id.id
                         medium_id = school_std_rec.medium_id.id
@@ -168,18 +165,15 @@ class ExamExam(models.Model):
                                    'standard_id': standard_id,
                                    'division_id': division_id,
                                    'medium_id': medium_id,
-                                   'grade_system': rec.grade_system.id
-                                   }
+                                   'grade_system': rec.grade_system.id}
                         exam_line = []
                         for exam_lines in rec.exam_timetable_ids:
                             for line in exam_lines.timetable_ids:
                                 min_mrks = line.subject_id.minimum_marks
                                 max_mrks = line.subject_id.maximum_marks
-                                sub_vals = {
-                                        'subject_id': line.subject_id.id,
-                                        'minimum_marks': min_mrks,
-                                        'maximum_marks': max_mrks
-                                        }
+                                sub_vals = {'subject_id': line.subject_id.id,
+                                            'minimum_marks': min_mrks,
+                                            'maximum_marks': max_mrks}
                                 exam_line.append((0, 0, sub_vals))
                         rs_dict.update({'result_ids': exam_line})
                         result = result_obj.create(rs_dict)

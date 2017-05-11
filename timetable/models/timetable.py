@@ -14,8 +14,9 @@ class TimeTable(models.Model):
     def _compute_user(self):
         '''Method to compute student'''
         for rec in self:
-            rec.user_ids = [teacher.teacher_id.user_id.id for teacher in
-                          rec.timetable_ids if rec.timetable_type == 'regular']
+            rec.user_ids = [teacher.teacher_id.user_id.id
+                            for teacher in rec.timetable_ids
+                            if rec.timetable_type == 'regular']
         return True
 
     name = fields.Char('Description')
