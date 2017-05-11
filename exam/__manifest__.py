@@ -3,7 +3,7 @@
 
 {
     'name': 'Exam Management',
-    'version': "10.0.1.0.10",
+    'version': "10.0.1.0.11",
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',

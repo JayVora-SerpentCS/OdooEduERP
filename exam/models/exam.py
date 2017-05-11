@@ -509,6 +509,24 @@ class AdditionalExamResult(models.Model):
                 else:
                     rec.result = 'Fail'
 
+    @api.model
+    def create(self, vals):
+        '''Override create method to get roll no and standard'''
+        student = self.env['student.student'].browse(vals.get('student_id'))
+        vals.update({'roll_no_id': student.roll_no,
+                     'standard_id': student.standard_id.id
+                     })
+        return super(AdditionalExamResult, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        '''Override write method to get roll no and standard'''
+        student = self.env['student.student'].browse(vals.get('student_id'))
+        vals.update({'roll_no_id': student.roll_no,
+                     'standard_id': student.standard_id.id
+                     })
+        return super(AdditionalExamResult, self).write(vals)
+
     @api.onchange('student_id')
     def onchange_student(self):
         ''' Method to get student roll no and standard by selecting student'''
@@ -526,9 +544,9 @@ class AdditionalExamResult(models.Model):
                                 required=True)
     student_id = fields.Many2one('student.student', 'Student Name',
                                  required=True)
-    roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No",
+    roll_no_id = fields.Integer(string="Roll No",
                                 readonly=True)
-    standard_id = fields.Many2one(related='student_id.standard_id',
+    standard_id = fields.Many2one('school.standard',
                                   string="Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
     result = fields.Char(compute='_compute_student_result', string='Result',
