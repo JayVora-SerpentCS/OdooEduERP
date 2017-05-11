@@ -1,6 +1,10 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+
+1.0.10 --> 11 May 2017 : Vimal Patel
+    * Added the exam schedule model in the exam and added the exam date on the exam timetable line  
+    
 1.0.9 --> 11 May 2017 : Arpit Joshi
     * Improve code in on change method
 

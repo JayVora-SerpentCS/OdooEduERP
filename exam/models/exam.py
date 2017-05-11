@@ -3,8 +3,7 @@
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-from odoo.exceptions import except_orm
+from odoo.exceptions import UserError, except_orm
 
 
 class BoardBoard(models.AbstractModel):
@@ -49,12 +48,11 @@ class ExtendedTimeTableLine(models.Model):
 
     @api.multi
     @api.onchange('exm_date')
-    def on_change_date_day(self):
+    def onchange_date_day(self):
         for rec in self:
             if rec.exm_date:
                 week_day = datetime.strptime(rec.exm_date, "%Y-%m-%d")
-                rec.week_day = week_day.strftime("%A").lower()
-        return True
+                rec.day_of_week = week_day.strftime("%A").title()
 
     @api.multi
     def _check_date(self):
@@ -194,9 +192,20 @@ class ExamExam(models.Model):
 class ExamScheduleLine(models.Model):
     _name = 'exam.schedule.line'
 
-    standard_id = fields.Many2one('standard.standard', 'Standard')
+    @api.multi
+    @api.onchange('standard_ids')
+    def onchange_standard(self):
+        standard_ids = []
+        for rec in self:
+            standard_ids = [std.id for std in rec.standard_ids]
+        return {'domain': {'standard_id': [('standard_id', 'in',
+                                            standard_ids)]}}
+
+    standard_id = fields.Many2one('school.standard', 'Standard')
     timetable_id = fields.Many2one('time.table', 'Exam Schedule')
     exam_id = fields.Many2one('exam.exam', 'Exam')
+    standard_ids = fields.Many2many('standard.standard',
+                                    string='Participant Standards')
 
 
 class AdditionalExam(models.Model):

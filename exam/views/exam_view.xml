@@ -101,7 +101,7 @@
                             <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
                             <field name="academic_year" placeholder="Select Academic Year.." widget="selection" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
-                        <group col="4" colspan="2">
+                        <group col="4" colspan="4">
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
                             <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
                             <notebook colspan="4" >
@@ -111,10 +111,14 @@
                                 </page>
                                 <page string="Exam Schedule">
                                     <field name="exam_schedule_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
-                                            context="{'standard_id':standard_id}">
+                                            context="{'default_standard_ids':standard_id,'academic_year':academic_year}">
                                         <tree name="exam_schedule" string="Exam Schedule" editable="top">
-                                            <field name="standard_id" required="1" widget="selection" domain="[('id','in',context.get('standard_id'))]"/>
-                                            <field name="timetable_id" required="1" widget="selection" domain="[('timetable_type','=','exam')]"/>
+                                            <field name="standard_ids" invisible="1"/>
+                                            <field name="standard_id" required="1" widget="selection"/>
+                                            <field name="timetable_id" required="1" domain="[('timetable_type','=','exam'),
+                                                                                             ('year_id','=',context.get('academic_year')),
+                                                                                             ('standard_id','=',standard_id)]"
+                                                options="{&quot;no_create&quot;: True}"/>
                                         </tree>
                                     </field>
                                 </page>
@@ -152,6 +156,21 @@
                 <xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
                     <field name="timetable_type" placeholder= "Select Time Table Type" readonly="1"/>
                 </xpath>
+                <field name="timetable_ids" position="attributes">
+                    <attribute name="attrs">{'invisible': [('timetable_type','!=','regular')]}</attribute>
+                </field>
+                <field name="timetable_ids" position="after">
+                    <field name="exam_timetable_line_ids" nolabel="1" attrs="{'invisible':[('timetable_type','!=','exam')]}">
+                        <tree name="exam_timetable" string="Exam Timetable" editable="top">
+                            <field name="exm_date"/>
+                            <field name="day_of_week"/>
+                            <field name="subject_id" widget="selection"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="teacher_id" string="Supervisor" widget="selection" domain="[('is_school_teacher','=',True)]"/>
+                        </tree>
+                    </field>
+                </field>
             </field>
         </record>
 
@@ -596,15 +615,15 @@
             </field>
         </record>
         <!-- Action of exam type timetable -->
-        <record id="timetable_exam_regular" model="ir.actions.act_window">
-            <field name="name">Exam Type Timetable</field>
+        <record id="timetable_exam_action" model="ir.actions.act_window">
+            <field name="name">Exam Timetable</field>
             <field name="res_model">time.table</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('timetable_type','=','exam')]</field>
             <field name="context">{'default_timetable_type':'exam'}</field>
         </record>
-        <menuitem id="timetable_exam_regular_menu" name="Exam Timetable" parent="timetable.menu_timetable_1" action="timetable_exam_regular" sequence="11" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+        <menuitem id="timetable_exam_regular_menu" name="Exam Timetable" parent="timetable.menu_timetable_1" action="timetable_exam_action" sequence="11" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
         <!-- Actions Of Form & Tree Views Of Additional Result Information -->
 
