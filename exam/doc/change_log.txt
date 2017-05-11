@@ -1,33 +1,3 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
-<<<<<<< HEAD
-=======
-1.0.9 --> 11 May 2017 : Arpit Joshi
-    * Improve code in on change method
-
-1.0.8 --> 10 May 2017 : Arpit Joshi
-    * View level improvements
-
->>>>>>> [IMP] code of  onchange method in exam module
-1.0.7 --> 10 May 2017: Vimal Patel
-    * added the code of the move standard based on the exam result.
-    
-1.0.6 --> 10 May 2017: Vimal Patel
-    * Solved travis error and fixed error when installed the module.
-    
-1.0.5 --> 3 May 2017: Arpit Joshi
-    * Solved issue of grade after re evaluation marks enter.
-
-1.0.4 --> 1 May 2017: Arpit Joshi
-    * Optimize code of default get method in wizard.
-
-1.0.3 --> 26 April 2017: Arpit Joshi
-    * Fix issue of report and onchange method.
-
-1.0.2 --> 19 April 2017 : Vimal Patel
-    * Improvement the code and fixed an error .
-
-1.0.1 --> 12 April 2017 : Arpit Joshi
-    * Improvement the security and fixed an error in report .
-
