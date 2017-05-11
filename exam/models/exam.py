@@ -7,10 +7,6 @@ from odoo.exceptions import UserError
 from odoo.exceptions import except_orm
 
 
-class BoardBoard(models.AbstractModel):
-    _inherit = 'board.board'
-
-
 class StudentStudent(models.Model):
     _inherit = 'student.student'
     _description = 'Student Information'
