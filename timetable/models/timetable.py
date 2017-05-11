@@ -29,12 +29,10 @@ class TimeTable(models.Model):
                                       inivisible=True)
     user_ids = fields.Many2many('res.users', string="Users",
                                 compute="_compute_user", store=True)
-#    do_not_create = fields.Boolean('Do not Create')
 
-    _sql_constraints = [
-        ('standard_year_unique', 'unique(standard_id,year_id)',
-         'Academic class and year should be unique !')
-    ]
+    _sql_constraints = [('standard_year_unique',
+                         'unique(standard_id,year_id)',
+                         'Academic class and year should be unique !')]
 
     @api.multi
     @api.constrains('timetable_ids')
@@ -69,24 +67,15 @@ class TimeTableLine(models.Model):
     _name = 'time.table.line'
     _rec_name = 'table_id'
 
-#    @api.multi
-#    def onchange_recess(self, recess):
-#        recess = {}
-#        domain = [('name', 'like', 'Recess')]
-#        sub_id = self.env['subject.subject'].search(domain)
-#        if not sub_id:
-#            raise UserError(_("You must have a 'Recess' as a subject"))
-#        recess.update({'value': {'subject_id': sub_id.id}})
-#        return recess
     @api.multi
     @api.constrains('teacher_id', 'subject_id')
     def check_teacher(self):
         '''Check if lecture is not related to teacher than raise error'''
         if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
                 self.table_id.timetable_type == 'regular'):
-            raise ValidationError(_('''The subject %s is not assigned to
-                                    teacher %s.''') % (self.subject_id.name,
-                                                       self.teacher_id.name))
+            raise ValidationError(_('The subject %s is not assigned to'
+                                    'teacher %s.') % (self.subject_id.name,
+                                                      self.teacher_id.name))
 
     teacher_id = fields.Many2one('hr.employee', 'Faculty Name')
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
@@ -96,7 +85,6 @@ class TimeTableLine(models.Model):
                               help="Time according to timeformat of 24 hours")
     end_time = fields.Float('End Time', required=True,
                             help="Time according to timeformat of 24 hours")
-#    is_break = fields.Boolean('Is Break')
     week_day = fields.Selection([('monday', 'Monday'),
                                  ('tuesday', 'Tuesday'),
                                  ('wednesday', 'Wednesday'),
