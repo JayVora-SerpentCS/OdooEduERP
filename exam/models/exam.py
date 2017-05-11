@@ -6,10 +6,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, except_orm
 
 
-class BoardBoard(models.AbstractModel):
-    _inherit = 'board.board'
-
-
 class StudentStudent(models.Model):
     _inherit = 'student.student'
     _description = 'Student Information'

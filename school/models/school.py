@@ -26,10 +26,8 @@ class AcademicYear(models.Model):
 
     sequence = fields.Integer('Sequence', required=True,
                               help="Sequence order you want to see this year.")
-    name = fields.Char('Name', required=True,
-                       help='Name of academic year')
-    code = fields.Char('Code', required=True,
-                       help='Code of academic year')
+    name = fields.Char('Name', required=True, help='Name of academic year')
+    code = fields.Char('Code', required=True, help='Code of academic year')
     date_start = fields.Date('Start Date', required=True,
                              help='Starting date of academic year')
     date_stop = fields.Date('End Date', required=True,
@@ -42,10 +40,10 @@ class AcademicYear(models.Model):
     @api.model
     def next_year(self, sequence):
         '''This method assign sequence to years'''
-        year_ids = self.search([('sequence', '>', sequence)], order='id',
+        year_id = self.search([('sequence', '>', sequence)], order='id',
                                limit=1)
-        if year_ids:
-            return year_ids.id
+        if year_id:
+            return year_id.id
         return False
 
     @api.multi
@@ -55,26 +53,19 @@ class AcademicYear(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
-        '''Method to check start date should be greater than end date'''
-        academic_list = [rec_academic.id for rec_academic in self.search([])]
-        for rec in self:
-            # remove current academic year
-            academic_list.remove(rec.id)
-        data_academic_yr = self.browse(academic_list)
-        for old_ac in data_academic_yr:
+        '''Method to check start date should be greater than end date
+           also check that dates are not overlapped with existing academic
+           year'''
+        if (self.date_stop and self.date_start and
+                self.date_stop < self.date_start):
+            raise UserError(_('Error! The duration of the academic year'
+                              'is invalid.'))
+        for old_ac in self.search(['id', 'not in', self.id]):
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
-                raise UserError(_('''Error! You cannot define overlapping
-                                    academic years.'''))
-
-    @api.constrains('date_start', 'date_stop')
-    def _check_duration(self):
-        '''Method to check duration'''
-        if (self.date_stop and self.date_start and
-                self.date_stop < self.date_start):
-            raise UserError(_('''Error! The duration of the academic year
-                                is invalid.'''))
+                raise UserError(_('Error! You cannot define overlapping'
+                                  'academic years.'''))
 
 
 class AcademicMonth(models.Model):
@@ -180,17 +171,6 @@ class SchoolStandard(models.Model):
                           ('state', '=', 'done')]
                 rec.student_ids = student_obj.search(domain)
 
-#    @api.multi
-#    def import_subject(self):
-#        '''Method to import subject'''
-#        for im_ob in self:
-#            domain = [('standard_id', '=', int(im_ob.standard_id) - 1)]
-#            import_sub_ids = self.search(domain)
-#            val = [last.id for sub in import_sub_ids
-#                   for last in sub.subject_ids]
-#            self.write({'subject_ids': [(6, 0, val)]})
-#        return True
-
     @api.multi
     @api.depends('subject_ids')
     def _compute_subject(self):
@@ -209,7 +189,6 @@ class SchoolStandard(models.Model):
                                   'Student In Class',
                                   compute='_compute_student')
     color = fields.Integer('Color Index')
-#    passing = fields.Integer('No Of ATKT', help="Allowed No of ATKTs")
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
     syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
@@ -269,8 +248,6 @@ class SubjectSubject(models.Model):
     standard_id = fields.Many2one('standard.standard', 'Class')
     is_practical = fields.Boolean('Is Practical',
                                   help='Check this if subject is practical.')
-#    no_exam = fields.Boolean("No Exam",
-#                             help='Check this if subject has no exam.')
     elective_id = fields.Many2one('subject.elective')
     student_ids = fields.Many2many('student.student',
                                    'elective_subject_student_rel',
@@ -456,9 +433,6 @@ class StudentStudent(models.Model):
     document = fields.One2many('student.document', 'doc_id', 'Documents')
     description = fields.One2many('student.description', 'des_id',
                                   'Description')
-#    student_id = fields.Many2one('student.student', 'name')
-#    contact_phone = fields.Char('Phone No', related='student_id.phone')
-#    contact_mobile = fields.Char('Mobile No', related='student_id.mobile')
     student_id = fields.Many2one('student.student', 'Name')
     contact_phone = fields.Char('Phone No', related='student_id.phone',
                                 readonly=True)
@@ -477,9 +451,6 @@ class StudentStudent(models.Model):
                            readonly=True)
     Acadamic_year = fields.Char('Academic Year', related='year.name',
                                 help='Academic Year', readonly=True)
-#    grn_number = fields.Many2one('student.grn', 'GR No.',
-#                                 help="General Register No.")
-#    standard_id = fields.Many2one('standard.standard', 'Class')
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
     cmp_id = fields.Many2one('res.company', 'Company Name',
@@ -489,9 +460,6 @@ class StudentStudent(models.Model):
                                  'student_id', 'parent_id', 'Parent(s)',
                                  states={'done': [('readonly', True)]})
     terminate_reason = fields.Text('Reason')
-
-#    _sql_constraints = [('grn_unique', 'unique(grn_number)',
-#                         'GRN Number must be unique!')]
 
     @api.multi
     def set_to_draft(self):
@@ -525,9 +493,8 @@ class StudentStudent(models.Model):
             # Assign group to student
             student_group = self.env.ref('school.group_school_student')
             emp_group = self.env.ref('base.group_user')
-            rec.user_id.write({'groups_id': [(6, 0,
-                                              [emp_group.id, student_group.id]
-                                              )]})
+            rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
+                                                     student_group.id])]})
             if rec.age <= 5:
                 raise except_orm(_('Warning'),
                                  _('''The student is not eligible.
@@ -559,56 +526,6 @@ class StudentStudent(models.Model):
                     'student_code': student_code,
                     'reg_code': registation_code})
         return True
-
-
-# class StudentGrn(models.Model):
-#    _name = "student.grn"
-#    _rec_name = "grn_no"
-#
-#    @api.multi
-#    def _compute_grn_no(self):
-#        for stud_grn in self:
-#            grn_no1 = " "
-#            grn_no2 = " "
-#            grn_no1 = stud_grn['grn']
-#            if stud_grn['prefix'] == 'static':
-#                grn_no1 = stud_grn['static_prefix'] + stud_grn['grn']
-#            elif stud_grn['prefix'] == 'school':
-#                a = stud_grn.schoolprefix_id.code
-#                grn_no1 = a + stud_grn['grn']
-#            elif stud_grn['prefix'] == 'year':
-#                grn_no1 = time.strftime('%Y') + stud_grn['grn']
-#            elif stud_grn['prefix'] == 'month':
-#                grn_no1 = time.strftime('%m') + stud_grn['grn']
-#            grn_no2 = grn_no1
-#            if stud_grn['postfix'] == 'static':
-#                grn_no2 = grn_no1 + stud_grn['static_postfix']
-#            elif stud_grn['postfix'] == 'school':
-#                b = stud_grn.schoolpostfix_id.code
-#                grn_no2 = grn_no1 + b
-#            elif stud_grn['postfix'] == 'year':
-#                grn_no2 = grn_no1 + time.strftime('%Y')
-#            elif stud_grn['postfix'] == 'month':
-#                grn_no2 = grn_no1 + time.strftime('%m')
-#            self.grn_no = grn_no2
-#
-#    grn = fields.Char('GR no', help='General Reg Number', readonly=True,
-#                      default=lambda obj:
-#                      obj.env['ir.sequence'].next_by_code('student.grn'))
-#    name = fields.Char('GRN Format Name', required=True)
-#    prefix = fields.Selection([('school', 'School Name'),
-#                               ('year', 'Year'), ('month', 'Month'),
-#                               ('static', 'Static String')], 'Prefix')
-#    schoolprefix_id = fields.Many2one('school.school',
-#                                      'School Name For Prefix')
-#    schoolpostfix_id = fields.Many2one('school.school',
-#                                       'School Name For Suffix')
-#    postfix = fields.Selection([('school', 'School Name'),
-#                                ('year', 'Year'), ('month', 'Month'),
-#                                ('static', 'Static String')], 'Suffix')
-#    static_prefix = fields.Char('Static String for Prefix')
-#    static_postfix = fields.Char('Static String for Suffix')
-#    grn_no = fields.Char('Generated GR No.', compute='_compute_grn_no')
 
 
 class MotherTongue(models.Model):
@@ -736,8 +653,7 @@ class HrEmployee(models.Model):
                          'password': vals.get('work_email', False),
                          'partner_id': self.id,
                          'company_id': school.company_id.id,
-                         'company_ids': [(4, school.company_id.id)]
-                         }
+                         'company_ids': [(4, school.company_id.id)]}
             # Create user
             user = self.env['res.users'].create(user_vals)
             if user and user.partner_id:
@@ -986,10 +902,9 @@ class StudentReminder(models.Model):
 
     @api.model
     def check_user(self):
-        '''Method to get default value of logged in user'''
-        student = self.env['student.student'].search([('user_id', '=',
-                                                       self._uid)])
-        return student.id
+        '''Method to get default value of logged in Student'''
+        return self.env['student.student'].search([('user_id', '=',
+                                                    self._uid)]).id
 
     stu_id = fields.Many2one('student.student', 'Student Name', required=True,
                              default=check_user)
