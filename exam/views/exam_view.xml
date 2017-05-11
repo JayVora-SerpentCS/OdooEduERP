@@ -150,7 +150,7 @@
             <field name="inherit_id" ref="timetable.view_time_table_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
-                    <field name="timetable_type" placeholder= "Select Time Table Type"/>
+                    <field name="timetable_type" placeholder= "Select Time Table Type" readonly="1"/>
                 </xpath>
             </field>
         </record>
@@ -595,6 +595,16 @@
                 </search>
             </field>
         </record>
+        <!-- Action of exam type timetable -->
+        <record id="timetable_exam_regular" model="ir.actions.act_window">
+            <field name="name">View Type Timetable</field>
+            <field name="res_model">time.table</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('timetable_type','=','exam')]</field>
+            <field name="context">{'default_timetable_type':'exam'}</field>
+        </record>
+        <menuitem id="timetable_exam_regular_menu" name="Exam Timetable" parent="timetable.menu_timetable_1" action="timetable_exam_regular" sequence="11" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
         <!-- Actions Of Form & Tree Views Of Additional Result Information -->
 
