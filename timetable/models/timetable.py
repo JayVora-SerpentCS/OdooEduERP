@@ -10,11 +10,12 @@ class TimeTable(models.Model):
     _name = 'time.table'
 
     @api.multi
+    @api.depends('timetable_ids')
     def _compute_user(self):
         '''Method to compute student'''
         for rec in self:
-            for teacher in rec.timetable_ids:
-                rec.user_ids = [teacher.teacher_id.user_id.id]
+            rec.user_ids = [teacher.teacher_id.user_id.id for teacher in
+                          rec.timetable_ids if rec.timetable_type == 'regular']
         return True
 
     name = fields.Char('Description')

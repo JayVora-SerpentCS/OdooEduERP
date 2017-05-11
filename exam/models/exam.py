@@ -224,17 +224,6 @@ class AdditionalExam(models.Model):
     create_date = fields.Date("Created Date", help="Exam Created Date")
     write_date = fields.Date("Updated date", help="Exam Updated Date")
 
-    @api.multi
-    def on_change_stadard_name(self, standard_id):
-        val = {}
-        school_standard_obj = self.env['school.standard']
-        school_line = school_standard_obj.browse(standard_id)
-        if school_line.medium_id.id:
-            val['medium_id'] = school_line.medium_id.id
-        if school_line.division_id.id:
-            val['division_id'] = school_line.division_id.id
-        return {'value': val}
-
 
 class ExamResult(models.Model):
     _name = 'exam.result'
@@ -517,14 +506,11 @@ class AdditionalExamResult(models.Model):
                 else:
                     rec.result = 'Fail'
 
-    @api.multi
-    def on_change_student(self, student):
-        val = {}
-        student_obj = self.env['student.student']
-        student_data = student_obj.browse(student)
-        val.update({'standard_id': student_data.standard_id.id,
-                    'roll_no_id': student_data.roll_no})
-        return {'value': val}
+    @api.onchange('student_id')
+    def onchange_student(self):
+        ''' Method to get student roll no and standard by selecting student'''
+        self.standard_id = self.student_id.standard_id.id
+        self.roll_no_id = self.student_id.roll_no
 
     @api.constrains('obtain_marks')
     def _validate_marks(self):

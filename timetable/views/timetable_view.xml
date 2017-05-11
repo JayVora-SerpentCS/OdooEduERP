@@ -13,11 +13,12 @@
                             <field name="name" placeholder="Enter Description"/>
                             <field name="standard_id" placeholder="Select Standard" widget="selection"/>
                             <field name="year_id" placeholder="Select Year" widget="selection"/>
+                            <field name="user_ids" invisible="1"/>
 <!--                             <field name="do_not_create"/> -->
                         </group>
-                        <group>
-                            <field name="user_ids" invisible="1"/>
-                        </group>
+<!--                         <group> -->
+<!--                             <field name="user_ids"/> -->
+<!--                         </group> -->
                         <notebook colspan="4">
                             <page string="TimeTable">
                                 <field name="timetable_ids" nolabel="1" colspan="4">

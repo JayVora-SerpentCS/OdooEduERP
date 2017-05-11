@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.9 --> 11 May 2017 : Arpit Joshi
+    * Improve code in on change method
+
 1.0.8 --> 10 May 2017 : Arpit Joshi
     * View level improvements
 

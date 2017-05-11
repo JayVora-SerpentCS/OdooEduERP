@@ -219,7 +219,7 @@
                         <group col="4" string="Additional Exam Information" colspan="6">
                             <field name="addtional_exam_code" />
                             <field name="name"  placeholder="Exam Name"/>
-                            <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select Standard" widget="selection"/>
+                            <field name="standard_id" placeholder="Select Standard" widget="selection"/>
                             <field name="subject_id" placeholder="Select Subject" widget="selection" required="1"/>
                             <field name="maximum_marks" required="1" />
                             <field name="minimum_marks" required="1"/>
@@ -559,7 +559,7 @@
                             <field name="a_exam_id" widget="selection"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">
-                            <field name="student_id" on_change="on_change_student(student_id)" widget="selection"/>
+                            <field name="student_id" widget="selection"/>
                             <field name="roll_no_id"/>
                             <field name="standard_id"/>
                         </group>
@@ -597,7 +597,7 @@
         </record>
         <!-- Action of exam type timetable -->
         <record id="timetable_exam_regular" model="ir.actions.act_window">
-            <field name="name">View Type Timetable</field>
+            <field name="name">Exam Type Timetable</field>
             <field name="res_model">time.table</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
