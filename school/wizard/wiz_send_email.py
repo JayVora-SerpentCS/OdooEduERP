@@ -9,7 +9,7 @@ class MailTemplate(models.Model):
 
     @api.multi
     def generate_email(self, res_ids, fields=None):
-        '''Method to genrate email'''
+        '''Method to generate email'''
         ret = super(MailTemplate, self).generate_email(res_ids, fields=fields)
 
         if (self._context.get('body_html', False) or
