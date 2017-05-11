@@ -41,7 +41,7 @@ class AcademicYear(models.Model):
     def next_year(self, sequence):
         '''This method assign sequence to years'''
         year_id = self.search([('sequence', '>', sequence)], order='id',
-                               limit=1)
+                              limit=1)
         if year_id:
             return year_id.id
         return False
