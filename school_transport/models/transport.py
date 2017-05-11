@@ -172,36 +172,36 @@ class StudentTransports(models.Model):
             @param context : standard Dictionary
             @return : True
         '''
-        prt_obj = self.env['transport.participant']
-        vehi_obj = self.env['transport.vehicle']
-        trans_ids = self.search([('state', '=', 'open')])
-        vehi_ids = vehi_obj.search([])
-
-        for trans in self.browse(trans_ids):
-            stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
-            participants = []
-            trans_parti = []
-            for prt_data in prt_obj.browse(stu_ids):
-                date = time.strftime("%Y-%m-%d")
-                if date > prt_data.tr_end_date:
-                    if prt_data.state != 'over':
-                        trans_parti.append(prt_data.id)
-                else:
-                    participants.append(prt_data.id)
-            if trans_parti:
-                prt_obj.write(prt_data.id, {'state': 'over'})
-            if participants:
-                self.write(trans.id, {'trans_participants_ids':
-                                      [(6, 0, participants)]},)
-
-        for vehicle in vehi_obj.browse(vehi_ids):
-            stu_ids = [stu_id.id for stu_id in vehicle.vehi_participants_ids]
-            list1 = []
-            for prt_data in prt_obj.browse(stu_ids):
-                if prt_data.state != 'over':
-                    list1.append(prt_data.id)
-            vehi_obj.write(vehicle.id, {
-                'vehi_participants_ids': [(6, 0, list1)]})
+#        prt_obj = self.env['transport.participant']
+#        vehi_obj = self.env['transport.vehicle']
+#        trans_ids = self.search([('state', '=', 'open')])
+#        vehi_ids = vehi_obj.search([])
+#
+#        for trans in self.browse(trans_ids):
+#            stu_ids = [stu_id.id for stu_id in trans.trans_participants_ids]
+#            participants = []
+#            trans_parti = []
+#            for prt_data in prt_obj.browse(stu_ids):
+#                date = time.strftime("%Y-%m-%d")
+#                if date > prt_data.tr_end_date:
+#                    if prt_data.state != 'over':
+#                        trans_parti.append(prt_data.id)
+#                else:
+#                    participants.append(prt_data.id)
+#            if trans_parti:
+#                prt_obj.write(prt_data.id, {'state': 'over'})
+#            if participants:
+#                self.write(trans.id, {'trans_participants_ids':
+#                                      [(6, 0, participants)]},)
+#
+#        for vehicle in vehi_obj.browse(vehi_ids):
+#            stu_ids = [stu_id.id for stu_id in vehicle.vehi_participants_ids]
+#            list1 = []
+#            for prt_data in prt_obj.browse(stu_ids):
+#                if prt_data.state != 'over':
+#                    list1.append(prt_data.id)
+#            vehi_obj.write(vehicle.id, {
+#                'vehi_participants_ids': [(6, 0, list1)]})
         return True
 
 
