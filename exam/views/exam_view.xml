@@ -220,15 +220,9 @@
                         <group col="4" string="Additional Exam Information" colspan="6">
                             <field name="addtional_exam_code" />
                             <field name="name"  placeholder="Exam Name"/>
-<<<<<<< HEAD
-                            <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
-                            <field name="subject_id" placeholder="Select or Create Subject"/>
-                            <field name="maximum_marks" required="1"/>
-=======
                             <field name="standard_id" placeholder="Select Standard" widget="selection"/>
                             <field name="subject_id" placeholder="Select Subject" widget="selection" required="1"/>
                             <field name="maximum_marks" required="1" />
->>>>>>> [IMP] code of  onchange method in exam module
                             <field name="minimum_marks" required="1"/>
                         </group>
                         <group col="4" string="Examination Dates" colspan="4">
@@ -289,7 +283,7 @@
                     <field name="s_exam_ids"/>
                     <field name="percentage"/>
                     <field name="total"/>
-                    <field name="re_total"/>
+<!--                     <field name="re_total"/> -->
                     <field name="result"/>
                 </tree>
             </field>
@@ -305,7 +299,7 @@
                     <header>
                         <button name="result_confirm" class="oe_stat_button fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Re-Evaluation Confirm" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="set_done" string="Mark as Done" type="object" class="fa fa-check-circle-o" aria-hidden="true" states="confirm,re-evaluation_confirm,re-access_confirm"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" readonly="1" />
                     </header>
@@ -315,24 +309,23 @@
                                     attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4">
-                            <field name="student_id" placeholder="Select or Create Student"  
-                                context="{'exam':s_exam_ids}"
+                            <field name="student_id" placeholder="Select Student"  
+                                context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True}"
                                 domain="[('state','=','done')]"
                                 attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                             <field name="roll_no_id" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                             <field name="standard_id" placeholder="Select or Create Standard"
                                                     attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
-                            <field name="grade_system" required="1"
+                            <field name="grade_system" required="1" options="{&quot;no_create&quot;: True}"
                                                     attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
                         </group>
-                        <field name="result_ids" nolabel="1" colspan="4"
-                            attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm','done'])]}">
+                        <field name="result_ids" nolabel="1" colspan="4" options="{&quot;no_create&quot;: True}"
+                            attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','done'])]}">
                             <tree string="Subjects" editable="bottom">
                                 <field name="subject_id" placeholder="Select or Create Subject" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-<!--                                 <field name="grade"/> -->
                                 <field name="state" invisible="1"/>
                                 <field name="grade_line_id" readonly="1"/>
                                 <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
@@ -350,8 +343,8 @@
                         </field>
                         <group>
                             <group>
-                                <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
-                                <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+<!--                                 <field name="re_total" attrs="{'invisible':[('state','in',['draft','confirm'])]}"/> -->
+                                <field name="total"/>
                                 <field name="percentage"/>
                             </group>
                             <group>
@@ -377,7 +370,6 @@
                     <field name="pid"/>
                     <field name="standard_id"/>
                     <field name="total"/>
-                    <field name="re_total"/>
                     <field name="percentage"/>
                     <field name="result"/>
                     <field name="grade"/>
@@ -421,9 +413,6 @@
                                                                     </div>
                                                                     <div>Total :
                                                                         <field name="total"/>
-                                                                    </div>
-                                                                    <div>Re-access Total :
-                                                                        <field name="re_total"/>
                                                                     </div>
                                                                     <div>Grade :
                                                                         <field name="grade"/>
@@ -566,11 +555,7 @@
                             <field name="a_exam_id"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">
-<<<<<<< HEAD
-                            <field name="student_id" on_change="on_change_student(student_id)" />
-=======
                             <field name="student_id" widget="selection"/>
->>>>>>> [IMP] code of  onchange method in exam module
                             <field name="roll_no_id"/>
                             <field name="standard_id"/>
                         </group>

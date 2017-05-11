@@ -88,8 +88,8 @@ class ExamExam(models.Model):
     start_date = fields.Date("Exam Start Date",
                              help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
-    exam_timetable_ids = fields.One2many('time.table', 'exam_id',
-                                         'Exam Schedule')
+#    exam_timetable_ids = fields.One2many('time.table', 'exam_id',
+#                                         'Exam Schedule')
     state = fields.Selection([('draft', 'Draft'),
                               ('running', 'Running'),
                               ('finished', 'Finished'),
@@ -106,11 +106,15 @@ class ExamExam(models.Model):
 
     @api.multi
     def set_running(self):
-        if self.exam_timetable_ids:
-            self.state = 'running'
-        else:
-            raise UserError(_('Exam Schedule\
-                             You must add one Exam Schedule'))
+        for rec in self:
+            if not rec.standard_id:
+                raise except_orm(_('Error !'),
+                                 _('Please Select Standard Id.'))
+            if rec.exam_schedule_ids:
+                rec.state = 'running'
+            else:
+                raise UserError(_('You must add one Exam Schedule'))
+        return True
 
     @api.multi
     def set_finish(self):
@@ -129,62 +133,45 @@ class ExamExam(models.Model):
 
     @api.multi
     def generate_result(self):
-        student_obj = self.env['student.student']
         result_obj = self.env['exam.result']
         result_list = []
         for rec in self:
-            if not rec.standard_id:
-                raise except_orm(_('Error !'),
-                                 _('Please Select Standard Id.'))
-            for school_std_rec in rec.standard_id:
-                domain = [('standard_id', '=', school_std_rec.standard_id.id),
-                          ('division_id', '=', school_std_rec.division_id.id),
-                          ('medium_id', '=', school_std_rec.medium_id.id)]
-                for student in student_obj.search(domain):
+            for exam_schedule in rec.exam_schedule_ids:
+                for student in exam_schedule.standard_id.student_ids:
                     domain = [('standard_id', '=',
-                               school_std_rec.standard_id.id),
+                               student.standard_id.id),
                               ('student_id.division_id', '=',
-                               school_std_rec.division_id.id),
+                               student.division_id.id),
                               ('student_id.medium_id', '=',
-                               school_std_rec.medium_id.id),
+                               student.medium_id.id),
                               ('student_id', '=', student.id),
                               ('s_exam_ids', '=', rec.id)]
                     result_exists = result_obj.search(domain)
                     if result_exists:
                         [result_list.append(res.id) for res in result_exists]
                     else:
-                        standard_id = school_std_rec.standard_id.id
-                        division_id = school_std_rec.division_id.id
-                        medium_id = school_std_rec.medium_id.id
                         rs_dict = {'s_exam_ids': rec.id,
                                    'student_id': student.id,
-                                   'standard_id': standard_id,
-                                   'division_id': division_id,
-                                   'medium_id': medium_id,
+                                   'standard_id': student.standard_id.id,
                                    'grade_system': rec.grade_system.id}
                         exam_line = []
-                        for exam_lines in rec.exam_timetable_ids:
-                            for line in exam_lines.timetable_ids:
-                                min_mrks = line.subject_id.minimum_marks
-                                max_mrks = line.subject_id.maximum_marks
-                                sub_vals = {'subject_id': line.subject_id.id,
-                                            'minimum_marks': min_mrks,
-                                            'maximum_marks': max_mrks}
-                                exam_line.append((0, 0, sub_vals))
+                        for line in exam_schedule.timetable_id.timetable_ids:
+                            min_mrks = line.subject_id.minimum_marks
+                            max_mrks = line.subject_id.maximum_marks
+                            sub_vals = {'subject_id': line.subject_id.id,
+                                        'minimum_marks': min_mrks,
+                                        'maximum_marks': max_mrks}
+                            exam_line.append((0, 0, sub_vals))
                         rs_dict.update({'result_ids': exam_line})
                         result = result_obj.create(rs_dict)
+                        result.onchange_student()
                         result_list.append(result.id)
-
-            else:
-                raise except_orm(_('Error !'),
-                                 _('Please Select Standard Id.'))
-
-            return {'name': _('Result Info'),
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'exam.result',
-                    'type': 'ir.actions.act_window',
-                    'domain': [('id', 'in', result_list)]}
+        return {'name': _('Result Info'),
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'exam.result',
+                'type': 'ir.actions.act_window',
+                'domain': [('id', 'in', result_list)]}
 
 
 class ExamScheduleLine(models.Model):
@@ -221,7 +208,8 @@ class ExamResult(models.Model):
     _description = 'exam result Information'
 
     @api.multi
-    @api.depends('result_ids', 'result_ids.obtain_marks')
+    @api.depends('result_ids', 'result_ids.obtain_marks',
+                 'result_ids.marks_reeval')
     def _compute_total(self):
         for rec in self:
             total = 0.0
@@ -234,7 +222,7 @@ class ExamResult(models.Model):
             rec.total = total
 
     @api.multi
-    @api.depends('result_ids', 'result_ids.obtain_marks')
+    @api.depends('total')
     def _compute_per(self):
         total = 0.0
         obtained_total = 0.0
@@ -244,7 +232,8 @@ class ExamResult(models.Model):
             for sub_line in result.result_ids:
                 if sub_line.state == "re-evaluation":
                     obtain_marks = sub_line.marks_reeval
-                obtain_marks = sub_line.obtain_marks
+                else:
+                    obtain_marks = sub_line.obtain_marks
                 total += sub_line.maximum_marks or 0
                 obtained_total += obtain_marks
             if total > 1.0:
@@ -258,7 +247,7 @@ class ExamResult(models.Model):
         return True
 
     @api.multi
-    @api.depends('result_ids')
+    @api.depends('percentage')
     def _compute_result(self):
         for rec in self:
             flag = False
@@ -287,14 +276,14 @@ class ExamResult(models.Model):
     standard_id = fields.Many2one("school.standard", "Standard", required=True)
     result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
     total = fields.Float(compute='_compute_total', string='Obtain Total',
-                         method=True, store=True)
-    re_total = fields.Float('Re-evaluation Obtain Total', readonly=True)
+                         store=True)
+#    re_total = fields.Float('Re-evaluation Obtain Total', readonly=True)
     percentage = fields.Float("Percentage", compute="_compute_per",
-                              readonly=True, store=True)
+                              store=True)
     result = fields.Char(compute='_compute_result', string='Result',
-                         readonly=True, method=True, store=True)
+                         store=True)
     grade = fields.Char("Grade", compute="_compute_per",
-                        readonly=True, store=True)
+                        store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
@@ -327,40 +316,44 @@ class ExamResult(models.Model):
 
     @api.multi
     def re_evaluation_confirm(self):
-        res = {}
-        opt_marks = []
-        eve_marks = []
-        add = 0.0
-        total = 0.0
-        per = 0.0
-        grd = 0.0
-        for result in self:
-            for sub_line in result.result_ids:
-                opt_marks.append(sub_line.obtain_marks)
-                eve_marks.append(sub_line.marks_reeval)
-                total += sub_line.maximum_marks or 0.0
-            for i in range(0, len(opt_marks)):
-                if eve_marks[i] != 0.0:
-                    opt_marks[i] = eve_marks[i]
-            for i in range(0, len(opt_marks)):
-                add += opt_marks[i]
-
-            if total > 1.0:
-                # Sum cannot be used here as it is reserved keyword
-                per = (add / total) * 100
-                for grade_id in result.grade_system.grade_ids:
-                    if per >= grade_id.from_mark and per <= grade_id.to_mark:
-                        grd = grade_id.grade
-                res.update({'grade': grd,
-                            'percentage': per,
-                            'state': 're-evaluation_confirm',
-                            're_total': add})
-            self.write(res)
+        for rec in self:
+            rec.state = 're-evaluation_confirm'
+#        res = {}
+#        opt_marks = []
+#        eve_marks = []
+#        add = 0.0
+#        total = 0.0
+#        per = 0.0
+#        grd = 0.0
+#        for result in self:
+#            for sub_line in result.result_ids:
+#                opt_marks.append(sub_line.obtain_marks)
+#                eve_marks.append(sub_line.marks_reeval)
+#                total += sub_line.maximum_marks or 0.0
+#            for i in range(0, len(opt_marks)):
+#                if eve_marks[i] != 0.0:
+#                    opt_marks[i] = eve_marks[i]
+#            for i in range(0, len(opt_marks)):
+#                add += opt_marks[i]
+#
+#            if total > 1.0:
+#                # Sum cannot be used here as it is reserved keyword
+#                per = (add / total) * 100
+#                for grade_id in result.grade_system.grade_ids:
+#                    if per >= grade_id.from_mark and per <= grade_id.to_mark:
+#                        grd = grade_id.grade
+#                res.update({'grade': grd,
+#                            'percentage': per,
+#                            'state': 're-evaluation_confirm'})
+#            self.write(res)
         return True
 
     @api.multi
     def result_re_evaluation(self):
-        self.state = 're-evaluation'
+        for rec in self:
+            for line in rec.result_ids:
+                line.marks_reeval = line.obtain_marks
+            rec.state = 're-evaluation'
         return True
 
     @api.multi
@@ -436,7 +429,6 @@ class ExamSubject(models.Model):
     obtain_marks = fields.Float("Obtain Marks", group_operator="avg")
     minimum_marks = fields.Float("Minimum Marks")
     maximum_marks = fields.Float("Maximum Marks")
-    marks_access = fields.Float("Marks After Access")
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_line_id = fields.Many2one('grade.line', "Grade",
                                     compute='_compute_grade')
