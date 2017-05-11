@@ -729,7 +729,7 @@ class HrEmployee(models.Model):
     def create(self, vals):
         '''This method creates teacher user and assign group teacher'''
         res = super(HrEmployee, self).create(vals)
-        if vals.get('is_school_teacher') and vals.get('school'):
+        if vals.get('school'):
             school = self.env['school.school'].browse(vals.get('school'))
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('work_email', False),
