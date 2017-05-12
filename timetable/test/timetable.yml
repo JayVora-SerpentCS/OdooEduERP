@@ -3,7 +3,7 @@
 -
   !record {model: time.table.line, id: time_line_01}:
     teacher_id: hr.employee_al
-    subject_id: school.demo_subject_subject_7
+    subject_id: school.demo_subject_subject_6
     table_id: time_table_firsts0
     start_time: '9.0'
     end_time: '10.0'
