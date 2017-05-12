@@ -153,6 +153,7 @@ class ExamExam(models.Model):
                         rs_dict = {'s_exam_ids': rec.id,
                                    'student_id': student.id,
                                    'standard_id': student.standard_id.id,
+                                   'roll_no_id': student.roll_no,
                                    'grade_system': rec.grade_system.id}
                         exam_line = []
                         for line in exam_schedule.timetable_id.timetable_ids:
@@ -164,7 +165,6 @@ class ExamExam(models.Model):
                             exam_line.append((0, 0, sub_vals))
                         rs_dict.update({'result_ids': exam_line})
                         result = result_obj.create(rs_dict)
-                        result.onchange_student()
                         result_list.append(result.id)
         return {'name': _('Result Info'),
                 'view_type': 'form',
@@ -260,6 +260,26 @@ class ExamResult(models.Model):
             if flag:
                 rec.result = 'Fail'
 
+    @api.model
+    def create(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id'
+                                                                  ))
+            vals.update({'roll_no_id': student.roll_no,
+                         'standard_id': student.standard_id.id
+                         })
+        return super(ExamResult, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id'
+                                                                  ))
+            vals.update({'roll_no_id': student.roll_no,
+                         'standard_id': student.standard_id.id
+                         })
+        return super(ExamResult, self).write(vals)
+
     @api.onchange('student_id', 's_exam_ids', 'standard_id')
     def onchange_student(self):
         if self.student_id:
@@ -269,11 +289,11 @@ class ExamResult(models.Model):
     s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True)
     student_id = fields.Many2one("student.student", "Student Name",
                                  required=True)
-    roll_no_id = fields.Integer(related='student_id.roll_no', string="Roll No",
+    roll_no_id = fields.Integer(string="Roll No",
                                 readonly=True)
     pid = fields.Char(related='student_id.pid', string="Student ID",
                       readonly=True)
-    standard_id = fields.Many2one("school.standard", "Standard", required=True)
+    standard_id = fields.Many2one("school.standard", "Standard")
     result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
     total = fields.Float(compute='_compute_total', string='Obtain Total',
                          store=True)
@@ -310,8 +330,9 @@ class ExamResult(models.Model):
                         details of subject "%s".') % (line.subject_id.name))
             vals = {'grade': rec.grade,
                     'percentage': rec.percentage,
-                    'state': 'confirm'}
-            self.write(vals)
+                    'state': 'confirm'
+                    }
+            rec.write(vals)
         return True
 
     @api.multi
@@ -516,8 +537,8 @@ class AdditionalExamResult(models.Model):
     @api.constrains('obtain_marks')
     def _validate_marks(self):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
-            raise UserError(_('The obtained marks should not extend'
-                            'maximum marks.'))
+            raise UserError(_('''The obtained marks should not extend
+                              maximum marks.'''))
         return True
 
     a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
