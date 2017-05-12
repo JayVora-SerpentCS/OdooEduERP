@@ -6,7 +6,7 @@ from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
     DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import except_orm, Warning as UserError
 from openerp.exceptions import ValidationError
@@ -157,7 +157,8 @@ class SchoolStandard(models.Model):
     _rec_name = "standard_id"
 
     @api.multi
-    @api.depends('standard_id', 'school_id', 'division_id', 'medium_id')
+    @api.depends('standard_id', 'school_id', 'division_id', 'medium_id',
+                 'school_id')
     def _compute_student(self):
         '''Compute student of done state'''
         student_obj = self.env['student.student']
