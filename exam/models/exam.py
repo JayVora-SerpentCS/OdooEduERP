@@ -91,9 +91,7 @@ class ExamExam(models.Model):
         validation Warning'''
         result_obj = self.env['exam.result']
         if not self.active:
-            for result in result_obj.search([('s_exam_ids',
-                                                '=',
-                                                self.id)]):
+            for result in result_obj.search([('s_exam_ids', '=', self.id)]):
                 if result.state != 'done':
                     raise ValidationError(_('Kindly,mark as done %s\
                     examination results') % (self.name))
