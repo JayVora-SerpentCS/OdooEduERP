@@ -1,33 +1,31 @@
-{
-  "language": "python",
-  "python": "2.7",
-  "sudo": false,
-  "cache": "pip",
-  "addons": {
-    "apt": {
-      "packages": [
-        "expect-dev",
-        "python-lxml"
-      ]
-    }
-  },
-  "env": "VERSION=\"10.0\" ODOO_REPO=\"odoo/odoo\" TESTS=\"1\" LINT_CHECK=\"0\"",
-  "virtualenv": {
-    "system_site_packages": true
-  },
-  "install": [
-    "pip install anybox.testing.openerp",
-    "git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools",
-    "export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}",
-    "travis_install_nightly"
-  ],
-  "script": [
-    "travis_run_tests"
-  ],
-  "after_success": [
-    "travis_after_tests_success"
-  ],
-  "group": "stable",
-  "dist": "precise",
-  "os": "linux"
+"language": "python",
+"python": "2.7",
+"sudo": false,
+"cache": "pip",
+"addons": {
+"apt": {
+"packages": [
+"expect-dev",
+"python-lxml"
+]
 }
+},
+"env": "VERSION=\"10.0\" ODOO_REPO=\"odoo/odoo\" TESTS=\"1\" LINT_CHECK=\"0\"",
+"virtualenv": {
+"system_site_packages": true
+},
+"install": [
+"pip install anybox.testing.openerp",
+"git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools",
+"export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}",
+"travis_install_nightly"
+],
+"script": [
+"travis_run_tests"
+],
+"after_success": [
+"travis_after_tests_success"
+],
+"group": "stable",
+"dist": "precise",
+"os": "linux"
