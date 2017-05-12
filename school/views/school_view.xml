@@ -1812,53 +1812,6 @@
             <field name="act_window_id" ref="action_parent_form" />
         </record>
         
-        <!--Form View Of My Dashboard -->
-        <record id="board_my_dash_view" model="ir.ui.view">
-            <field name="name">My Dashboard</field>
-            <field name="model">board.board</field>
-            <field name="arch" type="xml">
-                <form string="My Dashboard">
-                    <board style="2-1">
-                        <column>
-                            <action name="%(view_student_news)d" string="News Update" creatable="true" groups="school.group_school_student,school.group_school_administration, school.group_school_teacher,school.group_school_parent" />
-                        </column>
-                        <column>
-                            <action name="%(action_student_reminder)d" string="Reminder" creatable="true" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher" />
-                        </column>
-                    </board>
-                </form>
-            </field>
-        </record>
-        <!-- Action Of Form View Of My Dashboard -->
-        <record id="open_board_my_dash_action" model="ir.actions.act_window">
-            <field name="name">My Dashboard</field>
-            <field name="res_model">board.board</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="context">{}</field>
-            <field name="usage">menu</field>
-            <field name="view_id" ref="school.board_my_dash_view" />
-            <field name="help" type="html">
-                <div class="oe_empty_custom_dashboard">
-                    <p>
-                        <b>Your personal dashboard is empty.</b>
-                    </p>
-                    <p>
-                        To add your first report into this dashboard, go to any
-                        menu,
-                        switch to list or graph view, and click
-                        <i>'Add to
-                           Dashboard'
-                    </i>
-                        in the extended search options.
-                    </p>
-                    <p>
-                        You can filter and group data before inserting into the
-                        dashboard using the search options.
-                    </p>
-                </div>
-            </field>
-        </record>
         <!-- Menu Item Of EMS -->
         <menuitem id="menu_ems" name="EMS" sequence="1" 
             groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,school.group_is_admission" />
