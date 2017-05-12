@@ -677,7 +677,7 @@ class HrEmployee(models.Model):
     def write(self, vals):
         '''Write method of hr employee'''
         res = super(HrEmployee, self).write(vals)
-        #creating user
+        # creating user
         for rec in self:
             if rec.school and rec.is_school_teacher and not rec.user_id:
                 user_vals = {'name': rec.name,
@@ -693,10 +693,10 @@ class HrEmployee(models.Model):
                 if res and user:
                     rec.write({'address_home_id': user.partner_id.id,
                                'user_id': user and user.id or False})
-                    teacher_group = self.env.ref('school.group_school_teacher')
+                    teacher_grp = self.env.ref('school.group_school_teacher')
                     emp_group = self.env.ref('base.group_user')
                     user.write({'groups_id': [(6, 0, [emp_group.id,
-                                                      teacher_group.id])]})
+                                                      teacher_grp.id])]})
         # Assign email
         if res and vals.get('work_email'):
             if self.user_id:
