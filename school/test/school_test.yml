@@ -43,10 +43,7 @@
   I compute the age of a student
 -
   !python {model: student.student}: |
-    self._compute_student_age(cr, uid, [ref("student_student_0")], 'age', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
+    self._compute_student_age('age')
 -
   I confirm 'admission' using Confirm button
 -
