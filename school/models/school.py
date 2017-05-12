@@ -60,12 +60,13 @@ class AcademicYear(models.Model):
                 self.date_stop < self.date_start):
             raise UserError(_('Error! The duration of the academic year'
                               'is invalid.'))
-        for old_ac in self.search(['id', 'not in', self.id]):
+        for old_ac in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
                 raise UserError(_('Error! You cannot define overlapping'
                                   'academic years.'''))
+        return True
 
 
 class AcademicMonth(models.Model):
