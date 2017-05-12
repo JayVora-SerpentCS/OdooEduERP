@@ -469,33 +469,43 @@
         <!-- Demo data of teacher -->
         <record id="hr.employee_root" model="hr.employee">
           <field name="is_school_teacher" eval="True"/>
+          <field name="school" ref="demo_school_1"/>
        </record>
       <record id="hr.employee_al" model="hr.employee">
           <field name="is_school_teacher" eval="True"/>
+          <field name="school" ref="demo_school_1"/>
       </record>
       <record id="hr.employee_mit" model="hr.employee">
           <field name="is_school_teacher" eval="True"/>
+          <field name="school" ref="demo_school_1"/>
       </record>
       <record id="hr.employee_niv" model="hr.employee">
           <field name="is_school_teacher" eval="True"/>
+          <field name="school" ref="demo_school_1"/>
        </record>
        <record id="hr.employee_stw" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
+           <field name="school" ref="demo_school_1"/>
        </record>
        <record id="hr.employee_chs" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
+           <field name="school" ref="demo_school_2"/>
        </record>
        <record id="hr.employee_qdp" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
+           <field name="school" ref="demo_school_2"/>
        </record>
        <record id="hr.employee_fme" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
+           <field name="school" ref="demo_school_2"/>
        </record>
        <record id="hr.employee_fpi" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
+           <field name="school" ref="demo_school_2"/>
        </record>
        <record id="hr.employee_jep" model="hr.employee">
           <field name="is_school_teacher" eval="True"/>
+          <field name="school" ref="demo_school_2"/>
         </record>
         <!-- Student Informations -->
         <record id="demo_student_student_1" model="student.student">

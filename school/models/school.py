@@ -650,7 +650,7 @@ class HrEmployee(models.Model):
         res = super(HrEmployee, self).create(vals)
 #        if res and res.parent_school:
 #        if res and res.is_school_teacher:
-        if vals.get('school') and vals.get('is_school_teacher'):
+        if vals.get('school') and res.is_school_teacher:
             school = self.env['school.school'].browse(vals.get('school'))
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('work_email', False),
@@ -677,6 +677,26 @@ class HrEmployee(models.Model):
     def write(self, vals):
         '''Write method of hr employee'''
         res = super(HrEmployee, self).write(vals)
+        #creating user
+        for rec in self:
+            if rec.school and rec.is_school_teacher and not rec.user_id:
+                user_vals = {'name': rec.name,
+                             'login': rec.work_email,
+                             'password': rec.work_email,
+                             'company_id': rec.school.company_id.id,
+                             'company_ids': [(4, rec.school.company_id.id)]}
+                # Create user
+                user = self.env['res.users'].create(user_vals)
+                if user and user.partner_id:
+                    user.partner_id.write({'email': rec.work_email})
+                # Assign group of teacher to user created
+                if res and user:
+                    rec.write({'address_home_id': user.partner_id.id,
+                               'user_id': user and user.id or False})
+                    teacher_group = self.env.ref('school.group_school_teacher')
+                    emp_group = self.env.ref('base.group_user')
+                    user.write({'groups_id': [(6, 0, [emp_group.id,
+                                                      teacher_group.id])]})
         # Assign email
         if res and vals.get('work_email'):
             if self.user_id:
