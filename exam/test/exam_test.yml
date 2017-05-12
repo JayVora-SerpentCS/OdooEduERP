@@ -43,7 +43,7 @@
   In order to test the exam result, I will test _compute_total() method
 -
   !python {model: exam.result}:  |
-    self._compute_total(cr, uid, [ref("exam_result_10")], 'total', None, context=None)
+    self._compute_total()
 
 
 -

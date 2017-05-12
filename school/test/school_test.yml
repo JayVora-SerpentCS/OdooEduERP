@@ -43,7 +43,7 @@
   I compute the age of a student
 -
   !python {model: student.student}: |
-    self._compute_student_age('age')
+    self._compute_student_age()
 -
   I confirm 'admission' using Confirm button
 -
