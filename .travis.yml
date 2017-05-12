@@ -1,33 +1,37 @@
-{
-  "language": "python",
-  "python": "2.7",
-  "sudo": false,
-  "cache": "pip",
-  "addons": {
-    "apt": {
-      "packages": [
-        "expect-dev",
-        "python-lxml"
-      ]
-    }
-  },
-  "env": "VERSION=\"10.0\" ODOO_REPO=\"odoo/odoo\" TESTS=\"1\" LINT_CHECK=\"0\"",
-  "virtualenv": {
-    "system_site_packages": true
-  },
-  "install": [
-    "pip install anybox.testing.openerp",
-    "git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools",
-    "export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}",
-    "travis_install_nightly"
-  ],
-  "script": [
-    "travis_run_tests"
-  ],
-  "after_success": [
-    "travis_after_tests_success"
-  ],
-  "group": "stable",
-  "dist": "precise",
-  "os": "linux"
-}
+addons:
+  apt:
+    packages:
+      - expect-dev
+
+language: python
+
+python:
+  - "2.7"
+
+virtualenv:
+  system_site_packages: true
+
+env:
+  global:
+    - VERSION="0.1.0"
+    - RELEASE="0.1.0"
+    - PROJECT="oca"
+    - ODOO="10.0"
+  matrix:
+    - TESTS="1"
+    - LINT_CHECK="1"
+    - DOCS="1"
+
+install:
+  # Odoo not currently required.
+  # - pip install -r "https://raw.githubusercontent.com/odoo/odoo/${ODOO}/requirements.txt"
+  # - pip install "https://github.com/odoo/odoo/archive/${ODOO}.tar.gz"
+  - git clone --depth=1 https://github.com/LasLabs/python-quality-tools.git ${HOME}/python-quality-tools
+  - export PATH=${HOME}/python-quality-tools/travis:${PATH}
+  - travis_install
+
+script:
+  - travis_run
+
+after_success:
+  - travis_after_success

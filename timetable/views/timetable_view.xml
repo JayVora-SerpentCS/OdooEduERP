@@ -95,18 +95,6 @@
             <field name="domain">[('timetable_type','=','regular')]</field>
             <field name="context">{'default_timetable_type':'regular'}</field>
         </record>
-        Inherited Form View Of DashBoard School Timetable
-        <record id="inherit_dashboard_school_timetable" model="ir.ui.view">
-            <field name="name">inherit.darshboard.school.timetable</field>
-            <field name="model">board.board</field>
-            <field name="inherit_id" ref="school.board_my_dash_view" />
-            <field name="arch" type="xml">
-                <xpath expr="/form/board/column[1]/action[1]" position="after">
-                    <action name="%(action_timetable_regular)d" string="Time Table"
-                            groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
-                </xpath>
-            </field>
-        </record>
         <!-- Menu items of Timetable -->
         <menuitem id="menu_timetable_1" name="TimeTable" parent="school.menu_ems" sequence="9" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
         <menuitem id="menu_timetable_regular" name="Regular Timetable" parent="menu_timetable_1" action="action_timetable_regular" sequence="10" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
