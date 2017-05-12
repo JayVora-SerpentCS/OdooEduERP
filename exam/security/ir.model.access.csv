@@ -40,3 +40,5 @@ access_time_table_line3,time.table.line,model_time_table_line,school.group_schoo
 access_exam_grade_line3,exam.grade.line,model_exam_grade_line,school.group_school_parent,1,0,0,0
 access_exam_batchwise_result3,exam.batchwise.result,model_exam_batchwise_result,school.group_school_parent,1,0,0,0
 access_student_student3,student.student,model_student_student,school.group_school_parent,1,0,0,0
+,,,,,,,
+access_exam_schedule_line_all,access_exam_schedule_line,model_exam_schedule_line,,1,0,0,0

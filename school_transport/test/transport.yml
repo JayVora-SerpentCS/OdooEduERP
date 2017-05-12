@@ -10,8 +10,7 @@
     Call Search mathod in transport.point
 -
     !python {model: transport.point}: |
-     self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "name":
-      1, "tz": False},{})
+     self.search(cr, uid,[],{"lang": 'en_US', "name": 1, "tz": False},{})
 -
     Call Search mathod in transport.point with context={}
 -

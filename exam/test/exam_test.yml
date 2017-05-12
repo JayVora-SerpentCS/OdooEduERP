@@ -2,7 +2,6 @@
   When exam time will come I will create a new exam "Final Exam" & its timetable.
 - 
   !record {model: exam.exam, id: exam_exam_finalexam0}:
-    created_at: !eval time.strftime('%Y')+'/03/02'
     end_date: !eval time.strftime('%Y')+'/03/08'
     exam_code: !eval time.strftime('%Y /%m')+'/003'
     exam_timetable_ids:
