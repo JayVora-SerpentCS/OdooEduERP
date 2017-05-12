@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.13 --> 11 May 2017 : Arpit Joshi
+    * Imporovement in  view and py file. 
+
 1.0.12 --> 11 May 2017 : Vimal Patel
     * Imporovement of the exam generate result flow and code and optimizaton too. 
 

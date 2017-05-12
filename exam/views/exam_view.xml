@@ -99,11 +99,11 @@
                             <field name="exam_code"/>
                             <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
-                            <field name="academic_year" placeholder="Select Academic Year.." widget="selection" attrs="{'readonly': [('state','!=','draft')]}"/>
-                        </group>
-                        <group col="4" colspan="4">
+                            <field name="academic_year" placeholder="Select Academic Year.." widget="selection" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
                             <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
+                        </group>
+                        <group col="4" colspan="4">
                             <notebook colspan="4" >
                                 <page string="Standard">
                                     <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
@@ -195,8 +195,8 @@
         <!-- Menu Items Of Exam -->
 
         <menuitem id="menu_exam" name="Exam" parent="school.menu_ems" sequence="4" />
-
-        <menuitem id="menu_exam_sub_form" name="Exams" parent="menu_exam" action="action_exam_exam_form" sequence="5"/>
+        <menuitem id="regular_exams_details" name="Regular Exams"  parent="menu_exam" sequence="5"/>
+        <menuitem id="menu_exam_sub_form" name="Exams" parent="regular_exams_details" action="action_exam_exam_form" sequence="6"/>
 
         <!-- Calendar view Of Additional Exam Information -->
 
@@ -287,7 +287,8 @@
 
         <!-- Menu Item Of Additional Exam -->
 
-        <menuitem id="menu_additional_exam_sub_form" name="Additional Exam" parent="menu_exam" action="action_additional_exam_form" sequence="7"/>
+        <menuitem id="additional_exam" name="Additional Exams" parent="menu_exam" sequence="7"/>
+        <menuitem id="menu_additional_exam_sub_form" name="Additional Exam" parent="additional_exam" action="action_additional_exam_form"/>
 
         <!-- Tree View Of Result Information -->
 
@@ -324,21 +325,20 @@
                     <sheet>
                         <group col="2" string="Exam Details">
                             <field name="s_exam_ids" placeholder="Select Examination" widget="selection"
-                                    attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
+                                    attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4">
                             <field name="student_id" placeholder="Select Student"  
                                 context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True}"
                                 domain="[('state','=','done')]"
-                                attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
-                            <field name="roll_no_id" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
+                                attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="roll_no_id" readonly="1"/>
                             <field name="standard_id" placeholder="Select or Create Standard" widget="selection"
-                                                    attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
-                            <field name="grade_system" required="1" options="{&quot;no_create&quot;: True}"
-                                                    attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation','done'])]}"/>
+                                                    readonly="1"/>
+                            <field name="grade_system" required="1" widget="selection"
+                                                    attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
-                        <field name="result_ids" nolabel="1" colspan="4" options="{&quot;no_create&quot;: True}"
-                            attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','done'])]}">
+                        <field name="result_ids" nolabel="1" colspan="4" options="{&quot;no_create&quot;: True}">
                             <tree string="Subjects" editable="bottom">
                                 <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','=','re-evaluation')]}" required="1"/>
                                 <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
@@ -496,7 +496,7 @@
 
         <!-- Menu Item Of Result -->
 
-        <menuitem id="menu_exam_result" name="Exam Results" parent="menu_exam" action="action_exam_result_form" sequence="6"/>
+        <menuitem id="menu_exam_result" name="Exam Results" parent="regular_exams_details" action="action_exam_result_form" sequence="7"/>
 
         <!-- Tree View Of Batchwise Result Information -->
 
@@ -542,7 +542,7 @@
         <!-- Menu Item Of Batchwise Result -->
 
         <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam"
-                  action="action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="9"/>
+                  action="action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/>
 
         <!-- Tree View Of Additional Result Information -->
 
@@ -631,7 +631,7 @@
 
         <!-- Menu Item Of Additional Exam Result -->
 
-        <menuitem id="menu_additional_exam_result" name="Additional Exam Results" parent="menu_exam"
-                  action="action_additional_exam_result_form01" sequence="8"/>
+        <menuitem id="menu_additional_exam_result" name="Additional Exam Results" parent="additional_exam"
+                  action="action_additional_exam_result_form01"/>
 
 </odoo>
