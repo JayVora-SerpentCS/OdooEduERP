@@ -3,8 +3,7 @@
 
 from datetime import date, datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-from odoo.exceptions import except_orm
+from odoo.exceptions import ValidationError
 
 
 class StudentStudent(models.Model):
@@ -61,7 +60,7 @@ class ExtendedTimeTableLine(models.Model):
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
-                    raise UserError(_('Invalid Date Error !\
+                    raise ValidationError(_('Invalid Date Error !\
                         Either you have selected wrong day\
                                        for the date or you have selected\
                                        invalid date.'))
@@ -74,10 +73,32 @@ class ExamExam(models.Model):
 
     @api.constrains('start_date', 'end_date')
     def check_date_exam(self):
-        if self.end_date < self.start_date:
-            raise UserError(_('End date of Exam should be \
-                              greater than start date'))
+        for rec in self:
+            if rec.end_date < rec.start_date:
+                raise ValidationError(_('Exam end date should be \
+                                  greater than start date'))
+            for line in rec.exam_schedule_ids:
+                if line.timetable_id:
+                    for tt in line.timetable_id.exam_timetable_line_ids:
+                        if not rec.start_date <= tt.exm_date <= rec.end_date:
+                            raise ValidationError(_('Invalid Exam Schedule\
+                            \n\nExam Dates must be in between Start\
+                            date and End date !'))
 
+    @api.constrains('active')
+    def check_active(self):
+        '''if exam results is not in done state then raise an
+        validation Warning'''
+        result_obj = self.env['exam.result']
+        if not self.active:
+            for result in result_obj.search([('s_exam_ids',
+                                                '=',
+                                                self.id)]):
+                if result.state != 'done':
+                    raise ValidationError(_('Kindly,mark as done %s\
+                    examination results') % (self.name))
+
+    active = fields.Boolean('Active', default="True")
     name = fields.Char("Exam Name", required=True)
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             default=lambda obj:
@@ -108,12 +129,11 @@ class ExamExam(models.Model):
     def set_running(self):
         for rec in self:
             if not rec.standard_id:
-                raise except_orm(_('Error !'),
-                                 _('Please Select Standard Id.'))
+                raise ValidationError(_('Please Select Standard Id.'))
             if rec.exam_schedule_ids:
                 rec.state = 'running'
             else:
-                raise UserError(_('You must add one Exam Schedule'))
+                raise ValidationError(_('You must add one Exam Schedule'))
         return True
 
     @api.multi
@@ -140,10 +160,6 @@ class ExamExam(models.Model):
                 for student in exam_schedule.standard_id.student_ids:
                     domain = [('standard_id', '=',
                                student.standard_id.id),
-                              ('student_id.division_id', '=',
-                               student.division_id.id),
-                              ('student_id.medium_id', '=',
-                               student.medium_id.id),
                               ('student_id', '=', student.id),
                               ('s_exam_ids', '=', rec.id)]
                     result_exists = result_obj.search(domain)
@@ -280,7 +296,7 @@ class ExamResult(models.Model):
                          })
         return super(ExamResult, self).write(vals)
 
-    @api.onchange('student_id', 's_exam_ids', 'standard_id')
+    @api.onchange('student_id')
     def onchange_student(self):
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
@@ -319,14 +335,14 @@ class ExamResult(models.Model):
         for rec in self:
             for line in rec.result_ids:
                 if line.maximum_marks == 0:
-                    raise UserError(_('Kindly add maximum\
+                    raise ValidationError(_('Kindly add maximum\
                             marks of subject "%s".') % (line.subject_id.name))
                 elif line.minimum_marks == 0:
-                    raise UserError(_('Kindly add minimum\
+                    raise ValidationError(_('Kindly add minimum\
                         marks of subject "%s".') % (line.subject_id.name))
                 elif ((line.maximum_marks == 0 or line.minimum_marks == 0) and
                       line.obtain_marks):
-                    raise UserError(_('Kindly add marks\
+                    raise ValidationError(_('Kindly add marks\
                         details of subject "%s".') % (line.subject_id.name))
             vals = {'grade': rec.grade,
                     'percentage': rec.percentage,
@@ -420,7 +436,7 @@ class ExamSubject(models.Model):
     def _validate_marks(self):
         min_mark = self.minimum_marks > self.maximum_marks
         if (self.obtain_marks > self.maximum_marks or min_mark):
-            raise UserError(_('The obtained marks and minimum marks\
+            raise ValidationError(_('The obtained marks and minimum marks\
                               should not extend maximum marks.'))
 
     @api.multi
@@ -537,7 +553,7 @@ class AdditionalExamResult(models.Model):
     @api.constrains('obtain_marks')
     def _validate_marks(self):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
-            raise UserError(_('''The obtained marks should not extend
+            raise ValidationError(_('''The obtained marks should not extend
                               maximum marks.'''))
         return True
 

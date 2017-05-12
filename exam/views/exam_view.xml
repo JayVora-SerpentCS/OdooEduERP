@@ -86,14 +86,15 @@
                         <field name="state" nolabel="1" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="row">
-                            <div class="col-xs-10 col-md-10">
-                                <separator string="Exam Detail"/>
-                            </div>
-                            <div class="col-xs-2 col-md-2">
-                                <button name="generate_result" string="Generate result" type="object" class="fa fa-graduation-cap" attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}" groups="school.group_school_teacher,school.group_school_administration"/>
-                            </div>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" states="finished">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                            <button name="generate_result" string="Generate result" type="object" class="oe_stat_button fa fa-graduation-cap" 
+                                attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}" 
+                                groups="school.group_school_teacher,school.group_school_administration"/>
                         </div>
+                        <separator string="Exam Detail"/>
                         <group col="4" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
                             <separator colspan="4" col="4" />
                             <field name="exam_code"/>
@@ -306,7 +307,7 @@
                     </header>
                     <sheet>
                         <group col="2" string="Exam Details">
-                            <field name="s_exam_ids" placeholder="Select Examination" widget="selection"
+                            <field name="s_exam_ids" placeholder="Select Examination" widget="selection" domain="[('state','=','finished')]"
                                     attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
                         <group col="4" string="Student Details" colspan="4">
@@ -320,9 +321,9 @@
                             <field name="grade_system" required="1" widget="selection"
                                                     attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
-                        <field name="result_ids" nolabel="1" colspan="4" options="{&quot;no_create&quot;: True}">
-                            <tree string="Subjects" editable="bottom">
-                                <field name="subject_id" placeholder="Select or Create Subject" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                        <field name="result_ids" nolabel="1" colspan="4">
+                            <tree string="Subjects" editable="bottom" create="false">
+                                <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','=','re-evaluation')]}" required="1"/>
                                 <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
