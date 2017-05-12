@@ -40,8 +40,7 @@
     Call Search mathod in transport.vehicle
 -
     !python {model: transport.vehicle}: |
-     self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "name":
-      1, "tz": False},{})
+     self.search(cr, uid,[],{"lang": 'en_US', "name": 1, "tz": False},{})
 -
     Call Search mathod in transport.vehicle with context={}
 -
@@ -51,8 +50,7 @@
     Call Search mathod in transport.participant
 -
     !python {model: transport.participant}: |
-     self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "name":
-      1, "tz": False},{})
+     self.search(cr, uid,[],{"lang": 'en_US', "name": 1, "tz": False},{})
 - 
     Call Search mathod in transport.participant with context={}
 -
