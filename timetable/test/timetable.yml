@@ -2,7 +2,7 @@
   I create an time table line
 -
   !record {model: time.table.line, id: time_line_01}:
-    teacher_id: hr.employee1
+    teacher_id: hr.employee_al
     subject_id: school.demo_subject_subject_7
     table_id: time_table_firsts0
     start_time: '9.0'
@@ -22,8 +22,7 @@
  Search Method Call
 -
   !python {model: subject.subject}: |
-    self.search(cr, uid,[],{},{},{},{"lang": 'en_US', "teacher_id":
-    1, "tz": False},{})
+    self.search(cr, uid,[],{"lang": 'en_US', "teacher_id": 1, "tz": False},{})
 -
  In order to test the PDF reports defined on Generating Timetable
 -
