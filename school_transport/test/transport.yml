@@ -103,12 +103,12 @@
     I confirm the transport registration.
 -
     !python {model: transport.registration}: |
-     self.trans_regi_confirm([ref('transport_registration_0')])
+     self.trans_regi_confirm()
 -
     I cancel the transport registration.
 -
     !python {model: transport.registration}: |
-     self.trans_regi_cancel([ref('transport_registration_0')])
+     self.trans_regi_cancel()
 -
     on change in for month
 -
