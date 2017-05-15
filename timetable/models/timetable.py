@@ -30,36 +30,41 @@ class TimeTable(models.Model):
     user_ids = fields.Many2many('res.users', string="Users",
                                 compute="_compute_user", store=True)
 
-    _sql_constraints = [('standard_year_unique',
-                         'unique(standard_id,year_id)',
-                         'Academic class and year should be unique !')]
+    @api.constrains('year_id', 'standard_id')
+    def check_year_standard(self):
+        if self.timetable_type == 'regular':
+            if (self.year_id.id == self.year_id.id and
+                self.standard_id.id == self.standard_id.id):
+                raise ValidationError('''Academic class and Year should be
+                unique''')
 
     @api.multi
     @api.constrains('timetable_ids')
     def _check_lecture(self):
         '''Method to check same lecture is not assigned on same day'''
-        domain = [('table_id', '=', self.ids)]
-        line_ids = self.env['time.table.line'].search(domain)
-        for rec in line_ids:
-            records = [rec_check.id for rec_check in line_ids
-                       if (rec.week_day == rec_check.week_day and
-                           rec.start_time == rec_check.start_time and
-                           rec.end_time == rec_check.end_time and
-                           rec.teacher_id.id == rec.teacher_id.id)]
-            if len(records) > 1:
-                raise ValidationError(_('''You cannot set lecture at same
-                                        time %s  at same day %s for teacher
-                                        %s..!''') % (rec.start_time,
-                                                     rec.week_day,
-                                                     rec.teacher_id.name))
-            # Checks if time is greater than 24 hours than raise error
-            if rec.start_time > 24:
-                raise ValidationError(_('''Start Time should be less than
-                                        24 hours'''))
-            if rec.end_time > 24:
-                raise ValidationError(_('''End Time should be less than
-                                        24 hours'''))
-        return True
+        if self.timetable_type == 'regular':
+            domain = [('table_id', '=', self.ids)]
+            line_ids = self.env['time.table.line'].search(domain)
+            for rec in line_ids:
+                records = [rec_check.id for rec_check in line_ids
+                           if (rec.week_day == rec_check.week_day and
+                               rec.start_time == rec_check.start_time and
+                               rec.end_time == rec_check.end_time and
+                               rec.teacher_id.id == rec.teacher_id.id)]
+                if len(records) > 1:
+                    raise ValidationError(_('''You cannot set lecture at same
+                                            time %s  at same day %s for teacher
+                                            %s..!''') % (rec.start_time,
+                                                         rec.week_day,
+                                                         rec.teacher_id.name))
+                # Checks if time is greater than 24 hours than raise error
+                if rec.start_time > 24:
+                    raise ValidationError(_('''Start Time should be less than
+                                            24 hours'''))
+                if rec.end_time > 24:
+                    raise ValidationError(_('''End Time should be less than
+                                            24 hours'''))
+            return True
 
 
 class TimeTableLine(models.Model):
