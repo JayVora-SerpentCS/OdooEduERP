@@ -79,7 +79,8 @@
                                     <field name="stud_roll_no"/>
                                     <field name="student_id"/>
                                     <field name="state"/>
-                                    <button name="complete_assign" type="object" icon="fa-check text-success" help="done assigment" states="active,reject"/>
+                                    <button name="done_assignment" type="object" icon="fa-check text-success" help="done assigment" states="active,reject"/>
+                                    <button name="reassign_assignment" type="object" icon="fa-recycle" help="Re-assign assigment" states="reject"/>
                                     <button name="%(assignment.student_homework_reject)d" icon="fa-times-circle text-danger" help="reject assignment" type="action" states="active"/>
                                 </tree>
                             </field>
@@ -106,10 +107,14 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information">
                     <header>
+                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active" 
+                                type="object" groups="school.group_school_teacher,school.group_school_administration"/>
                         <button name="done_assignment" class="oe_stat_button fa fa-check" states="active,reject" string="Done" 
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
                         <button name="%(assignment.student_homework_reject)d" string="Reject" type="action" states="active"
                                 groups="school.group_school_teacher,school.group_school_administration"/>
+                        <button name="reassign_assignment" states="reject" string="Re-Assign" type="object"
+                                groups="school.group_school_teacher, school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                    <sheet>
@@ -231,7 +236,7 @@
                 parent="menu_assignment"
                 action="action_school_student_assignment_form" sequence="2"
                 groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
-         <menuitem id="menu_teacher_assignment_sub_form" name="Teacher Assignment"
+         <menuitem id="menu_teacher_assignment_sub_form" name="Assign Assignment"
                 parent="menu_assignment"
                 action="action_school_teacher_assignment_form"
                 groups="school.group_school_administration,school.group_school_teacher"/>
