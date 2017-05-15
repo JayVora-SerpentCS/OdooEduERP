@@ -628,19 +628,6 @@
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
-        <!-- Demo Data for teacher -->
-<!--         <record id="school_teacher_1" model="hr.employee"> -->
-<!--             <field name="is_school_teacher" eval="True"/> -->
-<!--             <field name="name">Martin Parker</field> -->
-<!--             <field name="school" ref="school.demo_school_1"/> -->
-<!--             <field name="work_email">Teacher1</field> -->
-<!--         </record> -->
-<!--         <record id="school_teacher_2" model="hr.employee"> -->
-<!--             <field name="is_school_teacher" eval="True"/> -->
-<!--             <field name="name">John Mathews</field> -->
-            
-<!--         </record> -->
-            
         <!-- Student cast -->
         <record id="demo_student_cast_1" model="student.cast">
             <field name="name">Hindu</field>
