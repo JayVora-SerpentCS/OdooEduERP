@@ -3,3 +3,4 @@
 
 from . import subject_result
 from . import move_standards
+from . import batch_result

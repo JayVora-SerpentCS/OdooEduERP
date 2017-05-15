@@ -26,4 +26,11 @@
                 name="exam.result_information_report"
                 groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
+        <report id="batch_result_qweb"
+                string="BatchWise Result"
+                model="exam.batchwise.result"
+                report_type="qweb-pdf"
+                file="exam_result_batch"
+                name="exam.exam_result_batch"/>
+
 </odoo>
