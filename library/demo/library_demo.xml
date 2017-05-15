@@ -107,25 +107,25 @@
 
         <!-- library.price.category -->
 
-        <record id="demo_library_price_category_1" model="library.price.category">
-            <field name="name">Books</field>
-            <field name="price">340</field>
-        </record>
+<!--         <record id="demo_library_price_category_1" model="library.price.category"> -->
+<!--             <field name="name">Books</field> -->
+<!--             <field name="price">340</field> -->
+<!--         </record> -->
 
-        <record id="demo_library_price_category_2" model="library.price.category">
-            <field name="name">Story Book</field>
-            <field name="price">150</field>
-        </record>
+<!--         <record id="demo_library_price_category_2" model="library.price.category"> -->
+<!--             <field name="name">Story Book</field> -->
+<!--             <field name="price">150</field> -->
+<!--         </record> -->
 
-        <record id="demo_library_price_category_3" model="library.price.category">
-            <field name="name">Research Paper</field>
-            <field name="price">260</field>
-        </record>
+<!--         <record id="demo_library_price_category_3" model="library.price.category"> -->
+<!--             <field name="name">Research Paper</field> -->
+<!--             <field name="price">260</field> -->
+<!--         </record> -->
 
-        <record id="demo_library_price_category_4" model="library.price.category">
-            <field name="name">References Books</field>
-            <field name="price">450</field>
-        </record>
+<!--         <record id="demo_library_price_category_4" model="library.price.category"> -->
+<!--             <field name="name">References Books</field> -->
+<!--             <field name="price">450</field> -->
+<!--         </record> -->
 
         <!-- Language -->
 
@@ -146,29 +146,29 @@
 
         <!-- library.book.returnday -->
 
-        <record id="library_book_returnday_1" model="library.book.returnday">
-            <field name="code">B001</field>
-            <field name="day">10</field>
-            <field name="fine_amt">20</field>
-        </record>
+<!--         <record id="library_book_returnday_1" model="library.book.returnday"> -->
+<!--             <field name="code">B001</field> -->
+<!--             <field name="day">10</field> -->
+<!--             <field name="fine_amt">20</field> -->
+<!--         </record> -->
 
-        <record id="library_book_returnday_2" model="library.book.returnday">
-            <field name="code">B002</field>
-            <field name="day">15</field>
-            <field name="fine_amt">30</field>
-        </record>
+<!--         <record id="library_book_returnday_2" model="library.book.returnday"> -->
+<!--             <field name="code">B002</field> -->
+<!--             <field name="day">15</field> -->
+<!--             <field name="fine_amt">30</field> -->
+<!--         </record> -->
 
-        <record id="library_book_returnday_3" model="library.book.returnday">
-            <field name="code">B003</field>
-            <field name="day">25</field>
-            <field name="fine_amt">50</field>
-        </record>
+<!--         <record id="library_book_returnday_3" model="library.book.returnday"> -->
+<!--             <field name="code">B003</field> -->
+<!--             <field name="day">25</field> -->
+<!--             <field name="fine_amt">50</field> -->
+<!--         </record> -->
 
-        <record id="library_book_returnday_4" model="library.book.returnday">
-            <field name="code">B004</field>
-            <field name="day">30</field>
-            <field name="fine_amt">60</field>
-        </record>
+<!--         <record id="library_book_returnday_4" model="library.book.returnday"> -->
+<!--             <field name="code">B004</field> -->
+<!--             <field name="day">30</field> -->
+<!--             <field name="fine_amt">60</field> -->
+<!--         </record> -->
 
         <!-- library.author -->
 

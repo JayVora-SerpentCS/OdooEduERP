@@ -8,13 +8,13 @@ from datetime import datetime
 from odoo.exceptions import Warning as UserError
 
 
-class ProductState(models.Model):
-    _name = "product.state"
-    _description = "States of Books"
-
-    name = fields.Char('State', required=True)
-    code = fields.Char('Code', required=True)
-    active = fields.Boolean('Active')
+# class ProductState(models.Model):
+#    _name = "product.state"
+#    _description = "States of Books"
+#
+#    name = fields.Char('State', required=True)
+#    code = fields.Char('Code', required=True)
+#    active = fields.Boolean('Active')
 
 
 class Many2manySym(fields.Many2many):
@@ -44,10 +44,10 @@ class ProductTemplate(models.Model):
 
     name = fields.Char('Name', required=True)
 
-    @api.multi
-    def _state_get(self):
-        self._cr.execute('select name, name from product_state order by name')
-        return self._cr.fetchall()
+#    @api.multi
+#    def _state_get(self):
+#        self._cr.execute('select name, name from product_state order by name')
+#        return self._cr.fetchall()
 
 
 class ProductLang(models.Model):
@@ -233,8 +233,8 @@ class ProductProduct(models.Model):
     @api.onchange('day_to_return_book')
     def onchange_day_to_return_book(self):
         t = "%Y-%m-%d %H:%M:%S"
-        rd = relativedelta(days=self.day_to_return_book.day or 0.0)
-        if self.day_to_return_book:
+        rd = relativedelta(days=self.day_to_return_book or 0.0)
+        if rd:
             ret_date = datetime.strptime(self.creation_date, t) + rd
             self.date_retour = ret_date
 
@@ -267,20 +267,23 @@ class ProductProduct(models.Model):
     catalog_num = fields.Char('Catalog number',
                               help="Shows Identification number of books")
     lang = fields.Many2one('product.lang', 'Language')
-    editor = fields.Many2one('res.partner', 'Editor', change_default=True)
+    editor_ids = fields.One2many('book.editor', "book_id", "Editor")
+#    editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
     code = fields.Char(compute_="_product_code", method=True,
                        string='Acronym', store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
-    date_parution = fields.Date('Release date',
-                                help="Release(Issue) Date of book")
+#    date_parution = fields.Date('Release date',
+#                                help="Release(Issue) Date of book")
     creation_date = fields.Datetime('Creation date', readonly=True,
                                     help="Record creation date",
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Datetime('Return Date', help='Book Return date')
-    book_price = fields.Float('Book Price')
+#    book_price = fields.Float('Book Price')
+    fine_lost = fields.Float('Fine Lost')
+    fine_late_return = fields.Float('Late Return')
     tome = fields.Char('TOME',
                        help="Stores information of work in several volume")
     nbpage = fields.Integer('Number of pages')
@@ -297,9 +300,9 @@ class ProductProduct(models.Model):
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",
                             default='paper')
-    collection = fields.Many2one('library.collection', 'Collection',
-                                 help='Show collection in which\
-                                 book is resides')
+#    collection = fields.Many2one('library.collection', 'Collection',
+#                                 help='Show collection in which\
+#                                 book is resides')
     pocket = fields.Char('Pocket')
     num_pocket = fields.Char('Collection No.',
                              help='Shows collection number in which'
@@ -307,9 +310,8 @@ class ProductProduct(models.Model):
     num_edition = fields.Integer('No. edition', help="Edition number of book")
     format = fields.Char('Format',
                          help="The general physical appearance of a book")
-    price_cat = fields.Many2one('library.price.category', "Price category")
-    day_to_return_book = fields.Many2one('library.book.returnday',
-                                         'Book return Days')
+#    price_cat = fields.Many2one('library.price.category', "Price category")
+    day_to_return_book = fields.Integer('Book Return Days')
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
 
@@ -379,3 +381,25 @@ class LibraryAuthor(models.Model):
 
     book_ids = fields.Many2many('product.product', 'author_book_rel',
                                 'author_id', 'product_id', 'Books')
+
+
+class BookEditor(models.Model):
+    '''Book Editor Information'''
+    _name = "book.editor"
+
+    image = fields.Binary("Image")
+    name = fields.Char('Name', required=True, select=True)
+    biography = fields.Text('Biography')
+    note = fields.Text('Notes')
+    phone = fields.Char('Phone')
+    mobile = fields.Char("Mobile")
+    fax = fields.Char('Fax')
+    title = fields.Many2one("res.partner.title", "Title")
+    website = fields.Char("Website")
+    street = fields.Char("Street")
+    street2 = fields.Char("Street2")
+    city = fields.Char("City")
+    state_id = fields.Many2one("res.country.state", "State")
+    zip = fields.Char("Zip")
+    country_id = fields.Many2one("res.country", "Country")
+    book_id = fields.Many2one("product.product", "Book Ref")
