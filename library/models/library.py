@@ -8,13 +8,13 @@ from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
 
 
-class LibraryPriceCategory(models.Model):
-    _name = 'library.price.category'
-    _description = 'Book Price Category'
-
-    name = fields.Char('Category', required=True)
-    price = fields.Float('Price', required=True, default=0)
-    product_ids = fields.One2many('product.product', 'price_cat', 'Books')
+# class LibraryPriceCategory(models.Model):
+#    _name = 'library.price.category'
+#    _description = 'Book Price Category'
+#
+#    name = fields.Char('Category', required=True)
+#    price = fields.Float('Price', required=True, default=0)
+#    product_ids = fields.One2many('product.product', 'price_cat', 'Books')
 
 
 class LibraryRack(models.Model):
@@ -27,24 +27,24 @@ class LibraryRack(models.Model):
     active = fields.Boolean('Active', default='True')
 
 
-class LibraryCollection(models.Model):
-    _name = 'library.collection'
-    _description = "Library Collection"
+# class LibraryCollection(models.Model):
+#    _name = 'library.collection'
+#    _description = "Library Collection"
+#
+#    name = fields.Char('Name', required=True)
+#    code = fields.Char('Code')
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code')
 
-
-class LibraryBookReturnday(models.Model):
-    _name = 'library.book.returnday'
-    _description = "Library Collection"
-    _rec_name = 'day'
-
-    day = fields.Integer('Days', required=True,
-                         help="It show the no of day/s for returning book")
-    code = fields.Char('Code')
-    fine_amt = fields.Float('Fine Amount', required=True,
-                            help="Fine amount after due of book return date")
+# class LibraryBookReturnday(models.Model):
+#    _name = 'library.book.returnday'
+#    _description = "Library Collection"
+#    _rec_name = 'day'
+#
+#    day = fields.Integer('Days', required=True,
+#                         help="It show the no of day/s for returning book")
+#    code = fields.Char('Code')
+#    fine_amt = fields.Float('Fine Amount', required=True,
+#                            help="Fine amount after due of book return date")
 
 
 class LibraryAuthor(models.Model):
@@ -128,8 +128,8 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
-        rd = relativedelta(days=self.day_to_return_book.day or 0.0)
-        if self.date_issue and self.day_to_return_book:
+        rd = relativedelta(days=self.day_to_return_book or 0.0)
+        if self.date_issue and rd:
             ret_date = datetime.strptime(self.date_issue, t) + rd
             self.date_return = ret_date
 
@@ -147,10 +147,11 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
-        rd = relativedelta(days=self.day_to_return_book.day or 0.0)
-        if self.date_issue and self.day_to_return_book:
-            ret_date = datetime.strptime(self.date_issue, t) + rd
-            self.date_return = ret_date
+        for rec in self:
+            rd = relativedelta(days=rec.day_to_return_book or 0.0)
+            if rec.date_issue and rd:
+                ret_date = datetime.strptime(rec.date_issue, t) + rd
+                rec.date_return = ret_date
 
     @api.multi
     @api.depends('date_return', 'day_to_return_book')
@@ -173,9 +174,9 @@ class LibraryBookIssue(models.Model):
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
                     diff = start_day - end_day
-                    day = float(diff.days) or 1.0
+                    day = float(diff.days) or 0.0
                     if line.day_to_return_book:
-                        line.penalty = day * line.day_to_return_book.fine_amt
+                        line.penalty = day * line.name.fine_late_return or 0.0
 
     @api.multi
     @api.depends('state')
@@ -192,8 +193,9 @@ class LibraryBookIssue(models.Model):
                   and book lost penalty as value
         '''
 
-        if self.state and self.state == 'lost':
-            self.lost_penalty = self.name.book_price or 0.0
+        for rec in self:
+            if rec.state and rec.state == 'lost':
+                rec.lost_penalty = rec.name.fine_lost or 0.0
 
     @api.multi
     @api.constrains('card_id', 'state')
@@ -206,19 +208,22 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True or False
         '''
-        if self.card_id:
-            card_ids = self.search([('card_id', '=', self.card_id.id),
-                                    ('state', 'in', ['issue', 'reissue'])])
-            if self.state == 'issue' or self.state == 'reissue':
-                if self.card_id.book_limit > len(card_ids) - 1:
-                    return True
+        for rec in self:
+            if rec.card_id:
+                card_ids = rec.search([('card_id', '=', rec.card_id.id),
+                                       ('state', 'in', ['issue', 'reissue'])])
+                if rec.state == 'issue' or rec.state == 'reissue':
+                    if rec.card_id.book_limit > len(card_ids) - 1:
+                        return True
+                    else:
+                        raise UserError(_('Book issue limit is over on this\
+                        card'))
                 else:
-                    raise UserError(_('Book issue limit is over on this card'))
-            else:
-                if self.card_id.book_limit > len(card_ids):
-                    return True
-                else:
-                    raise UserError(_('Book issue limit is over on this card'))
+                    if rec.card_id.book_limit > len(card_ids):
+                        return True
+                    else:
+                        raise UserError(_('Book issue limit is over on\
+                        this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
@@ -239,17 +244,16 @@ class LibraryBookIssue(models.Model):
                                   string='Return Date',
                                   store=True,
                                   help="Book To Be Return On This Date")
-    actual_return_date = fields.Datetime("Actual Return Date", readonly=True,
+    actual_return_date = fields.Datetime("Actual Return Date",
                                          help="Actual Return Date of Book")
     penalty = fields.Float(compute="_compute_penalty",
-                           string='Penalty', method=True,
+                           string='Penalty', store=True,
                            help='It show the late book return penalty')
     lost_penalty = fields.Float(compute="_compute_lost_penalty",
                                 string='Fine', store=True,
                                 help='It show the penalty for lost book')
-    return_days = fields.Integer('Return Days')
-    day_to_return_book = fields.Many2one('library.book.returnday',
-                                         'Book Return Days')
+#    return_days = fields.Integer('Return Days')
+    day_to_return_book = fields.Integer('Book Return Days')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     state = fields.Selection([('draft', 'Draft'), ('issue', 'Issued'),
                               ('reissue', 'Reissued'), ('cancel', 'Cancelled'),
@@ -327,9 +331,9 @@ class LibraryBookIssue(models.Model):
                 card_ids = rec.search([('card_id', '=', rec.card_id.id),
                                        ('state', 'in', ['issue', 'reissue'])])
                 if rec.card_id.book_limit > len(card_ids):
-                    rec.write({'state': 'issue'})
-#                    product_id = self.name
-#                    product_id.write({'availability': 'notavailable'})
+                    return_day = rec.name.day_to_return_book
+                    rec.write({'state': 'issue',
+                               'day_to_return_book': return_day})
             return True
 
     @api.multi
@@ -494,7 +498,7 @@ class LibraryBookRequest(models.Model):
             if self.type == 'existing':
                 book = self.name.name
             else:
-                book = self.new1
+                book = self.new_book
             self.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default=lambda self:
@@ -504,13 +508,14 @@ class LibraryBookRequest(models.Model):
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
-    new1 = fields.Char('Book Name',)
-    new2 = fields.Char('Book Name')
+    new_book = fields.Char('Book Name')
     bk_nm = fields.Char('Name', compute="_compute_bname", store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('cancel', 'Cancelled'),
                               ], "State", default='draft')
+    book_return_days = fields.Integer(related='name.day_to_return_book',
+                                      string="Return Days")
 
     @api.multi
     def draft_book_request(self):
@@ -519,21 +524,22 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     def confirm_book_request(self):
-        for book in self:
-            book.state = 'confirm'
-            book_issue_obj = self.env['library.book.issue']
-            vals = {'card_id': self.card_id.id,
-                    'type': self.type,
-                    'name': self.name.id}
+        book_issue_obj = self.env['library.book.issue']
+        for rec in self:
+            rec.state = 'confirm'
+            vals = {'card_id': rec.card_id.id,
+                    'type': rec.type,
+                    'name': rec.name.id}
             issue_id = book_issue_obj.create(vals)
-            issue_id.onchange_card_issue()
-            return {'name': ('Book Issue'),
-                    'view_mode': 'form',
-                    'view_type': 'form',
-                    'res_id': issue_id.id,
-                    'res_model': 'library.book.issue',
-                    'type': 'ir.actions.act_window',
-                    'target': 'current'}
+            if issue_id:
+                issue_id.onchange_card_issue()
+                return {'name': ('Book Issue'),
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'res_id': issue_id.id,
+                        'res_model': 'library.book.issue',
+                        'type': 'ir.actions.act_window',
+                        'target': 'current'}
 
     @api.multi
     def cancle_book_request(self):
