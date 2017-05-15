@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (Exam)
 ===============================================================================
+1.0.16 --> 11 May 2017 : Vimal Patel
+    * Code optimization and remove unused code also 
+
 1.0.15 --> 11 May 2017 : Arpit Joshi
     * Report of batchwise result
     * Added groups of school administrator and school teacher on menu of wizard 

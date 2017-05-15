@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, fields, _
+from odoo import models, api, fields
 
 
 class BatchExamResult(models.TransientModel):
