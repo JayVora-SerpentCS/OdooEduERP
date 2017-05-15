@@ -3,7 +3,7 @@
 
 {
     'name': 'Exam Management',
-    'version': "10.0.1.0.14",
+    'version': "10.0.1.0.15",
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
@@ -18,8 +18,10 @@
              'views/exam_result_report.xml',
              'views/additional_exam_report.xml',
              'views/result_information_report.xml',
+             'views/batch_exam.xml',
              'views/report_view.xml',
-             'wizard/subject_result.xml'],
+             'wizard/subject_result.xml',
+             'wizard/batch_result.xml'],
     'demo': ['demo/exam_demo.xml'],
     'installable': True,
     'application': True,

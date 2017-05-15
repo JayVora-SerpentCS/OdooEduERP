@@ -483,49 +483,49 @@
 
         <!-- Tree View Of Batchwise Result Information -->
 
-        <record id="view_exam_batch_result_tree" model="ir.ui.view">
-            <field name="name">exam.batchwise.result.tree</field>
-            <field name="model">exam.batchwise.result</field>
-            <field name="arch" type="xml">
-                <tree string="Resultss">
-                    <field name="standard_id"/>
-                    <field name="grade"/>
-                </tree>
-            </field>
-        </record>
+<!--         <record id="view_exam_batch_result_tree" model="ir.ui.view"> -->
+<!--             <field name="name">exam.batchwise.result.tree</field> -->
+<!--             <field name="model">exam.batchwise.result</field> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <tree string="Resultss"> -->
+<!--                     <field name="standard_id"/> -->
+<!--                     <field name="grade"/> -->
+<!--                 </tree> -->
+<!--             </field> -->
+<!--         </record> -->
 
         <!-- Form View Of Gradewise Result Information -->
 
-        <record id="view_exam_batch_result_form" model="ir.ui.view">
-            <field name="name">exam.batch.result.form</field>
-            <field name="model">exam.batchwise.result</field>
-            <field name="arch" type="xml">
-                <form string="Grade wise Results">
-                    <sheet>
-                        <separator string="Batchwise Avg Grade"/>
-                        <group col="4"  colspan="4">
-                            <field name="year"/>
-                            <field name="standard_id" widget="selection"/>
-                            <field name="grade" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+<!--         <record id="view_exam_batch_result_form" model="ir.ui.view"> -->
+<!--             <field name="name">exam.batch.result.form</field> -->
+<!--             <field name="model">exam.batchwise.result</field> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <form string="Grade wise Results"> -->
+<!--                     <sheet> -->
+<!--                         <separator string="Batchwise Avg Grade"/> -->
+<!--                         <group col="4"  colspan="4"> -->
+<!--                             <field name="year" widget="selection"/> -->
+<!--                             <field name="standard_id" widget="selection"/> -->
+<!--                             <field name="grade" /> -->
+<!--                         </group> -->
+<!--                     </sheet> -->
+<!--                 </form> -->
+<!--             </field> -->
+<!--         </record> -->
 
         <!-- Action Of Form & Tree Views Of Gradewise Result Information -->
 
-        <record id="action_batchwise_exam_result_form" model="ir.actions.act_window">
-            <field name="name">Batchwise Result</field>
-            <field name="res_model">exam.batchwise.result</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
+<!--         <record id="action_batchwise_exam_result_form" model="ir.actions.act_window"> -->
+<!--             <field name="name">Batchwise Result</field> -->
+<!--             <field name="res_model">exam.batchwise.result</field> -->
+<!--             <field name="view_type">form</field> -->
+<!--             <field name="view_mode">tree,form</field> -->
+<!--         </record> -->
 
         <!-- Menu Item Of Batchwise Result -->
 
-        <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam"
-                  action="action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/>
+<!--         <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam" -->
+<!--                   action="action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/> -->
 
         <!-- Tree View Of Additional Result Information -->
 

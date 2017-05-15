@@ -470,44 +470,6 @@ class ExamSubject(models.Model):
     # grade = fields.Char(compute='_compute_grade', string='Grade')
 
 
-class ExamResultBatchwise(models.Model):
-    _name = 'exam.batchwise.result'
-    _rec_name = 'standard_id'
-    _description = 'exam result Information by Batch wise'
-
-    @api.multi
-    @api.depends('standard_id', 'year')
-    def _compute_student_grade(self):
-        for rec in self:
-            fina_tot = 0
-            count = 0
-            divi = 0
-            year_obj = self.env['academic.year']
-            stud_obj = self.env['exam.result']
-            if rec.standard_id and rec.year:
-                year_ob = year_obj.browse(rec.year.id)
-                stand_id = stud_obj.search([
-                    ('standard_id', '=', rec.standard_id.id)])
-                for stand in stand_id:
-                    student_ids = stud_obj.browse(stand.id)
-                    if student_ids.result_ids:
-                        count += 1
-                        fina_tot += student_ids.total
-                    divi = fina_tot / count
-                    # Total_obtained mark of all student
-                    if year_ob.grade_id.grade_ids:
-                        # divis = divi <= year_ob.grade_id.to_mark
-                        for grade_id in year_ob.grade_id.grade_ids:
-                            if divi >= grade_id.from_mark and\
-                                    divi <= grade_id.to_mark:
-                                rec.grade = grade_id.grade
-    standard_id = fields.Many2one("school.standard", "Standard", required=True)
-    year = fields.Many2one('academic.year', 'Academic Year', required=True)
-    grade = fields.Char(compute='_compute_student_grade', string='Grade',
-                        method=True,
-                        store=True)
-
-
 class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'

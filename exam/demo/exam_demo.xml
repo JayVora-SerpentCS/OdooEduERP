@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Exam Demo Data -->
         <record id="exam_exam_finalexam0" model="exam.exam">
             <field eval="30" name="weightage"/>
@@ -12,7 +12,12 @@
             <field name="created_at" eval="time.strftime('%Y')+'/03/03'"/>
             <field eval="40" name="minimum_marks"/>
             <field name="start_date" eval="time.strftime('%Y')+'/03/06'"/>
-            <field eval="[(6,0,[])]" name="standard_id"/>
+            <field eval="[(6,0,[ref('school.demo_standard_standard_1')])]" name="standard_id"/>
+            <field name="academic_year" ref="school.demo_academic_year_3"/>
+        </record>
+        <record id="exam_schedule_line_record" model="exam.schedule.line">
+            <field name="standard_id" ref="school.demo_standard_standard_1"/>
+            <field name="timetable_id" ref="exam.exam_exam_finalexam0"/>
         </record>
         <record id="time_table_finalexamtimetable0" model="time.table">
             <field name="division_id" ref="school.demo_standard_division_1"/>
