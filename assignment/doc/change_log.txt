@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (assignment)
 ===============================================================================
+1.0.4 --> 15 May 2017 : Vimal Patel
+    * Added the re-assignment state and it's flow 
+
 1.0.3 --> 25 April 2017 : Arpit Joshi
     * Add search default of active and other view level changes
 
