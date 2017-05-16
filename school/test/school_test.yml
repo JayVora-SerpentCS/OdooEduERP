@@ -48,46 +48,31 @@
   I done 'admission' using Done button
 -
   !python {model: student.student}: |
-    self.admission_done(cr, uid, [ref("student_student_0")], None)
-
--
-  I cancel 'admission' using Cancel button
--
-  !python {model: student.student}: |
-    self.admission_cancel(cr, uid, [ref("student_student_0")], None)
+    self.admission_done()
 
 -
   I Reset the 'admission' using Reset To Draft button
 -
   !python {model: student.student}: |
-    self.admission_draft(cr, uid, [ref("student_student_0")], None)
+    self.admission_draft()
 
 -
   I computes the subjects related to particular teacher
 -
   !python {model: hr.employee}: |
-    self._compute_subject(cr, uid, [ref("school.demo_student_student_6")], 'subject_ids', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
+    self._compute_subject()
 
 -
   I computes the subjects related to particular standard
 -
   !python {model: school.standard}: |
-    self._compute_subject(cr, uid, [ref("school.demo_school_standard_1")], 'subject_ids', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
+    self._compute_subject()
 
 -
   I computes the student related to particular standard
 -
   !python {model: school.standard}: |
-    self._compute_student(cr, uid, [ref("school.demo_student_student_1")], 'student_ids', None, {"lang": "en_US",
-      "tz": False, "active_model": "ir.ui.menu", "section_id":
-      False, "active_ids": ['active_ids'],
-      "active_id": ['active_id'], })
+    self._compute_student()
 
 
 

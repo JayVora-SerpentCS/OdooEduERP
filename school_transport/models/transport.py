@@ -333,7 +333,8 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def trans_regi_cancel(self):
-        self.state = 'cancel'
+        for rec in self:
+            rec.write({'state': 'cancel'})
         return True
 
     @api.multi
