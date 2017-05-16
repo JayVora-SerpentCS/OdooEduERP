@@ -239,13 +239,13 @@ class ProductProduct(models.Model):
                     vals['seller_ids'].append(supplier)
         return super(ProductProduct, self).create(vals)
 
-    @api.onchange('day_to_return_book')
-    def onchange_day_to_return_book(self):
-        t = "%Y-%m-%d %H:%M:%S"
-        rd = relativedelta(days=self.day_to_return_book or 0.0)
-        if rd:
-            ret_date = datetime.strptime(self.creation_date, t) + rd
-            self.date_retour = ret_date
+#    @api.onchange('day_to_return_book')
+#    def onchange_day_to_return_book(self):
+#        t = "%Y-%m-%d %H:%M:%S"
+#        rd = relativedelta(days=self.day_to_return_book or 0.0)
+#        if rd:
+#            ret_date = datetime.strptime(self.creation_date, t) + rd
+#            self.date_retour = ret_date
 
     @api.multi
     @api.depends('qty_available')

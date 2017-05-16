@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {'name': 'Library Management',
- 'version': "10.0.1.0.5",
+ 'version': "10.0.1.0.6",
  'author': "Serpent Consulting Services Pvt. Ltd.",
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',

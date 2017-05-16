@@ -32,10 +32,27 @@ class TimeTable(models.Model):
 
 #    @api.constrains('year_id', 'standard_id')
 #    def check_year_standard(self):
-#        if (self.timetable_type == 'regular' and
-#                self.year_id.id == self.year_id.id and
-#                self.standard_id.id == self.standard_id.id):
-#            raise ValidationError('Academic class and Year should be unique')
+#        if self.timetable_type == 'regular':
+#            timetables = self.search([('year_id', '=', self.year_id.id),
+#                                      ('standard_id', '=', self.standard_id.id
+#                                       )])
+#            print"\n\ntimetables+++++++", timetables
+#            if timetables:
+#                raise ValidationError('''Academic class and Year should be
+#                unique''')
+#    @api.model
+#    def create(self, vals):
+#        res = super(TimeTable, self).create(vals)
+#        if res.timetable_type == 'regular':
+#            print"self.timetqable typle+++++++++", self.timetable_type
+#            timetables = self.search([('year_id', '=', res.year_id.id),
+#                                      ('standard_id', '=', res.standard_id.id,
+#                                       )])
+#            print"timetables++++++++", timetables
+#            if timetables:
+#                raise ValidationError('''Academic class and Year should be
+#                unique''')
+#        return res
 
     @api.multi
     @api.constrains('timetable_ids')

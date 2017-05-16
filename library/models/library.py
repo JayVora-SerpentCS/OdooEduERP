@@ -94,6 +94,25 @@ class LibraryCard(models.Model):
                 user = rec.teacher_id.name
             rec.gt_name = user
 
+    @api.model
+    def create(self, vals):
+        if vals.get('student_id'):
+            print"student id++++++++++++"
+            student = self.env['student.student'].browse(vals.get('student_id'
+                                                                  ))
+            vals.update({'standard_id': student.standard_id.id,
+                         'roll_no': student.roll_no})
+        return super(LibraryCard, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id'
+                                                                  ))
+            vals.update({'standard_id': student.standard_id.id,
+                         'roll_no': student.roll_no})
+        return super(LibraryCard, self).write(vals)
+
     code = fields.Char('Card No', required=True, default=lambda self:
                        self.env['ir.sequence'].get('library.card') or '/')
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
@@ -290,6 +309,38 @@ class LibraryBookIssue(models.Model):
                 self.teacher_id = self.card_id.teacher_id.id
                 self.gt_name = self.card_id.gt_name
 
+    @api.model
+    def create(self, vals):
+        if vals.get('card_id') and vals.get('user') == 'Student':
+            card = self.env['library.card'].browse(vals.get('card_id'))
+            vals.update({'student_id': card.student_id.id,
+                         'standard_id': card.standard_id.id,
+                         'roll_no': int(card.roll_no),
+                         'gt_name': card.gt_name
+                         })
+        if vals.get('card_id') and vals.get('user') == 'Teacher':
+            card = self.env['library.card'].browse(vals.get('card_id'))
+            vals.update({'teacher_id': card.teacher_id.id,
+                         'gt_name': card.gt_name
+                         })
+        return super(LibraryBookIssue, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('card_id') and vals.get('user') == 'Student':
+            card = self.env['library.card'].browse(vals.get('card_id'))
+            vals.update({'student_id': card.student_id.id,
+                         'standard_id': card.standard_id.id,
+                         'roll_no': int(card.roll_no),
+                         'gt_name': card.gt_name
+                         })
+        if vals.get('card_id') and vals.get('user') == 'Teacher':
+            card = self.env['library.card'].browse(vals.get('card_id'))
+            vals.update({'teacher_id': card.teacher_id.id,
+                         'gt_name': card.gt_name
+                         })
+        return super(LibraryBookIssue, self).write(vals)
+
     @api.multi
     def draft_book(self):
         '''
@@ -386,7 +437,7 @@ class LibraryBookIssue(models.Model):
             stock_scrap_obj.with_context({'book_lost': True}
                                          ).create(scrap_vals)
             rec.state = 'lost'
-            rec.lost_penalty = self.name.book_price
+            rec.lost_penalty = self.name.fine_lost
         return True
 
     @api.multi
@@ -504,7 +555,7 @@ class LibraryBookRequest(models.Model):
     req_id = fields.Char('Request ID', readonly=True, default='New')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
-                            'Book Type')
+                            'Book Type', default="existing")
     name = fields.Many2one('product.product', 'Book Name')
     new_book = fields.Char('Book Name')
     bk_nm = fields.Char('Name', compute="_compute_bname", store=True)
