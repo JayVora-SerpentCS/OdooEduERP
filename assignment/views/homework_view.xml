@@ -60,12 +60,12 @@
                     <separator string="Teacher Assignment" colspan="4"/>
                     <group col="4" colspan="4">
                         <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
-                        <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','=','done')]}" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
                     <group col="4" string="Subject and Dates">
-                        <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','=','done')]}" widget="selection"/>
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
-                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','=','done')]}" domain="[('teacher_ids','in',teacher_id)]" widget="selection"/>
                         <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                     <separator string="Attachements" colspan="4"/>
@@ -120,15 +120,15 @@
                    <sheet>
                     <separator colspan="4"/>
                     <group col="4" string="Assignment Information">
-                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','=','done')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                         <field name="stud_roll_no" invisible="1"/>
                         <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
                         <newline />
-                        <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','=','done')]}" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
                     <group col="4" string="Standard and Division">
-                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','=','done')]}"/>
-                        <field name="standard_id" placeholder="Standerd" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','=','done')]}" widget="selection" domain="[('teacher_ids','in',teacher_id)]"/>
+                        <field name="standard_id" placeholder="Standerd" attrs="{'readonly':[('state','=','done')]}" widget="selection"/>
                     </group>
                     <group col="4" string="Dates">
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
