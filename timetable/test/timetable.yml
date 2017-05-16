@@ -20,18 +20,10 @@
  Search Method Call
 -
   !python {model: subject.subject}: |
-    self.search(cr, uid,[],{"lang": 'en_US', "teacher_id": 1, "tz": False},{})
--
- In order to test the PDF reports defined on Generating Timetable
--
-  !python {model: time.table}: |
-    from odoo import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.time.table').create(cr, uid, [ref('timetable.time_table_firsts0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'timetable-time_table.'+format), 'wb+').write(data)
+    self.search([])
 -
  Search Method Call
 -
   !python {model: subject.subject}: |
-    self.search(cr, uid,[])
+    self.search([])
 -

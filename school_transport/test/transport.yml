@@ -113,43 +113,37 @@
     on change in for month
 -
     !python {model: transport.registration}: |
-     self.onchange_for_month(cr,uid,[ref('transport_registration_0')],4)
+     self.onchange_for_month()
 -
     on change in for month with context={}
 -
     !python {model: transport.registration}: |
-     self.onchange_for_month(cr,uid,[],{})
+     self.onchange_for_month()
 -
     on change in point_id
 -
     !python {model: transport.registration}: |
-     self.onchange_point_id(cr,uid,[ref('transport_registration_0')],ref("transport_point_1"))
+     self.onchange_point_id()
 -
     on change in point_id with context={}
 -
     !python {model: transport.registration}: |
-     self.onchange_point_id(cr,uid,[],{})
+     self.onchange_point_id()
 -
     do the state of transport open.
 -
     !python {model: student.transport}: |
-     self.transport_open(cr, uid, [ref("transport_root_0")], {"lang": 'en_US', "active_model":
-      "student.transport", "tz": False
-      })
+     self.transport_open()
 -
     do the state of transport close.
 -
     !python {model: student.transport}: |
-     self.transport_close(cr, uid, [ref("transport_root_0")], {"lang": 'en_US', "active_model":
-      "student.transport", "tz": False
-      })
+     self.transport_close()
 -
     do the delete entry of the participants of which transportation registration is over.
 -
     !python {model: student.transport}: |
-     self.delet_entry(cr, uid, [], {"lang": 'en_US', "active_model":
-      "student.transport", "tz": False
-      })
+     self.delet_entry()
 -
     create transfer.vehicle.
 -
@@ -163,20 +157,20 @@
     on change in participation_id
 -
     !python {model: transfer.vehicle}: |
-     self.onchange_participation_id(cr,uid,[ref('transfer_vehicle_0')],ref("transport_participant_1"))
+     self.onchange_participation_id()
 -
     on change in participation_id with context=0
 -
     !python {model: transfer.vehicle}: |
-     self.onchange_participation_id(cr,uid,[],{})
+     self.onchange_participation_id()
 -
     call Defaultget
 -
     !python {model: transfer.vehicle}: |
-     self.default_get(cr,uid,['old_vehicle_id', 'new_vehicle_id', 'name', 'participation_id', 'root_id'],{'lang': 'en_US', 'tz': False, 'active_model': 'student.student', 'department_id': False, 'active_ids': [5], 'active_id': 5})
+     self.default_get()
 -
     call vehicle_transfer
 -
     !python {model: transfer.vehicle}: |
-     self.vehicle_transfer(cr,uid,[ref('transfer_vehicle_0')])
+     self.vehicle_transfer()
 
