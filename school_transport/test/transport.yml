@@ -112,7 +112,8 @@
 -
     do the state of transport open.
 -
-    !python {model: student.transport}: |
+
+    !python {model: student.transport, id: student_transport_1}: |
      self.transport_open()
 -
     do the state of transport close.
