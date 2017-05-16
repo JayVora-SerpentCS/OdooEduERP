@@ -1,5 +1,8 @@
 Version Change Log (library)
 ===============================================================================
+1.0.6 --> 16 May 2017 : Arpit Joshi
+    * View level improvements
+    * add Create and write method. 
 
 1.0.5 --> 11 May 2017 : Vimal Patel
     * Code optimization and remove unused code also 
