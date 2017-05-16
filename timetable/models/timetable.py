@@ -34,7 +34,7 @@ class TimeTable(models.Model):
     def check_year_standard(self):
         if self.timetable_type == 'regular':
             if (self.year_id.id == self.year_id.id and
-                self.standard_id.id == self.standard_id.id):
+                    self.standard_id.id == self.standard_id.id):
                 raise ValidationError('''Academic class and Year should be
                 unique''')
 
