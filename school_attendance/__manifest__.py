@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {'name': 'Attendance Management',
- 'version': "10.0.1.0.1",
+ 'version': "10.0.1.0.2",
  'author': "Serpent Consulting Services Pvt. Ltd.",
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
@@ -13,7 +13,7 @@
  'data': ['security/attendance_security.xml',
           'security/ir.model.access.csv',
           'views/school_attendance_view.xml',
-          'views/attendance_workflow.xml',
+         # 'views/attendance_workflow.xml',
           'wizard/attendance_sheet_wizard_view.xml',
           'wizard/student_attendance_by_month_view.xml'],
  'demo': ['demo/school_attendance_demo.xml'],
