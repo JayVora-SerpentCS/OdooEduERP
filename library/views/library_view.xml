@@ -482,41 +482,41 @@
 
         <!-- Tree View Of Purchase Order -->
 
-        <record id="view_purchase_order_tree" model="ir.ui.view">
-            <field name="name">purchase.order.tree</field>
-            <field name="model">purchase.order</field>
-            <field name="arch" type="xml">
-                <tree string="Purchase Orders">
-                    <field name="message_unread" invisible="1" />
-                    <field name="name" string="Reference"/>
-                    <field name="date_order"/>
-                    <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
-                    <field name="origin"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/>
-                    <field name="amount_total" sum="Total amount"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
+<!--         <record id="view_purchase_order_tree" model="ir.ui.view"> -->
+<!--             <field name="name">purchase.order.tree</field> -->
+<!--             <field name="model">purchase.order</field> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <tree string="Purchase Orders"> -->
+<!--                     <field name="message_unread" invisible="1" /> -->
+<!--                     <field name="name" string="Reference"/> -->
+<!--                     <field name="date_order"/> -->
+<!--                     <field name="partner_id"/> -->
+<!--                     <field name="company_id" groups="base.group_multi_company" widget="selection"/> -->
+<!--                     <field name="date_planned" invisible="context.get('quotation_only', False)"/> -->
+<!--                     <field name="origin"/> -->
+<!--                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/> -->
+<!--                     <field name="amount_total" sum="Total amount"/> -->
+<!--                     <field name="state"/> -->
+<!--                 </tree> -->
+<!--             </field> -->
+<!--         </record> -->
 
         <!-- Actions Of Tree View Of Purchase Order Today -->
 
-        <record id="action_purchase_order_today_tree" model="ir.actions.act_window">
-            <field name="name">Purchase Orders of the day</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_purchase_order_tree" />
-        </record>
+<!--         <record id="action_purchase_order_today_tree" model="ir.actions.act_window"> -->
+<!--             <field name="name">Purchase Orders of the day</field> -->
+<!--             <field name="type">ir.actions.act_window</field> -->
+<!--             <field name="res_model">purchase.order</field> -->
+<!--             <field name="view_type">form</field> -->
+<!--             <field name="view_mode">tree,form</field> -->
+<!--             <field name="view_id" ref="view_purchase_order_tree" /> -->
+<!--         </record> -->
 
         <!-- Menu Item For Orders Of The Day -->
 
-        <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree"
-                  sequence="4"
-                  groups="school.group_school_administration,library.group_librarian"/>
+<!--         <menuitem id="purchase_order_day" name="Orders of the day" parent="menu_library" action="action_purchase_order_today_tree" -->
+<!--                   sequence="4" -->
+<!--                   groups="school.group_school_administration,library.group_librarian"/> -->
 
         <!-- Tree View Of Account Invoice -->
 
@@ -921,11 +921,8 @@
                             <group>
                                 <field name="new_book" attrs="{'invisible':[('type','!=','new')],'required':[('type','!=','existing')],
                                     'readonly':[('state','!=','draft')]}" />
-                                <field name="name" attrs="{'invisible':[('type','!=','existing')],'required':[('type','!=','new')],
-                                    'readonly':[('state','!=','draft')]}" 
-                                       domain="[('availability','=','available'),
-                                               ('categ_id.name', '=', 'Books')]"
-                                       widget="selection"/>
+                                <field name="name" domain="[('books_available','&gt;=',1),('categ_id.name', '=', 'Books')]" widget="selection"
+                                    attrs="{'invisible':[('type','!=','existing')],'required':[('type','!=','new')],'readonly':[('state','!=','draft')]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -1378,16 +1375,16 @@ i
 
         <!-- Form View Of MRP Procurement Order -->
 
-        <record id="mrp_procurement_form_view" model="ir.ui.view">
-            <field name="name">procurement.order.form</field>
-            <field name="model">procurement.order</field>
-            <field name="inherit_id" ref="mrp.view_procurement_form_inherit"/>
-            <field name="arch" type="xml">
-                <field name="origin" position="after">
-                    <field name="customer_ref"/>
-                    <field name="production_lot_id"/></field>
-            </field>
-        </record>
+<!--         <record id="mrp_procurement_form_view" model="ir.ui.view"> -->
+<!--             <field name="name">procurement.order.form</field> -->
+<!--             <field name="model">procurement.order</field> -->
+<!--             <field name="inherit_id" ref="mrp.view_procurement_form_inherit"/> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <field name="origin" position="after"> -->
+<!--                     <field name="customer_ref"/> -->
+<!--                     <field name="production_lot_id"/></field> -->
+<!--             </field> -->
+<!--         </record> -->
 
         <!-- Overwritten Tree View Of Stock Move -->
 
@@ -1412,29 +1409,29 @@ i
 
         <!-- Inherited Tree View Of Purchase Order Line -->
 
-        <record id="purchase_order_line_tree" model="ir.ui.view">
-            <field name="name">purchase.order.line.tree</field>
-            <field name="model">purchase.order.line</field>
-            <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
-            <field name="arch" type="xml">
-                <field name="product_id" position="before">
-                    <field name="origin_ref"/></field>
-            </field>
-        </record>
+<!--         <record id="purchase_order_line_tree" model="ir.ui.view"> -->
+<!--             <field name="name">purchase.order.line.tree</field> -->
+<!--             <field name="model">purchase.order.line</field> -->
+<!--             <field name="inherit_id" ref="purchase.purchase_order_line_tree"/> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <field name="product_id" position="before"> -->
+<!--                     <field name="origin_ref"/></field> -->
+<!--             </field> -->
+<!--         </record> -->
 
-        <!-- Inherited Form View Of Purchase Order Line -->
+<!--         Inherited Form View Of Purchase Order Line -->
 
-        <record id="purchase_order_line_form_inherit" model="ir.ui.view">
-            <field name="name">purchase.order.line.form</field>
-            <field name="model">purchase.order.line</field>
-            <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
-            <field name="arch" type="xml">
-                <field name="product_id" position="after">
-                    <field name="customer_ref"/>
-                    <field name="origin_ref"/>
-                    <field name="production_lot_id"/></field>
-            </field>
-        </record>
+<!--         <record id="purchase_order_line_form_inherit" model="ir.ui.view"> -->
+<!--             <field name="name">purchase.order.line.form</field> -->
+<!--             <field name="model">purchase.order.line</field> -->
+<!--             <field name="inherit_id" ref="purchase.purchase_order_line_form2"/> -->
+<!--             <field name="arch" type="xml"> -->
+<!--                 <field name="product_id" position="after"> -->
+<!--                     <field name="customer_ref"/> -->
+<!--                     <field name="origin_ref"/> -->
+<!--                     <field name="production_lot_id"/></field> -->
+<!--             </field> -->
+<!--         </record> -->
 
         <!-- Inherited Form View Of Sale Order -->
 

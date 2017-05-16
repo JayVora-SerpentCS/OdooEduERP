@@ -5,7 +5,7 @@ import time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
+from odoo.exceptions import ValidationError, Warning as UserError
 
 
 # class LibraryPriceCategory(models.Model):
@@ -126,7 +126,7 @@ class LibraryBookIssue(models.Model):
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
         rd = relativedelta(days=self.day_to_return_book or 0.0)
-        if self.date_issue and rd:
+        if self.date_issue and self.day_to_return_book:
             ret_date = datetime.strptime(self.date_issue, t) + rd
             self.date_return = ret_date
 
@@ -151,7 +151,7 @@ class LibraryBookIssue(models.Model):
                 rec.date_return = ret_date
 
     @api.multi
-    @api.depends('date_return', 'day_to_return_book')
+    @api.depends('actual_return_date', 'day_to_return_book')
     def _compute_penalty(self):
         ''' This method calculate a penalty on book .
         @param self : Object Pointer
@@ -166,11 +166,12 @@ class LibraryBookIssue(models.Model):
         '''
         for line in self:
             if line.date_return:
-                start_day = datetime.now()
+                start_day = datetime.strptime(line.actual_return_date,
+                                              "%Y-%m-%d %H:%M:%S")
                 end_day = datetime.strptime(line.date_return,
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
-                    diff = start_day - end_day
+                    diff = relativedelta(start_day.date(), end_day.date())
                     day = float(diff.days) or 0.0
                     if line.day_to_return_book:
                         line.penalty = day * line.name.fine_late_return or 0.0
@@ -225,8 +226,8 @@ class LibraryBookIssue(models.Model):
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
                              default=lambda self:
-                             self.env['ir.sequence'].
-                             get('library.book.issue') or '/')
+                             self.env['ir.sequence'].get('library.book.issue')
+                             or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
@@ -242,7 +243,9 @@ class LibraryBookIssue(models.Model):
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date",
-                                         help="Actual Return Date of Book")
+                                         help="Actual Return Date of Book",
+                                         default=lambda *
+                                         a: time.strftime('%Y-%m-%d %H:%M:%S'))
     penalty = fields.Float(compute="_compute_penalty",
                            string='Penalty', store=True,
                            help='It show the late book return penalty')
@@ -256,7 +259,7 @@ class LibraryBookIssue(models.Model):
                               ('reissue', 'Reissued'), ('cancel', 'Cancelled'),
                               ('return', 'Returned'), ('lost', 'Lost'),
                               ('fine', 'Fined'),
-                              ('paid', 'Fined Paid')],
+                              ('paid', 'Done')],
                              "State", default='draft')
     user = fields.Char("User")
     compute_inv = fields.Integer('Number of invoice',
@@ -314,6 +317,9 @@ class LibraryBookIssue(models.Model):
         @return : True
         '''
         for rec in self:
+            if rec.name and rec.name.availability == 'notavailable':
+                raise ValidationError(_('This Book is not available!'
+                                        '\nPlease try after sometime.'))
             if rec.student_id:
                 issue_str = ''
                 book_fines = rec.search([('card_id', '=', rec.card_id.id),
@@ -322,7 +328,7 @@ class LibraryBookIssue(models.Model):
                     for book in book_fines:
                         issue_str += str(book.issue_code) + ', '
                     raise UserError(_('You can not request for a book until'
-                                      'the fine is not paid for book issues'
+                                      ' the fine is not paid for book issues'
                                       ' %s!') % issue_str)
             if rec.card_id:
                 card_ids = rec.search([('card_id', '=', rec.card_id.id),
@@ -359,11 +365,8 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        vals = {'actual_return_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'state': 'return'}
-        self.write(vals)
-        product_id = self.name
-        product_id.write({'availability': 'available'})
+        for rec in self:
+            rec.write({'state': 'return'})
         return True
 
     @api.multi
@@ -498,9 +501,7 @@ class LibraryBookRequest(models.Model):
                 book = self.new_book
             self.bk_nm = book
 
-    req_id = fields.Char('Request ID', readonly=True, default=lambda self:
-                         self.env['ir.sequence'].
-                         next_by_code('library.book.request') or '/')
+    req_id = fields.Char('Request ID', readonly=True, default='New')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     type = fields.Selection([('existing', 'Existing'), ('new', 'New')],
                             'Book Type')
@@ -513,6 +514,15 @@ class LibraryBookRequest(models.Model):
                               ], "State", default='draft')
     book_return_days = fields.Integer(related='name.day_to_return_book',
                                       string="Return Days")
+
+    @api.model
+    def create(self, vals):
+        res = super(LibraryBookRequest, self).create(vals)
+        if res.req_id == 'New':
+            seq_obj = self.env['ir.sequence']
+            res.write({'req_id': (seq_obj.next_by_code('library.book.request'
+                                                       ) or 'New')})
+        return res
 
     @api.multi
     def draft_book_request(self):

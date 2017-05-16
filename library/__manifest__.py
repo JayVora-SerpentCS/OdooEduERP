@@ -2,14 +2,14 @@
 # See LICENSE file for full copyright and licensing details.
 
 {'name': 'Library Management',
- 'version': "10.0.1.0.4",
+ 'version': "10.0.1.0.5",
  'author': "Serpent Consulting Services Pvt. Ltd.",
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',
  'license': "AGPL-3",
  'summary': 'A Module For Library Management For School',
  'complexity': 'easy',
- 'depends': ['report_intrastat', 'mrp', 'delivery', 'school', 'stock'],
+ 'depends': ['report_intrastat', 'school', 'stock'],
  'data': ['security/library_security.xml',
           'security/ir.model.access.csv',
           'views/report_view.xml',

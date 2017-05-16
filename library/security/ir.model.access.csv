@@ -9,11 +9,8 @@ access_library_book_request_manager,library.book.request,model_library_book_requ
 access_product_templete_manager,product.template,model_product_template,library.group_librarian,1,1,1,1
 access_book_attachment_manager,book.attachment,model_book_attachment,library.group_librarian,1,1,1,1
 access_product_product_manager,product.product,model_product_product,library.group_librarian,1,1,1,1
-access_purchase_order_line_manager,purchase.order.line,model_purchase_order_line,library.group_librarian,1,1,1,1
-access_purchase_order_manager,purchase.order,model_purchase_order,library.group_librarian,1,1,1,1
 access_stock_move_manager,stock.move,model_stock_move,library.group_librarian,1,1,1,1
 access_stock_picking_manager,stock.picking,model_stock_picking,library.group_librarian,1,1,1,1
-access_procurement_order_manager,procurement.order,model_procurement_order,library.group_librarian,1,1,1,1
 access_account_invoice_line_manager,account.invoice.line,model_account_invoice_line,library.group_librarian,1,1,1,1
 access_student_manager,student.student,school.model_student_student,library.group_librarian,1,0,0,0
 access_standard_manager,school.standard,school.model_school_standard,library.group_librarian,1,0,0,0
@@ -31,11 +28,8 @@ access_library_book_request_user,library.book.request,model_library_book_request
 access_product_templete_user,product.template,model_product_template,library.group_userian,1,1,0,0
 access_book_attachment_user,book.attachment,model_book_attachment,library.group_userian,1,1,1,0
 access_product_product_user,product.product,model_product_product,library.group_userian,1,0,0,0
-access_purchase_order_line_user,purchase.order.line,model_purchase_order_line,library.group_userian,1,1,1,0
-access_purchase_order_user,purchase.order,model_purchase_order,library.group_userian,1,1,1,0
 access_stock_move_user,stock.move,model_stock_move,library.group_userian,1,1,1,0
 access_stock_picking_user,stock.picking,model_stock_picking,library.group_userian,1,1,1,0
-access_procurement_order_user,procurement.order,model_procurement_order,library.group_userian,1,1,1,0
 access_account_invoice_line_user,account.invoice.line,model_account_invoice_line,library.group_userian,1,1,1,0
 access_account_invoice_user,account.invoice,account.model_account_invoice,library.group_userian,1,0,0,0
 access_res_partner_user,res.partner,base.model_res_partner,library.group_userian,1,0,0,0
