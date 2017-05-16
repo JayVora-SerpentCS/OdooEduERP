@@ -75,7 +75,7 @@
 
         <record id="demo_library_book_request_2" model="library.book.request">
             <field name="card_id" ref="demo_library_card_2"/>
-            <field name="type">new</field>
+            <field name="type">existing</field>
         </record>
 
         <record id="demo_library_book_request_3" model="library.book.request">
@@ -85,7 +85,7 @@
 
         <record id="demo_library_book_request_4" model="library.book.request">
             <field name="card_id" ref="demo_library_card_4"/>
-            <field name="type">new</field>
+            <field name="type">existing</field>
         </record>
 
         <record id="demo_library_book_request_5" model="library.book.request">

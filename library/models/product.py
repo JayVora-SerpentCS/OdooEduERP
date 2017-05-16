@@ -69,11 +69,8 @@ class ProductProduct(models.Model):
     def default_get(self, fields):
         '''Overide method to get default category books'''
         res = super(ProductProduct, self).default_get(fields)
-        category = self.env['product.category'
-                            ].search([('name', '=', 'Books'),
-                                      ('property_valuation',
-                                       '=', 'manual_periodic'),
-                                      ('type', '=', 'normal')])
+        category = self.env['product.category'].search([('name', '=', 'Books')
+                                                        ])
         res.update({'categ_id': category.id})
         return res
 
@@ -336,19 +333,19 @@ class ProductProduct(models.Model):
     @api.multi
     def action_purchase_order(self):
         purchase_line_obj = self.env['purchase.order.line']
-        purchase_obj = purchase_line_obj.search([('product_id', '=', self.id)])
-        action = self.env.ref('library.action_purchase_order_today_tree')
+        purchase = purchase_line_obj.search([('product_id', '=', self.id)])
+        action = self.env.ref('purchase.purchase_form_action')
         result = action.read()[0]
-        if not purchase_obj:
+        if not purchase:
             raise UserError(_('There is no Books Purchase'))
         order = []
-        [order.append(order_rec.order_id.id) for order_rec in purchase_obj]
+        [order.append(order_rec.order_id.id) for order_rec in purchase]
         if len(order) != 1:
             result['domain'] = "[('id', 'in', " + str(order) + ")]"
         else:
             res = self.env.ref('purchase.purchase_order_form', False)
             result['views'] = [(res and res.id or False, 'form')]
-            result['res_id'] = purchase_obj.order_id.id
+            result['res_id'] = purchase.order_id.id
         return result
 
     @api.multi
