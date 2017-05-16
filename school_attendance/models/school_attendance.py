@@ -24,16 +24,19 @@ class AttendanceSheet(models.Model):
                                         ('lecture', 'Lecture Wise')], 'Type')
 
     @api.multi
-    def onchange_class_info(self, standard_id):
-        res = {}
+    @api.onchange('standard_id')
+    def onchange_class_info(self):
         student_list = []
         stud_obj = self.env['student.student']
-        stud_ids = stud_obj.search([('standard_id', '=', standard_id)])
-        for stud_id in stud_ids:
-            student_list.append({'roll_no': stud_id.roll_no,
-                                 'name': stud_id.name})
-        res.update({'value': {'attendance_ids': student_list}})
-        return res
+        for rec in self:
+            if rec.standard_id:
+                stud_ids = stud_obj.search([('standard_id', '=',
+                                             rec.standard_id)
+                                            ('state', '=', 'done')])
+                for stud in stud_ids:
+                    student_list.append({'roll_no': stud.roll_no,
+                                         'name': stud.name})
+            rec.attendance_ids = student_list
 
 
 class AttendanceSheetLine(models.Model):
@@ -203,12 +206,12 @@ class DailyAttendance(models.Model):
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
-    total_student = fields.Integer(compute="_compute_total", method=True,
+    total_student = fields.Integer(compute="_compute_total",
                                    store=True,
                                    string='Total Students')
-    total_presence = fields.Integer(compute="_compute_present", method=True,
+    total_presence = fields.Integer(compute="_compute_present",
                                     store=True, string='Present Students')
-    total_absent = fields.Integer(compute="_compute_absent", method=True,
+    total_absent = fields.Integer(compute="_compute_absent",
                                   store=True,
                                   string='Absent Students')
 
@@ -224,21 +227,21 @@ class DailyAttendance(models.Model):
         return ret_val
 
     @api.multi
-    def onchange_standard_id(self, standard_id):
-        res = {}
-        student_list = []
+    @api.onchange('standard_id')
+    def onchange_standard_id(self):
         stud_obj = self.env['student.student']
-        if standard_id:
-            self._cr.execute("""select id from student_student\
-                             where standard_id=%s""", (standard_id,))
-            stud_ids = self._cr.fetchall()
-            for stud_id in stud_ids:
-                student_ids = stud_obj.browse(stud_id)
-                student_list.append({'roll_no': student_ids.roll_no,
-                                     'stud_id': stud_id,
-                                     'is_present': True})
-            res.update({'value': {'student_ids': student_list}})
-        return res
+        student_list = []
+        for rec in self:
+            if rec.standard_id:
+                stud_ids = stud_obj.search([('standard_id', '=',
+                                             rec.standard_id.id), ('state',
+                                                                   '=', 'done')
+                                            ])
+                for stud in stud_ids:
+                    student_list.append({'roll_no': stud.roll_no,
+                                         'stud_id': stud.id,
+                                         'is_present': True})
+            rec.student_ids = student_list
 
     @api.multi
     def attendance_draft(self):
