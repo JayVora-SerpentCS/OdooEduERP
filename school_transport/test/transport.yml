@@ -110,26 +110,6 @@
     !python {model: transport.registration}: |
      self.trans_regi_cancel()
 -
-    on change in for month
--
-    !python {model: transport.registration}: |
-     self.onchange_for_month()
--
-    on change in for month with context={}
--
-    !python {model: transport.registration}: |
-     self.onchange_for_month()
--
-    on change in point_id
--
-    !python {model: transport.registration}: |
-     self.onchange_point_id()
--
-    on change in point_id with context={}
--
-    !python {model: transport.registration}: |
-     self.onchange_point_id()
--
     do the state of transport open.
 -
     !python {model: student.transport}: |
