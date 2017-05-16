@@ -62,8 +62,6 @@
         <!--Student assignment -->
 
         <record id="school_Student_assignment_firstxercise0" model="school.student.assignment">
-            <!-- <field name="school_id" ref="school.demo_school_1"/> -->
-            <!--<field name="name">MountCarmel</field-->
             <field name="student_id" ref="school.demo_student_student_1"/>
             <field name="teacher_id" ref="hr.employee_jth"/>
             <field name="name">First Exercise</field>
@@ -74,8 +72,6 @@
         </record>
 
         <record id="school_Student_assignment_secondexercise0" model="school.student.assignment">
-<!--             <field name="school_id" ref="school.demo_school_2"/> -->
-            <!--<field name="name">SwamiNarayan</field-->
             <field name="student_id" ref="school.demo_student_student_2"/>
             <field name="teacher_id" ref="hr.employee_jth"/>
             <field name="name">Second Exercise</field>
@@ -86,8 +82,6 @@
         </record>
 
         <record id="school_Student_assignment_thirdexercise0" model="school.student.assignment">
-            <!-- <field name="school_id" ref="school.demo_school_3"/> -->
-            <!--<field name="name">JayHind</field-->
             <field name="student_id" ref="school.demo_student_student_3"/>
             <field name="teacher_id" ref="hr.employee_jth"/>
             <field name="name">Third Exercise</field>

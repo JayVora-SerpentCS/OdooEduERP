@@ -26,10 +26,6 @@ class SchoolTeacherAssignment(models.Model):
                               ('active', 'Active'),
                               ('done', 'Done')],
                              'Status', readonly=True, default='draft')
-    school_id = fields.Many2one('school.school', 'School Name',
-                                related='standard_id.school_id')
-    cmp_id = fields.Many2one('res.company', 'Company Name',
-                             related='school_id.company_id')
     student_assign_ids = fields.One2many('school.student.assignment',
                                          'teacher_assignment_id',
                                          string="Student Assignments")
@@ -46,7 +42,7 @@ class SchoolTeacherAssignment(models.Model):
         for rec in self:
             students = student_obj.search([('standard_id', '=',
                                             rec.standard_id.id),
-                                           ('state', '=', 'state')])
+                                           ('state', '=', 'done')])
             for std in students:
                 ass_dict = {'name': rec.name,
                             'subject_id': rec.subject_id.id,
@@ -57,7 +53,8 @@ class SchoolTeacherAssignment(models.Model):
                             'attached_homework': rec.attached_homework,
                             'teacher_id': rec.teacher_id.id,
                             'teacher_assignment_id': rec.id,
-                            'student_id': std.id}
+                            'student_id': std.id,
+                            'stud_roll_no': std.roll_no}
                 assignment_id = assignment_obj.create(ass_dict)
                 if rec.attached_homework:
                     attach = {'name': 'test',
@@ -98,8 +95,7 @@ class SchoolStudentAssignment(models.Model):
                               ('done', 'Done')], 'Status',
                              readonly=True, default='draft')
     student_id = fields.Many2one('student.student', 'Student', required=True)
-    stud_roll_no = fields.Integer(related='student_id.roll_no',
-                                  string="Roll no")
+    stud_roll_no = fields.Integer(string="Roll no")
     attached_homework = fields.Binary('Attached Home work')
     teacher_assignment_id = fields.Many2one('school.teacher.assignment',
                                             string="Teachers")

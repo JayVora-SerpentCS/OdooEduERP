@@ -68,8 +68,8 @@ class LibraryCard(models.Model):
     _description = "Library Card information"
     _rec_name = "code"
 
-    @api.multi
-    def on_change_student(self, student_id):
+    @api.onchange('student_id')
+    def on_change_student(self):
         '''  This method automatically fill up student roll number
              and standard field  on student_id field
         @param self : Object Pointer
@@ -80,12 +80,9 @@ class LibraryCard(models.Model):
         @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
             and the value of student roll number and standard'''
-        if not student_id:
-            return {'value': {}}
-        student_data = self.env['student.student'].browse(student_id)
-        val = {'standard_id': student_data.standard_id.id,
-               'roll_no': student_data.roll_no}
-        return {'value': val}
+        student_data = self.env['student.student'].browse(self.student_id.id)
+        self.standard_id = student_data.standard_id.id
+        self.roll_no = student_data.roll_no
 
     @api.multi
     @api.depends('student_id')
