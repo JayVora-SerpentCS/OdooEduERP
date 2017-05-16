@@ -50,13 +50,13 @@
   In order to test the exam result, I will test _compute_per() method
 -
   !python {model: exam.result}:  |
-    self._compute_per(cr, uid, [ref("exam_result_10")], 'percentage', None, context=None)    
+    self._compute_per()    
     
 -
   In order to test the exam result, I will test _compute_result() method
 -
   !python {model: exam.result}:  |
-    self._compute_result(cr, uid, [ref("exam_result_10")], 'result', None, context=None)
+    self._compute_result()
   
 -
   In order to test the additional exam result, I will test _compute_total() method
