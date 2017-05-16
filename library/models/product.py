@@ -69,10 +69,11 @@ class ProductProduct(models.Model):
     def default_get(self, fields):
         '''Overide method to get default category books'''
         res = super(ProductProduct, self).default_get(fields)
-        category = self.env['product.category'].search([('name', '=', 'Books'),
-                                                        ('property_valuation',
-                                                         '=', 'manual_periodic'),
-                                                        ('type', '=', 'normal')])
+        category = self.env['product.category'
+                            ].search([('name', '=', 'Books'),
+                                      ('property_valuation',
+                                       '=', 'manual_periodic'),
+                                      ('type', '=', 'normal')])
         res.update({'categ_id': category.id})
         return res
 
