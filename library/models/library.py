@@ -245,8 +245,8 @@ class LibraryBookIssue(models.Model):
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
                              default=lambda self:
-                             self.env['ir.sequence'].get('library.book.issue')
-                             or '/')
+                             self.env['ir.sequence'
+                                      ].get('library.book.issue') or '/')
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
