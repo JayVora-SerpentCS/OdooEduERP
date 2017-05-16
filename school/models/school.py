@@ -523,10 +523,10 @@ class StudentStudent(models.Model):
             student_code = (str(rec.school_id.code) + str('/') +
                             str(rec.year.code) + str('/') +
                             str(stu_code))
-        self.write({'state': 'done',
-                    'admission_date': time.strftime('%Y-%m-%d'),
-                    'student_code': student_code,
-                    'reg_code': registation_code})
+            rec.write({'state': 'done',
+                       'admission_date': time.strftime('%Y-%m-%d'),
+                       'student_code': student_code,
+                       'reg_code': registation_code})
         return True
 
 
