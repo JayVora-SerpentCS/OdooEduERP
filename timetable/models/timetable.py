@@ -30,13 +30,12 @@ class TimeTable(models.Model):
     user_ids = fields.Many2many('res.users', string="Users",
                                 compute="_compute_user", store=True)
 
-    @api.constrains('year_id', 'standard_id')
-    def check_year_standard(self):
-        if self.timetable_type == 'regular':
-            if (self.year_id.id == self.year_id.id and
-                    self.standard_id.id == self.standard_id.id):
-                raise ValidationError('''Academic class and Year should be
-                unique''')
+#    @api.constrains('year_id', 'standard_id')
+#    def check_year_standard(self):
+#        if (self.timetable_type == 'regular' and
+#                self.year_id.id == self.year_id.id and
+#                self.standard_id.id == self.standard_id.id):
+#            raise ValidationError('Academic class and Year should be unique')
 
     @api.multi
     @api.constrains('timetable_ids')
