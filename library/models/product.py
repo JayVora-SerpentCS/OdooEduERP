@@ -359,7 +359,7 @@ class ProductProduct(models.Model):
             action = self.env.ref('library.action_lib_book_req')
             result = (action.read()[0])
             if not book_req:
-                raise UserError(('There is no Book requested'))
+                raise UserError(_('There is no Book requested'))
             req = []
             [req.append(request_rec.id) for request_rec in book_req]
             if len(req) != 1:
