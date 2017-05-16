@@ -54,22 +54,22 @@
                               </tr>
                               <tr>
                                   <t t-foreach="pass_student_count(o.year,o.standard_id)" t-as="t">
-		                              <td align="center" width="14.16%"
-	                                                     style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-	                                      <span t-esc="t.get('student_appear')"/>
-	                                  </td>
-	                                  <td align="center" width="14.16%"
-	                                      style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-	                                           <span t-esc="t.get('studnets')"/>
-	                                  </td>
-	                                  <td align="center" width="14.16%"
-	                                      style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-	                                      <span t-esc="t.get('fail_student')"/>
-	                                  </td>
-	                                  <td align="center" width="14.16%"
-	                                      style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-	                                           <span t-esc="t.get('pass_std')"/>%
-	                                  </td>
+                                      <td align="center" width="14.16%"
+                                                         style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                          <span t-esc="t.get('student_appear')"/>
+                                      </td>
+                                      <td align="center" width="14.16%"
+                                          style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                               <span t-esc="t.get('studnets')"/>
+                                      </td>
+                                      <td align="center" width="14.16%"
+                                          style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                          <span t-esc="t.get('fail_student')"/>
+                                      </td>
+                                      <td align="center" width="14.16%"
+                                          style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                               <span t-esc="t.get('pass_std')"/>%
+                                      </td>
                                   </t>
                               </tr>
                       </table>
