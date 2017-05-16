@@ -65,6 +65,17 @@ class ProductProduct(models.Model):
     """Book variant of product"""
     _inherit = "product.product"
 
+    @api.model
+    def default_get(self, fields):
+        '''Overide method to get default category books'''
+        res = super(ProductProduct, self).default_get(fields)
+        category = self.env['product.category'].search([('name', '=', 'Books'),
+                                                      ('property_valuation',
+                                                       '=', 'manual_periodic'),
+                                                      ('type', '=', 'normal')])
+        res.update({'categ_id': category.id})
+        return res
+
     @api.multi
     def name_get(self):
         ''' This method Returns the preferred display value

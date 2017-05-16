@@ -173,8 +173,8 @@
                                <field name="isbn" placeholder="ISBN Number"/>
                                <field name="default_code" placeholder="Enter Book Default code"/>
                                <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
-                               <field name="categ_id" placeholder="Select or Create Book"/>
-                               <field name="author" placeholder="Name of Author"/>
+                               <field name="categ_id" placeholder="Select or Create Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                               <field name="author" placeholder="Name of Author" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                             </group>
                         </group>
                         <notebook>
@@ -188,7 +188,7 @@
                                     <field name="tome"/>
                                     <field name="format" placeholder="Format of Book"/>
                                     <field name="weight"/>
-                                    <field name="rack" placeholder="Position of book"/>
+                                    <field name="rack" placeholder="Position of book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                                     <field name="back"/>
                                     <field name="num_edition" placeholder="No of Addition of Book"/>
                                     <field name="intrastat_id"/>
@@ -198,7 +198,7 @@
                                  <!--    <field name="price_cat" placeholder="Select or Create Price Category"/> -->
 <!--                                     <field name="book_price"/> -->
                                     <field name="catalog_num" placeholder="Enter Catalog No"/>
-                                    <field name="lang" placeholder="Language of Book"/>
+                                    <field name="lang" placeholder="Language of Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                                 </group>
 <!--                                 <newline/> -->
 <!--                                 <group colspan="2" col="2"> -->
@@ -624,13 +624,13 @@
                         </group>
                         <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
                             <separator colspan="4" col="4" />
-                            <field name="student_id" on_change="on_change_student(student_id)"/>
-                            <field name="roll_no" />
-                            <field name="standard_id"/>
+                            <field name="student_id" widget="selection"/>
+                            <field name="roll_no" readonly="1"/>
+                            <field name="standard_id" widget="selection"/>
                         </group>
                         <group col="2" colspan="2" attrs="{'invisible':[('user','!=','teacher')]}">
                             <separator colspan="2" col="2"/>
-                            <field name="teacher_id"/>
+                            <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]"/>
                         </group>
                     </sheet>
                 </form>
@@ -716,10 +716,10 @@
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="issue_code" attrs="{'readonly':[('state','not in','draft')]}"/>
-                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
 <!--                         </group> -->
 <!--                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}"> -->
-                            <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="user" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
@@ -915,7 +915,7 @@
                         <group>
                             <group>
                                 <field name="type" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name="book_return_days" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="book_return_days" attrs="{'readonly':[('state','!=','draft')],'invisible':[('type','=','new')]}"/>
                                 <field name="bk_nm" invisible="1"/>
                             </group>
                             <group>
@@ -1104,16 +1104,13 @@ i
             <field name="arch" type="xml">
                 <form string="Authors">
                     <sheet>
-                        <group col="4" colspan="4">
-                            <group col="2" colspan="2">
-                                <h2>
-                                    <field name="name" placeholder="Name"/>
-                                </h2>
-                            </group>
-                            <group col="2" colspan="2">
-                                <field name="image" widget="image" class="oe_avatar" nolabel="1"/>
-                            </group>
-                        </group>
+                        <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;image_medium&quot;}"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Employee's Name"/>
+                            </h1>
+                        </div>
                         <group col="4" colspan="4">
                             <group col="2" colspan="2">
                                 <label for="street" string="Address"/>
