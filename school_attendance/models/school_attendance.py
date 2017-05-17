@@ -262,8 +262,8 @@ class DailyAttendance(models.Model):
             domain_month = [('code', '=', date.month)]
             year_search_ids = academic_year_obj.search(domain_year)
             month_search_ids = academic_month_obj.search(domain_month)
-            for line in daily_attendance_data.student_ids:
-                line.write({'is_present': True, 'is_absent': False})
+#            for line in daily_attendance_data.student_ids:
+#                line.write({'is_present': True, 'is_absent': False})
             domain = [('standard_id', '=',
                        daily_attendance_data.standard_id.id),
                       ('month_id', '=', month_search_ids.id),

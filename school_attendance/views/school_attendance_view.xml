@@ -179,10 +179,11 @@
                                     </tree>
                                     <form string="Student Information">
                                         <group col="4">
-                                            <field name="stud_id" on_change="onchange_name(stud_id)" options="{&quot;no_create&quot;: True}" domain="[('state','=','done')]">
+                                            <field name="stud_id"  domain="[('state','=','done')]">
                                                 <field name="roll_no" />
-                                                <field name="is_present" attrs="{'readonly':[('is_absent','=',True)]}" on_change="onchange_is_present_option(is_present)" />
-                                                <field name="is_absent" attrs="{'readonly':[('is_present','=',True)]}" /></field>
+                                                <field name="is_present" attrs="{'readonly':[('is_present','=',True)]}" />
+                                                <field name="is_absent" attrs="{'readonly':[('is_absent','=',True)]}" />
+                                            </field>
                                         </group>
                                     </form>
                                 </field>
