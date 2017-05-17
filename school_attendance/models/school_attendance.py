@@ -31,7 +31,7 @@ class AttendanceSheet(models.Model):
         for rec in self:
             if rec.standard_id:
                 stud_ids = stud_obj.search([('standard_id', '=',
-                                             rec.standard_id)
+                                             rec.standard_id),
                                             ('state', '=', 'done')])
                 for stud in stud_ids:
                     student_list.append({'roll_no': stud.roll_no,
@@ -215,6 +215,11 @@ class DailyAttendance(models.Model):
                                   store=True,
                                   string='Absent Students')
 
+    _sql_constraints = [
+        ('attend_unique', 'unique(standard_id,user_id,date)',
+         'Attendance should be unique!')
+    ]
+
     @api.model
     def create(self, vals):
         child = ''
@@ -258,7 +263,7 @@ class DailyAttendance(models.Model):
             year_search_ids = academic_year_obj.search(domain_year)
             month_search_ids = academic_month_obj.search(domain_month)
             for line in daily_attendance_data.student_ids:
-                line.write({'is_present': False, 'is_absent': False})
+                line.write({'is_present': True, 'is_absent': False})
             domain = [('standard_id', '=',
                        daily_attendance_data.standard_id.id),
                       ('month_id', '=', month_search_ids.id),
@@ -359,7 +364,7 @@ class DailyAttendance(models.Model):
                 attendance_sheet_id = att_sheet_ids and att_sheet_ids[0]\
                     or False
                 if not attendance_sheet_id:
-                    sheet = {'name': 'Month ' + month_data.name + "-Year " +
+                    sheet = {'name':  month_data.name + '-' +
                              str(year),
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
@@ -777,3 +782,13 @@ class DailyAttendanceLine(models.Model):
     stud_id = fields.Many2one('student.student', 'Name', required=True)
     is_present = fields.Boolean('Present')
     is_absent = fields.Boolean('Absent')
+
+    @api.onchange('is_present')
+    def onchange_attendance(self):
+        if self.is_present:
+            self.is_absent = False
+
+    @api.onchange('is_absent')
+    def onchange_absent(self):
+        if self.is_absent:
+            self.is_present = False

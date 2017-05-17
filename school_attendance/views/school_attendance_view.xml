@@ -11,13 +11,13 @@
             <field name="arch" type="xml">
                 <form string="Attendance Sheet" >
                     <group>
-                        <field name="name" />
-                        <field name="standard_id" widget="selection"/>
+                        <field name="name"/>
+                        <field name="standard_id" widget="selection" readonly="1"/>
                     </group>
                     <newline />
                     <group col="4">
-                        <field name="year_id" widget="selection" colspan="2" />
-                        <field name="month_id" widget="selection" colspan="2" />
+                        <field name="year_id" widget="selection" colspan="2" readonly="1"/>
+                        <field name="month_id" widget="selection" colspan="2" readonly="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Attendances">
@@ -171,15 +171,15 @@
                         <notebook colspan="4">
                             <page string="Students">
                                 <field name="student_ids" nolabel="1" colspan="4">
-                                    <tree string="Student Information" editable="top">
+                                    <tree string="Student Information" editable="top" create="false" delete="false">
                                         <field name="roll_no" required="1" />
-                                        <field name="stud_id" required="1" />
-                                        <field name="is_present" attrs="{'readonly':[('is_absent','=',True)]}" />
-                                        <field name="is_absent" attrs="{'readonly':[('is_present','=',True)]}" />
+                                        <field name="stud_id" required="1" options="{&quot;no_create&quot;: True}" domain="[('state','=','done')]"/>
+                                        <field name="is_present"/>
+                                        <field name="is_absent"/>
                                     </tree>
                                     <form string="Student Information">
                                         <group col="4">
-                                            <field name="stud_id" on_change="onchange_name(stud_id)" >
+                                            <field name="stud_id" on_change="onchange_name(stud_id)" options="{&quot;no_create&quot;: True}" domain="[('state','=','done')]">
                                                 <field name="roll_no" />
                                                 <field name="is_present" attrs="{'readonly':[('is_absent','=',True)]}" on_change="onchange_is_present_option(is_present)" />
                                                 <field name="is_absent" attrs="{'readonly':[('is_present','=',True)]}" /></field>
