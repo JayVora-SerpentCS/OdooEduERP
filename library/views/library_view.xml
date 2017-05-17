@@ -411,7 +411,7 @@
             <field name="view_type">form</field>
            <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="books_kanban_view"></field>
-            <field name="context">{'search_default_book':1}</field>
+            <field name="context">{'search_default_book':1,'default_type':'product'}</field>
         </record>
 
         <!-- Menu Items Of Library Books -->
