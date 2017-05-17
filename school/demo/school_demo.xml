@@ -400,18 +400,21 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
             <field name="school_id" ref="demo_school_1"/>
+            <field name="user_id" ref="hr.employee_al"/>
         </record>
         <record id="demo_school_standard_2" model="school.standard">
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
             <field name="school_id" ref="demo_school_2"/>
+            <field name="user_id" ref="hr.employee_chs"/>
         </record>
         <record id="demo_school_standard_3" model="school.standard">
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
             <field name="school_id" ref="demo_school_3"/>
+            <field name="user_id" ref="hr.employee_fpi"/>
         </record>
         <!--Subject Information-->
         <record id="demo_subject_subject_1" model="subject.subject">
