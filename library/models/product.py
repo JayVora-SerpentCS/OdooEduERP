@@ -2,9 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
-from datetime import datetime
 from odoo.exceptions import Warning as UserError
 
 
