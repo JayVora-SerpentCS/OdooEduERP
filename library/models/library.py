@@ -97,7 +97,6 @@ class LibraryCard(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('student_id'):
-            print"student id++++++++++++"
             student = self.env['student.student'].browse(vals.get('student_id'
                                                                   ))
             vals.update({'standard_id': student.standard_id.id,
@@ -145,7 +144,7 @@ class LibraryBookIssue(models.Model):
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
         rd = relativedelta(days=self.day_to_return_book or 0.0)
-        if self.date_issue and self.day_to_return_book:
+        if self.date_issue and rd:
             ret_date = datetime.strptime(self.date_issue, t) + rd
             self.date_return = ret_date
 
