@@ -3,6 +3,7 @@
 ===============================================================================
 1.0.3 --> 17 May 2017 : Arpit Joshi
     * View and demo data improvements .
+    * View and code improvements
 
 1.0.2 --> 16 May 2017 : Vimal Patel
     * Code reviewed and remove onchange method and optimized .
