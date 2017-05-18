@@ -1,6 +1,11 @@
 ==============================================================================
  Version Change Log (School Fees)
 ===============================================================================
+1.0.3 --> 18 May 2017 : Vimal Patel
+    * Code optimized
+    * Added the standard in the fees structure and managed it's flow
+    * removed the workflow
+
 1.0.2 --> 03 May 2017 : Arpit Joshi
     * Improvement in flow of payment
 

@@ -171,7 +171,7 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip">
                     <header>
-                        <button name="payslip_confirm" class="fa fa-check" string="Confirm" states="draft" type="workflow" groups="school.group_school_administration"/>
+                        <button name="payslip_confirm" class="fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration"/>
                         <button name="student_pay_fees" class="fa fa-share" string="Payment" states="confirm" type="object" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
@@ -198,7 +198,6 @@
                             <separator string="Fees Structure" colspan="4"/>
                             <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/> 
-<!--                             <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" placeholder="Journal" domain=/> -->
                             <notebook colspan="4">
                                 <page string="Fees Structure">
                                     <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -273,7 +272,7 @@
             <field name="arch" type="xml">
                 <form string="Student Fees Register">
                     <header>
-                        <button name="fees_register_confirm" class="fa fa-check" string="Confirm" states="draft" groups="school.group_school_administration"/>
+                        <button name="fees_register_confirm" type="object" class="fa fa-check" string="Confirm" states="draft" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
@@ -284,6 +283,12 @@
                             <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
                             <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            
+                        </group>
+                        <group string="Fees Register for" col="4" colspan="4">
+                            <field name="fees_structure" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="standard_id" placeholder="Select Standard.." attrs="{'readonly':[('state','not in','draft')]}"
+                                required="1"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Student Payslip">
