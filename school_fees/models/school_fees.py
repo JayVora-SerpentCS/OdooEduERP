@@ -12,6 +12,15 @@ class StudentFeesRegister(models.Model):
     _name = 'student.fees.register'
     _description = 'Student fees Register'
 
+    @api.multi
+    @api.depends('line_ids')
+    def _total_amount(self):
+        for rec in self:
+            total_amt = 0.0
+            for line in rec.line_ids:
+                total_amt += line.total
+            rec.total_amount = total_amt
+
     name = fields.Char('Name', required=True,)
     date = fields.Date('Date', required=True,
                        default=lambda * a: time.strftime('%Y-%m-%d'))
@@ -20,7 +29,8 @@ class StudentFeesRegister(models.Model):
                          next_by_code('student.fees.register'))
     line_ids = fields.One2many('student.payslip', 'register_id',
                                'PaySlips')
-    total_amount = fields.Float("Total", readonly=True)
+    total_amount = fields.Float("Total", compute="_total_amount",
+                                store=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal',
@@ -29,42 +39,49 @@ class StudentFeesRegister(models.Model):
                                  change_default=True, readonly=True,
                                  default=lambda obj_c: obj_c.env['res.users'].
                                  browse([obj_c._uid])[0].company_id)
+    fees_structure = fields.Many2one('student.fees.structure',
+                                     'Fees Structure')
+    standard_id = fields.Many2one('standard.standard', 'Standard')
 
     @api.multi
     def fees_register_draft(self):
-        self.state = 'draft'
+        for rec in self:
+            rec.state = 'draft'
         return True
 
     @api.multi
     def fees_register_confirm(self):
-        student_pool = self.env['student.student']
-        slip_pool = self.env['student.payslip']
-        student_ids = student_pool.search([])
-        for fees_obj in self:
-            for vals in fees_obj.browse(fees_obj.ids):
-                for stu in student_ids:
-                    old_slips = slip_pool.search([('student_id', '=', stu.id),
-                                                  ('date', '=', vals.date)])
-                    if old_slips:
-                        old_slips.write({'register_id': vals.id})
-                        for sid in old_slips:
-                            sid.signal_workflow('_confirm')
-                    else:
-                        res = {'student_id': stu.id,
-                               'register_id': vals.id,
-                               'name': vals.name,
-                               'date': vals.date,
-                               'journal_id': vals.journal_id.id,
-                               'company_id': vals.company_id.id}
-                        slip_id = slip_pool.create(res)
-                        slip_id.signal_workflow('_confirm')
-                amount = 0
-                for datas in fees_obj.browse(self.ids):
-                    for data in datas.line_ids:
-                        amount = amount + data.total
-                    student_fees_register_vals = {'total_amount': amount}
-                    datas.write(student_fees_register_vals)
-                fees_obj.write({'state': 'confirm'})
+        stud_obj = self.env['student.student']
+        slip_obj = self.env['student.payslip']
+        school_std_obj = self.env['school.standard']
+        for rec in self:
+            school_std = school_std_obj.search([('standard_id', '=',
+                                                 rec.standard_id.id)])
+            student_ids = stud_obj.search([('standard_id', 'in',
+                                            school_std.ids),
+                                           ('state', '=', 'done')])
+            for stu in student_ids:
+                old_slips = slip_obj.search([('student_id', '=', stu.id),
+                                             ('date', '=', rec.date)])
+                if old_slips:
+                    raise UserError(_('There is already a Payslip exist for\
+                                           student: %s\
+                                           for same date.!') % stu.name)
+                else:
+                    res = {'student_id': stu.id,
+                           'register_id': rec.id,
+                           'name': rec.name,
+                           'date': rec.date,
+                           'company_id': rec.company_id.id,
+                           'journal_id': rec.journal_id.id,
+                           'fees_structure_id': rec.fees_structure.id or False}
+                    slip_id = slip_obj.create(res)
+                    slip_id.onchange_student()
+            amount = 0
+            for data in rec.line_ids:
+                amount += data.total
+            rec.write({'total_amount': amount,
+                       'state': 'confirm'})
         return True
 
 
@@ -123,49 +140,42 @@ class StudentFeesStructure(models.Model):
 
 
 class StudentPayslip(models.Model):
+    _name = 'student.payslip'
+    _description = 'Student PaySlip'
 
     @api.multi
     def payslip_draft(self):
-        self.state = 'draft'
+        for rec in self:
+            rec.state = 'draft'
         return True
 
     @api.multi
     def payslip_paid(self):
-        self.state = 'paid'
+        for rec in self:
+            rec.state = 'paid'
         return True
 
     @api.multi
     def payslip_confirm(self):
-        fees_structure_obj = self.env['student.fees.structure']
-        student_payslip_line_obj = self.env['student.payslip.line']
-        for payslip_obj in self:
-            for student_payslip_data in self.read(['fees_structure_id']):
-                fee_id = student_payslip_data['fees_structure_id'][1]
-                if not student_payslip_data['fees_structure_id']:
-                    payslip_obj.write({'state': 'paid'})
-                    return True
-                fees_ids = fees_structure_obj.search([('name', '=', fee_id)])
-                for datas in fees_ids:
-                    for data in datas.line_ids or []:
-                        line_vals = {'slip_id': self.id,
-                                     'name': data.name,
-                                     'code': data.code,
-                                     'sequence': data.sequence,
-                                     'type': data.type,
-                                     'account_id': data.account_id.id,
-                                     'amount': data.amount}
-                        student_payslip_line_obj.create(line_vals)
-                amount = 0
-                for datas in self.browse(self.ids):
-                    for data in datas.line_ids:
-                        amount = amount + data.amount
-                    student_payslip_vals = {'total': amount}
-                    datas.write(student_payslip_vals)
-            payslip_obj.write({'state': 'confirm'})
-            return True
+        for rec in self:
+            lines = []
+            for data in rec.fees_structure_id.line_ids or []:
+                line_vals = {'slip_id': rec.id,
+                             'name': data.name,
+                             'code': data.code,
+                             'sequence': data.sequence,
+                             'type': data.type,
+                             'account_id': data.account_id.id,
+                             'amount': data.amount}
+                lines.append((0, 0, line_vals))
+            rec.write({'line_ids': lines})
 
-    _name = 'student.payslip'
-    _description = 'Student PaySlip'
+            amount = 0
+            for data in rec.line_ids:
+                amount += data.amount
+            rec.write({'total': amount,
+                       'state': 'confirm'})
+        return True
 
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
@@ -216,9 +226,10 @@ class StudentPayslip(models.Model):
 
     @api.onchange('student_id')
     def onchange_student(self):
-        self.standard_id = self.student_id.standard_id.id
-        self.division_id = self.student_id.division_id
-        self.medium_id = self.student_id.medium_id
+        if self.student_id:
+            self.standard_id = self.student_id.standard_id.id
+            self.division_id = self.student_id.division_id
+            self.medium_id = self.student_id.medium_id
 
     @api.multi
     def copy(self, default=None):
@@ -231,15 +242,13 @@ class StudentPayslip(models.Model):
         return super(StudentPayslip, self).copy(default)
 
     @api.multi
-    def onchange_journal_id(self, journal_id=False):
-        result = {}
-        if journal_id:
-            journal = self.env['account.journal'].browse(journal_id)
-            currency_id = journal and journal.currency_id and\
-                journal.currency_id.id\
-                or journal.company_id.currency_id.id
-            result = {'value': {'currency_id': currency_id}}
-        return result
+    @api.onchange('journal_id')
+    def onchange_journal_id(self):
+        for rec in self:
+            currency_id = rec.journal_id and rec.journal_id.currency_id and\
+                rec.journal_id.currency_id.id\
+                or rec.journal_id.company_id.currency_id.id
+            rec.currency_id = currency_id
 
     @api.multi
     def _compute_invoice(self):
@@ -247,20 +256,23 @@ class StudentPayslip(models.Model):
         for rec in self:
             rec.invoice_count = inv_obj.search_count([('student_payslip_id',
                                                        '=', rec.id)])
+        return True
 
     @api.multi
     def invoice_view(self):
-        invoices = self.env['account.invoice'].search([('student_payslip_id',
-                                                        '=', self.id)])
-        action = self.env.ref('account.action_invoice_tree1').read()[0]
-        if len(invoices) > 1:
-            action['domain'] = [('id', 'in', invoices.ids)]
-        elif len(invoices) == 1:
-            action['views'] = [(self.env.ref('account.invoice_form').id,
-                                'form')]
-            action['res_id'] = invoices.ids[0]
-        else:
-            action = {'type': 'ir.actions.act_window_close'}
+        invoice_obj = self.env['account.invoice']
+        for rec in self:
+            invoices = invoice_obj.search([('student_payslip_id', '=',
+                                            rec.id)])
+            action = rec.env.ref('account.action_invoice_tree1').read()[0]
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
         return action
 
     @api.multi
@@ -268,7 +280,7 @@ class StudentPayslip(models.Model):
         cur_obj = self.env['res.currency']
         move_obj = self.env['account.move']
         move_line_obj = self.env['account.move.line']
-        for fees in self.browse(self.ids):
+        for fees in self:
             if not fees.journal_id.sequence_id:
                 raise UserError(_('Please define sequence on'
                                   'the journal related to this'
@@ -326,7 +338,7 @@ class StudentPayslip(models.Model):
             if credit < 0:
                 debit = -credit
                 credit = 0.0
-            sign = debit - credit < 0 and - 1 or 1
+            sign = debit - credit < 0 and -1 or 1
             cr_id = diff_currency_p and current_currency or False
             am_cr = diff_currency_p and sign * fees.total or 0.0
             date = fees.payment_date or time.strftime('%Y-%m-%d')
@@ -361,8 +373,6 @@ class StudentPayslip(models.Model):
     def student_pay_fees(self):
         for rec in self:
             rec.write({'state': 'pending'})
-            if not self.ids:
-                return []
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
                     'date_invoice': rec.date,
@@ -429,7 +439,8 @@ class AccountPayment(models.Model):
                 vals = {'state': 'paid',
                         'payment_date': curr_date,
                         'move_id': invoice.move_id.id or False,
-                        'paid_amount': fees_payment}
+                        'paid_amount': fees_payment,
+                        'due_amount': invoice.residual}
             if invoice.student_payslip_id and invoice.state == 'open':
                 fees_payment = (invoice.student_payslip_id.paid_amount +
                                 self.amount)
