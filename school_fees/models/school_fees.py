@@ -234,7 +234,8 @@ class StudentPayslip(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id'))
+            student = self.env['student.student'].browse(vals.get('student_id')
+                                                         )
             vals.update({'standard_id': student.standard_id.id,
                          'division_id': student.division_id.id,
                          'medium_id': student.medium_id.id})
@@ -243,7 +244,8 @@ class StudentPayslip(models.Model):
     @api.multi
     def write(self, vals):
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id'))
+            student = self.env['student.student'].browse(vals.get('student_id')
+                                                         )
             vals.update({'standard_id': student.standard_id.id,
                          'division_id': student.division_id.id,
                          'medium_id': student.medium_id.id})
