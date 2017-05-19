@@ -1,14 +1,14 @@
 <odoo>
-    <record id="paperformat_euro_lowmargin_attendance" model="report.paperformat">
-            <field name="name">European A4 low margin Attendance</field>
+    <record id="monthly_attendance_report" model="report.paperformat">
+            <field name="name">Mothly Attendance Report</field>
             <field name="default" eval="True"/>
             <field name="format">A4</field>
             <field name="page_height">0</field>
             <field name="page_width">0</field>
             <field name="orientation">Landscape</field>
-            <field name="margin_top">0</field>
-            <field name="margin_bottom">0</field>
-            <field name="margin_left">0</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">25</field>
+            <field name="margin_left">10</field>
             <field name="margin_right">5</field>
             <field name="header_line" eval="False"/>
             <field name="header_spacing">0</field>
@@ -16,10 +16,11 @@
 	</record>
 
     <report id="attendace_month_report"
-                    string="Student Attendances by Month"
-                    model="student.student"
-                    report_type="qweb-pdf"
-                    file="school_attendance.attendance_month"
-                    name="school_attendance.attendance_month"
-                    paperformat="school_attendance.paperformat_euro_lowmargin_attendance"/>
+                string="Student Attendances by Month"
+                model="student.student"
+                report_type="qweb-pdf"
+                file="school_attendance.attendance_month"
+                name="school_attendance.attendance_month"
+                paperformat="school_attendance.monthly_attendance_report"
+                menu="False"/>
 </odoo>

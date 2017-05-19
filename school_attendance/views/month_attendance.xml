@@ -8,6 +8,7 @@
                <t t-call="report.external_layout">
                  <div class="page">
                      <div class="oe_structure"/>
+                     <br/><br/>
                      <table width="100%">
                          <center>
                              <h1>Attendances By Month</h1>
@@ -16,41 +17,43 @@
                       <br/><br/>
                       <table class="table table-bordered" width="100%">
                           <thead>
-                              <tr>
-                                  <th>Year</th>
-                                  <t t-foreach="weeks(data)" t-as="t">
-                                      <th align="center">
-                                            <span t-esc="t"></span>
-                                      </th>
+                              <t t-foreach="get_header_data(data)" t-as="t">
+                                  <tr>
+                                      <th width="20%"><span t-esc="data['form']['year']"/></th>
+                                      <t t-foreach="t.get('week_day')" t-as="week_day">
+                                          <th style="background-color:goldenrod;color:white;">
+                                              <span t-esc="week_day"/>
+                                          </th>
+                                      </t>
+                                  </tr>
+                                  <tr>
+                                      <th width="20%"><span t-esc="o.month"/></th>
+                                      <t t-foreach="t.get('day_list')" t-as="day">
+                                          <th style="background-color:goldenrod;color:white;">
+                                              <span t-esc="day"/>
+                                          </th>
+                                      </t>
+                                  </tr>
+                              </t>
+                          </thead>
+                          <tbody>
+                              <tr t-foreach="get_student(data['form'])" t-as="student">
+                                  <td style="text-align:left" width="20%">
+                                        <strong><span t-field="student.name"/></strong>
+                                  </td>
+                                  <t t-foreach="get_header_data(data)" t-as="t">
+                                      <td t-foreach="t.get('day_list')" t-as="day">
+                                          <span style="color:green" t-if="daily_attendance(data['form'], day, student) == 'P'">
+                                               <strong><t t-esc="daily_attendance(data['form'], day, student)"/></strong>
+                                          </span>
+                                          <span style="color:red" t-if="daily_attendance(data['form'], day, student) == 'A'">
+                                               <strong><t t-esc="daily_attendance(data['form'], day, student)"/></strong>
+                                          </span>
+                                      </td>
                                   </t>
                               </tr>
-	                          <tr>
-                                  <th>Month</th>
-                                  <t t-foreach="range(1,months(data)+1)" t-as="t">
-                                      <th align="center">
-                                            <span t-esc="t"></span>
-                                      </th>
-                                  </t>
-	                          </tr>
-	                       </thead>
-	                       <tbody>
-	                            <tr>
-	                                <td align="center">
-                                            <span t-esc="t"></span>
-                                     </td>
-	                                 <t t-foreach="attendance(data)" t-as="t">
-	                                      <td align="center">
-	                                          <t t-if="t == 'A'">
-	                                              <span t-esc="t" style="color:red !important;"></span>
-	                                          </t>
-	                                          <t t-if="t == 'P'">
-	                                              <span t-esc="t" style="color:green !important;"></span>
-	                                          </t>
-	                                       </td>
-                                    </t>
-		                      </tr>
-	                     </tbody>
-                      </table>
+                          </tbody>
+                       </table>
                     </div>
                   </t>
                 </t>
