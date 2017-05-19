@@ -43,8 +43,6 @@ class HostelRoom(models.Model):
     student_per_room = fields.Integer('Student Per Room', required=True)
     availability = fields.Float(compute='_compute_check_availability',
                                 store=True, string="Availability")
-#    student_ids = fields.One2many('hostel.student',
-#                                  'hostel_room_id', 'Student')
     telephone = fields.Boolean('Telephone access')
     rent_amount = fields.Float('Rent Amount Per Month')
     ac = fields.Boolean('Air Conditioning')
@@ -229,7 +227,7 @@ class AccountInvoice(models.Model):
 
     hostel_student_id = fields.Many2one('hostel.student',
                                         string="Hostel Student")
-    hostel_ref = fields.Char('Hostel Fees Refrence')
+    hostel_ref = fields.Char('Hostel Fees Reference')
 
 
 class AccountPayment(models.Model):
@@ -239,17 +237,18 @@ class AccountPayment(models.Model):
     def post(self):
         res = super(AccountPayment, self).post()
         for inv in self.invoice_ids:
-            vals = {'remaining_amount': inv.residual}
+            vals = {}
             if inv.hostel_student_id and inv.state == 'paid':
                 fees_payment = (inv.hostel_student_id.paid_amount +
                                 self.amount)
                 vals.update({'status': 'paid',
                              'paid_amount': fees_payment})
-                inv.hostel_student_id.write()
+                inv.hostel_student_id.write(vals)
             elif inv.hostel_student_id and inv.state == 'open':
                 fees_payment = (inv.hostel_student_id.paid_amount +
                                 self.amount)
                 vals.update({'status': 'pending',
-                             'paid_amount': fees_payment})
+                             'paid_amount': fees_payment,
+                             'remaining_amount': inv.residual})
             inv.hostel_student_id.write(vals)
         return res

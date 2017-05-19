@@ -18,7 +18,6 @@
                         <group col="2">
                             <field name="other_info"/>
                         </group>
-<!--                         <separator string="Room Detail"/> -->
                         <notebook>
                             <page string="Room Detail">
                                 <field name="room_ids">
@@ -43,37 +42,6 @@
                                             <field name="refrigerator"/>
                                             <field name="microwave"/>
                                         </group>
-        <!--                                 <field name="student_ids" colspan="4" nolabel="1"> -->
-        <!--                                     <form string="Hostel Student"> -->
-        <!--                                         <header> -->
-        <!--                                             <button name="confirm_state" string="Confirm" type="object"/> -->
-        <!--                                             <button name="reservation_state" string="Reservation" type="object"/> -->
-        <!--                                             <button name="print_fee_receipt" string="Print Fee Slip" type="object" /> -->
-        <!--                                             <field name="status" widget="statusbar" nolabel="1"/> -->
-        <!--                                         </header> -->
-        <!--                                         <sheet> -->
-        <!--                                             <separator string="Student Detail"/> -->
-        <!--                                             <group col="4"> -->
-        <!--                                                 <field name="hostel_id"/> -->
-        <!--                                                 <field name="student_id"/> -->
-        <!--                                                 <field name="school_id"/> -->
-        <!--                                                 <field name="bed_type" widget="selection"/> -->
-        <!--                                                 <field name="admission_date"/> -->
-        <!--                                                 <field name="discharge_date"/> -->
-        <!--                                                 <field name="room_rent" /> -->
-        <!--                                                 <field name="paid_amount"/> -->
-        <!--                                                 <field name="remaining_amount"/> -->
-        <!--                                             </group> -->
-        <!--                                         </sheet> -->
-        <!--                                     </form> -->
-        <!--                                     <tree> -->
-        <!--                                         <field name="student_id"/> -->
-        <!--                                         <field name="room_rent"/> -->
-        <!--                                         <field name="paid_amount"/> -->
-        <!--                                         <field name="remaining_amount"/> -->
-        <!--                                         <field name="status"/> -->
-        <!--                                     </tree> -->
-        <!--                                 </field> -->
                                     </form>
                                 </field>
                              </page>
@@ -199,12 +167,11 @@
             <field name="arch" type="xml">
                 <form string="Hostel Information" >
                     <header>
-<!--                         <button name="confirm_state" string="Confirm" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['paid','reservation'])]}"/> -->
                         <button name="reservation_state" string="Reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['paid','reservation','cancel','pending','discharge'])]}"/>
                         <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"/>
                         <button name="cancel_state" string="Cancel" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['paid','cancel','discharge'])]}"/>
                         <button name="pay_fees" string="Payment" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['draft','paid','cancel','pending','discharge'])]}"/>
-                        <button name="discharge_state" string="Discharge" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge','pending'])]}" groups="school_hostel.group_hostel_manager"/>
+                        <button name="discharge_state" string="Discharge" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager"/>
                         <field name="status" widget="statusbar" nolabel="1" statusbar_visible="draft,reservation,paid" />
                     </header>
                     <sheet>
