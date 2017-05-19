@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <template id="attendance_month">
+        <t t-call="report.html_container">
+           <t t-foreach="docs" t-as="o">
+               <t t-call="report.external_layout">
+                 <div class="page">
+                     <div class="oe_structure"/>
+                     <table width="100%">
+                         <center>
+                             <h1>Attendances By Month</h1>
+                         </center>
+                      </table>
+                      <br/><br/>
+                      <table class="table table-bordered" width="100%">
+                          <thead>
+                              <tr>
+                                  <th>Year</th>
+                                  <t t-foreach="weeks(data)" t-as="t">
+                                      <th align="center">
+                                            <span t-esc="t"></span>
+                                      </th>
+                                  </t>
+                              </tr>
+	                          <tr>
+                                  <th>Month</th>
+                                  <t t-foreach="range(1,months(data)+1)" t-as="t">
+                                      <th align="center">
+                                            <span t-esc="t"></span>
+                                      </th>
+                                  </t>
+	                          </tr>
+	                       </thead>
+	                       <tbody>
+	                            <tr>
+	                                <td align="center">
+                                            <span t-esc="t"></span>
+                                     </td>
+	                                 <t t-foreach="attendance(data)" t-as="t">
+	                                      <td align="center">
+	                                          <t t-if="t == 'A'">
+	                                              <span t-esc="t" style="color:red !important;"></span>
+	                                          </t>
+	                                          <t t-if="t == 'P'">
+	                                              <span t-esc="t" style="color:green !important;"></span>
+	                                          </t>
+	                                       </td>
+                                    </t>
+		                      </tr>
+	                     </tbody>
+                      </table>
+                    </div>
+                  </t>
+                </t>
+              </t>
+           </template>
+        </odoo>

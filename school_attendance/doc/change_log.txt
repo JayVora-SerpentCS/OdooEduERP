@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (School Attendance)
 ===============================================================================
+1.0.4 --> 19 May 2017 : Arpit Joshi
+    * Report for monthly attendance
+
 1.0.3 --> 17 May 2017 : Arpit Joshi
     * View and demo data improvements .
     * View and code improvements

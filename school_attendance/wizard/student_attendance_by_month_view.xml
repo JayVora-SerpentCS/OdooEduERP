@@ -36,8 +36,6 @@
             <field name="target">new</field>
         </record>
 
-        <!-- Values Of Student Attendance By Month -->
-
         <record id="student_attendance_by_month_values" model="ir.values">
             <field name="model_id" ref="school.model_student_student" />
             <field name="object" eval="1" />
@@ -47,5 +45,6 @@
             <field name="key">action</field>
             <field name="model">student.student</field>
         </record>
+        
 
 </odoo>
