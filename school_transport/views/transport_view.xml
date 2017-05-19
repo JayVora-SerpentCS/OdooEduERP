@@ -12,7 +12,7 @@
                     <xpath expr="//page[@name='general']" position="after">
                         <page string="Transport">
                             <separator string="Transportation Details" colspan="4"/>
-                            <field name="transport_ids" nolabel= '1'/>
+                            <field name="transport_ids" readonly="1" nolabel= '1'/>
                         </page>
                     </xpath>
                 </data>

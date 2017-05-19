@@ -11,47 +11,43 @@ class BatchExamReport(models.AbstractModel):
     _name = 'report.school_attendance.attendance_month'
 
     @api.multi
-    def get_days_month(self, data):
+    def get_header_data(self, data):
         months = calendar.monthrange(data.get('form').get('year'),
                                      data.get('form').get('month'))
-        return months[(1)]
-
-    @api.multi
-    def getweek_day_month(self, data):
-        months = calendar.monthrange(data.get('form').get('year'),
-                                     data.get('form').get('month'))
+        data_dict = {}
         day_list = []
+        week_day_list = []
         for i in range(1, months[1] + 1):
             tmp_date = (str(i) + '-' + str(data.get('form').get('month')) +
                         '-' + str(data.get('form').get('year')))
             week_day = datetime.strptime(tmp_date, '%d-%m-%Y').strftime('%a')
-            day_list.append(week_day)
-        return day_list
+            week_day_list.append(week_day)
+            day_list.append(i)
+        data_dict.update({'week_day': week_day_list,
+                          'day_list': day_list})
+        return [data_dict]
 
     @api.multi
-    def student_present_absent(self, data):
-        student_ids = data['form']['stud_ids']
-        months = calendar.monthrange(data.get('form').get('year'),
-                                     data.get('form').get('month'))
-        if student_ids:
-            stud_list = []
-            for i in range(1, months[1] + 1):
-                tmp_date = str(data.get('form').get('month')) + '/' + str(i)\
-                            + '/' + str(data.get('form').get('year'))
-                for student in student_ids:
-                    stud_search = self.env['daily.attendance'
-                                           ].search([('date', '=', tmp_date),
-                                                     ('state', '=', 'validate')
-                                                     ])
-                    attend_line = self.env['daily.attendance.line'].search(
-                             [('standard_id', '=', stud_search.id),
-                              ('stud_id', '=', student)])
-                attend = 'A'
-                for line in attend_line:
-                    if line and line.is_present:
-                        attend = 'P'
-                stud_list.append(attend)
-            return stud_list
+    def get_student(self, form):
+        stu_list = []
+        for student in self.env['student.student'].browse(form['stud_ids']):
+            stu_list += student
+        return stu_list
+
+    def daily_attendance(self, form, day, student):
+        attend_obj = self.env['daily.attendance']
+        attend_date = (str(form.get('month')) + '/' + str(day) + '/'
+                       + str(form.get('year')))
+        sheets = attend_obj.search([('state', '=', 'validate'), ('date',
+                                                                 '=',
+                                                                 attend_date)])
+        flag = 'A'
+        for sheet in sheets:
+            for line in sheet.student_ids:
+                if line.stud_id.id == student.id:
+                    if line.is_present:
+                        flag = 'P'
+        return flag
 
     @api.model
     def render_html(self, docids, data):
@@ -62,9 +58,9 @@ class BatchExamReport(models.AbstractModel):
                    'doc_model': self.model,
                    'docs': docs,
                    'data': data,
-                   'months': self.get_days_month,
-                   'weeks': self.getweek_day_month,
-                   'attendance': self.student_present_absent
+                   'get_header_data': self.get_header_data,
+                   'get_student': self.get_student,
+                   'daily_attendance': self.daily_attendance
                    }
         render_model = "school_attendance.attendance_month"
         return self.env['report'].render(render_model, docargs)

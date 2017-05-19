@@ -36,11 +36,6 @@ class HostelRoom(models.Model):
                 count += 1
             room_availability = data.student_per_room - count
             data.availability = room_availability
-#            if room_availability < 0:
-#                raise ValidationError(_("You can not assign room\
-#                more than %s student" % data.student_per_room))
-#            else:
-#                data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'HOSTEL')
     floor_no = fields.Integer('Floor No.', default=1)
@@ -118,17 +113,19 @@ class HostelStudent(models.Model):
 
     @api.multi
     def invoice_view(self):
-        invoices = self.env['account.invoice'].search([('hostel_student_id',
-                                                        '=', self.id)])
-        action = self.env.ref('account.action_invoice_tree1').read()[0]
-        if len(invoices) > 1:
-            action['domain'] = [('id', 'in', invoices.ids)]
-        elif len(invoices) == 1:
-            action['views'] = [(self.env.ref('account.invoice_form').id,
-                                'form')]
-            action['res_id'] = invoices.ids[0]
-        else:
-            action = {'type': 'ir.actions.act_window_close'}
+        invoice_obj = self.env['account.invoice']
+        for rec in self:
+            invoices = invoice_obj.search([('hostel_student_id', '=', rec.id)
+                                           ])
+            action = rec.env.ref('account.action_invoice_tree1').read()[0]
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
         return action
 
     @api.multi
@@ -136,10 +133,11 @@ class HostelStudent(models.Model):
         inv_obj = self.env['account.invoice']
         for rec in self:
             rec.compute_inv = inv_obj.search_count([('hostel_student_id', '=',
-                                                     self.id)])
+                                                     rec.id)])
 
     @api.multi
     def pay_fees(self):
+        invoice_obj = self.env['account.invoice']
         for rec in self:
             rec.write({'status': 'pending'})
             partner = rec.student_id and rec.student_id.partner_id
@@ -147,9 +145,9 @@ class HostelStudent(models.Model):
                     'account_id': partner.property_account_receivable_id.id,
                     'hostel_student_id': rec.id,
                     'hostel_ref': rec.hostel_id}
-            account_inv_id = self.env['account.invoice'].create(vals)
+            account_inv_id = invoice_obj.create(vals)
             acc_id = account_inv_id.journal_id.default_credit_account_id.id
-            account_view_id = self.env.ref('account.invoice_form')
+            account_view_id = rec.env.ref('account.invoice_form')
             invoice_lines = []
             line_vals = {'name': rec.hostel_info_id.name,
                          'account_id': acc_id,
