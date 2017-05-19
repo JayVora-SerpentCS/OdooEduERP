@@ -22,7 +22,7 @@ class StudentAttendanceByMonth(models.TransientModel):
                                         ('lecture', 'Lecture Wise')], 'Type')
 
     @api.multi
-    def print_report(self):
+    def print_report(self, vals):
         ''' This method prints report
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -32,10 +32,11 @@ class StudentAttendanceByMonth(models.TransientModel):
         @return : printed report
         '''
         data = self.read([])[0]
-        data.update({'stud_ids': self._context.get('active_ids', [])})
+        data.update({'stud_ids': vals.get('active_ids')})
         datas = {'ids': [],
                  'model': 'student.student',
+                 'type': 'ir.actions.report.xml',
                  'form': data}
-        return {'type': 'ir.actions.report.xml',
-                'report_name': 'attendance.by.month.student',
-                'datas': datas}
+        return self.env['report'
+                        ].get_action([], 'school_attendance.attendance_month',
+                                     data=datas)
