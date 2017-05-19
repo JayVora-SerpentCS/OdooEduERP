@@ -231,6 +231,24 @@ class StudentPayslip(models.Model):
             self.division_id = self.student_id.division_id
             self.medium_id = self.student_id.medium_id
 
+    @api.model
+    def create(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id'))
+            vals.update({'standard_id': student.standard_id.id,
+                         'division_id': student.division_id.id,
+                         'medium_id': student.medium_id.id})
+        return super(StudentPayslip, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id'))
+            vals.update({'standard_id': student.standard_id.id,
+                         'division_id': student.division_id.id,
+                         'medium_id': student.medium_id.id})
+        return super(StudentPayslip, self).write(vals)
+
     @api.multi
     def copy(self, default=None):
         if default is None:

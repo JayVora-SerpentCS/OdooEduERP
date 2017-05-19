@@ -78,8 +78,8 @@
                         </group>
                         <group col="4" string="Calculations">
                             <field name="type"/>
-                            <field name="amount"/>
-                            <field name="account_id" required="1"/>
+                            <field name="amount" />
+                            <field name="account_id" required="1" options="{&quot;no_create&quot;: True}"/>
                         </group>
                         <group col="2" attrs="{'invisible':[('type','=','range')]}" string="Description">
                             <field name="description" />
@@ -182,27 +182,32 @@
                             </button>
                         </div>
                         <group>
+                            <h2>
+                                <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}" nolabel="1" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            </h2>
+                        </group>
+                        <group>
                             <group col="2" string="Information">
                                 <field name="name" placeholder="Description" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="number" attrs="{'readonly':[('state','not in','draft')]}" />
                                 <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
                             </group>
                             <group col="2" string="Standard Information">
-                                <field name="standard_id" placeholder="Standard" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="standard_id" placeholder="Standard" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
+                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
+                                <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
                             </group>
                         </group>
                         <group col="4">
-                            <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"/>
+<!--                             <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"/> -->
                             <separator string="Fees Structure" colspan="4"/>
-                            <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/> 
                             <notebook colspan="4">
                                 <page string="Fees Structure">
-                                    <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                    <field name="line_ids" colspan="4" nolabel="1" readonly="1"/>
                                     <separator string="" colspan="4"/>
-                                    <group col="4" colspan="4">
+                                    <group class="oe_subtotal_footer oe_right" colspan="2">
                                         <field name="total"/>
                                         <field name="paid_amount" readonly="1"/>
                                         <field name="due_amount" readonly="1"/>
@@ -215,7 +220,7 @@
                                         <field name="currency_id" placeholder="Currency" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <field name="move_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <field name="payment_date" placeholder="Payment Date" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                        <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                        <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                                     </group>
                                 </page>
                             </notebook>
@@ -280,20 +285,19 @@
                             <field name="name" placeholder="Name" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="number" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
-                            <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
-                            <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}"/>
-                            
+                            <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                         </group>
                         <group string="Fees Register for" col="4" colspan="4">
-                            <field name="fees_structure" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="fees_structure" placeholder="Fee structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="standard_id" placeholder="Select Standard.." attrs="{'readonly':[('state','not in','draft')]}"
-                                required="1"/>
+                                required="1" widget="selection"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Student Payslip">
                                 <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}" >
-                                    <tree string="Student Payslip" >
+                                    <tree string="Student Payslip" create="false">
                                         <field name="name"/>
                                         <field name="number"/>
                                         <field name="student_id"/>
@@ -317,9 +321,9 @@
                                         </sheet>
                                     </form>
                                 </field>
-                                <separator string="" colspan="4"/>
-                                <group col="8" colspan="8">
-                                    <field name="total_amount" colspan="8"/>
+<!--                                 <separator string="" /> -->
+                                <group class="oe_subtotal_footer oe_right" colspan="2">
+                                    <field name="total_amount"/>
                                 </group>
                             </page>
                         </notebook>
