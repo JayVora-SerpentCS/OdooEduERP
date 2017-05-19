@@ -15,7 +15,6 @@
              'wizard/terminate_reason_view.xml',
              'wizard/wiz_send_email_view.xml',
              'views/school_view.xml',
-             'views/admission_workflow.xml',
              'data/student_sequence.xml',
              'wizard/assign_roll_no_wizard.xml',
              'wizard/move_standards_view.xml',
