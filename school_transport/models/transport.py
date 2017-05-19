@@ -249,13 +249,9 @@ class TransportRegistration(models.Model):
     @api.model
     def create(self, vals):
         ret_val = super(TransportRegistration, self).create(vals)
-        m_amt = self.onchange_point_id(vals['point_id'])
-        ex_dt = self.onchange_for_month(vals['for_month'])
-        if ex_dt:
-            ret_val.write({'m_amount': m_amt['value']['m_amount'],
-                           'reg_end_date': ex_dt['value']['reg_end_date']})
-        else:
-            ret_val.write({'m_amount': m_amt['value']['m_amount']})
+        if ret_val:
+            ret_val.onchange_point_id()
+            ret_val.onchange_for_month()
         return ret_val
 
     @api.depends('m_amount', 'for_month')
@@ -265,22 +261,22 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def transport_fees_pay(self):
+        invoice_obj = self.env['account.invoice']
         for rec in self:
             rec.state = 'pending'
-            transport = rec.browse(rec.id)
-            partner = transport.part_name and transport.part_name.partner_id
+            partner = rec.part_name and rec.part_name.partner_id
             vals = {'partner_id': partner.id,
                     'account_id': partner.property_account_receivable_id.id,
-                    'transport_student_id': transport.id}
-            account_object = self.env['account.invoice'].create(vals)
-            journal = account_object.journal_id
+                    'transport_student_id': rec.id}
+            invoice = invoice_obj.create(vals)
+            journal = invoice.journal_id
             acct_journal_id = journal.default_credit_account_id.id
             account_view_id = self.env.ref('account.invoice_form')
             line_vals = {'name': 'Transport Fees',
                          'account_id': acct_journal_id,
-                         'quantity': transport.for_month,
-                         'price_unit': transport.m_amount}
-            account_object.write({'invoice_line_ids': (0, 0, line_vals)})
+                         'quantity': rec.for_month,
+                         'price_unit': rec.m_amount}
+            invoice.write({'invoice_line_ids': [(0, 0, line_vals)]})
             return {'name': _("Pay Transport Fees"),
                     'view_type': 'form',
                     'view_mode': 'form',
@@ -289,23 +285,25 @@ class TransportRegistration(models.Model):
                     'type': 'ir.actions.act_window',
                     'nodestroy': True,
                     'target': 'current',
-                    'res_id': account_object.id,
+                    'res_id': invoice.id,
                     'context': {}}
 
     @api.multi
     def view_invoice(self):
-        invoices = self.env['account.invoice'
-                            ].search([('transport_student_id', '=', self.id)])
-        action = self.env.ref('account.action_invoice_tree1').read()[0]
-        if len(invoices) > 1:
-            action['domain'] = [('id', 'in', invoices.ids)]
-        elif len(invoices) == 1:
-            action['views'] = [(self.env.ref('account.invoice_form'
-                                             ).id, 'form')]
-            action['res_id'] = invoices.ids[0]
-        else:
-            action = {'type': 'ir.actions.act_window_close'}
-        return action
+        invoice_obj = self.env['account.invoice']
+        for rec in self:
+            invoices = invoice_obj.search([('transport_student_id', '=',
+                                            rec.id)])
+            action = rec.env.ref('account.action_invoice_tree1').read()[0]
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
+            return action
 
     @api.multi
     def _compute_invoice(self):
@@ -315,21 +313,22 @@ class TransportRegistration(models.Model):
                                                    '=', rec.id)])
 
     @api.multi
-    def onchange_point_id(self, point):
-        if not point:
-            return {}
-        for point_obj in self.env['transport.point'].browse(point):
-            return {'value': {'m_amount': point_obj.amount}}
+    @api.onchange('point_id')
+    def onchange_point_id(self):
+        for rec in self:
+            if rec.point_id:
+                rec.m_amount = rec.point_id.amount or 0.0
 
     @api.multi
-    def onchange_for_month(self, month):
-        if not month:
-            return {}
-        tr_start_date = time.strftime("%Y-%m-%d")
-        mon = relativedelta(months=+month)
-        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon
-        date = datetime.strftime(tr_end_date, '%Y-%m-%d')
-        return {'value': {'reg_end_date': date}}
+    @api.onchange('for_month')
+    def onchange_for_month(self):
+        for rec in self:
+            tr_start_date = time.strftime("%Y-%m-%d")
+            mon = relativedelta(months=+rec.for_month)
+            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d'
+                                            ) + mon
+            date = datetime.strftime(tr_end_date, '%Y-%m-%d')
+            rec.reg_end_date = date
 
     @api.multi
     def trans_regi_cancel(self):
@@ -339,7 +338,6 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def trans_regi_confirm(self):
-        self.write({'state': 'confirm'})
         trans_obj = self.env['student.transport']
         prt_obj = self.env['student.student']
         stu_prt_obj = self.env['transport.participant']
@@ -354,6 +352,7 @@ class TransportRegistration(models.Model):
             if rec.vehicle_id.capacity < person:
                 raise UserError(_('There is No More vacancy on this vehicle.'))
 
+            rec.write({'state': 'confirm'})
             # calculate amount and Registration End date
             amount = rec.point_id.amount * rec.for_month
             tr_start_date = (rec.reg_date)
@@ -430,7 +429,7 @@ class AccountPayment(models.Model):
                     vals = {'state': 'paid',
                             'paid_amount': fees_payment}
                 elif invoice.transport_student_id and invoice.state == 'open':
-                    fees_payment = (invoice.hostel_student_id.paid_amount +
+                    fees_payment = (invoice.transport_student_id.paid_amount +
                                     rec.amount)
                     vals = {'status': 'pending',
                             'paid_amount': fees_payment}
