@@ -13,7 +13,7 @@
                 <form string="Transfer Vehicle">
                     <group colspan="4">
                         <field name='name' />
-                        <field name='participation_id' on_change="onchange_participation_id(participation_id)" context="{'name':name}" domain="[('name','=',name)]"/>
+                        <field name='participation_id' context="{'name':name}" domain="[('name','=',name)]"/>
                         <field name='root_id' />
                         <field name='old_vehicle_id'/>
                         <field name='new_vehicle_id' context="{'name':root_id}"/>
