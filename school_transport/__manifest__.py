@@ -10,7 +10,7 @@
     'category': 'School Management',
     'complexity': 'easy',
     'summary': 'A Module For Transport & Vehicle Management In School',
-    'depends': ['hr', 'school'],
+    'depends': ['hr', 'school', 'account_account'],
     'data': ['security/transport_security.xml',
              'security/ir.model.access.csv',
              'views/transport_view.xml',
