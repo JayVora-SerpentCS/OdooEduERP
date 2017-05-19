@@ -176,16 +176,15 @@
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
+                        <h2>
+                            <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"
+                                    domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            </h2>
                         <div class="oe_button_box" name="button_box">
                             <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" states="pending,paid" type="object" groups="school.group_school_administration">
                                 <field name="invoice_count"/>
                             </button>
                         </div>
-                        <group>
-                            <h2>
-                                <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}" nolabel="1" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
-                            </h2>
-                        </group>
                         <group>
                             <group col="2" string="Information">
                                 <field name="name" placeholder="Description" attrs="{'readonly':[('state','not in','draft')]}"/>

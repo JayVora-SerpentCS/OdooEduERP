@@ -439,7 +439,7 @@ class StudentPayslipLineLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    slip_ref = fields.Char('Fees Slip Refrence')
+    slip_ref = fields.Char('Fees Slip Reference')
     student_payslip_id = fields.Many2one('student.payslip',
                                          string="Student Payslip")
 
