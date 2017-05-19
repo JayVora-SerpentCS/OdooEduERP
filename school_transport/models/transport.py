@@ -210,8 +210,7 @@ class StudentStudent(models.Model):
     _description = 'Student Information'
 
     transport_ids = fields.Many2many('transport.participant', 'std_transport',
-                                     'trans_id', 'stud_id', 'Transport',
-                                     readonly=True)
+                                     'trans_id', 'stud_id', 'Transport')
 
 
 class TransportRegistration(models.Model):
