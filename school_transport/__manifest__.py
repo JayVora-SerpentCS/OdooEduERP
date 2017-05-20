@@ -17,6 +17,7 @@
              'views/report_view.xml',
              'views/vehicle.xml',
              'views/participants.xml',
+             'data/transport_schedular.xml',
              'wizard/transfer_vehicle.xml'],
     'demo': ['demo/transport_demo.xml'],
     'test': ['test/transport.yml', 'test/transport_report.yml'],

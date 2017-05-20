@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
 
         <!-- HR Department -->
         <record id="dep_school" model="hr.department">
@@ -20,21 +20,25 @@
         <record id="hr_employee_driver_1" model="hr.employee">
             <field name="name">Driver-1</field>
             <field name="job_id" ref="job_driver"/>
+            <field name="is_driver" eval="True"/>
             <field name="licence_no">GJ123456</field>
         </record>
         <record id="hr_employee_driver_2" model="hr.employee">
             <field name="name">Driver-2</field>
             <field name="job_id" ref="job_driver"/>
+            <field name="is_driver" eval="True"/>
             <field name="licence_no">GJ123456</field>
         </record>
         <record id="hr_employee_driver_3" model="hr.employee">
             <field name="name">Driver-3</field>
             <field name="job_id" ref="job_driver"/>
+            <field name="is_driver" eval="True"/>
             <field name="licence_no">GJ123456</field>
         </record>
         <record id="hr_employee_driver_4" model="hr.employee">
             <field name="name">Driver-4</field>
             <field name="job_id" ref="job_driver"/>
+            <field name="is_driver" eval="True"/>
             <field name="licence_no">GJ123456</field>
         </record>
 
@@ -224,15 +228,15 @@
             <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_4')])]" />
         </record>
         
-      <record id="ir_cron_student_transport_every_day" model="ir.cron">
-            <field name="name">student_transport</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field><!-- it s every day -->
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
-            <field eval="'student.transport'" name="model" />
-            <field eval="'delet_entry'" name="function" />
-            <field eval="'()'" name="args"/>
-        </record>
+<!--       <record id="ir_cron_student_transport_every_day" model="ir.cron"> -->
+<!--             <field name="name">student_transport</field> -->
+<!--             <field name="interval_number">1</field> -->
+<!--             <field name="interval_type">days</field>it s every day -->
+<!--             <field name="numbercall">-1</field> -->
+<!--             <field name="doall" eval="False"/> -->
+<!--             <field eval="'student.transport'" name="model" /> -->
+<!--             <field eval="'delet_entry'" name="function" /> -->
+<!--             <field eval="'()'" name="args"/> -->
+<!--         </record> -->
     </data>
 </odoo>

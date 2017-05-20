@@ -53,11 +53,11 @@
                 <data>
                     <xpath expr="//field[@name='category_ids']" position="after">
                         <group>
-                            <field name="is_driver" string="Is Driver"/>
+                            <field name="is_driver" string="Is Driver" readonly="1"/>
                         </group>
                     </xpath>
-                    <xpath expr="//field[@name = 'name']" position="after">
-                        <field name="licence_no"/>
+                    <xpath expr="//page[1]/group/group[2]/field[@name='calendar_id']" position="after">
+                        <field name="licence_no" attrs="{'required':[('is_driver','=',True)]}"/>
                     </xpath>
                     <xpath expr="//page[@name='hr_settings']" position="after">
                         <page name="vehicle_details" string="Vehicles Details" attrs="{'invisible':[('is_driver','=',False)]}">
@@ -218,7 +218,7 @@
                     <separator string="Transport Information"/>
                     <group col="4">
                     <field name="name" placeholder="Root Name" attrs="{'readonly':[('state','=','close')]}"/>
-                    <field name="contact_per_id" placeholder="Contact Person" attrs="{'readonly':[('state','=','close')]}"/>
+                    <field name="contact_per_id" placeholder="Contact Person" attrs="{'readonly':[('state','=','close')]}" options="{&quot;no_create&quot;: True}"/>
                     <field name="start_date" placeholder="Start Date Of Journey" attrs="{'readonly':[('state','=','close')]}"/>
                     <field name="end_date" placeholder="End Date Of Journey" attrs="{'readonly':[('state','=','close')]}"/>
                     <field name="total_participantes" readonly="1"/>
@@ -226,15 +226,15 @@
                     <notebook colspan="4">
                         <page string="Vehicles" >
                                 <separator string="Transport Vehicle Details" colspan="4"/>
-                                <field name="trans_vehicle_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="trans_vehicle_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                         </page>
                         <page string="Root Points" >
                              <separator string="Transport Point Details" colspan="4"/>
-                             <field name="trans_point_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
+                             <field name="trans_point_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                         </page>
                         <page string="Participants" >
                             <separator string="Participants Details" colspan="4"/>
-                            <field name="trans_participants_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}">
+                            <field name="trans_participants_ids" nolabel='1' readonly="1">
                                 <tree string="Subject Information">
                                     <field name="stu_pid_id"/>
                                     <field name="name"/>
