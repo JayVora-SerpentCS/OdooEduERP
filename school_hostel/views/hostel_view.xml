@@ -13,14 +13,14 @@
                             <field name="name" placeholder="Hostel Name"/>
                             <field name="type"/>
                             <newline/>
-                            <field name="rector"/>
+                            <field name="rector" options="{&quot;no_create&quot;: True}"/>
                         </group>
                         <group col="2">
                             <field name="other_info"/>
                         </group>
                         <notebook>
                             <page string="Room Detail">
-                                <field name="room_ids">
+                                <field name="room_ids" readonly="1">
                                     <tree>
                                         <field name="floor_no"/>
                                         <field name="room_no"/>
@@ -97,7 +97,7 @@
                     <sheet style="width: 10%%,height:10%%">
                         <separator string="Room Information"/>
                         <group col="4">
-                            <field name="name" required="1"/>
+                            <field name="name" required="1" options="{&quot;no_create&quot;: True}"/>
                             <field name="floor_no"/>
                             <field name="room_no"/>
                             <field name="student_per_room"/>
@@ -182,10 +182,10 @@
                          </div>
                         <separator string="Hostel Information"/>
                         <group col="4" colspan="4">
-                            <field name="student_id" attrs="{'readonly':[('status','not in','draft')]}" domain="[('state','=','done')]" required="1" />
-                            <field name="hostel_id" attrs="{'readonly':[('status','not in','draft')]}" />
-                            <field name="hostel_info_id" required="1" attrs="{'readonly':[('status','not in','draft')]}" />
-                            <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}"/>
+                            <field name="student_id" attrs="{'readonly':[('status','not in','draft')]}" domain="[('state','=','done')]" required="1" options="{&quot;no_create&quot;: True}"/>
+                            <field name="hostel_id" readonly="1"/>
+                            <field name="hostel_info_id" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="admission_date" required="1" attrs="{'readonly':[('status','not in','draft')]}" />
                             <field name="duration" required="1" attrs="{'readonly':[('status','not in','draft')]}"/>
 <!--                             <field name="rent_pay"/> -->

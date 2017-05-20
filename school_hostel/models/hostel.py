@@ -87,14 +87,21 @@ class HostelStudent(models.Model):
             rec.room_id.availability -= 1
         return True
 
-    @api.depends('admission_date', 'duration')
     @api.multi
-    def _compute_discharge_date(self):
+    @api.onchange('admission_date', 'duration')
+    def onchnage_discharge_date(self):
         for rec in self:
             if rec.admission_date:
                 date = datetime.strptime(rec.admission_date,
                                          DEFAULT_SERVER_DATETIME_FORMAT)
                 rec.discharge_date = date + rd(months=rec.duration)
+
+    @api.model
+    def create(self, vals):
+        res = super(HostelStudent, self).create(vals)
+        if res:
+            res.onchnage_discharge_date()
+        return res
 
     @api.constrains('duration')
     def check_duration(self):
@@ -108,6 +115,19 @@ class HostelStudent(models.Model):
             rec.status = 'discharge'
             rec.room_id.availability -= 1
             rec.acutal_discharge_date = curr_date
+
+    @api.multi
+    def student_expire(self):
+        current_date = datetime.now()
+        new_date = current_date.strftime('%m-%d-%Y')
+        domian = [('discharge_date', '<', new_date),
+                  ('status', '!=', 'draft')]
+        student_hostel = self.env['hostel.student'].search(domian)
+        if student_hostel:
+            for student in student_hostel:
+                student.write({'status': 'discharge'})
+                student.discharge_state()
+        return True
 
     @api.multi
     def invoice_view(self):
@@ -186,9 +206,9 @@ class HostelStudent(models.Model):
     room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
                              required=True)
     bed_type = fields.Many2one('bed.type', 'Bed Type')
-    admission_date = fields.Datetime('Admission Date')
-    discharge_date = fields.Datetime('Discharge Date',
-                                     compute="_compute_discharge_date")
+    admission_date = fields.Datetime('Admission Date',
+                                     default=fields.Date.context_today)
+    discharge_date = fields.Datetime('Discharge Date')
     paid_amount = fields.Float('Paid Amount')
     hostel_info_id = fields.Many2one('hostel.type', string="Hostel")
     room_id = fields.Many2one('hostel.room', string="Room")
