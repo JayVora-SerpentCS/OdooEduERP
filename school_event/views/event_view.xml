@@ -160,14 +160,14 @@
                         <separator string="Event Information" />
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
                             <field name="name" placeholder="Enter Event Name" attrs="{'readonly':[('state','not in','draft')]}"/>
-                            <field name="code" string="Organiser school" placeholder="Select Or Create School" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="code" string="Organiser school" placeholder="Select Or Create School" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <group colspan="4" col="4">
                                 <field name="start_reg_date" placeholder="Enter Start Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="last_reg_date" placeholder="Enter Last Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="start_date" placeholder="Start Date Of Event" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="end_date" placeholder="End Date Of Event" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                <field name="contact_per_id" placeholder="Select Or Create Organiser Name" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                <field name="supervisor_id" placeholder="Select Or Create Supervisor Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="contact_per_id" placeholder="Select Organiser Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('is_school_teacher','=',True)]"/>
+                                <field name="supervisor_id" placeholder="Select Supervisor Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('is_school_teacher','=',True)]"/>
                                 <field name="maximum_participants" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="parameter_id" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <field name="is_holiday" attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -177,7 +177,7 @@
                         <notebook colspan="4">
                             <page string="Participated Standards"
                             attrs="{'readonly':[('state','!=','draft')]}">
-                                <field name="part_standard_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="part_standard_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             </page>
                             <page string="Participants">
                                 <field name="part_ids">
@@ -289,7 +289,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <ul class="oe_dropdown_menu">
                                         <li>
-                                            <a type="edit">Edit...</a>
+                                            <a type="edit" >Edit...</a>
                                         </li>
                                         <li>
                                             <a type="delete">Delete</a>
@@ -351,7 +351,7 @@
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left" style="padding-left:10px;">
-                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
+                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
                                         <a string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear"/>
@@ -397,8 +397,8 @@
                     <sheet>
                         <separator string="Event Registration" />
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="part_name_id" context="{'name':name}" placeholder="Select Or Create Participant Name" domain="[('state','=','done')]"/>
-                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" />
+                            <field name="part_name_id" context="{'name':name}" placeholder="Select Participant Name" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" options="{&quot;no_create&quot;: True}"/>
                             <field name="reg_date" />
                             <field name="is_holiday" />
                         </group>

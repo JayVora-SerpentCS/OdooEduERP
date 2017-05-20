@@ -118,6 +118,7 @@ class HostelStudent(models.Model):
 
     @api.multi
     def student_expire(self):
+        ''' Schedular to discharge student from hostel'''
         current_date = datetime.now()
         new_date = current_date.strftime('%m-%d-%Y')
         domian = [('discharge_date', '<', new_date),

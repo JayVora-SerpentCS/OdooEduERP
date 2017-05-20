@@ -52,7 +52,7 @@
                             <div class="row" align="center" style="font-family: 'Helvetica';font-size: 18px;">
                                 <span>
                                     <b>PaySlip of </b>
-                                    <b t-field="o.student_id.name"></b>
+                                    <b t-field="o.sudo().student_id.name"></b>
                                 </span>
                             </div>
                             <br />
