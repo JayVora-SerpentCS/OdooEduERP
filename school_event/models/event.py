@@ -28,6 +28,7 @@ class SchoolEventParticipant(models.Model):
     '''for Participant which are participated in events'''
     _name = 'school.event.participant'
     _description = 'Participant Information'
+    _rec_name = "stu_pid"
     _order = "sequence"
 
     name = fields.Many2one('student.student', 'Participant Name',
@@ -159,6 +160,7 @@ class SchoolEventRegistration(models.Model):
     '''for registration by students for events'''
     _name = 'school.event.registration'
     _description = 'Event Registration'
+    _rec_name = "reg_date"
 
     name = fields.Many2one('school.event', 'Event Name',
                            domain=[('state', '=', 'draft')], required=True)
