@@ -451,21 +451,22 @@ class AccountPayment(models.Model):
     def post(self):
         res = super(AccountPayment, self).post()
         curr_date = datetime.now()
-        for invoice in self.invoice_ids:
-            vals = {'due_amount': invoice.residual}
-            if invoice.student_payslip_id and invoice.state == 'paid':
-                fees_payment = (invoice.student_payslip_id.paid_amount +
-                                self.amount)
-                vals = {'state': 'paid',
-                        'payment_date': curr_date,
-                        'move_id': invoice.move_id.id or False,
-                        'paid_amount': fees_payment,
-                        'due_amount': invoice.residual}
-            if invoice.student_payslip_id and invoice.state == 'open':
-                fees_payment = (invoice.student_payslip_id.paid_amount +
-                                self.amount)
-                vals = {'state': 'pending',
-                        'due_amount': invoice.residual,
-                        'paid_amount': fees_payment}
-            invoice.student_payslip_id.write(vals)
+        for rec in self:
+            for invoice in rec.invoice_ids:
+                vals = {'due_amount': invoice.residual}
+                if invoice.student_payslip_id and invoice.state == 'paid':
+                    fees_payment = (invoice.student_payslip_id.paid_amount +
+                                    rec.amount)
+                    vals = {'state': 'paid',
+                            'payment_date': curr_date,
+                            'move_id': invoice.move_id.id or False,
+                            'paid_amount': fees_payment,
+                            'due_amount': invoice.residual}
+                if invoice.student_payslip_id and invoice.state == 'open':
+                    fees_payment = (invoice.student_payslip_id.paid_amount +
+                                    rec.amount)
+                    vals = {'state': 'pending',
+                            'due_amount': invoice.residual,
+                            'paid_amount': fees_payment}
+                invoice.student_payslip_id.write(vals)
         return res
