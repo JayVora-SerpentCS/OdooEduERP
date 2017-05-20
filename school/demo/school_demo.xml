@@ -522,6 +522,8 @@
             <field name="gender">female</field>
             <field name="roll_no">1</field>
             <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Ahmedabad</field>
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
@@ -537,6 +539,8 @@
             <field name="gender">male</field>
             <field name="roll_no">1</field>
             <field name="school_id" ref="demo_school_2"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Gandhinagar</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
@@ -552,6 +556,8 @@
             <field name="gender">male</field>
             <field name="roll_no">1</field>
             <field name="school_id" ref="demo_school_3"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Bombay</field>
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
@@ -567,6 +573,8 @@
             <field name="gender">female</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Pune</field>
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
@@ -582,6 +590,8 @@
             <field name="gender">male</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_2"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Banglore</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
@@ -597,6 +607,8 @@
             <field name="gender">male</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_3"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Chennai</field>
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
@@ -612,6 +624,8 @@
             <field name="gender">female</field>
             <field name="roll_no">3</field>
             <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Goa</field>
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
@@ -627,6 +641,8 @@
             <field name="gender">female</field>
             <field name="roll_no">3</field>
             <field name="school_id" ref="demo_school_2"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="city">Gandhinagar</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
