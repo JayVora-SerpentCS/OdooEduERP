@@ -257,19 +257,20 @@ class AccountPayment(models.Model):
     @api.multi
     def post(self):
         res = super(AccountPayment, self).post()
-        for inv in self.invoice_ids:
-            vals = {}
-            if inv.hostel_student_id and inv.state == 'paid':
-                fees_payment = (inv.hostel_student_id.paid_amount +
-                                self.amount)
-                vals.update({'status': 'paid',
-                             'paid_amount': fees_payment})
+        for rec in self:
+            for inv in rec.invoice_ids:
+                vals = {}
+                if inv.hostel_student_id and inv.state == 'paid':
+                    fees_payment = (inv.hostel_student_id.paid_amount +
+                                    rec.amount)
+                    vals.update({'status': 'paid',
+                                 'paid_amount': fees_payment})
+                    inv.hostel_student_id.write(vals)
+                elif inv.hostel_student_id and inv.state == 'open':
+                    fees_payment = (inv.hostel_student_id.paid_amount +
+                                    rec.amount)
+                    vals.update({'status': 'pending',
+                                 'paid_amount': fees_payment,
+                                 'remaining_amount': inv.residual})
                 inv.hostel_student_id.write(vals)
-            elif inv.hostel_student_id and inv.state == 'open':
-                fees_payment = (inv.hostel_student_id.paid_amount +
-                                self.amount)
-                vals.update({'status': 'pending',
-                             'paid_amount': fees_payment,
-                             'remaining_amount': inv.residual})
-            inv.hostel_student_id.write(vals)
         return res
