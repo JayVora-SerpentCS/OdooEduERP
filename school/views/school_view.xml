@@ -1429,7 +1429,7 @@
                         <field name="school" required="1" placeholder="School"/>
                     </field>
                     <field name="work_email" position="attributes">
-                        <attribute name="required">1</attribute>
+                        <attribute name="attrs">{'required':[('is_school_teacher','=',True)]}</attribute>
                     </field>
                     <field name="user_id" position="attributes">
                         <attribute name="readonly">1</attribute>
