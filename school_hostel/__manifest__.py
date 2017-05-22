@@ -10,7 +10,7 @@
     'license': "AGPL-3",
     'complexity': 'easy',
     'summary': 'Module For HOSTEL Management In School',
-    'depends': ['school'],
+    'depends': ['school', 'account', 'account_accountant'],
     'data': ['security/hostel_security.xml',
              'security/ir.model.access.csv',
              'views/hostel_view.xml',
