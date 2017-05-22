@@ -414,11 +414,15 @@
                                                         <tr>
                                                             <td width="150">
                                                                 <div class="oe_kanban_title2">
-                                                                    <div>Student ID : 
-                                                                        <field name="pid"/>
+                                                                    <div>Student ID :
+                                                                        <a type="open">
+                                                                            <field name="pid"/>
+                                                                        </a>
                                                                     </div>
-                                                                    <div>Student Name : 
-                                                                        <field name="student_id"/>
+                                                                    <div>Student Name :
+                                                                        <a type="open">
+                                                                            <field name="student_id"/>
+                                                                        </a>
                                                                     </div>
                                                                     <div>Standard : 
                                                                         <field name="standard_id"/>
@@ -449,7 +453,7 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit"/>
+                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
@@ -574,7 +578,7 @@
                             <field name="a_exam_id" widget="selection"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">
-                            <field name="student_id" widget="selection"/>
+                            <field name="student_id" widget="selection" domain="[('state','=','done')]"/>
                             <field name="roll_no_id"/>
                             <field name="standard_id"/>
                         </group>

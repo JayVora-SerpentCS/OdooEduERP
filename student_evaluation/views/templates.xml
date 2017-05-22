@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+        <template id="student_evaluation_template" name="student_evals" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+<!--                 <script type="text/javascript" src="/org_chart/static/src/js/org_chart.js"></script> -->
+<!--                 <script type="text/javascript" src="/org_chart/static/src/js/primitives.min.js"></script> -->
+                <link rel="stylesheet" href="/student_evaluation/static/src/css/student_evaluation.css"/>
+<!--                 <link rel="stylesheet" href="/org_chart/static/src/css/print_org_chart.css"/> -->
+            </xpath>
+        </template>
+    </data>
+</odoo>
