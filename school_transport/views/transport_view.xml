@@ -316,9 +316,9 @@
                        </div>
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
                            <separator string="Transport Registration" colspan="4"/>
-                            <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]"/>
-                            <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}"/>
-                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
+                            <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" widget="selection"/>
                             <field name="point_id" widget="selection" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
                             <field name="m_amount"/>
                             <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -386,7 +386,7 @@
                     <sheet>
                     <group col="4" colspan="4">
                         <field name="vehicle"/>
-                        <field name="driver_id" domain="[('is_driver','=',True)]" context="{'default_is_driver':True}"/>
+                        <field name="driver_id" domain="[('is_driver','=',True)]" context="{'default_is_driver':True}" options="{&quot;no_create&quot;: True}"/>
                         <field name="capacity"/>
                         <field name="participant"/>
                     </group>
