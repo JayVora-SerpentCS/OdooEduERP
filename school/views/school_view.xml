@@ -57,9 +57,9 @@
                                     <field name="street" class="o_address_street" placeholder="Street..." attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     <field name="street2" class="o_address_street" placeholder="Street2..." attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                    <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                     <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: true}" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" options="{&quot;no_open&quot;: True}" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 </div>
                             </group>
                             <group>
@@ -420,7 +420,7 @@
                     <header>
                         <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
-                        <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft,terminate" groups="school.group_school_administration" />
+                        <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft" groups="school.group_school_administration" />
                         <field name="state" widget="statusbar" statusbar_visible="draft"/>
                     </header>
                     <sheet>
@@ -460,9 +460,9 @@
                                     <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="street2" placeholder="Street2..." class="o_address_street" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: true}" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: True}" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" required="1" options="{&quot;no_open&quot;: true}" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" required="1" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 </div>
                             </group>
                             <group>
@@ -636,7 +636,7 @@
                     <sheet>
                         <separator string="Reminder" />
                         <group col="4" colspan="4">
-                            <field name="stu_id" widget="selection" placeholder="Student" />
+                            <field name="stu_id" widget="selection" placeholder="Student" domain="[('state','=','done')]"/>
                             <field name="date" placeholder="Select Date" />
                             <field name="name" placeholder="Reminder Title" required="1"/>
                             <newline />
@@ -1156,7 +1156,7 @@
                             <field name="code" placeholder="Code" />
                             <field name="date_start" placeholder="Start Date" />
                             <field name="date_stop" placeholder="Stop Date" />
-                            <field name="year_id" colspan="4" placeholder="Year"/>
+                            <field name="year_id" colspan="4" placeholder="Year" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             <field name="description" colspan="4" placeholder="Description"/>
                         </group>
                     </sheet>
@@ -1232,6 +1232,35 @@
                     <field name="doc_type" />
                 </tree>
             </field>
+        </record>
+        <!-- Form View of mother Tongue -->
+        <record id="mother_tongue_form_view" model="ir.ui.view">
+            <field name="name">mother tongue</field>
+            <field name="model">mother.toungue</field>
+            <field name="arch" type="xml">
+                <form string="Mother Tongue">
+                    <group>
+                        <field name="name" required="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!-- Tree View of Mother Tongue -->
+        <record id="mother_tongue_tree_view" model="ir.ui.view">
+            <field name="name">Mother Toungue</field>
+            <field name="model">mother.toungue</field>
+            <field name="arch" type="xml">
+                <tree string="Mother Toungue" editable="top">
+                    <field name="name" required="1"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Action of mother Toungue -->
+        <record id="action_mother_toungue" model="ir.actions.act_window">
+            <field name="name">Mother Toungue</field>
+            <field name="res_model">mother.toungue</field>
+             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
         <!-- Action Of Form & Tree Views Of Student Document Type -->
         <record id="action_document_type_form" model="ir.actions.act_window">
@@ -1426,7 +1455,7 @@
                         </group>
                     </field>
                     <field name="address_id" position="before">
-                        <field name="school" required="1" placeholder="School"/>
+                        <field name="school" required="1" placeholder="School" options="{&quot;no_create&quot;: True}"/>
                     </field>
                     <field name="work_email" position="attributes">
                         <attribute name="attrs">{'required':[('is_school_teacher','=',True)]}</attribute>
@@ -1837,6 +1866,7 @@
         <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1" action="action_document_type_form" />
         <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1" action="action_grade_master_form" />
         <menuitem id="submenu_sub_news" name="News / Update" parent="menu_school_config_form1" action="view_student_news" />
+        <menuitem id="mother_tongue_menu" name="Mother Toungue" parent="menu_school_config_form1" action="action_mother_toungue" groups="school.group_school_administration"/>
         <menuitem id="menu_school_school_sub_form" name="School" parent="menu_school_config_form1" action="action_school_school_form" />
         <!-- MenuItem For Configurations->Academic Years -->
         <menuitem id="menu_academic_year_form" name="Academic Years" parent="menu_configuration" />

@@ -492,6 +492,12 @@ class StudentStudent(models.Model):
         return True
 
     @api.multi
+    def set_terminate(self):
+        for rec in self:
+            rec.state = 'terminate'
+        return True
+
+    @api.multi
     def admission_done(self):
         '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
