@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <record id="bnk" model="account.account">
             <field name="code">X1014</field>
             <field name="name">Bank Current Account - (test)</field>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- Exam Demo Data -->
         <record id="exam_exam_finalexam0" model="exam.exam">
             <field eval="30" name="weightage"/>

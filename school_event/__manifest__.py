@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {'name': 'School Event Management',
- 'version': "10.0.1.0.2",
+ 'version': "10.0.1.0.3",
  'author': "Serpent Consulting Services Pvt. Ltd.",
  'website': 'http://www.serpentcs.com',
  'category': 'School Management',
@@ -13,7 +13,6 @@
  'data': ['security/event_security.xml',
           'security/ir.model.access.csv',
           'views/event_view.xml',
-          'views/event_workflow.xml',
           'views/participants.xml',
           'views/report_view.xml'],
     'demo': ['demo/event_demo.xml'],

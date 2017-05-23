@@ -537,7 +537,6 @@ class StudentStudent(models.Model):
                        'admission_date': time.strftime('%Y-%m-%d'),
                        'student_code': student_code,
                        'reg_code': registation_code})
-            print "trec::::::::::::::::::::::::::::::::::", rec, rec.state
         return True
 
 

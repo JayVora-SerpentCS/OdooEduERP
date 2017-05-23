@@ -1,3 +1,4 @@
+
 <odoo>
     <record id="monthly_attendance_report" model="report.paperformat">
             <field name="name">Mothly Attendance Report</field>
@@ -13,7 +14,7 @@
             <field name="header_line" eval="False"/>
             <field name="header_spacing">0</field>
             <field name="dpi">90</field>
-	</record>
+    </record>
 
     <report id="attendace_month_report"
                 string="Student Attendances by Month"
