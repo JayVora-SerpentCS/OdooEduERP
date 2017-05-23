@@ -501,7 +501,7 @@
 <!--             </field> -->
 <!--         </record> -->
 
-        <!-- Actions Of Tree View Of Purchase Order Today -->
+<!--         Actions Of Tree View Of Purchase Order Today -->
 
 <!--         <record id="action_purchase_order_today_tree" model="ir.actions.act_window"> -->
 <!--             <field name="name">Purchase Orders of the day</field> -->
@@ -741,7 +741,7 @@
                             <field name="day_to_return_book" readonly="1"/>
                             <field name="date_issue" readonly="1"/>
                             <field name="date_return" readonly="1"/>
-                            <field name="actual_return_date" attrs="{'readonly':[('state','!=','issue')]}"/>
+                            <field name="actual_return_date" attrs="{'readonly':[('state','not in',('issue','reissue'))]}"/>
                             <field name="penalty" attrs="{'invisible':[('state','!=','return')]}"/>
                             <field name="lost_penalty" attrs="{'invisible':[('state','!=','lost')]}"/>
                         </group>

@@ -466,25 +466,29 @@ class StudentStudent(models.Model):
     @api.multi
     def set_to_draft(self):
         '''Method to change state to draft'''
-        self.state = 'draft'
+        for rec in self:
+            rec.state = 'draft'
         return True
 
     @api.multi
     def set_alumni(self):
         '''Method to change state to alumni'''
-        self.state = 'alumni'
+        for rec in self:
+            rec.state = 'alumni'
         return True
 
     @api.multi
     def set_done(self):
         '''Method to change state to done'''
-        self.state = 'done'
+        for rec in self:
+            rec.state = 'done'
         return True
 
     @api.multi
     def admission_draft(self):
         '''Set the state to draft'''
-        self.state = 'draft'
+        for rec in self:
+            rec.state = 'draft'
         return True
 
     @api.multi
