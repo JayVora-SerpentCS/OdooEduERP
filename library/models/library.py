@@ -351,7 +351,8 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'draft'})
+        for rec in self:
+            rec.write({'state': 'draft'})
         return True
 
     @api.multi
@@ -400,8 +401,9 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.state = 'reissue'
-        self.write({'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for rec in self:
+            rec.state = 'reissue'
+            rec.write({'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     @api.multi
@@ -450,7 +452,8 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'cancel'})
+        for rec in self:
+            rec.write({'state': 'cancel'})
         return True
 
     @api.multi
@@ -514,17 +517,19 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def view_invoice(self):
-        invoices = self.env['account.invoice'].search([('book_issue',
-                                                        '=', self.id)])
-        action = self.env.ref('account.action_invoice_tree1').read()[0]
-        if len(invoices) > 1:
-            action['domain'] = [('id', 'in', invoices.ids)]
-        elif len(invoices) == 1:
-            action['views'] = [(self.env.ref('account.invoice_form').id,
-                                'form')]
-            action['res_id'] = invoices.ids[0]
-        else:
-            action = {'type': 'ir.actions.act_window_close'}
+        '''this method is use for the view invoice of panelty'''
+        invoice_obj = self.env['account.invoice']
+        for rec in self:
+            invoices = invoice_obj.search([('book_issue', '=', rec.id)])
+            action = self.env.ref('account.action_invoice_tree1').read()[0]
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(self.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
         return action
 
     @api.multi
