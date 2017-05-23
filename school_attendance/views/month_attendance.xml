@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
     <template id="attendance_month">
@@ -54,9 +52,9 @@
                               </tr>
                           </tbody>
                        </table>
-                    </div>
-                  </t>
+                   </div>
                 </t>
-              </t>
-           </template>
-        </odoo>
+             </t>
+          </t>
+    </template>
+</odoo>
