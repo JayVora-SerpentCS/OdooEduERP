@@ -89,7 +89,7 @@
                         <group attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
                             <group>
                                  <field name="student_id" placeholder="Select Or Create Student Name" domain="[('state','=','done')]"
-                                     attrs="{'readonly':[('state','not in','draft')],'required':[('type','=','student')]}"/>
+                                     attrs="{'readonly':[('state','not in','draft')],'required':[('type','=','student')]}" options="{&quot;no_create&quot;: True}"/>
                                  <field name="date" style="width: 84%" attrs="{'readonly':[('state','not in','draft')]}"/>
                             </group>
                             <group>
@@ -108,13 +108,13 @@
                             <page string="General">
                                 <field name="eval_line" nolabel='1'  context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
-                                        <field name="stu_eval_id" domain="[('type','=',context.get('type'))]"/>
-                                        <field name="point_id" on_change="onchange_point(point_id)"/>
+                                        <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
+                                        <field name="point_id" on_change="onchange_point(point_id)" options="{&quot;no_create&quot;: True}"/>
                                         <field name="rating"/>
                                     </tree>
                                     <form string="Evaluation Line">
-                                        <field name="stu_eval_id" placeholder="Select Or Create Question"/>
-                                        <field name="point_id" placeholder="Select Or Create Rating"/>
+                                        <field name="stu_eval_id" placeholder="Select Or Create Question" options="{&quot;no_create&quot;: True}"/>
+                                        <field name="point_id" placeholder="Select Or Create Rating" options="{&quot;no_create&quot;: True}"/>
                                         <field name="rating" placeholder="Enter Remarks"/>
                                     </form>
                                 </field>
@@ -148,12 +148,12 @@
                                 <field name="student_id" required="0" invisible="1"/>
                                 <field name="teacher_id" placeholder="Select Or Create Teacher Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':1}"
                                         attrs="{'readonly':[('state','not in','draft')],
-                                                'required': [('type','=','faculty')]}"/>
+                                                'required': [('type','=','faculty')]}" options="{&quot;no_create&quot;: True}"/>
                                 <field name="date" style="width: 84%%" attrs="{'readonly':[('state','not in','draft')]}"/>
                             </group>
                             <group>
                                  <field name="type" readonly="1"/>
-                                 <field name="username" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <field name="username" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
                                  <button name="get_record" type='object' class="oe_inline oe_stat_button"
                                     attrs="{'invisible' : [('state', '!=', 'draft')]}"
                                     groups="school.group_school_administration">
@@ -167,13 +167,13 @@
                             <page string="General">
                                 <field name="eval_line" nolabel='1' context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
-                                        <field name="stu_eval_id" domain="[('type','=',context.get('type'))]"/>
-                                        <field name="point_id" on_change="onchange_point(point_id)"/>
+                                        <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
+                                        <field name="point_id" on_change="onchange_point(point_id)" options="{&quot;no_create&quot;: True}"/>
                                         <field name="rating"/>
                                     </tree>
                                     <form string="Evaluation Line">
-                                        <field name="stu_eval_id" placeholder="Select Or Create Question"/>
-                                        <field name="point_id" placeholder="Select Or Create Rating"/>
+                                        <field name="stu_eval_id" placeholder="Select Or Create Question" options="{&quot;no_create&quot;: True}"/>
+                                        <field name="point_id" placeholder="Select Or Create Rating" options="{&quot;no_create&quot;: True}"/>
                                         <field name="rating" placeholder="Enter Remarks"/>
                                     </form>
                                 </field>

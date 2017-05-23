@@ -136,6 +136,7 @@ class SchoolEvaluationTemplate(models.Model):
 class RatingRating(models.Model):
     _name = 'rating.rating'
     _rec_name = 'point'
+    _order = "point desc"
 
     rating_id = fields.Many2one('school.evaluation.template', 'Stud')
     point = fields.Integer('Rating in points', required=True)
