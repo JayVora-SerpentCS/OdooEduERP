@@ -43,7 +43,7 @@
             <field name="name">participant.form.2</field>
             <field name="model">school.event.participant</field>
             <field name="arch" type="xml">
-                <form string="Event Participant Information">
+                <form string="Event Participant Information" create="false">
                     <sheet>
                         <separator string="Event Participant" />
                         <group col="4" colspan="4">
@@ -65,7 +65,7 @@
             <field name="name">participant.tree.2</field>
             <field name="model">school.event.participant</field>
             <field name="arch" type="xml">
-                <tree string="Event Participant Information">
+                <tree string="Event Participant Information" create="false">
                     <field name="stu_pid" />
                     <field name="name" />
                     <field name="event_id" />
