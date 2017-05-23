@@ -1,3 +1,4 @@
+
 <odoo>
       <record id="ir_cron_student_hostel_schedule" model="ir.cron">
             <field name="name">Student Hostel</field>
