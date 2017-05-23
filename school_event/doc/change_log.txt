@@ -1,6 +1,9 @@
 ==============================================================================
  Version Change Log (school event)
 ===============================================================================
+1.0.3 --> 23 May 2017 : Vimal Patel
+    * Code optimized .
+    
 1.0.2 --> 27 April 2017 : Arpit Joshi
     * View level changes in event registration.
 
