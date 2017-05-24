@@ -552,17 +552,17 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <header>
-                        <button name="return_book" class="fa fa fa-undo" string="Book Return" states="issue,reissue"
+                        <button name="return_book" type="object" class="fa fa fa-undo" string="Book Return" states="issue,reissue"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="issue_book" string="Book Issue" class="fa fa-check-circle" states="draft"
+                        <button name="issue_book" type="object" string="Book Issue" class="fa fa-check-circle" states="draft"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="reissue_book" class="fa fa-reply" string="Book Reissue" states="issue"
+                        <button name="reissue_book" type="object" class="fa fa-reply" string="Book Reissue" states="issue"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="cancel_book" class="fa fa fa-ban" string="Cancel" states="draft,issue"
+                        <button name="cancel_book" type="object" class="fa fa fa-ban" string="Cancel" states="draft,issue"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="draft_book" class="fa fa-file-code-o" string="Draft" states="cancel"
+                        <button name="draft_book" type="object" class="fa fa-file-code-o" string="Draft" states="cancel"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="lost_book" class="fa fa-snowflake-o" string="Book Lost" states="issue,reissue"
+                        <button name="lost_book" type="object" class="fa fa-snowflake-o" string="Book Lost" states="issue,reissue"
                                 groups="school.group_school_administration,library.group_librarian"/>
                         <button name="user_fine" class="fa fa-circle" string="Fine" type="object"
                                 attrs="{'invisible':['&amp;','|',('state','not in',['return','lost']),('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
@@ -653,7 +653,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.value)"/>
-                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <table class="oe_kanban_table">
@@ -701,7 +701,7 @@
                                     
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit"/>
+                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="library.group_librarian"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
@@ -767,8 +767,14 @@
                            groups="library.group_librarian" attrs="{'invisible':['|',('type','=','new'),('state','!=','draft')]}" states='draft'/>
                            <button name="cancle_book_request" class="fa fa-snowflake-o" string="Cancle Request" type="object" states="confirm"/>
                            <field name="state" widget="statusbar" align="right" readonly="1" />
+                           
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
                         <group col="4" colspan="4">
                             <separator string="Book Request" colspan="4" col="4"/>
                             <field name="req_id" readonly="1"/>
