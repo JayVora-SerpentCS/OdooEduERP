@@ -1,3 +1,4 @@
+
 <odoo>
       <record id="ir_cron_student_transport_every_day_schedule" model="ir.cron">
             <field name="name">student_transport</field>
