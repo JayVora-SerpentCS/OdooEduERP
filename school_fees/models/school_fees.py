@@ -3,7 +3,7 @@
 
 import time
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
+from odoo.exceptions import ValidationError, Warning as UserError
 from datetime import datetime
 
 
@@ -34,7 +34,7 @@ class StudentFeesRegister(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal',
-                                 required=True)
+                                 required=False)
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
                                  default=lambda obj_c: obj_c.env['res.users'].
@@ -55,6 +55,10 @@ class StudentFeesRegister(models.Model):
         slip_obj = self.env['student.payslip']
         school_std_obj = self.env['school.standard']
         for rec in self:
+            if not rec.journal_id:
+                raise ValidationError(_('Kindly, Select Account Journal'))
+            if not rec.fees_structure:
+                raise ValidationError(_('Kindly, Select Fees Structure'))
             school_std = school_std_obj.search([('standard_id', '=',
                                                  rec.standard_id.id)])
             student_ids = stud_obj.search([('standard_id', 'in',
@@ -144,37 +148,11 @@ class StudentPayslip(models.Model):
     _description = 'Student PaySlip'
 
     @api.multi
-    def payslip_draft(self):
+    def _compute_invoice(self):
+        inv_obj = self.env['account.invoice']
         for rec in self:
-            rec.state = 'draft'
-        return True
-
-    @api.multi
-    def payslip_paid(self):
-        for rec in self:
-            rec.state = 'paid'
-        return True
-
-    @api.multi
-    def payslip_confirm(self):
-        for rec in self:
-            lines = []
-            for data in rec.fees_structure_id.line_ids or []:
-                line_vals = {'slip_id': rec.id,
-                             'name': data.name,
-                             'code': data.code,
-                             'sequence': data.sequence,
-                             'type': data.type,
-                             'account_id': data.account_id.id,
-                             'amount': data.amount}
-                lines.append((0, 0, line_vals))
-            rec.write({'line_ids': lines})
-
-            amount = 0
-            for data in rec.line_ids:
-                amount += data.amount
-            rec.write({'total': amount,
-                       'state': 'confirm'})
+            rec.invoice_count = inv_obj.search_count([('student_payslip_id',
+                                                       '=', rec.id)])
         return True
 
     fees_structure_id = fields.Many2one('student.fees.structure',
@@ -197,7 +175,7 @@ class StudentPayslip(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('pending', 'Pending'), ('paid', 'Paid')],
                              'State', readonly=True, default='draft')
-    journal_id = fields.Many2one('account.journal', 'Journal', required=True)
+    journal_id = fields.Many2one('account.journal', 'Journal', required=False)
     invoice_count = fields.Integer(string="# of Invoices",
                                    compute="_compute_invoice")
     paid_amount = fields.Float('Paid Amount')
@@ -231,6 +209,15 @@ class StudentPayslip(models.Model):
             self.division_id = self.student_id.division_id
             self.medium_id = self.student_id.medium_id
 
+    @api.multi
+    @api.onchange('journal_id')
+    def onchange_journal_id(self):
+        for rec in self:
+            currency_id = rec.journal_id and rec.journal_id.currency_id and\
+                rec.journal_id.currency_id.id\
+                or rec.journal_id.company_id.currency_id.id
+            rec.currency_id = currency_id
+
     @api.model
     def create(self, vals):
         if vals.get('student_id'):
@@ -262,20 +249,41 @@ class StudentPayslip(models.Model):
         return super(StudentPayslip, self).copy(default)
 
     @api.multi
-    @api.onchange('journal_id')
-    def onchange_journal_id(self):
+    def payslip_draft(self):
         for rec in self:
-            currency_id = rec.journal_id and rec.journal_id.currency_id and\
-                rec.journal_id.currency_id.id\
-                or rec.journal_id.company_id.currency_id.id
-            rec.currency_id = currency_id
+            rec.state = 'draft'
+        return True
 
     @api.multi
-    def _compute_invoice(self):
-        inv_obj = self.env['account.invoice']
+    def payslip_paid(self):
         for rec in self:
-            rec.invoice_count = inv_obj.search_count([('student_payslip_id',
-                                                       '=', rec.id)])
+            rec.state = 'paid'
+        return True
+
+    @api.multi
+    def payslip_confirm(self):
+        for rec in self:
+            if not rec.journal_id:
+                raise ValidationError(_('Kindly, Select Account Journal'))
+            if not rec.fees_structure_id:
+                raise ValidationError(_('Kindly, Select Fees Structure'))
+            lines = []
+            for data in rec.fees_structure_id.line_ids or []:
+                line_vals = {'slip_id': rec.id,
+                             'name': data.name,
+                             'code': data.code,
+                             'sequence': data.sequence,
+                             'type': data.type,
+                             'account_id': data.account_id.id,
+                             'amount': data.amount}
+                lines.append((0, 0, line_vals))
+            rec.write({'line_ids': lines})
+
+            amount = 0
+            for data in rec.line_ids:
+                amount += data.amount
+            rec.write({'total': amount,
+                       'state': 'confirm'})
         return True
 
     @api.multi
@@ -403,8 +411,16 @@ class StudentPayslip(models.Model):
                     'type': 'out_invoice'}
             invoice_line = []
             for line in rec.line_ids:
+                acc_id = ''
+                if line.account_id.id:
+                    acc_id = line.account_id.id
+                else:
+                    if rec.type in ('out_invoice', 'in_refund'):
+                        acc_id = rec.journal_id.default_credit_account_id.id
+                    else:
+                        acc_id = rec.journal_id.default_debit_account_id.id
                 invoice_line_vals = {'name': line.name,
-                                     'account_id': line.account_id.id,
+                                     'account_id': acc_id,
                                      'quantity': 1.000,
                                      'price_unit': line.amount}
                 invoice_line.append((0, 0, invoice_line_vals))
