@@ -540,6 +540,8 @@ class LibraryBookRequest(models.Model):
                               ], "State", default='draft')
     book_return_days = fields.Integer(related='name.day_to_return_book',
                                       string="Return Days")
+    active = fields.Boolean(default=True, help='''The active field allows you
+    to hide the category without removing it.''')
 
     @api.model
     def create(self, vals):
@@ -559,11 +561,11 @@ class LibraryBookRequest(models.Model):
     def confirm_book_request(self):
         book_issue_obj = self.env['library.book.issue']
         for rec in self:
-            rec.state = 'confirm'
             vals = {'card_id': rec.card_id.id,
                     'type': rec.type,
                     'name': rec.name.id}
             issue_id = book_issue_obj.create(vals)
+            rec.state = 'confirm'
             if issue_id:
                 issue_id.onchange_card_issue()
                 return {'name': ('Book Issue'),

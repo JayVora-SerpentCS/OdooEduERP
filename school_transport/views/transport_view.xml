@@ -303,8 +303,8 @@
                 <form string="Transport Registration">
                     <header>
                         <button name="trans_regi_confirm" class="fa fa-check" string="Confirm" states="draft" type='object'/>
-                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' states="draft,confirm,pending,paid"/>
-                        <button name="transport_fees_pay" string="Payment" type="object" states="confirm,pending" groups="school_transport.group_transportation_manager"/>
+                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' attrs="{'invisible':[('transport_user','=',True),('state','not in' ,'draft')]}"/>
+                        <button name="transport_fees_pay" string="Payment" type="object" states="confirm" groups="school_transport.group_transportation_manager"/>
 <!--                         <button name="cancel_ref" string="Cancel" type="object" states="confirm,pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> -->
                         <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,confirm,paid"/>
                     </header>
@@ -318,9 +318,9 @@
                            <field name="transport_user" invisible="1"/>
                            <separator string="Transport Registration" colspan="4"/>
                             <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
-                            <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" widget="selection"/>
-                            <field name="point_id" widget="selection" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
+                            <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" />
+                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
+                            <field name="point_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
                             <field name="m_amount"/>
                             <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="transport_fees"/>

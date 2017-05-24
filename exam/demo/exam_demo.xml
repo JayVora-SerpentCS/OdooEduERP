@@ -43,7 +43,7 @@
         <record id="time_table_line_1" model="time.table.line">
             <field name="teacher_id" ref="hr.employee_jve"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
-            <field name="end_date" eval="time.strftime('%Y')+'/03/07'"/>
+            <field name="exm_date" eval="time.strftime('%Y')+'/03/07'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/07', '%Y/%m/%d').strftime('%A').lower()"/>
             <field model="time.table" name="table_id" search="[('name', '=', u'Final Exam Timetable')]"/>
             <field eval="12.0" name="end_time"/>
