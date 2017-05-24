@@ -93,7 +93,7 @@
             <field name="name">view.hostel.room.form</field>
             <field name="model">hostel.room</field>
             <field name="arch" type="xml">
-                <form string="Hostel Room">
+                <form name="hostel_room" string="Hostel Room">
                     <sheet style="width: 10%%,height:10%%">
                         <separator string="Room Information"/>
                         <group col="4">
@@ -138,7 +138,7 @@
             <field name="name">view.hostel.room.tree</field>
             <field name="model">hostel.room</field>
             <field name="arch" type="xml">
-                <tree string="Hostel Room" >
+                <tree name="hostel_room" string="Hostel Room" >
                     <field name="name" />
                     <field name="floor_no" />
                     <field name="room_no" />
@@ -165,12 +165,12 @@
             <field name="name">view.hostel.student.form</field>
             <field name="model">hostel.student</field>
             <field name="arch" type="xml">
-                <form string="Hostel Information" >
+                <form name="hostel_information" string="Hostel Information">
                     <header>
                         <button name="reservation_state" string="Reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['paid','reservation','cancel','pending','discharge'])]}"/>
                         <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"/>
-                        <button name="cancel_state" string="Cancel" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['paid','cancel','discharge'])]}"/>
-                        <button name="pay_fees" string="Payment" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['draft','paid','cancel','pending','discharge'])]}"/>
+                        <button name="cancel_state" string="Cancel" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['paid','cancel','reservation','discharge'])]}"/>
+                        <button name="pay_fees" string="Payment" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','paid','cancel','pending','discharge'])]}"/>
                         <button name="discharge_state" string="Discharge" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager"/>
                         <field name="status" widget="statusbar" nolabel="1" statusbar_visible="draft,reservation,paid" />
                     </header>
@@ -188,12 +188,10 @@
                             <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="admission_date" required="1" attrs="{'readonly':[('status','not in','draft')]}" />
                             <field name="duration" required="1" attrs="{'readonly':[('status','not in','draft')]}"/>
-<!--                             <field name="rent_pay"/> -->
                             <field name="discharge_date" readonly="1"/>
                             <field name="room_rent" readonly="1"/>
                             <field name="bed_type" widget="selection" attrs="{'readonly':[('status','not in','draft')]}"/>
                             <field name="paid_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}" />
-<!--                             <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/> -->
                             <field name="acutal_discharge_date" readonly="1"/>
                             <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/> -->
                         </group>
