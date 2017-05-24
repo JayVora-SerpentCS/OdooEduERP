@@ -321,7 +321,6 @@ class ExamResult(models.Model):
     result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
     total = fields.Float(compute='_compute_total', string='Obtain Total',
                          store=True)
-#    re_total = fields.Float('Re-evaluation Obtain Total', readonly=True)
     percentage = fields.Float("Percentage", compute="_compute_per",
                               store=True)
     result = fields.Char(compute='_compute_result', string='Result',

@@ -8,15 +8,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
 
 
-# class LibraryPriceCategory(models.Model):
-#    _name = 'library.price.category'
-#    _description = 'Book Price Category'
-#
-#    name = fields.Char('Category', required=True)
-#    price = fields.Float('Price', required=True, default=0)
-#    product_ids = fields.One2many('product.product', 'price_cat', 'Books')
-
-
 class LibraryRack(models.Model):
     _name = 'library.rack'
     _description = "Library Rack"
@@ -25,26 +16,6 @@ class LibraryRack(models.Model):
                        help="it will be show the position of book")
     code = fields.Char('Code')
     active = fields.Boolean('Active', default='True')
-
-
-# class LibraryCollection(models.Model):
-#    _name = 'library.collection'
-#    _description = "Library Collection"
-#
-#    name = fields.Char('Name', required=True)
-#    code = fields.Char('Code')
-
-
-# class LibraryBookReturnday(models.Model):
-#    _name = 'library.book.returnday'
-#    _description = "Library Collection"
-#    _rec_name = 'day'
-#
-#    day = fields.Integer('Days', required=True,
-#                         help="It show the no of day/s for returning book")
-#    code = fields.Char('Code')
-#    fine_amt = fields.Float('Fine Amount', required=True,
-#                            help="Fine amount after due of book return date")
 
 
 class LibraryAuthor(models.Model):

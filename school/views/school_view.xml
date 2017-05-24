@@ -734,52 +734,6 @@
                 </kanban>
             </field>
         </record>
-        <!-- Form View Of Student GRN -->
-<!--         <record id="view_student_GRN_form" model="ir.ui.view"> -->
-<!--             <field name="name">student.grn.form</field> -->
-<!--             <field name="model">student.grn</field> -->
-<!--             <field name="arch" type="xml"> -->
-<!--                 <form string="Student GRN format"> -->
-<!--                     <sheet> -->
-<!--                         <group col="4" colspan="4"> -->
-<!--                             <field name="grn" /> -->
-<!--                             <newline /> -->
-<!--                             <field name="name" /> -->
-<!--                             <newline /> -->
-<!--                             <field name="prefix" placeholder="Prefix" /> -->
-<!--                             <field name="static_prefix" attrs="{'invisible':[('prefix','!=','static')],'required':[('prefix','=','static')]}" /> -->
-<!--                             <newline /> -->
-<!--                             <field name="schoolprefix_id" attrs="{'invisible':[('prefix','!=','school')],'required':[('prefix','=','school')]}" /> -->
-<!--                             <newline /> -->
-<!--                             <field name="postfix" placeholder="Suffix" /> -->
-<!--                             <field name="schoolpostfix_id" attrs="{'invisible':[('postfix','!=','school')],'required':[('postfix','=','school')]}" /> -->
-<!--                             <newline /> -->
-<!--                             <field name="static_postfix" attrs="{'invisible':[('postfix','!=','static')],'required':[('postfix','=','static')]}" /> -->
-<!--                             <newline /> -->
-<!--                             <field name="grn_no" /> -->
-<!--                         </group> -->
-<!--                     </sheet> -->
-<!--                 </form> -->
-<!--             </field> -->
-<!--         </record> -->
-        <!-- Tree View Of Student GRN -->
-<!--         <record id="view_student_GRN_tree" model="ir.ui.view"> -->
-<!--             <field name="name">student.grn.tree</field> -->
-<!--             <field name="model">student.grn</field> -->
-<!--             <field name="arch" type="xml"> -->
-<!--                 <tree string="Student GRN format"> -->
-<!--                     <field name="grn" /> -->
-<!--                     <field name="name" /> -->
-<!--                 </tree> -->
-<!--             </field> -->
-<!--         </record> -->
-        <!-- Actions Of Form & Tree Views Of Student GRN -->
-<!--         <record id="action_student_grn_form" model="ir.actions.act_window"> -->
-<!--             <field name="name">GR No.</field> -->
-<!--             <field name="res_model">student.grn</field> -->
-<!--             <field name="view_type">form</field> -->
-<!--             <field name="view_mode">tree,form</field> -->
-<!--         </record> -->
         <!-- Form View Of School Information -->
         <record id="view_school_school_form" model="ir.ui.view">
             <field name="name">school.school.form</field>
@@ -1842,8 +1796,7 @@
         </record>
         
         <!-- Menu Item Of EMS -->
-        <menuitem id="menu_ems" name="EMS" sequence="1" 
-            groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,school.group_is_admission" />
+        <menuitem id="menu_ems" name="EMS" sequence="1"/>
         <!-- Menu Item Of Dashboard -->
         <!-- <menuitem id="menu_dashboard" name="Dashboard" parent="menu_ems" action="open_board_my_dash_action" sequence="1"
                   icon="terp-project" web_icon_hover="images/hover.png"/> -->
@@ -1851,12 +1804,12 @@
         <menuitem id="admission_register" name="Admission Register" parent="menu_ems" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
         <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register" action="action_student_student_form_2" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
         <!-- Menu Item Of Students & Parents -->
-        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="2" />
+        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="2"/>
         <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_res_partner_form" name="Parents Profiles" parent="menu_students_parents" action="action_parent_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_teachers_profiles" name="Teachers Profiles" parent="menu_students_parents" action="action_teacher_teacher_form_1" groups="school.group_school_administration,school.group_school_teacher" />
         <!-- MenuItem For Reminders -->
-        <menuitem id="menu_reminders" name="Reminders" parent="menu_ems" action="action_student_reminder" sequence="8" />
+        <menuitem id="menu_reminders" name="Reminders" parent="menu_ems" action="action_student_reminder" sequence="8" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
         <!-- MenuItem For Configurations -->
         <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="10" groups="group_school_administration" />
         <!-- MenuItem For Configurations->School Configurations -->
