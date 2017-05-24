@@ -13,5 +13,6 @@ access_student_hostel_room_hostel_user,hostel.room,school_hostel.model_hostel_ro
 access_student_hostel_studnet_user,hostel.student,school_hostel.model_hostel_student,school_hostel.group_hostel_user,1,1,1,0
 access_student_bed_type,bed.type,school_hostel.model_bed_type,school_hostel.group_hostel_user,1,0,0,0
 access_account_invoice_hostel_user,account.invoice,account.model_account_invoice,school_hostel.group_hostel_user,1,0,0,0
+,,,,,,,
 access_student_hostel_room_student,hostel.room,school_hostel.model_hostel_room,school.group_school_student,1,0,0,0
 access_student_hostel_studnet_stu,hostel.student,school_hostel.model_hostel_student,school.group_school_student,1,1,1,0

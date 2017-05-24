@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
 from odoo import models, fields, api, _
 from openerp.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta as rd
@@ -26,6 +27,28 @@ class HostelRoom(models.Model):
 
     _name = 'hostel.room'
     _rec_name = 'room_no'
+
+    @api.model
+    def fields_view_get(self, view_id=None, viewtype='form', toolbar=False,
+                        submenu=False):
+        res = super(HostelRoom, self).fields_view_get(view_id=view_id,
+                                                      view_type=viewtype,
+                                                      toolbar=toolbar,
+                                                      submenu=submenu)
+        user_group = self.env.user.has_group('school_hostel.group_hostel_user')
+        doc = etree.XML(res['arch'])
+        if user_group:
+            if viewtype == 'tree':
+                nodes = doc.xpath("//tree[@name='hostel_room']")
+                for node in nodes:
+                    node.set('edit', 'false')
+                res['arch'] = etree.tostring(doc)
+            if viewtype == 'form':
+                nodes = doc.xpath("//form[@name='hostel_room']")
+                for node in nodes:
+                    node.set('edit', 'false')
+                res['arch'] = etree.tostring(doc)
+        return res
 
     @api.depends('student_ids')
     def _compute_check_availability(self):
@@ -73,6 +96,67 @@ class HostelStudent(models.Model):
         for rec in self:
             rec.remaining_amount = rec.room_rent - (rec.paid_amount or 0.0)
 
+    @api.constrains('duration')
+    def check_duration(self):
+        if self.duration <= 0:
+            raise ValidationError(_('Duration should be greater than 0'))
+
+    @api.multi
+    def _compute_invoices(self):
+        inv_obj = self.env['account.invoice']
+        for rec in self:
+            rec.compute_inv = inv_obj.search_count([('hostel_student_id', '=',
+                                                     rec.id)])
+
+    @api.depends('duration')
+    def _compute_rent(self):
+        for rec in self:
+            amt = rec.room_id.rent_amount or 0.0
+            rec.room_rent = rec.duration * amt
+
+    @api.depends('status')
+    def _get_hostel_user(self):
+        user_group = self.env.ref('school_hostel.group_hostel_user')
+        grps = [group.id
+                for group in self.env['res.users'].browse(self._uid).groups_id]
+        if user_group.id in grps:
+            self.hostel_user = True
+
+    hostel_id = fields.Char('HOSTEL ID', readonly=True,
+                            default=lambda obj: obj.env['ir.sequence'].
+                            next_by_code('hostel.student'))
+    compute_inv = fields.Integer('Number of invoice',
+                                 compute="_compute_invoices")
+    student_id = fields.Many2one('student.student', 'Student')
+    school_id = fields.Many2one('school.school', 'School')
+    room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
+                             required=True)
+    bed_type = fields.Many2one('bed.type', 'Bed Type')
+    admission_date = fields.Datetime('Admission Date',
+                                     default=fields.Date.context_today)
+    discharge_date = fields.Datetime('Discharge Date')
+    paid_amount = fields.Float('Paid Amount')
+    hostel_info_id = fields.Many2one('hostel.type', string="Hostel")
+    room_id = fields.Many2one('hostel.room', string="Room")
+    duration = fields.Integer('Duration')
+    rent_pay = fields.Float('Rent')
+    acutal_discharge_date = fields.Datetime('Actual Discharge Date')
+    remaining_amount = fields.Float(compute='_compute_remaining_fee_amt',
+                                    string='Remaining Amount')
+    status = fields.Selection([('draft', 'Draft'),
+                               ('reservation', 'Reservation'),
+                               ('pending', 'Pending'),
+                               ('paid', 'Done'),
+                               ('discharge', 'Discharge'),
+                               ('cancel', 'Cancel')],
+                              string='Status',
+                              default='draft')
+
+    _sql_constraints = [('admission_date_greater',
+                         'check(discharge_date >= admission_date)',
+                         'Error ! Discharge Date cannot be set'
+                         'before Admission Date.')]
+
     @api.multi
     def cancel_state(self):
         for rec in self:
@@ -102,11 +186,6 @@ class HostelStudent(models.Model):
         if res:
             res.onchnage_discharge_date()
         return res
-
-    @api.constrains('duration')
-    def check_duration(self):
-        if self.duration <= 0:
-            raise ValidationError(_('Duration should be greater than 0'))
 
     @api.multi
     def discharge_state(self):
@@ -148,13 +227,6 @@ class HostelStudent(models.Model):
         return action
 
     @api.multi
-    def _compute_invoices(self):
-        inv_obj = self.env['account.invoice']
-        for rec in self:
-            rec.compute_inv = inv_obj.search_count([('hostel_student_id', '=',
-                                                     rec.id)])
-
-    @api.multi
     def pay_fees(self):
         invoice_obj = self.env['account.invoice']
         for rec in self:
@@ -190,47 +262,6 @@ class HostelStudent(models.Model):
         return self.env['report'
                         ].get_action(self,
                                      'school_hostel.hostel_fee_reciept1')
-
-    @api.depends('duration')
-    def _compute_rent(self):
-        for rec in self:
-            amt = rec.room_id.rent_amount or 0.0
-            rec.room_rent = rec.duration * amt
-
-    hostel_id = fields.Char('HOSTEL ID', readonly=True,
-                            default=lambda obj: obj.env['ir.sequence'].
-                            next_by_code('hostel.student'))
-    compute_inv = fields.Integer('Number of invoice',
-                                 compute="_compute_invoices")
-    student_id = fields.Many2one('student.student', 'Student')
-    school_id = fields.Many2one('school.school', 'School')
-    room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
-                             required=True)
-    bed_type = fields.Many2one('bed.type', 'Bed Type')
-    admission_date = fields.Datetime('Admission Date',
-                                     default=fields.Date.context_today)
-    discharge_date = fields.Datetime('Discharge Date')
-    paid_amount = fields.Float('Paid Amount')
-    hostel_info_id = fields.Many2one('hostel.type', string="Hostel")
-    room_id = fields.Many2one('hostel.room', string="Room")
-    duration = fields.Integer('Duration')
-    rent_pay = fields.Float('Rent')
-    acutal_discharge_date = fields.Datetime('Actual Discharge Date')
-    remaining_amount = fields.Float(compute='_compute_remaining_fee_amt',
-                                    string='Remaining Amount')
-    status = fields.Selection([('draft', 'Draft'),
-                               ('reservation', 'Reservation'),
-                               ('pending', 'Pending'),
-                               ('paid', 'Done'),
-                               ('discharge', 'Discharge'),
-                               ('cancel', 'Cancel')],
-                              string='Status',
-                              default='draft')
-
-    _sql_constraints = [('admission_date_greater',
-                         'check(discharge_date >= admission_date)',
-                         'Error ! Discharge Date cannot be set'
-                         'before Admission Date.')]
 
 
 class BedType(models.Model):
