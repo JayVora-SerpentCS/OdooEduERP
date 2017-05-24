@@ -154,12 +154,14 @@ class StudentTransports(models.Model):
 
     @api.multi
     def transport_open(self):
-        self.state = 'open'
+        for rec in self:
+            rec.state = 'open'
         return True
 
     @api.multi
     def transport_close(self):
-        self.state = 'close'
+        for rec in self:
+            rec.state = 'close'
         return True
 
     @api.multi
@@ -185,6 +187,14 @@ class TransportRegistration(models.Model):
     '''for registration'''
     _name = 'transport.registration'
     _description = 'Transport Registration'
+
+    @api.depends('state')
+    def _get_user_groups(self):
+        user_group = self.env.ref('school_transport.group_transportation_user')
+        grps = [group.id
+                for group in self.env['res.users'].browse(self._uid).groups_id]
+        if user_group.id in grps:
+            self.transport_user = True
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
                            domain=[('state', '=', 'open')], required=True)
@@ -212,6 +222,8 @@ class TransportRegistration(models.Model):
                                   string="Transport Fees")
     amount = fields.Float('Final Amount', readonly=True)
     count_inv = fields.Integer('Invoice Count', compute="_compute_invoice")
+    transport_user = fields.Boolean(compute="_get_user_groups",
+                                    string="transport user")
 
     @api.model
     def create(self, vals):

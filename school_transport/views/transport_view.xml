@@ -230,7 +230,7 @@
                         </page>
                         <page string="Root Points" >
                              <separator string="Transport Point Details" colspan="4"/>
-                             <field name="trans_point_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                             <field name="trans_point_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
                         </page>
                         <page string="Participants" >
                             <separator string="Participants Details" colspan="4"/>
@@ -315,6 +315,7 @@
                             </button>
                        </div>
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
+                           <field name="transport_user" invisible="1"/>
                            <separator string="Transport Registration" colspan="4"/>
                             <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
                             <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
