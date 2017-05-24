@@ -377,8 +377,8 @@
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.student_id.raw_value)"/>
-                            <div t-attf-class="oe_kanban_global_click color + (record.result.raw_value == 'Fail' ? ' oe_kanban_color_alert' : '')">
-                                <div class="oe_kanban_box oe_kanban_color_border ">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_box oe_kanban_color_border">
                                     <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <table class="oe_kanban_table">
                                             <tr>
@@ -485,51 +485,6 @@
 
         <menuitem id="menu_exam_result" name="Exam Results" parent="regular_exams_details" action="action_exam_result_form" sequence="7"/>
 
-        <!-- Tree View Of Batchwise Result Information -->
-
-<!--         <record id="view_exam_batch_result_tree" model="ir.ui.view"> -->
-<!--             <field name="name">exam.batchwise.result.tree</field> -->
-<!--             <field name="model">exam.batchwise.result</field> -->
-<!--             <field name="arch" type="xml"> -->
-<!--                 <tree string="Resultss"> -->
-<!--                     <field name="standard_id"/> -->
-<!--                     <field name="grade"/> -->
-<!--                 </tree> -->
-<!--             </field> -->
-<!--         </record> -->
-
-        <!-- Form View Of Gradewise Result Information -->
-
-<!--         <record id="view_exam_batch_result_form" model="ir.ui.view"> -->
-<!--             <field name="name">exam.batch.result.form</field> -->
-<!--             <field name="model">exam.batchwise.result</field> -->
-<!--             <field name="arch" type="xml"> -->
-<!--                 <form string="Grade wise Results"> -->
-<!--                     <sheet> -->
-<!--                         <separator string="Batchwise Avg Grade"/> -->
-<!--                         <group col="4"  colspan="4"> -->
-<!--                             <field name="year" widget="selection"/> -->
-<!--                             <field name="standard_id" widget="selection"/> -->
-<!--                             <field name="grade" /> -->
-<!--                         </group> -->
-<!--                     </sheet> -->
-<!--                 </form> -->
-<!--             </field> -->
-<!--         </record> -->
-
-        <!-- Action Of Form & Tree Views Of Gradewise Result Information -->
-
-<!--         <record id="action_batchwise_exam_result_form" model="ir.actions.act_window"> -->
-<!--             <field name="name">Batchwise Result</field> -->
-<!--             <field name="res_model">exam.batchwise.result</field> -->
-<!--             <field name="view_type">form</field> -->
-<!--             <field name="view_mode">tree,form</field> -->
-<!--         </record> -->
-
-        <!-- Menu Item Of Batchwise Result -->
-
-<!--         <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam" -->
-<!--                   action="action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/> -->
 
         <!-- Tree View Of Additional Result Information -->
 
