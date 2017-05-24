@@ -322,14 +322,14 @@
                                                     attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4">
-                            <tree string="Subjects" editable="bottom" create="false">
+                            <tree string="Subjects" editable="bottom" create="false" delete="false">
                                 <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','=','re-evaluation')]}" required="1"/>
                                 <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="state" invisible="1"/>
                                 <field name="grade_line_id" readonly="1"/>
-                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])]}"/>
                             </tree>
                             <form string="Subjects">
                                 <group col = "4">
@@ -337,7 +337,7 @@
                                     <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                     <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                     <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])]}"/>
                                     <field name="state" invisible="1"/>
                                 </group>
                             </form>
@@ -377,8 +377,8 @@
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.student_id.raw_value)"/>
-                            <div t-att-class="color + (record.result.raw_value == 'Fail' ? ' oe_kanban_color_alert' : '')">
-                                <div class="oe_kanban_box oe_kanban_color_border">
+                            <div t-attf-class="oe_kanban_global_click color + (record.result.raw_value == 'Fail' ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border ">
                                     <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <table class="oe_kanban_table">
                                             <tr>
