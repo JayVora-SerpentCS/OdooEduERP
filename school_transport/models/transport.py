@@ -69,16 +69,19 @@ class TransportVehicle(models.Model):
                                              ' vehicle Participants')
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def name_search(self, name='', args=None, operator='ilike',
+                    limit=100):
+        transport_obj = self.env['student.transport']
         name = self._context.get('name')
+        args = args or []
         if name:
-            transport_obj = self.env['student.transport']
             transport_data = transport_obj.browse(name)
             vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
-            args.append(('id', 'in', vehicle_ids))
-        return super(TransportVehicle, self).search(args, offset, limit,
-                                                    order, count=count)
+            args.extend([('id', 'in', vehicle_ids)])
+        return super(TransportVehicle, self).name_search(name=name, args=args,
+                                                   operator=operator,
+                                                   limit=limit)
 
 
 class TransportParticipant(models.Model):
@@ -103,17 +106,20 @@ class TransportParticipant(models.Model):
                              'State', readonly=True,)
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def name_search(self, name='', args=None, operator='ilike',
+                    limit=100):
+        student_obj = self.env['student.student']
         name = self._context.get('name')
         if name:
-            student_obj = self.env['student.student']
             for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
                                  for transport_id in
                                  student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
-        return super(TransportParticipant, self).search(args, offset, limit,
-                                                        order, count=count)
+        return super(TransportParticipant, self).name_search(name=name,
+                                                             args=args,
+                                                             operator=operator,
+                                                             limit=limit)
 
 
 class StudentTransports(models.Model):
