@@ -35,7 +35,7 @@ class TimeTable(models.Model):
     def _check_lecture(self):
         '''Method to check same lecture is not assigned on same day'''
         if self.timetable_type == 'regular':
-            domain = [('table_id', '=', self.ids)]
+            domain = [('table_id', 'in', self.ids)]
             line_ids = self.env['time.table.line'].search(domain)
             for rec in line_ids:
                 records = [rec_check.id for rec_check in line_ids

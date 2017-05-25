@@ -10,10 +10,7 @@
 
 -
   !python {model: assign.roll.no}: |
-    self.assign_rollno(cr, uid, [ref("assign_roll_no_0")], {"lang": 'en_US',
-      "active_model": "student.student", "active_ids": [ref("school.demo_student_student_1"),ref("school.demo_student_student_2"),ref("school.demo_student_student_3"),ref("school.demo_student_student_4"),ref("school.demo_student_student_5")],
-      "tz": False, "active_id": ref("school.demo_student_student_1"), })
-
+    self.assign_rollno(ref("school.demo_student_student_1"))x
 
 
 
