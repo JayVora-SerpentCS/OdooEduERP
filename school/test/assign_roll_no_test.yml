@@ -10,7 +10,7 @@
 
 -
   !python {model: assign.roll.no}: |
-    self.assign_rollno(ref("school.demo_student_student_1"))
+    self.assign_rollno()
 
 
 

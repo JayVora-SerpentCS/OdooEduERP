@@ -22,5 +22,5 @@ class SubjectResultWiz(models.TransientModel):
     @api.multi
     def result_report(self):
         data = self.read()[0]
-        return self.env['report'].get_action([], 'exam.exam_result_report',
+        return self.env['report'].get_action(self, 'exam.exam_result_report',
                                              data=data)

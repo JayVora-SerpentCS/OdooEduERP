@@ -1,17 +1,22 @@
 -
   In order to test the PDF reports defined on trasport root of student.transport
 -
-  !python {model: student.transport}: |
-    from odoo import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.student.transport').create(cr, uid, [ref('school_transport.transport_root_0')], {}, {})
+!python {model: student.transport, id: False}: |
+    import os
+    import odoo.report
+    from odoo import tools
+    data, format = odoo.report.render_report(self.env.cr, self.env.uid, [ref('school_transport.transport_root_0')], 'report.student.transport', {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'school_transport-student_transport.'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'student-transport.'+format), 'wb+').write(data)
+-
 -
   In order to test the PDF reports defined on trasport vehicle of transport.vehicle
 -
-  !python {model: transport.vehicle}: |
-    from odoo import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.transport.vehicle').create(cr, uid, [ref('school_transport.transport_vehicle_0')], {}, {})
+!python {model: transport.vehicle, id: False}: |
+    import os
+    import odoo.report
+    from odoo import tools
+    data, format = odoo.report.render_report(self.env.cr, self.env.uid, [ref('school_transport.transport_vehicle_0')], 'report.transport.vehicle', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'school_transport-transport_vehicle.'+format), 'wb+').write(data)
 
