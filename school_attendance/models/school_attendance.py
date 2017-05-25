@@ -30,11 +30,11 @@ class AttendanceSheet(models.Model):
         stud_obj = self.env['student.student']
         for rec in self:
             if rec.standard_id:
-                student_list = [{'roll_no': stud.roll_no,
-                                 'name': stud.name}
-                                for stud in stud_obj.search([('standard_id',
-                                                              '=',
-                                                              rec.standard_id),
+                student_list = [{'roll_no': stu.roll_no,
+                                 'name': stu.name}
+                                for stu in stud_obj.search([('standard_id',
+                                                             '=',
+                                                             rec.standard_id),
                                              ('state', '=', 'done')])]
             rec.attendance_ids = student_list
 
