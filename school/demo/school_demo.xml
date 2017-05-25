@@ -427,30 +427,35 @@
             <field name="name">Science</field>
             <field name="code">SCN</field>
             <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fme'),ref('hr.employee_al'),ref('hr.employee_fpi')])]"/>
         </record>
         <record id="demo_subject_subject_3" model="subject.subject">
             <field name="name">English</field>
             <field name="code">ENG</field>
             <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp'),ref('hr.employee_jep')])]"/>
         </record>
         <record id="demo_subject_subject_4" model="subject.subject">
             <field name="name">Social Science</field>
             <field name="code">SOS</field>
             <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_mit'),ref('hr.employee_chs'),ref('hr.employee_fpi'),ref('hr.employee_stw')])]"/>
         </record>
         <record id="demo_subject_subject_5" model="subject.subject">
             <field name="name">Computer</field>
             <field name="code">CMP</field>
             <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_stw'),ref('hr.employee_al')])]"/>
         </record>
         <record id="demo_subject_subject_6" model="subject.subject">
             <field name="name">Sport</field>
             <field name="code">PET</field>
             <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
         </record>
         <!--  Subject elective -->
@@ -522,8 +527,8 @@
             <field name="gender">female</field>
             <field name="roll_no">1</field>
             <field name="school_id" ref="demo_school_1"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Ahmedabad</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Melbourne</field>
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
@@ -539,8 +544,8 @@
             <field name="gender">male</field>
             <field name="roll_no">1</field>
             <field name="school_id" ref="demo_school_2"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Sydney</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
@@ -556,8 +561,8 @@
             <field name="gender">male</field>
             <field name="roll_no">1</field>
             <field name="school_id" ref="demo_school_3"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Bombay</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Adelaide</field>
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
@@ -573,8 +578,8 @@
             <field name="gender">female</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_1"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Pune</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">London</field>
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
@@ -590,8 +595,8 @@
             <field name="gender">male</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_2"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Banglore</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Manchester</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
@@ -607,8 +612,8 @@
             <field name="gender">male</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_3"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Chennai</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Headingly</field>
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
@@ -624,8 +629,8 @@
             <field name="gender">female</field>
             <field name="roll_no">3</field>
             <field name="school_id" ref="demo_school_1"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Goa</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="city">Johesburg</field>
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
@@ -641,8 +646,8 @@
             <field name="gender">female</field>
             <field name="roll_no">3</field>
             <field name="school_id" ref="demo_school_2"/>
-            <field name="country_id" ref="base.in"/>
-            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="city">CapeTown</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
