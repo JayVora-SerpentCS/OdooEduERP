@@ -190,7 +190,8 @@ class SchoolStandard(models.Model):
     user_id = fields.Many2one('hr.employee', 'Class Teacher')
     student_ids = fields.One2many('student.student', 'standard_id',
                                   'Student In Class',
-                                  compute='_compute_student')
+                                  compute='_compute_student',
+                                  store=True)
     color = fields.Integer('Color Index')
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
@@ -400,11 +401,6 @@ class StudentStudent(models.Model):
                                           'Previous School Detail',
                                           states={'done': [('readonly',
                                                             True)]})
-    family_con_icmp_idds = fields.One2many('student.family.contact',
-                                           'family_contact_id',
-                                           'Family Contact Detail',
-                                           states={'done': [('readonly', True)
-                                                            ]})
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
     designation = fields.Char('Designation')
     doctor_phone = fields.Char('Phone')
@@ -503,12 +499,10 @@ class StudentStudent(models.Model):
     def admission_done(self):
         '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
+        ir_sequence = self.env['ir.sequence']
+        student_group = self.env.ref('school.group_school_student')
+        emp_group = self.env.ref('base.group_user')
         for rec in self:
-            # Assign group to student
-            student_group = self.env.ref('school.group_school_student')
-            emp_group = self.env.ref('base.group_user')
-            rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
-                                                     student_group.id])]})
             if rec.age <= 5:
                 raise except_orm(_('Warning'),
                                  _('''The student is not eligible.
@@ -519,19 +513,21 @@ class StudentStudent(models.Model):
                 raise except_orm(_('Warning'),
                                  _('''The standard is not defined in a
                                      school'''))
+            # Assign group to student
+            rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
+                                                     student_group.id])]})
             # Assign roll no to student
             number = 1
-            for rec in self.search(domain):
-                rec.roll_no = number
+            for rec_std in rec.search(domain):
+                rec_std.roll_no = number
                 number += 1
             # Assign registration code to student
-            reg_code = self.env['ir.sequence'
-                                ].next_by_code('student.registration')
+            reg_code = ir_sequence.next_by_code('student.registration')
             registation_code = (str(rec.school_id.state_id.name) + str('/') +
                                 str(rec.school_id.city) + str('/') +
                                 str(rec.school_id.name) + str('/') +
                                 str(reg_code))
-            stu_code = self.env['ir.sequence'].next_by_code('student.code')
+            stu_code = ir_sequence.next_by_code('student.code')
             student_code = (str(rec.school_id.code) + str('/') +
                             str(rec.year.code) + str('/') +
                             str(stu_code))
@@ -810,19 +806,30 @@ class StudentFamilyContact(models.Model):
     _description = "Student Family Contact"
 
     family_contact_id = fields.Many2one('student.student', 'Student')
+    exsting_student = fields.Many2one('student.student',
+                                      'Student')
     rel_name = fields.Selection([('exist', 'Link to Existing Student'),
                                  ('new', 'Create New Relative Name')],
                                 'Related Student', help="Select Name",
                                 required=True)
-    user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              required=True)
-    stu_name = fields.Char('Name', related='user_id.name',
-                           help="Select Student From Existing List")
+    user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade")
+    stu_name = fields.Many2one('student.student', 'Name',
+                               help="Select Student From Existing List")
     name = fields.Char('Name')
     relation = fields.Many2one('student.relation.master', 'Relation',
                                required=True)
     phone = fields.Char('Phone', required=True)
     email = fields.Char('E-Mail')
+    relative_name = fields.Char(compute='_get_name', string='Name')
+
+    @api.multi
+    @api.depends('relation')
+    def _get_name(self):
+        for rec in self:
+            if rec.stu_name:
+                rec.relative_name = rec.stu_name.name
+            else:
+                rec.relative_name = rec.name
 
 
 class StudentRelationMaster(models.Model):

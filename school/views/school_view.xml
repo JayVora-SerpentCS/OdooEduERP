@@ -170,8 +170,9 @@
                                         <group>
                                             <group>
                                                 <field name="rel_name" />
-                                                <field name="stu_name" placeholder="Create or Select Name" attrs="{'invisible':[('rel_name','!=','exist')]}" />
-                                                <field name="name" placeholder="Name" attrs="{'invisible':[('rel_name','!=','new')]}" />
+                                                <field name="stu_name" placeholder="Create or Select Name" attrs="{'invisible':[('rel_name','!=','exist')]}"
+                                                        options="{&quot;no_create&quot;: True}"/>
+                                                <field name="name" placeholder="Name" attrs="{'invisible':[('rel_name','!=','new')]}"/>
                                                 <field name="relation" placeholder="Enter or select Relation" />
                                             </group>
                                             <group>
@@ -181,8 +182,7 @@
                                         </group>
                                     </form>
                                     <tree string="Family Contact Details">
-                                        <field name="stu_name" string="Existing Student" />
-                                        <field name="name" string="New Name" />
+                                        <field name="relative_name"/>
                                         <field name="relation" />
                                         <field name="phone" />
                                     </tree>
@@ -552,17 +552,17 @@
                             <page string="Family Details">
                                 <field name="family_con_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
                                     <tree string="Family  Contact Details">
-                                        <field name="stu_name" attrs="{'invisible':[('rel_name','!=','exist')]}" string="Existing Student" />
-                                        <field name="name" attrs="{'invisible':[('rel_name','!=','new')]}" string="New Name" />
-<!--                                         <field name="relation" /> -->
+                                        <field name="relative_name"/>
+                                        <field name="relation" />
                                         <field name="phone" />
                                     </tree>
                                     <form string="Family Contact Details">
                                         <group>
                                             <group>
                                                 <field name="rel_name" placeholder="Name" />
-                                                <field name="stu_name" placeholder="Create or Select Name" attrs="{'invisible':[('rel_name','!=','exist')]}" />
-                                                <field name="name" placeholder="Name" attrs="{'invisible':[('rel_name','!=','new')]}" />
+                                                <field name="stu_name" placeholder="Create or Select Name" attrs="{'invisible':[('rel_name','!=','exist')]}"
+                                                            options="{&quot;no_create&quot;: True}"/>
+                                                <field name="name" placeholder="Name" attrs="{'invisible':[('rel_name','!=','new')]}"/>
                                                 <field name="relation" placeholder="Enter or select Relation" />
                                             </group>
                                             <group>
