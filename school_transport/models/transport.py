@@ -80,8 +80,8 @@ class TransportVehicle(models.Model):
                            for std_id in transport_data.trans_vehicle_ids]
             args.extend([('id', 'in', vehicle_ids)])
         return super(TransportVehicle, self).name_search(name=name, args=args,
-                                                   operator=operator,
-                                                   limit=limit)
+                                                         operator=operator,
+                                                         limit=limit)
 
 
 class TransportParticipant(models.Model):

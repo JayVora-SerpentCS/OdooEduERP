@@ -2,9 +2,8 @@
   I called the 'assign_roll_no' wizard
 -
   !record {model: assign.roll.no, id: assign_roll_no_0}:
-    class_id: demo_standard_standard_1
+    standard_id: demo_school_standard_1
     medium_id: demo_standard_medium_1
-    division_id: demo_standard_division_1
  
 -
   I clicked on Finish Button

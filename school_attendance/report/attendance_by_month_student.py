@@ -36,8 +36,8 @@ class BatchExamReport(models.AbstractModel):
 
     def daily_attendance(self, form, day, student):
         attend_obj = self.env['daily.attendance']
-        attend_date = (str(form.get('month')) + '/' + str(day) + '/'
-                       + str(form.get('year')))
+        attend_date = (str(form.get('month')) + '/' + str(day) + '/' +
+                       str(form.get('year')))
         sheets = attend_obj.search([('state', '=', 'validate'), ('date',
                                                                  '=',
                                                                  attend_date)])
