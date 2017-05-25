@@ -26,15 +26,17 @@ class AttendanceSheet(models.Model):
     @api.multi
     @api.onchange('standard_id')
     def onchange_class_info(self):
-        stu_list = []
+        student_list = []
         stud_obj = self.env['student.student']
         for rec in self:
             if rec.standard_id:
-                stu_list = [{'roll_no': stu.roll_no, 'name': stu.name}
-                            for stu in stud_obj.search([('standard_id', '=',
-                                                         rec.standard_id),
+                student_list = [{'roll_no': stu.roll_no,
+                                 'name': stu.name}
+                                for stu in stud_obj.search([('standard_id',
+                                                             '=',
+                                                             rec.standard_id),
                                              ('state', '=', 'done')])]
-            rec.attendance_ids = stu_list
+            rec.attendance_ids = student_list
 
 
 class AttendanceSheetLine(models.Model):
