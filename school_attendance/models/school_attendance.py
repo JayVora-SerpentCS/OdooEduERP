@@ -26,8 +26,8 @@ class AttendanceSheet(models.Model):
     @api.multi
     @api.onchange('standard_id')
     def onchange_class_info(self):
-        stud_list = []
         '''Method to get student roll no'''
+        stud_list = []
         stud_obj = self.env['student.student']
         for rec in self:
             if rec.standard_id:
