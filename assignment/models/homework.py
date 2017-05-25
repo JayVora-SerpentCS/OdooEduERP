@@ -11,6 +11,7 @@ class SchoolTeacherAssignment(models.Model):
 
     @api.constrains('assign_date', 'due_date')
     def check_date(self):
+        '''Method to check constraint of due date and assign date'''
         if self.due_date < self.assign_date:
             raise ValidationError(_('Due date of homework should \
                                     be greater than assign date'))
