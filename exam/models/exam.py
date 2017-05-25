@@ -169,7 +169,8 @@ class ExamExam(models.Model):
                                    'roll_no_id': student.roll_no,
                                    'grade_system': rec.grade_system.id}
                         exam_line = []
-                        for line in exam_schedule.timetable_id.timetable_ids:
+                        timetable = exam_schedule.sudo().timetable_id
+                        for line in timetable.sudo().timetable_ids:
                             min_mrks = line.subject_id.minimum_marks
                             max_mrks = line.subject_id.maximum_marks
                             sub_vals = {'subject_id': line.subject_id.id,
@@ -362,34 +363,6 @@ class ExamResult(models.Model):
     def re_evaluation_confirm(self):
         for rec in self:
             rec.state = 're-evaluation_confirm'
-#        res = {}
-#        opt_marks = []
-#        eve_marks = []
-#        add = 0.0
-#        total = 0.0
-#        per = 0.0
-#        grd = 0.0
-#        for result in self:
-#            for sub_line in result.result_ids:
-#                opt_marks.append(sub_line.obtain_marks)
-#                eve_marks.append(sub_line.marks_reeval)
-#                total += sub_line.maximum_marks or 0.0
-#            for i in range(0, len(opt_marks)):
-#                if eve_marks[i] != 0.0:
-#                    opt_marks[i] = eve_marks[i]
-#            for i in range(0, len(opt_marks)):
-#                add += opt_marks[i]
-#
-#            if total > 1.0:
-#                # Sum cannot be used here as it is reserved keyword
-#                per = (add / total) * 100
-#                for grade_id in result.grade_system.grade_ids:
-#                    if per >= grade_id.from_mark and per <= grade_id.to_mark:
-#                        grd = grade_id.grade
-#                res.update({'grade': grd,
-#                            'percentage': per,
-#                            'state': 're-evaluation_confirm'})
-#            self.write(res)
         return True
 
     @api.multi
@@ -475,13 +448,12 @@ class ExamSubject(models.Model):
     marks_reeval = fields.Float("Marks After Re-evaluation")
     grade_line_id = fields.Many2one('grade.line', "Grade",
                                     compute='_compute_grade')
-    # grade = fields.Char(compute='_compute_grade', string='Grade')
 
 
 class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'
     _description = 'subject result Information'
-    _rec_name = 'a_exam_id'
+    _rec_name = 'roll_no_id'
 
     @api.multi
     @api.depends('a_exam_id', 'obtain_marks')
@@ -529,10 +501,10 @@ class AdditionalExamResult(models.Model):
                                 required=True)
     student_id = fields.Many2one('student.student', 'Student Name',
                                  required=True)
-    roll_no_id = fields.Integer(string="Roll No",
+    roll_no_id = fields.Integer("Roll No",
                                 readonly=True)
     standard_id = fields.Many2one('school.standard',
-                                  string="Standard", readonly=True)
+                                  "Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
     result = fields.Char(compute='_compute_student_result', string='Result',
                          method=True)
