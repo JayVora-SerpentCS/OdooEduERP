@@ -10,7 +10,8 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
     DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import except_orm, Warning as UserError
 from openerp.exceptions import ValidationError
-
+# added import statement in try-except because when server runs on
+# windows operating system issue arise because this library is not in Windows.
 try:
     from odoo.tools import image_colorize, image_resize_image_big
 except:
@@ -339,6 +340,7 @@ class StudentStudent(models.Model):
     @api.model
     def _get_default_image(self, is_company, colorize=False):
         '''Method to get default Image'''
+        # added in try-except because import statements are in try-except
         try:
             img_path = get_module_resource('base', 'static/src/img',
                                            'avatar.png')
