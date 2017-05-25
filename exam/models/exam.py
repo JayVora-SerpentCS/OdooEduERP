@@ -230,7 +230,7 @@ class AdditionalExam(models.Model):
 
 class ExamResult(models.Model):
     _name = 'exam.result'
-    _rec_name = 's_exam_ids'
+    _rec_name = 'roll_no_id'
     _description = 'exam result Information'
 
     @api.multi
@@ -507,5 +507,4 @@ class AdditionalExamResult(models.Model):
     standard_id = fields.Many2one('school.standard',
                                   "Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_compute_student_result', string='Result',
-                         method=True)
+    result = fields.Char(compute='_compute_student_result', string='Result')

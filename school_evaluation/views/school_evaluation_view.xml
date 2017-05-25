@@ -320,7 +320,7 @@
         <!-- Actions View of the School Student Form View -->
         <record id="action_view_student_evaluation_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
-            <field eval="31" name="sequence" />
+            <field eval="30" name="sequence" />
             <field name="view_id" ref="view_student_evaluation_form" />
             <field name="act_window_id" ref="action_student_eval_form" />
         </record>
@@ -328,7 +328,7 @@
         <!-- Actions View of the School Teacher Tree View -->
         <record id="action_view_teacher_evaluation_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
-            <field eval="31" name="sequence" />
+            <field eval="30" name="sequence" />
             <field name="view_id" ref="view_teacher_evaluation_tree" />
             <field name="act_window_id" ref="action_teacher_eval" />
         </record>

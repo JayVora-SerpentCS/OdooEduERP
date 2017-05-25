@@ -12,15 +12,6 @@
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
 
-<!--          Record Rule Teacher can see own evaluation -->
-<!--          <record id="evaluation_record_rule_teacher" model="ir.rule"> -->
-<!--             <field name="name">Teacher Evaluation Rule</field> -->
-<!--             <field name="model_id" ref="model_student_evaluation"/> -->
-<!--             <field name="global" eval="True"/> -->
-<!--             <field name="domain_force">[('evaluator_id.user_id','=',user.id)]</field> -->
-<!--             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/> -->
-<!--         </record> -->
-
         <!-- Record rule Parent can see only their children evaluation  -->
         <record id="evaluation_rule_parent" model="ir.rule">
             <field name="name">Parent Evaluation Rule</field>
@@ -30,13 +21,5 @@
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
 
-        <!-- Record Rule Teacher can see own evaluation -->
-<!--         <record id="evaluation_teacher_record_rule" model="ir.rule"> -->
-<!--             <field name="name">Teacher Evaluation Record Rule</field> -->
-<!--             <field name="model_id" ref="model_teacher_evaluation"/> -->
-<!--             <field name="global" eval="True"/> -->
-<!--             <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field> -->
-<!--             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/> -->
-<!--         </record> -->
     </data>
 </odoo>

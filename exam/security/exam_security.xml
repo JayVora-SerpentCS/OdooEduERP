@@ -35,7 +35,7 @@
             <field name="name">Parent Final Exam Record Rule</field>
             <field name="model_id" ref="model_exam_result"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="domain_force">[('student_id','in',user.partner_id.student_ids.ids)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
         
@@ -51,8 +51,8 @@
         <!-- Record Rule for Exam Schedule For Student -->
         <record id="student_rule_exam_schedule_record" model="ir.rule">
             <field name="name">Personal Exam Schedule Record</field>
-            <field ref="model_exam_exam" name="model_id"/>
-            <field eval="1" name="global"/>
+            <field name="model_id" ref="model_exam_exam"/>
+            <field name="global" eval="1"/>
             <field name="domain_force">[('exam_schedule_ids.standard_id.student_ids.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
@@ -60,8 +60,8 @@
         <!-- Record Rule for Additional Exam Schedule For Student -->
         <record id="student_rule_additional_exam_schedule_record" model="ir.rule">
             <field name="name">Personal Additional Exam Schedule Record</field>
-            <field ref="model_additional_exam" name="model_id"/>
-            <field eval="1" name="global"/>
+            <field name="model_id" ref="model_additional_exam"/>
+            <field name="global" eval="1"/>
             <field name="domain_force">[('standard_id.student_ids.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
         </record>
@@ -69,18 +69,18 @@
         <!-- Record Rule for Exam Schedule For Parents -->
         <record id="parents_rule_exam_schedule_record" model="ir.rule">
             <field name="name">Parents Exam Schedule Record</field>
-            <field ref="model_exam_exam" name="model_id"/>
-            <field eval="1" name="global"/>
-            <field name="domain_force">[('exam_schedule_ids.standard_id.student_ids.user_id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="model_id" ref="model_exam_exam"/>
+            <field name="global" eval="1"/>
+            <field name="domain_force">[('exam_schedule_ids.standard_id.student_ids','in',user.partner_id.student_ids.ids)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
         
         <!-- Record Rule for Additional Exam Schedule For Parents -->
         <record id="parent_rule_additional_exam_schedule_record" model="ir.rule">
             <field name="name">Parents Additional Exam Schedule Record</field>
-            <field ref="model_additional_exam" name="model_id"/>
-            <field eval="1" name="global"/>
-            <field name="domain_force">[('standard_id.student_ids.user_id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="model_id" ref="model_additional_exam"/>
+            <field name="global" eval="1"/>
+            <field name="domain_force">[('standard_id.student_ids','in',user.partner_id.student_ids.ids)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
     </data>
