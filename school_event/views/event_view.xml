@@ -397,7 +397,7 @@
                     <sheet>
                         <separator string="Event Registration" />
                         <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="part_name_id" context="{'name':name}" placeholder="Select Participant Name" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            <field name="part_name_id" placeholder="Select Participant Name" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}" context="{'name':name}"/>
                             <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" options="{&quot;no_create&quot;: True}"/>
                             <field name="reg_date" />
                             <field name="is_holiday" />

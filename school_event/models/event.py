@@ -120,24 +120,15 @@ class SchoolEvent(models.Model):
                                     lower than Event start-date.'))
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            arg_domain = ('part_standard_ids', 'in', [data.class_id.id])
-            args.append(arg_domain)
-        return super(SchoolEvent, self).search(args, offset, limit, order,
-                                               count=count)
-
-    @api.multi
-    def event_open(self):
-        for rec in self:
-            if rec.part_ids and len(rec.part_ids) >= 1:
-                rec.write({'state': 'open'})
-            else:
-                raise UserError(_('No Participants ! \
-                                 No Participants to open the Event.'))
+            args.append(('part_standard_ids', 'in', [data.standard_id.id]))
+        return super(SchoolEvent, self).name_search(name=name, args=args,
+                                                    operator=operator,
+                                                    limit=limit)
 
     @api.multi
     def event_close(self):
@@ -230,11 +221,13 @@ class StudentStudent(models.Model):
                                  'participant_id', 'Participants')
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
         if self._context.get('name'):
             event_obj = self.env['school.event']
             event_data = event_obj.browse(self._context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
             args.append(('standard_id', 'in', std_ids))
-        return super(StudentStudent, self).search(args, offset, limit, order,
-                                                  count=count)
+        return super(StudentStudent, self).name_search(name=name, args=args,
+                                                       operator=operator,
+                                                       limit=limit)

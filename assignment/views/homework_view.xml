@@ -120,7 +120,7 @@
                    <sheet>
                     <separator colspan="4"/>
                     <group col="4" string="Assignment Information">
-                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','=','done')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','=','done')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('state','=','done')]"/>
                         <field name="stud_roll_no" invisible="1"/>
                         <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
                         <newline />

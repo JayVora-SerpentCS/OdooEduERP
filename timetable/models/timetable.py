@@ -30,30 +30,6 @@ class TimeTable(models.Model):
     user_ids = fields.Many2many('res.users', string="Users",
                                 compute="_compute_user", store=True)
 
-#    @api.constrains('year_id', 'standard_id')
-#    def check_year_standard(self):
-#        if self.timetable_type == 'regular':
-#            timetables = self.search([('year_id', '=', self.year_id.id),
-#                                      ('standard_id', '=', self.standard_id.id
-#                                       )])
-#            print"\n\ntimetables+++++++", timetables
-#            if timetables:
-#                raise ValidationError('''Academic class and Year should be
-#                unique''')
-#    @api.model
-#    def create(self, vals):
-#        res = super(TimeTable, self).create(vals)
-#        if res.timetable_type == 'regular':
-#            print"self.timetqable typle+++++++++", self.timetable_type
-#            timetables = self.search([('year_id', '=', res.year_id.id),
-#                                      ('standard_id', '=', res.standard_id.id,
-#                                       )])
-#            print"timetables++++++++", timetables
-#            if timetables:
-#                raise ValidationError('''Academic class and Year should be
-#                unique''')
-#        return res
-
     @api.multi
     @api.constrains('timetable_ids')
     def _check_lecture(self):

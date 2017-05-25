@@ -15,6 +15,7 @@ class StudentStudent(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
+        args = args or []
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])

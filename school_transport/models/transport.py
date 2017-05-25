@@ -33,16 +33,19 @@ class TransportPoint(models.Model):
     amount = fields.Float('Amount', default=0.0)
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        name = self._context.get('name')
-        if name:
-            transport_obj = self.env['student.transport']
-            for transport_data in transport_obj.browse(name):
-                point_ids = [point_id.id
-                             for point_id in transport_data.trans_point_ids]
-                args.append(('id', 'in', point_ids))
-        return super(TransportPoint, self).search(args, offset, limit, order,
-                                                  count=count)
+    def name_search(self, name='', args=None, operator='ilike',
+                    limit=100):
+        transport_obj = self.env['student.transport']
+        name_points = self._context.get('name')
+        args = args or []
+        if name_points:
+            transport_data = transport_obj.browse(name_points)
+            point_ids = [point_id.id
+                         for point_id in transport_data.trans_point_ids]
+            args.extend([('id', 'in', point_ids)])
+        return super(TransportPoint, self).name_search(name=name, args=args,
+                                                       operator=operator,
+                                                       limit=limit)
 
 
 class TransportVehicle(models.Model):
@@ -72,10 +75,10 @@ class TransportVehicle(models.Model):
     def name_search(self, name='', args=None, operator='ilike',
                     limit=100):
         transport_obj = self.env['student.transport']
-        name = self._context.get('name')
+        name_vehicle = self._context.get('name')
         args = args or []
-        if name:
-            transport_data = transport_obj.browse(name)
+        if name_vehicle:
+            transport_data = transport_obj.browse(name_vehicle)
             vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
             args.extend([('id', 'in', vehicle_ids)])
@@ -109,9 +112,9 @@ class TransportParticipant(models.Model):
     def name_search(self, name='', args=None, operator='ilike',
                     limit=100):
         student_obj = self.env['student.student']
-        name = self._context.get('name')
-        if name:
-            for student_data in student_obj.browse(name):
+        std_name = self._context.get('name')
+        if std_name:
+            for student_data in student_obj.browse(std_name):
                 transport_ids = [transport_id.id
                                  for transport_id in
                                  student_data.transport_ids]

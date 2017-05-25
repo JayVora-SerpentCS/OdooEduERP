@@ -9,6 +9,7 @@
          <record id="group_transportation_manager" model="res.groups">
             <field name="name">Transport Manager</field>
             <field name="category_id" ref="module_category_school_transortation"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
         <record id="group_transportation_user" model="res.groups">
