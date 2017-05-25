@@ -14,16 +14,23 @@ class StudentStudent(models.Model):
                                        'Exam History', readonly=True)
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def name_search(self, name='', args=None, operator='ilike',
+                    limit=100):
+        '''Overide method to get student according to exam'''
         args = args or []
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('standard_id', 'in', std_ids))
-        return super(StudentStudent, self).search(args=args, offset=offset,
-                                                  limit=limit, order=order,
-                                                  count=count)
+        if self._context.get('a_exam'):
+            add_exam = self.env['additional.exam']
+            add_exam_data = add_exam.browse(self._context.get('a_exam'))
+            standards = [stds_id.id for stds_id in add_exam_data.standard_id]
+            args.append(('standard_id', 'in', standards))
+        return super(StudentStudent, self).name_search(name=name, args=args,
+                                                       operator=operator,
+                                                       limit=limit)
 
 
 class ExtendedTimeTable(models.Model):
@@ -46,6 +53,7 @@ class ExtendedTimeTableLine(models.Model):
     @api.multi
     @api.onchange('exm_date')
     def onchange_date_day(self):
+        '''Method to get weekday from date'''
         for rec in self:
             if rec.exm_date:
                 week_day = datetime.strptime(rec.exm_date, "%Y-%m-%d")
@@ -53,6 +61,7 @@ class ExtendedTimeTableLine(models.Model):
 
     @api.multi
     def _check_date(self):
+        '''Method to check constraint of start date and end date'''
         for line in self:
             if line.exm_date:
                 dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
@@ -73,6 +82,7 @@ class ExamExam(models.Model):
 
     @api.constrains('start_date', 'end_date')
     def check_date_exam(self):
+        '''Method to check constraint of exam start date and end date'''
         for rec in self:
             if rec.end_date < rec.start_date:
                 raise ValidationError(_('Exam end date should be \
@@ -121,10 +131,12 @@ class ExamExam(models.Model):
 
     @api.multi
     def set_to_draft(self):
+        '''Method to set state to draft'''
         self.state = 'draft'
 
     @api.multi
     def set_running(self):
+        '''Method to set state to running'''
         for rec in self:
             if not rec.standard_id:
                 raise ValidationError(_('Please Select Standard Id.'))
@@ -136,14 +148,17 @@ class ExamExam(models.Model):
 
     @api.multi
     def set_finish(self):
+        '''Method to set state to finish'''
         self.state = 'finished'
 
     @api.multi
     def set_cancel(self):
+        '''Method to set state to cancel'''
         self.state = 'cancelled'
 
     @api.multi
     def _validate_date(self):
+        '''Method to check start date should be less than end date'''
         for exm in self:
             if exm.start_date > exm.end_date:
                 return False
@@ -151,6 +166,7 @@ class ExamExam(models.Model):
 
     @api.multi
     def generate_result(self):
+        '''Method to genrate result'''
         result_obj = self.env['exam.result']
         result_list = []
         for rec in self:
@@ -195,6 +211,7 @@ class ExamScheduleLine(models.Model):
     @api.multi
     @api.onchange('standard_ids')
     def onchange_standard(self):
+        '''Method to get standard according to the standard selected'''
         standard_ids = []
         for rec in self:
             standard_ids = [std.id for std in rec.standard_ids]
@@ -237,6 +254,7 @@ class ExamResult(models.Model):
     @api.depends('result_ids', 'result_ids.obtain_marks',
                  'result_ids.marks_reeval')
     def _compute_total(self):
+        '''Method to compute total'''
         for rec in self:
             total = 0.0
             if rec.result_ids:
@@ -250,6 +268,7 @@ class ExamResult(models.Model):
     @api.multi
     @api.depends('total')
     def _compute_per(self):
+        '''Method to compute percentage'''
         total = 0.0
         obtained_total = 0.0
         obtain_marks = 0.0
@@ -275,6 +294,7 @@ class ExamResult(models.Model):
     @api.multi
     @api.depends('percentage')
     def _compute_result(self):
+        '''Method to compute result'''
         for rec in self:
             flag = False
             if rec.result_ids:
@@ -308,6 +328,7 @@ class ExamResult(models.Model):
 
     @api.onchange('student_id')
     def onchange_student(self):
+        '''Method to get standard and roll no of student selected'''
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.roll_no_id = self.student_id.roll_no
@@ -362,12 +383,14 @@ class ExamResult(models.Model):
 
     @api.multi
     def re_evaluation_confirm(self):
+        '''Method to change state to re_evaluation_confirm'''
         for rec in self:
             rec.state = 're-evaluation_confirm'
         return True
 
     @api.multi
     def result_re_evaluation(self):
+        '''Method to set state to re-evaluation'''
         for rec in self:
             for line in rec.result_ids:
                 line.marks_reeval = line.obtain_marks
@@ -376,6 +399,7 @@ class ExamResult(models.Model):
 
     @api.multi
     def set_done(self):
+        '''Method to obtain history of student'''
         history_obj = self.env['student.history']
         for rec in self:
             vals = {'student_id': rec.student_id.id,
@@ -415,6 +439,7 @@ class ExamSubject(models.Model):
 
     @api.constrains('obtain_marks', 'minimum_marks')
     def _validate_marks(self):
+        '''Method to validate marks'''
         min_mark = self.minimum_marks > self.maximum_marks
         if (self.obtain_marks > self.maximum_marks or min_mark):
             raise ValidationError(_('The obtained marks and minimum marks\
@@ -423,6 +448,7 @@ class ExamSubject(models.Model):
     @api.multi
     @api.depends('exam_id', 'obtain_marks', 'marks_reeval')
     def _compute_grade(self):
+        '''Method to compute grade after re-evaluation'''
         for rec in self:
             grade_lines = rec.exam_id.grade_system.grade_ids
             if (rec.exam_id and rec.exam_id.student_id and grade_lines):
@@ -459,6 +485,7 @@ class AdditionalExamResult(models.Model):
     @api.multi
     @api.depends('a_exam_id', 'obtain_marks')
     def _compute_student_result(self):
+        '''Method to compute result of student'''
         for rec in self:
             if rec.a_exam_id and rec.a_exam_id:
                 if rec.a_exam_id.minimum_marks < \

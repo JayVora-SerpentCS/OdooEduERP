@@ -27,6 +27,7 @@ class AttendanceSheet(models.Model):
     @api.onchange('standard_id')
     def onchange_class_info(self):
         stud_list = []
+        '''Method to get student roll no'''
         stud_obj = self.env['student.student']
         for rec in self:
             if rec.standard_id:
@@ -43,6 +44,7 @@ class AttendanceSheetLine(models.Model):
 
     @api.multi
     def _compute_percentage(self):
+        '''Method to get attendance percent'''
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -167,12 +169,14 @@ class DailyAttendance(models.Model):
     @api.multi
     @api.depends('student_ids')
     def _compute_total(self):
+        '''Method to compute total student'''
         for rec in self:
             rec.total_student = len(rec.student_ids)
 
     @api.multi
     @api.depends('student_ids')
     def _compute_present(self):
+        '''Method to count present student'''
         for rec in self:
             count = 0
             if rec.student_ids:
