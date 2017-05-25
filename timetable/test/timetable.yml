@@ -20,10 +20,10 @@
  Search Method Call
 -
   !python {model: subject.subject}: |
-    self.search([()])
+    self.search([])
 -
  Search Method Call
 -
   !python {model: subject.subject}: |
-    self.search([()])
+    self.search([])
 -
