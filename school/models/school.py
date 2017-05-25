@@ -217,7 +217,7 @@ class SchoolSchool(models.Model):
     @api.model
     def _lang_get(self):
         '''Method to get language'''
-        languages = self.env['res.lang'].search([])
+        languages = self.env['res.lang'].search([()])
         return [(language.code, language.name) for language in languages]
 
     company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
@@ -885,7 +885,7 @@ class StudentNews(models.Model):
         obj_mail_server = self.env['ir.mail_server']
         user = self.env['res.users'].browse(self._context.get('uid'))
         # Check if out going mail configured
-        mail_server_ids = obj_mail_server.search([])
+        mail_server_ids = obj_mail_server.search([())])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'),
                              _('''No mail outgoing mail server
@@ -902,7 +902,7 @@ class StudentNews(models.Model):
                                      _("Email not found in users !"))
             # Check email is defined in user created from employee
             else:
-                for employee in emp_obj.search([]):
+                for employee in emp_obj.search([())]):
                     if employee.work_email:
                         email_list.append(employee.work_email)
                     elif employee.user_id and employee.user_id.email:
