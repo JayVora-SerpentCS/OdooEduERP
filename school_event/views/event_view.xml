@@ -30,7 +30,7 @@
                 <data>
                     <xpath expr="//page[1]" position="after">
                         <page string="Events">
-                            <field name="event_ids" required="1" nolabel= '1' />
+                            <field name="event_ids" readonly="1" nolabel= '1' />
                         </page>
                     </xpath>
                 </data>
