@@ -10,12 +10,12 @@
     Call Search mathod in transport.point
 -
     !python {model: transport.point}: |
-     self.search(cr, uid,[()],{"lang": 'en_US', "name": 1, "tz": False},{})
+     self.search(cr, uid,[],{"lang": 'en_US', "name": 1, "tz": False},{})
 -
     Call Search mathod in transport.point with context={}
 -
     !python {model: transport.point}: |
-     self.search(cr, uid,[()])
+     self.search(cr, uid,[])
 -
     create vehicle driver.
 -
@@ -40,22 +40,22 @@
     Call Search mathod in transport.vehicle
 -
     !python {model: transport.vehicle}: |
-     self.search(cr, uid,[()],{"lang": 'en_US', "name": 1, "tz": False},{})
+     self.search(cr, uid,[],{"lang": 'en_US', "name": 1, "tz": False},{})
 -
     Call Search mathod in transport.vehicle with context={}
 -
     !python {model: transport.vehicle}: |
-     self.search(cr, uid,[()])
+     self.search(cr, uid,[])
 -
     Call Search mathod in transport.participant
 -
     !python {model: transport.participant}: |
-     self.search(cr, uid,[()],{"lang": 'en_US', "name": 1, "tz": False},{})
+     self.search(cr, uid,[],{"lang": 'en_US', "name": 1, "tz": False},{})
 - 
     Call Search mathod in transport.participant with context={}
 -
     !python {model: transport.participant}: |
-     self.search(cr, uid,[()])
+     self.search(cr, uid,[])
 -   
     I Create the one transport root.
 -
