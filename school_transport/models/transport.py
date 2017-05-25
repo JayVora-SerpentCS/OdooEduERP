@@ -35,6 +35,7 @@ class TransportPoint(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike',
                     limit=100):
+        '''Overide Method to get transport point of selected transport root'''
         transport_obj = self.env['student.transport']
         name_points = self._context.get('name')
         args = args or []
@@ -54,6 +55,7 @@ class TransportVehicle(models.Model):
     @api.multi
     @api.depends('vehi_participants_ids')
     def _compute_participants(self):
+        '''Method to get number participant'''
         for rec in self:
             rec.participant = len(rec.vehi_participants_ids)
 
@@ -74,6 +76,7 @@ class TransportVehicle(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike',
                     limit=100):
+        '''Overide method to get vehicles of selected transport root'''
         transport_obj = self.env['student.transport']
         name_vehicle = self._context.get('name')
         args = args or []
@@ -163,18 +166,22 @@ class StudentTransports(models.Model):
 
     @api.multi
     def transport_open(self):
+        '''Method to change state open'''
         for rec in self:
             rec.state = 'open'
         return True
 
     @api.multi
     def transport_close(self):
+        '''Method to change state to close'''
         for rec in self:
             rec.state = 'close'
         return True
 
     @api.multi
     def participant_expire(self):
+        '''Schedular to change in paticipant state when registration date
+            is over'''
         current_date = datetime.now()
         trans_parti = self.env['transport.participant']
         parti_obj_search = trans_parti.search([('tr_end_date', '<',
@@ -249,6 +256,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def transport_fees_pay(self):
+        '''Method to genrate invoice of participant'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             rec.state = 'pending'
@@ -278,6 +286,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def view_invoice(self):
+        '''Method to view invoice of participant'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             invoices = invoice_obj.search([('transport_student_id', '=',
@@ -295,6 +304,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def _compute_invoice(self):
+        '''Method to compute number of invoice of participant'''
         inv_obj = self.env['account.invoice']
         for rec in self:
             rec.count_inv = inv_obj.search_count([('transport_student_id',
@@ -303,6 +313,7 @@ class TransportRegistration(models.Model):
     @api.multi
     @api.onchange('point_id')
     def onchange_point_id(self):
+        '''Method to get amount of point selected'''
         for rec in self:
             if rec.point_id:
                 rec.m_amount = rec.point_id.amount or 0.0
@@ -310,6 +321,7 @@ class TransportRegistration(models.Model):
     @api.multi
     @api.onchange('for_month')
     def onchange_for_month(self):
+        '''Method to compute registraton end date'''
         for rec in self:
             tr_start_date = time.strftime("%Y-%m-%d")
             mon = relativedelta(months=+rec.for_month)
@@ -320,12 +332,14 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def trans_regi_cancel(self):
+        '''Method to set state to cancel'''
         for rec in self:
             rec.write({'state': 'cancel'})
         return True
 
     @api.multi
     def trans_regi_confirm(self):
+        '''Method to confirm registration'''
         trans_obj = self.env['student.transport']
         prt_obj = self.env['student.student']
         stu_prt_obj = self.env['transport.participant']
@@ -407,6 +421,7 @@ class AccountPayment(models.Model):
 
     @api.multi
     def post(self):
+        '''Method to compute paid amount and due amount'''
         res = super(AccountPayment, self).post()
         for rec in self:
             for invoice in rec.invoice_ids:

@@ -319,8 +319,8 @@
                            <separator string="Transport Registration" colspan="4"/>
                             <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
                             <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" />
-                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
-                            <field name="point_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}"/>
+                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="point_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
                             <field name="m_amount"/>
                             <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="transport_fees"/>

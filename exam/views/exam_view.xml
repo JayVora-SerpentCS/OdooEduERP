@@ -530,10 +530,10 @@
                 <form string="Results">
                     <sheet>
                         <group col="2" string="Result Information">
-                            <field name="a_exam_id" widget="selection"/>
+                            <field name="a_exam_id" options="{&quot;no_create&quot;: True}"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">
-                            <field name="student_id" widget="selection" domain="[('state','=','done')]"/>
+                            <field name="student_id" domain="[('state','=','done')]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
                             <field name="roll_no_id"/>
                             <field name="standard_id"/>
                         </group>

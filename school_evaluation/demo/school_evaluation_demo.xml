@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- student.evaluation -->
         <record id="student_evaluation_2" model="school.evaluation">
             <field name="student_id" ref="school.demo_student_student_2"/>

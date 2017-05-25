@@ -21,6 +21,7 @@ class TransferVehicle(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
+        '''Overide method to get student'''
         active_id = self._context.get('active_id')
         result = super(TransferVehicle, self).default_get(fields)
         if active_id:
@@ -32,6 +33,7 @@ class TransferVehicle(models.TransientModel):
     @api.multi
     @api.onchange('participation_id')
     def onchange_participation_id(self):
+        '''Method to get transport id and vehicle of participant'''
         for rec in self:
             if rec.participation_id:
                 rec.root_id = rec.participation_id.transport_id.id
@@ -39,6 +41,7 @@ class TransferVehicle(models.TransientModel):
 
     @api.multi
     def vehicle_transfer(self):
+        '''Method to transfer vehicle'''
         for rec in self:
             vehi_data = rec.old_vehicle_id
             vehi_new_data = rec.new_vehicle_id
