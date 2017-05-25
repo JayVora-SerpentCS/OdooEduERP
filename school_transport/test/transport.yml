@@ -140,11 +140,6 @@
     !python {model: transfer.vehicle}: |
      self.onchange_participation_id()
 -
-    call Defaultget
--
-    !python {model: transfer.vehicle}: |
-     self.default_get()
--
     call vehicle_transfer
 -
     !python {model: transfer.vehicle}: |
