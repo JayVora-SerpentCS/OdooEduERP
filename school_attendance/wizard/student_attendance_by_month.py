@@ -38,5 +38,6 @@ class StudentAttendanceByMonth(models.TransientModel):
                  'type': 'ir.actions.report.xml',
                  'form': data}
         return self.env['report'
-                        ].get_action(self, 'school_attendance.attendance_month',
+                        ].get_action(self,
+                                     'school_attendance.attendance_month',
                                      data=datas)
