@@ -406,14 +406,14 @@
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
-            <field name="school_id" ref="demo_school_2"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="user_id" ref="hr.employee_chs"/>
         </record>
         <record id="demo_school_standard_3" model="school.standard">
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
-            <field name="school_id" ref="demo_school_3"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="user_id" ref="hr.employee_fpi"/>
         </record>
         <!--Subject Information-->
@@ -497,23 +497,23 @@
        </record>
        <record id="hr.employee_chs" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
-           <field name="school" ref="demo_school_2"/>
+           <field name="school" ref="demo_school_1"/>
        </record>
        <record id="hr.employee_qdp" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
-           <field name="school" ref="demo_school_2"/>
+           <field name="school" ref="demo_school_1"/>
        </record>
        <record id="hr.employee_fme" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
-           <field name="school" ref="demo_school_2"/>
+           <field name="school" ref="demo_school_1"/>
        </record>
        <record id="hr.employee_fpi" model="hr.employee">
            <field name="is_school_teacher" eval="True"/>
-           <field name="school" ref="demo_school_2"/>
+           <field name="school" ref="demo_school_1"/>
        </record>
        <record id="hr.employee_jep" model="hr.employee">
           <field name="is_school_teacher" eval="True"/>
-          <field name="school" ref="demo_school_2"/>
+          <field name="school" ref="demo_school_1"/>
         </record>
         <!-- Student Informations -->
         <record id="demo_student_student_1" model="student.student">
@@ -543,7 +543,7 @@
             <field name="date_of_birth">02/14/2001</field>
             <field name="gender">male</field>
             <field name="roll_no">1</field>
-            <field name="school_id" ref="demo_school_2"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Sydney</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
@@ -560,7 +560,7 @@
             <field name="date_of_birth">09/24/2007</field>
             <field name="gender">male</field>
             <field name="roll_no">1</field>
-            <field name="school_id" ref="demo_school_3"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Adelaide</field>
             <field name="standard_id" ref="demo_standard_standard_3"/>
@@ -594,7 +594,7 @@
             <field name="date_of_birth">03/24/2003</field>
             <field name="gender">male</field>
             <field name="roll_no">2</field>
-            <field name="school_id" ref="demo_school_2"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Manchester</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>
@@ -611,7 +611,7 @@
             <field name="date_of_birth">05/12/2008</field>
             <field name="gender">male</field>
             <field name="roll_no">2</field>
-            <field name="school_id" ref="demo_school_3"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Headingly</field>
             <field name="standard_id" ref="demo_standard_standard_3"/>
@@ -645,7 +645,7 @@
             <field name="date_of_birth">06/06/2005</field>
             <field name="gender">female</field>
             <field name="roll_no">3</field>
-            <field name="school_id" ref="demo_school_2"/>
+            <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">CapeTown</field>
             <field name="standard_id" ref="demo_standard_standard_2"/>

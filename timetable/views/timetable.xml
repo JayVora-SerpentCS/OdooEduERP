@@ -150,7 +150,7 @@
                                                      <span t-field="t.end_time"></span>
                                                    </td>
                                                    <td align="center" width="14.16%" style="margin-top: 16px; font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                       <span t-field="t.week_day" style="text-align: center;vertical-align: middle;"/>
+                                                       <span t-field="t.day_of_week" style="text-align: center;vertical-align: middle;"/>
                                                    </td>
                                                    <td align="center" width="14.16%" style="margin-top: 16px; font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
                                                        <span t-field="t.subject_id.name" style="text-align: center;vertical-align: middle;"/>
