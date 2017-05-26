@@ -184,7 +184,7 @@
             <field eval="40" name="minimum_marks"/>
             <field name="name">Supplementry Exam_12</field>
             <field eval="100" name="maximum_marks"/>
-            <field name="standard_id" ref="school.demo_school_standard_2"/>
+            <field name="standard_id" ref="school.demo_school_standard_3"/>
             <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
             <field name="created_at" eval="time.strftime('%Y')+'/08/29'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
