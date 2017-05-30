@@ -7,6 +7,7 @@
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
+    'images': ['static/description/SchoolExam.png'],
     'category': 'School Management',
     'license': "AGPL-3",
     'summary': 'A Module For Exams Management Taken In School',

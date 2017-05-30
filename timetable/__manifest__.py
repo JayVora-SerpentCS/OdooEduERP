@@ -8,6 +8,7 @@
     'author': '''Serpent Consulting Services Pvt. Ltd.,
                  Odoo Community Association (OCA)''',
     'website': 'http://www.serpentcs.com',
+    'images': ['static/description/SchoolTimetable.png'],
     'license': "AGPL-3",
     'category': 'School Management',
     'complexity': 'easy',
