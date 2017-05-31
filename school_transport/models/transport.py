@@ -33,20 +33,18 @@ class TransportPoint(models.Model):
     amount = fields.Float('Amount', default=0.0)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike',
-                    limit=100):
-        '''Overide Method to get transport point of selected transport root'''
-        transport_obj = self.env['student.transport']
-        name_points = self._context.get('name')
-        args = args or []
-        if name_points:
-            transport_data = transport_obj.browse(name_points)
-            point_ids = [point_id.id
-                         for point_id in transport_data.trans_point_ids]
-            args.extend([('id', 'in', point_ids)])
-        return super(TransportPoint, self).name_search(name=name, args=args,
-                                                       operator=operator,
-                                                       limit=limit)
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        name = self._context.get('name')
+        if name:
+            transport_obj = self.env['student.transport']
+            for transport_data in transport_obj.browse(name):
+                point_ids = [point_id.id
+                             for point_id in transport_data.trans_point_ids]
+                args.append(('id', 'in', point_ids))
+        return super(TransportPoint, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
 
 
 class TransportVehicle(models.Model):
@@ -74,20 +72,19 @@ class TransportVehicle(models.Model):
                                              ' vehicle Participants')
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike',
-                    limit=100):
-        '''Overide method to get vehicles of selected transport root'''
-        transport_obj = self.env['student.transport']
-        name_vehicle = self._context.get('name')
-        args = args or []
-        if name_vehicle:
-            transport_data = transport_obj.browse(name_vehicle)
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Override method to get vehicles of selected transport root'''
+        name = self._context.get('name')
+        if name:
+            transport_obj = self.env['student.transport']
+            transport_data = transport_obj.browse(name)
             vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
-            args.extend([('id', 'in', vehicle_ids)])
-        return super(TransportVehicle, self).name_search(name=name, args=args,
-                                                         operator=operator,
-                                                         limit=limit)
+            args.append(('id', 'in', vehicle_ids))
+        return super(TransportVehicle, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
 
 
 class TransportParticipant(models.Model):
@@ -112,20 +109,19 @@ class TransportParticipant(models.Model):
                              'State', readonly=True,)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike',
-                    limit=100):
-        student_obj = self.env['student.student']
-        std_name = self._context.get('name')
-        if std_name:
-            for student_data in student_obj.browse(std_name):
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        name = self._context.get('name')
+        if name:
+            student_obj = self.env['student.student']
+            for student_data in student_obj.browse(name):
                 transport_ids = [transport_id.id
                                  for transport_id in
                                  student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
-        return super(TransportParticipant, self).name_search(name=name,
-                                                             args=args,
-                                                             operator=operator,
-                                                             limit=limit)
+        return super(TransportParticipant, self)._search(
+               args=args, offset=offset, limit=limit, order=order, count=count,
+               access_rights_uid=access_rights_uid)
 
 
 class StudentTransports(models.Model):
@@ -180,7 +176,7 @@ class StudentTransports(models.Model):
 
     @api.multi
     def participant_expire(self):
-        '''Schedular to change in paticipant state when registration date
+        '''Schedular to change in participant state when registration date
             is over'''
         current_date = datetime.now()
         trans_parti = self.env['transport.participant']
@@ -256,7 +252,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def transport_fees_pay(self):
-        '''Method to genrate invoice of participant'''
+        '''Method to generate invoice of participant'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             rec.state = 'pending'
@@ -321,7 +317,7 @@ class TransportRegistration(models.Model):
     @api.multi
     @api.onchange('for_month')
     def onchange_for_month(self):
-        '''Method to compute registraton end date'''
+        '''Method to compute registration end date'''
         for rec in self:
             tr_start_date = time.strftime("%Y-%m-%d")
             mon = relativedelta(months=+rec.for_month)
