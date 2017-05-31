@@ -31,6 +31,7 @@ class AccountPayment(models.Model):
 
     @api.multi
     def post(self):
+        '''Override method to change state when invoice is paid'''
         res = super(AccountPayment, self).post()
         for rec in self:
             for invoice in rec.invoice_ids:

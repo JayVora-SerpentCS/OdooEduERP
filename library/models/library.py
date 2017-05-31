@@ -203,6 +203,8 @@ class LibraryBookIssue(models.Model):
                     if rec.card_id.book_limit > len(card_ids) - 1:
                         return True
                     else:
+                        # Check the book issue limit on card if it is over it
+                        # give warning
                         raise UserError(_('Book issue limit is over on this\
                         card'))
                 else:
@@ -281,7 +283,9 @@ class LibraryBookIssue(models.Model):
 
     @api.model
     def create(self, vals):
+        '''Override create method'''
         if vals.get('card_id') and vals.get('user') == 'Student':
+            # fetch the record of user type student
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'student_id': card.student_id.id,
                          'standard_id': card.standard_id.id,
@@ -289,6 +293,7 @@ class LibraryBookIssue(models.Model):
                          'gt_name': card.gt_name
                          })
         if vals.get('card_id') and vals.get('user') == 'Teacher':
+            # fetch the record of user type teacher
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'teacher_id': card.teacher_id.id,
                          'gt_name': card.gt_name
@@ -297,7 +302,9 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def write(self, vals):
+        '''Override write method'''
         if vals.get('card_id') and vals.get('user') == 'Student':
+            # update the details of user type student
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'student_id': card.student_id.id,
                          'standard_id': card.standard_id.id,
@@ -305,6 +312,7 @@ class LibraryBookIssue(models.Model):
                          'gt_name': card.gt_name
                          })
         if vals.get('card_id') and vals.get('user') == 'Teacher':
+            # upate the details of user type Teacher
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'teacher_id': card.teacher_id.id,
                          'gt_name': card.gt_name
@@ -329,7 +337,6 @@ class LibraryBookIssue(models.Model):
     @api.multi
     def issue_book(self):
         '''
-
         This method used for issue a books.
         @param self : Object Pointer
         @param cr : Database Cursor
@@ -341,7 +348,7 @@ class LibraryBookIssue(models.Model):
         for rec in self:
             if rec.name and rec.name.availability == 'notavailable':
                 raise ValidationError(_('This Book is not available!'
-                                        '\nPlease try after sometime.'))
+                                        '\nPlease try after sometime !'))
             if rec.student_id:
                 issue_str = ''
                 book_fines = rec.search([('card_id', '=', rec.card_id.id),
@@ -349,6 +356,8 @@ class LibraryBookIssue(models.Model):
                 if book_fines:
                     for book in book_fines:
                         issue_str += str(book.issue_code) + ', '
+                        # check if fine on book is paid until then user
+                        # cannot issue new book
                     raise UserError(_('You can not request for a book until'
                                       ' the fine is not paid for book issues'
                                       ' %s!') % issue_str)
@@ -430,7 +439,8 @@ class LibraryBookIssue(models.Model):
     @api.multi
     def user_fine(self):
         '''
-        This method used when penalty on book either late return or book lost.
+        This method used when penalty on book either late return or book lost
+        and generate invoice of fine.
         @param self : Object Pointer
         @param cr : Database Cursor
         @param uid : Current Logged in User
@@ -488,7 +498,7 @@ class LibraryBookIssue(models.Model):
 
     @api.multi
     def view_invoice(self):
-        '''this method is use for the view invoice of panelty'''
+        '''this method is use for the view invoice of penalty'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             invoices = invoice_obj.search([('book_issue', '=', rec.id)])
@@ -540,8 +550,8 @@ class LibraryBookRequest(models.Model):
                               ], "State", default='draft')
     book_return_days = fields.Integer(related='name.day_to_return_book',
                                       string="Return Days")
-    active = fields.Boolean(default=True, help='''The active field allows you
-    to hide the category without removing it.''')
+    active = fields.Boolean(default=True, help='''Set active to false to hide
+    the category without removing it.''')
 
     @api.model
     def create(self, vals):
@@ -559,12 +569,14 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     def confirm_book_request(self):
+        '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
         for rec in self:
             vals = {'card_id': rec.card_id.id,
                     'type': rec.type,
                     'name': rec.name.id}
             issue_id = book_issue_obj.create(vals)
+            # changes state to confirm
             rec.state = 'confirm'
             if issue_id:
                 issue_id.onchange_card_issue()

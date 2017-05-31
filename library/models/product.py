@@ -248,6 +248,7 @@ class ProductProduct(models.Model):
     @api.multi
     @api.depends('qty_available')
     def _compute_books_available(self):
+        '''Computes the available books'''
         book_issue_obj = self.env['library.book.issue']
         for rec in self:
             issue_ids = book_issue_obj.sudo().search([('name', '=', rec.id),
@@ -256,12 +257,14 @@ class ProductProduct(models.Model):
             occupied_no = 0.0
             if issue_ids:
                 occupied_no = len(issue_ids)
+            # reduces the quantity when book is issued
             rec.books_available = rec.sudo().qty_available - occupied_no
         return True
 
     @api.multi
     @api.depends('books_available')
     def _compute_books_availablity(self):
+        '''Method to compute availability of book'''
         for rec in self:
             if rec.books_available >= 1:
                 rec.availability = 'available'
@@ -335,7 +338,7 @@ class ProductProduct(models.Model):
         action = self.env.ref('purchase.purchase_form_action')
         result = action.read()[0]
         if not purchase:
-            raise UserError(_('There is no Books Purchase'))
+            raise UserError(_('There is no Books Purchase !'))
         order = []
         [order.append(order_rec.order_id.id) for order_rec in purchase]
         if len(order) != 1:
@@ -348,6 +351,7 @@ class ProductProduct(models.Model):
 
     @api.multi
     def action_book_req(self):
+        '''Method to request book'''
         for rec in self:
             book_req = self.env['library.book.request'].search([('name', '=',
                                                                  rec.id)])
