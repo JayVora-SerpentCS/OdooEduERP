@@ -52,6 +52,7 @@ class HostelRoom(models.Model):
 
     @api.depends('student_ids')
     def _compute_check_availability(self):
+        '''Method to check room availability'''
         room_availability = 0
         for data in self:
             count = 0
@@ -93,16 +94,19 @@ class HostelStudent(models.Model):
 
     @api.depends('room_rent', 'paid_amount')
     def _compute_remaining_fee_amt(self):
+        '''Method to compute hostel amount'''
         for rec in self:
             rec.remaining_amount = rec.room_rent - (rec.paid_amount or 0.0)
 
     @api.constrains('duration')
     def check_duration(self):
+        '''Method to check duration should be greater than zero'''
         if self.duration <= 0:
             raise ValidationError(_('Duration should be greater than 0'))
 
     @api.multi
     def _compute_invoices(self):
+        '''Method to compute number of invoice of student'''
         inv_obj = self.env['account.invoice']
         for rec in self:
             rec.compute_inv = inv_obj.search_count([('hostel_student_id', '=',
@@ -110,6 +114,7 @@ class HostelStudent(models.Model):
 
     @api.depends('duration')
     def _compute_rent(self):
+        '''Method to compute hostel room rent'''
         for rec in self:
             amt = rec.room_id.rent_amount or 0.0
             rec.room_rent = rec.duration * amt
@@ -159,15 +164,19 @@ class HostelStudent(models.Model):
 
     @api.multi
     def cancel_state(self):
+        '''Method to change state to cancel'''
         for rec in self:
             rec.status = 'cancel'
+            # increase room availability
             rec.room_id.availability += 1
         return True
 
     @api.multi
     def reservation_state(self):
+        '''Method to change state to reservation'''
         for rec in self:
             rec.status = 'reservation'
+            # room availability is decreased
             rec.room_id.availability -= 1
         return True
 
@@ -175,6 +184,8 @@ class HostelStudent(models.Model):
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
         for rec in self:
+            '''Method to calculate discharge date based on current date and
+               duration'''
             if rec.admission_date:
                 date = datetime.strptime(rec.admission_date,
                                          DEFAULT_SERVER_DATETIME_FORMAT)
@@ -189,10 +200,12 @@ class HostelStudent(models.Model):
 
     @api.multi
     def discharge_state(self):
+        '''Method to change state to discharge'''
         curr_date = datetime.now()
         for rec in self:
             rec.status = 'discharge'
             rec.room_id.availability -= 1
+            # set discharge date equal to current date
             rec.acutal_discharge_date = curr_date
 
     @api.multi
@@ -211,6 +224,7 @@ class HostelStudent(models.Model):
 
     @api.multi
     def invoice_view(self):
+        '''Method to view number of invoice of student'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             invoices = invoice_obj.search([('hostel_student_id', '=', rec.id)
@@ -228,6 +242,7 @@ class HostelStudent(models.Model):
 
     @api.multi
     def pay_fees(self):
+        '''Method generate invoice of hostel fees of student'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             rec.write({'status': 'pending'})
@@ -259,6 +274,7 @@ class HostelStudent(models.Model):
 
     @api.multi
     def print_fee_receipt(self):
+        '''Method to print fee reciept'''
         return self.env['report'
                         ].get_action(self,
                                      'school_hostel.hostel_fee_reciept1')
