@@ -26,6 +26,7 @@
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/SchoolLibrary.png"],
     "complexity": "easy",
     "description": """Module to manage library.
         Books Information,

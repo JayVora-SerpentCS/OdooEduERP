@@ -24,6 +24,7 @@
     "version": "2.1",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/SchoolFees.png"],
     "category": "School Management",
     "complexity": "easy",
     "description": """A module to School Fees Management System.

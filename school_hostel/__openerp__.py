@@ -25,6 +25,7 @@
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/SchoolHostel.png"],
     "complexity": "easy",
     "description": """Module to Manages Hostel.
         Rooms Information,

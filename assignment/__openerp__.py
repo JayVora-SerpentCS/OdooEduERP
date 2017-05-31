@@ -25,6 +25,7 @@
     "version": "8.0.3.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/Assignment_Management.png"],
     "category": "School Management",
     "complexity": "easy",
     "description": "A module to School Assignment Management helps in the \

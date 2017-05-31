@@ -25,6 +25,7 @@
     "version": "3.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/SchoolAttendance.png"],
     "category": "School Management",
     "complexity": "easy",
     "description": """A module to Student Attendance System.

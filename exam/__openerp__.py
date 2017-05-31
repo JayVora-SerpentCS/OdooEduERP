@@ -27,6 +27,7 @@
                  Serpent Consulting Services Pvt. Ltd.''',
     "license": 'AGPL-3',
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/SchoolExam.png"],
     "category": "School Management",
     "complexity": "easy",
     "depends": ["timetable"],

@@ -24,6 +24,7 @@
     "version": "3.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
+    "images": ["static/description/school.png"],
     "category": "School Management",
     "complexity": "easy",
     "description": """A module to School Management.
