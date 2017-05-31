@@ -50,6 +50,7 @@ class SchoolEvent(models.Model):
 
     @api.depends('part_ids')
     def _compute_participants(self):
+        '''Method to calculate number of participant'''
         for rec in self:
             rec.participants = len(rec.part_ids)
 
@@ -99,11 +100,11 @@ class SchoolEvent(models.Model):
 
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
-
+        '''Raises constraint when start date is greater than end date'''
         sedt = self.start_date > self.end_date
         if (self.start_date and self.end_date and sedt):
             raise UserError(_('Error! Event start-date must be lower\
-                              then Event end-date.'))
+                              then Event end-date!'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
                     'last_reg_date')
@@ -114,36 +115,41 @@ class SchoolEvent(models.Model):
 
             if self.start_reg_date > self.last_reg_date:
                 raise UserError(_('Error! Event Registration StartDate must be\
-                                  lower than Event Registration end-date.'))
+                                  lower than Event Registration end-date.!'))
             elif self.last_reg_date >= self.start_date:
                 raise UserError(_('Error! Event Registration last-date must be\
-                                    lower than Event start-date.'))
+                                    lower than Event start-date!.'))
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        args = args or []
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Override method to find student of standard selected'''
         if self._context.get('part_name_id'):
             student_obj = self.env['student.student']
             data = student_obj.browse(self._context.get('part_name_id'))
-            args.append(('part_standard_ids', 'in', [data.standard_id.id]))
-        return super(SchoolEvent, self).name_search(name=name, args=args,
-                                                    operator=operator,
-                                                    limit=limit)
+            arg_domain = ('part_standard_ids', 'in', [data.standard_id.id])
+            args.append(arg_domain)
+        return super(SchoolEvent, self)._search(
+               args=args, offset=offset, limit=limit, count=count,
+               access_rights_uid=access_rights_uid)
 
     @api.multi
     def event_close(self):
+        '''Method to change state to close'''
         for rec in self:
             rec.write({'state': 'close'})
         return True
 
     @api.multi
     def event_draft(self):
+        '''Method to change state to draft'''
         for rec in self:
             rec.write({'state': 'draft'})
         return True
 
     @api.multi
     def event_cancel(self):
+        '''Method to change state to cancel'''
         for rec in self:
             rec.write({'state': 'cancel'})
         return True
@@ -171,6 +177,7 @@ class SchoolEventRegistration(models.Model):
 
     @api.multi
     def regi_cancel(self):
+        '''Method to cancel registration'''
         event_part_obj = self.env['school.event.participant']
         for rec in self:
             prt_data = rec.part_name_id
@@ -185,6 +192,7 @@ class SchoolEventRegistration(models.Model):
 
     @api.multi
     def regi_confirm(self):
+        '''Method to confirm registration'''
         event_part_obj = self.env['school.event.participant']
 
         for rec in self:
@@ -221,13 +229,14 @@ class StudentStudent(models.Model):
                                  'participant_id', 'Participants')
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        args = args or []
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Override method to find event of standard selected'''
         if self._context.get('name'):
             event_obj = self.env['school.event']
             event_data = event_obj.browse(self._context['name'])
             std_ids = [std_id.id for std_id in event_data.part_standard_ids]
             args.append(('standard_id', 'in', std_ids))
-        return super(StudentStudent, self).name_search(name=name, args=args,
-                                                       operator=operator,
-                                                       limit=limit)
+        return super(StudentStudent, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
