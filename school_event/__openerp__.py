@@ -6,6 +6,7 @@
  'author': '''Serpent Consulting Services PVT. LTD.,
              Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
+ 'images': ['static/description/SchoolEvent.png'],
  'category': 'School Management',
  'license': '',
  'complexity': 'easy',

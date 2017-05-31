@@ -6,6 +6,7 @@
  'author': '''Serpent Consulting Services PVT. LTD.,
              Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
+ 'images': ['static/description/SchoolAttendance.png'],
  'category': 'School Management',
  'license': '',
  'summary': 'A Module For Attendance Management In School',
