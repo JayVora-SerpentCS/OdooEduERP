@@ -6,6 +6,7 @@
  'author': '''Serpent Consulting Services PVT. LTD.,
              Odoo Community Association (OCA)''',
  'website': 'http://www.serpentcs.com',
+ 'images': ['static/description/Assignment_Management.png'],
  'license': '',
  'category': 'School Management',
  'summary': 'A Module For Assignment Management In School',

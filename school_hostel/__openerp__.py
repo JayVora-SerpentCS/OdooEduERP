@@ -7,6 +7,7 @@
              Odoo Community Association (OCA)''',
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',
+ 'images': ['static/description/SchoolHostel.png'],
  'license': '',
  'complexity': 'easy',
  'summary': 'Module For HOSTEL Management In School',

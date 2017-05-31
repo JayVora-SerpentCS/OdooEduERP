@@ -6,6 +6,7 @@
  'author': '''Serpent Consulting Services PVT. LTD.,
              Odoo Community Association (OCA)''',
  'category': 'School Management',
+ 'images': ['static/description/SchoolBarcode.png'],
  'license': '',
  'summary': 'A Module For BarCode System For School',
  'depends': ['timetable'],

@@ -7,6 +7,7 @@
              Odoo Community Association (OCA)''',
  'category': 'School Management',
  'website': 'http://www.serpentcs.com',
+ 'images': ['static/description/SchoolLibrary.png'],
  'license': '',
  'summary': 'A Module For Library Management For School',
  'complexity': 'easy',
