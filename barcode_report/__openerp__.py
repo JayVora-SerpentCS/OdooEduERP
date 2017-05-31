@@ -23,6 +23,7 @@
     "name": "School Barcode",
     "version": "3.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
+    "images": ["static/description/SchoolBarcode.png"],
     'category': 'School Management',
     "depends": ['timetable'],
     "demo": [],
