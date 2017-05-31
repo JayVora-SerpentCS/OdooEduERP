@@ -12,6 +12,7 @@ class SchoolEvaluation(models.Model):
 
     @api.multi
     def get_record(self):
+        '''Method to get the evaluation questions'''
         eval_temp_obj = self.env['school.evaluation.template']
         eval_list = []
         for rec in self:
@@ -27,6 +28,7 @@ class SchoolEvaluation(models.Model):
     @api.multi
     @api.depends('eval_line')
     def _compute_total_points(self):
+        '''Method to compute evaluation points'''
         for rec in self:
             if rec.eval_line:
                 rec.total = sum(line.point_id.point for line in rec.eval_line
@@ -77,24 +79,28 @@ class SchoolEvaluation(models.Model):
 
     @api.multi
     def set_start(self):
+        '''change state to start'''
         for rec in self:
             rec.state = 'start'
         return True
 
     @api.multi
     def set_finish(self):
+        '''Change state to finished'''
         for rec in self:
             rec.state = 'finished'
         return True
 
     @api.multi
     def set_cancel(self):
+        '''Change state to cancelled'''
         for rec in self:
             rec.state = 'cancelled'
         return True
 
     @api.multi
     def set_draft(self):
+        '''Changes state to draft'''
         for rec in self:
             rec.state = 'draft'
         return True
@@ -105,6 +111,7 @@ class StudentEvaluationLine(models.Model):
 
     @api.multi
     def onchange_point(self, point_id):
+        '''Method to get rating point based on rating'''
         if point_id:
             for point_obj in self.env['rating.rating'].browse(point_id):
                 return {'value': {'rating': point_obj.rating}}
