@@ -15,6 +15,7 @@ class StudentFeesRegister(models.Model):
     @api.multi
     @api.depends('line_ids')
     def _total_amount(self):
+        '''Method to compute total amount'''
         for rec in self:
             total_amt = 0.0
             for line in rec.line_ids:
@@ -45,12 +46,14 @@ class StudentFeesRegister(models.Model):
 
     @api.multi
     def fees_register_draft(self):
+        '''Changes the state to draft'''
         for rec in self:
             rec.state = 'draft'
         return True
 
     @api.multi
     def fees_register_confirm(self):
+        '''Method to confirm payslip'''
         stud_obj = self.env['student.student']
         slip_obj = self.env['student.payslip']
         school_std_obj = self.env['school.standard']
@@ -67,6 +70,7 @@ class StudentFeesRegister(models.Model):
             for stu in student_ids:
                 old_slips = slip_obj.search([('student_id', '=', stu.id),
                                              ('date', '=', rec.date)])
+                # Check if payslip exist of student
                 if old_slips:
                     raise UserError(_('There is already a Payslip exist for\
                                            student: %s\
@@ -81,6 +85,7 @@ class StudentFeesRegister(models.Model):
                            'fees_structure_id': rec.fees_structure.id or False}
                     slip_id = slip_obj.create(res)
                     slip_id.onchange_student()
+            # Calculate the amount
             amount = 0
             for data in rec.line_ids:
                 amount += data.total
@@ -149,6 +154,7 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def _compute_invoice(self):
+        '''Method to compute number invoice'''
         inv_obj = self.env['account.invoice']
         for rec in self:
             rec.invoice_count = inv_obj.search_count([('student_payslip_id',
@@ -204,6 +210,7 @@ class StudentPayslip(models.Model):
 
     @api.onchange('student_id')
     def onchange_student(self):
+        '''Method to get standard , division , medium of student selected'''
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.division_id = self.student_id.division_id
@@ -212,6 +219,7 @@ class StudentPayslip(models.Model):
     @api.multi
     @api.onchange('journal_id')
     def onchange_journal_id(self):
+        '''Method to get currency from journal'''
         for rec in self:
             currency_id = rec.journal_id and rec.journal_id.currency_id and\
                 rec.journal_id.currency_id.id\
@@ -250,18 +258,21 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def payslip_draft(self):
+        '''Change state to draft'''
         for rec in self:
             rec.state = 'draft'
         return True
 
     @api.multi
     def payslip_paid(self):
+        '''Change state to paid'''
         for rec in self:
             rec.state = 'paid'
         return True
 
     @api.multi
     def payslip_confirm(self):
+        '''Method to confirm payslip'''
         for rec in self:
             if not rec.journal_id:
                 raise ValidationError(_('Kindly, Select Account Journal'))
@@ -278,7 +289,7 @@ class StudentPayslip(models.Model):
                              'amount': data.amount}
                 lines.append((0, 0, line_vals))
             rec.write({'line_ids': lines})
-
+            # Compute amount
             amount = 0
             for data in rec.line_ids:
                 amount += data.amount
@@ -288,6 +299,7 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def invoice_view(self):
+        '''View number of invoice of student'''
         invoice_obj = self.env['account.invoice']
         for rec in self:
             invoices = invoice_obj.search([('student_payslip_id', '=',
@@ -399,6 +411,7 @@ class StudentPayslip(models.Model):
 
     @api.multi
     def student_pay_fees(self):
+        '''Generate invoice of student fee'''
         for rec in self:
             rec.write({'state': 'pending'})
             partner = rec.student_id and rec.student_id.partner_id
@@ -415,6 +428,7 @@ class StudentPayslip(models.Model):
                 if line.account_id.id:
                     acc_id = line.account_id.id
                 else:
+                    # check type of invoice
                     if rec.type in ('out_invoice', 'in_refund'):
                         acc_id = rec.journal_id.default_credit_account_id.id
                     else:
@@ -425,6 +439,7 @@ class StudentPayslip(models.Model):
                                      'price_unit': line.amount}
                 invoice_line.append((0, 0, invoice_line_vals))
             vals.update({'invoice_line_ids': invoice_line})
+            # creates invoice
             account_invoice_id = self.env['account.invoice'].create(vals)
             invoice_obj = self.env.ref('account.invoice_form')
             return {'name': _("Pay Fees"),
@@ -465,12 +480,14 @@ class AccountPayment(models.Model):
 
     @api.multi
     def post(self):
+        '''Method to change state to paid when state in invoice is paid'''
         res = super(AccountPayment, self).post()
         curr_date = datetime.now()
         for rec in self:
             for invoice in rec.invoice_ids:
                 vals = {'due_amount': invoice.residual}
                 if invoice.student_payslip_id and invoice.state == 'paid':
+                    # Calculate paid amount and changes state to paid
                     fees_payment = (invoice.student_payslip_id.paid_amount +
                                     rec.amount)
                     vals = {'state': 'paid',
@@ -479,6 +496,8 @@ class AccountPayment(models.Model):
                             'paid_amount': fees_payment,
                             'due_amount': invoice.residual}
                 if invoice.student_payslip_id and invoice.state == 'open':
+                    # Calculate paid amount and due amount and changes state
+                    # to pending
                     fees_payment = (invoice.student_payslip_id.paid_amount +
                                     rec.amount)
                     vals = {'state': 'pending',

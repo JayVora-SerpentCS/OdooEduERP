@@ -73,7 +73,6 @@
                 </tree>
             </field>
         </record>
-        
         <!-- Actions Of Form & Tree Views Of HOSTEL Type -->
         <record id="action_hostel_type" model="ir.actions.act_window">
             <field name="name">HOSTEL Type</field>
@@ -81,7 +80,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
         <!-- MenuItem Of HOSTEL -->
         <menuitem id="hostel_main_menu" name="Hostel" parent="school.menu_ems" sequence="5" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
 

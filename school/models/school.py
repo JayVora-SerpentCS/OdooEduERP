@@ -177,6 +177,7 @@ class SchoolStandard(models.Model):
     @api.multi
     @api.depends('subject_ids')
     def _compute_subject(self):
+        '''Method to compute subjects'''
         for rec in self:
             rec.total_no_subjects = len(rec.subject_ids)
 
@@ -296,6 +297,7 @@ class StudentStudent(models.Model):
                 start = datetime.strptime(rec.date_of_birth,
                                           DEFAULT_SERVER_DATE_FORMAT)
                 age_calc = ((current_dt - start).days / 365)
+                # Age should be greater than 0
                 if age_calc > 0.0:
                     rec.age = age_calc
 

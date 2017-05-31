@@ -17,5 +17,5 @@ class RejectReason(models.TransientModel):
             student = student_assignment.browse(std_id)
             if student:
                 student.write({'state': 'reject',
-                               'reject_assignment': rec.reasons or ''})
+                               'rejection_reason': rec.reasons or ''})
         return True

@@ -69,6 +69,7 @@ class SchoolTeacherAssignment(models.Model):
 
     @api.multi
     def done_assignments(self):
+        '''Changes the state to done'''
         self.ensure_one()
         self.state = 'done'
         return True
@@ -87,7 +88,7 @@ class SchoolStudentAssignment(models.Model):
     name = fields.Char('Assignment Name')
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
     standard_id = fields.Many2one('school.standard', 'Standard', required=True)
-    reject_assignment = fields.Text('Reject Reason')
+    rejection_reason = fields.Text('Reject Reason')
     teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True)
     assign_date = fields.Date('Assign Date', required=True)
     due_date = fields.Date('Due Date', required=True)

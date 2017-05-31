@@ -10,6 +10,7 @@ class MoveStandards(models.TransientModel):
 
     @api.multi
     def move_start(self):
+        '''Method to change standard of student after he passes the exam'''
         academic_obj = self.env['academic.year']
         school_stand_obj = self.env['school.standard']
         standard_obj = self.env["standard.standard"]
