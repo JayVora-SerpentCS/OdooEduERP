@@ -13,6 +13,7 @@ class SubjectResultWiz(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
+        '''Override default method to get default subjects'''
         res = super(SubjectResultWiz, self).default_get(fields)
         exams = self.env['exam.result'].browse(self._context.get('active_id'))
         subjectlist = [rec.subject_id.id for rec in exams.result_ids]

@@ -14,23 +14,17 @@ class StudentStudent(models.Model):
                                        'Exam History', readonly=True)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike',
-                    limit=100):
-        '''Overide method to get student according to exam'''
-        args = args or []
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Override method to get exam of student selcted'''
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('standard_id', 'in', std_ids))
-        if self._context.get('a_exam'):
-            add_exam = self.env['additional.exam']
-            add_exam_data = add_exam.browse(self._context.get('a_exam'))
-            standards = [stds_id.id for stds_id in add_exam_data.standard_id]
-            args.append(('standard_id', 'in', standards))
-        return super(StudentStudent, self).name_search(name=name, args=args,
-                                                       operator=operator,
-                                                       limit=limit)
+        return super(StudentStudent, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
 
 
 class ExtendedTimeTable(models.Model):
@@ -73,7 +67,7 @@ class ExtendedTimeTableLine(models.Model):
                     raise ValidationError(_('Invalid Date Error !\
                         Either you have selected wrong day\
                                        for the date or you have selected\
-                                       invalid date.'))
+                                       invalid date!'))
         return True
 
 
@@ -87,7 +81,7 @@ class ExamExam(models.Model):
         for rec in self:
             if rec.end_date < rec.start_date:
                 raise ValidationError(_('Exam end date should be \
-                                  greater than start date'))
+                                  greater than start date!'))
             for line in rec.exam_schedule_ids:
                 if line.timetable_id:
                     for tt in line.timetable_id.exam_timetable_line_ids:
@@ -144,18 +138,22 @@ class ExamExam(models.Model):
             if rec.exam_schedule_ids:
                 rec.state = 'running'
             else:
-                raise ValidationError(_('You must add one Exam Schedule'))
+                raise ValidationError(_('You must add one Exam Schedule!'))
         return True
 
     @api.multi
     def set_finish(self):
         '''Method to set state to finish'''
-        self.state = 'finished'
+        for rec in self:
+            rec.state = 'finished'
+        return True
 
     @api.multi
     def set_cancel(self):
         '''Method to set state to cancel'''
-        self.state = 'cancelled'
+        for rec in self:
+            rec.state = 'cancelled'
+        return True
 
     @api.multi
     def _validate_date(self):
@@ -167,7 +165,7 @@ class ExamExam(models.Model):
 
     @api.multi
     def generate_result(self):
-        '''Method to genrate result'''
+        '''Method to generate result'''
         result_obj = self.env['exam.result']
         result_list = []
         for rec in self:
@@ -361,9 +359,11 @@ class ExamResult(models.Model):
 
     @api.multi
     def result_confirm(self):
+        '''Method to confirm result'''
         for rec in self:
             for line in rec.result_ids:
                 if line.maximum_marks == 0:
+                    # Check subject marks not greater than maximum marks
                     raise ValidationError(_('Kindly add maximum\
                             marks of subject "%s".') % (line.subject_id.name))
                 elif line.minimum_marks == 0:
@@ -372,7 +372,7 @@ class ExamResult(models.Model):
                 elif ((line.maximum_marks == 0 or line.minimum_marks == 0) and
                       line.obtain_marks):
                     raise ValidationError(_('Kindly add marks\
-                        details of subject "%s".') % (line.subject_id.name))
+                        details of subject "%s"!') % (line.subject_id.name))
             vals = {'grade': rec.grade,
                     'percentage': rec.percentage,
                     'state': 'confirm'
