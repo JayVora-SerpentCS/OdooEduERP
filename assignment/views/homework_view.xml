@@ -138,7 +138,7 @@
                             <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
                         <group string="Reject Assignment" attrs="{'invisible':[('state','in',['draft','active','done'])]}">
-                            <field name="reject_assignment" attrs="{'invisible':[('state','in',['draft','active','done'])]}"/>
+                            <field name="rejection_reason" attrs="{'invisible':[('state','in',['draft','active','done'])]}"/>
                         </group>
                         <field name="teacher_assignment_id" invisible="1"/>
                    </sheet>
