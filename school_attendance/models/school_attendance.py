@@ -176,7 +176,7 @@ class DailyAttendance(models.Model):
     @api.multi
     @api.depends('student_ids')
     def _compute_present(self):
-        '''Method to count present student'''
+        '''Method to count present students'''
         for rec in self:
             count = 0
             if rec.student_ids:
@@ -188,6 +188,7 @@ class DailyAttendance(models.Model):
     @api.multi
     @api.depends('student_ids')
     def _compute_absent(self):
+        '''Method to count absent students'''
         for rec in self:
             count_fail = 0
             if rec.student_ids:
@@ -237,6 +238,7 @@ class DailyAttendance(models.Model):
     @api.multi
     @api.onchange('standard_id')
     def onchange_standard_id(self):
+        '''Method to get standard of student selected'''
         stud_obj = self.env['student.student']
         student_list = []
         for rec in self:
@@ -252,6 +254,7 @@ class DailyAttendance(models.Model):
 
     @api.multi
     def attendance_draft(self):
+        '''Changes the state of attendance to draft'''
         attendance_sheet_obj = self.env['attendance.sheet']
         academic_year_obj = self.env['academic.year']
         academic_month_obj = self.env['academic.month']
@@ -344,6 +347,7 @@ class DailyAttendance(models.Model):
 
     @api.multi
     def attendance_validate(self):
+        '''Method to validate attendance'''
         sheet_line_obj = self.env['attendance.sheet.line']
         acadmic_year_obj = self.env['academic.year']
         acadmic_month_obj = self.env['academic.month']
@@ -381,6 +385,7 @@ class DailyAttendance(models.Model):
                             sheet_line_obj.read([student_id.roll_no])
                             domain = [('roll_no', '=', student_id.roll_no)]
                             search_id = sheet_line_obj.search(domain)
+                            # compute attendance of each day
                             if date.day == 1 and student_id.is_absent:
                                 val = {'one': False}
 
@@ -786,10 +791,12 @@ class DailyAttendanceLine(models.Model):
 
     @api.onchange('is_present')
     def onchange_attendance(self):
+        '''Method to make absent false when student is present'''
         if self.is_present:
             self.is_absent = False
 
     @api.onchange('is_absent')
     def onchange_absent(self):
+        '''Method to make present false when student is absent'''
         if self.is_absent:
             self.is_present = False
