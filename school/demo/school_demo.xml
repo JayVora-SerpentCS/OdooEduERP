@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!--  School Information -->
         <record id="demo_school_1" model="school.school">
             <field name="name">West High School</field>
@@ -458,21 +458,39 @@
             <field name="minimum_marks">35</field>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
         </record>
+        <record id="demo_subject_subject_7" model="subject.subject">
+            <field name="name">Music</field>
+            <field name="code">MS</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
+        </record>
+        <record id="demo_subject_subject_8" model="subject.subject">
+            <field name="name">Philosophy</field>
+            <field name="code">PH</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
+        </record>
         <!--  Subject elective -->
         <record id="demo_elective_subject_1" model="subject.elective">
-            <field name="name">SansKrit</field>
+            <field name="name">Elective Group 1</field>
+            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_8')])]"/>
         </record>
 
         <record id="demo_elective_subject_2" model="subject.elective">
-            <field name="name">Computer</field>
+            <field name="name">Elective Group 2</field>
+            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_5')])]"/>
         </record>
 
         <record id="demo_elective_subject_3" model="subject.elective">
-            <field name="name">Sport</field>
+            <field name="name">Elective Group 3</field>
+            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_6')])]"/>
         </record>
 
         <record id="demo_elective_subject_4" model="subject.elective">
-            <field name="name">Music</field>
+            <field name="name">Elective Group 4</field>
+            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_7')])]"/>
         </record>
         <!-- Demo data of teacher -->
         <record id="hr.employee_root" model="hr.employee">
