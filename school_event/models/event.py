@@ -129,9 +129,10 @@ class SchoolEvent(models.Model):
             data = student_obj.browse(self._context.get('part_name_id'))
             arg_domain = ('part_standard_ids', 'in', [data.standard_id.id])
             args.append(arg_domain)
-        return super(SchoolEvent, self)._search(
-               args=args, offset=offset, limit=limit, count=count,
-               access_rights_uid=access_rights_uid)
+        return super(SchoolEvent, self
+                     )._search(args=args, offset=offset,
+                               limit=limit, count=count,
+                               access_rights_uid=access_rights_uid)
 
     @api.multi
     def event_close(self):
