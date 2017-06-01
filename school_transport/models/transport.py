@@ -119,9 +119,10 @@ class TransportParticipant(models.Model):
                                  for transport_id in
                                  student_data.transport_ids]
                 args.append(('id', 'in', transport_ids))
-        return super(TransportParticipant, self)._search(
-               args=args, offset=offset, limit=limit, order=order, count=count,
-               access_rights_uid=access_rights_uid)
+        return super(TransportParticipant, self
+                     )._search(args=args, offset=offset,
+                               limit=limit, count=count,
+                               access_rights_uid=access_rights_uid)
 
 
 class StudentTransports(models.Model):
