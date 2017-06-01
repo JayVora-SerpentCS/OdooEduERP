@@ -26,4 +26,4 @@
     'demo': ['demo/library_demo.xml'],
     'installable': True,
     'application': True
- }
+}
