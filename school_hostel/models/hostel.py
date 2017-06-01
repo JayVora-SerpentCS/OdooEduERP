@@ -183,9 +183,8 @@ class HostelStudent(models.Model):
     @api.multi
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
+        '''to calculate discharge date based on current date and duration'''
         for rec in self:
-            '''Method to calculate discharge date based on current date and
-               duration'''
             if rec.admission_date:
                 date = datetime.strptime(rec.admission_date,
                                          DEFAULT_SERVER_DATETIME_FORMAT)
