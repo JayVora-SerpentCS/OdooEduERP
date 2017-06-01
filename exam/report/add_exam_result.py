@@ -3,7 +3,6 @@
 
 import time
 from odoo import models, api
-import odoo
 
 
 class ReportAddExamResult(models.AbstractModel):
@@ -15,8 +14,7 @@ class ReportAddExamResult(models.AbstractModel):
         result_data = []
         for sub in subject_ids:
             sub_list.append(sub.id)
-        env = odoo.api.Environment({})
-        sub_obj = env['exam.subject']
+        sub_obj = self.env['exam.subject']
         subject_exam_ids = sub_obj.search([('id', 'in', sub_list),
                                            ('exam_id', '=', result.id)])
         for subject in subject_exam_ids:
@@ -33,19 +31,12 @@ class ReportAddExamResult(models.AbstractModel):
 
         docs = self.env[self.model].browse(self.env.context.get('active_ids',
                                                                 []))
-        subject_ids = data['form'].get('subject_ids')
-        result = data['form'].get('result')
-        _get_result = self.with_context(data['form'].get('used_context', {}))
-        _get_result_detail = _get_result._get_result_detail(subject_ids,
-                                                            result
-                                                            )
         docargs = {
             'doc_ids': docids,
             'doc_model': self.model,
-            'data': data['form'],
             'docs': docs,
             'time': time,
-            '_get_result_detail': _get_result_detail,
+            'get_result_detail': self._get_result_detail,
         }
-        render_model = 'report.abstract_report'
+        render_model = 'exam.exam_result_report'
         return self.env['report'].render(render_model, docargs)

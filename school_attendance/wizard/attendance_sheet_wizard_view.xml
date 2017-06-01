@@ -11,14 +11,14 @@
             <field name="arch" type="xml">
                 <form string="Monthly Attendance Sheet">
                     <sheet>
-                        <separator string="Standard Information" colspan="4" />
-                        <group col="4" colspan="2">
+                        <separator string="Standard Information" col="2" colspan="2"/>
+                        <group col="2" colspan="2">
                             <field name="standard_id"  widget="selection" />
                         </group>
                         <separator string="Academic Year Information" colspan="4" />
                         <group col="4" colspan="2">
                             <field name="year_id" widget="selection" />
-                            <field name="month_id" domain="[('year_id','=',year_id)]" />
+                            <field name="month_id" domain="[('year_id','=',year_id)]" widget="selection"/>
                         </group>
                         <separator string="" colspan="4" />
                     </sheet>

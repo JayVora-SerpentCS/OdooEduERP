@@ -6,14 +6,24 @@
         <record id="demo_subject_subject_9" model="subject.subject">
             <field name="name">Economic</field>
             <field name="code">ECO</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6, 0,[ref('hr.employee_chs')])]"/>
+            
         </record>
         <record id="demo_subject_subject_10" model="subject.subject">
             <field name="name">Account</field>
             <field name="code">ACC</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6, 0,[ref('hr.employee_root'),ref('hr.employee_niv')])]"/>
         </record>
         <record id="demo_subject_subject_11" model="subject.subject">
             <field name="name">Sanskrit</field>
             <field name="code">SAN</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6,0,[ref('hr.employee_chs')])]"/>
         </record>
         <record id="time_table_firsts0" model="time.table">
             <!-- <field name="division_id" ref="school.demo_standard_division_2"/> -->

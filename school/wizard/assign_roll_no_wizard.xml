@@ -14,28 +14,26 @@
                     <group colspan="4" col="6">
                         <field name="standard_id" widget="selection" />
                         <field name="medium_id" widget="selection"  />
-                        <field name="division_id" widget="selection" />
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                        <label string="" colspan="2"/>
-                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
-                        <button class="btn btn-sm btn-default fa fa-plus" name="assign_rollno" string="Finish" type="object"/>
-                   </group>
+                   <footer>
+                       <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
+                       <button class="btn btn-sm btn-default fa fa-plus" name="assign_rollno" string="Finish" type="object"/>
+                   </footer>
                </form>
             </field>
         </record>
 
-        <!-- Assign Roll Number Wizard Action  -->
+        <!-- Action Of Form Views Of Assign Roll Number -->
+        <record id="action_assign_roll_no_form" model="ir.actions.act_window">
+            <field name="name">Assign Roll Number</field>
+            <field name="res_model">assign.roll.no</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_assign_roll_no_form" />
+            <field name="target">new</field>
+        </record>
 
-        <act_window id="action_assign_roll_no_form"
-            multi="True"
-            key2="client_action_multi"
-            name="Assign Roll Number"
-            res_model="assign.roll.no"
-            src_model="student.student"
-            view_mode="form"
-            target="new"
-            view_type="form"/>
+        <!-- MenuItem For Configurations->Move Standards -->
+        <menuitem id="menu_assign_rollno_form" name="Assign Roll Number" parent="menu_configuration" action="action_assign_roll_no_form" />
 
 </odoo>

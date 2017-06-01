@@ -86,27 +86,49 @@
                         <field name="state" nolabel="1" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" states="finished">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                            <button name="generate_result" string="Generate result" type="object" class="oe_stat_button fa fa-graduation-cap" 
+                                attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}" 
+                                groups="school.group_school_teacher,school.group_school_administration"/>
+                        </div>
                         <separator string="Exam Detail"/>
-                        <group col="4" colspan="6" attrs="{'readonly': [('state','!=','draft')]}">
+                        <group col="4" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
                             <separator colspan="4" col="4" />
                             <field name="exam_code"/>
-                            <field name="name" placeholder="Exam Name"/>
-                        </group>
-                        <group col="4" colspan="2">
+                            <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
+                            <field name="academic_year" placeholder="Select Academic Year.." widget="selection" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
                             <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
+                        </group>
+                        <group col="4" colspan="4">
                             <notebook colspan="4" >
-                                <page string="Exam Schedule">
-                                    <field name="exam_timetable_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                </page>
                                 <page string="Standard">
-                                    <field name="standard_id" nolabel="1" colspan="4"/>
+                                    <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
+                                        options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                                 </page>
+                                <page string="Exam Schedule">
+                                    <field name="exam_schedule_ids" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
+                                            context="{'default_standard_ids':standard_id,'academic_year':academic_year}">
+                                        <tree name="exam_schedule" string="Exam Schedule" editable="top">
+                                            <field name="standard_ids" invisible="1"/>
+                                            <field name="standard_id" required="1" widget="selection"/>
+                                            <field name="timetable_id" required="1" domain="[('timetable_type','=','exam'),
+                                                                                             ('year_id','=',context.get('academic_year')),
+                                                                                             ('standard_id','=',standard_id)]"
+                                                options="{&quot;no_create&quot;: True}"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                
                             </notebook>
                         </group>
                         <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
-                            <field name="create_date" placeholder="Created Date"/>
-                            <field name="write_date" placeholder="Last Update Date"/>
+                            <field name="create_date" readonly="1" placeholder="Created Date" string="Exam Created Date"/>
+                            <field name="write_date" readonly="1" placeholder="Last Update Date" string="Exam Update Date"/>
                         </group>
                     </sheet>
                 </form>
@@ -133,8 +155,23 @@
             <field name="inherit_id" ref="timetable.view_time_table_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
-                    <field name="timetable_type" placeholder= "Select Time Table Type"/>
+                    <field name="timetable_type" placeholder= "Select Time Table Type" readonly="1"/>
                 </xpath>
+                <field name="timetable_ids" position="attributes">
+                    <attribute name="attrs">{'invisible': [('timetable_type','!=','regular')]}</attribute>
+                </field>
+                <field name="timetable_ids" position="after">
+                    <field name="exam_timetable_line_ids" nolabel="1" attrs="{'invisible':[('timetable_type','!=','exam')]}">
+                        <tree name="exam_timetable" string="Exam Timetable" editable="top">
+                            <field name="exm_date"/>
+                            <field name="day_of_week"/>
+                            <field name="subject_id" widget="selection"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                            <field name="teacher_id" string="Supervisor" widget="selection" domain="[('is_school_teacher','=',True)]"/>
+                        </tree>
+                    </field>
+                </field>
             </field>
         </record>
 
@@ -159,8 +196,8 @@
         <!-- Menu Items Of Exam -->
 
         <menuitem id="menu_exam" name="Exam" parent="school.menu_ems" sequence="4" />
-
-        <menuitem id="menu_exam_sub_form" name="Exams" parent="menu_exam" action="action_exam_exam_form" />
+        <menuitem id="regular_exams_details" name="Regular Exams"  parent="menu_exam" sequence="5"/>
+        <menuitem id="menu_exam_sub_form" name="Exams" parent="regular_exams_details" action="action_exam_exam_form" sequence="6"/>
 
         <!-- Calendar view Of Additional Exam Information -->
 
@@ -202,8 +239,10 @@
                         <group col="4" string="Additional Exam Information" colspan="6">
                             <field name="addtional_exam_code" />
                             <field name="name"  placeholder="Exam Name"/>
-                            <field name="standard_id" on_change="on_change_stadard_name(standard_id)" placeholder="Select or Create Standard"/>
-                            <field name="subject_id" placeholder="Select or Create Subject"/>
+                            <field name="standard_id" placeholder="Select Standard" widget="selection"/>
+                            <field name="subject_id" placeholder="Select Subject" widget="selection" required="1"/>
+                            <field name="maximum_marks" required="1" />
+                            <field name="minimum_marks" required="1"/>
                         </group>
                         <group col="4" string="Examination Dates" colspan="4">
                             <field name="exam_date" placeholder="Exam Date"/>
@@ -249,7 +288,8 @@
 
         <!-- Menu Item Of Additional Exam -->
 
-        <menuitem id="menu_additional_exam_sub_form" name="Additional Exam" parent="menu_exam" action="action_additional_exam_form" />
+        <menuitem id="additional_exam" name="Additional Exams" parent="menu_exam" sequence="7"/>
+        <menuitem id="menu_additional_exam_sub_form" name="Additional Exam" parent="additional_exam" action="action_additional_exam_form"/>
 
         <!-- Tree View Of Result Information -->
 
@@ -263,7 +303,7 @@
                     <field name="s_exam_ids"/>
                     <field name="percentage"/>
                     <field name="total"/>
-                    <field name="re_total"/>
+<!--                     <field name="re_total"/> -->
                     <field name="result"/>
                 </tree>
             </field>
@@ -278,51 +318,58 @@
                 <form string="Results">
                     <header>
                         <button name="result_confirm" class="oe_stat_button fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_result_confirm" class="oe_stat_button fa fa-reply-all" string="Compute Re-aceess" states="re-access" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="result_re_access" class="oe_stat_button fa fa-repeat" string="Re-Access" states="confirm,re-evaluation,re-evaluation_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                         <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Compute Re-evaluation" states="re-evaluation" type="object"/>
-                        <field name="state" widget="statusbar" readonly="1" />
+                        <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Re-Evaluation Confirm" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="set_done" string="Mark as Done" type="object" class="fa fa-check-circle-o" aria-hidden="true" states="confirm,re-evaluation_confirm,re-access_confirm"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" readonly="1" />
                     </header>
                     <sheet>
-                        <group col="2" string="Exam Details" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="s_exam_ids" placeholder="Select or Create Examination"/>
+                        <group col="2" string="Exam Details">
+                            <field name="s_exam_ids" placeholder="Select Examination" widget="selection" domain="[('state','=','finished')]"
+                                    attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
-                        <group col="4" string="Student Details" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm', 're-access', 're-evaluation'])]}">
-                            <field name="student_id" placeholder="Select or Create Student" on_change="on_change_student(student_id, s_exam_ids, standard_id)" context="{'exam':s_exam_ids}"/>
-                            <field name="roll_no_id" />
-                            <field name="standard_id" placeholder="Select or Create Standard"/>
+                        <group col="4" string="Student Details" colspan="4">
+                            <field name="student_id" placeholder="Select Student"  
+                                context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True}"
+                                domain="[('state','=','done')]"
+                                attrs="{'readonly' : [('state','!=','draft')]}"/>
+                            <field name="roll_no_id" readonly="1"/>
+                            <field name="standard_id" placeholder="Select or Create Standard" widget="selection"
+                                                    readonly="1"/>
+                            <field name="grade_system" required="1" widget="selection"
+                                                    attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
-                        <field name="result_ids" nolabel="1" colspan="4" attrs="{'readonly' : [('state', 'in', ['confirm','re-evaluation_confirm','re-access_confirm'])]}">
-                            <tree string="Subjects" >
-                                <field name="subject_id" placeholder="Select or Create Subject"/>
-                                <field name="maximum_marks"/>
-                                <field name="minimum_marks"/>
-                                <field name="obtain_marks"/>
-                                <field name="grade"/>
+                        <field name="result_ids" nolabel="1" colspan="4">
+                            <tree string="Subjects" editable="bottom" create="false" delete="false">
+                                <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','=','re-evaluation')]}" required="1"/>
+                                <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
                                 <field name="state" invisible="1"/>
-                                <field name="marks_access" attrs="{'invisible':[('state','not in',['re-access_confirm','re-access'])]}"/>
-                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="grade_line_id" readonly="1"/>
+                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])]}"/>
                             </tree>
                             <form string="Subjects">
                                 <group col = "4">
-                                    <field name="subject_id"/>
-                                    <field name="maximum_marks"/>
-                                    <field name="minimum_marks"/>
-                                    <field name="obtain_marks"/>
-                                    <field name="marks_access" attrs="{'invisible':[('state','!=','re-access')]}"/>
-                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])]}"/>
+                                    <field name="subject_id" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])]}"/>
                                     <field name="state" invisible="1"/>
                                 </group>
                             </form>
                         </field>
-                        <group col="4" colspan="4">
-                            <field name="re_total" attrs="{'invisible':[('state','=','confirm')]}"/>
-                            <field name="grade"/>
-                            <field name="percentage"/>
-                            <field name="result"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
-                            <field name="total" attrs="{'invisible':[('state','!=','confirm')]}"/>
+                        <group>
+                            <group>
+<!--                                 <field name="re_total" attrs="{'invisible':[('state','in',['draft','confirm'])]}"/> -->
+                                <field name="total"/>
+                                <field name="percentage"/>
+                            </group>
+                            <group>
+                                <field name="grade"/>
+                                <field name="result"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -342,14 +389,13 @@
                     <field name="pid"/>
                     <field name="standard_id"/>
                     <field name="total"/>
-                    <field name="re_total"/>
                     <field name="percentage"/>
                     <field name="result"/>
                     <field name="grade"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.student_id.raw_value)"/>
-                            <div t-att-class="color + (record.result.raw_value == 'Fail' ? ' oe_kanban_color_alert' : '')">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <table class="oe_kanban_table">
@@ -368,11 +414,15 @@
                                                         <tr>
                                                             <td width="150">
                                                                 <div class="oe_kanban_title2">
-                                                                    <div>Student ID : 
-                                                                        <field name="pid"/>
+                                                                    <div>Student ID :
+                                                                        <a type="open">
+                                                                            <field name="pid"/>
+                                                                        </a>
                                                                     </div>
-                                                                    <div>Student Name : 
-                                                                        <field name="student_id"/>
+                                                                    <div>Student Name :
+                                                                        <a type="open">
+                                                                            <field name="student_id"/>
+                                                                        </a>
                                                                     </div>
                                                                     <div>Standard : 
                                                                         <field name="standard_id"/>
@@ -386,9 +436,6 @@
                                                                     </div>
                                                                     <div>Total :
                                                                         <field name="total"/>
-                                                                    </div>
-                                                                    <div>Re-access Total :
-                                                                        <field name="re_total"/>
                                                                     </div>
                                                                     <div>Grade :
                                                                         <field name="grade"/>
@@ -406,7 +453,7 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit"/>
+                                            <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
@@ -454,53 +501,8 @@
 
         <!-- Menu Item Of Result -->
 
-        <menuitem id="menu_exam_result" name="Exam Results" parent="menu_exam" action="action_exam_result_form" />
+        <menuitem id="menu_exam_result" name="Exam Results" parent="regular_exams_details" action="action_exam_result_form" sequence="7"/>
 
-        <!-- Tree View Of Batchwise Result Information -->
-
-        <record id="view_exam_batch_result_tree" model="ir.ui.view">
-            <field name="name">exam.batchwise.result.tree</field>
-            <field name="model">exam.batchwise.result</field>
-            <field name="arch" type="xml">
-                <tree string="Resultss">
-                    <field name="standard_id"/>
-                    <field name="grade"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Form View Of Gradewise Result Information -->
-
-        <record id="view_exam_batch_result_form" model="ir.ui.view">
-            <field name="name">exam.batch.result.form</field>
-            <field name="model">exam.batchwise.result</field>
-            <field name="arch" type="xml">
-                <form string="Grade wise Results">
-                    <sheet>
-                        <separator string="Batchwise Avg Grade"/>
-                        <group col="4"  colspan="4">
-                            <field name="year"/>
-                            <field name="standard_id" widget="selection"/>
-                            <field name="grade" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <!-- Action Of Form & Tree Views Of Gradewise Result Information -->
-
-        <record id="action_batchwise_exam_result_form" model="ir.actions.act_window">
-            <field name="name">Batchwise Result</field>
-            <field name="res_model">exam.batchwise.result</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <!-- Menu Item Of Batchwise Result -->
-
-        <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="menu_exam"
-                  action="action_batchwise_exam_result_form" />
 
         <!-- Tree View Of Additional Result Information -->
 
@@ -528,10 +530,10 @@
                 <form string="Results">
                     <sheet>
                         <group col="2" string="Result Information">
-                            <field name="a_exam_id"/>
+                            <field name="a_exam_id" options="{&quot;no_create&quot;: True}"/>
                         </group>
                         <group col="4" string="Student Information" colspan="4">
-                            <field name="student_id" on_change="on_change_student(student_id)" />
+                            <field name="student_id" domain="[('state','=','done')]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
                             <field name="roll_no_id"/>
                             <field name="standard_id"/>
                         </group>
@@ -567,6 +569,16 @@
                 </search>
             </field>
         </record>
+        <!-- Action of exam type timetable -->
+        <record id="timetable_exam_action" model="ir.actions.act_window">
+            <field name="name">Exam Timetable</field>
+            <field name="res_model">time.table</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('timetable_type','=','exam')]</field>
+            <field name="context">{'default_timetable_type':'exam'}</field>
+        </record>
+        <menuitem id="timetable_exam_regular_menu" name="Exam Timetable" parent="timetable.menu_timetable_1" action="timetable_exam_action" sequence="11" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
         <!-- Actions Of Form & Tree Views Of Additional Result Information -->
 
@@ -579,33 +591,7 @@
 
         <!-- Menu Item Of Additional Exam Result -->
 
-        <menuitem id="menu_additional_exam_result" name="Additional Exam Results" parent="menu_exam"
+        <menuitem id="menu_additional_exam_result" name="Additional Exam Results" parent="additional_exam"
                   action="action_additional_exam_result_form01"/>
-
-        <!-- Result Information Tree View -->
-
-        <record id="view_exam_result_board_view_form" model="ir.ui.view">
-            <field name="name">exam.result.board.view</field>
-            <field name="model">board.board</field>
-            <field name="inherit_id" ref="school.board_my_dash_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/board/column" position="inside">
-                    <action colspan="4" name="%(action_exam_result_form)d" string="Student Exam Result" creatable="true" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent "/>
-                </xpath>
-            </field>
-        </record>
-
-        <!-- Inherited Dash Board For Exam -->
-
-        <record id="inherit_dashboard_school_exam" model="ir.ui.view">
-            <field name="name">inherit.darshboard.school.exam</field>
-            <field name="model">board.board</field>
-            <field name="inherit_id" ref="school.board_my_dash_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/board/column[2]/action" position="after">
-                    <action name="%(action_exam_exam_tree)d" string="All Exam Information" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent "/>
-                </xpath>
-            </field>
-        </record>
 
 </odoo>

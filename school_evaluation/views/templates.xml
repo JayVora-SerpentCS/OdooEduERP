@@ -1,0 +1,9 @@
+<odoo>
+    <data>
+        <template id="school_evaluation_template" name="school_evaluation" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/school_evaluation/static/src/css/school_evaluation.css"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

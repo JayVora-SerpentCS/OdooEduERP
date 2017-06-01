@@ -2,16 +2,8 @@
   When exam time will come I will create a new exam "Final Exam" & its timetable.
 - 
   !record {model: exam.exam, id: exam_exam_finalexam0}:
-    created_at: !eval time.strftime('%Y')+'/03/02'
     end_date: !eval time.strftime('%Y')+'/03/08'
     exam_code: !eval time.strftime('%Y /%m')+'/003'
-    exam_timetable_ids:
-      - class_id: school.demo_school_standard_1
-        division_id: school.demo_standard_division_1
-        medium_id: school.demo_standard_medium_1
-        name: Final Exam Timetable
-        timetable_type: exam
-        year_id: school.demo_academic_year_1
     name: Final Exam
     start_date: !eval time.strftime('%Y')+'/03/05'
     
@@ -20,7 +12,6 @@
 - 
   !record {model: additional.exam, id: additional_exam_supplementaryexam0}:
     addtional_exam_code: !eval time.strftime('%Y /%m')+'/003'
-    created_at: !eval time.strftime('%Y')+'/03/09'
     exam_date: !eval time.strftime('%Y')+'/03/17'
     name: Supplementary Exam
     standard_id: school.demo_school_standard_1
@@ -52,20 +43,20 @@
   In order to test the exam result, I will test _compute_total() method
 -
   !python {model: exam.result}:  |
-    self._compute_total(cr, uid, [ref("exam_result_10")], 'total', None, context=None)
+    self._compute_total()
 
 
 -
   In order to test the exam result, I will test _compute_per() method
 -
   !python {model: exam.result}:  |
-    self._compute_per(cr, uid, [ref("exam_result_10")], 'percentage', None, context=None)    
+    self._compute_per()    
     
 -
   In order to test the exam result, I will test _compute_result() method
 -
   !python {model: exam.result}:  |
-    self._compute_result(cr, uid, [ref("exam_result_10")], 'result', None, context=None)
+    self._compute_result()
   
 -
   In order to test the additional exam result, I will test _compute_total() method
@@ -86,10 +77,10 @@
     obtain_marks: 50.00
     
 -
-  In order to test the additional exam result, I will test _calc_result() method
+  In order to test the additional exam result, I will test _compute_student_result() method
 -
   !python {model: additional.exam.result}:  |
-    self._calc_result(cr, uid, [ref("additional_exam_result_100")], 'result', None, context=None)
+    self._compute_student_result()
     
 -
   Testing additional.exam.result Report

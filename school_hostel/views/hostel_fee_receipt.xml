@@ -3,7 +3,7 @@
 
 <odoo>
 
-        <template id="hostel_fee_reciept">
+        <template id="hostel_fee_reciept1">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="hostel">
                     <t t-call="report.external_layout">
@@ -31,7 +31,7 @@
                                                     <b>:</b>
                                                 </td>
                                                 <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                    <span t-field="hostel.hostel_room_id.name.name" />
+                                                    <span t-field="hostel.hostel_info_id.name" />
                                                 </td>
                                                 <td align="left" width="19%"
                                                     style="font-family: 'Helvetica';font-size: 18px;">
@@ -41,7 +41,7 @@
                                                     <b>:</b>
                                                 </td>
                                                 <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                    <span t-field="hostel.hostel_room_id.room_no" />
+                                                    <span t-field="hostel.room_id.room_no" />
                                                 </td>
                                             </tr>
                                         </table>
@@ -82,7 +82,7 @@
                                                     <b>:</b>
                                                 </td>
                                                 <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                    <span t-field="hostel.school_id.name" />
+                                                    <span t-field="hostel.student_id.school_id.name" />
                                                 </td>
                                                 <td width="50%">
                                                     <span></span>

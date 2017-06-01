@@ -78,9 +78,10 @@
                         </group>
                         <group col="4" string="Calculations">
                             <field name="type"/>
-                            <field name="amount"/>
+                            <field name="amount" />
+                            <field name="account_id" required="1" options="{&quot;no_create&quot;: True}"/>
                         </group>
-                        <group col="4" attrs="{'invisible':[('type','=','range')]}" string="Description">
+                        <group col="2" attrs="{'invisible':[('type','=','range')]}" string="Description">
                             <field name="description" />
                         </group>
                         <notebook colspan="4"  attrs="{'invisible':[('type','!=','range')]}">
@@ -110,6 +111,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
+                    <field name="account_id"/>
                     <field name="amount"/>
                 </tree>
             </field>
@@ -127,6 +129,7 @@
                     <group col="4" string="Calculations">
                         <field name="type"/>
                         <field name="amount"/>
+                        <field name="account_id" required="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Function">
@@ -156,6 +159,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
+                    <field name="account_id"/>
                     <field name="amount"/>
                 </tree>
             </field>
@@ -167,44 +171,55 @@
             <field name="arch" type="xml">
                 <form string="Student Payslip">
                     <header>
-                        <button name="payslip_confirm" class="fa fa-check" string="Confirm" states="draft" type="workflow" groups="school.group_school_administration"/>
+                        <button name="payslip_confirm" class="fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration"/>
                         <button name="student_pay_fees" class="fa fa-share" string="Payment" states="confirm" type="object" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
+                        <h2>
+                            <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"
+                                    domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            </h2>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" states="pending,paid" type="object" groups="school.group_school_administration">
+                                <field name="invoice_count"/>
+                            </button>
+                        </div>
                         <group>
                             <group col="2" string="Information">
-                                <field name="name" placeholder="Description"/>
-                                <field name="number" />
-                                <field name="date"/>
+                                <field name="name" placeholder="Description" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="number" attrs="{'readonly':[('state','not in','draft')]}" />
+                                <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
                             </group>
                             <group col="2" string="Standard Information">
-                                <field name="standard_id" placeholder="Standard" widget="selection"/>
-                                <field name="division_id" placeholder="Division" widget="selection"/>
-                                <field name="medium_id" placeholder="Medium" widget="selection"/>
+                                <field name="standard_id" placeholder="Standard" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
+                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
+                                <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
                             </group>
                         </group>
                         <group col="4">
-                            <field name="student_id" placeholder="Student Name" colspan="4"/>
+<!--                             <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"/> -->
                             <separator string="Fees Structure" colspan="4"/>
-                            <field name="fees_structure_id" required="1" placeholder="Fee Structure"/>
-                            <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" placeholder="Journal"/>
+                            <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/> 
                             <notebook colspan="4">
                                 <page string="Fees Structure">
-                                    <field name="line_ids" colspan="4" nolabel="1"/>
+                                    <field name="line_ids" colspan="4" nolabel="1" readonly="1"/>
                                     <separator string="" colspan="4"/>
-                                    <group col="8" colspan="4">
+                                    <group class="oe_subtotal_footer oe_right" colspan="2">
                                         <field name="total"/>
+                                        <field name="paid_amount" readonly="1"/>
+                                        <field name="due_amount" readonly="1"/>
                                     </group>
                                 </page>
                                 <page string="Other Information">
                                     <group col="4" colspan="4">
-                                        <field name="type"  placeholder="Type"/>
+                                        <field name="type"  placeholder="Type" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <!-- <field name="period_id" placeholder="Force Period"/> -->
-                                        <field name="currency_id" placeholder="Currency"/>
-                                        <field name="move_id" />
-                                        <field name="payment_date" placeholder="Payment Date"/>
-                                        <field name="company_id" string = "School" placeholder="School Name"/>
+                                        <field name="currency_id" placeholder="Currency" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                        <field name="move_id" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                        <field name="payment_date" placeholder="Payment Date" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                        <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                                     </group>
                                 </page>
                             </notebook>
@@ -261,22 +276,27 @@
             <field name="arch" type="xml">
                 <form string="Student Fees Register">
                     <header>
-                        <button name="fees_register_confirm" class="fa fa-check" string="Confirm" states="draft" groups="school.group_school_administration"/>
+                        <button name="fees_register_confirm" type="object" class="fa fa-check" string="Confirm" states="draft" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
                         <group string="Information" col="4" colspan="4">
-                            <field name="name" placeholder="Name"/>
-                            <field name="number"/>
-                            <field name="date"/>
-                            <field name="journal_id" placeholder="Journal"/>
+                            <field name="name" placeholder="Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="number" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
-                            <field name="company_id" string = "School" placeholder="School Name"/>
+                            <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                        </group>
+                        <group string="Fees Register for" col="4" colspan="4">
+                            <field name="fees_structure" placeholder="Fee structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="standard_id" placeholder="Select Standard.." attrs="{'readonly':[('state','not in','draft')]}"
+                                required="1" widget="selection"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Student Payslip">
-                                <field name="line_ids" colspan="4" nolabel="1" >
-                                    <tree string="Student Payslip" >
+                                <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}" >
+                                    <tree string="Student Payslip" create="false">
                                         <field name="name"/>
                                         <field name="number"/>
                                         <field name="student_id"/>
@@ -300,9 +320,9 @@
                                         </sheet>
                                     </form>
                                 </field>
-                                <separator string="" colspan="4"/>
-                                <group col="8" colspan="8">
-                                    <field name="total_amount" colspan="8"/>
+<!--                                 <separator string="" /> -->
+                                <group class="oe_subtotal_footer oe_right" colspan="2">
+                                    <field name="total_amount"/>
                                 </group>
                             </page>
                         </notebook>
@@ -401,12 +421,26 @@
                 </data>
             </field>
         </record>
+
+        <!-- Inherited View of Account Invoice -->
+        <record id="school_fees_account_inherited" model="ir.ui.view">
+            <field name="name">Account Invoice Inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']/group/group[2]/field[@name='name']" position="after">
+                    <field name="slip_ref" readonly="1"/>
+                    <field name="student_payslip_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <!-- memu Items for Fees -->
-        <menuitem id="menu_fees" name="Fees" parent="school.menu_ems" sequence="9"/>
+        <menuitem id="menu_fees" name="Fees" parent="school.menu_ems" groups="school.group_school_administration,school.group_school_student,school.group_school_parent" sequence="9"/>
         <menuitem id="menu_student_payslip" name="Fees Receipts" parent="menu_fees" action="action_student_payslip_form"
-                  groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+                  groups="school.group_school_administration,school.group_school_student,school.group_school_parent"/>
         <menuitem id="menu_student_fees_register" name="Fees Registers" parent="menu_fees" action="action_student_fees_register_form"
-                  groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+                  groups="school.group_school_administration,school.group_school_student,school.group_school_parent"/>
         <menuitem id="menu_student_fees_structure_form" name="Fees" parent="school.menu_configuration"/>
         <menuitem id="menu_student_fees_structure_sub_form" name="Fees Structure" parent="menu_student_fees_structure_form"
                   action="action_student_fees_structure_form"/>

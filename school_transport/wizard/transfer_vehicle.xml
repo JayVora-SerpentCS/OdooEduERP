@@ -13,7 +13,7 @@
                 <form string="Transfer Vehicle">
                     <group colspan="4">
                         <field name='name' />
-                        <field name='participation_id' on_change="onchange_participation_id(participation_id)" context="{'name':name}" />
+                        <field name='participation_id' context="{'name':name}" domain="[('name','=',name)]"/>
                         <field name='root_id' />
                         <field name='old_vehicle_id'/>
                         <field name='new_vehicle_id' context="{'name':root_id}"/>
@@ -21,7 +21,7 @@
                     <separator colspan="4"/>
                     <footer>
                         <group>
-                            <button  name="vehicle_transfer"  string="Transfer" class="fa fa-check" type="object" colspan="1"/>
+                            <button name="vehicle_transfer"  string="Transfer" class="fa fa-check" type="object" colspan="1"/>
                            <button special="cancel" string="Close" class="fa fa-ban" colspan="1"/>
                         </group>
                     </footer>
@@ -33,12 +33,13 @@
 
         <act_window id="act_transfer_vehicle"
             name="Transfer Vehicle"
-            multi="True"
+            multi="False"
             key2="client_action_multi" 
             res_model="transfer.vehicle" 
             src_model="student.student"
             view_mode="form" 
             target="new" 
-            view_type="form"/>
+            view_type="form"
+            groups="school_transport.group_transportation_manager"/>
 
 </odoo>

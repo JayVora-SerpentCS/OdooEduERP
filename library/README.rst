@@ -6,7 +6,7 @@ Installation
 
 To install this module, you need to:
 
-install 'report_intrastat', 'mrp', 'delivery', 'school' module
+install 'report_intrastat', 'school' module
 
 Configuration
 
