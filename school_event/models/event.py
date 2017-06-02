@@ -135,6 +135,15 @@ class SchoolEvent(models.Model):
                                access_rights_uid=access_rights_uid)
 
     @api.multi
+    def event_open(self):
+        for rec in self:
+            if rec.part_ids and len(rec.part_ids) >= 1:
+                self.write({'state': 'open'})
+            else:
+                raise UserError(_('No Participants ! \
+                             No Participants to open the Event.'))
+
+    @api.multi
     def event_close(self):
         '''Method to change state to close'''
         for rec in self:

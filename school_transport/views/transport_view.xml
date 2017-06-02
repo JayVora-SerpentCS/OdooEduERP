@@ -93,6 +93,7 @@
             <field name="arch" type="xml">
                 <form create="false" string="Transport Participants Information" colors="blue:state=='running';red:state in ('over')" version="7.0">
                     <header>
+                        <button name="set_over" string="Over" states="running" type='object' groups="school.group_school_administration,school_transport.group_transportation_manager"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -303,7 +304,7 @@
                 <form string="Transport Registration">
                     <header>
                         <button name="trans_regi_confirm" class="fa fa-check" string="Confirm" states="draft" type='object'/>
-                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' attrs="{'invisible':[('transport_user','=',True),('state','not in' ,'draft')]}"/>
+                        <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' attrs="{'invisible':[('transport_user','=',True),('state','not in' ,('draft'))]}"/>
                         <button name="transport_fees_pay" string="Payment" type="object" states="confirm" groups="school_transport.group_transportation_manager"/>
 <!--                         <button name="cancel_ref" string="Cancel" type="object" states="confirm,pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> -->
                         <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,confirm,paid"/>

@@ -286,7 +286,7 @@ class ExamResult(models.Model):
                         if per >= grade_id.from_mark and\
                                 per <= grade_id.to_mark:
                             result.grade = grade_id.grade or ''
-                result.percentage = per
+            result.percentage = per
         return True
 
     @api.multi
