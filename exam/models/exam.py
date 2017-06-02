@@ -16,7 +16,7 @@ class StudentStudent(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        '''Override method to get exam of student selcted'''
+        '''Override method to get exam of student selected'''
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])
@@ -166,10 +166,17 @@ class ExamExam(models.Model):
     def generate_result(self):
         '''Method to generate result'''
         result_obj = self.env['exam.result']
+        student_obj = self.env['student.student']
         result_list = []
         for rec in self:
             for exam_schedule in rec.exam_schedule_ids:
-                for student in exam_schedule.standard_id.student_ids:
+                domain = [('standard_id', '=', exam_schedule.standard_id.id),
+                          ('year', '=', rec.academic_year.id),
+                          ('state', '=', 'done'),
+                          ('school_id', '=',
+                           exam_schedule.standard_id.school_id.id)]
+                students = student_obj.search(domain)
+                for student in students:
                     domain = [('standard_id', '=',
                                student.standard_id.id),
                               ('student_id', '=', student.id),
@@ -182,7 +189,8 @@ class ExamExam(models.Model):
                                    'student_id': student.id,
                                    'standard_id': student.standard_id.id,
                                    'roll_no_id': student.roll_no,
-                                   'grade_system': rec.grade_system.id}
+                                   'grade_system': rec.grade_system.id,
+                                   }
                         exam_line = []
                         timetable = exam_schedule.sudo().timetable_id
                         for line in timetable.sudo().timetable_ids:
