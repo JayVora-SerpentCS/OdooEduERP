@@ -23,7 +23,6 @@
              'views/identity_card.xml'],
     'demo': ['demo/school_demo.xml'],
     'post_init_hook': 'post_init_hook',
-    'test': ['test/school_test.yml', 'test/assign_roll_no_test.yml'],
     'installable': True,
     'application': True
 }
