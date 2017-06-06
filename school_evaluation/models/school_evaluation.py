@@ -109,12 +109,11 @@ class SchoolEvaluation(models.Model):
 class StudentEvaluationLine(models.Model):
     _name = 'school.evaluation.line'
 
-    @api.multi
-    def onchange_point(self, point_id):
+    @api.onchange('point_id')
+    def onchange_point(self):
         '''Method to get rating point based on rating'''
-        if point_id:
-            for point_obj in self.env['rating.rating'].browse(point_id):
-                return {'value': {'rating': point_obj.rating}}
+        if self.point_id:
+            self.rating = self.point_id.rating
 
     eval_id = fields.Many2one('school.evaluation', 'Evaluation id')
 #    teacher_eval_id = fields.Many2one('teacher.evaluation',
