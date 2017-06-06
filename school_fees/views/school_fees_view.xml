@@ -79,7 +79,7 @@
                         <group col="4" string="Calculations">
                             <field name="type"/>
                             <field name="amount" />
-                            <field name="account_id" required="1" options="{&quot;no_create&quot;: True}"/>
+                            <field name="account_id" options="{&quot;no_create&quot;: True}"/>
                         </group>
                         <group col="2" attrs="{'invisible':[('type','=','range')]}" string="Description">
                             <field name="description" />
