@@ -117,7 +117,7 @@
                                 <field name="eval_line" nolabel='1'  context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
                                         <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
-                                        <field name="point_id" on_change="onchange_point(point_id)" options="{&quot;no_create&quot;: True}"/>
+                                        <field name="point_id" options="{&quot;no_create&quot;: True}"/>
                                         <field name="rating"/>
                                     </tree>
                                     <form string="Evaluation Line">

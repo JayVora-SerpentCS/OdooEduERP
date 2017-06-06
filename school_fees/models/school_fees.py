@@ -110,7 +110,7 @@ class StudentPayslipLine(models.Model):
                                'Calculations')
     slip_id = fields.Many2one('student.payslip', 'Pay Slip')
     description = fields.Text('Description')
-    account_id = fields.Many2one('account.account', string="Account")
+    account_id = fields.Many2one('account.account', "Account")
 
 
 class StudentFeesStructureLine(models.Model):
