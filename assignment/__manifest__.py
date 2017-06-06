@@ -16,7 +16,6 @@
              'views/homework_view.xml',
              'security/ir.model.access.csv'
              ],
-    'test': ['test/assignment.yml'],
     'demo': ['demo/assignment_demo.xml'],
     'installable': True,
     'application': True,

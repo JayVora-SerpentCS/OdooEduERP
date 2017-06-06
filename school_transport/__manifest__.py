@@ -20,7 +20,6 @@
              'data/transport_schedular.xml',
              'wizard/transfer_vehicle.xml'],
     'demo': ['demo/transport_demo.xml'],
-#    'test': ['test/transport.yml'],
     'installable': True,
     'application': True
 }

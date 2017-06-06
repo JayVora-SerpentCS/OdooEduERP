@@ -25,5 +25,4 @@
     'demo': ['demo/exam_demo.xml'],
     'installable': True,
     'application': True,
-    'test': ['test/exam_test.yml']
 }

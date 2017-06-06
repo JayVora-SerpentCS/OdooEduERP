@@ -18,7 +18,6 @@
              'views/report_view.xml',
              'views/timetable.xml'],
     'demo': ['demo/timetable_demo.xml'],
-    'test': ['test/timetable.yml'],
     'installable': True,
     'application': True
 }
