@@ -14,7 +14,6 @@ class TestTimetable(common.TransactionCase):
         self.subject_id = self.env.ref('school.demo_subject_subject_2')
         self.teacher_id = self.env.ref('hr.employee_al')
         self.table_id = self.env.ref('timetable.time_table_firsts0')
-
 #       Create time-table
         self.time_table = self.time_table_obj.\
             create({'name': 'Test Timetable',
