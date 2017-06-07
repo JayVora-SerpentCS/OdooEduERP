@@ -133,12 +133,7 @@ class TestLibrary(common.TransactionCase):
         self.library_book_issue.issue_book()
         self.library_book_issue.reissue_book()
         self.library_book_issue.return_book()
-        self.library_book_issue.lost_book()
         self.library_book_issue.cancel_book()
-        self.library_book_issue.user_fine()
-        self.library_book_issue.user_fine()
-        self.library_book_issue.view_invoice()
-        self.library_book_issue._compute_invoices()
 
     def test_exam(self):
         self.assertEqual(self.library_card.student_id.state, 'done')
