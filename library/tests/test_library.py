@@ -76,7 +76,6 @@ class TestLibrary(common.TransactionCase):
         # Create purchase order
         self.purchase_order = self.purchase_order_obj.\
             create({'partner_id': self.res_partner.id,
-#                    'company_id': self.company_id.id,
                     'date_order': time.strftime('06-29-2017 16:58:10'),
                     'date_planned': time.strftime('06-29-2017 16:58:10'),
                     })
