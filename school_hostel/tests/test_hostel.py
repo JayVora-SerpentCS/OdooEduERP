@@ -14,24 +14,20 @@ class TestHostel(common.TransactionCase):
         self.hostel_student_obj = self.env['hostel.student']
         self.rector = self.env.ref('base.res_partner_2')
         self.student = self.env.ref('school.demo_student_student_5')
-
 #       Create bed type
         self.bed_type = self.bed_type_obj.\
             create({'name': 'Single Bed',
                     'description': 'single bed type',
                     })
-
 #        Create Hostel Type
         self.hostel_type = self.hostel_type_obj.\
             create({'name': 'Test Hostel',
                     'type': 'boys',
                     'rector': self.rector.id
                     })
-
 #        Create Hostel Room
         self.hostel_room = self.hostel_room_obj.\
-            create({
-                    'name': self.hostel_type.id,
+            create({'name': self.hostel_type.id,
                     'room_no': '101',
                     'student_per_room': '3',
                     'rent_amount': 1000,
@@ -40,7 +36,6 @@ class TestHostel(common.TransactionCase):
                     'private_bathroom': True
                     })
         self.hostel_room._compute_check_availability()
-
 #        Create Hostel Student
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.hostel_student = self.hostel_student_obj.\
