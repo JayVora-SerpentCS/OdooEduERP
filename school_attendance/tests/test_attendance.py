@@ -12,6 +12,7 @@ class TestAttendance(common.TransactionCase):
         self.school_std = self.env.ref('school.demo_school_standard_2')
         self.academic_year = self.env.ref('school.demo_academic_year_2')
         self.month = self.env.ref('school.demo_academic_month_current_6')
+        self.stud_id = self.env.ref('school.demo_student_student_5')
         self.daily_attendance_line_obj = self.env['daily.attendance.line']
         self.monthly_attendance_obj = self.env['monthly.attendance.sheet']
         self.sheet_line = self.env['attendance.sheet.line']
@@ -54,7 +55,7 @@ class TestAttendance(common.TransactionCase):
                                               self.attendance_sheet.id)])
         for rec in self.sheet:
             rec._compute_percentage()
-        vals = {}
+        vals = {'active_id': self.stud_id.id}
         self.attend_report = self.attend_report_obj.\
             create({'month': 6,
                     'year': '2017'
