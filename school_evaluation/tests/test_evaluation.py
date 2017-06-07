@@ -29,7 +29,6 @@ class TestEvaluation(common.TransactionCase):
                     'rating': 'Excellent',
                     'rating_id': self.evaluation_template.id
                     })
-
 #        Create School Evaluation For The School Teachers
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.teacher_evalution = self.school_evaluation_obj.\
@@ -44,7 +43,6 @@ class TestEvaluation(common.TransactionCase):
         self.teacher_evalution.set_finish()
         self.teacher_evalution.set_cancel()
         self.teacher_evalution.set_draft()
-
 #        Create School Evaluation For The School Student
         self.student_evalution = self.school_evaluation_obj.\
             create({
@@ -58,7 +56,6 @@ class TestEvaluation(common.TransactionCase):
         self.student_evalution.set_finish()
         self.student_evalution.set_cancel()
         self.student_evalution.set_draft()
-
 #        Create Student Evaluation
         self.evaluation_line = self.evaluation_line_obj.\
             create({
