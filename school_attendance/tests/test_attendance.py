@@ -42,13 +42,11 @@ class TestAttendance(common.TransactionCase):
                     })
         self.monthly_attendance.monthly_attendance_sheet_open_window()
         # Attendance sheet
-        self.attendance_sheet = self.attendance_sheet_obj.search(
-                                [('standard_id', '=',
-                                  self.monthly_attendance.standard_id.id),
-                                 ('year_id', '=',
-                                 self.monthly_attendance.year_id.id),
-                                 ('month_id', '=',
-                                  self.monthly_attendance.month_id.id)])
+        self.attendance_sheet = self.attendance_sheet_obj.\
+            search([('standard_id', '=',
+                     self.monthly_attendance.standard_id.id),
+                    ('year_id', '=', self.monthly_attendance.year_id.id),
+                    ('month_id', '=', self.monthly_attendance.month_id.id)])
         self.attendance_sheet_obj.onchange_class_info()
         self.sheet = self.sheet_line.search([('standard_id', '=',
                                               self.attendance_sheet.id)])
