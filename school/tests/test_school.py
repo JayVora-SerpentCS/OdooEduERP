@@ -17,6 +17,7 @@ class TestSchool(common.TransactionCase):
         self.standard_medium = self.env.ref('school.demo_standard_medium_1')
         self.year = self.env.ref('school.demo_academic_year_2')
         self.currency_id = self.env.ref('base.INR')
+        self.sch = self.env.ref('school.demo_school_1')
         self.country_id = self.env.ref('base.in')
         self.std = self.env.ref('school.demo_standard_standard_1')
         self.state_id = self.env.ref('base.state_in_gj')
@@ -57,16 +58,6 @@ class TestSchool(common.TransactionCase):
                     'state_id': self.state_id.id,
                     'city': 'Gandhinagar',
                     'email': 'robertmartin@gmail.com'
-                    })
-        # School create
-        self.school_school = self.school_school_obj.\
-            create({'name': 'Harvad School',
-                    'code': '06443',
-                    'country_id': self.country_id.id,
-                    'state_id': self.state_id.id,
-                    'city': 'Gnadhinagar',
-                    'currency_id': self.currency_id.id,
-                    'language': 'en_US',
                     })
         # Create academic Year
         self.academic_year_obj = self.env['academic.year']

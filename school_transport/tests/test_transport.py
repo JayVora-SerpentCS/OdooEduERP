@@ -62,8 +62,6 @@ class TestTransport(common.TransactionCase):
         self.transport_registration.onchange_for_month()
         self.transport_registration.trans_regi_confirm()
         self.transport_registration.trans_regi_cancel()
-        self.transport_registration.transport_fees_pay()
-        self.transport_registration.view_invoice()
 #        Do one entry of the transport.participant
         self.transport_participant = self.transport_participant_obj.\
             create({'name': self.student.id,
