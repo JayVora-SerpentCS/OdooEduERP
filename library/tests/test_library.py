@@ -93,8 +93,8 @@ class TestLibrary(common.TransactionCase):
         self.purchase_order.button_confirm()
         self.purchase_order.action_view_picking()
         self.purchase_order_line.onchange_product_id()
-        self.stock_picking = self.stock_picking_obj.search(
-                             [('origin', '=', self.purchase_order.name)])
+        self.stock_picking = self.stock_picking_obj.\
+            search([('origin', '=', self.purchase_order.name)])
         self.stock_picking.do_new_transfer()
         self.imm = self.immideate_transfer.\
             create({'pick_id': self.stock_picking.id})

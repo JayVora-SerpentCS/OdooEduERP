@@ -14,26 +14,21 @@ class TestEvaluation(common.TransactionCase):
         self.evaluation_line_obj = self.env['school.evaluation.line']
         self.teacher = self.env.ref('hr.employee_al')
         self.student = self.env.ref('school.demo_student_student_5')
-
 #        Create School Evaluation Template
         self.evaluation_template = self.evaluation_template_obj.\
-            create({
-                    'desc': 'Communication with students',
+            create({'desc': 'Communication with students',
                     'type': 'faculty'
                     })
-
 #       Create Rating of above template
         self.rating = self.rating_obj.\
-            create({
-                    'point': 5,
+            create({'point': 5,
                     'rating': 'Excellent',
                     'rating_id': self.evaluation_template.id
                     })
 #        Create School Evaluation For The School Teachers
         current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.teacher_evalution = self.school_evaluation_obj.\
-            create({
-                    'type': 'faculty',
+            create({'type': 'faculty',
                     'teacher_id': self.teacher.id,
                     'date': current_date,
                     })
@@ -45,8 +40,7 @@ class TestEvaluation(common.TransactionCase):
         self.teacher_evalution.set_draft()
 #        Create School Evaluation For The School Student
         self.student_evalution = self.school_evaluation_obj.\
-            create({
-                    'type': 'student',
+            create({'type': 'student',
                     'student_id': self.student.id,
                     'date': current_date,
                     })
@@ -58,8 +52,7 @@ class TestEvaluation(common.TransactionCase):
         self.student_evalution.set_draft()
 #        Create Student Evaluation
         self.evaluation_line = self.evaluation_line_obj.\
-            create({
-                    'eval_id': self.student_evalution.id,
+            create({'eval_id': self.student_evalution.id,
                     'stu_eval_id': self.evaluation_template.id,
                     'point_id': self.rating.id
                     })
