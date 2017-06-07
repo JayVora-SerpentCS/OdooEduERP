@@ -1,7 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from datetime import datetime
 import time
 
 
@@ -26,7 +25,9 @@ class TestLibrary(common.TransactionCase):
         self.standard = self.env.ref('school.demo_standard_standard_2')
         self.product = self.env.ref('library.library_product_b2')
         self.res_partner = self.env.ref('base.res_partner_1')
+        self.category = self.env.ref('product.product_category_1')
         self.company_id = self.env.ref('school.demo_school_1')
+        self.product_book = self.env.ref('library.product_product_b1')
         self.prd_uom = self.env.ref('product.product_uom_unit')
         # Create library rack
         self.library_rack = self.library_rack_obj.\
@@ -48,6 +49,7 @@ class TestLibrary(common.TransactionCase):
         self.product_product = self.product_product_obj.\
             create({'name': 'Java',
                     'categ_id': categ.id,
+                    'type': 'product',
                     'day_to_return_book': 10,
                     'weight': 1.23,
                     'fine_lost': 100,
@@ -74,14 +76,14 @@ class TestLibrary(common.TransactionCase):
         # Create purchase order
         self.purchase_order = self.purchase_order_obj.\
             create({'partner_id': self.res_partner.id,
-                    'company_id': self.company_id.id,
-                    'date_order': datetime.now(),
-                    'date_planned': datetime.now()
+#                    'company_id': self.company_id.id,
+                    'date_order': time.strftime('06-29-2017 16:58:10'),
+                    'date_planned': time.strftime('06-29-2017 16:58:10'),
                     })
         # Create purchase order line
         self.purchase_order_line = self.purchase_order_line_obj.\
             create({'product_id': self.product_product.id,
-                    'name': 'C++',
+                    'name': 'Java Book',
                     'date_planned': time.strftime('06-29-2017 16:58:10'),
                     'company_id': self.company_id.id,
                     'product_qty': 10.0,
@@ -95,7 +97,9 @@ class TestLibrary(common.TransactionCase):
         self.stock_picking = self.stock_picking_obj.search(
                              [('origin', '=', self.purchase_order.name)])
         self.stock_picking.do_new_transfer()
-        for rec in self.immideate_transfer:
+        self.imm = self.immideate_transfer.\
+            create({'pick_id': self.stock_picking.id})
+        for rec in self.imm:
             rec.process()
         # Book request created
         self.library_book_request = self.library_book_request_obj.\
