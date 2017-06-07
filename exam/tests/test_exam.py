@@ -1,6 +1,6 @@
 from odoo.tests import common
 from odoo.report import render_report
-from odoo.tools import config, test_reports
+from odoo.tools import config
 import os
 import time
 
