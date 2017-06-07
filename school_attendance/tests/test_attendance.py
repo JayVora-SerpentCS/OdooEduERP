@@ -29,9 +29,8 @@ class TestAttendance(common.TransactionCase):
         self.daily_attendance.onchange_standard_id()
         self.daily_attendance.attendance_draft()
         self.daily_attendance.attendance_validate()
-        self.daily_attendance_line = self.daily_attendance_line_obj.search(
-                                     [('standard_id', '=',
-                                       self.daily_attendance.id)])
+        self.daily_attendance_line = self.daily_attendance_line_obj.\
+            search([('standard_id', '=', self.daily_attendance.id)])
         for rec in self.daily_attendance_line:
             rec.onchange_attendance()
             rec.onchange_absent()
