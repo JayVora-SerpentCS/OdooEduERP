@@ -48,15 +48,12 @@ class TestHostel(common.TransactionCase):
                     })
         self.hostel_student.check_duration()
         self.hostel_student._compute_remaining_fee_amt()
-        self.hostel_student._compute_invoices()
         self.hostel_student._compute_rent()
         self.hostel_student._get_hostel_user()
         self.hostel_student.reservation_state()
         self.hostel_student.onchnage_discharge_date()
         self.hostel_student.discharge_state()
         self.hostel_student.student_expire()
-        self.hostel_student.pay_fees()
-        self.hostel_student.invoice_view()
         self.hostel_student.print_fee_receipt()
 
     def test_hostel(self):
