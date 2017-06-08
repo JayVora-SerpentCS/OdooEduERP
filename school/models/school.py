@@ -723,11 +723,12 @@ class HrEmployee(models.Model):
                                                })
         # Assign Company
         if vals.get('school'):
-            school = self.env['school.school'].browse(vals.get('school'))
-            if school and school.company_id:
-                self.user_id.write({'company_ids': [(4, school.company_id.id)
-                                                    ],
-                                    'company_id': school.company_id.id})
+            if self._context.get('school_teacher'):
+                school = self.env['school.school'].browse(vals.get('school'))
+                if school and school.company_id:
+                    self.user_id.write({'company_ids':
+                                        [(4, school.company_id.id)],
+                                        'company_id': school.company_id.id})
         return res
 
 
