@@ -174,7 +174,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager">
+                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" widget="stateinfo" class="oe_stat_button" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager">
                                 <field name="compute_inv"/>
                             </button>
                          </div>
