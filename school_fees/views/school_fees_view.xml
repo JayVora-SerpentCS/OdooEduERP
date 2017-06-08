@@ -181,7 +181,7 @@
                                     domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
                             </h2>
                         <div class="oe_button_box" name="button_box">
-                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" states="pending,paid" type="object" groups="school.group_school_administration">
+                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" widget="stateinfo" class="oe_stat_button" states="pending,paid" type="object" groups="school.group_school_administration">
                                 <field name="invoice_count"/>
                             </button>
                         </div>

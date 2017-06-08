@@ -16,6 +16,7 @@ class TestFees(common.TransactionCase):
         self.student = self.env.ref('school.demo_student_student_5')
         self.school = self.env.ref('school.demo_school_1')
         self.standard = self.env.ref('school.demo_school_standard_1')
+        self.acct_type = self.env.ref('account.data_account_type_revenue')
 #       Create Payslip Line
         self.payslip_line = self.payslip_line_obj.\
             create({'name': 'Test case-fees',
@@ -40,7 +41,7 @@ class TestFees(common.TransactionCase):
         self.journal = self.env['account.journal'].search([('type', '=',
                                                             'sale')],
                                                           limit=1)
-#        Create Student Fees Register
+        # Create Student Fees Register
         self.fees_register = self.fees_register_obj.\
             create({'name': self.student.id,
                     'date': '2017-06-05',
@@ -57,7 +58,7 @@ class TestFees(common.TransactionCase):
         self.student_payslip = self.student_payslip_obj.\
             create({'student_id': self.student.id,
                     'name': 'Test Fees Receipt',
-                    'number': 'SLIP/001',
+                    'number': 'SLIP/097',
                     'date': current_date,
                     'fees_structure_id': self.fees_structure.id,
                     'journal_id': self.journal.id
@@ -66,9 +67,8 @@ class TestFees(common.TransactionCase):
         self.student_payslip.onchange_journal_id()
         self.student_payslip.payslip_confirm()
         self.student_payslip.student_pay_fees()
-        self.student_payslip.invoice_view()
-        self.student_payslip.payslip_draft()
         self.student_payslip.payslip_paid()
+        self.student_payslip.invoice_view()
 
     def test_fees(self):
         self.assertEqual(self.student.state, 'done')
