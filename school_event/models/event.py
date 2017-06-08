@@ -137,31 +137,28 @@ class SchoolEvent(models.Model):
     @api.multi
     def event_open(self):
         for rec in self:
-            if rec.part_ids and len(rec.part_ids) >= 1:
-                self.write({'state': 'open'})
+            if len(rec.part_ids) >= 1:
+                rec.state = 'open'
             else:
                 raise UserError(_('No Participants ! \
-                             No Participants to open the Event.'))
+                             No Participants to open the Event!'))
 
     @api.multi
     def event_close(self):
         '''Method to change state to close'''
-        for rec in self:
-            rec.write({'state': 'close'})
+        self.write({'state': 'close'})
         return True
 
     @api.multi
     def event_draft(self):
         '''Method to change state to draft'''
-        for rec in self:
-            rec.write({'state': 'draft'})
+        self.write({'state': 'draft'})
         return True
 
     @api.multi
     def event_cancel(self):
         '''Method to change state to cancel'''
-        for rec in self:
-            rec.write({'state': 'cancel'})
+        self.write({'state': 'cancel'})
         return True
 
 
