@@ -16,13 +16,20 @@ class SchoolTeacherAssignment(models.Model):
             raise ValidationError(_('Due date of homework should \
                                     be greater than assign date'))
 
-    name = fields.Char('Assignment Name')
-    subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
-    standard_id = fields.Many2one('school.standard', 'Standard')
-    teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True)
-    assign_date = fields.Date('Assign Date', required=True)
-    due_date = fields.Date('Due Date', required=True)
-    attached_homework = fields.Binary('Attached Home work')
+    name = fields.Char('Assignment Name',
+                       help="Name of Assignment")
+    subject_id = fields.Many2one('subject.subject', 'Subject', required=True,
+                                 help="Select Subject")
+    standard_id = fields.Many2one('school.standard', 'Standard',
+                                  help="Select Standard")
+    teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True,
+                                 help="Select Teacher")
+    assign_date = fields.Date('Assign Date', required=True,
+                              help="Starting date of assignment")
+    due_date = fields.Date('Due Date', required=True,
+                           help="Ending date of assignment")
+    attached_homework = fields.Binary('Attached Home work',
+                                      help="Attached Homework")
     state = fields.Selection([('draft', 'Draft'),
                               ('active', 'Active'),
                               ('done', 'Done')],
@@ -85,20 +92,32 @@ class SchoolStudentAssignment(models.Model):
             raise ValidationError(_('Due date of homework should be greater \
                                    than Assign date'))
 
-    name = fields.Char('Assignment Name')
-    subject_id = fields.Many2one('subject.subject', 'Subject', required=True)
-    standard_id = fields.Many2one('school.standard', 'Standard', required=True)
-    rejection_reason = fields.Text('Reject Reason')
-    teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True)
-    assign_date = fields.Date('Assign Date', required=True)
-    due_date = fields.Date('Due Date', required=True)
+    name = fields.Char('Assignment Name',
+                       help="Assignment Name")
+    subject_id = fields.Many2one('subject.subject', 'Subject', required=True,
+                                 help="Select Subject")
+    standard_id = fields.Many2one('school.standard', 'Standard', required=True,
+                                  help="Select Standard")
+    rejection_reason = fields.Text('Reject Reason',
+                                   help="Reject Reason")
+    teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True,
+                                 help='''Teacher responsible to assign
+                                 assignment''')
+    assign_date = fields.Date('Assign Date', required=True,
+                              help="Starting date of assignment")
+    due_date = fields.Date('Due Date', required=True,
+                           help="End date of assignment")
     state = fields.Selection([('draft', 'Draft'), ('active', 'Active'),
                               ('reject', 'Reject'),
                               ('done', 'Done')], 'Status',
+                             help="States of assignment",
                              readonly=True, default='draft')
-    student_id = fields.Many2one('student.student', 'Student', required=True)
-    stud_roll_no = fields.Integer(string="Roll no")
-    attached_homework = fields.Binary('Attached Home work')
+    student_id = fields.Many2one('student.student', 'Student', required=True,
+                                 help="Name of Student")
+    stud_roll_no = fields.Integer(string="Roll no",
+                                  help="Roll No of student")
+    attached_homework = fields.Binary('Attached Home work',
+                                      help="Homework Attached by student")
     teacher_assignment_id = fields.Many2one('school.teacher.assignment',
                                             string="Teachers")
 
