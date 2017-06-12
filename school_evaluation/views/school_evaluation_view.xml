@@ -99,6 +99,7 @@
                                  <field name="student_id" placeholder="Select Or Create Student Name" domain="[('state','=','done')]"
                                      attrs="{'readonly':[('state','not in','draft')],'required':[('type','=','student')]}" options="{&quot;no_create&quot;: True}"/>
                                  <field name="date" style="width: 84%" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                 <field name="teacher_id" invisible="1"/>
                             </group>
                             <group>
                                  <field name="type" readonly="1"/>
@@ -176,7 +177,7 @@
                                 <field name="eval_line" nolabel='1' context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Evaluation Line" editable='top'>
                                         <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
-                                        <field name="point_id" on_change="onchange_point(point_id)" options="{&quot;no_create&quot;: True}"/>
+                                        <field name="point_id" options="{&quot;no_create&quot;: True}"/>
                                         <field name="rating"/>
                                     </tree>
                                     <form string="Evaluation Line">

@@ -14,12 +14,16 @@ class AttendanceSheet(models.Model):
 
     name = fields.Char('Description', readonly=True)
     standard_id = fields.Many2one('school.standard', 'Academic Class',
-                                  required=True)
-    month_id = fields.Many2one('academic.month', 'Month', required=True)
+                                  required=True,
+                                  help="Select Standard")
+    month_id = fields.Many2one('academic.month', 'Month', required=True,
+                               help="Select Academic Month")
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     attendance_ids = fields.One2many('attendance.sheet.line', 'standard_id',
-                                     'Attendance')
-    user_id = fields.Many2one('hr.employee', 'Faculty')
+                                     'Attendance',
+                                     help="Academic Year")
+    user_id = fields.Many2one('hr.employee', 'Faculty',
+                              help="Select Teacher")
     attendance_type = fields.Selection([('daily', 'FullDay'),
                                         ('lecture', 'Lecture Wise')], 'Type')
 
@@ -198,26 +202,32 @@ class DailyAttendance(models.Model):
                 rec.total_absent = count_fail
 
     date = fields.Date("Today's Date",
+                       help="Current Date",
                        default=lambda *a: time.strftime('%Y-%m-%d'))
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True,
+                                  help="Select Standard",
                                   states={'validate': [('readonly', True)]})
     student_ids = fields.One2many('daily.attendance.line', 'standard_id',
                                   'Students',
                                   states={'validate': [('readonly', True)],
                                           'draft': [('readonly', False)]})
     user_id = fields.Many2one('hr.employee', 'Faculty',
+                              help="Select Teacher",
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
     total_student = fields.Integer(compute="_compute_total",
                                    store=True,
+                                   help="Total Students in class",
                                    string='Total Students')
     total_presence = fields.Integer(compute="_compute_present",
-                                    store=True, string='Present Students')
+                                    store=True, string='Present Students',
+                                    help="Present Student")
     total_absent = fields.Integer(compute="_compute_absent",
                                   store=True,
-                                  string='Absent Students')
+                                  string='Absent Students',
+                                  help="Absent Students")
 
     _sql_constraints = [
         ('attend_unique', 'unique(standard_id,user_id,date)',
@@ -786,8 +796,8 @@ class DailyAttendanceLine(models.Model):
     roll_no = fields.Integer('Roll No.', required=True, help='Roll Number')
     standard_id = fields.Many2one('daily.attendance', 'Standard')
     stud_id = fields.Many2one('student.student', 'Name', required=True)
-    is_present = fields.Boolean('Present')
-    is_absent = fields.Boolean('Absent')
+    is_present = fields.Boolean('Present', help="Check if student is present")
+    is_absent = fields.Boolean('Absent', help="Check if student is absent")
 
     @api.onchange('is_present')
     def onchange_attendance(self):

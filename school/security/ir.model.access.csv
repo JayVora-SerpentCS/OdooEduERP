@@ -103,7 +103,7 @@ access_standard_medium_teacher,standard.medium,model_standard_medium,group_schoo
 access_standard_division_teacher,standard.division,model_standard_division,group_school_teacher,1,1,1,0
 access_subject_subject_teacher,subject.subject,model_subject_subject,group_school_teacher,1,1,1,0
 access_school_school_teacher,school.school,model_school_school,group_school_teacher,1,1,0,0
-access_standard_standard_teacher,standard.standard,model_standard_standard,group_school_teacher,1,1,0,0
+access_standard_standard_teacher,standard.standard,model_standard_standard,group_school_teacher,1,1,1,0
 access_school_standard_teacher,school.standard,model_school_standard,group_school_teacher,1,1,1,0
 access_student_student_teacher,student.student,model_student_student,group_school_teacher,1,1,1,0
 access_subject_elective_teacher,subject.elective,model_subject_elective,group_school_teacher,1,1,1,0
@@ -116,7 +116,7 @@ access_student_award_teacher,student.award,model_student_award,group_school_teac
 access_student_document_teacher,student.document,model_student_document,group_school_teacher,1,1,1,0
 access_document_type_teacher,document.type,model_document_type,group_school_teacher,1,1,1,0
 access_student_description_teacher,student.description,model_student_description,group_school_teacher,1,1,1,0
-access_res_partner_teacher,res.partner,model_res_partner,group_school_teacher,1,0,0,0
+access_res_partner_teacher,res.partner,model_res_partner,group_school_teacher,1,1,0,0
 access_student_descipline_teacher,student.descipline,model_student_descipline,group_school_teacher,1,1,1,0
 access_student_history_teacher,student.history,model_student_history,group_school_teacher,1,1,1,0
 access_student_certificate_teacher,student.certificate,model_student_certificate,group_school_teacher,1,1,1,0

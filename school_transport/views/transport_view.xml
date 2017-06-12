@@ -311,7 +311,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="view_invoice" icon="fa-pencil-square-o" string="Invoice" type="object" widget="stateinfo" class="oe_stat_button" states="pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user">
+                            <button name="view_invoice" icon="fa-pencil-square-o" string="Invoice" type="object" widget="stateinfo" class="oe_stat_button" states="pending,paid" groups="school_transport.group_transportation_manager">
                                 <field name="count_inv"/>
                             </button>
                        </div>

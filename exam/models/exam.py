@@ -30,12 +30,24 @@ class StudentStudent(models.Model):
 class ExtendedTimeTable(models.Model):
     _inherit = 'time.table'
 
+    @api.multi
+    @api.depends('timetable_ids')
+    def _compute_users(self):
+        '''Method to compute user'''
+        for rec in self:
+            rec.user_ids = [teacher.teacher_id.user_id.id
+                            for teacher in rec.timetable_ids
+                            if rec.timetable_type == 'exam']
+        return True
+
     timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
                                       string='Time Table Type', required=True,
                                       inivisible=False)
     exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
                                               'TimeTable')
     exam_id = fields.Many2one('exam.exam', 'Exam')
+    users = fields.Many2many('res.users', string="Users",
+                             compute="_compute_users", store=True)
 
 
 class ExtendedTimeTableLine(models.Model):
@@ -101,13 +113,16 @@ class ExamExam(models.Model):
                     examination results') % (self.name))
 
     active = fields.Boolean('Active', default="True")
-    name = fields.Char("Exam Name", required=True)
+    name = fields.Char("Exam Name", required=True,
+                       help="Name of Exam")
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
+                            help="Code of exam",
                             default=lambda obj:
                             obj.env['ir.sequence'].next_by_code('exam.exam'))
     standard_id = fields.Many2many('standard.standard',
                                    'standard_standard_exam_rel', 'standard_id',
-                                   'event_id', 'Participant Standards')
+                                   'event_id', 'Participant Standards',
+                                   help="Select Standard")
     start_date = fields.Date("Exam Start Date",
                              help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
@@ -118,8 +133,10 @@ class ExamExam(models.Model):
                               ('finished', 'Finished'),
                               ('cancelled', 'Cancelled')], 'State',
                              readonly=True, default='draft')
-    grade_system = fields.Many2one('grade.master', "Grade System")
-    academic_year = fields.Many2one('academic.year', 'Academic Year')
+    grade_system = fields.Many2one('grade.master', "Grade System",
+                                   help="Select Grade System")
+    academic_year = fields.Many2one('academic.year', 'Academic Year',
+                                    help="Select Academic Year")
     exam_schedule_ids = fields.One2many('exam.schedule.line', 'exam_id',
                                         'Exam Schedule')
 
@@ -224,7 +241,8 @@ class ExamScheduleLine(models.Model):
         return {'domain': {'standard_id': [('standard_id', 'in',
                                             standard_ids)]}}
 
-    standard_id = fields.Many2one('school.standard', 'Standard')
+    standard_id = fields.Many2one('school.standard', 'Standard',
+                                  help="Select Standard")
     timetable_id = fields.Many2one('time.table', 'Exam Schedule')
     exam_id = fields.Many2one('exam.exam', 'Exam')
     standard_ids = fields.Many2many('standard.standard',
@@ -235,8 +253,10 @@ class AdditionalExam(models.Model):
     _name = 'additional.exam'
     _description = 'additional Exam Information'
 
-    name = fields.Char("Additional Exam Name", required=True)
+    name = fields.Char("Additional Exam Name", required=True,
+                       help="Name of Exam")
     addtional_exam_code = fields.Char('Exam Code', required=True,
+                                      help="Exam Code",
                                       readonly=True,
                                       default=lambda obj:
                                       obj.env['ir.sequence'].
@@ -244,8 +264,10 @@ class AdditionalExam(models.Model):
     standard_id = fields.Many2one("school.standard", "Standard")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     exam_date = fields.Date("Exam Date")
-    maximum_marks = fields.Integer("Maximum Mark")
-    minimum_marks = fields.Integer("Minimum Mark")
+    maximum_marks = fields.Integer("Maximum Mark",
+                                   help="Minimum Marks of exam")
+    minimum_marks = fields.Integer("Minimum Mark",
+                                   help="Maximum Marks of Exam")
     weightage = fields.Char("WEIGHTAGE")
     create_date = fields.Date("Created Date", help="Exam Created Date")
     write_date = fields.Date("Updated date", help="Exam Updated Date")
@@ -339,23 +361,27 @@ class ExamResult(models.Model):
             self.standard_id = self.student_id.standard_id.id
             self.roll_no_id = self.student_id.roll_no
 
-    s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True)
+    s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True,
+                                 help="Select Exam")
     student_id = fields.Many2one("student.student", "Student Name",
-                                 required=True)
+                                 required=True,
+                                 help="Select Student")
     roll_no_id = fields.Integer(string="Roll No",
                                 readonly=True)
     pid = fields.Char(related='student_id.pid', string="Student ID",
                       readonly=True)
-    standard_id = fields.Many2one("school.standard", "Standard")
+    standard_id = fields.Many2one("school.standard", "Standard",
+                                  help="Select Standard")
     result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
     total = fields.Float(compute='_compute_total', string='Obtain Total',
-                         store=True)
+                         store=True, help="Total of marks")
     percentage = fields.Float("Percentage", compute="_compute_per",
-                              store=True)
+                              store=True,
+                              help="Percentage Obtained")
     result = fields.Char(compute='_compute_result', string='Result',
-                         store=True)
+                         store=True, help="Result Obtained")
     grade = fields.Char("Grade", compute="_compute_per",
-                        store=True)
+                        store=True, help="Grade Obtained")
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
@@ -364,7 +390,8 @@ class ExamResult(models.Model):
                               ('done', 'Done')],
                              'State', readonly=True, default='draft')
     color = fields.Integer('Color')
-    grade_system = fields.Many2one('grade.master', "Grade System")
+    grade_system = fields.Many2one('grade.master', "Grade System",
+                                   help="Grade System selected")
 
     @api.multi
     def result_confirm(self):
@@ -478,9 +505,12 @@ class ExamSubject(models.Model):
                              related='exam_id.state', string="State")
     subject_id = fields.Many2one("subject.subject", "Subject Name")
     obtain_marks = fields.Float("Obtain Marks", group_operator="avg")
-    minimum_marks = fields.Float("Minimum Marks")
-    maximum_marks = fields.Float("Maximum Marks")
-    marks_reeval = fields.Float("Marks After Re-evaluation")
+    minimum_marks = fields.Float("Minimum Marks",
+                                 help="Minimum Marks of subject")
+    maximum_marks = fields.Float("Maximum Marks",
+                                 help="Maximum Marks of subject")
+    marks_reeval = fields.Float("Marks After Re-evaluation",
+                                help="Marks Obtain after Re-evaluation")
     grade_line_id = fields.Many2one('grade.line', "Grade",
                                     compute='_compute_grade')
 
@@ -534,12 +564,15 @@ class AdditionalExamResult(models.Model):
         return True
 
     a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
-                                required=True)
+                                required=True,
+                                help="Select Additional Exam")
     student_id = fields.Many2one('student.student', 'Student Name',
-                                 required=True)
+                                 required=True,
+                                 help="Select Student")
     roll_no_id = fields.Integer("Roll No",
                                 readonly=True)
     standard_id = fields.Many2one('school.standard',
                                   "Standard", readonly=True)
-    obtain_marks = fields.Float('Obtain Marks')
-    result = fields.Char(compute='_compute_student_result', string='Result')
+    obtain_marks = fields.Float('Obtain Marks', help="Marks obtain in exam")
+    result = fields.Char(compute='_compute_student_result', string='Result',
+                         help="Result Obtained")

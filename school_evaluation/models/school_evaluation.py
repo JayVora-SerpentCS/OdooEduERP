@@ -59,18 +59,21 @@ class SchoolEvaluation(models.Model):
                 res['arch'] = etree.tostring(doc)
         return res
 
-    student_id = fields.Many2one('student.student', 'Student Name')
+    student_id = fields.Many2one('student.student', 'Student Name',
+                                 help="Select Student")
     teacher_id = fields.Many2one('hr.employee', "Teacher")
     type = fields.Selection([('student', 'Student'),
                              ('faculty', 'Faculty')],
-                            'User Type', required=True)
+                            'User Type', required=True,
+                            help="Type of evaluation")
     date = fields.Date('Evaluation Date', required=True,
+                       help="Evaluation Date",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
 #    evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
     eval_line = fields.One2many('school.evaluation.line', 'eval_id',
                                 'Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
-                         method=True)
+                         method=True, help="Total Points Obtained")
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
@@ -83,6 +86,16 @@ class SchoolEvaluation(models.Model):
         for rec in self:
             rec.state = 'start'
         return True
+
+    @api.model
+    def default_get(self, fields):
+        '''Override method to get default value of teacher'''
+        res = super(SchoolEvaluation, self).default_get(fields)
+        if res.get('type') == 'student':
+            hr_emp = self.env['hr.employee'].search([('user_id', '=',
+                                                      self._uid)])
+            res.update({'teacher_id': hr_emp.id})
+        return res
 
     @api.multi
     def set_finish(self):
@@ -135,7 +148,8 @@ class SchoolEvaluationTemplate(models.Model):
 
     desc = fields.Char('Description', required=True)
     type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')],
-                            'User Type', required=True, default='faculty')
+                            'User Type', required=True, default='faculty',
+                            help="Type of Evaluation")
     rating_line = fields.One2many('rating.rating', 'rating_id', 'Rating')
 
 
@@ -144,6 +158,8 @@ class RatingRating(models.Model):
     _rec_name = 'point'
     _order = "point desc"
 
-    rating_id = fields.Many2one('school.evaluation.template', 'Stud')
-    point = fields.Integer('Rating in points', required=True)
+    rating_id = fields.Many2one('school.evaluation.template', 'Stud',
+                                help="Ratings")
+    point = fields.Integer('Rating in points', required=True,
+                           help="Points")
     rating = fields.Char('Remarks', required=True)
