@@ -12,9 +12,11 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class HostelType(models.Model):
     _name = 'hostel.type'
 
-    name = fields.Char('HOSTEL Name', required=True)
+    name = fields.Char('HOSTEL Name', required=True,
+                       help="Name of Hostel")
     type = fields.Selection([('boys', 'Boys'), ('girls', 'Girls'),
                              ('common', 'Common')], 'HOSTEL Type',
+                            help="Type of Hostel",
                             required=True, default='common')
     other_info = fields.Text('Other Information')
     rector = fields.Many2one('res.partner', 'Rector')
@@ -61,10 +63,13 @@ class HostelRoom(models.Model):
             room_availability = data.student_per_room - count
             data.availability = room_availability
 
-    name = fields.Many2one('hostel.type', 'HOSTEL')
-    floor_no = fields.Integer('Floor No.', default=1)
+    name = fields.Many2one('hostel.type', 'HOSTEL',
+                           help="Name of hostel")
+    floor_no = fields.Integer('Floor No.', default=1,
+                              help="Floor Number")
     room_no = fields.Char('Room No.', required=True)
-    student_per_room = fields.Integer('Student Per Room', required=True)
+    student_per_room = fields.Integer('Student Per Room', required=True,
+                                      help="Students allocated per room")
     availability = fields.Float(compute='_compute_check_availability',
                                 store=True, string="Availability")
     telephone = fields.Boolean('Telephone access')
@@ -135,17 +140,23 @@ class HostelStudent(models.Model):
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
     room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
-                             required=True)
+                             required=True,
+                             help="Rent of room")
     bed_type = fields.Many2one('bed.type', 'Bed Type')
     admission_date = fields.Datetime('Admission Date',
+                                     help="Date of admission in hostel",
                                      default=fields.Date.context_today)
-    discharge_date = fields.Datetime('Discharge Date')
-    paid_amount = fields.Float('Paid Amount')
+    discharge_date = fields.Datetime('Discharge Date',
+                                     help="Date on which student discharge")
+    paid_amount = fields.Float('Paid Amount',
+                               help="Amount Paid")
     hostel_info_id = fields.Many2one('hostel.type', "Hostel")
     room_id = fields.Many2one('hostel.room', "Room")
     duration = fields.Integer('Duration')
     rent_pay = fields.Float('Rent')
-    acutal_discharge_date = fields.Datetime('Actual Discharge Date')
+    acutal_discharge_date = fields.Datetime('Actual Discharge Date',
+                                            help='''Date on which student
+                                            discharge''')
     remaining_amount = fields.Float(compute='_compute_remaining_fee_amt',
                                     string='Remaining Amount')
     status = fields.Selection([('draft', 'Draft'),
@@ -294,7 +305,8 @@ class AccountInvoice(models.Model):
 
     hostel_student_id = fields.Many2one('hostel.student',
                                         string="Hostel Student")
-    hostel_ref = fields.Char('Hostel Fees Reference')
+    hostel_ref = fields.Char('Hostel Fees Reference',
+                             help="Hostel Fee Reference")
 
 
 class AccountPayment(models.Model):
