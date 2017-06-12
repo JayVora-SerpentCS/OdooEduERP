@@ -124,6 +124,10 @@ class TransportParticipant(models.Model):
                                limit=limit, count=count,
                                access_rights_uid=access_rights_uid)
 
+    @api.multi
+    def set_over(self):
+        self.write({'state': 'over'})
+
 
 class StudentTransports(models.Model):
     '''for root detail'''
@@ -164,15 +168,13 @@ class StudentTransports(models.Model):
     @api.multi
     def transport_open(self):
         '''Method to change state open'''
-        for rec in self:
-            rec.state = 'open'
+        self.write({'state': 'open'})
         return True
 
     @api.multi
     def transport_close(self):
         '''Method to change state to close'''
-        for rec in self:
-            rec.state = 'close'
+        self.write({'state': 'close'})
         return True
 
     @api.multi

@@ -110,7 +110,7 @@ class StudentPayslipLine(models.Model):
                                'Calculations')
     slip_id = fields.Many2one('student.payslip', 'Pay Slip')
     description = fields.Text('Description')
-    account_id = fields.Many2one('account.account', string="Account")
+    account_id = fields.Many2one('account.account', "Account")
 
 
 class StudentFeesStructureLine(models.Model):
@@ -259,15 +259,13 @@ class StudentPayslip(models.Model):
     @api.multi
     def payslip_draft(self):
         '''Change state to draft'''
-        for rec in self:
-            rec.state = 'draft'
+        self.write({'state': 'draft'})
         return True
 
     @api.multi
     def payslip_paid(self):
         '''Change state to paid'''
-        for rec in self:
-            rec.state = 'paid'
+        self.write({'state': 'paid'})
         return True
 
     @api.multi
