@@ -12,7 +12,7 @@ class TimeTable(models.Model):
     @api.multi
     @api.depends('timetable_ids')
     def _compute_user(self):
-        '''Method to compute student'''
+        '''Method to compute user'''
         for rec in self:
             rec.user_ids = [teacher.teacher_id.user_id.id
                             for teacher in rec.timetable_ids
@@ -21,8 +21,10 @@ class TimeTable(models.Model):
 
     name = fields.Char('Description')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
-                                  required=True)
-    year_id = fields.Many2one('academic.year', 'Year', required=True)
+                                  required=True,
+                                  help="Select Standard")
+    year_id = fields.Many2one('academic.year', 'Year', required=True,
+                              help="select academic year")
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
     timetable_type = fields.Selection([('regular', 'Regular')],
                                       'Time Table Type', default="regular",
@@ -74,9 +76,11 @@ class TimeTableLine(models.Model):
                                     'teacher %s.') % (self.subject_id.name,
                                                       self.teacher_id.name))
 
-    teacher_id = fields.Many2one('hr.employee', 'Faculty Name')
+    teacher_id = fields.Many2one('hr.employee', 'Faculty Name',
+                                 help="Select Teacher")
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
-                                 required=True)
+                                 required=True,
+                                 help="Select Subject")
     table_id = fields.Many2one('time.table', 'TimeTable')
     start_time = fields.Float('Start Time', required=True,
                               help="Time according to timeformat of 24 hours")
@@ -97,6 +101,7 @@ class SubjectSubject(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
+        '''Override method to get subject related to teacher'''
         teacher_id = self._context.get('teacher_id')
         if teacher_id:
             for teacher_data in self.env['hr.employee'].browse(teacher_id):
