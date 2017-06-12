@@ -31,9 +31,12 @@ class SchoolEventParticipant(models.Model):
     _order = "sequence"
 
     name = fields.Many2one('student.student', 'Participant Name',
-                           readonly=True)
-    score = fields.Float('Score', default=0)
-    event_id = fields.Many2one('school.event', 'Event', readonly=True)
+                           readonly=True,
+                           help="Name of Student")
+    score = fields.Float('Score', default=0,
+                         help="Score obtained by student")
+    event_id = fields.Many2one('school.event', 'Event', readonly=True,
+                               help="Name of event")
     stu_pid = fields.Char('Personal Identification Number', required=True,
                           readonly=True)
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
@@ -169,10 +172,13 @@ class SchoolEventRegistration(models.Model):
     _rec_name = "reg_date"
 
     name = fields.Many2one('school.event', 'Event Name',
-                           domain=[('state', '=', 'draft')], required=True)
+                           domain=[('state', '=', 'draft')], required=True,
+                           help="Name of event")
     part_name_id = fields.Many2one('student.student', 'Participant Name',
-                                   required=True)
+                                   required=True,
+                                   help="Select Participant")
     reg_date = fields.Date('Registration Date', readonly=True,
+                           help="Registration date of event",
                            default=lambda *a:
                            time.strftime("%Y-%m-%d %H:%M:%S"))
     state = fields.Selection([('draft', 'Draft'),
