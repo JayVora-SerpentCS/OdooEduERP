@@ -38,7 +38,7 @@
             <field eval="10.0" name="start_time"/>
         </record>
         <record id="time_table_line_1" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_jve"/>
+            <field name="teacher_id" ref="hr.employee_al"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/07'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/07', '%Y/%m/%d').strftime('%A').lower()"/>
@@ -47,7 +47,7 @@
             <field eval="10.0" name="start_time"/>
         </record>
         <record id="time_table_line_2" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_jth"/>
+            <field name="teacher_id" ref="hr.employee_mit"/>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/08'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/08', '%Y/%m/%d').strftime('%A').lower()"/>
@@ -56,7 +56,7 @@
             <field eval="10.0" name="start_time"/>
         </record>
         <record id="time_table_line_3" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_jgo"/>
+            <field name="teacher_id" ref="hr.employee_stw"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/09'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/09', '%Y/%m/%d').strftime('%A').lower()"/>

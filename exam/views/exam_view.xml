@@ -151,8 +151,9 @@
             <field name="model">time.table</field>
             <field name="inherit_id" ref="timetable.view_time_table_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/sheet/group/field[@name='year_id']" position="after">
+                <xpath expr="//form/sheet/group/field[@name='year_id']" position="after">
                     <field name="timetable_type" placeholder= "Select Time Table Type" readonly="1"/>
+                    <field name="users" invisible="1"/>
                 </xpath>
             </field>
         </record>
