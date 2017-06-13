@@ -3,7 +3,7 @@
 
 from lxml import etree
 from odoo import models, fields, api, _
-from openerp.exceptions import ValidationError
+from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta as rd
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
