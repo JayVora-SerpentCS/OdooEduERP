@@ -22,8 +22,9 @@ class StudentFeesRegister(models.Model):
                 total_amt += line.total
             rec.total_amount = total_amt
 
-    name = fields.Char('Name', required=True,)
+    name = fields.Char('Name', required=True, help="Enter Name")
     date = fields.Date('Date', required=True,
+                       help="Date of register",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     number = fields.Char('Number', readonly=True,
                          default=lambda obj: obj.env['ir.sequence'].
@@ -35,6 +36,7 @@ class StudentFeesRegister(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal',
+                                 help="Select Journal",
                                  required=False)
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
@@ -174,18 +176,20 @@ class StudentPayslip(models.Model):
                          next_by_code('student.payslip'))
     student_id = fields.Many2one('student.student', 'Student', required=True)
     date = fields.Date('Date', readonly=True,
+                       help="Current Date of payslip",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     line_ids = fields.One2many('student.payslip.line', 'slip_id',
                                'PaySlip Line')
-    total = fields.Float("Total", readonly=True)
+    total = fields.Float("Total", readonly=True,
+                         help="Total Amount")
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('pending', 'Pending'), ('paid', 'Paid')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=False)
     invoice_count = fields.Integer(string="# of Invoices",
                                    compute="_compute_invoice")
-    paid_amount = fields.Float('Paid Amount')
-    due_amount = fields.Float('Due Amount')
+    paid_amount = fields.Float('Paid Amount', help="Amount Paid")
+    due_amount = fields.Float('Due Amount', help="Amount Remaining")
     currency_id = fields.Many2one('res.currency', 'Currency')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
                               ondelete='restrict',
@@ -468,7 +472,8 @@ class StudentPayslipLineLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    slip_ref = fields.Char('Fees Slip Reference')
+    slip_ref = fields.Char('Fees Slip Reference',
+                           help="Payslip Reference")
     student_payslip_id = fields.Many2one('student.payslip',
                                          string="Student Payslip")
 

@@ -21,7 +21,7 @@ class TransferVehicle(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        '''Overide method to get student'''
+        '''Override method to get student'''
         active_id = self._context.get('active_id')
         result = super(TransferVehicle, self).default_get(fields)
         if active_id:

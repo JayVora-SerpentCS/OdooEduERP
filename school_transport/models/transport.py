@@ -19,7 +19,7 @@ class HrEmployee(models.Model):
     _description = 'Driver Information'
 
     licence_no = fields.Char('License No')
-    is_driver = fields.Boolean('IS driver')
+    is_driver = fields.Boolean('IS driver', help="Check if employee is driver")
     transport_vehicle = fields.One2many('transport.vehicle',
                                         'driver_id', 'Vehicles')
 
@@ -65,7 +65,8 @@ class TransportVehicle(models.Model):
     vehicle = fields.Char('Vehicle No', required=True)
     capacity = fields.Integer('Capacity')
     participant = fields.Integer(compute='_compute_participants',
-                                 string='Total Participants', readonly=True)
+                                 string='Total Participants', readonly=True,
+                                 help="Students registered in root")
     vehi_participants_ids = fields.Many2many('transport.participant',
                                              'vehicle_participant_student_rel',
                                              'vehicle_id', 'student_id',
@@ -99,11 +100,14 @@ class TransportParticipant(models.Model):
     transport_id = fields.Many2one('student.transport', 'Transport Root',
                                    readonly=True, required=True)
     stu_pid_id = fields.Char('Personal Identification Number', required=True)
-    tr_reg_date = fields.Date('Transportation Registration Date')
-    tr_end_date = fields.Date('Registration End Date')
+    tr_reg_date = fields.Date('Transportation Registration Date',
+                              help="Start date of registration")
+    tr_end_date = fields.Date('Registration End Date',
+                              help="End date of registration")
     months = fields.Integer('Registration For Months')
     vehicle_id = fields.Many2one('transport.vehicle', 'Vehicle No')
-    point_id = fields.Many2one('transport.point', 'Point Name')
+    point_id = fields.Many2one('transport.point', 'Point Name',
+                               help="Name of point")
     state = fields.Selection([('running', 'Running'),
                               ('over', 'Over')],
                              'State', readonly=True,)
@@ -143,7 +147,8 @@ class StudentTransports(models.Model):
 
     name = fields.Char('Transport Root Name', required=True)
     start_date = fields.Date('Start Date', required=True)
-    contact_per_id = fields.Many2one('hr.employee', 'Contact Person')
+    contact_per_id = fields.Many2one('hr.employee', 'Contact Person',
+                                     help="Contact Person")
     end_date = fields.Date('End Date', required=True)
     total_participantes = fields.Integer(compute='_compute_total_participants',
                                          method=True,
@@ -214,11 +219,14 @@ class TransportRegistration(models.Model):
     name = fields.Many2one('student.transport', 'Transport Root Name',
                            domain=[('state', '=', 'open')], required=True)
     part_name = fields.Many2one('student.student', 'Participant Name',
-                                required=True)
+                                required=True,
+                                help="Student Name")
     reg_date = fields.Date('Registration Date', readonly=True,
+                           help="Start Date of registration",
                            default=lambda * a:
                            time.strftime("%Y-%m-%d %H:%M:%S"))
-    reg_end_date = fields.Date('Registration End Date', readonly=True)
+    reg_end_date = fields.Date('Registration End Date', readonly=True,
+                               help="Start Date of registration")
     for_month = fields.Integer('Registration For Months')
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
@@ -231,8 +239,10 @@ class TransportRegistration(models.Model):
     point_id = fields.Many2one('transport.point', 'Point', widget='selection',
                                required=True)
     m_amount = fields.Float('Monthly Amount', readonly=True)
-    paid_amount = fields.Float('Paid Amount')
-    remain_amt = fields.Float('Due Amount')
+    paid_amount = fields.Float('Paid Amount',
+                               help="Amount Paid")
+    remain_amt = fields.Float('Due Amount',
+                              help="Amount Remaining")
     transport_fees = fields.Float(compute="_compute_transport_fees",
                                   string="Transport Fees")
     amount = fields.Float('Final Amount', readonly=True)
