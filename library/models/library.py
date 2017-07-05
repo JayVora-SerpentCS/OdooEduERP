@@ -3,9 +3,11 @@
 
 import time
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
+from datetime import datetime
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from dateutil.relativedelta import relativedelta as rd
 
 
 class LibraryRack(models.Model):
@@ -83,6 +85,15 @@ class LibraryCard(models.Model):
                          'roll_no': student.roll_no})
         return super(LibraryCard, self).write(vals)
 
+    @api.multi
+    @api.depends('start_date', 'duration')
+    def _compute_end_date(self):
+        for rec in self:
+            if rec.start_date:
+                date_diff = datetime.strptime(rec.start_date,
+                                              DEFAULT_SERVER_DATE_FORMAT)
+                rec.end_date = date_diff + rd(months=rec.duration)
+
     code = fields.Char('Card No', required=True, default=lambda self:
                        self.env['ir.sequence'].get('library.card') or '/')
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
@@ -93,6 +104,10 @@ class LibraryCard(models.Model):
                             'User')
     roll_no = fields.Integer('Roll No')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
+    start_date = fields.Date('Start Date')
+    duration = fields.Integer('Enter Duration',
+                              help="Duration in months")
+    end_date = fields.Date('End Date', compute="_compute_end_date", store=True)
 
 
 class LibraryBookIssue(models.Model):
@@ -345,6 +360,10 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, '%m/%d/%Y')
+        if self.card_id.end_date > new_date:
+            raise ValidationError(_('The Membership of library card is over!'))
         for rec in self:
             if rec.name and rec.name.availability == 'notavailable':
                 raise ValidationError(_('This Book is not available!'
@@ -571,6 +590,10 @@ class LibraryBookRequest(models.Model):
     def confirm_book_request(self):
         '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, '%m/%d/%Y')
+        if self.card_id.end_date > new_date:
+            raise ValidationError(_('The Membership of library card is over!'))
         for rec in self:
             vals = {'card_id': rec.card_id.id,
                     'type': rec.type,
