@@ -575,4 +575,4 @@ class AdditionalExamResult(models.Model):
                                   "Standard", readonly=True)
     obtain_marks = fields.Float('Obtain Marks', help="Marks obtain in exam")
     result = fields.Char(compute='_compute_student_result', string='Result',
-                         help="Result Obtained")
+                         help="Result Obtained", store=True)
