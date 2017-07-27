@@ -496,12 +496,6 @@
                             <separator colspan="2" col="2"/>
                             <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]"/>
                         </group>
-                        <separator string="Membership Details"/>
-                        <group col="4" colspan="4">
-                            <field name="start_date" required="1"/>
-                            <field name="duration" required="1"/>
-                            <field name="end_date"/>
-                        </group>
                     </sheet>
                 </form>
             </field>

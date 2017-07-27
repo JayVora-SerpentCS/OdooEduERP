@@ -7,6 +7,7 @@
     'author': "Serpent Consulting Services Pvt. Ltd.",
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
+    'images': ['static/description/SchoolLibrary.png'],
     'license': "AGPL-3",
     'summary': 'A Module For Library Management For School',
     'complexity': 'easy',
