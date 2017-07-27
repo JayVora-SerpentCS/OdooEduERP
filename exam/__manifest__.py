@@ -6,6 +6,7 @@
     'version': "10.0.1.0.15",
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
+    'images': ['static/description/SchoolExam.png'],
     'category': 'School Management',
     'license': "AGPL-3",
     'summary': 'A Module For Exams Management Taken In School',

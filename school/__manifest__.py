@@ -6,6 +6,7 @@
     'version': '10.0.1.0.13',
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
+    'images': ['static/description/school.png'],
     'category': 'School Management',
     'license': "AGPL-3",
     'complexity': 'easy',
@@ -21,11 +22,7 @@
              'wizard/move_standards_view.xml',
              'views/report_view.xml',
              'views/identity_card.xml'],
-#             'views/template_view.xml'],
     'demo': ['demo/school_demo.xml'],
-#    'qweb': [
-#        "static/src/xml/school_dashboard.xml",
-#    ],
     'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': True

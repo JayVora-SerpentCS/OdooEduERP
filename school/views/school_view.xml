@@ -1769,37 +1769,6 @@
                 </tree>
             </field>
         </record>
-        <!-- Kanban View Of Student Dashboard -->
-<!--         <record id="student_dashboard_kanban_view" model="ir.ui.view"> -->
-<!--             <field name="name">Student Dashboard</field> -->
-<!--             <field name="model">student.dashboard</field> -->
-<!--             <field name="arch" type="xml"> -->
-<!--                 <kanban default_group_by="date"> -->
-<!--                     <field name="name" /> -->
-<!--                     <templates> -->
-<!--                         <t t-name="kanban-box"></t> -->
-<!--                     </templates> -->
-<!--                 </kanban> -->
-<!--             </field> -->
-<!--         </record> -->
-
-<!--         <record id="student_dashboard_action" model="ir.actions.act_window"> -->
-<!--             <field name="name">Student Dashboard</field> -->
-<!--             <field name="res_model">student.dashboard</field> -->
-<!--             <field name="view_type">form</field> -->
-<!--             <field name="view_mode">kanban</field> -->
-<!--         </record> -->
-        <!-- Action DashBoard -->
-<!--         <record id="school_dashboard_act" model="ir.actions.act_window"> -->
-<!--             <field name="name">School Dashboard</field> -->
-<!--             <field name="res_model">student.dashboard</field> -->
-<!--             <field name="view_type">form</field> -->
-<!--             <field name="view_mode">school_dashboard_view</field> -->
-<!--             <field name="context">{'school_dashboard_view_view_ref': 'school.student_dashboard_kanban_view'}</field> -->
-<!--         </record>  -->
-        <!-- Menu of DashBoard -->
-<!--           <menuitem id="menu_school_dashboard" name="Dashboard" action="school_dashboard_act" sequence="1"  -->
-<!--             parent="menu_ems" icon="fa-dashboard" web_icon="school,static/description/dashboard.png"/> -->
         <!-- Action Of Form, Tree & Kanban Views Of Parent Information -->
         <record id="action_parent_form" model="ir.actions.act_window">
             <field name="name">Parents</field>
@@ -1831,14 +1800,11 @@
         <!-- Menu Item Of Dashboard -->
         <!-- <menuitem id="menu_dashboard" name="Dashboard" parent="menu_ems" action="open_board_my_dash_action" sequence="1"
                   icon="terp-project" web_icon_hover="images/hover.png"/> -->
-        <!-- Menu of DashBoard -->
-<!--           <menuitem id="menu_school_dashboard" name="Dashboard" action="school_dashboard_act" sequence="2"  -->
-<!--             parent="menu_ems" icon="fa-dashboard" web_icon="school,static/description/dashboard.png"/> -->
         <!-- MenuItem Of Admission Register -->
-        <menuitem id="admission_register" name="Admission Register" parent="menu_ems" sequence="3" groups="school.group_school_administration,school.group_is_admission"/>
-        <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register" action="action_student_student_form_2" sequence="4" groups="school.group_school_administration,school.group_is_admission"/>
+        <menuitem id="admission_register" name="Admission Register" parent="menu_ems" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
+        <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register" action="action_student_student_form_2" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
         <!-- Menu Item Of Students & Parents -->
-        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="5"/>
+        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="2"/>
         <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_res_partner_form" name="Parents Profiles" parent="menu_students_parents" action="action_parent_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_teachers_profiles" name="Teachers Profiles" parent="menu_students_parents" action="action_teacher_teacher_form_1" groups="school.group_school_administration,school.group_school_teacher" />
