@@ -1,5 +1,7 @@
 from odoo.tests import common
 import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta as rd
 
 
 class TestEvent(common.TransactionCase):
@@ -13,6 +15,15 @@ class TestEvent(common.TransactionCase):
         self.hr_employee = self.env.ref('hr.employee_al')
         self.part_name = self.env.ref('school.demo_student_student_5')
         self.standard = self.env.ref('school.demo_standard_standard_2')
+        currdt = datetime.now()
+        new_dt = currdt - rd(days=7)
+        start_dt = datetime.strftime(new_dt, '%m/%d/%Y')
+        end_date = currdt + rd(days=8)
+        end_dt = datetime.strftime(end_date, '%m/%d/%Y')
+        event_start = currdt + rd(days=15)
+        eve_start = datetime.strftime(event_start, '%m/%d/%Y')
+        event_end = currdt + rd(days=20)
+        eve_end = datetime.strftime(event_end, '%m/%d/%Y')
         # Event Parameter created
         self.event_parameter = self.event_parameter_obj.\
             create({'name': 'New Parameter'})
@@ -20,10 +31,10 @@ class TestEvent(common.TransactionCase):
         self.school_event = self.school_event_obj.\
             create({'name': 'New Event',
                     'code': self.school_id.id,
-                    'start_reg_date': time.strftime('06-30-2017'),
-                    'last_reg_date': time.strftime('07-05-2017'),
-                    'start_date': time.strftime('07-10-2017'),
-                    'end_date': time.strftime('07-20-2017'),
+                    'start_reg_date': start_dt,
+                    'last_reg_date': end_dt,
+                    'start_date': eve_start,
+                    'end_date': eve_end,
                     'contact_per_id': self.hr_employee.id,
                     'supervisor_id': self.hr_employee.id,
                     'part_standard_ids': [(6, 0, (self.standard.ids))],
@@ -49,7 +60,7 @@ class TestEvent(common.TransactionCase):
         self.school_event.event_cancel()
         self.school_event.event_open()
 
-    def test_exam(self):
+    def test_event(self):
         self.assertEqual(self.school_event.contact_per_id.is_school_teacher,
                          True)
         self.assertEqual(self.school_event.supervisor_id.is_school_teacher,
