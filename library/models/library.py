@@ -419,12 +419,13 @@ class LibraryBookIssue(models.Model):
         curr_dt = datetime.now()
         new_date = datetime.strftime(curr_dt, '%m/%d/%Y')
         if (self.card_id.end_date < new_date and
-           self.card_id.end_date > new_date):
+                self.card_id.end_date > new_date):
                 raise ValidationError(_('''The Membership of library
                                         card is over!'''))
         if self.issue_code == 'New':
-            self.issue_code = self.env['ir.sequence'].next_by_code(
-                              'library.book.issue') or _('New')
+            self.issue_code = self.env['ir.sequence'
+                                       ].next_by_code('library.book.issue'
+                                                      ) or _('New')
         for rec in self:
             if rec.name and rec.name.availability == 'notavailable':
                 raise ValidationError(_('''This Book is not available
