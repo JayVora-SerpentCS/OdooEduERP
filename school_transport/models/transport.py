@@ -6,6 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from odoo.exceptions import ValidationError
 
 
 class StudentTransport(models.Model):
@@ -22,6 +23,28 @@ class HrEmployee(models.Model):
     is_driver = fields.Boolean('IS driver', help="Check if employee is driver")
     transport_vehicle = fields.One2many('transport.vehicle',
                                         'driver_id', 'Vehicles')
+
+    @api.model
+    def create(self, vals):
+        driver_search = self.env['hr.employee'].search([('is_driver',
+                                                         '=', True),
+                                                        ('licence_no', '=',
+                                                         vals.get('licence_no')
+                                                         )])
+        if driver_search:
+            raise ValidationError(_('''Enter different licence number'''))
+        return super(HrEmployee, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        driver_search = self.env['hr.employee'].search([('is_driver',
+                                                         '=', True),
+                                                        ('licence_no', '=',
+                                                         vals.get('licence_no')
+                                                         )])
+        if driver_search:
+            raise ValidationError(_('''Enter different licence number'''))
+        return super(HrEmployee, self).write(vals)
 
 
 class TransportPoint(models.Model):
@@ -132,6 +155,14 @@ class TransportParticipant(models.Model):
     def set_over(self):
         self.write({'state': 'over'})
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'running':
+                raise ValidationError(_('''You cannot delete
+                                        record in running state!.'''))
+            return super(TransportParticipant, self).unlink()
+
 
 class StudentTransports(models.Model):
     '''for root detail'''
@@ -194,6 +225,26 @@ class StudentTransports(models.Model):
             for partitcipants in parti_obj_search:
                 partitcipants.state = 'over'
 
+    @api.constrains('start_date', 'end_date')
+    def check_dates(self):
+        for rec in self:
+            st_date = datetime.strptime(rec.start_date, '%Y-%m-%d')
+            ed_date = datetime.strptime(rec.end_date, '%Y-%m-%d')
+            delta = ed_date - st_date
+            if rec.start_date > rec.end_date:
+                raise ValidationError(_('''Start date should be
+                                        less than end date!'''))
+            if delta.days < 30:
+                raise ValidationError(_('Enter duration of month!'))
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'open':
+                raise ValidationError(_('''You can delete record in draft state
+                                        or cancel state only!'''))
+            return super(StudentTransports, self).unlink()
+
 
 class StudentStudent(models.Model):
     _inherit = 'student.student'
@@ -218,7 +269,7 @@ class TransportRegistration(models.Model):
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
                            domain=[('state', '=', 'open')], required=True)
-    part_name = fields.Many2one('student.student', 'Participant Name',
+    part_name = fields.Many2one('student.student', 'Student Name',
                                 required=True,
                                 help="Student Name")
     reg_date = fields.Date('Registration Date', readonly=True,
@@ -262,6 +313,14 @@ class TransportRegistration(models.Model):
     def _compute_transport_fees(self):
         for rec in self:
             rec.transport_fees = rec.m_amount * rec.for_month
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ['confirm', 'pending', 'paid']:
+                raise ValidationError(_('''You can delete record in draft state
+                                        and cancel state only.'''))
+            return super(TransportRegistration, self).unlink()
 
     @api.multi
     def transport_fees_pay(self):
