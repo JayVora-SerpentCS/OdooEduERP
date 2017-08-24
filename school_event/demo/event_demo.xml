@@ -48,42 +48,42 @@
 
         <record id="event_registration_1" model="school.event.registration">
             <field name="name" ref="school_event_1" />
-            <field name="part_name_id" ref="school.demo_student_student_1" />
+            <field name="part_name_id" ref="school.demo_student_student_5" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">confirm</field>
         </record>
 
         <record id="event_registration_2" model="school.event.registration">
             <field name="name" ref="school_event_1" />
-            <field name="part_name_id" ref="school.demo_student_student_2" />
+            <field name="part_name_id" ref="school.demo_student_student_6" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">confirm</field>
         </record>
 
         <record id="event_registration_3" model="school.event.registration">
             <field name="name" ref="school_event_1" />
-            <field name="part_name_id" ref="school.demo_student_student_3" />
+            <field name="part_name_id" ref="school.demo_student_student_7" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">confirm</field>
         </record>
 
         <record id="event_registration_4" model="school.event.registration">
             <field name="name" ref="school_event_2" />
-            <field name="part_name_id" ref="school.demo_student_student_1" />
+            <field name="part_name_id" ref="school.demo_student_student_8" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">confirm</field>
         </record>
 
         <record id="event_registration_5" model="school.event.registration">
             <field name="name" ref="school_event_2" />
-            <field name="part_name_id" ref="school.demo_student_student_2" />
+            <field name="part_name_id" ref="school.demo_student_student_4" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">confirm</field>
         </record>
 
         <record id="event_registration_6" model="school.event.registration">
             <field name="name" ref="school_event_2" />
-            <field name="part_name_id" ref="school.demo_student_student_3" />
+            <field name="part_name_id" ref="school.demo_student_student_5" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">confirm</field>
         </record>
@@ -92,7 +92,7 @@
 
          <record id="event_participant_1" model="school.event.participant">
             <field name="stu_pid">101</field>
-            <field name="name" ref="school.demo_student_student_1" />
+            <field name="name" ref="school.demo_student_student_5" />
             <field name="event_id" ref="school_event_1" />
             <field name="win_parameter_id" ref="event_parameter_1" />
             <field name="score">101</field>
@@ -101,7 +101,7 @@
 
         <record id="event_participant_2" model="school.event.participant">
             <field name="stu_pid">102</field>
-            <field name="name" ref="school.demo_student_student_2" />
+            <field name="name" ref="school.demo_student_student_8" />
             <field name="event_id" ref="school_event_2" />
             <field name="win_parameter_id" ref="event_parameter_2" />
             <field name="score">106</field>
@@ -110,7 +110,7 @@
 
         <record id="event_participant_3" model="school.event.participant">
             <field name="stu_pid">103</field>
-            <field name="name" ref="school.demo_student_student_3" />
+            <field name="name" ref="school.demo_student_student_6" />
             <field name="event_id" ref="school_event_1" />
             <field name="win_parameter_id" ref="event_parameter_1" />
             <field name="score">151</field>

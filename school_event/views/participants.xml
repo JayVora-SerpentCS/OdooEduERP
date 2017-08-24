@@ -129,7 +129,7 @@
                                                     <span t-field="part_standard_ids.medium_id.name" />
                                                 </td>
                                                 <td width="35%" style="font-family: 'Helvetica';font-size: 16px;">
-                                                    <span t-field="part_standard_ids.user_id.name" />
+                                                    <span t-field="part_standard_ids.sudo().user_id.name" />
                                                 </td>
                                             </tr>
                                         </t>
