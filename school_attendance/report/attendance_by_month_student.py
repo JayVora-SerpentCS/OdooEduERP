@@ -12,8 +12,8 @@ class BatchExamReport(models.AbstractModel):
 
     @api.multi
     def get_header_data(self, data):
-        attend_month = self.env['student.attendance.by.month'].browse(
-                       self._context.get('active_id'))
+        attend_month = self.env['student.attendance.by.month'
+                                ].browse(self._context.get('active_id'))
         start_dt = datetime.strptime(attend_month.month.date_start, '%Y-%m-%d')
         end_dt = datetime.strptime(attend_month.month.date_stop, '%Y-%m-%d')
         delta = end_dt - start_dt
@@ -38,8 +38,8 @@ class BatchExamReport(models.AbstractModel):
 #
 
     def daily_attendance(self, form, day, student):
-        attend_month = self.env['student.attendance.by.month'].browse(
-                       self._context.get('active_id'))
+        attend_month = self.env['student.attendance.by.month'
+                                ].browse(self._context.get('active_id'))
         st_date = attend_month.month.date_start
 #        end_dt = attend_month.month.date_stop
         attend_obj = self.env['daily.attendance']

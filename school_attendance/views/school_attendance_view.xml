@@ -150,25 +150,25 @@
                     </header>
                     <sheet>
                         <group>
-	                        <group string="Leave Details">
-	                            <field name="name" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
-	                            <label for="days" string="Duration"/>
-	                            <div>
-	                                <div>
-	                                    <field name="start_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
-	                                    <label string="-" class="oe_inline"/>
-	                                    <field name="end_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
-	                                </div>
-	                                <div>
-	                                    <field name="days" class="oe_inline" attrs="{'readonly':[('state','in',['approve','reject'])]}"/> days
-	                                </div>
-	                            </div>
-	                        </group>
-	                        <group string="Student Information">
-	                            <field name="student_id" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                            <group string="Leave Details">
+                                <field name="name" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                                <label for="days" string="Duration"/>
+                                <div>
+                                    <div>
+                                        <field name="start_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                                        <label string="-" class="oe_inline"/>
+                                        <field name="end_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                                    </div>
+                                    <div>
+                                        <field name="days" class="oe_inline" attrs="{'readonly':[('state','in',['approve','reject'])]}"/> days
+                                    </div>
+                                </div>
+                            </group>
+                            <group string="Student Information">
+                                <field name="student_id" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
                                 <field name="roll_no" readonly="1"/>
                                 <field name="standard_id" readonly="1"/>
-	                        </group>
+                            </group>
                         </group>
                         <group col="4" colspan="4" string="Teacher Information">
                             <field name="teacher_id" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True}" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>

@@ -19,8 +19,8 @@ class StudentAttendanceByMonth(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(StudentAttendanceByMonth, self).default_get(fields)
-        students = self.env['student.student'].browse(
-                   self._context.get('active_id'))
+        students = self.env['student.student'
+                            ].browse(self._context.get('active_id'))
         if students.state == 'draft':
             raise ValidationError(_('''You can not print report for student in
                                     draft state!'''))
@@ -36,9 +36,9 @@ class StudentAttendanceByMonth(models.TransientModel):
         @param context : standard Dictionary
         @return : printed report
         '''
-        stud_search = self.env['student.student'].search([
-                          ('id', '=', vals.get('active_id')),
-                          ('state', '=', 'done')])
+        stud_search = self.env['student.student'
+                               ].search([('id', '=', vals.get('active_id')),
+                                         ('state', '=', 'done')])
         daily_attend = self.env['daily.attendance']
         for rec in self:
             attend_stud = daily_attend.search([('standard_id', '=',
