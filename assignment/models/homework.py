@@ -81,6 +81,14 @@ class SchoolTeacherAssignment(models.Model):
         self.state = 'done'
         return True
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('''You can delete record in
+                                        draft state only.'''))
+            return super(SchoolTeacherAssignment, self).unlink()
+
 
 class SchoolStudentAssignment(models.Model):
     _name = 'school.student.assignment'
@@ -120,6 +128,12 @@ class SchoolStudentAssignment(models.Model):
                                       help="Homework Attached by student")
     teacher_assignment_id = fields.Many2one('school.teacher.assignment',
                                             string="Teachers")
+    stud_std = fields.Many2one('standard.standard', 'Student Standard')
+
+    @api.onchange('student_id')
+    def onchange_stud_std(self):
+        for rec in self:
+            rec.stud_std = rec.student_id.standard_id.standard_id.id
 
     @api.multi
     def active_assignment(self):
@@ -143,3 +157,11 @@ class SchoolStudentAssignment(models.Model):
         self.ensure_one()
         self.state = 'active'
         return True
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('''You can delete record
+                                        in draft state only.'''))
+            return super(SchoolStudentAssignment, self).unlink()

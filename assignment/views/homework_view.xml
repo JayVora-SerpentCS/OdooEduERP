@@ -63,14 +63,14 @@
                         <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','=','done')]}" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
                     <group col="4" string="Subject and Dates">
-                        <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','=','done')]}" widget="selection" domain="[('user_id','=',teacher_id)]"/>
+                        <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','=','done')]}" widget="selection" domain="[('user_id','=',teacher_id)]" required="1"/>
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
                         <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','=','done')]}" domain="[('teacher_ids','in',teacher_id)]" widget="selection"/>
                         <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
-                    <separator string="Attachements" colspan="4"/>
+                    <separator string="Attachments" colspan="4"/>
                     <group col="2">
-                        <field name="attached_homework" placeholder="Attachement File" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
                     <notebook>
                         <page string="Student Assignment Details">
@@ -93,7 +93,7 @@
 
         <!-- Action Of Form & Tree Views Of Assignment Information -->
         <record id="action_school_teacher_assignment_form" model="ir.actions.act_window">
-            <field name="name">Teacher Assignment</field>
+            <field name="name">Assign Assignment</field>
             <field name="res_model">school.teacher.assignment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -127,20 +127,21 @@
                         <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','=','done')]}" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
                     <group col="4" string="Standard and Division">
-                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','=','done')]}" widget="selection" domain="[('teacher_ids','in',teacher_id)]"/>
-                        <field name="standard_id" placeholder="Standerd" attrs="{'readonly':[('state','=','done')]}" widget="selection"/>
+                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','=','done')]}" widget="selection" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',stud_std)]"/>
+                        <field name="standard_id" placeholder="Standard" attrs="{'readonly':[('state','=','done')]}" domain="[('user_id','=',teacher_id)]" widget="selection"/>
                     </group>
                     <group col="4" string="Dates">
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
                         <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
                     </group>
-                        <group string="Attachements">
+                        <group string="Attachments">
                             <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','=','done')]}"/>
                         </group>
                         <group string="Reject Assignment" attrs="{'invisible':[('state','in',['draft','active','done'])]}">
                             <field name="rejection_reason" attrs="{'invisible':[('state','in',['draft','active','done'])]}"/>
                         </group>
                         <field name="teacher_assignment_id" invisible="1"/>
+                        <field name="stud_std" invisible="1"/>
                    </sheet>
                 </form>
             </field>
@@ -212,7 +213,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_school_student_assignment_form_btn)d" type="action" class="oe_stat_button">
+                        <button name="%(action_school_student_assignment_form_btn)d" type="action" class="oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
                              <img src="/assignment/static/description/Assign.png" style="height:25px;width:50px;float:left;"/>
                                 <lable style = "">Assignment</lable>
                         </button>
