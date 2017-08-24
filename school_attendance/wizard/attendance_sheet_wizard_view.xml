@@ -49,6 +49,6 @@
         <!-- Menu Item Of Monthly Attendance Sheet -->
 
         <menuitem id="menu_monthly_attendance_sheet_sub_form" parent="school_attendance.menu_attendance"
-                  action="action_monthly_attendance_sheet" icon="STOCK_INDENT"/>
+                  action="action_monthly_attendance_sheet" icon="STOCK_INDENT" groups="school.group_school_administration,school.group_school_teacher"/>
 
 </odoo>

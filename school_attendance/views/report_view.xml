@@ -12,7 +12,7 @@
             <field name="margin_left">10</field>
             <field name="margin_right">5</field>
             <field name="header_line" eval="False"/>
-            <field name="header_spacing">0</field>
+            <field name="header_spacing">10</field>
             <field name="dpi">90</field>
     </record>
 
@@ -23,5 +23,6 @@
                 file="school_attendance.attendance_month"
                 name="school_attendance.attendance_month"
                 paperformat="school_attendance.monthly_attendance_report"
-                menu="False"/>
+                menu="False" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher"
+                />
 </odoo>

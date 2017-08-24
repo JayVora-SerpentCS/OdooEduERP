@@ -5,6 +5,8 @@ import time
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.exceptions import ValidationError
 
 
 class AttendanceSheet(models.Model):
@@ -41,6 +43,80 @@ class AttendanceSheet(models.Model):
                                                          ('state', '=',
                                                           'done')])]
             rec.attendance_ids = stud_list
+
+
+class StudentleaveRequest(models.Model):
+    _name = "studentleave.request"
+
+    @api.model
+    def create(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id'
+                                                                  ))
+            vals.update({'roll_no': student.roll_no,
+                         'standard_id': student.standard_id.id
+                         })
+        return super(StudentleaveRequest, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(vals.get('student_id')
+                                                         )
+            vals.update({'roll_no': student.roll_no,
+                        'standard_id': student.standard_id.id})
+        return super(StudentleaveRequest, self).write(vals)
+
+    @api.onchange('student_id')
+    def onchange_student(self):
+        '''Method to get standard and roll no of student selected'''
+        if self.student_id:
+            self.standard_id = self.student_id.standard_id.id
+            self.roll_no = self.student_id.roll_no
+
+    @api.multi
+    def approve_state(self):
+        self.state = 'approve'
+
+    @api.multi
+    def draft_state(self):
+        self.state = 'draft'
+
+    @api.multi
+    def toapprove_state(self):
+        self.state = 'toapprove'
+
+    @api.multi
+    def reject_state(self):
+        self.state = 'reject'
+
+    @api.multi
+    @api.depends('start_date', 'end_date')
+    def _compute_days(self):
+        for rec in self:
+            if rec.start_date and rec.end_date:
+                date = datetime.strptime(rec.start_date,
+                                         DEFAULT_SERVER_DATE_FORMAT)
+                enddate = datetime.strptime(rec.end_date,
+                                            DEFAULT_SERVER_DATE_FORMAT)
+                rec.days = (enddate - date).days
+
+    name = fields.Char('Type of Leave')
+    student_id = fields.Many2one('student.student', 'Student', required=True)
+    roll_no = fields.Char('Roll Number')
+    standard_id = fields.Many2one('school.standard', 'Class',
+                                  required=True)
+    attachments = fields.Binary('Attachment')
+    state = fields.Selection([('draft', 'Draft'),
+                              ('toapprove', 'To Approve'),
+                              ('reject', 'Reject'),
+                              ('approve', 'Approved')],
+                             'Status', default='draft')
+    start_date = fields.Date('Start Date')
+    end_date = fields.Date('End Date')
+    teacher_id = fields.Many2one('hr.employee', 'Class Teacher')
+    days = fields.Integer('Days', compute="_compute_days", store=True)
+    reason = fields.Text('Reason for Leave')
 
 
 class AttendanceSheetLine(models.Model):
@@ -201,7 +277,15 @@ class DailyAttendance(models.Model):
                         count_fail += 1
                 rec.total_absent = count_fail
 
-    date = fields.Date("Today's Date",
+    @api.constrains('date')
+    def validate_date(self):
+        curr = datetime.now()
+        new_date = datetime.strftime(curr, '%Y-%m-%d')
+        if self.date > new_date:
+            raise ValidationError(_('''Date should be less than or equal to\
+                                    current date .'''))
+
+    date = fields.Date("Date",
                        help="Current Date",
                        default=lambda *a: time.strftime('%Y-%m-%d'))
     standard_id = fields.Many2one('school.standard', 'Academic Class',
@@ -257,9 +341,20 @@ class DailyAttendance(models.Model):
                                              rec.standard_id.id),
                                             ('state', '=', 'done')])
                 for stud in stud_ids:
-                    student_list.append({'roll_no': stud.roll_no,
-                                         'stud_id': stud.id,
-                                         'is_present': True})
+                    student_leave = self.env['studentleave.request'].search(
+                                    [('state', '=', 'approve'),
+                                     ('student_id', '=', stud.id),
+                                     ('standard_id', '=', rec.standard_id.id),
+                                     ('start_date', '<=', rec.date),
+                                     ('end_date', '>=', rec.date)])
+                    if student_leave:
+                        student_list.append({'roll_no': stud.roll_no,
+                                             'stud_id': stud.id,
+                                             'is_absent': True})
+                    else:
+                        student_list.append({'roll_no': stud.roll_no,
+                                             'stud_id': stud.id,
+                                             'is_present': True})
             rec.student_ids = student_list
 
     @api.multi
@@ -810,3 +905,9 @@ class DailyAttendanceLine(models.Model):
         '''Method to make present false when student is absent'''
         if self.is_absent:
             self.is_present = False
+
+    @api.constrains('is_present', 'is_absent')
+    def check_present_absent(self):
+        for rec in self:
+            if not rec.is_present and not rec.is_absent:
+                raise ValidationError(_('Check Present or Absent'))
