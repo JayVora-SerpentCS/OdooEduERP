@@ -22,7 +22,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_stu_result_form)d" class="oe_inline oe_stat_button" type="action">
+                        <button name="%(action_stu_result_form)d" class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
                             <img src="/exam/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
                             <lable style="">Result</lable>
                         </button>
@@ -102,8 +102,8 @@
                             <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
                             <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
                             <field name="academic_year" placeholder="Select Academic Year.." widget="selection" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
-                            <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date"/>
-                            <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date"/>
+                            <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date" required="1"/>
+                            <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date" required="1"/>
                         </group>
                         <group col="4" colspan="4">
                             <notebook colspan="4" >
@@ -153,8 +153,34 @@
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet/group/field[@name='year_id']" position="after">
                     <field name="timetable_type" placeholder= "Select Time Table Type" readonly="1"/>
-                    <field name="users" invisible="1"/>
                 </xpath>
+                <field name="timetable_ids" position="attributes">
+                    <attribute name="attrs">{'invisible': [('timetable_type','!=','regular')]}</attribute>
+                </field>
+                <field name="timetable_ids" position="after">
+                    <field name="exam_timetable_line_ids" nolabel="1" attrs="{'invisible':[('timetable_type','!=','exam')]}">
+                        <tree name="exam_timetable" string="Exam Timetable" editable="top">
+                            <field name="exm_date"/>
+                            <field name="day_of_week"/>
+                            <field name="subject_id" widget="selection"/>
+                            <field name="start_time" widget="float_time"/>
+                            <field name="end_time" widget="float_time"/>
+                            <field name="teacher_id" string="Supervisor" widget="selection" domain="[('is_school_teacher','=',True)]"/>
+                            <field name="class_room_id" widget="selection"/>
+                        </tree>
+                        <form string="Exam Timetable">
+                            <group col="4" colspan="4">
+	                            <field name="exm_date"/>
+	                            <field name="day_of_week"/>
+	                            <field name="subject_id" widget="selection"/>
+	                            <field name="start_time" widget="float_time"/>
+	                            <field name="end_time" widget="float_time"/>
+	                            <field name="teacher_id" string="Supervisor" widget="selection" domain="[('is_school_teacher','=',True)]"/>
+	                            <field name="class_room_id" widget="selection"/>
+                            </group>
+                        </form>
+                    </field>
+                </field>
             </field>
         </record>
 
@@ -188,7 +214,7 @@
             <field name="name">additional.exam.calendar</field>
             <field name="model">additional.exam</field>
             <field name="arch" type="xml">
-                <calendar string="Additional Exam Information Calendar" color="name" date_start="exam_date">
+                <calendar string="Additional Exam Information Calendar" color="color_name" date_start="exam_date">
                     <field name="name"/>
                     <field name="standard_id" />
                     <field name="subject_id" />
@@ -230,8 +256,8 @@
                         <group col="4" string="Examination Dates" colspan="4">
                             <field name="exam_date" placeholder="Exam Date"/>
                             <newline/>
-                            <field name="create_date" placeholder="Created Date" />
-                            <field name="write_date" placeholder="Last Updated Date"/>
+                            <field name="create_date" placeholder="Created Date" readonly="1"/>
+                            <field name="write_date" placeholder="Last Updated Date" readonly="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -324,21 +350,21 @@
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4">
                             <tree string="Subjects" editable="bottom" create="false" delete="false">
-                                <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','=','re-evaluation')]}" required="1"/>
-                                <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
+                                <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}" required="1"/>
+                                <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                 <field name="state" invisible="1"/>
                                 <field name="grade_line_id" readonly="1"/>
-                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])],'readonly':[('state','in',['re-evaluation_confirm','done'])]}"/>
                             </tree>
                             <form string="Subjects">
                                 <group col = "4">
-                                    <field name="subject_id" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                    <field name="maximum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                    <field name="minimum_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                    <field name="obtain_marks" attrs="{'readonly':[('state','=','re-evaluation')]}"/>
-                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                    <field name="subject_id" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                    <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                    <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                    <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                                    <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])],'readonly':[('state','in',['re-evaluation_confirm','done'])]}"/>
                                     <field name="state" invisible="1"/>
                                 </group>
                             </form>
@@ -476,7 +502,7 @@
         <!-- Actions Of Form, Tree & Kanban Views Of Result Information -->
 
         <record id="action_exam_result_form" model="ir.actions.act_window">
-            <field name="name">Result</field>
+            <field name="name">Exam Results</field>
             <field name="res_model">exam.result</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>

@@ -67,20 +67,20 @@
         
         <!-- Exam Result Demo Data -->
         <record id="exam_result_1" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_1"/>
+            <field name="student_id" ref="school.demo_student_student_7"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
         </record>
         <record id="exam_result_2" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_2"/>
+            <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
             <field name="result">Pass</field>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
         </record>
         <record id="exam_result_3" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_3"/>
+            <field name="student_id" ref="school.demo_student_student_6"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
@@ -92,7 +92,7 @@
             <field name="grade_system" ref="school.demo_student_grade_1"/>
         </record>
         <record id="exam_result_5" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_5"/>
+            <field name="student_id" ref="school.demo_student_student_8"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
