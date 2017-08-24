@@ -6,6 +6,7 @@
         <template id="student_payslip">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
+                    
                     <t t-call="report.external_layout">
                         <div class="page">
                             <div class="oe_structure" />
@@ -85,39 +86,46 @@
                                                 <span t-field="l.name"></span>
                                             </td>
                                             <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
-                                                <span t-esc="l.amount"></span>
+                                                <span t-field="l.amount" t-options='{"widget": "monetary","display_currency": l.currency_id}'></span>
                                             </td>
                                         </tr>
                                     </t>
                                 </tbody>
                             </table>
-                            <table width="100%">
-                                <tr>
-                                    <td width="5%"></td>
-                                    <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <b>Total Fees</b>
-                                    </td>
-                                    <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <b t-esc="o.total"></b>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table width="100%">
-                                <tr>
-                                    <td width="50%" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <br />
-                                        <br />
-                                        <br />
-                                        <br />
-                                        <b>Principal</b>
-                                        <br />
-                                        <span>Authorized Signature</span>
-                                    </td>
-                                    <td width="50%">
-                                        <br />
-                                    </td>
-                                </tr>
-                            </table>
+                            <div class="row">
+                                <div class="col-xs-4 pull-right">
+                                    <table class="table table-condensed">
+                                        <tr>
+                                            <td><strong>Total Fees</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.total"
+                                                    t-options='{"widget": "monetary","display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Amount Paid</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.paid_amount"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black">
+                                            <td><strong>Due Amount</strong></td>
+                                            <td class="text-right">
+                                                <span t-field="o.due_amount"
+                                                    />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-xs-4 pull-right">
+                                <br/><br/><br/><br/><br/><br/><br/>
+                                <b>Principal,</b>
+                                <br/><br/><br/>
+                                <span style="font-family: 'Helvetica';font-size: 16px;">Authorized Signature</span>
+                                <br />
+	                       </div>
                         </div>
                     </t>
                 </t>
