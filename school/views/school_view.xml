@@ -75,12 +75,12 @@
                                     <group>
                                         <field name="cast_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" widget="selection" placeholder="Cast"/>
                                         <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                        <field name="gender" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Gender"/>
+                                        <field name="gender" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Gender" required="1"/>
                                         <field name="age"/>
                                     </group>
                                     <group>
                                         <field name="mother_tongue" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"  widget="selection" placeholder="Mother Tounge"/>
-                                        <field name="admission_date" widget="date" placeholder="Admission Date" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                        <field name="admission_date" widget="date" placeholder="Admission Date" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" readonly="1"/>
                                         <field name="maritual_status" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Maritial Status"/>
                                     </group>
                                     <newline />
@@ -320,7 +320,7 @@
             <field name="name">Student KANBAN</field>
             <field name="model">student.student</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="standard_id" create="false">
+                <kanban default_group_by="standard_id" nocreate="1" create="false">
                     <field name="color" />
                     <field name="name" />
                     <field name="email" />
@@ -418,10 +418,11 @@
             <field name="arch" type="xml">
                 <form string="Admission Register">
                     <header>
-                        <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration" />
+                        <button class="oe_highlight oe_stat_button" name="set_terminate" string="Terminate" type="object" icon="fa-ban" states="done" groups="school.group_school_administration"/>
                         <button class="oe_stat_button" name="set_alumni" string="Alumni" type="object" icon="fa-archive" states="done" groups="school.group_school_administration" />
                         <button class="oe_stat_button" icon="fa-check" name="admission_done" type="object" string="Done" states="draft" groups="school.group_school_administration" />
-                        <field name="state" widget="statusbar" statusbar_visible="draft"/>
+                        <button class="oe_stat_button" icon="fa-ban" name="cancel_admission" type="object" string="Cancel" states="draft" groups="school.group_school_administration"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,cancel"/>
                     </header>
                     <sheet>
                         <div class="oe_inline">
@@ -437,6 +438,8 @@
                                     <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <br />
                                     <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <br/>
+                                    <field name="active" invisible="1"/>
                                 </group>
                             </div>
                         </div>
@@ -444,13 +447,14 @@
                             <group string="School Information">
                                 <field name="school_id" placeholder="School Name" required="1" 
                                     attrs="{'readonly':[('state','=','alumni')]}" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
-                                <field name="year" widget="selection" placeholder="Academic Year" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                <field name="year" widget="selection" placeholder="Academic Year" readonly="1"/>
                                 <field name="cmp_id" invisible="1"/>
                             </group>
                             <group string="Class Information">
-                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','alumni')]}" invisible="1"/>
+                                
                             </group>
                         </group>
                         <group colspan="4">
@@ -459,10 +463,10 @@
                                 <div class="o_address_format">
                                     <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="street2" placeholder="Street2..." class="o_address_street" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" required="1" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="city" placeholder="City" class="o_address_city" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" placeholder="State" options="{&quot;no_open&quot;: True}" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
                                     <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                    <field name="country_id" placeholder="Country" class="o_address_country,oe_no_button" required="1" options="{&quot;no_open&quot;: True}" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 </div>
                             </group>
                             <group>
@@ -478,13 +482,13 @@
                                     <sheet>
                                         <group string="General Information">
                                             <group>
-                                                <field name="gender" placeholder="Gender" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                                <field name="gender" placeholder="Gender" attrs="{'readonly':[('state','=','alumni')]}" required="1"/>
                                                 <field name="date_of_birth" placeholder="Birthdate" attrs="{'readonly':[('state','=','alumni')]}"/>
                                                 <field name="age" />
                                             </group>
                                             <group>
                                                 <field name="mother_tongue" widget="selection" placeholder="Mother Tongue" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                                <field name="admission_date" placeholder="Admission Date" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                                <field name="admission_date" placeholder="Admission Date" attrs="{'readonly':[('state','=','alumni')]}" readonly="1"/>
                                                 <field name="maritual_status" placeholder="Select Maritual Status" attrs="{'readonly':[('state','=','alumni')]}"/>
                                             </group>
                                             <newline />
@@ -506,9 +510,9 @@
                             <page string="References">
                                 <field name="reference_ids" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','alumni')]}">
                                     <tree string="Reference" editable="top">
-                                        <field name="name" placeholder="Name"/>
-                                        <field name="middle" placeholder="Middle Name"/>
-                                        <field name="last" placeholder="LastName"/>
+                                        <field name="name" placeholder="Firstname"/>
+                                        <field name="middle" placeholder="Middlename"/>
+                                        <field name="last" placeholder="Surname"/>
                                         <field name="designation" placeholder="Designation"/>
                                         <field name="phone" placeholder="Phone"/>
                                         <field name="gender" placeholder="Gender"/>
@@ -564,6 +568,7 @@
                                                             options="{&quot;no_create&quot;: True}"/>
                                                 <field name="name" placeholder="Name" attrs="{'invisible':[('rel_name','!=','new')]}"/>
                                                 <field name="relation" placeholder="Enter or select Relation" />
+                                                <field name="relative_name" invisible="1"/>
                                             </group>
                                             <group>
                                                 <field name="phone" placeholder="Phone Number" />
@@ -812,7 +817,11 @@
                                 domain="[('is_school_teacher','=',True)]"
                                 context="{'default_is_school_teacher': True}"
                                 widget="selection"/>
-<!--                             <field name="passing" placeholder="No Of ATKT Allowed" /> -->
+                            <field name="capacity"/>
+                            <field name="total_students"/>
+                            <field name="remaining_seats"/>
+                            <field name="class_room_id" options="{&quot;no_create&quot;: True}"/>
+                            <field name="name" invisible="1"/>
                             <field name="total_no_subjects" invisible="1"/>
                         </group>
                         <notebook colspan="4">
@@ -835,7 +844,6 @@
                                 </field>
                             </page>
                             <page string="Subjects">
-<!--                                 <button name="import_subject" string="Import Previous Standard subject" type="object" class="oe_highlight" /> -->
                                 <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
                             <page string="Syllabus" attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}">
@@ -868,10 +876,11 @@
             <field name="model">school.standard</field>
             <field name="arch" type="xml">
                 <tree string="Standard Information">
-                    <field name="standard_id" />
-                    <field name="user_id" />
-                    <field name="division_id" />
-                    <field name="medium_id" />
+                    <field name="standard_id"/>
+                    <field name="user_id"/>
+                    <field name="division_id"/>
+                    <field name="medium_id"/>
+                    <field name="remaining_seats"/>
                 </tree>
             </field>
         </record>
@@ -1045,15 +1054,19 @@
             <field name="model">academic.year</field>
             <field name="arch" type="xml">
                 <form string="Academic Years">
+                    <header>
+                        <button name="generate_academicmonth" type="object" string="Generate Months"/>
+                    </header>
                     <sheet>
                         <group col="4" colspan="4">
-                            <field name="sequence" />
                             <field name="name" placeholder="Name" />
                             <field name="code" placeholder="Code" />
                             <field name="date_start" placeholder="Start Date" />
-                            <field name="date_stop" placeholder="Stop Date" />
+                             <field name="date_stop" placeholder="Stop Date" />
+                            <field name="sequence" />
+                            <field name="current"/>
                             <field name="grade_id" placeholder="Grade System" 
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" invisible="1"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Months">
@@ -1201,17 +1214,17 @@
         </record>
         <!-- Tree View of Mother Tongue -->
         <record id="mother_tongue_tree_view" model="ir.ui.view">
-            <field name="name">Mother Toungue</field>
+            <field name="name">Mother Tongue</field>
             <field name="model">mother.toungue</field>
             <field name="arch" type="xml">
-                <tree string="Mother Toungue" editable="top">
+                <tree string="Mother Tongue" editable="top">
                     <field name="name" required="1"/>
                 </tree>
             </field>
         </record>
         <!-- Action of mother Toungue -->
         <record id="action_mother_toungue" model="ir.actions.act_window">
-            <field name="name">Mother Toungue</field>
+            <field name="name">Mother Tongue</field>
             <field name="res_model">mother.toungue</field>
              <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1270,7 +1283,7 @@
                                         <field name="code" placeholder="Code" />
                                         <field name="maximum_marks" placeholder="Maximum Marks"/>
                                         <field name="minimum_marks" placeholder="Minimum Marks"/>
-                                        <field name="weightage" placeholder="Weightage"/>
+<!--                                         <field name="weightage" placeholder="Weightage"/> -->
                                         <field name="is_practical" />
 <!--                                         <field name="no_exam" /> -->
                                         <field name="elective_id" string="Elective Group" invisible="1" />
@@ -1317,7 +1330,7 @@
                             <field name="code" placeholder="Code" />
                             <field name="maximum_marks" placeholder="Maximum Marks"/>
                             <field name="minimum_marks" placeholder="Minimum Marks"/>
-                            <field name="weightage" placeholder="Weightage"/>
+<!--                             <field name="weightage" placeholder="Weightage"/> -->
                             <field name="is_practical" />
 <!--                             <field name="no_exam" /> -->
                             <field name="elective_id" string="Elective Group" readonly="1" />
@@ -1339,7 +1352,7 @@
                                 </field>
                             </page>
                             <page string="Teachers">
-                                <field name="teacher_ids" nolabel="1" colspan="4" 
+                                <field name="teacher_ids" nolabel="1" colspan="4" domain="[('is_school_teacher','=',True)]"
                                      options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
                             <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">
@@ -1360,7 +1373,7 @@
                     <field name="code" />
                     <field name="maximum_marks" />
                     <field name="minimum_marks" />
-                    <field name="weightage" />
+<!--                     <field name="weightage" /> -->
 <!--                     <field name="no_exam" /> -->
                 </tree>
             </field>
@@ -1474,7 +1487,7 @@
         <record id="action_student_student_form_2" model="ir.actions.act_window">
             <field name="name">Admission Register</field>
             <field name="res_model">student.student</field>
-            <field name="domain">[('state','=','draft')]</field>
+            <field name="domain">['|',('state','=','draft'),('state','=','cancel')]</field>
 <!--             <field name="context">{'search_default_state_student': 1}</field> -->
             <field name="view_type">form</field>
             <field name="view_id" ref="view_student_student_form_2" />
@@ -1618,7 +1631,7 @@
             <field name="name">student.news.form</field>
             <field name="model">student.news</field>
             <field name="arch" type="xml">
-                <form string="News">
+                <form string="Noticeboard">
                     <header>
                         <button string="Send Mail" class="btn btn-sm btn-default fa fa-envelope" type="object" name="news_update" colspan="2" />
                     </header>
@@ -1649,7 +1662,7 @@
             <field name="name">student.news.tree</field>
             <field name="model">student.news</field>
             <field name="arch" type="xml">
-                <tree string="News">
+                <tree string="Noticeboard">
                     <field name="subject" />
                     <field name="date" />
                 </tree>
@@ -1679,7 +1692,7 @@
                                         name="color" /></div><br class="oe_kanban_clear"/></div></div></t></templates></kanban></field></record> -->
         <!-- Action Of Form, Tree & Kanban Views Of Student News -->
         <record id="view_student_news" model="ir.actions.act_window">
-            <field name="name">News</field>
+            <field name="name">Noticeboard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">student.news</field>
             <field name="view_type">form</field>
@@ -1709,13 +1722,14 @@
                                     <div class="o_address_format">
                                         <field name="street" placeholder="Street..." class="o_address_street" />
                                         <field name="street2" placeholder="Street2..." class="o_address_street" />
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
                                         <field name="city" placeholder="City" required="1" class="o_address_city"/>
                                         <field name="state_id" domain="[('country_id','=',country_id)]" class="o_address_state" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
                                         <field name="zip" placeholder="Zip" class="o_address_zip"/>
-                                        <field name="country_id" placeholder="Country" class="oe_no_button" options="{&quot;no_open&quot;: true}" required="1" />
                                     </div>
                                 </group>
                                 <group string="Communication">
+                                    <field name="gender"/>
                                     <field name="phone" placeholder="Phone Number"/>
                                     <field name="mobile" placeholder="Mobile Number"/>
                                     <field name="fax" placeholder="Fax"/>
@@ -1769,7 +1783,39 @@
                 </tree>
             </field>
         </record>
-        <!-- Action Of Form, Tree & Kanban Views Of Parent Information -->
+        <!-- Form View of Class Room -->
+        <record id="class_room_form_view" model="ir.ui.view">
+            <field name="name">class.room.form</field>
+            <field name="model">class.room</field>
+            <field name="arch" type="xml">
+                <form string="Class Room Form View">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="number"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Tree view of class Room -->
+        <record id="class_room_tree_view" model="ir.ui.view">
+            <field name="name">class.room.tree</field>
+            <field name="model">class.room</field>
+            <field name="arch" type="xml">
+                <tree string="Class Room Tree View">
+                    <field name="name"/>
+                    <field name="number"/>
+                </tree>
+           </field>
+        </record>
+        <!-- Action of Class Room -->
+        <record id="action_class_room" model="ir.actions.act_window">
+            <field name="name">Class Room</field>
+            <field name="res_model">class.room</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
         <record id="action_parent_form" model="ir.actions.act_window">
             <field name="name">Parents</field>
             <field name="res_model">res.partner</field>
@@ -1780,6 +1826,7 @@
             <field name="context">{'search_default_parent_school': 1,'default_customer': 0,'default_supplier': 0, 'default_parent_school': 1}</field>
             <field name="filter" eval="True" />
         </record>
+
         <!-- Action Of Tree View Of Parent -->
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence" />
@@ -1796,15 +1843,18 @@
         </record>
         
         <!-- Menu Item Of EMS -->
-        <menuitem id="menu_ems" name="EMS" sequence="1"/>
+        <menuitem id="menu_ems" name="EMS" web_icon="school,static/description/ems.png" sequence="1"/>
         <!-- Menu Item Of Dashboard -->
         <!-- <menuitem id="menu_dashboard" name="Dashboard" parent="menu_ems" action="open_board_my_dash_action" sequence="1"
                   icon="terp-project" web_icon_hover="images/hover.png"/> -->
+        <!-- Menu of DashBoard -->
+<!--           <menuitem id="menu_school_dashboard" name="Dashboard" action="school_dashboard_act" sequence="2"  -->
+<!--             parent="menu_ems" icon="fa-dashboard" web_icon="school,static/description/dashboard.png"/> -->
         <!-- MenuItem Of Admission Register -->
-        <menuitem id="admission_register" name="Admission Register" parent="menu_ems" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
-        <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register" action="action_student_student_form_2" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
+        <menuitem id="admission_register" name="Admission Register" parent="menu_ems" sequence="3" groups="school.group_school_administration,school.group_is_admission"/>
+        <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register" action="action_student_student_form_2" sequence="4" groups="school.group_school_administration,school.group_is_admission"/>
         <!-- Menu Item Of Students & Parents -->
-        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="2"/>
+        <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="5"/>
         <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_res_partner_form" name="Parents Profiles" parent="menu_students_parents" action="action_parent_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent" />
         <menuitem id="menu_teachers_profiles" name="Teachers Profiles" parent="menu_students_parents" action="action_teacher_teacher_form_1" groups="school.group_school_administration,school.group_school_teacher" />
@@ -1818,8 +1868,8 @@
         <menuitem id="menu_cast" name="Cast" parent="menu_school_config_form1" action="action_student_cast_form_7" />
         <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1" action="action_document_type_form" />
         <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1" action="action_grade_master_form" />
-        <menuitem id="submenu_sub_news" name="News / Update" parent="menu_school_config_form1" action="view_student_news" />
-        <menuitem id="mother_tongue_menu" name="Mother Toungue" parent="menu_school_config_form1" action="action_mother_toungue" groups="school.group_school_administration"/>
+        <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_school_config_form1" action="view_student_news" />
+        <menuitem id="mother_tongue_menu" name="Mother Tongue" parent="menu_school_config_form1" action="action_mother_toungue" groups="school.group_school_administration"/>
         <menuitem id="menu_school_school_sub_form" name="School" parent="menu_school_config_form1" action="action_school_school_form" />
         <!-- MenuItem For Configurations->Academic Years -->
         <menuitem id="menu_academic_year_form" name="Academic Years" parent="menu_configuration" />
@@ -1831,12 +1881,19 @@
         <menuitem id="menu_standard_standard_form" name="Classes" parent="menu_school_standard_form" action="action_standard_standard_form" />
         <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_school_standard_form" action="action_standard_division_form" />
         <menuitem id="menu_standard_medium_form" name="Mediums" parent="menu_school_standard_form" action="action_standard_medium_form" />
+        <menuitem id="menu_class_room" name="Class Room" parent="menu_school_standard_form" action="action_class_room"/>
         <!-- MenuItem For Configurations->Subject -->
         <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
         <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
         <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" />
         <!-- Menuitem of alumni and terminate -->
         <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="admission_register" groups="school.group_school_administration,school.group_school_teacher"/>
+        <menuitem
+            id="hr.menu_hr_root"
+            name="Employees"
+            groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,school.group_school_administration"
+            web_icon="hr,static/description/icon.png"
+            sequence="75"/>
 <!--         <menuitem id="menu_student_terminate" name="Terminate Student" action="action_student_terminate" parent="admission_register"/> -->
         <!-- MenuItem For Configurations->Subject -->
         <!-- Inherited Form View Of Company -->
@@ -1850,4 +1907,67 @@
                 </field>
             </field>
         </record>
+        <report 
+            id="account.action_report_print_overdue"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Due Payments"
+            name="account.report_overdue"
+            file="account.report_overdue"
+            groups="school.group_school_administration"
+            />
+        <report 
+            id="account.action_report_partnerledger"
+            model="account.report_partnerledger"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account.report_partnerledger"
+            file="account.report_partnerledger"
+            groups="school.group_school_administration"
+            />
+        <act_window
+            id="account.act_account_partner_ledger_payable"
+            name="Partner Ledger: Payable"
+            res_model="account.move.line"
+            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
+            src_model="res.partner"
+            groups="school.group_school_administration"/>
+        <act_window
+            id="account.act_account_partner_ledger_payable_no_partner"
+            name="Unknown Partner Ledger"
+            res_model="account.move.line"
+            context="{'search_default_unreconciled':1, 'search_default_payable':1}"
+            domain="[('partner_id', '=', False)]"
+            src_model="res.partner"
+            groups="school.group_school_administration"/>
+        <act_window
+            id="account.act_account_partner_ledger_receivable"
+            name="Partner Ledger: Receivable"
+            res_model="account.move.line"
+            context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
+            src_model="res.partner"
+            groups="school.group_school_administration"/>
+        <act_window
+            id="account.act_account_partner_ledger_receivable_no_partner"
+            name="Unknown Partner Ledger"
+            res_model="account.move.line"
+            context="{'search_default_unreconciled':1, 'search_default_receivable':1}"
+            domain="[('partner_id', '=', False)]"
+            src_model="res.partner"
+            groups="school.group_school_administration"/>
+        <act_window
+            id="account.action_move_select"
+            name="Journal Entries"
+            context="{'search_default_dummy_account_id': [active_id]}"
+            res_model="account.move"
+            groups="school.group_school_administration"
+            />
+        <act_window
+            id="account.action_move_line_select_by_partner"
+            name="Journal Items"
+            context="{'search_default_partner_id': [active_id]}"
+            res_model="account.move.line"
+            src_model="res.partner"
+            groups="school.group_school_administration"/>
+        
 </odoo>

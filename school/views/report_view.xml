@@ -3,9 +3,9 @@
 
 <odoo>
         <report id="report_student_student"
-                string="Indentity Card"
+                string="Identity Card"
                 model="student.student"
                 report_type="qweb-pdf"
                 file="school.identity_card"
-                name="school.identity_card" groups="school.group_school_administration,school.group_school_teacher"/>
+                name="school.identity_card" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student"/>
 </odoo>

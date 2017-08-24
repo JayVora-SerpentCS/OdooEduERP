@@ -2,14 +2,17 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
+import re
+import calendar
 from datetime import date, datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
     DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import except_orm, Warning as UserError
-from openerp.exceptions import ValidationError
+from odoo.exceptions import except_orm
+from odoo.exceptions import ValidationError
+from dateutil.relativedelta import relativedelta
 # added import statement in try-except because when server runs on
 # windows operating system issue arise because this library is not in Windows.
 try:
@@ -17,6 +20,17 @@ try:
 except:
     image_colorize = False
     image_resize_image_big = False
+
+
+def emailvalidation(email):
+    if email:
+        EMAIL_REGEX = re.compile(r'''[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+
+                                    (\.[a-z0-9-]+)*(\.[a-z]{2,4})$'''
+                                 )
+        if not EMAIL_REGEX.match(email):
+            raise ValidationError(_('''Enter Email in correct format'''))
+        else:
+            return True
 
 
 class AcademicYear(models.Model):
@@ -36,6 +50,7 @@ class AcademicYear(models.Model):
     month_ids = fields.One2many('academic.month', 'year_id', 'Months',
                                 help="related Academic months")
     grade_id = fields.Many2one('grade.master', "Grade")
+    current = fields.Boolean('Current', help="Set Active Current Year")
     description = fields.Text('Description')
 
     @api.model
@@ -52,22 +67,57 @@ class AcademicYear(models.Model):
         '''Method to display name and code'''
         return [(rec.id, ' [' + rec.code + ']' + rec.name) for rec in self]
 
+    @api.multi
+    def generate_academicmonth(self):
+        interval = 1
+        month_obj = self.env['academic.month']
+        for data in self.browse(self._ids):
+            ds = datetime.strptime(data.date_start, '%Y-%m-%d')
+            while ds.strftime('%Y-%m-%d') < data.date_stop:
+                de = ds + relativedelta(months=interval, days=-1)
+                if de.strftime('%Y-%m-%d') > data.date_stop:
+                    de = datetime.strptime(data.date_stop, '%Y-%m-%d')
+                month_obj.create({
+                    'name': ds.strftime('%B'),
+                    'code': ds.strftime('%m/%Y'),
+                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'date_stop': de.strftime('%Y-%m-%d'),
+                    'year_id': data.id,
+                })
+                ds = ds + relativedelta(months=interval)
+        return True
+
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
         '''Method to check start date should be greater than end date
            also check that dates are not overlapped with existing academic
            year'''
+        new_start_date = datetime.strptime(self.date_start, '%Y-%m-%d')
+        print"new_start.year", new_start_date.year
+        new_stop_date = datetime.strptime(self.date_stop, '%Y-%m-%d')
+        delta = new_stop_date - new_start_date
+        if delta.days > 365 and not calendar.isleap(new_start_date.year):
+            raise ValidationError(_('''Error! The duration of the academic year
+                                      is invalid.'''))
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise UserError(_('Error! The duration of the academic year'
-                              'is invalid.'))
+            raise ValidationError(_('''The start date of the academic year'
+                                      should be less than end date.'''))
         for old_ac in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
-                raise UserError(_('Error! You cannot define overlapping'
-                                  'academic years.'''))
+                raise ValidationError(_('''Error! You cannot
+                                        define overlapping'
+                                        academic years.'''))
         return True
+
+    @api.constrains('current')
+    def check_current_year(self):
+        check_year = self.search([('current', '=', True)])
+        if len(check_year.ids) >= 2:
+            raise ValidationError(_('''Error! You cannot set
+                                    two current year active.'''))
 
 
 class AcademicMonth(models.Model):
@@ -86,13 +136,18 @@ class AcademicMonth(models.Model):
                               help="Related academic year ")
     description = fields.Text('Description')
 
+    _sql_constraints = [
+        ('month_unique', 'unique(date_start, date_stop, year_id)',
+         'Academic Month should be unique!'),
+    ]
+
     @api.constrains('date_start', 'date_stop')
     def _check_duration(self):
         '''Method to check duration of date'''
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise UserError(_('''Error ! The duration of the Month(s)
-                                 is/are invalid.'''))
+            raise ValidationError(_(''' End of Period date should be greater
+                                    than Start of Peroid Date!'''))
 
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
@@ -102,9 +157,19 @@ class AcademicMonth(models.Model):
                     self.year_id.date_stop < self.date_start or
                     self.year_id.date_start > self.date_start or
                     self.year_id.date_start > self.date_stop):
-                raise UserError(_('''Invalid Months ! Some months overlap
+                raise ValidationError(_('''Invalid Months ! Some months overlap
                                     or the date period is not in the scope
                                     of the academic year.'''))
+
+    @api.constrains('date_start', 'date_stop')
+    def check_months(self):
+        for old_month in self.search([('id', 'not in', self.ids)]):
+            # Check start date should be less than stop date
+            if (old_month.date_start <= self.date_start <=
+                    old_month.date_stop or old_month.date_start <=
+                    self.date_stop <= old_month.date_stop):
+                    raise ValidationError(_('''Error! You cannot
+                                            define overlapping months.'''))
 
 
 class StandardMedium(models.Model):
@@ -174,12 +239,28 @@ class SchoolStandard(models.Model):
                           ('state', '=', 'done')]
                 rec.student_ids = student_obj.search(domain)
 
+    @api.onchange('standard_id', 'division_id')
+    def onchange_combine(self):
+        self.name = str(self.standard_id.name) + '-' + str(
+                                                    self.division_id.name)
+
     @api.multi
     @api.depends('subject_ids')
     def _compute_subject(self):
         '''Method to compute subjects'''
         for rec in self:
             rec.total_no_subjects = len(rec.subject_ids)
+
+    @api.multi
+    @api.depends('student_ids')
+    def _total_student(self):
+        for rec in self:
+            rec.total_students = len(rec.student_ids)
+
+    @api.depends("capacity", "total_students")
+    def _compute_remain_seats(self):
+        for rec in self:
+            rec.remaining_seats = rec.capacity - rec.total_students
 
     school_id = fields.Many2one('school.school', 'School', required=True)
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
@@ -200,6 +281,28 @@ class SchoolStandard(models.Model):
                                    'Syllabus')
     total_no_subjects = fields.Integer('Total No of Subject',
                                        compute="_compute_subject")
+    name = fields.Char('Name')
+    capacity = fields.Integer("Total Seats")
+    total_students = fields.Integer("Total Students",
+                                    compute="_total_student",
+                                    store=True)
+    remaining_seats = fields.Integer("Available Seats",
+                                     compute="_compute_remain_seats",
+                                     store=True)
+    class_room_id = fields.Many2one('class.room', 'Room Number')
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
+                raise ValidationError(_('''You cannot delete this standard'''))
+
+    @api.constrains('capacity')
+    def check_seats(self):
+        for rec in self:
+            if rec.capacity <= 0:
+                raise ValidationError(_('''Total seats should
+                                        be greater than 0!'''))
 
     @api.multi
     def name_get(self):
@@ -285,7 +388,6 @@ class StudentStudent(models.Model):
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
-    _inherits = {'res.users': 'user_id'}
 
     @api.multi
     @api.depends('date_of_birth')
@@ -316,6 +418,9 @@ class StudentStudent(models.Model):
     @api.model
     def create(self, vals):
         '''Method to create user when student is created'''
+        if vals.get('pid', _('New')) == _('New'):
+            vals['pid'] = self.env['ir.sequence'].next_by_code(
+                          'student.student') or _('New')
         if vals.get('pid', False):
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
@@ -327,6 +432,8 @@ class StudentStudent(models.Model):
             h = {'company_ids': [(4, vals.get('cmp_id'))],
                  'company_id': vals.get('cmp_id')}
             vals.update(h)
+        if vals.get('email'):
+            emailvalidation(vals.get('email'))
         res = super(StudentStudent, self).create(vals)
         # Assign group to student based on condition
         emp_grp = self.env.ref('base.group_user')
@@ -354,16 +461,27 @@ class StudentStudent(models.Model):
         except:
             return False
 
+    @api.model
+    def check_current_year(self):
+        '''Method to get default value of logged in Student'''
+        res = self.env['academic.year'].search([('current', '=',
+                                                 True)])
+        if not res:
+            raise ValidationError(_('''There is no current Academic
+                                    Year defined!
+                                    Please contact to Administator!'''))
+        return res.id
+
     family_con_ids = fields.One2many('student.family.contact',
                                      'family_contact_id',
                                      'Family Contact Detail',
                                      states={'done': [('readonly', True)]})
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              required=True)
+                              required=True, delegate=True)
     student_name = fields.Char('Student Name', related='user_id.name',
                                store=True, readonly=True)
-    pid = fields.Char('Student ID', required=True, default=lambda obj:
-                      obj.env['ir.sequence'].next_by_code('student.student'),
+    pid = fields.Char('Student ID', required=True,
+                      default=lambda self: _('New'),
                       help='Personal IDentification Number')
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
@@ -374,8 +492,8 @@ class StudentStudent(models.Model):
     photo = fields.Binary('Photo', default=lambda self: self._get_default_image
                           (self._context.get('default_is_company',
                                              False)))
-    year = fields.Many2one('academic.year', 'Academic Year', required=True,
-                           states={'done': [('readonly', True)]})
+    year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
+                           default=check_current_year)
     cast_id = fields.Many2one('student.cast', 'Religion')
     relation = fields.Many2one('student.relation.master', 'Relation')
 
@@ -424,6 +542,7 @@ class StudentStudent(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('done', 'Done'),
                               ('terminate', 'Terminate'),
+                              ('cancel', 'Cancel'),
                               ('alumni', 'Alumni')],
                              'State', readonly=True, default="draft")
     history_ids = fields.One2many('student.history', 'student_id', 'History')
@@ -462,6 +581,7 @@ class StudentStudent(models.Model):
                                  'student_id', 'parent_id', 'Parent(s)',
                                  states={'done': [('readonly', True)]})
     terminate_reason = fields.Text('Reason')
+    active = fields.Boolean(default=True)
 
     @api.multi
     def set_to_draft(self):
@@ -498,6 +618,23 @@ class StudentStudent(models.Model):
         return True
 
     @api.multi
+    def cancel_admission(self):
+        for rec in self:
+            rec.state = 'cancel'
+            rec.active = False
+        return True
+
+    @api.constrains('standard_id')
+    def check_seats_standard(self):
+        for rec in self:
+            if not rec.standard_id:
+                raise ValidationError(_('''Please select the standard'''))
+            if rec.standard_id.remaining_seats <= 0:
+                raise ValidationError(_('Seats of standard class %s are full'
+                                        ) % (rec.standard_id.standard_id.name,)
+                                      )
+
+    @api.multi
     def admission_done(self):
         '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
@@ -505,16 +642,12 @@ class StudentStudent(models.Model):
         student_group = self.env.ref('school.group_school_student')
         emp_group = self.env.ref('base.group_user')
         for rec in self:
-            if rec.age <= 5:
-                raise except_orm(_('Warning'),
-                                 _('''The student is not eligible.
-                                   Age is not valid.'''))
-            domain = [('standard_id', '=', rec.standard_id.id)]
+            domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
                 raise except_orm(_('Warning'),
-                                 _('''The standard is not defined in a
-                                     school'''))
+                                 _('''The standard is
+                                   not defined in school'''))
             # Assign group to student
             rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
                                                      student_group.id])]})
@@ -586,9 +719,16 @@ class DocumentType(models.Model):
     _rec_name = "doc_type"
     _order = "seq_no"
 
-    seq_no = fields.Char('Sequence', readonly=True, default=lambda obj:
-                         obj.env['ir.sequence'].next_by_code('document.type'))
+    seq_no = fields.Char('Sequence', readonly=True,
+                         default=lambda self: _('New'))
     doc_type = fields.Char('Document Type', required=True)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('seq_no', _('New')) == _('New'):
+            vals['seq_no'] = self.env['ir.sequence'].next_by_code(
+                            'document.type') or _('New')
+        return super(DocumentType, self).create(vals)
 
 
 class StudentDescription(models.Model):
@@ -660,6 +800,7 @@ class HrEmployee(models.Model):
         res = super(HrEmployee, self).create(vals)
 #        if res and res.parent_school:
 #        if res and res.is_school_teacher:
+
         if vals.get('school') and res.is_school_teacher:
             school = self.env['school.school'].browse(vals.get('school'))
             user_vals = {'name': vals.get('name'),
@@ -668,6 +809,8 @@ class HrEmployee(models.Model):
                          'partner_id': self.id,
                          'company_id': school.company_id.id,
                          'company_ids': [(4, school.company_id.id)]}
+            if vals.get('work_email'):
+                emailvalidation(vals.get('work_email'))
             # Create user
             user = self.env['res.users'].create(user_vals)
             if user and user.partner_id:
@@ -739,6 +882,8 @@ class ResPartner(models.Model):
 
     student_id = fields.Many2one('student.student', 'Student')
     parent_school = fields.Boolean('Is A Parent')
+    gender = fields.Selection([('male', 'Male'),
+                               ('female', 'Female')], 'Gender')
     student_ids = fields.Many2many('student.student', 'student_parent_rel',
                                    'parent_id', 'student_id', 'Children')
 
@@ -751,15 +896,28 @@ class ResPartner(models.Model):
             user_vals = {'name': vals.get('name'),
                          'login': vals.get('email', False),
                          'password': vals.get('email', False),
-                         'partner_id': res.id}
+                         'partner_id': res.id
+                         }
+            if vals.get('email'):
+                emailvalidation(vals.get('email'))
             user = self.env['res.users'].create(user_vals)
             # Assign group of parents to user created
             emp_grp = self.env.ref('base.group_user')
             parent_group = self.env.ref('school.group_school_parent')
             if user:
-                user.write({'groups_id': [(6, 0, [emp_grp.id, parent_group.id]
-                                           )]})
+                user.write({'groups_id': [(6, 0, [emp_grp.id, parent_group.id])
+                                          ]
+                            })
         return res
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id:
+            return {'domain': {'state_id': [('country_id', '=',
+                                             self.country_id.id)]}}
+        else:
+            return {'domain': {'state_id': [('country_id', '=',
+                                             self.country_id.id)]}}
 
 
 class StudentReference(models.Model):
@@ -789,6 +947,20 @@ class StudentPreviousSchool(models.Model):
     exit_date = fields.Date('Exit Date')
     course_id = fields.Many2one('standard.standard', 'Course', required=True)
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects')
+
+    @api.constrains('admission_date', 'exit_date')
+    def check_date(self):
+        curr_dt = datetime.now()
+        new_dt = datetime.strftime(curr_dt,
+                                   DEFAULT_SERVER_DATE_FORMAT)
+        if self.admission_date >= new_dt or self.exit_date >= new_dt:
+            raise ValidationError(_('''Your admission date and exit
+                                    date should be less than current date
+                                    in previous school details'''))
+        if self.admission_date > self.exit_date:
+            raise ValidationError(_(''' Admission date should be
+                                    less than exit date
+                                    in previous school'''))
 
 
 class AcademicSubject(models.Model):
@@ -826,7 +998,7 @@ class StudentFamilyContact(models.Model):
     relative_name = fields.Char(compute='_get_name', string='Name')
 
     @api.multi
-    @api.depends('relation')
+    @api.depends('relation', 'stu_name')
     def _get_name(self):
         for rec in self:
             if rec.stu_name:
@@ -974,4 +1146,26 @@ class ResUsers(models.Model):
         '''Overide create method to get value of employee id'''
         vals.update({'employee_ids': False})
         res = super(ResUsers, self).create(vals)
+        return res
+
+
+class ClassRoom(models.Model):
+    _name = "class.room"
+
+    name = fields.Char("Name")
+    number = fields.Char("Room Number")
+
+
+class Report(models.Model):
+    _inherit = "report"
+
+    @api.multi
+    def render(self, template, values=None):
+        for data in values.get('docs'):
+            if (values.get('doc_model') == 'student.student' and
+                    data.state == 'draft'):
+                    raise ValidationError(_('''You can not print
+                                            report for student in
+                                            draft state!'''))
+        res = super(Report, self).render(template, values)
         return res

@@ -4,15 +4,17 @@
 <odoo>
         <template id="identity_card">
             <t t-call="report.html_container">
-                <t t-foreach="docs" t-as="student">
+                <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
                         <div class="page" style="height: 2px;">
-                            <div class="oe_structure" />
+                            <div class="oe_structure"/>
                             <br/>
                             <br/>
                             <br/>
                             <br/>
                             <br/>
+                            <t t-foreach="o" t-as="student">
+                            <br/><br/><br/>
                             <table width="25%" height="50px" style="border: 3px solid black;">
                                 <tr>
                                     <td width="100%" align="center" height="30">
@@ -105,9 +107,10 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
+                          </t>
+                       </div>
                     </t>
                 </t>
             </t>
-        </template>
+     </template>
 </odoo>
