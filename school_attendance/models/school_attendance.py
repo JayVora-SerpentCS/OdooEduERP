@@ -341,12 +341,17 @@ class DailyAttendance(models.Model):
                                              rec.standard_id.id),
                                             ('state', '=', 'done')])
                 for stud in stud_ids:
-                    student_leave = self.env['studentleave.request'].search(
-                                    [('state', '=', 'approve'),
-                                     ('student_id', '=', stud.id),
-                                     ('standard_id', '=', rec.standard_id.id),
-                                     ('start_date', '<=', rec.date),
-                                     ('end_date', '>=', rec.date)])
+                    student_leave = self.env['studentleave.request'
+                                             ].search([('state', '=',
+                                                        'approve'),
+                                                       ('student_id', '=',
+                                                        stud.id),
+                                                       ('standard_id', '=',
+                                                        rec.standard_id.id),
+                                                       ('start_date', '<=',
+                                                        rec.date),
+                                                       ('end_date', '>=',
+                                                        rec.date)])
                     if student_leave:
                         student_list.append({'roll_no': stud.roll_no,
                                              'stud_id': stud.id,

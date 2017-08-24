@@ -44,6 +44,7 @@ class ExtendedTimeTable(models.Model):
                 if schedule_line_search:
                     raise ValidationError(_('''You cannot delete schedule
                                            of exam in running state'''))
+        return super(ExtendedTimeTable, self).unlink()
 
     timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
                                       string='Time Table Type', required=True,

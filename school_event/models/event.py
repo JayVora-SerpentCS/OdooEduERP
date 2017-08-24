@@ -20,6 +20,7 @@ class SchoolStandard(models.Model):
         for rec in self:
             if rec.event_ids:
                 raise ValidationError(_('''You cannot delete this standard'''))
+        return super(SchoolStandard, self).unlink()
 
 
 class SchoolEventParameter(models.Model):
@@ -246,10 +247,11 @@ class SchoolEventRegistration(models.Model):
 
     @api.model
     def create(self, vals):
-        event = self.env['school.event.registration'].search([
-                        ('part_name_id', '=', vals.get('part_name_id')),
-                        ('name', '=', vals.get('name')),
-                        ('state', '!=', 'cancel')])
+        event = self.env['school.event.registration'
+                         ].search([('part_name_id', '=',
+                                    vals.get('part_name_id')),
+                                   ('name', '=', vals.get('name')),
+                                   ('state', '!=', 'cancel')])
         if event:
                 raise ValidationError(_('''Student is already
                                         registered in this event.'''))
@@ -257,10 +259,11 @@ class SchoolEventRegistration(models.Model):
 
     @api.multi
     def write(self, vals):
-        event = self.env['school.event.registration'].search([
-                        ('part_name_id', '=', vals.get('part_name_id')),
-                        ('name', '=', vals.get('name')),
-                        ('state', '!=', 'cancel')])
+        event = self.env['school.event.registration'
+                         ].search([('part_name_id', '=',
+                                    vals.get('part_name_id')),
+                                   ('name', '=', vals.get('name')),
+                                   ('state', '!=', 'cancel')])
         if event:
                 raise ValidationError(_('''Student is already
                                         registered in this event.'''))

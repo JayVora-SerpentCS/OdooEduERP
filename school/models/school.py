@@ -93,7 +93,6 @@ class AcademicYear(models.Model):
            also check that dates are not overlapped with existing academic
            year'''
         new_start_date = datetime.strptime(self.date_start, '%Y-%m-%d')
-        print"new_start.year", new_start_date.year
         new_stop_date = datetime.strptime(self.date_stop, '%Y-%m-%d')
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
@@ -241,8 +240,8 @@ class SchoolStandard(models.Model):
 
     @api.onchange('standard_id', 'division_id')
     def onchange_combine(self):
-        self.name = str(self.standard_id.name) + '-' + str(
-                                                    self.division_id.name)
+        self.name = str(self.standard_id.name
+                        ) + '-' + str(self.division_id.name)
 
     @api.multi
     @api.depends('subject_ids')
@@ -727,7 +726,7 @@ class DocumentType(models.Model):
     def create(self, vals):
         if vals.get('seq_no', _('New')) == _('New'):
             vals['seq_no'] = self.env['ir.sequence'].next_by_code(
-                            'document.type') or _('New')
+                             'document.type') or _('New')
         return super(DocumentType, self).create(vals)
 
 
