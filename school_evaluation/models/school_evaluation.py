@@ -4,6 +4,8 @@
 import time
 from lxml import etree
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
 
 
 class SchoolEvaluation(models.Model):
@@ -73,7 +75,8 @@ class SchoolEvaluation(models.Model):
     eval_line = fields.One2many('school.evaluation.line', 'eval_id',
                                 'Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
-                         method=True, help="Total Points Obtained")
+                         method=True, help="Total Points Obtained",
+                         store="True")
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
@@ -117,6 +120,14 @@ class SchoolEvaluation(models.Model):
         for rec in self:
             rec.state = 'draft'
         return True
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state in ['start', 'finished']:
+                raise ValidationError(_('''You can delete record in
+                                        draft state only.'''))
+            return super(SchoolEvaluation, self).unlink()
 
 
 class StudentEvaluationLine(models.Model):
