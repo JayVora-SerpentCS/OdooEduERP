@@ -73,12 +73,12 @@ class StudentFeesRegister(models.Model):
                                              ('date', '=', rec.date)])
                 # Check if payslip exist of student
                 if old_slips:
-                    raise UserError(_('There is already a Payslip exist for\
-                                           student: %s\
-                                           for same date.!') % stu.name)
+                    raise UserError(_('''There is already a Payslip exist for
+                                           student: %s
+                                           for same date.!''') % stu.name)
                 if rec.number == ('New'):
                     rec.number = self.env['ir.sequence'].next_by_code(
-                                 'student.fees.register') or _('New')
+                        'student.fees.register') or _('New')
                 else:
                     res = {'student_id': stu.id,
                            'register_id': rec.id,
@@ -460,8 +460,9 @@ class StudentPayslip(models.Model):
         '''Generate invoice of student fee'''
         for rec in self:
             if rec.number == 'New':
-                rec.number = self.env['ir.sequence'].next_by_code(
-                             'student.payslip') or _('New')
+                rec.number = self.env['ir.sequence'
+                                      ].next_by_code('student.payslip'
+                                                     ) or _('New')
             rec.write({'state': 'pending'})
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
