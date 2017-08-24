@@ -7,7 +7,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from dateutil.relativedelta import relativedelta as rd
 
 
 class LibraryRack(models.Model):
@@ -92,7 +91,7 @@ class LibraryCard(models.Model):
             if rec.start_date:
                 date_diff = datetime.strptime(rec.start_date,
                                               DEFAULT_SERVER_DATE_FORMAT)
-                rec.end_date = date_diff + rd(months=rec.duration)
+                rec.end_date = date_diff + relativedelta(months=rec.duration)
 
     code = fields.Char('Card No', required=True, default=lambda self: _('New'))
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
@@ -117,8 +116,8 @@ class LibraryCard(models.Model):
     def running_state(self):
         for rec in self:
             if rec.code == 'New':
-                rec.code = self.env['ir.sequence'].next_by_code(
-                                                   'library.card') or _('New')
+                rec.code = self.env['ir.sequence'].next_by_code('library.card'
+                                                                ) or _('New')
                 rec.state = 'running'
 
     @api.multi
@@ -131,6 +130,7 @@ class LibraryCard(models.Model):
             if rec.state == 'running':
                 raise ValidationError(_('''You cannot delete library
                                         card in confirm state'''))
+        super(LibraryCard, self).unlink()
 
     @api.multi
     def librarycard_expire(self):
@@ -334,11 +334,10 @@ class LibraryBookIssue(models.Model):
     @api.model
     def create(self, vals):
         '''Override create method'''
-        book_issue = self.env['library.book.issue'].search([
-                                                    ('name', '=',
-                                                     vals.get('name')),
-                                                    ('card_id', '=',
-                                                     vals.get('card_id'))])
+        book_issue = self.env['library.book.issue'
+                              ].search([('name', '=', vals.get('name')),
+                                        ('card_id', '=',
+                                         vals.get('card_id'))])
         if book_issue:
             raise ValidationError(_('''You cannot issue same book on
                                     same card more than one time'''))
@@ -352,7 +351,6 @@ class LibraryBookIssue(models.Model):
                          'roll_no': int(card.roll_no),
                          'gt_name': card.gt_name
                          })
-            print"vals+++++", vals
         if vals.get('card_id') and vals.get('user') == 'Teacher':
             # fetch the record of user type teacher
             card = self.env['library.card'].browse(vals.get('card_id'))
@@ -365,11 +363,11 @@ class LibraryBookIssue(models.Model):
     @api.multi
     def write(self, vals):
         '''Override write method'''
-        book_issue = self.env['library.book.issue'].search([
-                                                    ('name', '=',
-                                                     vals.get('name')),
-                                                    ('card_id', '=',
-                                                     vals.get('card_id'))])
+        book_issue = self.env['library.book.issue'
+                              ].search([('name', '=',
+                                         vals.get('name')),
+                                        ('card_id', '=',
+                                         vals.get('card_id'))])
         if book_issue:
             raise ValidationError(_('''You cannot issue same book on
                                     same card more than one time'''))
@@ -429,8 +427,8 @@ class LibraryBookIssue(models.Model):
                               'library.book.issue') or _('New')
         for rec in self:
             if rec.name and rec.name.availability == 'notavailable':
-                raise ValidationError(_('This Book is not available!'
-                                        '\nPlease try after sometime !'))
+                raise ValidationError(_('''This Book is not available
+                                        Please try after sometime!'''))
             if rec.student_id:
                 issue_str = ''
                 book_fines = rec.search([('card_id', '=', rec.card_id.id),
