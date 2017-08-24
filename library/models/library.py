@@ -3,9 +3,11 @@
 
 import time
 from dateutil.relativedelta import relativedelta
-from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
+from datetime import datetime
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from dateutil.relativedelta import relativedelta as rd
 
 
 class LibraryRack(models.Model):
@@ -83,16 +85,64 @@ class LibraryCard(models.Model):
                          'roll_no': student.roll_no})
         return super(LibraryCard, self).write(vals)
 
-    code = fields.Char('Card No', required=True, default=lambda self:
-                       self.env['ir.sequence'].get('library.card') or '/')
+    @api.multi
+    @api.depends('start_date', 'duration')
+    def _compute_end_date(self):
+        for rec in self:
+            if rec.start_date:
+                date_diff = datetime.strptime(rec.start_date,
+                                              DEFAULT_SERVER_DATE_FORMAT)
+                rec.end_date = date_diff + rd(months=rec.duration)
+
+    code = fields.Char('Card No', required=True, default=lambda self: _('New'))
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
     student_id = fields.Many2one('student.student', 'Student Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
     gt_name = fields.Char(compute="_compute_name", method=True, string='Name')
     user = fields.Selection([('student', 'Student'), ('teacher', 'Teacher')],
                             'User')
+    state = fields.Selection([('draft', 'Draft'),
+                              ('running', 'Confirm'),
+                              ('expire', 'Expire'),
+                              ],
+                             "State", default='draft')
     roll_no = fields.Integer('Roll No')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
+    start_date = fields.Date('Start Date')
+    duration = fields.Integer('Enter Duration',
+                              help="Duration in months")
+    end_date = fields.Date('End Date', compute="_compute_end_date", store=True)
+
+    @api.multi
+    def running_state(self):
+        for rec in self:
+            if rec.code == 'New':
+                rec.code = self.env['ir.sequence'].next_by_code(
+                                                   'library.card') or _('New')
+                rec.state = 'running'
+
+    @api.multi
+    def draft_state(self):
+        self.state = 'draft'
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'running':
+                raise ValidationError(_('''You cannot delete library
+                                        card in confirm state'''))
+
+    @api.multi
+    def librarycard_expire(self):
+        '''Schedular to change in librarycard state when end date
+            is over'''
+        current_date = datetime.now()
+        new_date = datetime.strftime(current_date, '%m/%d/%Y')
+        lib_card = self.env['library.card']
+        lib_card_search = lib_card.search([('end_date', '<', new_date)])
+        if lib_card_search:
+            for rec in lib_card_search:
+                rec.state = 'expire'
 
 
 class LibraryBookIssue(models.Model):
@@ -205,24 +255,22 @@ class LibraryBookIssue(models.Model):
                     else:
                         # Check the book issue limit on card if it is over it
                         # give warning
-                        raise UserError(_('Book issue limit is over on this\
-                        card'))
+                        raise ValidationError(_('''Book issue limit is over
+                                                on this  card'''))
                 else:
                     if rec.card_id.book_limit > len(card_ids):
                         return True
                     else:
-                        raise UserError(_('Book issue limit is over on\
+                        raise ValidationError(_('Book issue limit is over on\
                         this card'))
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
-                             default=lambda self:
-                             self.env['ir.sequence'
-                                      ].get('library.book.issue') or '/')
+                             default=lambda self: _('New'))
     student_id = fields.Many2one('student.student', 'Student Name')
     teacher_id = fields.Many2one('hr.employee', 'Teacher Name')
     gt_name = fields.Char('Name')
-    standard_id = fields.Many2one('standard.standard', 'Standard')
+    standard_id = fields.Many2one('school.standard', 'Standard')
     roll_no = fields.Integer('Roll No')
     invoice_id = fields.Many2one('account.invoice', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
@@ -276,37 +324,61 @@ class LibraryBookIssue(models.Model):
                 self.standard_id = self.card_id.standard_id.id or False
                 self.roll_no = int(self.card_id.roll_no) or False
                 self.gt_name = self.card_id.gt_name or ''
+#                self.user = str(self.card_id.user.title())
 
             else:
                 self.teacher_id = self.card_id.teacher_id.id
                 self.gt_name = self.card_id.gt_name
+#                self.user = str(self.card_id.user.title())
 
     @api.model
     def create(self, vals):
         '''Override create method'''
-        if vals.get('card_id') and vals.get('user') == 'Student':
+        book_issue = self.env['library.book.issue'].search([
+                                                    ('name', '=',
+                                                     vals.get('name')),
+                                                    ('card_id', '=',
+                                                     vals.get('card_id'))])
+        if book_issue:
+            raise ValidationError(_('''You cannot issue same book on
+                                    same card more than one time'''))
+        if vals.get('card_id'):
             # fetch the record of user type student
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'student_id': card.student_id.id,
+                         'card_id': card.id,
+                         'user': str(card.user.title()),
                          'standard_id': card.standard_id.id,
                          'roll_no': int(card.roll_no),
                          'gt_name': card.gt_name
                          })
+            print"vals+++++", vals
         if vals.get('card_id') and vals.get('user') == 'Teacher':
             # fetch the record of user type teacher
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'teacher_id': card.teacher_id.id,
-                         'gt_name': card.gt_name
+                         'gt_name': card.gt_name,
+                         'user': str(card.user.title()),
                          })
         return super(LibraryBookIssue, self).create(vals)
 
     @api.multi
     def write(self, vals):
         '''Override write method'''
+        book_issue = self.env['library.book.issue'].search([
+                                                    ('name', '=',
+                                                     vals.get('name')),
+                                                    ('card_id', '=',
+                                                     vals.get('card_id'))])
+        if book_issue:
+            raise ValidationError(_('''You cannot issue same book on
+                                    same card more than one time'''))
         if vals.get('card_id') and vals.get('user') == 'Student':
             # update the details of user type student
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'student_id': card.student_id.id,
+                         'card_id': card.id,
+                         'user': str(card.user.title()),
                          'standard_id': card.standard_id.id,
                          'roll_no': int(card.roll_no),
                          'gt_name': card.gt_name
@@ -315,7 +387,8 @@ class LibraryBookIssue(models.Model):
             # upate the details of user type Teacher
             card = self.env['library.card'].browse(vals.get('card_id'))
             vals.update({'teacher_id': card.teacher_id.id,
-                         'gt_name': card.gt_name
+                         'gt_name': card.gt_name,
+                         'user': str(card.user.title()),
                          })
         return super(LibraryBookIssue, self).write(vals)
 
@@ -345,6 +418,15 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, '%m/%d/%Y')
+        if (self.card_id.end_date < new_date and
+           self.card_id.end_date > new_date):
+                raise ValidationError(_('''The Membership of library
+                                        card is over!'''))
+        if self.issue_code == 'New':
+            self.issue_code = self.env['ir.sequence'].next_by_code(
+                              'library.book.issue') or _('New')
         for rec in self:
             if rec.name and rec.name.availability == 'notavailable':
                 raise ValidationError(_('This Book is not available!'
@@ -555,12 +637,28 @@ class LibraryBookRequest(models.Model):
 
     @api.model
     def create(self, vals):
+        book_req = self.search([('card_id', '=', vals.get('card_id')),
+                                ('name', '=', vals.get('name')),
+                                ])
+        if book_req:
+            raise ValidationError(_('''You cannot assign same book to same
+                                    card number more than one time'''))
         res = super(LibraryBookRequest, self).create(vals)
         if res.req_id == 'New':
             seq_obj = self.env['ir.sequence']
             res.write({'req_id': (seq_obj.next_by_code('library.book.request'
                                                        ) or 'New')})
         return res
+
+    @api.multi
+    def write(self, vals):
+        book_req = self.search([('card_id', '=', vals.get('card_id')),
+                                ('name', '=', vals.get('name')),
+                                ])
+        if book_req:
+            raise ValidationError(_('''You cannot assign same book to same
+                                    card number more than one time'''))
+        return super(LibraryBookRequest, self).write(vals)
 
     @api.multi
     def draft_book_request(self):
@@ -571,6 +669,12 @@ class LibraryBookRequest(models.Model):
     def confirm_book_request(self):
         '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, '%m/%d/%Y')
+        if (new_date >= self.card_id.start_date and
+           new_date <= self.card_id.end_date):
+                raise ValidationError(_('''The Membership of
+                                        library card is over!'''))
         for rec in self:
             vals = {'card_id': rec.card_id.id,
                     'type': rec.type,
