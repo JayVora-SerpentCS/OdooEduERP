@@ -16,7 +16,7 @@ class TimeTable(models.Model):
         for rec in self:
             rec.user_ids = [teacher.teacher_id.user_id.id
                             for teacher in rec.timetable_ids
-                            if rec.timetable_type == 'regular']
+                            ]
         return True
 
     name = fields.Char('Description')
@@ -31,6 +31,7 @@ class TimeTable(models.Model):
                                       inivisible=True)
     user_ids = fields.Many2many('res.users', string="Users",
                                 compute="_compute_user", store=True)
+    class_room_id = fields.Many2one('class.room', 'Room Number')
 
     @api.multi
     @api.constrains('timetable_ids')
@@ -72,9 +73,9 @@ class TimeTableLine(models.Model):
         '''Check if lecture is not related to teacher than raise error'''
         if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
                 self.table_id.timetable_type == 'regular'):
-            raise ValidationError(_('The subject %s is not assigned to'
-                                    'teacher %s.') % (self.subject_id.name,
-                                                      self.teacher_id.name))
+            raise ValidationError(_('''The subject %s is not assigned to
+                                    teacher %s.''') % (self.subject_id.name,
+                                                       self.teacher_id.name))
 
     teacher_id = fields.Many2one('hr.employee', 'Faculty Name',
                                  help="Select Teacher")
@@ -93,6 +94,28 @@ class TimeTableLine(models.Model):
                                  ('friday', 'Friday'),
                                  ('saturday', 'Saturday'),
                                  ('sunday', 'Sunday')], "Week day",)
+    class_room_id = fields.Many2one('class.room', 'Room Number')
+
+    @api.constrains('teacher_id', 'class_room_id')
+    def check_teacher_room(self):
+        timetable_rec = self.env['time.table'].search([('id', '!=',
+                                                        self.table_id.id)])
+        if timetable_rec:
+            for data in timetable_rec:
+                for record in data.timetable_ids:
+                    if (data.timetable_type == 'regular'and
+                            self.table_id.timetable_type == 'regular'and
+                            self.teacher_id == record.teacher_id and
+                            self.week_day == record.week_day and
+                            self.start_time == record.start_time):
+                            raise ValidationError(_('''There is a
+                                                    lecture of Lecturer at
+                                                    same time.'''))
+                    if (data.timetable_type == 'regular' and
+                            self.table_id.timetable_type == 'regular' and
+                            self.class_room_id == record.class_room_id and
+                            self.start_time == record.start_time):
+                            raise ValidationError(_("The room is occupied."))
 
 
 class SubjectSubject(models.Model):
