@@ -135,6 +135,69 @@
                 </search>
             </field>
         </record>
+        <!-- Form View of student Leave Request -->
+        <record id="student_leave_req_form" model="ir.ui.view">
+            <field name="name">studentleave.request.form</field>
+            <field name="model">studentleave.request</field>
+            <field name="arch" type="xml">
+                <form string="Student Leave Request Form">
+                    <header>
+                        <button name="approve_state" type="object" string="Approve" groups="school.group_school_administration,school.group_school_teacher" attrs="{'invisible':[('state','in',['approve','reject','draft'])]}"/>
+                        <button name="draft_state" type="object" string="Send to Draft" attrs="{'invisible':[('state','in',['draft','approve','reject'])]}"/>
+                        <button name="toapprove_state" string="To Approve" type="object" attrs="{'invisible':[('state','in',['approve','toapprove','reject'])]}"/>
+                        <button name="reject_state" type="object" string="Reject" attrs="{'invisible':[('state','in',['reject','approve'])]}" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft, toapprove"/>
+                    </header>
+                    <sheet>
+                        <group>
+	                        <group string="Leave Details">
+	                            <field name="name" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+	                            <label for="days" string="Duration"/>
+	                            <div>
+	                                <div>
+	                                    <field name="start_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+	                                    <label string="-" class="oe_inline"/>
+	                                    <field name="end_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+	                                </div>
+	                                <div>
+	                                    <field name="days" class="oe_inline" attrs="{'readonly':[('state','in',['approve','reject'])]}"/> days
+	                                </div>
+	                            </div>
+	                        </group>
+	                        <group string="Student Information">
+	                            <field name="student_id" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                                <field name="roll_no" readonly="1"/>
+                                <field name="standard_id" readonly="1"/>
+	                        </group>
+                        </group>
+                        <group col="4" colspan="4" string="Teacher Information">
+                            <field name="teacher_id" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True}" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                            <field name="attachments" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                        </group>
+                        <group string="Reason">
+                            <field name="reason" required="1" attrs="{'readonly':[('state','in',['approve','reject'])]}"/>
+                        </group>
+                    </sheet>
+                </form>
+             </field>
+        </record>
+        <!-- Tree View of student Leave Request-->
+        <record id="student_leave_req_tree" model="ir.ui.view">
+            <field name="name">studentleave.request.tree</field>
+            <field name="model">studentleave.request</field>
+            <field name="arch" type="xml">
+                <tree string="Student Leave Request tree">
+                    <field name="name"/>
+                    <field name="student_id"/>
+                    <field name="roll_no"/>
+                    <field name="standard_id"/>
+                    <field name="teacher_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="state"/>
+                </tree>
+             </field>
+        </record>
 
         <!-- Action Of Form & Tree Views Of Attendance Sheet Information -->
 
@@ -144,10 +207,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
+        
+        <!-- Action of Student Leave REquest -->
+        <record id="action_student_leave_form" model="ir.actions.act_window">
+            <field name="name">Student Leave Request Action</field>
+            <field name="res_model">studentleave.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
         <!-- Menu Item Of Attendance -->
 
-        <menuitem id="menu_attendance" name="Attendance" parent="school.menu_ems" sequence="8" groups="school.group_school_administration,school.group_school_teacher"/>
+        <menuitem id="menu_attendance" name="Attendance" parent="school.menu_ems" sequence="8" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
         <!-- Form View Of Daily Attendance Information -->
 
@@ -157,14 +228,14 @@
             <field name="arch" type="xml">
                 <form string="Daily Attendance Information">
                     <header>
-                        <button name="attendance_validate" string="Validate" states="draft" type="object" />
-                        <button name="attendance_draft" string="Reset To Draft" states="validate" type="object" />
+                        <button name="attendance_validate" string="Validate" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <button name="attendance_draft" string="Reset To Draft" states="validate" type="object" groups="school.group_school_administration"/>
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
                         <separator string="Daily Attendance Sheet" />
                         <group colspan="4" col="4">
-                            <field name="user_id" placeholder="Select" required="1" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':1}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="user_id" placeholder="Select" required="1" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True}"/>
                             <field name="standard_id" widget="selection" domain="[('user_id','=',user_id)]"/>
                             <field name="date" attrs="{'readonly':[('state','not in','draft')]}" />
                         </group>
@@ -249,6 +320,8 @@
         <!-- Menu Item Of Daily Attendance Sheets -->
 
         <menuitem id="menu_daily_attendances" name="Daily Attendance Sheets" parent="menu_attendance"
-                  action="action_daily_attendance_form" groups="school.group_school_administration,school.group_school_teacher" />
+                  action="action_daily_attendance_form" groups="school.group_school_administration,school.group_school_teacher" sequence="1"/>
+        <!-- Menu of Student Leave Request -->
+        <menuitem id="menu_student_leave_req" name="Student Leave Request" parent="menu_attendance" action="action_student_leave_form" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent" sequence="2"/>
 
 </odoo>

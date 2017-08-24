@@ -13,32 +13,30 @@
                             <field name="name" placeholder="Enter Description"/>
                             <field name="standard_id" placeholder="Select Standard" widget="selection"/>
                             <field name="year_id" placeholder="Select Year" widget="selection"/>
+                            <field name="class_room_id" options="{&quot;no_create&quot;: True}" invisible="1"/>
                             <field name="user_ids" invisible="1"/>
-<!--                             <field name="do_not_create"/> -->
                         </group>
-<!--                         <group> -->
-<!--                             <field name="user_ids"/> -->
-<!--                         </group> -->
                         <notebook colspan="4">
                             <page string="TimeTable">
                                 <field name="timetable_ids" nolabel="1" colspan="4">
                                     <tree string="TimeTable" editable="top">
                                         <field name="week_day"/>
                                         <field name="subject_id" widget="selection"/>
-                                        <field name="start_time"/>
-                                        <field name="end_time"/>
+                                        <field name="start_time" widget="float_time"/>
+                                        <field name="end_time" widget="float_time"/>
                                         <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]"/>
-                                        
+                                        <field name="class_room_id" widget="selection"/>
                                     </tree>
                                     <form string="TimeTable">
                                         <group col="4" colspan="4">
                                             <field name="week_day"/>
                                             <field name="subject_id"
                                                    placeholder="Select Subject" widget="selection"/>
-                                            <field name="start_time"/>
-                                            <field name="end_time"/>
+                                            <field name="start_time" widget="float_time"/>
+                                            <field name="end_time" widget="float_time"/>
                                             <field name="teacher_id" context="{'subject_id':subject_id}"
                                                    placeholder="Select Supervisior" widget="selection"/>
+                                            <field name="class_room_id" widget="selection"/>
 <!--                                             <field name="is_break" on_change="onchange_recess(is_break)"/> -->
                                         </group>
                                     </form>
@@ -88,7 +86,7 @@
 <!--             <field name="view_mode">tree,form</field> -->
 <!--         </record> -->
         <record id="action_timetable_regular" model="ir.actions.act_window">
-            <field name="name">Regular Time Table Type</field>
+            <field name="name">Regular Timetable</field>
             <field name="res_model">time.table</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

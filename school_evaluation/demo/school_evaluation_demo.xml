@@ -5,13 +5,13 @@
     <data noupdate="1">
         <!-- student.evaluation -->
         <record id="student_evaluation_2" model="school.evaluation">
-            <field name="student_id" ref="school.demo_student_student_2"/>
+            <field name="student_id" ref="school.demo_student_student_7"/>
             <field name="type">student</field>
             <field name="date" eval="str(int(time.strftime('2016'))) +'-06-25'"/>
             <field name="evaluator_id" ref="hr.employee_al"/>
         </record>
         <record id="student_evaluation_4" model="school.evaluation">
-            <field name="student_id" ref="school.demo_student_student_4"/>
+            <field name="student_id" ref="school.demo_student_student_6"/>
             <field name="type">student</field>
             <field name="date" eval="str(int(time.strftime('2017'))) +'-06-15'"/>
             <field name="evaluator_id" ref="hr.employee_niv"/>

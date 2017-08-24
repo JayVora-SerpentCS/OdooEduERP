@@ -80,6 +80,9 @@
                             <field name="type"/>
                             <field name="amount" />
                             <field name="account_id" options="{&quot;no_create&quot;: True}"/>
+                            <field name="company_id"/>
+                            <field name="currency_id" invisible="0"/>
+                            <field name="currency_symbol" invisible="0"/>
                         </group>
                         <group col="2" attrs="{'invisible':[('type','=','range')]}" string="Description">
                             <field name="description" />
@@ -113,6 +116,9 @@
                     <field name="type"/>
                     <field name="account_id"/>
                     <field name="amount"/>
+<!--                     <field name="company_id"/> -->
+                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_symbol" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -130,6 +136,9 @@
                         <field name="type"/>
                         <field name="amount"/>
                         <field name="account_id" required="1"/>
+                        <field name="company_id"/>
+                        <field name="currency_id"/>
+                        <field name="currency_symbol"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Function">
@@ -188,7 +197,7 @@
                         <group>
                             <group col="2" string="Information">
                                 <field name="name" placeholder="Description" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                <field name="number" attrs="{'readonly':[('state','not in','draft')]}" />
+                                <field name="number" readonly="1"/>
                                 <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
                             </group>
                             <group col="2" string="Standard Information">
@@ -217,6 +226,7 @@
                                         <field name="type"  placeholder="Type" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <!-- <field name="period_id" placeholder="Force Period"/> -->
                                         <field name="currency_id" placeholder="Currency" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                        <field name="currency_symbol" invisible="0"/>
                                         <field name="move_id" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <field name="payment_date" placeholder="Payment Date" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
@@ -282,7 +292,7 @@
                     <sheet>
                         <group string="Information" col="4" colspan="4">
                             <field name="name" placeholder="Name" attrs="{'readonly':[('state','not in','draft')]}"/>
-                            <field name="number" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="number" readonly="1"/>
                             <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
                             <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
@@ -413,7 +423,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button">
+                        <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_student">
                             <img src="/school_fees/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
                             <lable style="">Fees Receipt</lable>
                         </button>
@@ -440,7 +450,7 @@
         <menuitem id="menu_student_payslip" name="Fees Receipts" parent="menu_fees" action="action_student_payslip_form"
                   groups="school.group_school_administration,school.group_school_student,school.group_school_parent"/>
         <menuitem id="menu_student_fees_register" name="Fees Registers" parent="menu_fees" action="action_student_fees_register_form"
-                  groups="school.group_school_administration,school.group_school_student,school.group_school_parent"/>
+                  groups="school.group_school_administration,school.group_school_student,-school.group_school_parent"/>
         <menuitem id="menu_student_fees_structure_form" name="Fees" parent="school.menu_configuration"/>
         <menuitem id="menu_student_fees_structure_sub_form" name="Fees Structure" parent="menu_student_fees_structure_form"
                   action="action_student_fees_structure_form"/>

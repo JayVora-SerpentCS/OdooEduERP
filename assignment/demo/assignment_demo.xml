@@ -62,7 +62,7 @@
         <!--Student assignment -->
 
         <record id="school_Student_assignment_firstxercise0" model="school.student.assignment">
-            <field name="student_id" ref="school.demo_student_student_1"/>
+            <field name="student_id" ref="school.demo_student_student_7"/>
             <field name="teacher_id" ref="hr.employee_al"/>
             <field name="name">First Exercise</field>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
@@ -72,7 +72,7 @@
         </record>
 
         <record id="school_Student_assignment_secondexercise0" model="school.student.assignment">
-            <field name="student_id" ref="school.demo_student_student_2"/>
+            <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="teacher_id" ref="hr.employee_fpi"/>
             <field name="name">Second Exercise</field>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
@@ -82,7 +82,7 @@
         </record>
 
         <record id="school_Student_assignment_thirdexercise0" model="school.student.assignment">
-            <field name="student_id" ref="school.demo_student_student_3"/>
+            <field name="student_id" ref="school.demo_student_student_6"/>
             <field name="teacher_id" ref="hr.employee_al"/>
             <field name="name">Third Exercise</field>
             <field name="subject_id" ref="school.demo_subject_subject_6"/>

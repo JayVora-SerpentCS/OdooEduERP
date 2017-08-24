@@ -43,5 +43,6 @@
             src_model="exam.result"
             view_mode="form" 
             target="new" 
-            view_type="form"/>
+            view_type="form"
+            groups="-school.group_school_administration"/>
 </odoo>

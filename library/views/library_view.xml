@@ -337,7 +337,7 @@
                                                 </table>
                                                 <br />
                                             </td>
-                                            <td align="right" style="padding-left: 50px;">
+                                            <td align="right" style="padding-left: 43px;">
                                                 <a type="open">
                                                      <img t-att-src="kanban_image('product.product','image_medium', record.id.value)" class="oe_avatar"/>
                                                 </a>
@@ -478,23 +478,34 @@
             <field name="model">library.card</field>
             <field name="arch" type="xml">
                 <form string="Card Details">
+                    <header>
+                        <button name="running_state" type="object" string="Confirm" attrs="{'invisible':[('state', '=', 'running')]}" groups="library.group_librarian"/>
+                        <button name="draft_state" type="object" string="Draft State" attrs="{'invisible':[('state', '=', 'draft')]}" groups="library.group_librarian"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
                     <sheet>
                         <separator string="Card Details" colspan="4" col="4"/>
                         <group col="2" colspan="4">
-                            <field name="code" placeholder="Code"/>
-                            <field name="user"/>
-                            <field name="book_limit"/>
+                            <field name="code" placeholder="Code" readonly="1"/>
+                            <field name="user" required="1" attrs="{'readonly':[('state','=','running')]}"/>
+                            <field name="book_limit" attrs="{'readonly':[('state','=','running')]}"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
                         <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
                             <separator colspan="4" col="4" />
-                            <field name="student_id" widget="selection" domain="[('state','=','done')]"/>
+                            <field name="student_id" widget="selection" domain="[('state','=','done')]" attrs="{'required':[('user','=','student')],'readonly':[('state','=','running')]}"/>
                             <field name="roll_no" readonly="1"/>
                             <field name="standard_id" widget="selection" readonly="1"/>
                         </group>
                         <group col="2" colspan="2" attrs="{'invisible':[('user','!=','teacher')]}">
                             <separator colspan="2" col="2"/>
-                            <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]"/>
+                            <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]" attrs="{'required':[('user','=','teacher')],'readonly':[('state','=','running')]}"/>
+                        </group>
+                        <separator string="Membership Details"/>
+                        <group col="4" colspan="4">
+                            <field name="start_date" required="1" attrs="{'readonly':[('state','=','running')]}"/>
+                            <field name="duration" required="1" attrs="{'readonly':[('state','=','running')]}"/>
+                            <field name="end_date"/>
                         </group>
                     </sheet>
                 </form>
@@ -579,18 +590,18 @@
                             
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
-                            <field name="issue_code" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="issue_code" readonly="1"/>
                             <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                            <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                            <field name="user" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('state', '=', 'running')]"/>
+                            <field name="user" readonly="1"/>
                             <field name="gt_name" invisible="True"/>
                         </group>
                         <group col="4" colspan="4"
-                               attrs="{'invisible':[('user','!=','Student')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
+                               attrs="{'invisible':[('user','!=','Student')]}">
                             <separator string="Student Details" colspan="4" col="4"/>
-                            <field name="student_id" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" readonly="1"/>
-                            <field name="roll_no" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
-                            <field name="standard_id" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
+                            <field name="student_id" attrs="{'invisible':[('user','=','teacher')]}" domain="[('state','=','done')]" readonly="1"/>
+                            <field name="roll_no" attrs="{'invisible':[('user','=','teacher')]}" readonly="1"/>
+                            <field name="standard_id" attrs="{'invisible':[('user','=','teacher')]}" readonly="1"/>
                         </group>
                         <group col="2" colspan="2"
                                attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
@@ -603,7 +614,7 @@
                             <field name="day_to_return_book" readonly="1"/>
                             <field name="date_issue" readonly="1"/>
                             <field name="date_return" readonly="1"/>
-                            <field name="actual_return_date" attrs="{'readonly':[('state','not in',('issue','reissue'))]}"/>
+                            <field name="actual_return_date" attrs="{'readonly':[('state','not in',('issue','reissue'))]}" required="1"/>
                             <field name="penalty" attrs="{'invisible':[('state','!=','return')]}"/>
                             <field name="lost_penalty" attrs="{'invisible':[('state','!=','lost')]}"/>
                         </group>
@@ -778,7 +789,7 @@
                         <group col="4" colspan="4">
                             <separator string="Book Request" colspan="4" col="4"/>
                             <field name="req_id" readonly="1"/>
-                            <field name="card_id" placeholder="Card Id" widget="selection" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="card_id" domain="[('state','=','running')]" placeholder="Card Id" widget="selection" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                         <group>
                             <group>
@@ -1444,5 +1455,13 @@ i
                 </form>
             </field>
         </record>
+        <report
+            id="product.report_product_label"
+            string="Products Labels"
+            model="product.product"
+            report_type="qweb-pdf"
+            name="product.report_productlabel"
+            file="product.report_productlabel"
+            groups="library.group_librarian"/>
 
 </odoo>

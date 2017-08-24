@@ -2,6 +2,8 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
 
 
 class ReportResultInfo(models.AbstractModel):
@@ -36,12 +38,15 @@ class ReportResultInfo(models.AbstractModel):
         list_exam = []
         value = {}
         final_total = 0
-        count = 0
         per = 0.0
+        obtain_marks = 0.0
+        maximum_marks = 0.0
         for res in result_id:
             if res.result_ids:
-                count += 1
-                per = float(res.total / count)
+                for res_data in res.result_ids:
+                    obtain_marks += float(res_data.obtain_marks)
+                    maximum_marks += float(res_data.maximum_marks)
+                per += obtain_marks * 100 / maximum_marks
             final_total = final_total + res.total
             value.update({'result': res.result,
                           'percentage': per,
@@ -52,6 +57,13 @@ class ReportResultInfo(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         docs = self.env['student.student'].browse(docids)
+        for rec in docs:
+            res_search = self.env['exam.result'].search([('student_id', '=',
+                                                          rec.id)])
+            if not res_search or rec.state == 'draft':
+                raise ValidationError(_('''You can not print report for
+                                       student in draft state
+                                       or when data is not found !'''))
         docargs = {
             'doc_ids': docids,
             'doc_model': self.env['student.student'],

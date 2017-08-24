@@ -8,7 +8,8 @@
                 string="Vehicle Detail"
                 model="transport.vehicle"
                 report_type = "qweb-pdf"
-                file="school_transport.vehicle"/>
+                file="school_transport.vehicle"
+                groups="school_transport.group_transportation_manager"/>
 
         <report id="report_student_transport_qweb"
                 name="school_transport.participants"

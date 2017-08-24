@@ -27,8 +27,7 @@ class StudentFeesRegister(models.Model):
                        help="Date of register",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     number = fields.Char('Number', readonly=True,
-                         default=lambda obj: obj.env['ir.sequence'].
-                         next_by_code('student.fees.register'))
+                         default=lambda self: _('New'))
     line_ids = fields.One2many('student.payslip', 'register_id',
                                'PaySlips')
     total_amount = fields.Float("Total", compute="_total_amount",
@@ -77,12 +76,16 @@ class StudentFeesRegister(models.Model):
                     raise UserError(_('There is already a Payslip exist for\
                                            student: %s\
                                            for same date.!') % stu.name)
+                if rec.number == ('New'):
+                    rec.number = self.env['ir.sequence'].next_by_code(
+                                 'student.fees.register') or _('New')
                 else:
                     res = {'student_id': stu.id,
                            'register_id': rec.id,
                            'name': rec.name,
                            'date': rec.date,
                            'company_id': rec.company_id.id,
+                           'currency_id': rec.company_id.currency_id.id,
                            'journal_id': rec.journal_id.id,
                            'fees_structure_id': rec.fees_structure.id or False}
                     slip_id = slip_obj.create(res)
@@ -107,12 +110,24 @@ class StudentPayslipLine(models.Model):
                              ('year', 'Yearly'),
                              ('range', 'Range')],
                             'Duration', required=True)
-    amount = fields.Float('Amount', digits=(16, 4))
+    amount = fields.Float('Amount', digits=(16, 2))
     line_ids = fields.One2many('student.payslip.line.line', 'slipline_id',
                                'Calculations')
     slip_id = fields.Many2one('student.payslip', 'Pay Slip')
     description = fields.Text('Description')
+    company_id = fields.Many2one('res.company', 'Company',
+                                 change_default=True,
+                                 default=lambda obj_c: obj_c.env['res.users'].
+                                 browse([obj_c._uid])[0].company_id)
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    currency_symbol = fields.Char(related="currency_id.symbol",
+                                  string='Symbol')
     account_id = fields.Many2one('account.account', "Account")
+
+    @api.onchange('company_id')
+    def set_currency_onchange(self):
+        for rec in self:
+            rec.currency_id = rec.company_id.currency_id.id
 
 
 class StudentFeesStructureLine(models.Model):
@@ -127,11 +142,24 @@ class StudentFeesStructureLine(models.Model):
                              ('year', 'Yearly'),
                              ('range', 'Range')],
                             'Duration', required=True)
-    amount = fields.Float('Amount', digits=(16, 4))
+    amount = fields.Float('Amount', digits=(16, 2))
     sequence = fields.Integer('Sequence')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline1_id',
                                'Calculations')
     account_id = fields.Many2one('account.account', string="Account")
+    company_id = fields.Many2one('res.company', 'Company',
+                                 change_default=True,
+                                 default=lambda obj_c: obj_c.env['res.users'].
+                                 browse([obj_c._uid])[0].company_id)
+    currency_id = fields.Many2one('res.currency',
+                                  'Currency')
+    currency_symbol = fields.Char(related="currency_id.symbol",
+                                  string='Symbol')
+
+    @api.onchange('company_id')
+    def set_currency_company(self):
+        for rec in self:
+            rec.currency_id = rec.company_id.currency_id.id
 
 
 class StudentFeesStructure(models.Model):
@@ -146,8 +174,8 @@ class StudentFeesStructure(models.Model):
                                 'fees_id', 'slip_id', 'Fees Structure')
 
     _sql_constraints = [('code_uniq', 'unique(code)',
-                         'The code of the Fees Structure must'
-                         'be unique !')]
+                         '''The code of the Fees Structure must
+                         be unique !''')]
 
 
 class StudentPayslip(models.Model):
@@ -166,31 +194,34 @@ class StudentPayslip(models.Model):
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
                                         states={'paid': [('readonly', True)]})
-    standard_id = fields.Many2one('standard.standard', 'Class')
+    standard_id = fields.Many2one('school.standard', 'Class')
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
     register_id = fields.Many2one('student.fees.register', 'Register')
     name = fields.Char('Description')
     number = fields.Char('Number', readonly=True,
-                         default=lambda obj: obj.env['ir.sequence'].
-                         next_by_code('student.payslip'))
+                         default=lambda self: _('New'))
     student_id = fields.Many2one('student.student', 'Student', required=True)
     date = fields.Date('Date', readonly=True,
                        help="Current Date of payslip",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     line_ids = fields.One2many('student.payslip.line', 'slip_id',
                                'PaySlip Line')
-    total = fields.Float("Total", readonly=True,
-                         help="Total Amount")
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
-                              ('pending', 'Pending'), ('paid', 'Paid')],
+    total = fields.Monetary("Total", readonly=True,
+                            help="Total Amount")
+    state = fields.Selection([('draft', 'Draft'),
+                              ('confirm', 'Confirm'),
+                              ('pending', 'Pending'),
+                              ('paid', 'Paid')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=False)
     invoice_count = fields.Integer(string="# of Invoices",
                                    compute="_compute_invoice")
-    paid_amount = fields.Float('Paid Amount', help="Amount Paid")
-    due_amount = fields.Float('Due Amount', help="Amount Remaining")
+    paid_amount = fields.Monetary('Paid Amount', help="Amount Paid")
+    due_amount = fields.Monetary('Due Amount', help="Amount Remaining")
     currency_id = fields.Many2one('res.currency', 'Currency')
+    currency_symbol = fields.Char(related='currency_id.symbol',
+                                  string='Symbol')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
                               ondelete='restrict',
                               help='Link to the automatically'
@@ -217,8 +248,16 @@ class StudentPayslip(models.Model):
         '''Method to get standard , division , medium of student selected'''
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
-            self.division_id = self.student_id.division_id
+            self.division_id = self.student_id.standard_id.division_id.id
             self.medium_id = self.student_id.medium_id
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('''You can delete record in
+                                 draft state only.'''))
+            return super(StudentPayslip, self).unlink()
 
     @api.multi
     @api.onchange('journal_id')
@@ -236,7 +275,7 @@ class StudentPayslip(models.Model):
             student = self.env['student.student'].browse(vals.get('student_id')
                                                          )
             vals.update({'standard_id': student.standard_id.id,
-                         'division_id': student.division_id.id,
+                         'division_id': student.standard_id.division_id.id,
                          'medium_id': student.medium_id.id})
         return super(StudentPayslip, self).create(vals)
 
@@ -246,7 +285,7 @@ class StudentPayslip(models.Model):
             student = self.env['student.student'].browse(vals.get('student_id')
                                                          )
             vals.update({'standard_id': student.standard_id.id,
-                         'division_id': student.division_id.id,
+                         'division_id': student.standard_id.division_id.id,
                          'medium_id': student.medium_id.id})
         return super(StudentPayslip, self).write(vals)
 
@@ -288,7 +327,9 @@ class StudentPayslip(models.Model):
                              'sequence': data.sequence,
                              'type': data.type,
                              'account_id': data.account_id.id,
-                             'amount': data.amount}
+                             'amount': data.amount,
+                             'currency_id': data.currency_id.id or False,
+                             'currency_symbol': data.currency_symbol or False}
                 lines.append((0, 0, line_vals))
             rec.write({'line_ids': lines})
             # Compute amount
@@ -296,7 +337,10 @@ class StudentPayslip(models.Model):
             for data in rec.line_ids:
                 amount += data.amount
             rec.write({'total': amount,
-                       'state': 'confirm'})
+                       'state': 'confirm',
+                       'due_amount': amount,
+                       'currency_id': rec.company_id.currency_id.id or False
+                       })
         return True
 
     @api.multi
@@ -415,6 +459,9 @@ class StudentPayslip(models.Model):
     def student_pay_fees(self):
         '''Generate invoice of student fee'''
         for rec in self:
+            if rec.number == 'New':
+                rec.number = self.env['ir.sequence'].next_by_code(
+                             'student.payslip') or _('New')
             rec.write({'state': 'pending'})
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,

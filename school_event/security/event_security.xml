@@ -2,17 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-
-        <!-- Event Rule For Teacher -->
-
-        <record id="school_rule_event_teacher_record" model="ir.rule">
-            <field name="name">School Event For Teacher</field>
-            <field ref="model_school_event" name="model_id" />
-            <field eval="1" name="global" />
-            <field name="domain_force">["|",('contact_per_id.user_id','=',user.id) , ('supervisor_id.user_id','=',user.id) ]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
-        </record>
-
         <record id="student_rule_event_regi_record" model="ir.rule">
             <field name="name">Personal Event REgistation Record</field>
             <field ref="model_school_event_registration" name="model_id" />
@@ -46,5 +35,20 @@
             <field eval="1" name="global" />
             <field name="domain_force">[('part_standard_ids.student_ids.id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]" />
+        </record>
+        <!-- Students can see own calendar event -->
+        <record id="students_grp_event_calendar_record_rule" model="ir.rule">
+            <field name="name">Children can see own record rule of calendar event</field>
+            <field ref="calendar.model_calendar_event" name="model_id" />
+            <field eval="1" name="global" />
+            <field name="domain_force">[('partner_ids','=',user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+        </record>
+        <record id="teacher_school_regi_rules" model="ir.rule">
+            <field name="name">Teacher Event Registration Record Rule</field>
+            <field name="model_id" ref="model_school_event_registration"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('part_name_id.cmp_id','=',user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
 </odoo>

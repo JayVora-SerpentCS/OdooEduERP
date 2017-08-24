@@ -24,7 +24,7 @@
                                     <b>:</b>
                                 </td>
                                 <td width="75%" style="font-family: 'Helvetica';font-size: 18px;">
-                                    <span t-field="result.name"></span>
+                                    <span t-field="result.sudo().name"></span>
                                     <span t-field="result.middle"></span>
                                     <span t-field="result.last"></span>
                                 </td>
