@@ -419,8 +419,9 @@ class StudentStudent(models.Model):
     def create(self, vals):
         '''Method to create user when student is created'''
         if vals.get('pid', _('New')) == _('New'):
-            vals['pid'] = self.env['ir.sequence'].next_by_code(
-                          'student.student') or _('New')
+            vals['pid'] = self.env['ir.sequence'
+                                   ].next_by_code('student.student'
+                                                  ) or _('New')
         if vals.get('pid', False):
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
