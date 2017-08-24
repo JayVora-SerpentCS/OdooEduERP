@@ -295,6 +295,7 @@ class SchoolStandard(models.Model):
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
                 raise ValidationError(_('''You cannot delete this standard'''))
+        return super(SchoolStandard, self).unlink()
 
     @api.constrains('capacity')
     def check_seats(self):
@@ -725,8 +726,9 @@ class DocumentType(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('seq_no', _('New')) == _('New'):
-            vals['seq_no'] = self.env['ir.sequence'].next_by_code(
-                             'document.type') or _('New')
+            vals['seq_no'] = self.env['ir.sequence'
+                                      ].next_by_code('document.type'
+                                                     ) or _('New')
         return super(DocumentType, self).create(vals)
 
 
