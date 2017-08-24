@@ -87,7 +87,7 @@ class HostelRoom(models.Model):
             if data.student_ids:
                 count += 1
             room_availability = data.student_per_room - len(
-                                                        data.student_ids.ids)
+                data.student_ids.ids)
             data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'HOSTEL',
@@ -245,8 +245,9 @@ class HostelStudent(models.Model):
         '''Method to change state to reservation'''
         for rec in self:
             if rec.hostel_id == 'New':
-                rec.hostel_id = self.env['ir.sequence'].next_by_code(
-                                'hostel.student') or _('New')
+                rec.hostel_id = self.env['ir.sequence'
+                                         ].next_by_code('hostel.student'
+                                                        ) or _('New')
             rec.status = 'reservation'
         return True
 
@@ -262,10 +263,10 @@ class HostelStudent(models.Model):
 
     @api.model
     def create(self, vals):
-        hostel_stud = self.env['hostel.student'].search([
-                                                ('student_id', '=',
-                                                 vals.get('student_id')),
-                                                ('status', '!=', 'cancel')])
+        hostel_stud = self.env['hostel.student'
+                               ].search([('student_id', '=',
+                                          vals.get('student_id')),
+                                         ('status', '!=', 'cancel')])
         if hostel_stud:
                 raise ValidationError(_('''Student is already registered'''))
         res = super(HostelStudent, self).create(vals)
@@ -275,10 +276,10 @@ class HostelStudent(models.Model):
 
     @api.multi
     def write(self, vals):
-        hostel_stud = self.env['hostel.student'].search([
-                                                ('student_id', '=',
-                                                 vals.get('student_id')),
-                                                ('status', '!=', 'cancel')])
+        hostel_stud = self.env['hostel.student'
+                               ].search([('student_id', '=',
+                                          vals.get('student_id')),
+                                         ('status', '!=', 'cancel')])
         if hostel_stud:
                 raise ValidationError(_('''Student is already registered'''))
         return super(HostelStudent, self).write(vals)
