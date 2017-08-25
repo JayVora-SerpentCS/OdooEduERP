@@ -12,8 +12,8 @@ class TestEvent(common.TransactionCase):
         self.school_event_reg_obj = self.env['school.event.registration']
         self.school_id = self.env.ref('school.demo_school_1')
         self.hr_employee = self.env.ref('hr.employee_al')
-        self.part_name = self.env.ref('school.demo_student_student_7')
-        self.standard = self.env.ref('school.demo_school_standard_1')
+        self.part_name = self.env.ref('school.demo_student_student_9')
+        self.standard = self.env.ref('school.demo_school_standard_3')
         self.calendarevent = self.env['calendar.event']
         currdt = datetime.now()
         new_dt = currdt - rd(days=7)
