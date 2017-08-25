@@ -58,7 +58,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_6"/>
         </record>
         <record id="time_table_line_3" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_mit"/>
             <field eval="13.0" name="start_time"/>
             <field name="week_day">monday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -66,7 +66,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_4"/>
         </record>
         <record id="time_table_line_4" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_8"/>
+            <field name="teacher_id" ref="hr.employee_fme"/>
             <field eval="14.0" name="start_time"/>
             <field name="week_day">monday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -74,7 +74,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
         </record>
         <record id="time_table_line_5" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_4"/>
+            <field name="teacher_id" ref="hr.employee_root"/>
             <field eval="15.0" name="start_time"/>
             <field name="week_day">monday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -90,7 +90,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
         <record id="time_table_line_7" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_7"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="10.0" name="start_time"/>
             <field name="week_day">tuesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -98,7 +98,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
         </record>
         <record id="time_table_line_8" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_chs"/>
             <field eval="11.0" name="start_time"/>
             <field name="week_day">tuesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -106,7 +106,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
         </record>
         <record id="time_table_line_9" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_8"/>
+            <field name="teacher_id" ref="hr.employee_al"/>
             <field eval="13.0" name="start_time"/>
             <field name="week_day">tuesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -114,7 +114,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
         </record>
         <record id="time_table_line_10" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_mit"/>
             <field eval="14.0" name="start_time"/>
             <field name="week_day">tuesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -130,7 +130,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
         </record>
         <record id="time_table_line_12" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_chs"/>
             <field eval="9.0" name="start_time"/>
             <field name="week_day">wednesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -138,7 +138,7 @@
             <field name="subject_id" ref="demo_subject_subject_9"/>
         </record>
         <record id="time_table_line_13" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_1"/>
+            <field name="teacher_id" ref="hr.employee_root"/>
             <field eval="10.0" name="start_time"/>
             <field name="week_day">wednesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -146,7 +146,7 @@
             <field name="subject_id" ref="demo_subject_subject_10"/>
         </record>
         <record id="time_table_line_14" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_5"/>
+            <field name="teacher_id" ref="hr.employee_fme"/>
             <field eval="11.0" name="start_time"/>
             <field name="week_day">wednesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -162,7 +162,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_6"/>
         </record>
         <record id="time_table_line_16" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_8"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
             <field eval="14.0" name="start_time"/>
             <field name="week_day">wednesday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -194,7 +194,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_4"/>
         </record>
         <record id="time_table_line_20" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_chs"/>
             <field eval="11.0" name="start_time"/>
             <field name="week_day">thursday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -202,7 +202,7 @@
             <field name="subject_id" ref="demo_subject_subject_11"/>
         </record>
         <record id="time_table_line_21" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_5"/>
+            <field name="teacher_id" ref="hr.employee_chs"/>
             <field eval="13.0" name="start_time"/>
             <field name="week_day">thursday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -210,7 +210,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_4"/>
         </record>
         <record id="time_table_line_22" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_7"/>
+            <field name="teacher_id" ref="hr.employee_qdp"/>
             <field eval="14.0" name="start_time"/>
             <field name="week_day">thursday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -218,7 +218,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
         </record>
         <record id="time_table_line_23" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_chs"/>
             <field eval="15.0" name="start_time"/>
             <field name="week_day">thursday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -250,7 +250,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
         <record id="time_table_line_27" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_6"/>
+            <field name="teacher_id" ref="hr.employee_chs"/>
             <field eval="13.0" name="start_time"/>
             <field name="week_day">friday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -258,7 +258,7 @@
             <field name="subject_id" ref="demo_subject_subject_9"/>
         </record>
         <record id="time_table_line_28" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_7"/>
+            <field name="teacher_id" ref="hr.employee_qdp"/>
             <field eval="14.0" name="start_time"/>
             <field name="week_day">friday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -266,7 +266,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
         </record>
         <record id="time_table_line_29" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_8"/>
+            <field name="teacher_id" ref="hr.employee_al"/>
             <field eval="15.0" name="start_time"/>
             <field name="week_day">friday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -274,7 +274,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
         </record>
         <record id="time_table_line_30" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_2"/>
+            <field name="teacher_id" ref="hr.employee_stw"/>
             <field eval="9.0" name="start_time"/>
             <field name="week_day">saturday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -282,7 +282,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
         </record>
         <record id="time_table_line_31" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_3"/>
+            <field name="teacher_id" ref="hr.employee_mit"/>
             <field eval="10.0" name="start_time"/>
             <field name="week_day">saturday</field>
             <field name="table_id" ref="time_table_firsts0"/>
@@ -290,7 +290,7 @@
             <field name="subject_id" ref="school.demo_subject_subject_4"/>
         </record>
         <record id="time_table_line_32" model="time.table.line">
-            <field name="teacher_id" ref="school.demo_student_student_2"/>
+            <field name="teacher_id" ref="hr.employee_al"/>
             <field eval="11.0" name="start_time"/>
             <field name="week_day">saturday</field>
             <field name="table_id" ref="time_table_firsts0"/>

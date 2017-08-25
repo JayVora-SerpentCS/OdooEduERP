@@ -1,7 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
 
