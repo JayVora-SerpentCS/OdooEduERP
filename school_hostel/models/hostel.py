@@ -261,19 +261,6 @@ class HostelStudent(models.Model):
                                          DEFAULT_SERVER_DATETIME_FORMAT)
                 rec.discharge_date = date + rd(months=rec.duration)
 
-    @api.model
-    def create(self, vals):
-        hostel_stud = self.env['hostel.student'
-                               ].search([('student_id', '=',
-                                          vals.get('student_id')),
-                                         ('status', '!=', 'cancel')])
-        if hostel_stud:
-                raise ValidationError(_('''Student is already registered'''))
-        res = super(HostelStudent, self).create(vals)
-        if res:
-            res.onchnage_discharge_date()
-        return res
-
     @api.multi
     def write(self, vals):
         hostel_stud = self.env['hostel.student'
