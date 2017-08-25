@@ -12,17 +12,18 @@ class TestEvent(common.TransactionCase):
         self.school_event_reg_obj = self.env['school.event.registration']
         self.school_id = self.env.ref('school.demo_school_1')
         self.hr_employee = self.env.ref('hr.employee_al')
-        self.part_name = self.env.ref('school.demo_student_student_5')
-        self.standard = self.env.ref('school.demo_standard_standard_2')
+        self.part_name = self.env.ref('school.demo_student_student_7')
+        self.standard = self.env.ref('school.demo_school_standard_1')
+        self.calendarevent = self.env['calendar.event']
         currdt = datetime.now()
         new_dt = currdt - rd(days=7)
         start_dt = datetime.strftime(new_dt, '%m/%d/%Y')
         end_date = currdt + rd(days=8)
         end_dt = datetime.strftime(end_date, '%m/%d/%Y')
         event_start = currdt + rd(days=15)
-        eve_start = datetime.strftime(event_start, '%m/%d/%Y')
+        eve_start = datetime.strftime(event_start, '%Y-%m-%d')
         event_end = currdt + rd(days=20)
-        eve_end = datetime.strftime(event_end, '%m/%d/%Y')
+        eve_end = datetime.strftime(event_end, '%Y-%m-%d')
         # Event Parameter created
         self.event_parameter = self.event_parameter_obj.\
             create({'name': 'New Parameter'})
@@ -40,6 +41,14 @@ class TestEvent(common.TransactionCase):
                     'parameter_id': self.event_parameter.id,
                     'maximum_participants': 20,
                     })
+        self.cal_event = self.calendarevent.\
+            create({'name': 'New Event',
+                    'start_date': eve_start,
+                    'stop_date': eve_start,
+                    'allday': True,
+                    'start': eve_start,
+                    'stop': eve_start
+                    })
         self.school_event._compute_participants()
         self.school_event._check_dates()
         self.school_event._check_all_dates()
@@ -50,13 +59,13 @@ class TestEvent(common.TransactionCase):
         self.school_event_reg = self.school_event_reg_obj.\
             create({'part_name_id': self.part_name.id,
                     'name': self.school_event.id,
+                    'stud_std': self.standard.id
                     })
         self.school_event_reg.regi_cancel()
         self.school_event_reg.regi_confirm()
         self.school_event.event_open()
         self.school_event.event_close()
         self.school_event.event_draft()
-        self.school_event.event_cancel()
         self.school_event.event_open()
 
     def test_event(self):
