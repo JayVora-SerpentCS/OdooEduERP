@@ -2,38 +2,67 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
 
         <!-- library.card -->
 
         <record id="demo_library_card_1" model="library.card">
             <field name="code">A1</field>
             <field name="user">student</field>
-            <field name="book_limit">02</field>
+            <field name="book_limit">10</field>
+            <field name="student_id" ref="school.demo_student_student_5"/>
+            <field name="roll_no">2</field>
+            <field name="standard_id" ref="school.demo_school_standard_2"/>
+            <field name="start_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-07-23')"/>
+            <field name="duration">5</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=5)).strftime('%Y-12-23')"/>
+            <field name="state">running</field>
         </record>
 
         <record id="demo_library_card_2" model="library.card">
             <field name="code">F1</field>
             <field name="user">teacher</field>
-            <field name="book_limit">04</field>
+            <field name="book_limit">10</field>
+            <field name="teacher_id" ref="hr.employee_al"/>
+            <field name="start_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-07-23')"/>
+            <field name="duration">5</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=5)).strftime('%Y-12-23')"/>
+            <field name="state">running</field>
         </record>
 
         <record id="demo_library_card_3" model="library.card">
             <field name="code">A2</field>
             <field name="user">student</field>
             <field name="book_limit">02</field>
+            <field name="student_id" ref="school.demo_student_student_6"/>
+            <field name="standard_id" ref="school.demo_school_standard_3"/>
+            <field name="roll_no">2</field>
+             <field name="start_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-07-23')"/>
+            <field name="duration">5</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=5)).strftime('%Y-12-23')"/>
+            <field name="state">running</field>
         </record>
 
         <record id="demo_library_card_4" model="library.card">
             <field name="code">F2</field>
             <field name="user">teacher</field>
             <field name="book_limit">04</field>
+            <field name="teacher_id" ref="hr.employee_stw"/>
+             <field name="start_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-07-23')"/>
+            <field name="duration">5</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=5)).strftime('%Y-12-23')"/>
+            <field name="state">running</field>
         </record>
 
         <record id="demo_library_card_5" model="library.card">
             <field name="code">F3</field>
             <field name="user">teacher</field>
             <field name="book_limit">04</field>
+            <field name="teacher_id" ref="hr.employee_chs"/>
+             <field name="start_date" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-07-23')"/>
+            <field name="duration">5</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=5)).strftime('%Y-12-23')"/>
+            <field name="state">running</field>
         </record>
 
         <!-- Product -->
@@ -56,14 +85,14 @@
             <field name="issue_code">101</field>
             <field name="name"  ref="product_product_b1"/>
             <field name="card_id" ref="demo_library_card_1"/>
-            <field name="user">Teacher</field>
+            <field name="user">Student</field>
         </record>
 
         <record id="demo_library_book_2" model="library.book.issue">
             <field name="issue_code">201</field>
             <field name="name"  ref="library_product_b2"/>
             <field name="card_id" ref="demo_library_card_2"/>
-            <field name="user">Student</field>
+            <field name="user">Teacher</field>
         </record>
 
         <!-- library.book.request -->
