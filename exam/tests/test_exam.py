@@ -29,6 +29,7 @@ class TestExam(common.TransactionCase):
         self.school_standard = self.env.ref('school.demo_school_standard_2')
         self.student_student = self.env.ref('school.demo_student_student_5')
         self.grade_line = self.env.ref('school.demo_student_grade_line_6')
+        self.room_id = self.env.ref('school.class_room14')
         # Create Exam Timetable
         self.time_table = self.time_table_obj.\
             create({'name': 'Mid Term Exam',
@@ -44,7 +45,8 @@ class TestExam(common.TransactionCase):
                     'start_time': 10.00,
                     'end_time': 12.00,
                     'teacher_id': self.hr_employee.id,
-                    'table_id': self.time_table.id
+                    'table_id': self.time_table.id,
+                    'class_room_id': self.room_id.id
                     })
         self.time_table_line.onchange_date_day()
         self.time_table_line._check_date()
