@@ -21,25 +21,25 @@
             <field name="name">Driver-1</field>
             <field name="job_id" ref="job_driver"/>
             <field name="is_driver" eval="True"/>
-            <field name="licence_no">GJ123456</field>
+            <field name="licence_no">12234</field>
         </record>
         <record id="hr_employee_driver_2" model="hr.employee">
             <field name="name">Driver-2</field>
             <field name="job_id" ref="job_driver"/>
             <field name="is_driver" eval="True"/>
-            <field name="licence_no">GJ123456</field>
+            <field name="licence_no">91213465</field>
         </record>
         <record id="hr_employee_driver_3" model="hr.employee">
             <field name="name">Driver-3</field>
             <field name="job_id" ref="job_driver"/>
             <field name="is_driver" eval="True"/>
-            <field name="licence_no">GJ123456</field>
+            <field name="licence_no">435668</field>
         </record>
         <record id="hr_employee_driver_4" model="hr.employee">
             <field name="name">Driver-4</field>
             <field name="job_id" ref="job_driver"/>
             <field name="is_driver" eval="True"/>
-            <field name="licence_no">GJ123456</field>
+            <field name="licence_no">903455</field>
         </record>
 
         <!--transport.point-->

@@ -21,7 +21,7 @@ class TestTransport(common.TransactionCase):
 #       Create Driver
         self.driver = self.transport_driver_obj.\
             create({'name': 'Driver test',
-                    'licence_no': '0554545454',
+                    'licence_no': '055454545674',
                     'school': self.school.id,
                     'is_driver': True
                     })
