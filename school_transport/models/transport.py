@@ -24,17 +24,6 @@ class HrEmployee(models.Model):
     transport_vehicle = fields.One2many('transport.vehicle',
                                         'driver_id', 'Vehicles')
 
-    @api.model
-    def create(self, vals):
-        driver_search = self.env['hr.employee'].search([('is_driver',
-                                                         '=', True),
-                                                        ('licence_no', '=',
-                                                         vals.get('licence_no')
-                                                         )])
-        if driver_search:
-            raise ValidationError(_('''Enter different licence number'''))
-        return super(HrEmployee, self).create(vals)
-
     @api.multi
     def write(self, vals):
         driver_search = self.env['hr.employee'].search([('is_driver',

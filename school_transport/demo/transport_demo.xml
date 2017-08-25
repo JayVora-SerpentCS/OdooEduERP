@@ -21,7 +21,7 @@
             <field name="name">Driver-1</field>
             <field name="job_id" ref="job_driver"/>
             <field name="is_driver" eval="True"/>
-            <field name="licence_no">12234</field>
+            <field name="licence_no">12255657634</field>
         </record>
         <record id="hr_employee_driver_2" model="hr.employee">
             <field name="name">Driver-2</field>
