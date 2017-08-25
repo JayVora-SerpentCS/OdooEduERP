@@ -625,16 +625,6 @@ class StudentStudent(models.Model):
             rec.active = False
         return True
 
-    @api.constrains('standard_id')
-    def check_seats_standard(self):
-        for rec in self:
-            if not rec.standard_id:
-                raise ValidationError(_('''Please select the standard'''))
-            if rec.standard_id.remaining_seats <= 0:
-                raise ValidationError(_('Seats of standard class %s are full'
-                                        ) % (rec.standard_id.standard_id.name,)
-                                      )
-
     @api.multi
     def admission_done(self):
         '''Method to confirm admission'''
@@ -643,6 +633,12 @@ class StudentStudent(models.Model):
         student_group = self.env.ref('school.group_school_student')
         emp_group = self.env.ref('base.group_user')
         for rec in self:
+            if not rec.standard_id:
+                raise ValidationError(_('''Please select the standard'''))
+            if rec.standard_id.remaining_seats <= 0:
+                raise ValidationError(_('Seats of standard class %s are full'
+                                        ) % (rec.standard_id.standard_id.name,)
+                                      )
             domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
