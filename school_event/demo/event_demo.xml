@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <!--school.event.parameter-->
 
