@@ -14,6 +14,7 @@ class TestTimetable(common.TransactionCase):
         self.subject_id = self.env.ref('school.demo_subject_subject_2')
         self.teacher_id = self.env.ref('hr.employee_al')
         self.table_id = self.env.ref('timetable.time_table_firsts0')
+        self.room_id = self.env.ref('school.class_room15')
 #       Create time-table
         self.time_table = self.time_table_obj.\
             create({'name': 'Test Timetable',
@@ -29,6 +30,7 @@ class TestTimetable(common.TransactionCase):
                     'start_time': '9.0',
                     'end_time': '10.0',
                     'table_id': self.time_table.id,
+                    'class_room_id': self.room_id.id
                     })
 
     def test_timetable(self):
