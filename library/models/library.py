@@ -337,7 +337,10 @@ class LibraryBookIssue(models.Model):
         book_issue = self.env['library.book.issue'
                               ].search([('name', '=', vals.get('name')),
                                         ('card_id', '=',
-                                         vals.get('card_id'))])
+                                         vals.get('card_id')),
+                                        ('state', 'not in', ['draft', 'cancel',
+                                                             'return',
+                                                             'paid'])])
         if book_issue:
             raise ValidationError(_('''You cannot issue same book on
                                     same card more than one time'''))
@@ -367,7 +370,10 @@ class LibraryBookIssue(models.Model):
                               ].search([('name', '=',
                                          vals.get('name')),
                                         ('card_id', '=',
-                                         vals.get('card_id'))])
+                                         vals.get('card_id')),
+                                        ('state', 'not in', ['draft', 'cancel',
+                                                             'return', 'paid'
+                                                             ])])
         if book_issue:
             raise ValidationError(_('''You cannot issue same book on
                                     same card more than one time'''))

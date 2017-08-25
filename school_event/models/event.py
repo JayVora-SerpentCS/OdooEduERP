@@ -181,7 +181,7 @@ class SchoolEvent(models.Model):
             for student in rec.student_ids:
                 st_lst.append(student.user_id.partner_id.id)
                 event_vals.update({'partner_ids': [(6, 0, st_lst)]})
-        self.env['calendar.event'].create(event_vals)
+        h = self.env['calendar.event'].create(event_vals)
         return res
 
 

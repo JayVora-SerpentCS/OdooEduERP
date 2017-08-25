@@ -18,6 +18,7 @@ class TestAttendance(common.TransactionCase):
         self.sheet_line = self.env['attendance.sheet.line']
         self.attendance_sheet_obj = self.env['attendance.sheet']
         self.attend_report_obj = self.env['student.attendance.by.month']
+        self.month_wiz = self.env.ref('school.demo_academic_month_cur_8')
         # create daily attendance
         self.daily_attendance = self.daily_attendance_obj.\
             create({'user_id': self.hr_employee.id,
@@ -52,12 +53,6 @@ class TestAttendance(common.TransactionCase):
                                               self.attendance_sheet.id)])
         for rec in self.sheet:
             rec._compute_percentage()
-        vals = {'active_id': self.stud_id.id}
-        self.attend_report = self.attend_report_obj.\
-            create({'month': 6,
-                    'year': '2017'
-                    })
-        self.attend_report.print_report(vals)
 
     def test_attendance(self):
         self.assertEqual(self.daily_attendance.user_id,

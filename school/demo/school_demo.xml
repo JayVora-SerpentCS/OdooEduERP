@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!--  School Information -->
         <record id="demo_school_1" model="school.school">
             <field name="name">West High School</field>
@@ -400,6 +400,7 @@
             <field name="standard_id" ref="demo_standard_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
+            <field name="capacity">50</field>
             <field name="school_id" ref="demo_school_1"/>
             <field name="user_id" ref="hr.employee_al"/>
         </record>
@@ -407,6 +408,7 @@
             <field name="standard_id" ref="demo_standard_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
+            <field name="capacity">50</field>
             <field name="school_id" ref="demo_school_1"/>
             <field name="user_id" ref="hr.employee_chs"/>
         </record>
@@ -414,6 +416,7 @@
             <field name="standard_id" ref="demo_standard_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
+            <field name="capacity">50</field>
             <field name="school_id" ref="demo_school_1"/>
             <field name="user_id" ref="hr.employee_fpi"/>
         </record>
@@ -422,6 +425,7 @@
             <field name="name">Mathematics</field>
             <field name="code">MAT</field>
             <field name="maximum_marks">100</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6,0,[ref('hr.employee_fme'),ref('hr.employee_stw'),ref('hr.employee_chs')])]"/>
         </record>
         <record id="demo_subject_subject_2" model="subject.subject">
@@ -429,6 +433,7 @@
             <field name="code">SCN</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fme'),ref('hr.employee_al'),ref('hr.employee_fpi')])]"/>
         </record>
         <record id="demo_subject_subject_3" model="subject.subject">
@@ -436,6 +441,7 @@
             <field name="code">ENG</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_fpi'),ref('hr.employee_qdp'),ref('hr.employee_jep')])]"/>
         </record>
         <record id="demo_subject_subject_4" model="subject.subject">
@@ -443,6 +449,7 @@
             <field name="code">SOS</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_mit'),ref('hr.employee_chs'),ref('hr.employee_fpi'),ref('hr.employee_stw')])]"/>
         </record>
         <record id="demo_subject_subject_5" model="subject.subject">
@@ -450,6 +457,7 @@
             <field name="code">CMP</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_stw'),ref('hr.employee_al')])]"/>
         </record>
         <record id="demo_subject_subject_6" model="subject.subject">
@@ -457,6 +465,7 @@
             <field name="code">PET</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
         </record>
         <record id="demo_subject_subject_7" model="subject.subject">
@@ -464,6 +473,7 @@
             <field name="code">MS</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
         </record>
         <record id="demo_subject_subject_8" model="subject.subject">
@@ -471,6 +481,7 @@
             <field name="code">PH</field>
             <field name="maximum_marks">100</field>
             <field name="minimum_marks">35</field>
+            <field name="standard_ids" eval="[(6,0,[ref('demo_standard_standard_1'),ref('demo_standard_standard_2'),ref('demo_standard_standard_3')])]"/>
             <field name="teacher_ids" eval="[(6, 0, [ref('hr.employee_al')])]"/>
         </record>
         <!--  Subject elective -->
@@ -548,8 +559,7 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Melbourne</field>
-            <field name="standard_id" ref="demo_standard_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
+            <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
         <record id="demo_student_student_2" model="student.student">
@@ -565,9 +575,8 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Sydney</field>
-            <field name="standard_id" ref="demo_standard_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_2"/>
+            <field name="standard_id" ref="demo_school_standard_1"/>
+            <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
         <record id="demo_student_student_3" model="student.student">
             <field name="name">Jacob</field>
@@ -582,9 +591,8 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.au"/>
             <field name="city">Adelaide</field>
-            <field name="standard_id" ref="demo_standard_standard_3"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_3"/>
+            <field name="standard_id" ref="demo_school_standard_2"/>
+            <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
         <record id="demo_student_student_4" model="student.student">
             <field name="name">Maria</field>
@@ -599,9 +607,8 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">London</field>
-            <field name="standard_id" ref="demo_standard_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_1"/>
+            <field name="standard_id" ref="demo_school_standard_2"/>
+            <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
         <record id="demo_student_student_5" model="student.student">
             <field name="name">John</field>
@@ -616,8 +623,7 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Manchester</field>
-            <field name="standard_id" ref="demo_standard_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
+            <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
         <record id="demo_student_student_6" model="student.student">
@@ -633,10 +639,27 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Headingly</field>
-            <field name="standard_id" ref="demo_standard_standard_3"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
+            <field name="standard_id" ref="demo_school_standard_3"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
         </record>
+        
+        <record id="demo_student_student_9" model="student.student">
+            <field name="name">Ricky</field>
+            <field name="middle">Thomas</field>
+            <field name="last">Ponting</field>
+            <field name="state">done</field>
+            <field name="year" ref="demo_academic_year_2"/>
+            <field name="pid">2017/56</field>
+            <field name="date_of_birth">05/12/2007</field>
+            <field name="gender">male</field>
+            <field name="roll_no">7</field>
+            <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.uk"/>
+            <field name="city">Headingly</field>
+            <field name="standard_id" ref="demo_school_standard_3"/>
+            <field name="medium_id" ref="demo_standard_medium_3"/>
+        </record>
+        
         <record id="demo_student_student_7" model="student.student">
             <field name="name">Sarah</field>
             <field name="middle">Isaac</field>
@@ -650,8 +673,7 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">Johesburg</field>
-            <field name="standard_id" ref="demo_standard_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
+            <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
         <record id="demo_student_student_8" model="student.student">
@@ -667,8 +689,7 @@
             <field name="school_id" ref="demo_school_1"/>
             <field name="country_id" ref="base.za"/>
             <field name="city">CapeTown</field>
-            <field name="standard_id" ref="demo_standard_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
+            <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
         <!-- Student cast -->
@@ -713,6 +734,68 @@
         <record id="demo_student_news_desc_1" model="student.news">
             <field name="subject">Education Information</field>
             <field eval="str(int(time.strftime('2017'))) +'-07-13'" name="date"/>
+        </record>
+        
+        <!-- demo data for class room -->
+        <record id="class_room1" model="class.room">
+            <field name="name">Room 1</field>
+            <field name="number">1</field>
+        </record>
+        <record id="class_room2" model="class.room">
+            <field name="name">Room 2</field>
+            <field name="number">2</field>
+        </record>
+        <record id="class_room3" model="class.room">
+            <field name="name">Room 3</field>
+            <field name="number">3</field>
+        </record>
+        <record id="class_room4" model="class.room">
+            <field name="name">Room 4</field>
+            <field name="number">4</field>
+        </record>
+        <record id="class_room5" model="class.room">
+            <field name="name">Room 5</field>
+            <field name="number">5</field>
+        </record>
+        <record id="class_room6" model="class.room">
+            <field name="name">Room 6</field>
+            <field name="number">6</field>
+        </record>
+        <record id="class_room7" model="class.room">
+            <field name="name">Room 7</field>
+            <field name="number">7</field>
+        </record>
+        <record id="class_room8" model="class.room">
+            <field name="name">Room 8</field>
+            <field name="number">8</field>
+        </record>
+        <record id="class_room9" model="class.room">
+            <field name="name">Room 9</field>
+            <field name="number">9</field>
+        </record>
+        <record id="class_room10" model="class.room">
+            <field name="name">Room 10</field>
+            <field name="number">10</field>
+        </record>
+        <record id="class_room11" model="class.room">
+            <field name="name">Room 11</field>
+            <field name="number">11</field>
+        </record>
+        <record id="class_room12" model="class.room">
+            <field name="name">Room 12</field>
+            <field name="number">12</field>
+        </record>
+        <record id="class_room3" model="class.room">
+            <field name="name">Room 13</field>
+            <field name="number">13</field>
+        </record>
+        <record id="class_room14" model="class.room">
+            <field name="name">Room 4</field>
+            <field name="number">14</field>
+        </record>
+        <record id="class_room15" model="class.room">
+            <field name="name">Room 15</field>
+            <field name="number">15</field>
         </record>
     </data>
 </odoo>
