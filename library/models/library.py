@@ -334,16 +334,6 @@ class LibraryBookIssue(models.Model):
     @api.model
     def create(self, vals):
         '''Override create method'''
-        book_issue = self.env['library.book.issue'
-                              ].search([('name', '=', vals.get('name')),
-                                        ('card_id', '=',
-                                         vals.get('card_id')),
-                                        ('state', 'not in', ['draft', 'cancel',
-                                                             'return',
-                                                             'paid'])])
-        if book_issue:
-            raise ValidationError(_('''You cannot issue same book on
-                                    same card more than one time'''))
         if vals.get('card_id'):
             # fetch the record of user type student
             card = self.env['library.card'].browse(vals.get('card_id'))
@@ -642,12 +632,6 @@ class LibraryBookRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        book_req = self.search([('card_id', '=', vals.get('card_id')),
-                                ('name', '=', vals.get('name')),
-                                ])
-        if book_req:
-            raise ValidationError(_('''You cannot assign same book to same
-                                    card number more than one time'''))
         res = super(LibraryBookRequest, self).create(vals)
         if res.req_id == 'New':
             seq_obj = self.env['ir.sequence']
@@ -659,6 +643,7 @@ class LibraryBookRequest(models.Model):
     def write(self, vals):
         book_req = self.search([('card_id', '=', vals.get('card_id')),
                                 ('name', '=', vals.get('name')),
+                                ('state', '=', 'confirm')
                                 ])
         if book_req:
             raise ValidationError(_('''You cannot assign same book to same
