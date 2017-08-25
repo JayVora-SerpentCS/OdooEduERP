@@ -24,8 +24,8 @@ except:
 
 def emailvalidation(email):
     if email:
-        EMAIL_REGEX = re.compile(r'[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+'
-                                 '(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
+        EMAIL_REGEX = re.compile(r'''[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+
+                                 (\.[a-z0-9-]+)*(\.[a-z]{2,4})$'''
                                  )
         if not EMAIL_REGEX.match(email):
             raise ValidationError(_('''Enter Email in correct format'''))
