@@ -16,7 +16,7 @@ class TestTransport(common.TransactionCase):
         self.transfer_vehicle_obj = self.env['transfer.vehicle']
         self.school = self.env.ref('school.demo_school_1')
         self.contect_person = self.env.ref('hr.employee_al')
-        self.student = self.env.ref('school.demo_student_student_5')
+        self.student = self.env.ref('school.demo_student_student_9')
         self.new_vehicle = self.env.ref('school_transport.transport_vehicle_1')
 #       Create Driver
         self.driver = self.transport_driver_obj.\
