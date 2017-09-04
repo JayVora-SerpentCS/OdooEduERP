@@ -790,7 +790,7 @@
             <field name="number">13</field>
         </record>
         <record id="class_room14" model="class.room">
-            <field name="name">Room 4</field>
+            <field name="name">Room 14</field>
             <field name="number">14</field>
         </record>
         <record id="class_room15" model="class.room">
