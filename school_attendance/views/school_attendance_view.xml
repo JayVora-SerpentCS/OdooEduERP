@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <odoo>
+
     <!-- From View Of Attendance Sheet Information -->
     <record id="view_attendance_sheet_form" model="ir.ui.view">
         <field name="name">attendance.sheet.form</field>
