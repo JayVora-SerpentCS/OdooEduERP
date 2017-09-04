@@ -60,9 +60,9 @@ class StudentFeesRegister(models.Model):
         school_std_obj = self.env['school.standard']
         for rec in self:
             if not rec.journal_id:
-                raise ValidationError(_('Kindly, Select Account Journal'))
+                raise ValidationError(_('Kindly, Select Account Journal!'))
             if not rec.fees_structure:
-                raise ValidationError(_('Kindly, Select Fees Structure'))
+                raise ValidationError(_('Kindly, Select Fees Structure!'))
             school_std = school_std_obj.search([('standard_id', '=',
                                                  rec.standard_id.id)])
             student_ids = stud_obj.search([('standard_id', 'in',
@@ -75,11 +75,10 @@ class StudentFeesRegister(models.Model):
                 if old_slips:
                     raise UserError(_('''There is already a Payslip exist for
                                            student: %s
-                                           for same date.!''') % stu.name)
-                if rec.number == ('New'):
+                                           for same date!''') % stu.name)
+                else:
                     rec.number = self.env['ir.sequence'].next_by_code(
                         'student.fees.register') or _('New')
-                else:
                     res = {'student_id': stu.id,
                            'register_id': rec.id,
                            'name': rec.name,
@@ -241,7 +240,7 @@ class StudentPayslip(models.Model):
                                  browse([obj_c._uid])[0].company_id)
 
     _sql_constraints = [('code_uniq', 'unique(student_id,date,state)',
-                         'The code of the Fees Structure must be unique !')]
+                         'The code of the Fees Structure must be unique!')]
 
     @api.onchange('student_id')
     def onchange_student(self):
@@ -256,8 +255,8 @@ class StudentPayslip(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_('''You can delete record in
-                                 draft state only.'''))
-            return super(StudentPayslip, self).unlink()
+                                 unconfirm state only!'''))
+        return super(StudentPayslip, self).unlink()
 
     @api.multi
     @api.onchange('journal_id')
@@ -316,9 +315,9 @@ class StudentPayslip(models.Model):
         '''Method to confirm payslip'''
         for rec in self:
             if not rec.journal_id:
-                raise ValidationError(_('Kindly, Select Account Journal'))
+                raise ValidationError(_('Kindly, Select Account Journal!'))
             if not rec.fees_structure_id:
-                raise ValidationError(_('Kindly, Select Fees Structure'))
+                raise ValidationError(_('Kindly, Select Fees Structure!'))
             lines = []
             for data in rec.fees_structure_id.line_ids or []:
                 line_vals = {'slip_id': rec.id,
@@ -370,7 +369,7 @@ class StudentPayslip(models.Model):
             if not fees.journal_id.sequence_id:
                 raise UserError(_('Please define sequence on'
                                   'the journal related to this'
-                                  'invoice.'))
+                                  'invoice!'))
             if fees.move_id:
                 continue
             ctx = self._context.copy()
@@ -398,7 +397,7 @@ class StudentPayslip(models.Model):
                                   'journal. UnCheck the centralized'
                                   'counterpart'
                                   'box in the related journal from the'
-                                  'configuration menu.'))
+                                  'configuration menu!'))
             move = {'ref': fees.name,
                     'journal_id': fees.journal_id.id,
                     'date': fees.payment_date or time.strftime('%Y-%m-%d')}
