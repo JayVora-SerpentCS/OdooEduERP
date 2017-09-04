@@ -28,7 +28,8 @@ def emailvalidation(email):
     if email:
         EMAIL_REGEX = re.compile(exp)
         if not EMAIL_REGEX.match(email):
-            raise ValidationError(_('''Enter Email in correct format'''))
+            raise ValidationError(_('''This seems not to be valid email.
+            Please enter email in correct format!'''))
         else:
             return True
 
@@ -69,6 +70,7 @@ class AcademicYear(models.Model):
 
     @api.multi
     def generate_academicmonth(self):
+        '''Method to generate academic months based on year'''
         interval = 1
         month_obj = self.env['academic.month']
         for data in self.browse(self._ids):
@@ -97,18 +99,18 @@ class AcademicYear(models.Model):
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
             raise ValidationError(_('''Error! The duration of the academic year
-                                      is invalid.'''))
+                                      is invalid!'''))
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise ValidationError(_('''The start date of the academic year'
-                                      should be less than end date.'''))
+            raise ValidationError(_('''Configure start date of the academic
+            year less than end date!'''))
         for old_ac in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
                 raise ValidationError(_('''Error! You cannot
                                         define overlapping'
-                                        academic years.'''))
+                                        academic years!'''))
         return True
 
     @api.constrains('current')
@@ -116,7 +118,7 @@ class AcademicYear(models.Model):
         check_year = self.search([('current', '=', True)])
         if len(check_year.ids) >= 2:
             raise ValidationError(_('''Error! You cannot set
-                                    two current year active.'''))
+                                    two current year active!'''))
 
 
 class AcademicMonth(models.Model):
@@ -156,9 +158,9 @@ class AcademicMonth(models.Model):
                     self.year_id.date_stop < self.date_start or
                     self.year_id.date_start > self.date_start or
                     self.year_id.date_start > self.date_stop):
-                raise ValidationError(_('''Invalid Months ! Some months overlap
+                raise ValidationError(_('''Invalid Months! Some months overlap
                                     or the date period is not in the scope
-                                    of the academic year.'''))
+                                    of the academic year!'''))
 
     @api.constrains('date_start', 'date_stop')
     def check_months(self):
@@ -168,7 +170,7 @@ class AcademicMonth(models.Model):
                     old_month.date_stop or old_month.date_start <=
                     self.date_stop <= old_month.date_stop):
                     raise ValidationError(_('''Error! You cannot
-                                            define overlapping months.'''))
+                                            define overlapping months!'''))
 
 
 class StandardMedium(models.Model):
@@ -229,14 +231,12 @@ class SchoolStandard(models.Model):
         '''Compute student of done state'''
         student_obj = self.env['student.student']
         for rec in self:
-            rec.student_ids = False
-            if rec.standard_id:
-                domain = [('standard_id', '=', rec.id),
-                          ('school_id', '=', rec.school_id.id),
-                          ('division_id', '=', rec.division_id.id),
-                          ('medium_id', '=', rec.medium_id.id),
-                          ('state', '=', 'done')]
-                rec.student_ids = student_obj.search(domain)
+            domain = [('standard_id', '=', rec.id),
+                      ('school_id', '=', rec.school_id.id),
+                      ('division_id', '=', rec.division_id.id),
+                      ('medium_id', '=', rec.medium_id.id),
+                      ('state', '=', 'done')]
+            rec.student_ids = student_obj.search(domain)
 
     @api.onchange('standard_id', 'division_id')
     def onchange_combine(self):
@@ -294,15 +294,18 @@ class SchoolStandard(models.Model):
     def unlink(self):
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
-                raise ValidationError(_('''You cannot delete this standard'''))
+                raise ValidationError(_('''You cannot delete this standard
+                                        because it has reference with student
+                                        or subject or syllabus!
+                                        '''))
         return super(SchoolStandard, self).unlink()
 
     @api.constrains('capacity')
     def check_seats(self):
         for rec in self:
             if rec.capacity <= 0:
-                raise ValidationError(_('''Total seats should
-                                        be greater than 0!'''))
+                raise ValidationError(_('''Configure total seats
+                                       greater than 0!'''))
 
     @api.multi
     def name_get(self):
@@ -413,7 +416,8 @@ class StudentStudent(models.Model):
             age_calc = ((current_dt - start).days / 365)
             # Check if age less than 5 years
             if age_calc < 5:
-                raise ValidationError(_('Age should be greater than 5 years.'))
+                raise ValidationError(_('''Age of the student should be greater
+                than 5 years!'''))
 
     @api.model
     def create(self, vals):
@@ -427,8 +431,8 @@ class StudentStudent(models.Model):
             vals['password'] = vals['pid']
         else:
             raise except_orm(_('Error!'),
-                             _('''PID not valid
-                                 so record will not be saved.'''))
+                             _('''PID is not seem to be valid.
+                                 So the record will not be saved!'''))
         if vals.get('cmp_id', False):
             h = {'company_ids': [(4, vals.get('cmp_id'))],
                  'company_id': vals.get('cmp_id')}
@@ -470,7 +474,7 @@ class StudentStudent(models.Model):
         if not res:
             raise ValidationError(_('''There is no current Academic
                                     Year defined!
-                                    Please contact to Administator!'''))
+                                    Please contact to Administrator!'''))
         return res.id
 
     family_con_ids = fields.One2many('student.family.contact',
@@ -634,17 +638,18 @@ class StudentStudent(models.Model):
         emp_group = self.env.ref('base.group_user')
         for rec in self:
             if not rec.standard_id:
-                raise ValidationError(_('''Please select the standard'''))
+                raise ValidationError(_('''Please select the standard!'''))
             if rec.standard_id.remaining_seats <= 0:
-                raise ValidationError(_('Seats of standard class %s are full'
+                raise ValidationError(_('''Seats of standard %s
+                                        are full!'''
                                         ) % (rec.standard_id.standard_id.name,)
                                       )
             domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
-                raise except_orm(_('Warning'),
-                                 _('''The standard is
-                                   not defined in school'''))
+                raise except_orm(_('Warning!'),
+                                 _('''The selected standard is
+                                   not defined in school!'''))
             # Assign group to student
             rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
                                                      student_group.id])]})
@@ -796,8 +801,6 @@ class HrEmployee(models.Model):
     def create(self, vals):
         '''This method creates teacher user and assign group teacher'''
         res = super(HrEmployee, self).create(vals)
-#        if res and res.parent_school:
-#        if res and res.is_school_teacher:
 
         if vals.get('school') and res.is_school_teacher:
             school = self.env['school.school'].browse(vals.get('school'))
@@ -952,13 +955,12 @@ class StudentPreviousSchool(models.Model):
         new_dt = datetime.strftime(curr_dt,
                                    DEFAULT_SERVER_DATE_FORMAT)
         if self.admission_date >= new_dt or self.exit_date >= new_dt:
-            raise ValidationError(_('''Your admission date and exit
-                                    date should be less than current date
-                                    in previous school details'''))
+            raise ValidationError(_('''Configure admission date and exit
+                                    date less than current date
+                                    in previous school details!'''))
         if self.admission_date > self.exit_date:
-            raise ValidationError(_(''' Admission date should be
-                                    less than exit date
-                                    in previous school'''))
+            raise ValidationError(_('''Configure admission date less than
+                                    exit date in previous school details!'''))
 
 
 class AcademicSubject(models.Model):
@@ -978,6 +980,15 @@ class StudentFamilyContact(models.Model):
     _name = "student.family.contact"
     _description = "Student Family Contact"
 
+    @api.multi
+    @api.depends('relation', 'stu_name')
+    def _get_name(self):
+        for rec in self:
+            if rec.stu_name:
+                rec.relative_name = rec.stu_name.name
+            else:
+                rec.relative_name = rec.name
+
     family_contact_id = fields.Many2one('student.student', 'Student')
     exsting_student = fields.Many2one('student.student',
                                       'Student')
@@ -994,15 +1005,6 @@ class StudentFamilyContact(models.Model):
     phone = fields.Char('Phone', required=True)
     email = fields.Char('E-Mail')
     relative_name = fields.Char(compute='_get_name', string='Name')
-
-    @api.multi
-    @api.depends('relation', 'stu_name')
-    def _get_name(self):
-        for rec in self:
-            if rec.stu_name:
-                rec.relative_name = rec.stu_name.name
-            else:
-                rec.relative_name = rec.name
 
 
 class StudentRelationMaster(models.Model):
@@ -1072,7 +1074,7 @@ class StudentNews(models.Model):
                               if news_user.email]
                 if not email_list:
                     raise except_orm(_('User Email Configuration!'),
-                                     _("Email not found in users !"))
+                                     _("Email not found in users!"))
             # Check email is defined in user created from employee
             else:
                 for employee in emp_obj.search([]):
@@ -1096,7 +1098,7 @@ class StudentNews(models.Model):
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
-                raise except_orm(_('Email Configuration '),
+                raise except_orm(_('Email Configuration!'),
                                  _("Kindly,Configure Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             # Configure email
@@ -1162,8 +1164,8 @@ class Report(models.Model):
         for data in values.get('docs'):
             if (values.get('doc_model') == 'student.student' and
                     data.state == 'draft'):
-                    raise ValidationError(_('''You can not print
-                                            report for student in
-                                            draft state!'''))
+                    raise ValidationError(_('''You cannot print
+                                            report of an unconfirmed student
+                                            !'''))
         res = super(Report, self).render(template, values)
         return res

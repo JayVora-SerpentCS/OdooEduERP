@@ -126,7 +126,7 @@
 
         <!-- Menu Items Of Library -->
 
-        <menuitem id="menu_library" name="Library" parent="school.menu_ems" sequence="5" groups="library.group_librarian,group_userian"/>
+        <menuitem id="menu_library" name="Library" parent="school.menu_ems" sequence="7" groups="library.group_librarian,group_userian"/>
 
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" groups="library.group_librarian,group_userian"/>
       
@@ -143,12 +143,7 @@
             <field name="arch" type="xml">
                 <form string="Books">
                     <sheet>
-                        <group>
-                            <group>
-                                <h1><field name="name" placeholder="Book Name" nolabel="1"/></h1>
-                            </group>
-                            <group>
-                                <div class="oe_button_box" name="button_box">
+                        <div class="oe_button_box" name="button_box">
                                     <button name="action_purchase_order"
                                         type="object"
                                         class="oe_stat_button"
@@ -163,6 +158,9 @@
                                        <field string="Remaining Qty" name="books_available" widget="statinfo" />
                                     </button>
                                 </div>
+                        <group>
+                            <group>
+                                <h1><field name="name" placeholder="Book Name" nolabel="1"/></h1>
                             </group>
                         </group>
                         <group col="3" colspan="3">
@@ -402,7 +400,7 @@
         <!-- Menu Items Of Library Books -->
 
         <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5"  />
-        <menuitem id="menu_books_student" parent="menu_library" action="action_product_book_list" sequence="1"
+        <menuitem id="menu_books_student" parent="menu_library" action="action_product_book_list" sequence="71"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
 
         <!-- Action Of Form View Of View Book -->
@@ -552,7 +550,7 @@
 
         <!-- Menu Item Of Library Card -->
 
-        <menuitem id="menu_card_main" parent="menu_library" action="action_card_info" sequence="5"
+        <menuitem id="menu_card_main" parent="menu_library" action="action_card_info" sequence="74"
                   groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,library.group_librarian,library.group_userian" />
 
         <!-- Form View Of Library Book Issue -->
@@ -763,7 +761,7 @@
         <!--Menu Item Of Library Book Issue -->
 
         <menuitem id="menu_book_issue_sub_form" name="Book Issues" parent="menu_library"
-                  action="action_library_book_list1" sequence="3"
+                  action="action_library_book_list1" sequence="73"
                   groups="school.group_school_administration,library.group_librarian,library.group_userian"/>
 
         <!-- Form View Of Library Book Request -->
@@ -862,7 +860,7 @@ i
 
         <!-- Menu Item Of Library Book Request -->
 
-        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="2"
+        <menuitem id="menu_lib_book_sub_req" parent="menu_library" action="action_lib_book_req" sequence="72"
                   groups="school.group_school_administration,school.group_school_student,library.group_librarian,library.group_userian"/>
 
         <!-- Form view Of Product Language -->

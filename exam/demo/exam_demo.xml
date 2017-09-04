@@ -166,8 +166,7 @@
             <field name="name">Supplementary Exam_10</field>
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
-            <field name="exam_date" eval="time.strftime('%Y')+'/03/17'"/>
-            <field name="created_at" eval="time.strftime('%Y')+'/03/09'"/>
+            <field name="exam_date" eval="(DateTime.today() + relativedelta(days=3))"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
         <record id="additional_exam_supplementaryexam1" model="additional.exam">
@@ -177,8 +176,7 @@
             <field name="name">Supplementry Exam_11</field>
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
-            <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
-            <field name="created_at" eval="time.strftime('%Y')+'/08/29'"/>
+            <field name="exam_date" eval="(DateTime.today() + relativedelta(days=4))"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
         <record id="additional_exam_supplementaryexam12" model="additional.exam">
@@ -188,8 +186,7 @@
             <field name="name">Supplementry Exam_12</field>
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
-            <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
-            <field name="created_at" eval="time.strftime('%Y')+'/08/29'"/>
+            <field name="exam_date" eval="(DateTime.today() + relativedelta(days=5))"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
         <!-- Additional Exam Result Demo Data -->

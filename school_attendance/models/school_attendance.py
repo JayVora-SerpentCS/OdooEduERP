@@ -282,8 +282,8 @@ class DailyAttendance(models.Model):
         curr = datetime.now()
         new_date = datetime.strftime(curr, '%Y-%m-%d')
         if self.date > new_date:
-            raise ValidationError(_('''Date should be less than or equal to\
-                                    current date .'''))
+            raise ValidationError(_('''Configure date of attendance less
+                                    than or equal to current date!'''))
 
     date = fields.Date("Date",
                        help="Current Date",
@@ -915,4 +915,4 @@ class DailyAttendanceLine(models.Model):
     def check_present_absent(self):
         for rec in self:
             if not rec.is_present and not rec.is_absent:
-                raise ValidationError(_('Check Present or Absent'))
+                raise ValidationError(_('''Please Check Present or Absent!'''))

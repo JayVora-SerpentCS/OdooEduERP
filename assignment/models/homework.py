@@ -13,8 +13,8 @@ class SchoolTeacherAssignment(models.Model):
     def check_date(self):
         '''Method to check constraint of due date and assign date'''
         if self.due_date < self.assign_date:
-            raise ValidationError(_('Due date of homework should \
-                                    be greater than assign date'))
+            raise ValidationError(_('''Please Configure due date of homework
+                                    greater than the assign date!'''))
 
     name = fields.Char('Assignment Name',
                        help="Name of Assignment")
@@ -86,8 +86,8 @@ class SchoolTeacherAssignment(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise ValidationError(_('''You can delete record in
-                                        draft state only.'''))
-            return super(SchoolTeacherAssignment, self).unlink()
+                                        unconfirm state only!'''))
+        return super(SchoolTeacherAssignment, self).unlink()
 
 
 class SchoolStudentAssignment(models.Model):
@@ -97,8 +97,8 @@ class SchoolStudentAssignment(models.Model):
     @api.constrains('assign_date', 'due_date')
     def check_date(self):
         if self.due_date < self.assign_date:
-            raise ValidationError(_('Due date of homework should be greater \
-                                   than Assign date'))
+            raise ValidationError(_('''Configure due date of homework
+                                    greater than Assign date!'''))
 
     name = fields.Char('Assignment Name',
                        help="Assignment Name")
@@ -163,5 +163,5 @@ class SchoolStudentAssignment(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise ValidationError(_('''You can delete record
-                                        in draft state only.'''))
-            return super(SchoolStudentAssignment, self).unlink()
+                                        in inactive state only!'''))
+        return super(SchoolStudentAssignment, self).unlink()
