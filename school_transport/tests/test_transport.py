@@ -25,19 +25,19 @@ class TestTransport(common.TransactionCase):
                     'school': self.school.id,
                     'is_driver': True
                     })
-#        Create Transport Vehicle.
+#       Create Transport Vehicle.
         self.transport_vehicle = self.transport_vehicle_obj.\
             create({'driver_id': self.driver.id,
                     'vehicle': 'GJ-2 6233',
                     'capacity': 56
                     })
-#        Create Transport Point.
+#       Create Transport Point.
         self.transport_point = self.transport_point_obj.\
             create({'name': 'test point-1',
                     'amount': '1000'
                     })
         self.transport_point._search([])
-#        Create The Transport Root
+#       Create The Transport Root
         self.transport_root = self.student_transport_obj.\
             create({'name': 'Transport-root-1',
                     'contact_per_id': self.contect_person.id,
@@ -50,7 +50,7 @@ class TestTransport(common.TransactionCase):
         self.transport_root.transport_close()
         self.transport_root.participant_expire()
 
-#        Do One Registration of The Participant
+#       Do One Registration of The Participant
         self.transport_registration = self.transport_registration_obj.\
             create({'part_name': self.student.id,
                     'name': self.transport_root.id,
@@ -62,7 +62,7 @@ class TestTransport(common.TransactionCase):
         self.transport_registration.onchange_for_month()
         self.transport_registration.trans_regi_confirm()
         self.transport_registration.trans_regi_cancel()
-#        Do one entry of the transport.participant
+#       Do one entry of the transport.participant
         self.transport_participant = self.transport_participant_obj.\
             create({'name': self.student.id,
                     'transport_id': self.transport_root.id,
@@ -76,7 +76,7 @@ class TestTransport(common.TransactionCase):
                     })
         self.transport_participant._search([])
         self.transport_participant.set_over()
-#        Do create vehicle transfer
+#       Do create vehicle transfer
         self.transfer_vehicle = self.transfer_vehicle_obj.\
             create({'name': self.student.id,
                     'participation_id': self.transport_participant.id,
