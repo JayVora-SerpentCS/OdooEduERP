@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
 
@@ -125,11 +124,10 @@
                                 <br/><br/><br/>
                                 <span style="font-family: 'Helvetica';font-size: 16px;">Authorized Signature</span>
                                 <br />
-	                       </div>
-                        </div>
+                           </div>
+                       </div>
                     </t>
                 </t>
             </t>
         </template>
-
 </odoo>
