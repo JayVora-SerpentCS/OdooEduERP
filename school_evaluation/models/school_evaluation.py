@@ -126,8 +126,8 @@ class SchoolEvaluation(models.Model):
         for rec in self:
             if rec.state in ['start', 'finished']:
                 raise ValidationError(_('''You can delete record in
-                                        draft state only.'''))
-            return super(SchoolEvaluation, self).unlink()
+                                        unconfirm state only!'''))
+        return super(SchoolEvaluation, self).unlink()
 
 
 class StudentEvaluationLine(models.Model):
