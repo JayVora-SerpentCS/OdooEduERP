@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
+
 <odoo>
+
     <!-- Actions Of Form & Tree Views Of Student Result -->
     <record id="action_stu_result_form" model="ir.actions.act_window">
         <field name="name">Result</field>
@@ -144,7 +146,7 @@
                         <field name="start_time" widget="float_time" />
                         <field name="end_time" widget="float_time" />
                         <field name="teacher_id" string="Supervisor" widget="selection" domain="[('is_school_teacher','=',True)]" />
-                        <field name="class_room_id" widget="selection" />
+                        <field name="class_room_id" widget="selection" required="1"/>
                     </tree>
                     <form string="Exam Timetable">
                         <group col="4" colspan="4">
@@ -154,7 +156,7 @@
                             <field name="start_time" widget="float_time" />
                             <field name="end_time" widget="float_time" />
                             <field name="teacher_id" string="Supervisor" widget="selection" domain="[('is_school_teacher','=',True)]" />
-                            <field name="class_room_id" widget="selection" />
+                            <field name="class_room_id" widget="selection" required="1"/>
                         </group>
                     </form>
                 </field>
