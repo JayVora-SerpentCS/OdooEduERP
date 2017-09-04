@@ -371,14 +371,15 @@ class LibraryBookIssue(models.Model):
     def write(self, vals):
         '''Override write method'''
         # update the details of user type student
-        card = self.env['library.card'].browse(vals.get('card_id'))
-        vals.update({'student_id': card.student_id.id,
-                     'card_id': card.id,
-                     'user': str(card.user.title()),
-                     'standard_id': card.standard_id.id,
-                     'roll_no': int(card.roll_no),
-                     'gt_name': card.gt_name
-                     })
+        if vals.get('card_id'):
+            card = self.env['library.card'].browse(vals.get('card_id'))
+            vals.update({'student_id': card.student_id.id,
+                         'card_id': card.id,
+                         'user': str(card.user.title()),
+                         'standard_id': card.standard_id.id,
+                         'roll_no': int(card.roll_no),
+                         'gt_name': card.gt_name
+                         })
         if vals.get('card_id') and vals.get('user') == 'Teacher':
             # upate the details of user type Teacher
             card = self.env['library.card'].browse(vals.get('card_id'))
