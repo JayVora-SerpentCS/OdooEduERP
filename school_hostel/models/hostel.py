@@ -114,10 +114,10 @@ class HostelRoom(models.Model):
     _sql_constraints = [('room_no_unique', 'unique(room_no)',
                          'Room number must be unique!')]
     _sql_constraints = [('floor_per_hostel', 'check(floor_no < 10)',
-                         'Error ! Floor per HOSTEL should be less than 10.')]
+                         'Error ! Floor per HOSTEL should be less than 10!')]
     _sql_constraints = [('student_per_room_greater',
                          'check(student_per_room < 10)',
-                         'Error ! Student per room should be less than 10.')]
+                         'Error ! Student per room should be less than 10!')]
 
 
 class HostelStudent(models.Model):
@@ -134,7 +134,7 @@ class HostelStudent(models.Model):
     def check_duration(self):
         '''Method to check duration should be greater than zero'''
         if self.duration <= 0:
-            raise ValidationError(_('Duration should be greater than 0'))
+            raise ValidationError(_('''Configure duration greater than 0!'''))
 
     @api.multi
     def _compute_invoices(self):
@@ -161,15 +161,16 @@ class HostelStudent(models.Model):
         for rec in self:
             if rec.room_id.availability <= 0:
                 raise ValidationError(_('''There is no avalilability
-                                        in the room'''))
+                                        in %s room!''') %
+                                      self.room_id.room_no)
 
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.status in ['reservation', 'pending', 'paid']:
-                raise ValidationError(_('''You can delete record\
-                                        in draft state only.'''))
-            return super(HostelStudent, self).unlink()
+                raise ValidationError(_('''You can delete record
+                                        in unconfirm state only!'''))
+        return super(HostelStudent, self).unlink()
 
     @api.depends('status')
     def _get_hostel_user(self):
@@ -219,7 +220,7 @@ class HostelStudent(models.Model):
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
                          'Error ! Discharge Date cannot be set'
-                         'before Admission Date.')]
+                         'before Admission Date!')]
 
     @api.multi
     def cancel_state(self):
@@ -261,25 +262,13 @@ class HostelStudent(models.Model):
                                          DEFAULT_SERVER_DATETIME_FORMAT)
                 rec.discharge_date = date + rd(months=rec.duration)
 
-    @api.model
-    def create(self, vals):
-        hostel_stud = self.env['hostel.student'
-                               ].search([('student_id', '=',
-                                          vals.get('student_id')),
-                                         ('status', '!=', 'cancel')])
-        if hostel_stud:
-                raise ValidationError(_('''Student is already registered'''))
-        return super(HostelStudent, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        hostel_stud = self.env['hostel.student'
-                               ].search([('student_id', '=',
-                                          vals.get('student_id')),
-                                         ('status', '!=', 'cancel')])
-        if hostel_stud:
-                raise ValidationError(_('''Student is already registered'''))
-        return super(HostelStudent, self).write(vals)
+    @api.constrains('student_id')
+    def check_student_registration(self):
+        student = self.search([('student_id', '=', self.student_id.id),
+                               ('id', 'not in', self.ids)])
+        if student:
+            raise ValidationError(_('''Selected student is already
+            registered!'''))
 
     @api.multi
     def discharge_state(self):
