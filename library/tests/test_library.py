@@ -126,7 +126,7 @@ class TestLibrary(common.TransactionCase):
         self.library_book_request.cancle_book_request()
 
         self.library_book_issue2 = self.library_book_issue_obj.\
-            create({'issue_code': 'L0976789878',
+            create({'issue_code': 'New',
                     'name': self.product_product2.id,
                     'card_id': self.library_card2.id,
                     'user': 'Student',
