@@ -47,7 +47,7 @@
         <record id="event_registration_1" model="school.event.registration">
             <field name="name" ref="school_event_1" />
             <field name="part_name_id" ref="school.demo_student_student_5" />
-            <field name="stud_std" ref="school.demo_school_standard_2"/>
+            <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
             <field name="state">draft</field>
         </record>
@@ -56,7 +56,7 @@
             <field name="name" ref="school_event_1" />
             <field name="part_name_id" ref="school.demo_student_student_6" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
-            <field name="stud_std" ref="school.demo_school_standard_3"/>
+            <field name="student_standard_id" ref="school.demo_school_standard_3"/>
             <field name="state">draft</field>
         </record>
 
@@ -64,7 +64,7 @@
             <field name="name" ref="school_event_1" />
             <field name="part_name_id" ref="school.demo_student_student_7" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
-            <field name="stud_std" ref="school.demo_school_standard_1"/>
+            <field name="student_standard_id" ref="school.demo_school_standard_1"/>
             <field name="state">draft</field>
         </record>
 
@@ -72,7 +72,7 @@
             <field name="name" ref="school_event_2" />
             <field name="part_name_id" ref="school.demo_student_student_8" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
-            <field name="stud_std" ref="school.demo_school_standard_2"/>
+            <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field name="state">draft</field>
         </record>
 
@@ -80,7 +80,7 @@
             <field name="name" ref="school_event_2" />
             <field name="part_name_id" ref="school.demo_student_student_4" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
-            <field name="stud_std" ref="school.demo_school_standard_2"/>
+            <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field name="state">draft</field>
         </record>
 
@@ -88,7 +88,7 @@
             <field name="name" ref="school_event_2" />
             <field name="part_name_id" ref="school.demo_student_student_5" />
             <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
-            <field name="stud_std" ref="school.demo_school_standard_2"/>
+            <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field name="state">draft</field>
         </record>
 

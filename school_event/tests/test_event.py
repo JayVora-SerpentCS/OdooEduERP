@@ -59,7 +59,7 @@ class TestEvent(common.TransactionCase):
         self.school_event_reg = self.school_event_reg_obj.\
             create({'part_name_id': self.part_name.id,
                     'name': self.school_event.id,
-                    'stud_std': self.standard.id
+                    'student_standard_id': self.standard.id
                     })
         self.school_event_reg.regi_cancel()
         self.school_event_reg.regi_confirm()
