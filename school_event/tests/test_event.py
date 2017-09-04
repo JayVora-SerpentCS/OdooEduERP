@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# See LICENSE file for full copyright and licensing details.
+
 from odoo.tests import common
 from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
