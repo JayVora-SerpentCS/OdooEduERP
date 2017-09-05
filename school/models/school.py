@@ -252,7 +252,7 @@ class SchoolStandard(models.Model):
 
     @api.multi
     @api.depends('student_ids')
-    def _total_student(self):
+    def _compute_total_student(self):
         for rec in self:
             rec.total_students = len(rec.student_ids)
 
@@ -283,7 +283,7 @@ class SchoolStandard(models.Model):
     name = fields.Char('Name')
     capacity = fields.Integer("Total Seats")
     total_students = fields.Integer("Total Students",
-                                    compute="_total_student",
+                                    compute="_compute_total_student",
                                     store=True)
     remaining_seats = fields.Integer("Available Seats",
                                      compute="_compute_remain_seats",
@@ -982,7 +982,7 @@ class StudentFamilyContact(models.Model):
 
     @api.multi
     @api.depends('relation', 'stu_name')
-    def _get_name(self):
+    def _compute_get_name(self):
         for rec in self:
             if rec.stu_name:
                 rec.relative_name = rec.stu_name.name
@@ -1004,7 +1004,7 @@ class StudentFamilyContact(models.Model):
                                required=True)
     phone = fields.Char('Phone', required=True)
     email = fields.Char('E-Mail')
-    relative_name = fields.Char(compute='_get_name', string='Name')
+    relative_name = fields.Char(compute='_compute_get_name', string='Name')
 
 
 class StudentRelationMaster(models.Model):
