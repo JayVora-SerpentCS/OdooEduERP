@@ -14,7 +14,7 @@ class TimeTable(models.Model):
     def _compute_user(self):
         '''Method to compute user'''
         for rec in self:
-            rec.user_ids = [teacher.teacher_id.user_id.id
+            rec.user_ids = [teacher.teacher_id.employee_id.user_id.id
                             for teacher in rec.timetable_ids
                             ]
         return True
@@ -49,15 +49,15 @@ class TimeTable(models.Model):
                 if len(records) > 1:
                     raise ValidationError(_('''You cannot set lecture at same
                                             time %s  at same day %s for teacher
-                                            %s!''') % (rec.start_time,
-                                                       rec.week_day,
-                                                       rec.teacher_id.name))
+                                            %s..!''') % (rec.start_time,
+                                                         rec.week_day,
+                                                         rec.teacher_id.name))
                 # Checks if time is greater than 24 hours than raise error
                 if rec.start_time > 24:
-                    raise ValidationError(_('''Configure start time
-                                            less than 24 hours!'''))
+                    raise ValidationError(_('''Start Time should be less than
+                                            24 hours!'''))
                 if rec.end_time > 24:
-                    raise ValidationError(_('''Configure end time less than
+                    raise ValidationError(_('''End Time should be less than
                                             24 hours!'''))
             return True
 
@@ -74,10 +74,10 @@ class TimeTableLine(models.Model):
         if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
                 self.table_id.timetable_type == 'regular'):
             raise ValidationError(_('''The subject %s is not assigned to
-                                    teacher %s!''') % (self.subject_id.name,
+                                    teacher %s.''') % (self.subject_id.name,
                                                        self.teacher_id.name))
 
-    teacher_id = fields.Many2one('hr.employee', 'Faculty Name',
+    teacher_id = fields.Many2one('school.teacher', 'Faculty Name',
                                  help="Select Teacher")
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
                                  required=True,
@@ -103,20 +103,18 @@ class TimeTableLine(models.Model):
         if timetable_rec:
             for data in timetable_rec:
                 for record in data.timetable_ids:
-                    if (data.timetable_type == 'regular'and
-                            self.table_id.timetable_type == 'regular'and
+                    if (data.timetable_type == 'regular' and
+                            self.table_id.timetable_type == 'regular' and
                             self.teacher_id == record.teacher_id and
                             self.week_day == record.week_day and
                             self.start_time == record.start_time):
-                            raise ValidationError(_('''There is a
-                                                    lecture of Lecturer at
-                                                    same time!'''))
+                            raise ValidationError(_('''There is a lecture of
+                            Lecturer at same time!'''))
                     if (data.timetable_type == 'regular' and
                             self.table_id.timetable_type == 'regular' and
                             self.class_room_id == record.class_room_id and
                             self.start_time == record.start_time):
-                            raise ValidationError(_('''The selected room is
-                            already occupied by students of other class!'''))
+                            raise ValidationError(_("The room is occupied."))
 
 
 class SubjectSubject(models.Model):
@@ -128,7 +126,7 @@ class SubjectSubject(models.Model):
         '''Override method to get subject related to teacher'''
         teacher_id = self._context.get('teacher_id')
         if teacher_id:
-            for teacher_data in self.env['hr.employee'].browse(teacher_id):
+            for teacher_data in self.env['school.teacher'].browse(teacher_id):
                 args.append(('teacher_ids', 'in', [teacher_data.id]))
         return super(SubjectSubject, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
