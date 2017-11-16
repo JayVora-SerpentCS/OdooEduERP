@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -9,28 +8,28 @@ class TestHostel(common.TransactionCase):
 
     def setUp(self):
         super(TestHostel, self).setUp()
-#        self.bed_type_obj = self.env['bed.type']
         self.hostel_type_obj = self.env['hostel.type']
         self.hostel_room_obj = self.env['hostel.room']
         self.hostel_student_obj = self.env['hostel.student']
+        self.student = self.env.ref('school.demo_student_student_7')
         self.res_partner = self.env['res.partner']
-        self.rector = self.env.ref('base.res_partner_2')
-        self.student = self.env.ref('school.demo_student_student_9')
-#        create rector
-        self.partner = self.res_partner.\
-            create({'name': 'Rector',
-                    'is_hostel_rector': True})
+        # create hostel rector
+        self.rector = self.res_partner.\
+            create({'name': 'Hostel Rector',
+                    'is_hostel_rector': True,
+                    'email': 'hostelrec@demo.com',
+                    })
 #        Create Hostel Type
         self.hostel_type = self.hostel_type_obj.\
             create({'name': 'Test Hostel',
-                    'type': 'male',
-                    'rector': self.partner.id
+                    'type': 'female',
+                    'rector': self.rector.id
                     })
 #        Create Hostel Room
         self.hostel_room = self.hostel_room_obj.\
             create({'name': self.hostel_type.id,
                     'room_no': '101',
-                    'student_per_room': '6',
+                    'student_per_room': '3',
                     'rent_amount': 1000,
                     'telephone': True,
                     'ac': True,
