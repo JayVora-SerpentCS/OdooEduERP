@@ -26,5 +26,5 @@
             <field name="target">new</field>
         </record>
         <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="exam.menu_exam"
-                  action="wizard_action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="107"/>
+                  action="wizard_action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="106"/>
 </odoo>

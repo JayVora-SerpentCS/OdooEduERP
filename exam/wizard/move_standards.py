@@ -30,7 +30,7 @@ class MoveStandards(models.TransientModel):
                 if year_id and year_id != rec.academic_year_id.id:
                     continue
                 if stud_year_ids:
-                    raise except_orm(_('Please Select Next Academic year.'))
+                    raise except_orm(_('Please Select Next Academic year!.'))
                 else:
                     result_domain = [('standard_id', '=',
                                       stud.standard_id.id),

@@ -61,10 +61,8 @@ class ReportResultInfo(models.AbstractModel):
             res_search = self.env['exam.result'].search([('student_id', '=',
                                                           rec.id)])
             if not res_search or rec.state == 'draft':
-                raise ValidationError(_('''You cannot print report for
-                                       student in unconfirm state
-                                       or when data of the student is not
-                                       found !'''))
+                raise ValidationError(_('''You can not print report for student
+                in unconfirm state or when data is not found !'''))
         docargs = {
             'doc_ids': docids,
             'doc_model': self.env['student.student'],
