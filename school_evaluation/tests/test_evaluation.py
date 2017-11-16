@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -13,11 +12,11 @@ class TestEvaluation(common.TransactionCase):
         self.evaluation_template_obj = self.env['school.evaluation.template']
         self.school_evaluation_obj = self.env['school.evaluation']
         self.evaluation_line_obj = self.env['school.evaluation.line']
-        self.teacher = self.env.ref('hr.employee_al')
+        self.teacher = self.env.ref('school.demo_school_teacher_1')
         self.student = self.env.ref('school.demo_student_student_5')
 #        Create School Evaluation Template
         self.evaluation_template = self.evaluation_template_obj.\
-            create({'desc': 'Communication with students',
+            create({'desc': 'Communication with students and other activity',
                     'type': 'faculty'
                     })
 #       Create Rating of above template
