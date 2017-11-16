@@ -176,8 +176,11 @@
                                                     <span t-field="part_ids.score" />
                                                 </td>
                                                 <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
-                                                    <span t-field="part_ids.sequence" />
+                                                    <span t-field="part_ids.rank" />
                                                 </td>
+<!--                                                 <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;"> -->
+<!--                                                     <span t-field="part_ids.sequence" /> -->
+<!--                                                 </td> -->
                                             </tr>
                                         </t>
                                     </tbody>

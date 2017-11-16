@@ -15,15 +15,6 @@ class SchoolStandard(models.Model):
     event_ids = fields.Many2many('school.event', 'school_standard_event_rel',
                                  'event_id', 'standard_id', 'Events')
 
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.event_ids:
-                raise ValidationError(_('''You cannot delete this standard
-                                        because it has reference with event!
-                                        '''))
-        return super(SchoolStandard, self).unlink()
-
 
 class SchoolEventParameter(models.Model):
     '''for event parameter based on which score will given'''
@@ -50,8 +41,13 @@ class SchoolEventParticipant(models.Model):
                           readonly=True)
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
                                        readonly=True)
-    rank = fields.Integer('Rank', help='''The sequence field is used to Give
-                               Rank to the Participant''')
+    rank = fields.Integer('Rank', help="The sequence field is used to Give\
+                               Rank to the Participant")
+
+    @api.constrains('rank')
+    def check_rank(self):
+        if self.rank < 0:
+            raise ValidationError(_('''Rank should be greater than 0!'''))
 
 
 class SchoolEvent(models.Model):
@@ -94,8 +90,8 @@ class SchoolEvent(models.Model):
                                          'school_standard_event_rel',
                                          'standard_id', 'event_id',
                                          'Participant Standards',
-                                         help='''The Participant is from
-                                               which standard''',
+                                         help="The Participant is from\
+                                               which standard",
                                          )
     state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
                               ('close', 'Close')],
@@ -115,9 +111,8 @@ class SchoolEvent(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft', 'close']:
-                raise ValidationError(_('''You can delete record
-                                        in unconfirm state
-                                        or close state only!'''))
+                raise ValidationError(_('''You can delete record in unconfirm
+                state only or close state only !'''))
         return super(SchoolEvent, self).unlink()
 
     @api.constrains('start_date', 'end_date')
@@ -125,8 +120,8 @@ class SchoolEvent(models.Model):
         '''Raises constraint when start date is greater than end date'''
         sedt = self.start_date > self.end_date
         if (self.start_date and self.end_date and sedt):
-            raise ValidationError(_('''Event start-date must be lower
-                              then Event end-date!'''))
+            raise ValidationError(_('Event start-date must be lower\
+                              then Event end-date!'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
                     'last_reg_date')
@@ -136,11 +131,11 @@ class SchoolEvent(models.Model):
         if (self.start_date and self.end_date and dt):
 
             if self.start_reg_date > self.last_reg_date:
-                raise ValidationError(_('''Event Registration StartDate must be
-                                  less than Event Registration end-date!'''))
+                raise ValidationError(_('Event Registration StartDate must be\
+                                  lower than Event Registration end-date.!'))
             elif self.last_reg_date >= self.start_date:
-                raise ValidationError(_('''Event Registration last-date must be
-                                    less than Event start-date!'''))
+                raise ValidationError(_('Event Registration last-date must be\
+                                    lower than Event start-date!.'))
 
     @api.multi
     def event_open(self):
@@ -148,8 +143,7 @@ class SchoolEvent(models.Model):
             if len(rec.part_ids) >= 1:
                 rec.state = 'open'
             else:
-                raise ValidationError(_(''' There are no participants in this
-                event. Please Enter participants to open the event!'''))
+                raise UserError(_('Enter participants to open the event!'))
 
     @api.multi
     def event_close(self):
@@ -209,15 +203,12 @@ class SchoolEventRegistration(models.Model):
                               ('confirm', 'Confirm'),
                               ('cancel', 'Cancel')], 'State', readonly=True,
                              default='draft')
-    is_holiday = fields.Boolean('Is Holiday(s)', help='''Checked if the event
-                                                        is organized on
-                                                        holiday.''')
+    is_holiday = fields.Boolean('Is Holiday(s)', help='Checked if the event is\
+                                                    organized on holiday.')
 
     @api.onchange('part_name_id')
     def onchange_student_standard(self):
-        '''Method to get standard of selected student'''
-        for rec in self:
-            rec.student_standard_id = rec.part_name_id.standard_id.id
+        self.student_standard_id = self.part_name_id.standard_id.id
 
     @api.multi
     def regi_cancel(self):
@@ -238,17 +229,16 @@ class SchoolEventRegistration(models.Model):
     def check_event_state(self):
         for rec in self:
             if rec.name.state in ['open', 'close']:
-                raise ValidationError(_('''You cannot do registration in an
-                                        event which has started or in an event
-                                        which is closed!'''))
+                raise ValidationError(_('''You cannot do registration in
+                                        event which is in running or closed!
+                                        '''))
 
     @api.multi
     def unlink(self):
         for rec in self:
-            if rec.state in ['draft', 'cancel']:
-                raise UserError(_('''You can delete record
-                                 in unconfirm state
-                                 or cancel state only!'''))
+            if rec.state != 'draft':
+                raise UserError(_('''You can delete record in unconfirm state
+                only!'''))
         return super(SchoolEventRegistration, self).unlink()
 
     @api.constrains('part_name_id')
@@ -271,8 +261,7 @@ class SchoolEventRegistration(models.Model):
 
             # check participation is full or not.
             if participants > rec.name.maximum_participants:
-                raise UserError(_('''Error !
-                                 Participation in this Event is Full!'''))
+                raise UserError(_('''Participation in this Event is Full!'''))
 
             # check last registration date is over or not
             if rec.reg_date < rec.name.start_reg_date:
