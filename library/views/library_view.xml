@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!DOCTYPE html>
 
 <odoo>
 
@@ -9,6 +10,7 @@
             <field name="model">library.author</field>
             <field name="arch" type="xml">
                 <form string="Authors">
+                    
                     <sheet>
                         <notebook>
                             <page string="General Information">
@@ -16,7 +18,7 @@
                                     <field name="name" placeholder="Author Name"/>
                                 </group>
                                 <separator string="Books" colspan="4"/>
-                                <field name="book_ids" nolabel="1" colspan="4"/>
+                                <field name="book_ids" nolabel="1" colspan="4" domain="[('categ_id.name','=','Books'),('is_ebook','=',False),('availability','=','available')]"/>
                             </page>
                             <page string="More Information">
                                 <separator string="Editors" colspan="4"/>
@@ -156,7 +158,7 @@
                                         icon="fa-pencil-square-o">
                                        <field string="Remaining Qty" name="books_available" widget="statinfo" />
                                     </button>
-                                </div>
+                              </div>
                         <group>
                             <group>
                                 <h1><field name="name" placeholder="Book Name" nolabel="1"/></h1>
@@ -177,9 +179,9 @@
                         <notebook>
                             <page string="Details">
                                 <group col="4" colspan="2">
-                                    <field name="availability"/>
+                                    <field name="availability" attrs="{'invisible':[('is_ebook', '=', True)]}"/>
                                     <field name="nbpage" placeholder="No of Page in books"/>
-                                    <field name="day_to_return_book" required="1" placeholder="Days of Returnning"/>
+                                    <field name="day_to_return_book" placeholder="Days of Returnning" attrs="{'required':[('is_ebook','=',False)],'invisible':[('is_ebook','=',True)]}"/>
                                     <field name="creation_date"/>
                                     <field name="tome"/>
                                     <field name="format" placeholder="Format of Book"/>
@@ -190,6 +192,10 @@
                                     <field name="intrastat_id"/>
                                     <field name="catalog_num" placeholder="Enter Catalog No"/>
                                     <field name="lang" placeholder="Language of Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                                    <field name="is_ebook"/>
+                                    <field name="is_subscription" attrs="{'invisible':[('is_ebook', '=',False)]}"/>
+                                    <field name="subscrption_amt" attrs="{'invisible':[('is_subscription','=',False)],'required':[('is_subscription','=',True)]}"/>
+                                    <field name="attach_ebook" attrs="{'invisible':[('is_ebook','=',False)],'required':[('is_ebook','=',True)]}"/>
                                 </group>
                             </page>
                             <page string="Editors">
@@ -496,7 +502,7 @@
                         </group>
                         <group col="2" colspan="2" attrs="{'invisible':[('user','!=','teacher')]}">
                             <separator colspan="2" col="2"/>
-                            <field name="teacher_id" widget="selection" domain="[('is_school_teacher','=',True)]" attrs="{'required':[('user','=','teacher')],'readonly':[('state','=','running')]}"/>
+                            <field name="teacher_id" widget="selection" attrs="{'required':[('user','=','teacher')],'readonly':[('state','=','running')]}"/>
                         </group>
                         <separator string="Membership Details"/>
                         <group col="4" colspan="4">
@@ -560,26 +566,27 @@
             <field name="arch" type="xml">
                 <form string="Student Information">
                     <header>
-                        <button name="return_book" type="object" class="fa fa fa-undo" string="Book Return" states="issue,reissue"
+                        <button name="return_book" type="object" class="fa fa fa-undo" string="Book Return" attrs="{'invisible':['|',('ebook_check','=',True),('state','not in',['issue','reissue'])]}"
                                 groups="school.group_school_administration,library.group_librarian"/>
                         <button name="issue_book" type="object" string="Book Issue" class="fa fa-check-circle" states="draft"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="reissue_book" type="object" class="fa fa-reply" string="Book Reissue" states="issue"
+                        <button name="reissue_book" type="object" class="fa fa-reply" string="Book Reissue" attrs="{'invisible':['|',('ebook_check','=',True),('state','not in',['issue'])]}"
+                                groups="school.group_school_administration,library.group_librarian" />
+                        <button name="cancel_book" type="object" class="fa fa fa-ban" string="Cancel"  attrs="{'invisible':['|',('ebook_check','=',True),('state','not in',['draft','issue','subscribe'])]}"
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="cancel_book" type="object" class="fa fa fa-ban" string="Cancel" states="draft,issue"
+                        <button name="draft_book" type="object" class="fa fa-file-code-o" string="Draft" states="cancel" 
                                 groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="draft_book" type="object" class="fa fa-file-code-o" string="Draft" states="cancel"
-                                groups="school.group_school_administration,library.group_librarian"/>
-                        <button name="lost_book" type="object" class="fa fa-snowflake-o" string="Book Lost" states="issue,reissue"
+                        <button name="lost_book" type="object" class="fa fa-snowflake-o" string="Book Lost" attrs="{'invisible':['|',('ebook_check','=',True),('state','not in',['issue','reissue'])]}"
                                 groups="school.group_school_administration,library.group_librarian"/>
                         <button name="user_fine" class="fa fa-circle" string="Fine" type="object"
                                 attrs="{'invisible':['&amp;','|',('state','not in',['return','lost']),('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}"
                                 groups="school.group_school_administration,library.group_librarian"/>
+                        <button name="subscription_pay" class="fa fa-circle" string="Subscription Payment" type="object" states="subscribe" groups="school.group_school_administration,library.group_librarian"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,issue,fine,cancel" align="right" readonly="1"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="view_invoice" string="Invoice" icon="fa-credit-card" type="object" states="fine,paid"
+                            <button name="view_invoice" string="Invoice" icon="fa-credit-card" type="object" states="fine,paid,pending"
                                 groups="library.group_librarian">
                                 <field name="compute_inv"/>
                             </button>
@@ -588,7 +595,7 @@
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="issue_code" readonly="1"/>
-                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books'),('is_ebook','=',False)]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('state', '=', 'running')]"/>
                             <field name="user" readonly="1"/>
                             <field name="gt_name" invisible="True"/>
@@ -599,14 +606,15 @@
                             <field name="student_id" attrs="{'invisible':[('user','=','teacher')]}" domain="[('state','=','done')]" readonly="1"/>
                             <field name="roll_no" attrs="{'invisible':[('user','=','teacher')]}" readonly="1"/>
                             <field name="standard_id" attrs="{'invisible':[('user','=','teacher')]}" readonly="1"/>
+                            <field name="ebook_check" invisible="1"/>
                         </group>
                         <group col="2" colspan="2"
                                attrs="{'invisible':[('user','!=','Teacher')], 'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <separator string="Teacher Details" colspan="2" col="2"/>
-                            <field name="teacher_id" attrs="{'readonly':[('state','not in','draft')]}" domain="[('is_school_teacher','=',True)]" widget="selection" readonly="1"/>
+                            <field name="teacher_id" attrs="{'readonly':[('state','not in','draft')]}" widget="selection" readonly="1"/>
                         </group>
                         <group col="4" colspan="4"
-                               attrs="{'invisible':[('state','=','draft')], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
+                               attrs="{'invisible':[('state','in',['draft','subscribe','pending'])], 'readonly' : [('state', 'in', ['reissue', 'return'])]}">
                             <separator string="Issue Date" colspan="4" col="4" />
                             <field name="day_to_return_book" readonly="1"/>
                             <field name="date_issue" readonly="1"/>
@@ -614,6 +622,13 @@
                             <field name="actual_return_date" attrs="{'readonly':[('state','not in',('issue','reissue'))]}" required="1"/>
                             <field name="penalty" attrs="{'invisible':[('state','!=','return')]}"/>
                             <field name="lost_penalty" attrs="{'invisible':[('state','!=','lost')]}"/>
+                        </group>
+                        <group col="4" colspan="4" string="E Book Details" attrs="{'invisible':[('state','in',['issue','ressiue','cancel','return','lost','fine','draft'])],'readonly':[('state','in',('done'))]}">
+<!--                             <field name="payment_mode"/> -->
+                            <field name="subscription_amt" attrs="{'invisible':[('state','=','paid')],'readonly':[('state','in',['pending','subscribe'])]}"/>
+<!--                             <field name="bank_teller_no"/> -->
+<!--                             <field name="bank_teller_amt"/> -->
+                            <field name="ebook_download" attrs="{'readonly':[('state','in',['pending','subscribe','paid'])]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -790,18 +805,24 @@
                         </group>
                         <group>
                             <group>
-                                <field name="name" attrs="{'invisible':[('type','!=','existing')],'required':[('type','!=','new')],
-                                    'readonly':[('state','!=','draft')]}" 
-                                       domain="[('availability','=','available'),
-                                               ('categ_id.name', '=', 'Books')]"
-                                       widget="selection"/>
-                                <field name="type" attrs="{'readonly':[('state','!=','draft')]}" invisible="1"/>
+                                <field name="ebook_name" attrs="{'invisible':[('type','!=','ebook')], 'required':
+                                     [('type','=','ebook')], 'readonly':[('state','!=','draft')]}"
+                                     domain="['|',('categ_id.name', '=', 'Books'),('categ_id.parent_id.name', '=', 'All'),('is_ebook', '=', True)]" widget="selection"/>
+                                
+                                <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':
+                                     [('type','=','existing')], 'readonly':[('state','!=','draft')]}"
+                                     domain="[('categ_id.name', '=', 'Books'),('categ_id.parent_id.name', '=', 'All'),('is_ebook', '=', False),('availability','=','available')]" widget="selection"/>
+<!--                                 <field name="name" attrs="{'invisible':[('type','!=','existing')],'required':[('type','=','exsiting')] ,'readonly':[('state','!=','draft')]}" -->
+<!--                                         domain="[('categ_id.name', '=', 'Books'),('is_ebook','=', False),('availability','=','available')]" -->
+<!--                                         widget="selection"/> -->
+                                
                                 <field name="bk_nm" invisible="1"/>
+                                <field name="type" attrs="{'readonly':[('state','!=','draft')]}" invisible="0" required="1"/>
                             </group>
                             <group>
-                                <field name="new_book" attrs="{'invisible':[('type','!=','new')],'required':[('type','!=','existing')],
-                                    'readonly':[('state','!=','draft')]}" invisible="1"/>
-                                <field name="book_return_days" readonly="1"/>
+<!--                                 <field name="new_book" attrs="{'invisible':[('type','!=','ebook')],'required':[('type','!=','existing')], -->
+<!--                                      'readonly':[('state','!=','draft')]}" invisible="1"/> -->
+                                <field name="book_return_days" readonly="1" attrs="{'invisible':[('type','!=','existing')]}"/>
                             </group>
                         </group>
                     </sheet>
@@ -820,6 +841,7 @@
                     <field name="card_id"/>
                     <field name="type"/>
                     <field name="bk_nm"/>
+                    <field name="ebook_name"/>
                     <field name="state"/>
                 </tree>
             </field>
