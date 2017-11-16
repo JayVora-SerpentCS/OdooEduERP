@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Assignment Management',
     'version': "10.0.1.0.4",
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
-    'images': ['static/description/Assignment_Management.png'],
     'license': "AGPL-3",
     'category': 'School Management',
     'summary': 'A Module For Assignment Management In School',
