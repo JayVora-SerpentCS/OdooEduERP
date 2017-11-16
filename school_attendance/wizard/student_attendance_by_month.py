@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
+# import time
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
+# from datetime import datetime
 
 
 class StudentAttendanceByMonth(models.TransientModel):
 
     _name = 'student.attendance.by.month'
     _description = 'Student Monthly Attendance Report'
-
     month = fields.Many2one('academic.month')
     year = fields.Many2one('academic.year')
     attendance_type = fields.Selection([('daily', 'FullDay'),
@@ -23,7 +24,7 @@ class StudentAttendanceByMonth(models.TransientModel):
                             ].browse(self._context.get('active_id'))
         if students.state == 'draft':
             raise ValidationError(_('''You can not print report for student in
-                                    draft state!'''))
+            unconfirm state!'''))
         return res
 
     @api.multi
@@ -36,9 +37,15 @@ class StudentAttendanceByMonth(models.TransientModel):
         @param context : standard Dictionary
         @return : printed report
         '''
+#        curr_dt = datetime.now()
         stud_search = self.env['student.student'
                                ].search([('id', '=', vals.get('active_id')),
                                          ('state', '=', 'done')])
+#        attend_line = self.env['daily.attendance.line'
+#                               ].search([('stud_id', '=', stud_search.id)])
+#        k = curr_dt.strftime('%B')
+#        months = False
+#        years = False
         daily_attend = self.env['daily.attendance']
         for rec in self:
             attend_stud = daily_attend.search([('standard_id', '=',

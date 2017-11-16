@@ -2,11 +2,15 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import datetime
+# from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from dateutil.relativedelta import relativedelta as rd
 from odoo.exceptions import ValidationError
+from lxml import etree
+import json
 
 
 class AttendanceSheet(models.Model):
@@ -24,7 +28,7 @@ class AttendanceSheet(models.Model):
     attendance_ids = fields.One2many('attendance.sheet.line', 'standard_id',
                                      'Attendance',
                                      help="Academic Year")
-    user_id = fields.Many2one('hr.employee', 'Faculty',
+    user_id = fields.Many2one('school.teacher', 'Faculty',
                               help="Select Teacher")
     attendance_type = fields.Selection([('daily', 'FullDay'),
                                         ('lecture', 'Lecture Wise')], 'Type')
@@ -44,17 +48,73 @@ class AttendanceSheet(models.Model):
                                                           'done')])]
             rec.attendance_ids = stud_list
 
+    @api.model
+    def fields_view_get(self, view_id=None,
+                        view_type='form',
+                        toolbar=False, submenu=False):
+        res = super(AttendanceSheet, self).fields_view_get(view_id=view_id,
+                                                           view_type=view_type,
+                                                           toolbar=toolbar,
+                                                           submenu=submenu)
+        start = self._context.get('start_date')
+        end = self._context.get('end_date')
+        st_dates = datetime.strptime(start,
+                                     DEFAULT_SERVER_DATE_FORMAT)
+        end_dates = datetime.strptime(end,
+                                      DEFAULT_SERVER_DATE_FORMAT)
+        if view_type == 'form':
+            digits_temp_dict = {1: 'one', 2: 'two', 3: 'three', 4: 'four',
+                                5: 'five', 6: 'six', 7: 'seven', 8: 'eight',
+                                9: 'nine', 10: 'ten', 11: 'one_1', 12: 'one_2',
+                                13: 'one_3', 14: 'one_4', 15: 'one_5',
+                                16: 'one_6', 17: 'one_7', 18: 'one_8',
+                                19: 'one_9', 20: 'one_0',
+                                21: 'two_1', 22: 'two_2', 23: 'two_3',
+                                24: 'two_4', 25: 'two_5',
+                                26: 'two_6', 27: 'two_7', 28: 'two_8',
+                                29: 'two_9', 30: 'two_0',
+                                31: 'three_1'}
+            flag = 1
+            while st_dates <= end_dates:
+                res['fields']['attendance_ids'
+                              ]['views'
+                                ]['tree'
+                                  ]['fields'
+                                    ][digits_temp_dict.get(flag)
+                                      ]['string'
+                                        ] = st_dates.day
+                st_dates += rd(days=1)
+                flag += 1
+            if flag < 32:
+                res['fields']['attendance_ids'
+                              ]['views']['tree'
+                                         ]['fields'
+                                           ][digits_temp_dict.get(flag)
+                                             ]['string'] = ''
+                doc2 = etree.XML(res['fields']['attendance_ids']['views'
+                                                                 ]['tree'
+                                                                   ]['arch'])
+                nodes = doc2.xpath("//field[@name='" +
+                                   digits_temp_dict.get(flag) + "']")
+                for node in nodes:
+                    node.set('modifiers', json.dumps({'invisible': True}))
+                res['fields']['attendance_ids'
+                              ]['views']['tree']['arch'] = etree.tostring(doc2)
+        return res
+
 
 class StudentleaveRequest(models.Model):
     _name = "studentleave.request"
+    _inherit = ["mail.thread", "ir.needaction_mixin"]
 
     @api.model
     def create(self, vals):
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id'
-                                                                  ))
+            student = self.env['student.student'].browse(vals.get('student_id')
+                                                         )
             vals.update({'roll_no': student.roll_no,
-                         'standard_id': student.standard_id.id
+                         'standard_id': student.standard_id.id,
+                         'teacher_id': student.standard_id.user_id.id
                          })
         return super(StudentleaveRequest, self).create(vals)
 
@@ -64,7 +124,9 @@ class StudentleaveRequest(models.Model):
             student = self.env['student.student'].browse(vals.get('student_id')
                                                          )
             vals.update({'roll_no': student.roll_no,
-                        'standard_id': student.standard_id.id})
+                         'standard_id': student.standard_id.id,
+                         'teacher_id': student.standard_id.user_id.id
+                         })
         return super(StudentleaveRequest, self).write(vals)
 
     @api.onchange('student_id')
@@ -73,22 +135,23 @@ class StudentleaveRequest(models.Model):
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.roll_no = self.student_id.roll_no
+            self.teacher_id = self.student_id.standard_id.user_id.id or False
 
     @api.multi
     def approve_state(self):
-        self.state = 'approve'
+        self.write({'state': 'approve'})
 
     @api.multi
     def draft_state(self):
-        self.state = 'draft'
+        self.write({'state': 'draft'})
 
     @api.multi
     def toapprove_state(self):
-        self.state = 'toapprove'
+        self.write({'state': 'toapprove'})
 
     @api.multi
     def reject_state(self):
-        self.state = 'reject'
+        self.write({'state': 'reject'})
 
     @api.multi
     @api.depends('start_date', 'end_date')
@@ -99,7 +162,11 @@ class StudentleaveRequest(models.Model):
                                          DEFAULT_SERVER_DATE_FORMAT)
                 enddate = datetime.strptime(rec.end_date,
                                             DEFAULT_SERVER_DATE_FORMAT)
-                rec.days = (enddate - date).days
+                rec.days = (enddate - date).days + 1
+            if rec.start_date == rec.end_date:
+                rec.days = 1
+            if not rec.start_date or not rec.end_date:
+                rec.days = 0
 
     name = fields.Char('Type of Leave')
     student_id = fields.Many2one('student.student', 'Student', required=True)
@@ -110,13 +177,54 @@ class StudentleaveRequest(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('toapprove', 'To Approve'),
                               ('reject', 'Reject'),
-                              ('approve', 'Approved')],
-                             'Status', default='draft')
+                              ('approve', 'Approved')], 'Status',
+                             default='draft',
+                             track_visibility='onchange',)
     start_date = fields.Date('Start Date')
     end_date = fields.Date('End Date')
-    teacher_id = fields.Many2one('hr.employee', 'Class Teacher')
+    teacher_id = fields.Many2one('school.teacher', 'Class Teacher')
     days = fields.Integer('Days', compute="_compute_days", store=True)
     reason = fields.Text('Reason for Leave')
+    message_ids = fields.One2many('mail.message', 'res_id', 'Messages',
+                                  domain=lambda self: [('model', '=',
+                                                        self._name)],
+                                  auto_join=True)
+    message_follower_ids = fields.One2many('mail.followers', 'res_id',
+                                           'Followers',
+                                           domain=lambda self: [('res_model',
+                                                                 '=',
+                                                                 self._name
+                                                                 )])
+
+    @api.constrains('student_id', 'start_date', 'end_date')
+    def check_student_request(self):
+        leave_request = self.search([('student_id', '=', self.student_id.id),
+                                     ('start_date', '=', self.start_date),
+                                     ('end_date', '=', self.end_date),
+                                     ('id', 'not in', self.ids)])
+        if leave_request:
+            raise ValidationError(_('''You cannot take leave on same date
+            for the same student!'''))
+
+    @api.constrains('start_date', 'end_date')
+    def check_dates(self):
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, '%Y-%m-%d')
+        if self.start_date > self.end_date:
+            raise ValidationError(_('''Configure start date less than end date!
+            '''))
+        if self.start_date < new_date:
+            raise ValidationError(_('''Your leave request start date should be
+            greater than current date!
+            .'''))
+
+    @api.constrains('start_date')
+    def check_daily_attend_date(self):
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, '%Y-%m-%d')
+        if self.start_date <= new_date:
+            raise ValidationError(_('''Your leave request start date should be
+            greater than current date!.'''))
 
 
 class AttendanceSheetLine(models.Model):
@@ -253,6 +361,11 @@ class DailyAttendance(models.Model):
         for rec in self:
             rec.total_student = len(rec.student_ids)
 
+    @api.onchange("user_id")
+    def onchange_check_faculty_value(self):
+        if self.user_id:
+            self.standard_id = False
+
     @api.multi
     @api.depends('student_ids')
     def _compute_present(self):
@@ -282,8 +395,8 @@ class DailyAttendance(models.Model):
         curr = datetime.now()
         new_date = datetime.strftime(curr, '%Y-%m-%d')
         if self.date > new_date:
-            raise ValidationError(_('''Configure date of attendance less
-                                    than or equal to current date!'''))
+            raise ValidationError(_('''Date should be less than or equal to
+            current date!'''))
 
     date = fields.Date("Date",
                        help="Current Date",
@@ -296,8 +409,8 @@ class DailyAttendance(models.Model):
                                   'Students',
                                   states={'validate': [('readonly', True)],
                                           'draft': [('readonly', False)]})
-    user_id = fields.Many2one('hr.employee', 'Faculty',
-                              help="Select Teacher",
+    user_id = fields.Many2one('school.teacher', 'Faculty',
+                              help="Select Teacher", ondelete='restrict',
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
                              'State', readonly=True, default='draft')
@@ -351,7 +464,8 @@ class DailyAttendance(models.Model):
                                                        ('start_date', '<=',
                                                         rec.date),
                                                        ('end_date', '>=',
-                                                        rec.date)])
+                                                        rec.date)
+                                                       ])
                     if student_leave:
                         student_list.append({'roll_no': stud.roll_no,
                                              'stud_id': stud.id,
@@ -913,6 +1027,5 @@ class DailyAttendanceLine(models.Model):
 
     @api.constrains('is_present', 'is_absent')
     def check_present_absent(self):
-        for rec in self:
-            if not rec.is_present and not rec.is_absent:
-                raise ValidationError(_('''Please Check Present or Absent!'''))
+        if not self.is_present and not self.is_absent:
+            raise ValidationError(_('Check Present or Absent!'))
