@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
@@ -10,6 +9,8 @@ class TestSchool(common.TransactionCase):
     def setUp(self):
         super(TestSchool, self).setUp()
         self.student_student_obj = self.env['student.student']
+        self.teacher_obj = self.env['school.teacher']
+        self.parent_obj = self.env['school.parent']
         self.school_school_obj = self.env['school.school']
         self.school_standard_obj = self.env['school.standard']
         self.res_company_obj = self.env['res.company']
@@ -22,6 +23,8 @@ class TestSchool(common.TransactionCase):
         self.country_id = self.env.ref('base.in')
         self.std = self.env.ref('school.demo_standard_standard_1')
         self.state_id = self.env.ref('base.state_in_gj')
+        self.subject1 = self.env.ref('school.demo_subject_subject_1')
+        self.subject2 = self.env.ref('school.demo_subject_subject_2')
         # Student created
         self.student_student = self.student_student_obj.\
             create({'pid': '2017/06/099',
@@ -35,30 +38,30 @@ class TestSchool(common.TransactionCase):
                     'state_id': self.state_id.id,
                     'city': 'Gandhinagar',
                     'gender': 'male',
-                    'date_of_birth': time.strftime('05-30-1993'),
-                    'state': 'draft'
+                    'date_of_birth': time.strftime('05/30/1993'),
                     })
         self.student_student._compute_student_age()
         self.student_student.check_age()
         self.student_student.admission_done()
         self.student_student.set_alumni()
-        self.hr_employee_obj = self.env['hr.employee']
-        # Teacher created
-        self.hr_employee = self.hr_employee_obj.\
+        subject_list = [self.subject1.id, self.subject2.id]
+#       Teacher created
+        self.teacher_create = self.teacher_obj.\
             create({'name': 'Robert Smith',
-                    'is_school_teacher': True,
-                    'school': self.school_id.id,
+                    'subject_id': [(6, 0, subject_list)],
+                    'school_id': self.school_id.id,
                     'work_email': 'roberts@gmail.com'
                     })
-        self.res_partner_obj = self.env['res.partner']
-        # Partner Created
-        self.res_partner = self.res_partner_obj.\
-            create({'parent_school': True,
+        student_list = [self.student_student.id]
+        # Parent Created
+        self.parent = self.parent_obj.\
+            create({
                     'name': 'Robert Martin',
                     'country_id': self.country_id.id,
                     'state_id': self.state_id.id,
                     'city': 'Gandhinagar',
-                    'email': 'robertmartin@gmail.com'
+                    'email': 'robertmartin@gmail.com',
+                    'student_id': [(6, 0, student_list)]
                     })
         # Create academic Year
         self.academic_year_obj = self.env['academic.year']

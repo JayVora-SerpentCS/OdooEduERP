@@ -6,3 +6,6 @@
 # ----------------------------------------------------------
 
 from . import school
+from . import student
+from . import teacher
+from . import parent
