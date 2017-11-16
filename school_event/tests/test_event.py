@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# See LICENSE file for full copyright and licensing details.
-
 from odoo.tests import common
 from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
@@ -14,10 +11,9 @@ class TestEvent(common.TransactionCase):
         self.school_event_obj = self.env['school.event']
         self.school_event_reg_obj = self.env['school.event.registration']
         self.school_id = self.env.ref('school.demo_school_1')
-        self.hr_employee = self.env.ref('hr.employee_al')
-        self.part_name = self.env.ref('school.demo_student_student_9')
-        self.standard = self.env.ref('school.demo_school_standard_3')
-        self.calendarevent = self.env['calendar.event']
+        self.teacher = self.env.ref('school.demo_school_teacher_1')
+        self.part_name = self.env.ref('school.demo_student_student_5')
+        self.standard = self.env.ref('school.demo_standard_standard_2')
         currdt = datetime.now()
         new_dt = currdt - rd(days=7)
         start_dt = datetime.strftime(new_dt, '%m/%d/%Y')
@@ -38,19 +34,11 @@ class TestEvent(common.TransactionCase):
                     'last_reg_date': end_dt,
                     'start_date': eve_start,
                     'end_date': eve_end,
-                    'contact_per_id': self.hr_employee.id,
-                    'supervisor_id': self.hr_employee.id,
+                    'contact_per_id': self.teacher.id,
+                    'supervisor_id': self.teacher.id,
                     'part_standard_ids': [(6, 0, (self.standard.ids))],
                     'parameter_id': self.event_parameter.id,
                     'maximum_participants': 20,
-                    })
-        self.cal_event = self.calendarevent.\
-            create({'name': 'New Event',
-                    'start_date': eve_start,
-                    'stop_date': eve_start,
-                    'allday': True,
-                    'start': eve_start,
-                    'stop': eve_start
                     })
         self.school_event._compute_participants()
         self.school_event._check_dates()
@@ -62,18 +50,12 @@ class TestEvent(common.TransactionCase):
         self.school_event_reg = self.school_event_reg_obj.\
             create({'part_name_id': self.part_name.id,
                     'name': self.school_event.id,
-                    'student_standard_id': self.standard.id
                     })
         self.school_event_reg.regi_cancel()
         self.school_event_reg.regi_confirm()
         self.school_event.event_open()
         self.school_event.event_close()
         self.school_event.event_draft()
-        self.school_event.event_open()
 
-    def test_event(self):
-        self.assertEqual(self.school_event.contact_per_id.is_school_teacher,
-                         True)
-        self.assertEqual(self.school_event.supervisor_id.is_school_teacher,
-                         True)
+    def test_exam(self):
         self.assertEqual(self.school_event_reg.part_name_id.state, 'done')

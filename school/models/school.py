@@ -1,32 +1,26 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-import time
+# import time
 import re
 import calendar
-from datetime import date, datetime
+from datetime import datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.modules import get_module_resource
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
     DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
-# added import statement in try-except because when server runs on
-# windows operating system issue arise because this library is not in Windows.
-try:
-    from odoo.tools import image_colorize, image_resize_image_big
-except:
-    image_colorize = False
-    image_resize_image_big = False
 
-exp = r'[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
+
+EM = (r"[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$")
 
 
 def emailvalidation(email):
+
     if email:
-        EMAIL_REGEX = re.compile(exp)
+        EMAIL_REGEX = re.compile(EM)
         if not EMAIL_REGEX.match(email):
             raise ValidationError(_('''This seems not to be valid email.
             Please enter email in correct format!'''))
@@ -70,10 +64,9 @@ class AcademicYear(models.Model):
 
     @api.multi
     def generate_academicmonth(self):
-        '''Method to generate academic months based on year'''
         interval = 1
         month_obj = self.env['academic.month']
-        for data in self.browse(self._ids):
+        for data in self:
             ds = datetime.strptime(data.date_start, '%Y-%m-%d')
             while ds.strftime('%Y-%m-%d') < data.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
@@ -99,26 +92,25 @@ class AcademicYear(models.Model):
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
             raise ValidationError(_('''Error! The duration of the academic year
-                                      is invalid!'''))
+                                      is invalid.'''))
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise ValidationError(_('''Configure start date of the academic
-            year less than end date!'''))
+            raise ValidationError(_('''The start date of the academic year'
+                                      should be less than end date.'''))
         for old_ac in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
-                raise ValidationError(_('''Error! You cannot
-                                        define overlapping'
-                                        academic years!'''))
+                raise ValidationError(_('''Error! You cannot define overlapping
+                                          academic years.'''))
         return True
 
     @api.constrains('current')
     def check_current_year(self):
         check_year = self.search([('current', '=', True)])
         if len(check_year.ids) >= 2:
-            raise ValidationError(_('''Error! You cannot set
-                                    two current year active!'''))
+            raise ValidationError(_('''Error! You cannot set two current
+            year active!'''))
 
 
 class AcademicMonth(models.Model):
@@ -158,7 +150,7 @@ class AcademicMonth(models.Model):
                     self.year_id.date_stop < self.date_start or
                     self.year_id.date_start > self.date_start or
                     self.year_id.date_start > self.date_stop):
-                raise ValidationError(_('''Invalid Months! Some months overlap
+                raise ValidationError(_('''Invalid Months ! Some months overlap
                                     or the date period is not in the scope
                                     of the academic year!'''))
 
@@ -166,11 +158,11 @@ class AcademicMonth(models.Model):
     def check_months(self):
         for old_month in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
-            if (old_month.date_start <= self.date_start <=
-                    old_month.date_stop or old_month.date_start <=
-                    self.date_stop <= old_month.date_stop):
-                    raise ValidationError(_('''Error! You cannot
-                                            define overlapping months!'''))
+            if (old_month.date_start <= self.date_start <= old_month.date_stop
+                    or old_month.date_start <= self.date_stop <=
+                    old_month.date_stop):
+                    raise ValidationError(_('''Error! You cannot define
+                    overlapping months!'''))
 
 
 class StandardMedium(models.Model):
@@ -252,14 +244,13 @@ class SchoolStandard(models.Model):
 
     @api.multi
     @api.depends('student_ids')
-    def _compute_total_student(self):
+    def _total_student(self):
         for rec in self:
             rec.total_students = len(rec.student_ids)
 
     @api.depends("capacity", "total_students")
     def _compute_remain_seats(self):
-        for rec in self:
-            rec.remaining_seats = rec.capacity - rec.total_students
+        self.remaining_seats = self.capacity - self.total_students
 
     school_id = fields.Many2one('school.school', 'School', required=True)
     standard_id = fields.Many2one('standard.standard', 'Class', required=True)
@@ -268,11 +259,11 @@ class SchoolStandard(models.Model):
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
     subject_ids = fields.Many2many('subject.subject', 'subject_standards_rel',
                                    'subject_id', 'standard_id', 'Subject')
-    user_id = fields.Many2one('hr.employee', 'Class Teacher')
+    user_id = fields.Many2one('school.teacher', 'Class Teacher')
     student_ids = fields.One2many('student.student', 'standard_id',
                                   'Student In Class',
-                                  compute='_compute_student',
-                                  store=True)
+                                  compute='_compute_student', store=True
+                                  )
     color = fields.Integer('Color Index')
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
@@ -283,29 +274,41 @@ class SchoolStandard(models.Model):
     name = fields.Char('Name')
     capacity = fields.Integer("Total Seats")
     total_students = fields.Integer("Total Students",
-                                    compute="_compute_total_student",
+                                    compute="_total_student",
                                     store=True)
     remaining_seats = fields.Integer("Available Seats",
                                      compute="_compute_remain_seats",
                                      store=True)
     class_room_id = fields.Many2one('class.room', 'Room Number')
 
+    @api.constrains('standard_id', 'division_id')
+    def check_standard_unique(self):
+        standard_search = self.env['school.standard'
+                                   ].search([('standard_id', '=',
+                                              self.standard_id.id),
+                                             ('division_id', '=',
+                                              self.division_id.id),
+                                             ('school_id', '=',
+                                              self.school_id.id),
+                                             ('id', 'not in', self.ids)])
+        if standard_search:
+            raise ValidationError(_('''Division and class should be unique!'''
+                                    ))
+
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
                 raise ValidationError(_('''You cannot delete this standard
-                                        because it has reference with student
-                                        or subject or syllabus!
-                                        '''))
+                because it has reference with student or subject or
+                syllabus!'''))
         return super(SchoolStandard, self).unlink()
 
     @api.constrains('capacity')
     def check_seats(self):
-        for rec in self:
-            if rec.capacity <= 0:
-                raise ValidationError(_('''Configure total seats
-                                       greater than 0!'''))
+        if self.capacity <= 0:
+            raise ValidationError(_('''Total seats should be greater than
+                0!'''))
 
     @api.multi
     def name_get(self):
@@ -327,7 +330,8 @@ class SchoolSchool(models.Model):
         languages = self.env['res.lang'].search([])
         return [(language.code, language.name) for language in languages]
 
-    company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
+    company_id = fields.Many2one('res.company', 'Company',
+                                 ondelete="cascade",
                                  required=True)
     com_name = fields.Char('School Name', related='company_id.name',
                            store=True)
@@ -351,7 +355,7 @@ class SubjectSubject(models.Model):
     maximum_marks = fields.Integer("Maximum marks")
     minimum_marks = fields.Integer("Minimum marks")
     weightage = fields.Integer("WeightAge")
-    teacher_ids = fields.Many2many('hr.employee', 'subject_teacher_rel',
+    teacher_ids = fields.Many2many('school.teacher', 'subject_teacher_rel',
                                    'subject_id', 'teacher_id', 'Teachers')
     standard_ids = fields.Many2many('standard.standard',
                                     'subject_standards_rel',
@@ -384,295 +388,6 @@ class SubjectElective(models.Model):
     name = fields.Char("Name")
     subject_ids = fields.One2many('subject.subject', 'elective_id',
                                   'Elective Subjects')
-
-
-class StudentStudent(models.Model):
-    ''' Defining a student information '''
-    _name = 'student.student'
-    _table = "student_student"
-    _description = 'Student Information'
-
-    @api.multi
-    @api.depends('date_of_birth')
-    def _compute_student_age(self):
-        '''Method to calculate student age'''
-        current_dt = datetime.today()
-        for rec in self:
-            if rec.date_of_birth:
-                start = datetime.strptime(rec.date_of_birth,
-                                          DEFAULT_SERVER_DATE_FORMAT)
-                age_calc = ((current_dt - start).days / 365)
-                # Age should be greater than 0
-                if age_calc > 0.0:
-                    rec.age = age_calc
-
-    @api.constrains('date_of_birth')
-    def check_age(self):
-        '''Method to check age should be greater than 5'''
-        current_dt = datetime.today()
-        if self.date_of_birth:
-            start = datetime.strptime(self.date_of_birth,
-                                      DEFAULT_SERVER_DATE_FORMAT)
-            age_calc = ((current_dt - start).days / 365)
-            # Check if age less than 5 years
-            if age_calc < 5:
-                raise ValidationError(_('''Age of the student should be greater
-                than 5 years!'''))
-
-    @api.model
-    def create(self, vals):
-        '''Method to create user when student is created'''
-        if vals.get('pid', _('New')) == _('New'):
-            vals['pid'] = self.env['ir.sequence'
-                                   ].next_by_code('student.student'
-                                                  ) or _('New')
-        if vals.get('pid', False):
-            vals['login'] = vals['pid']
-            vals['password'] = vals['pid']
-        else:
-            raise except_orm(_('Error!'),
-                             _('''PID is not seem to be valid.
-                                 So the record will not be saved!'''))
-        if vals.get('cmp_id', False):
-            h = {'company_ids': [(4, vals.get('cmp_id'))],
-                 'company_id': vals.get('cmp_id')}
-            vals.update(h)
-        if vals.get('email'):
-            emailvalidation(vals.get('email'))
-        res = super(StudentStudent, self).create(vals)
-        # Assign group to student based on condition
-        emp_grp = self.env.ref('base.group_user')
-        if res.state == 'draft':
-            admission_group = self.env.ref('school.group_is_admission')
-            new_grp_list = [admission_group.id, emp_grp.id]
-            res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
-        elif res.state == 'done':
-            done_student = self.env.ref('school.group_school_student')
-            group_list = [done_student.id, emp_grp.id]
-            res.user_id.write({'groups_id': [(6, 0, group_list)]})
-        return res
-
-    @api.model
-    def _get_default_image(self, is_company, colorize=False):
-        '''Method to get default Image'''
-        # added in try-except because import statements are in try-except
-        try:
-            img_path = get_module_resource('base', 'static/src/img',
-                                           'avatar.png')
-            with open(img_path, 'rb') as f:
-                image = f.read()
-            image = image_colorize(image)
-            return image_resize_image_big(image.encode('base64'))
-        except:
-            return False
-
-    @api.model
-    def check_current_year(self):
-        '''Method to get default value of logged in Student'''
-        res = self.env['academic.year'].search([('current', '=',
-                                                 True)])
-        if not res:
-            raise ValidationError(_('''There is no current Academic
-                                    Year defined!
-                                    Please contact to Administrator!'''))
-        return res.id
-
-    family_con_ids = fields.One2many('student.family.contact',
-                                     'family_contact_id',
-                                     'Family Contact Detail',
-                                     states={'done': [('readonly', True)]})
-    user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              required=True, delegate=True)
-    student_name = fields.Char('Student Name', related='user_id.name',
-                               store=True, readonly=True)
-    pid = fields.Char('Student ID', required=True,
-                      default=lambda self: _('New'),
-                      help='Personal IDentification Number')
-    reg_code = fields.Char('Registration Code',
-                           help='Student Registration Code')
-    student_code = fields.Char('Student Code')
-    contact_phone1 = fields.Char('Phone no.',)
-    contact_mobile1 = fields.Char('Mobile no',)
-    roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self: self._get_default_image
-                          (self._context.get('default_is_company',
-                                             False)))
-    year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
-                           default=check_current_year)
-    cast_id = fields.Many2one('student.cast', 'Religion')
-    relation = fields.Many2one('student.relation.master', 'Relation')
-
-    admission_date = fields.Date('Admission Date', default=date.today())
-    middle = fields.Char('Middle Name', required=True,
-                         states={'done': [('readonly', True)]})
-    last = fields.Char('Surname', required=True,
-                       states={'done': [('readonly', True)]})
-    gender = fields.Selection([('male', 'Male'), ('female', 'Female')],
-                              'Gender', states={'done': [('readonly', True)]})
-    date_of_birth = fields.Date('BirthDate', required=True,
-                                states={'done': [('readonly', True)]})
-    mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
-    age = fields.Integer(compute='_compute_student_age', string='Age',
-                         readonly=True)
-    maritual_status = fields.Selection([('unmarried', 'Unmarried'),
-                                        ('married', 'Married')],
-                                       'Marital Status',
-                                       states={'done': [('readonly', True)]})
-    reference_ids = fields.One2many('student.reference', 'reference_id',
-                                    'References',
-                                    states={'done': [('readonly', True)]})
-    previous_school_ids = fields.One2many('student.previous.school',
-                                          'previous_school_id',
-                                          'Previous School Detail',
-                                          states={'done': [('readonly',
-                                                            True)]})
-    doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
-    designation = fields.Char('Designation')
-    doctor_phone = fields.Char('Phone')
-    blood_group = fields.Char('Blood Group')
-    height = fields.Float('Height', help="Hieght in C.M")
-    weight = fields.Float('Weight', help="Weight in K.G")
-    eye = fields.Boolean('Eyes')
-    ear = fields.Boolean('Ears')
-    nose_throat = fields.Boolean('Nose & Throat')
-    respiratory = fields.Boolean('Respiratory')
-    cardiovascular = fields.Boolean('Cardiovascular')
-    neurological = fields.Boolean('Neurological')
-    muskoskeletal = fields.Boolean('Musculoskeletal')
-    dermatological = fields.Boolean('Dermatological')
-    blood_pressure = fields.Boolean('Blood Pressure')
-    remark = fields.Text('Remark', states={'done': [('readonly', True)]})
-    school_id = fields.Many2one('school.school', 'School',
-                                states={'done': [('readonly', True)]})
-    state = fields.Selection([('draft', 'Draft'),
-                              ('done', 'Done'),
-                              ('terminate', 'Terminate'),
-                              ('cancel', 'Cancel'),
-                              ('alumni', 'Alumni')],
-                             'State', readonly=True, default="draft")
-    history_ids = fields.One2many('student.history', 'student_id', 'History')
-    certificate_ids = fields.One2many('student.certificate', 'student_id',
-                                      'Certificate')
-    student_discipline_line = fields.One2many('student.descipline',
-                                              'student_id', 'Descipline')
-    address_ids = fields.One2many('res.partner', 'student_id', 'Contacts')
-    document = fields.One2many('student.document', 'doc_id', 'Documents')
-    description = fields.One2many('student.description', 'des_id',
-                                  'Description')
-    student_id = fields.Many2one('student.student', 'Name')
-    contact_phone = fields.Char('Phone No', related='student_id.phone',
-                                readonly=True)
-    contact_mobile = fields.Char('Mobile No', related='student_id.mobile',
-                                 readonly=True)
-    contact_email = fields.Char('Email', related='student_id.email',
-                                readonly=True)
-    contact_website = fields.Char('WebSite', related='student_id.website',
-                                  readonly=True)
-    award_list = fields.One2many('student.award', 'award_list_id',
-                                 'Award List')
-    student_status = fields.Selection('Status', related='student_id.state',
-                                      help="Shows Status Of Student",
-                                      readonly=True)
-    stu_name = fields.Char('First Name', related='user_id.name',
-                           readonly=True)
-    Acadamic_year = fields.Char('Academic Year', related='year.name',
-                                help='Academic Year', readonly=True)
-    division_id = fields.Many2one('standard.division', 'Division')
-    medium_id = fields.Many2one('standard.medium', 'Medium')
-    cmp_id = fields.Many2one('res.company', 'Company Name',
-                             related='school_id.company_id', store=True)
-    standard_id = fields.Many2one('school.standard', 'Standard')
-    parent_id = fields.Many2many('res.partner', 'student_parent_rel',
-                                 'student_id', 'parent_id', 'Parent(s)',
-                                 states={'done': [('readonly', True)]})
-    terminate_reason = fields.Text('Reason')
-    active = fields.Boolean(default=True)
-
-    @api.multi
-    def set_to_draft(self):
-        '''Method to change state to draft'''
-        for rec in self:
-            rec.state = 'draft'
-        return True
-
-    @api.multi
-    def set_alumni(self):
-        '''Method to change state to alumni'''
-        for rec in self:
-            rec.state = 'alumni'
-        return True
-
-    @api.multi
-    def set_done(self):
-        '''Method to change state to done'''
-        for rec in self:
-            rec.state = 'done'
-        return True
-
-    @api.multi
-    def admission_draft(self):
-        '''Set the state to draft'''
-        for rec in self:
-            rec.state = 'draft'
-        return True
-
-    @api.multi
-    def set_terminate(self):
-        for rec in self:
-            rec.state = 'terminate'
-        return True
-
-    @api.multi
-    def cancel_admission(self):
-        for rec in self:
-            rec.state = 'cancel'
-            rec.active = False
-        return True
-
-    @api.multi
-    def admission_done(self):
-        '''Method to confirm admission'''
-        school_standard_obj = self.env['school.standard']
-        ir_sequence = self.env['ir.sequence']
-        student_group = self.env.ref('school.group_school_student')
-        emp_group = self.env.ref('base.group_user')
-        for rec in self:
-            if not rec.standard_id:
-                raise ValidationError(_('''Please select the standard!'''))
-            if rec.standard_id.remaining_seats <= 0:
-                raise ValidationError(_('''Seats of standard %s
-                                        are full!'''
-                                        ) % (rec.standard_id.standard_id.name,)
-                                      )
-            domain = [('school_id', '=', rec.school_id.id)]
-            # Checks the standard if not defined raise error
-            if not school_standard_obj.search(domain):
-                raise except_orm(_('Warning!'),
-                                 _('''The selected standard is
-                                   not defined in school!'''))
-            # Assign group to student
-            rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
-                                                     student_group.id])]})
-            # Assign roll no to student
-            number = 1
-            for rec_std in rec.search(domain):
-                rec_std.roll_no = number
-                number += 1
-            # Assign registration code to student
-            reg_code = ir_sequence.next_by_code('student.registration')
-            registation_code = (str(rec.school_id.state_id.name) + str('/') +
-                                str(rec.school_id.city) + str('/') +
-                                str(rec.school_id.name) + str('/') +
-                                str(reg_code))
-            stu_code = ir_sequence.next_by_code('student.code')
-            student_code = (str(rec.school_id.code) + str('/') +
-                            str(rec.year.code) + str('/') +
-                            str(stu_code))
-            rec.write({'state': 'done',
-                       'admission_date': time.strftime('%Y-%m-%d'),
-                       'student_code': student_code,
-                       'reg_code': registation_code})
-        return True
 
 
 class MotherTongue(models.Model):
@@ -747,7 +462,7 @@ class StudentDescipline(models.Model):
     _name = 'student.descipline'
 
     student_id = fields.Many2one('student.student', 'Student')
-    teacher_id = fields.Many2one('hr.employee', 'Teacher')
+    teacher_id = fields.Many2one('school.teacher', 'Teacher')
     date = fields.Date('Date')
     class_id = fields.Many2one('standard.standard', 'Class')
     note = fields.Text('Note')
@@ -771,154 +486,6 @@ class StudentCertificate(models.Model):
     student_id = fields.Many2one('student.student', 'Student')
     description = fields.Char('Description')
     certi = fields.Binary('Certificate', required=True)
-
-
-class HrEmployee(models.Model):
-    ''' Defining a teacher information '''
-    _name = 'hr.employee'
-    _inherit = 'hr.employee'
-    _description = 'Teacher Information'
-
-    @api.multi
-    def _compute_subject(self):
-        ''' This function will automatically computes the subjects related to
-            particular teacher.'''
-        subject_obj = self.env['subject.subject']
-        for rec in self:
-            # Search the subject assign to teacher
-            subject_ids = subject_obj.search([('teacher_ids', '=', rec.id)])
-            # append the subjects
-            rec.subject_ids = False
-            if subject_ids:
-                rec.subject_ids = [sub_rec.id for sub_rec in subject_ids]
-
-    is_school_teacher = fields.Boolean('School Teacher')
-    school = fields.Many2one('school.school', 'School')
-    subject_ids = fields.Many2many('subject.subject', 'hr_employee_rel',
-                                   'Subjects', compute='_compute_subject')
-
-    @api.model
-    def create(self, vals):
-        '''This method creates teacher user and assign group teacher'''
-        res = super(HrEmployee, self).create(vals)
-
-        if vals.get('school') and res.is_school_teacher:
-            school = self.env['school.school'].browse(vals.get('school'))
-            user_vals = {'name': vals.get('name'),
-                         'login': vals.get('work_email', False),
-                         'password': vals.get('work_email', False),
-                         'partner_id': self.id,
-                         'company_id': school.company_id.id,
-                         'company_ids': [(4, school.company_id.id)]}
-            if vals.get('work_email'):
-                emailvalidation(vals.get('work_email'))
-            # Create user
-            user = self.env['res.users'].create(user_vals)
-            if user and user.partner_id:
-                user.partner_id.write({'email': vals.get('work_email', False)}
-                                      )
-            # Assign group of teacher to user created
-            if res and user:
-                res.write({'address_home_id': user.partner_id.id,
-                           'user_id': user and user.id or False})
-                teacher_group = self.env.ref('school.group_school_teacher')
-                emp_group = self.env.ref('base.group_user')
-                user.write({'groups_id': [(6, 0, [emp_group.id,
-                                                  teacher_group.id])]})
-        return res
-
-    @api.multi
-    def write(self, vals):
-        '''Write method of hr employee'''
-        res = super(HrEmployee, self).write(vals)
-        # creating user
-        for rec in self:
-            if rec.school and rec.is_school_teacher and not rec.user_id:
-                user_vals = {'name': rec.name,
-                             'login': rec.work_email,
-                             'password': rec.work_email,
-                             'company_id': rec.school.company_id.id,
-                             'company_ids': [(4, rec.school.company_id.id)]}
-                # Create user
-                user = self.env['res.users'].create(user_vals)
-                if user and user.partner_id:
-                    user.partner_id.write({'email': rec.work_email})
-                # Assign group of teacher to user created
-                if res and user:
-                    rec.write({'address_home_id': user.partner_id.id,
-                               'user_id': user and user.id or False})
-                    teacher_grp = self.env.ref('school.group_school_teacher')
-                    emp_group = self.env.ref('base.group_user')
-                    user.write({'groups_id': [(6, 0, [emp_group.id,
-                                                      teacher_grp.id])]})
-        # Assign email
-        if res and vals.get('work_email'):
-            if self.user_id:
-                self.user_id.write({'login': vals.get('work_email')})
-            if self.user_id and self.user_id.partner_id:
-                self.user_id.partner_id.write({'email': vals.get('work_email')
-                                               })
-        # Assign name
-        if res and vals.get('name'):
-            if self.user_id:
-                self.user_id.write({'name': vals.get('name')})
-            if self.user_id and self.user_id.partner_id:
-                self.user_id.partner_id.write({'name': vals.get('name')
-                                               })
-        # Assign Company
-        if vals.get('school'):
-            if self._context.get('school_teacher'):
-                school = self.env['school.school'].browse(vals.get('school'))
-                if school and school.company_id:
-                    self.user_id.write({'company_ids':
-                                        [(4, school.company_id.id)],
-                                        'company_id': school.company_id.id})
-        return res
-
-
-class ResPartner(models.Model):
-    '''Defining a address information '''
-    _inherit = 'res.partner'
-    _description = 'Address Information'
-
-    student_id = fields.Many2one('student.student', 'Student')
-    parent_school = fields.Boolean('Is A Parent')
-    gender = fields.Selection([('male', 'Male'),
-                               ('female', 'Female')], 'Gender')
-    student_ids = fields.Many2many('student.student', 'student_parent_rel',
-                                   'parent_id', 'student_id', 'Children')
-
-    @api.model
-    def create(self, vals):
-        '''Method creates parents assign group parents'''
-        res = super(ResPartner, self).create(vals)
-        # Create user
-        if res and res.parent_school:
-            user_vals = {'name': vals.get('name'),
-                         'login': vals.get('email', False),
-                         'password': vals.get('email', False),
-                         'partner_id': res.id
-                         }
-            if vals.get('email'):
-                emailvalidation(vals.get('email'))
-            user = self.env['res.users'].create(user_vals)
-            # Assign group of parents to user created
-            emp_grp = self.env.ref('base.group_user')
-            parent_group = self.env.ref('school.group_school_parent')
-            if user:
-                user.write({'groups_id': [(6, 0, [emp_grp.id, parent_group.id])
-                                          ]
-                            })
-        return res
-
-    @api.onchange('country_id')
-    def _onchange_country_id(self):
-        if self.country_id:
-            return {'domain': {'state_id': [('country_id', '=',
-                                             self.country_id.id)]}}
-        else:
-            return {'domain': {'state_id': [('country_id', '=',
-                                             self.country_id.id)]}}
 
 
 class StudentReference(models.Model):
@@ -955,12 +522,11 @@ class StudentPreviousSchool(models.Model):
         new_dt = datetime.strftime(curr_dt,
                                    DEFAULT_SERVER_DATE_FORMAT)
         if self.admission_date >= new_dt or self.exit_date >= new_dt:
-            raise ValidationError(_('''Configure admission date and exit
-                                    date less than current date
-                                    in previous school details!'''))
+            raise ValidationError(_('''Your admission date and exit date
+            should be less than current date in previous school details!'''))
         if self.admission_date > self.exit_date:
-            raise ValidationError(_('''Configure admission date less than
-                                    exit date in previous school details!'''))
+            raise ValidationError(_(''' Admission date should be less than
+            exit date in previous school!'''))
 
 
 class AcademicSubject(models.Model):
@@ -980,15 +546,6 @@ class StudentFamilyContact(models.Model):
     _name = "student.family.contact"
     _description = "Student Family Contact"
 
-    @api.multi
-    @api.depends('relation', 'stu_name')
-    def _compute_get_name(self):
-        for rec in self:
-            if rec.stu_name:
-                rec.relative_name = rec.stu_name.name
-            else:
-                rec.relative_name = rec.name
-
     family_contact_id = fields.Many2one('student.student', 'Student')
     exsting_student = fields.Many2one('student.student',
                                       'Student')
@@ -1004,7 +561,16 @@ class StudentFamilyContact(models.Model):
                                required=True)
     phone = fields.Char('Phone', required=True)
     email = fields.Char('E-Mail')
-    relative_name = fields.Char(compute='_compute_get_name', string='Name')
+    relative_name = fields.Char(compute='_get_name', string='Name')
+
+    @api.multi
+    @api.depends('relation', 'stu_name')
+    def _get_name(self):
+        for rec in self:
+            if rec.stu_name:
+                rec.relative_name = rec.stu_name.name
+            else:
+                rec.relative_name = rec.name
 
 
 class StudentRelationMaster(models.Model):
@@ -1043,6 +609,7 @@ class StudentNews(models.Model):
     _name = 'student.news'
     _description = 'Student News'
     _rec_name = 'subject'
+    _order = 'date asc'
 
     subject = fields.Char('Subject', required=True,
                           help='Subject of the news.')
@@ -1052,6 +619,14 @@ class StudentNews(models.Model):
                                 'User News',
                                 help='Name to whom this news is related.')
     color = fields.Integer('Color Index', default=0)
+
+    @api.constrains("date")
+    def checknews_dates(self):
+        curr_dt = datetime.now()
+        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATETIME_FORMAT)
+        if self.date < new_date:
+            raise ValidationError('''Configure expiry date greater than current
+            date!''')
 
     @api.multi
     def news_update(self):
@@ -1074,7 +649,7 @@ class StudentNews(models.Model):
                               if news_user.email]
                 if not email_list:
                     raise except_orm(_('User Email Configuration!'),
-                                     _("Email not found in users!"))
+                                     _("Email not found in users !"))
             # Check email is defined in user created from employee
             else:
                 for employee in emp_obj.search([]):
@@ -1098,7 +673,7 @@ class StudentNews(models.Model):
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
-                raise except_orm(_('Email Configuration!'),
+                raise except_orm(_('Email Configuration '),
                                  _("Kindly,Configure Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             # Configure email
@@ -1164,8 +739,7 @@ class Report(models.Model):
         for data in values.get('docs'):
             if (values.get('doc_model') == 'student.student' and
                     data.state == 'draft'):
-                    raise ValidationError(_('''You cannot print
-                                            report of an unconfirmed student
-                                            !'''))
+                    raise ValidationError(_('''You cannot print report for
+                student in unconfirm state!'''))
         res = super(Report, self).render(template, values)
         return res

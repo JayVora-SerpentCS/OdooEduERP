@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# See LICENSE file for full copyright and licensing details.
-
 from odoo.tests import common
 from odoo.report import render_report
 from odoo.tools import config
@@ -20,7 +17,7 @@ class TestExam(common.TransactionCase):
         self.time_table_line_obj = self.env['time.table.line']
         self.exam_schedule_line_obj = self.env['exam.schedule.line']
         self.exam_subject_obj = self.env['exam.subject']
-        self.hr_employee = self.env.ref('hr.employee_al')
+        self.hr_employee = self.env.ref('school.demo_school_teacher_2')
         self.subject_id = self.env.ref('school.demo_subject_subject_1')
         self.std = self.env.ref('school.demo_standard_standard_1')
         self.standards = self.env.ref('school.demo_school_standard_1')
@@ -49,7 +46,7 @@ class TestExam(common.TransactionCase):
                     'end_time': 12.00,
                     'teacher_id': self.hr_employee.id,
                     'table_id': self.time_table.id,
-                    'class_room_id': self.room_id.id
+                    'class_room_id': self.room_id.id,
                     })
         self.time_table_line.onchange_date_day()
         self.time_table_line._check_date()
@@ -129,7 +126,7 @@ class TestExam(common.TransactionCase):
                     'result': 'Pass'
                     })
         self.additional_exam_result.onchange_student()
-        self.additional_exam_result._validate_marks()
+        self.additional_exam_result._validate_obtain_marks()
         self.additional_exam_result._compute_student_result()
         data, format = render_report(self.env.cr, self.env.uid,
                                      self.additional_exam_result.ids,

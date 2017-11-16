@@ -11,11 +11,15 @@ class ReportTimetableInfo(models.AbstractModel):
     def _get_timetable(self, timetable_id):
         timetable_detail = []
         self._cr.execute('''select t.start_time,t.end_time,s.name,week_day,
-                        r.name as teacher from time_table_line t,
-                        subject_subject s, resource_resource r, hr_employee
-                        hr where t.subject_id= s.id and t.teacher_id= hr.id
-                        and hr.resource_id = r.id  and table_id = %s
-                        group by start_time,end_time,s.name,week_day,r.name
+                        st.employee_id, hr.name_related as
+                        teacher from time_table_line t,
+                        subject_subject s, resource_resource r, school_teacher
+                        st, hr_employee
+                        hr where t.subject_id= s.id and t.teacher_id=st.id and
+                        st.employee_id= hr.id
+                        and  t.table_id = %s
+                        group by start_time,end_time,s.name,week_day,
+                        st.employee_id,hr.name_related
                         order by start_time''', tuple([timetable_id.id]))
         res = self._cr.dictfetchall()
         self._cr.execute('''select start_time,end_time from time_table_line

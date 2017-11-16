@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Library Management',
     'version': "10.0.1.0.6",
     'author': "Serpent Consulting Services Pvt. Ltd.",
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
-    'images': ['static/description/SchoolLibrary.png'],
     'license': "AGPL-3",
     'summary': 'A Module For Library Management For School',
     'complexity': 'easy',

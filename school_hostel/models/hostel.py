@@ -33,15 +33,14 @@ class HostelType(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        '''Override method to get exam of student selected'''
+        '''Override method to get hostel of student selected'''
         if self._context.get('student_id'):
             stud_obj = self.env['student.student']
             stud = stud_obj.browse(self._context['student_id'])
             datas = []
             if stud.gender:
-                self._cr.execute("""select id from hostel_type
-                                 where type=%s or
-                                 type='common' """, (stud.gender,))
+                self._cr.execute("""select id from hostel_type where type=%s or
+                type='common' """, (stud.gender,))
                 data = self._cr.fetchall()
                 for d in data:
                     datas.append(d[0])
@@ -114,10 +113,10 @@ class HostelRoom(models.Model):
     _sql_constraints = [('room_no_unique', 'unique(room_no)',
                          'Room number must be unique!')]
     _sql_constraints = [('floor_per_hostel', 'check(floor_no < 10)',
-                         'Error ! Floor per HOSTEL should be less than 10!')]
+                         'Error ! Floor per HOSTEL should be less than 10.')]
     _sql_constraints = [('student_per_room_greater',
                          'check(student_per_room < 10)',
-                         'Error ! Student per room should be less than 10!')]
+                         'Error ! Student per room should be less than 10.')]
 
 
 class HostelStudent(models.Model):
@@ -134,7 +133,7 @@ class HostelStudent(models.Model):
     def check_duration(self):
         '''Method to check duration should be greater than zero'''
         if self.duration <= 0:
-            raise ValidationError(_('''Configure duration greater than 0!'''))
+            raise ValidationError(_('Duration should be greater than 0!'))
 
     @api.multi
     def _compute_invoices(self):
@@ -158,18 +157,17 @@ class HostelStudent(models.Model):
 
     @api.constrains('room_id')
     def check_room_avaliable(self):
-        for rec in self:
-            if rec.room_id.availability <= 0:
-                raise ValidationError(_('''There is no avalilability
-                                        in %s room!''') %
-                                      self.room_id.room_no)
+        '''Check Room Availability'''
+        if self.room_id.availability <= 0:
+                raise ValidationError(_('''There is no avalilability in the
+                room!'''))
 
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.status in ['reservation', 'pending', 'paid']:
-                raise ValidationError(_('''You can delete record
-                                        in unconfirm state only!'''))
+                raise ValidationError(_('''You can delete record in
+                unconfirm state only!'''))
         return super(HostelStudent, self).unlink()
 
     @api.depends('status')
@@ -189,7 +187,7 @@ class HostelStudent(models.Model):
     room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
                              required=True,
                              help="Rent of room")
-    bed_type = fields.Many2one('bed.type', 'Bed Type')
+#    bed_type = fields.Many2one('bed.type', 'Bed Type')
     admission_date = fields.Datetime('Admission Date',
                                      help="Date of admission in hostel",
                                      default=fields.Date.context_today)
@@ -220,7 +218,7 @@ class HostelStudent(models.Model):
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
                          'Error ! Discharge Date cannot be set'
-                         'before Admission Date!')]
+                         'before Admission Date.')]
 
     @api.multi
     def cancel_state(self):
@@ -233,13 +231,12 @@ class HostelStudent(models.Model):
 
     @api.onchange('hostel_info_id')
     def onchange_hostel_types(self):
-        for rec in self:
-            rec.hostel_types = rec.hostel_info_id.type
+        self.hostel_types = self.hostel_info_id.type
 
     @api.onchange('student_id')
     def onchange_student_gender(self):
-        for rec in self:
-            rec.stud_gender = rec.student_id.gender
+        '''Method to get gender of student'''
+        self.stud_gender = self.student_id.gender
 
     @api.multi
     def reservation_state(self):
@@ -256,11 +253,32 @@ class HostelStudent(models.Model):
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
         '''to calculate discharge date based on current date and duration'''
-        for rec in self:
-            if rec.admission_date:
-                date = datetime.strptime(rec.admission_date,
-                                         DEFAULT_SERVER_DATETIME_FORMAT)
-                rec.discharge_date = date + rd(months=rec.duration)
+        if self.admission_date:
+            date = datetime.strptime(self.admission_date,
+                                     DEFAULT_SERVER_DATETIME_FORMAT)
+            self.discharge_date = date + rd(months=self.duration)
+
+    @api.model
+    def create(self, vals):
+        res = super(HostelStudent, self).create(vals)
+        date = datetime.strptime(res.admission_date,
+                                 DEFAULT_SERVER_DATETIME_FORMAT)
+        res.discharge_date = date + rd(months=res.duration)
+        vals.update({'discharge_date': res.discharge_date,
+                     })
+        return res
+
+    @api.multi
+    def write(self, vals):
+        duration_months = vals.get('duration') or self.duration
+        addmissiondate = vals.get('admission_date') or self.admission_date
+        if addmissiondate and not vals.get('discharge_date'):
+            date = datetime.strptime(addmissiondate,
+                                     DEFAULT_SERVER_DATETIME_FORMAT)
+            discharge_date_student = date + rd(months=duration_months)
+            vals.update({'discharge_date': discharge_date_student,
+                         })
+        return super(HostelStudent, self).write(vals)
 
     @api.constrains('student_id')
     def check_student_registration(self):
@@ -350,15 +368,6 @@ class HostelStudent(models.Model):
         return self.env['report'
                         ].get_action(self,
                                      'school_hostel.hostel_fee_reciept1')
-
-
-class BedType(models.Model):
-
-    _name = 'bed.type'
-    _description = 'Type of Bed in HOSTEL'
-
-    name = fields.Char('Name', required=True)
-    description = fields.Text('Description')
 
 
 class AccountInvoice(models.Model):

@@ -235,6 +235,9 @@ class ProductProduct(models.Model):
                     vals['seller_ids'] = [supplier]
                 else:
                     vals['seller_ids'].append(supplier)
+#        ebook_product = self.browse(vals.get('is_ebook'))
+#        if ebook_product:
+#            vals.update({'availability': available})
         return super(ProductProduct, self).create(vals)
 
 #    @api.onchange('day_to_return_book')
@@ -321,6 +324,10 @@ class ProductProduct(models.Model):
     format = fields.Char('Format',
                          help="The general physical appearance of a book")
 #    price_cat = fields.Many2one('library.price.category', "Price category")
+    is_ebook = fields.Boolean("Is EBook")
+    is_subscription = fields.Boolean("Is Subscription based")
+    subscrption_amt = fields.Float("Subscription Amount")
+    attach_ebook = fields.Binary("Attach EBook")
     day_to_return_book = fields.Integer('Book Return Days')
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
@@ -330,6 +337,20 @@ class ProductProduct(models.Model):
                           all the products'),
                         ('code_uniq', 'unique (code)',
                          'Code of the product must be unique !')]
+
+    @api.onchange('is_ebook', 'attach_ebook')
+    def onchange_availablilty(self):
+        if self.is_ebook and self.attach_ebook:
+            self.availability = 'available'
+
+#    @api.model
+#    def create(self, vals):
+#        res = super(ProductProduct, self).create(vals)
+#        print"vals1++++++++++", vals
+#        ebook_product = self.browse(vals.get('is_ebook'))
+#        if res.is_ebook:
+#            vals.update({'availability': 'available'})
+#        return res
 
     @api.multi
     def action_purchase_order(self):

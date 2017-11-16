@@ -25,6 +25,8 @@ class MonthlyAttendanceSheet(models.TransientModel):
             @return : record of monthly attendance sheet
         '''
         data = self.read([])[0]
+        context = {'start_date': self.month_id.date_start,
+                   'end_date': self.month_id.date_stop}
         models_data = self.env['ir.model.data']
         # Get opportunity views
         dummy, form_view = models_data.\
@@ -40,6 +42,7 @@ class MonthlyAttendanceSheet(models.TransientModel):
                 'domain': [('standard_id', '=', data['standard_id'][0]),
                            ('month_id', '=', data['month_id'][0]),
                            ('year_id', '=', data['year_id'][0])],
+                'context': context,
                 'views': [(tree_view or False, 'tree'),
                           (form_view or False, 'form')],
                 'type': 'ir.actions.act_window'}

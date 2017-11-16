@@ -8,15 +8,15 @@
             <field name="name">Teacher Attendance Record Rule</field>
             <field name="model_id" ref="model_daily_attendance"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('user_id.user_id','=',user.id)]</field>
+            <field name="domain_force">[('user_id.employee_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
-        <!-- Record Rule Teacher can see atbsenties of own class of his own class-->
+<!--         Record Rule Teacher can see atbsenties of own class of his own class -->
         <record id="attendance_rule_teacher_absentee" model="ir.rule">
             <field name="name">Teacher Attendance Absentie Record Rule</field>
             <field name="model_id" ref="model_studentleave_request"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field>
+            <field name="domain_force">[('teacher_id.employee_id.user_id','=',user.id),('state','in',['approve','reject','toapprove'])]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
         <!-- Record Rule student can see absentee of its own -->
@@ -29,11 +29,28 @@
         </record>
         <!-- Record Rule parents can see absentee record of own child -->
         <record id="parents_rule_event_registration" model="ir.rule">
-            <field name="name">Patents Attendance Absentie Record Rule</field>
+            <field name="name">Parents Attendance Absentie Record Rule</field>
             <field name="model_id" ref="model_studentleave_request"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="domain_force">[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
+        
+<!--         <record id="parents_rule_event_registration_test" model="ir.rule"> -->
+<!--             <field name="name">Parents Attendance Absentie Record Rule Test</field> -->
+<!--             <field name="model_id" ref="model_studentleave_request"/> -->
+<!--             <field name="global" eval="True"/> -->
+<!--             <field name="domain_force">[(1 ,'=', 1)]</field> -->
+<!--             <field name="groups" eval="[(4, ref('school.group_school_parent'),ref('school.group_school_teacher'))]"/> -->
+<!--         </record> -->
+        
+<!--         Record Rule teacher can see only related students of his ow standard -->
+        <record id="teacher_rule_students" model="ir.rule">
+            <field name="name">Teacher Attendance Absentie Student Record Rule</field>
+            <field name="model_id" ref="model_studentleave_request"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('student_id.standard_id.user_id.employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
     </data>
 </odoo>

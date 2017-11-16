@@ -56,7 +56,7 @@
             <field name="name">Personal library card Record for Teacher</field>
             <field ref="library.model_library_card" name="model_id" />
             <field eval="1" name="global" />
-            <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field>
+            <field name="domain_force">[('teacher_id.employee_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
         
@@ -66,7 +66,7 @@
             <field name="name">Personal Book Request Record</field>
             <field ref="library.model_library_book_request" name="model_id"/>
             <field eval="1" name="global" />
-            <field name="domain_force">[('card_id.teacher_id.user_id','=',user.id)]</field>
+            <field name="domain_force">[('card_id.teacher_id.employee_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
         
@@ -76,7 +76,7 @@
             <field name="name">Personal Book Issues Record for Teacher</field>
             <field ref="library.model_library_book_issue" name="model_id"/>
             <field eval="1" name="global" />
-            <field name="domain_force">[('card_id.teacher_id.user_id','=',user.id)]</field>
+            <field name="domain_force">[('card_id.teacher_id.employee_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
     </data>

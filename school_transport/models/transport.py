@@ -15,7 +15,6 @@ class StudentTransport(models.Model):
 
 
 class HrEmployee(models.Model):
-    _name = 'hr.employee'
     _inherit = 'hr.employee'
     _description = 'Driver Information'
 
@@ -45,8 +44,8 @@ class TransportPoint(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
         name = self._context.get('name')
+        transport_obj = self.env['student.transport']
         if name:
-            transport_obj = self.env['student.transport']
             for transport_data in transport_obj.browse(name):
                 point_ids = [point_id.id
                              for point_id in transport_data.trans_point_ids]
@@ -86,8 +85,8 @@ class TransportVehicle(models.Model):
                 access_rights_uid=None):
         '''Override method to get vehicles of selected transport root'''
         name = self._context.get('name')
+        transport_obj = self.env['student.transport']
         if name:
-            transport_obj = self.env['student.transport']
             transport_data = transport_obj.browse(name)
             vehicle_ids = [std_id.id
                            for std_id in transport_data.trans_vehicle_ids]
@@ -145,9 +144,8 @@ class TransportParticipant(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state == 'running':
-                raise ValidationError(_('''You can delete
-                                        record only when duration is over!.
-                                        '''))
+                raise ValidationError(_('''You cannot delete record in running
+                state!.'''))
         return super(TransportParticipant, self).unlink()
 
 
@@ -219,18 +217,17 @@ class StudentTransports(models.Model):
             ed_date = datetime.strptime(rec.end_date, '%Y-%m-%d')
             delta = ed_date - st_date
             if rec.start_date > rec.end_date:
-                raise ValidationError(_('''Configure start date less than end
+                raise ValidationError(_('''Start date should be less than end
                 date!'''))
             if delta.days < 30:
-                raise ValidationError(_('''The duration between end date and
-                start date should be of 30 days or more than 30 days!'''))
+                raise ValidationError(_('Enter duration of month!'))
 
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.state == 'open':
-                raise ValidationError(_('''You can delete record in unconfirm
-                                        state or in cancel state only!'''))
+                raise ValidationError(_('''You can delete record in draft state
+                                        or cancel state only!'''))
         return super(StudentTransports, self).unlink()
 
 
@@ -248,20 +245,12 @@ class TransportRegistration(models.Model):
     _description = 'Transport Registration'
 
     @api.depends('state')
-    def _compute_get_user_groups(self):
+    def _get_user_groups(self):
         user_group = self.env.ref('school_transport.group_transportation_user')
         grps = [group.id
                 for group in self.env['res.users'].browse(self._uid).groups_id]
         if user_group.id in grps:
             self.transport_user = True
-
-    @api.multi
-    def _compute_invoice(self):
-        '''Method to compute number of invoice of participant'''
-        inv_obj = self.env['account.invoice']
-        for rec in self:
-            rec.count_inv = inv_obj.search_count([('transport_student_id',
-                                                   '=', rec.id)])
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
                            domain=[('state', '=', 'open')], required=True)
@@ -294,7 +283,7 @@ class TransportRegistration(models.Model):
                                   string="Transport Fees")
     amount = fields.Float('Final Amount', readonly=True)
     count_inv = fields.Integer('Invoice Count', compute="_compute_invoice")
-    transport_user = fields.Boolean(compute="_compute_get_user_groups",
+    transport_user = fields.Boolean(compute="_get_user_groups",
                                     string="transport user")
 
     @api.model
@@ -307,16 +296,14 @@ class TransportRegistration(models.Model):
 
     @api.depends('m_amount', 'for_month')
     def _compute_transport_fees(self):
-        for rec in self:
-            rec.transport_fees = rec.m_amount * rec.for_month
+        self.transport_fees = self.m_amount * self.for_month
 
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.state in ['confirm', 'pending', 'paid']:
                 raise ValidationError(_('''You can delete record in
-                                        unconfirm state and cancel
-                                        state only!'''))
+                unconfirm state and cancel state only!'''))
         return super(TransportRegistration, self).unlink()
 
     @api.multi
@@ -368,31 +355,35 @@ class TransportRegistration(models.Model):
             return action
 
     @api.multi
+    def _compute_invoice(self):
+        '''Method to compute number of invoice of participant'''
+        inv_obj = self.env['account.invoice']
+        for rec in self:
+            rec.count_inv = inv_obj.search_count([('transport_student_id',
+                                                   '=', rec.id)])
+
+    @api.multi
     @api.onchange('point_id')
     def onchange_point_id(self):
         '''Method to get amount of point selected'''
-        for rec in self:
-            if rec.point_id:
-                rec.m_amount = rec.point_id.amount or 0.0
+        if self.point_id:
+            self.m_amount = self.point_id.amount or 0.0
 
     @api.multi
     @api.onchange('for_month')
     def onchange_for_month(self):
         '''Method to compute registration end date'''
-        for rec in self:
-            tr_start_date = time.strftime("%Y-%m-%d")
-            mon = relativedelta(months=+rec.for_month)
-            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d'
-                                            ) + mon
-            date = datetime.strftime(tr_end_date, '%Y-%m-%d')
-            rec.reg_end_date = date
+        tr_start_date = time.strftime("%Y-%m-%d")
+        mon = relativedelta(months=+self.for_month)
+        tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d'
+                                        ) + mon
+        date = datetime.strftime(tr_end_date, '%Y-%m-%d')
+        self.reg_end_date = date
 
     @api.multi
     def trans_regi_cancel(self):
         '''Method to set state to cancel'''
-        for rec in self:
-            rec.write({'state': 'cancel'})
-        return True
+        self.write({'state': 'cancel'})
 
     @api.multi
     def trans_regi_confirm(self):
@@ -404,12 +395,12 @@ class TransportRegistration(models.Model):
         for rec in self:
             # registration months must one or more then one
             if rec.for_month <= 0:
-                raise UserError(_('''Error!Registration months must be
-                                  one or more then one!'''))
+                raise UserError(_('Error! Sorry Registration months must be 1'
+                                  'or more then one.'))
             # First Check Is there vacancy or not
             person = int(rec.vehicle_id.participant) + 1
             if rec.vehicle_id.capacity < person:
-                raise UserError(_('There is no vacancy in this vehicle!'))
+                raise UserError(_('There is No More vacancy on this vehicle.'))
 
             rec.write({'state': 'confirm',
                        'remain_amt': rec.transport_fees})
@@ -421,9 +412,9 @@ class TransportRegistration(models.Model):
             tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon1
             date = datetime.strptime(rec.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
-                raise UserError(_('''For the selected months
-                                  Registration is not Possible because
-                                  Root end date is Early!'''))
+                raise UserError(_('For this much Months\
+                                  Registration is not Possible because\
+                                  Root end date is Early!'))
             # make entry in Transport
             dict_prt = {'stu_pid_id': str(rec.part_name.pid),
                         'amount': amount,
