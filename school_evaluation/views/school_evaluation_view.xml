@@ -465,14 +465,14 @@
         </record>
         
         <!-- Actions View of the School Student Tree View -->
-        <record id="action_view_student_evaluation_tree_finished" model="ir.actions.act_window.view">
+        <record id="action_view_student_evaluation_tree_draft" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_student_evaluation_tree" />
             <field name="act_window_id" ref="action_student_eval_draft" />
         </record>
 
         <!-- Actions View of the School Student Form View -->
-        <record id="action_view_student_evaluation_form_finished" model="ir.actions.act_window.view">
+        <record id="action_view_student_evaluation_form_draft" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_student_evaluation_form" />
             <field name="act_window_id" ref="action_student_eval_draft" />
