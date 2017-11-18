@@ -14,7 +14,7 @@ class StudentFeesRegister(models.Model):
 
     @api.multi
     @api.depends('line_ids')
-    def _total_amount(self):
+    def _compute_total_amount(self):
         '''Method to compute total amount'''
         for rec in self:
             total_amt = 0.0
@@ -31,7 +31,7 @@ class StudentFeesRegister(models.Model):
     line_ids = fields.One2many('student.payslip', 'register_id',
                                'PaySlips')
     total_amount = fields.Float("Total",
-                                compute="_total_amount",
+                                compute="_compute_total_amount",
                                 store=True)
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
                              'State', readonly=True, default='draft')
@@ -79,10 +79,8 @@ class StudentFeesRegister(models.Model):
                                            student: %s\
                                            for same date.!') % stu.name)
                 else:
-                    rec.number = self.env['ir.sequence'
-                                          ]. \
-                                          next_by_code('student.fees.register'
-                                                       ) or _('New')
+                    rec.number = self.env['ir.sequence'].\
+                        next_by_code('student.fees.register') or _('New')
                     res = {'student_id': stu.id,
                            'register_id': rec.id,
                            'name': rec.name,
