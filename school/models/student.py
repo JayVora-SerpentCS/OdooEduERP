@@ -12,7 +12,7 @@ from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 # from dateutil.relativedelta import relativedelta
-from school import emailvalidation
+from school.models.school import emailvalidation
 # from lxml import etree
 # added import statement in try-except because when server runs on
 # windows operating system issue arise because this library is not in Windows.

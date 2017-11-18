@@ -159,8 +159,8 @@ class AcademicMonth(models.Model):
         for old_month in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
             if (old_month.date_start <= self.date_start <= old_month.date_stop
-                    or old_month.date_start <= self.date_stop <=
-                    old_month.date_stop):
+                    or old_month.date_start <= self.date_stop
+                    <= old_month.date_stop):
                     raise ValidationError(_('''Error! You cannot define
                     overlapping months!'''))
 
@@ -244,7 +244,7 @@ class SchoolStandard(models.Model):
 
     @api.multi
     @api.depends('student_ids')
-    def _total_student(self):
+    def _compute_total_student(self):
         for rec in self:
             rec.total_students = len(rec.student_ids)
 
@@ -274,7 +274,7 @@ class SchoolStandard(models.Model):
     name = fields.Char('Name')
     capacity = fields.Integer("Total Seats")
     total_students = fields.Integer("Total Students",
-                                    compute="_total_student",
+                                    compute="_compute_total_student",
                                     store=True)
     remaining_seats = fields.Integer("Available Seats",
                                      compute="_compute_remain_seats",
@@ -546,6 +546,15 @@ class StudentFamilyContact(models.Model):
     _name = "student.family.contact"
     _description = "Student Family Contact"
 
+    @api.multi
+    @api.depends('relation', 'stu_name')
+    def _compute_get_name(self):
+        for rec in self:
+            if rec.stu_name:
+                rec.relative_name = rec.stu_name.name
+            else:
+                rec.relative_name = rec.name
+
     family_contact_id = fields.Many2one('student.student', 'Student')
     exsting_student = fields.Many2one('student.student',
                                       'Student')
@@ -561,16 +570,7 @@ class StudentFamilyContact(models.Model):
                                required=True)
     phone = fields.Char('Phone', required=True)
     email = fields.Char('E-Mail')
-    relative_name = fields.Char(compute='_get_name', string='Name')
-
-    @api.multi
-    @api.depends('relation', 'stu_name')
-    def _get_name(self):
-        for rec in self:
-            if rec.stu_name:
-                rec.relative_name = rec.stu_name.name
-            else:
-                rec.relative_name = rec.name
+    relative_name = fields.Char(compute='_compute_get_name', string='Name')
 
 
 class StudentRelationMaster(models.Model):
@@ -625,8 +625,8 @@ class StudentNews(models.Model):
         curr_dt = datetime.now()
         new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATETIME_FORMAT)
         if self.date < new_date:
-            raise ValidationError('''Configure expiry date greater than current
-            date!''')
+            raise ValidationError(_('''Configure expiry date greater than
+            current date!'''))
 
     @api.multi
     def news_update(self):

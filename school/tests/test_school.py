@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
@@ -55,8 +56,7 @@ class TestSchool(common.TransactionCase):
         student_list = [self.student_student.id]
         # Parent Created
         self.parent = self.parent_obj.\
-            create({
-                    'name': 'Robert Martin',
+            create({'name': 'Robert Martin',
                     'country_id': self.country_id.id,
                     'state_id': self.state_id.id,
                     'city': 'Gandhinagar',
