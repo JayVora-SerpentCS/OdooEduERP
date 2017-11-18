@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, tools, api
+from odoo import models, fields, api
 
 
 class SchoolTeacher(models.Model):
@@ -144,13 +144,13 @@ class SchoolTeacher(models.Model):
 #            self.work_phone = self.school_id.company_id.partner_id.phone
 
 
-class ResUsers(models.Model):
+class TeacherresUsers(models.Model):
 
     _inherit = "res.users"
 
     @api.model
     def create(self, vals):
-        user_rec = super(ResUsers, self).create(vals)
+        user_rec = super(TeacherresUsers, self).create(vals)
         school = self.env['school.school'].browse(vals.get('school_id'))
         if vals.get('teacher_create'):
             ir_obj = self.env['ir.model.data']

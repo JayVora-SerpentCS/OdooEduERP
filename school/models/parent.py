@@ -67,13 +67,13 @@ class SchoolParent(models.Model):
         return {'value': {}}
 
 
-class ResUsers(models.Model):
+class ParentresUsers(models.Model):
 
     _inherit = "res.users"
 
     @api.model
     def create(self, vals):
-        user_rec = super(ResUsers, self).create(vals)
+        user_rec = super(ParentresUsers, self).create(vals)
         if vals.get('parent_create'):
             ir_obj = self.env['ir.model.data']
             parent_grp_id = ir_obj.get_object('school', 'group_school_parent')

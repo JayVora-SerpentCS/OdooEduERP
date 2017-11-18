@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from dateutil.relativedelta import relativedelta
+# from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
@@ -185,9 +185,9 @@ class LibraryBookIssue(models.Model):
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
-        rd = relativedelta(days=self.day_to_return_book or 0.0)
-        if self.date_issue and rd:
-            ret_date = datetime.strptime(self.date_issue, t) + rd
+        diff = rd(days=self.day_to_return_book or 0.0)
+        if self.date_issue and diff:
+            ret_date = datetime.strptime(self.date_issue, t) + diff
             self.date_return = ret_date
 
     @api.multi
@@ -205,9 +205,9 @@ class LibraryBookIssue(models.Model):
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
         for rec in self:
-            rd = relativedelta(days=rec.day_to_return_book or 0.0)
-            if rec.date_issue and rd:
-                ret_date = datetime.strptime(rec.date_issue, t) + rd
+            diff = rd(days=rec.day_to_return_book or 0.0)
+            if rec.date_issue and diff:
+                ret_date = datetime.strptime(rec.date_issue, t) + diff
                 rec.date_return = ret_date
 
     @api.multi
@@ -231,7 +231,7 @@ class LibraryBookIssue(models.Model):
                 end_day = datetime.strptime(line.date_return,
                                             "%Y-%m-%d %H:%M:%S")
                 if start_day > end_day:
-                    diff = relativedelta(start_day.date(), end_day.date())
+                    diff = rd(start_day.date(), end_day.date())
                     day = float(diff.days) or 0.0
                     if line.day_to_return_book:
                         line.penalty = day * line.name.fine_late_return or 0.0
