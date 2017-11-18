@@ -245,7 +245,7 @@ class TransportRegistration(models.Model):
     _description = 'Transport Registration'
 
     @api.depends('state')
-    def _get_user_groups(self):
+    def _compute_get_user_groups(self):
         user_group = self.env.ref('school_transport.group_transportation_user')
         grps = [group.id
                 for group in self.env['res.users'].browse(self._uid).groups_id]
@@ -283,7 +283,7 @@ class TransportRegistration(models.Model):
                                   string="Transport Fees")
     amount = fields.Float('Final Amount', readonly=True)
     count_inv = fields.Integer('Invoice Count', compute="_compute_invoice")
-    transport_user = fields.Boolean(compute="_get_user_groups",
+    transport_user = fields.Boolean(compute="_compute_get_user_groups",
                                     string="transport user")
 
     @api.model
