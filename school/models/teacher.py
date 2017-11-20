@@ -142,25 +142,3 @@ class SchoolTeacher(models.Model):
 #                                   faculty please change in Course\
 #                                   configuration.'))
 #            self.work_phone = self.school_id.company_id.partner_id.phone
-
-
-class TeacherresUsers(models.Model):
-
-    _inherit = "res.users"
-
-    @api.model
-    def create(self, vals):
-        user_rec = super(TeacherresUsers, self).create(vals)
-        school = self.env['school.school'].browse(vals.get('school_id'))
-        if vals.get('teacher_create'):
-            ir_obj = self.env['ir.model.data']
-            teacher_grp_id = ir_obj.get_object('school',
-                                               'group_school_teacher')
-            user_base_grp = ir_obj.get_object('base', 'group_user')
-            contact_create = ir_obj.get_object('base', 'group_partner_manager')
-            group_ids = [user_base_grp.id, teacher_grp_id.id,
-                         contact_create.id]
-            user_rec.write({'groups_id': [(6, 0, group_ids)],
-                            'company_id': school.company_id.id,
-                            'company_ids': [(4, school.company_id.id)]})
-        return user_rec

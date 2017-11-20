@@ -67,23 +67,6 @@ class SchoolParent(models.Model):
         return {'value': {}}
 
 
-class ParentresUsers(models.Model):
-
-    _inherit = "res.users"
-
-    @api.model
-    def create(self, vals):
-        user_rec = super(ParentresUsers, self).create(vals)
-        if vals.get('parent_create'):
-            ir_obj = self.env['ir.model.data']
-            parent_grp_id = ir_obj.get_object('school', 'group_school_parent')
-            emp_grp = ir_obj.get_object('base', 'group_user')
-#            groups = parent_grp_id
-            group_ids = [emp_grp.id, parent_grp_id.id]
-            user_rec.write({'groups_id': [(6, 0, group_ids)]})
-        return user_rec
-
-
 class StudentStudent(models.Model):
     _inherit = "student.student"
 
