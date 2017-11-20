@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 
 <odoo>
-
         <template id="exam_result_report">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">

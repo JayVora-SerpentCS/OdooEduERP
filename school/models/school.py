@@ -158,8 +158,10 @@ class AcademicMonth(models.Model):
     def check_months(self):
         for old_month in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
-            if (old_month.date_start <= self.date_start <= old_month.date_stop
-                    or old_month.date_start <= self.date_stop
+            if (old_month.date_start
+                    <= self.date_start
+                    <= old_month.date_stop or
+                    old_month.date_start <= self.date_stop
                     <= old_month.date_stop):
                     raise ValidationError(_('''Error! You cannot define
                     overlapping months!'''))

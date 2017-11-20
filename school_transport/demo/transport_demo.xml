@@ -2,7 +2,6 @@
 
 <odoo>
     <data noupdate="1">
-
         <!-- HR Department -->
         <record id="dep_school" model="hr.department">
             <field name="name">school</field>

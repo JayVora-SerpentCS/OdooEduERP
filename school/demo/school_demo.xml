@@ -2,7 +2,6 @@
 
 <odoo>
     <data noupdate="1">
-        
         <!--  School Information -->
         <record id="demo_school_1" model="school.school">
             <field name="name">West High School</field>
