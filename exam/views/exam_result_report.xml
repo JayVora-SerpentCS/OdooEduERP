@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-
         <template id="exam_result_report">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
