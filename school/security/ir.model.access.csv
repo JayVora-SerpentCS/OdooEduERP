@@ -166,3 +166,7 @@ access_school_standard_user_student_inadmission_school,school.standard,school.mo
 access_subject_syllabus_student_admission_student,subject.syllabus,model_subject_syllabus,group_is_admission,1,0,0,0
 access_class_room_teacher,class.room,model_class_room,group_school_teacher,1,0,0,0
 access_class_room_admin,class.room,model_class_room,group_school_administration,1,1,1,1
+access_parent_relation_admin,parent.relation,school.model_parent_relation,group_school_administration,1,1,1,1
+access_parent_relation_student,parent.relation,school.model_parent_relation,group_school_student,1,0,0,0
+access_parent_relation_parent_grp,parent.relation,school.model_parent_relation,group_school_parent,1,1,1,0
+access_parent_relation_teacher_grp,parent.relation,school.model_parent_relation,group_school_teacher,1,0,0,0
