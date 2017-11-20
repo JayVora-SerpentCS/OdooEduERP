@@ -12,7 +12,7 @@ from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 # from dateutil.relativedelta import relativedelta
-from .school import emailvalidation
+from .import school
 
 # from lxml import etree
 # added import statement in try-except because when server runs on
@@ -76,7 +76,7 @@ class StudentStudent(models.Model):
                  'company_id': vals.get('cmp_id')}
             vals.update(h)
         if vals.get('email'):
-            emailvalidation(vals.get('email'))
+            school.emailvalidation(vals.get('email'))
         res = super(StudentStudent, self).create(vals)
         # Assign group to student based on condition
         emp_grp = self.env.ref('base.group_user')
