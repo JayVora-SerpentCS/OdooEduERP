@@ -714,17 +714,6 @@ class StudentCast(models.Model):
     name = fields.Char("Name", required=True)
 
 
-class ResUsers(models.Model):
-    _inherit = 'res.users'
-
-    @api.model
-    def create(self, vals):
-        '''Overide create method to get value of employee id'''
-        vals.update({'employee_ids': False})
-        res = super(ResUsers, self).create(vals)
-        return res
-
-
 class ClassRoom(models.Model):
     _name = "class.room"
 
