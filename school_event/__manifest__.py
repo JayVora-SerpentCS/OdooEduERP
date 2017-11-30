@@ -19,7 +19,6 @@
              'views/participants.xml',
              'views/report_view.xml'],
     'demo': ['demo/event_demo.xml'],
-    'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': True
 }

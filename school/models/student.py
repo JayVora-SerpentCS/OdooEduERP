@@ -72,9 +72,9 @@ class StudentStudent(models.Model):
                              _('''PID not valid
                                  so record will not be saved.'''))
         if vals.get('cmp_id', False):
-            h = {'company_ids': [(4, vals.get('cmp_id'))],
-                 'company_id': vals.get('cmp_id')}
-            vals.update(h)
+            company_vals = {'company_ids': [(4, vals.get('cmp_id'))],
+                            'company_id': vals.get('cmp_id')}
+            vals.update(company_vals)
         if vals.get('email'):
             school.emailvalidation(vals.get('email'))
         res = super(StudentStudent, self).create(vals)

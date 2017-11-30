@@ -43,13 +43,13 @@ class TransportPoint(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        name = self._context.get('name')
-        transport_obj = self.env['student.transport']
-        if name:
-            for transport_data in transport_obj.browse(name):
-                point_ids = [point_id.id
-                             for point_id in transport_data.trans_point_ids]
-                args.append(('id', 'in', point_ids))
+        if self._context.get('name'):
+            transport_obj = self.env['student.transport']
+            point_ids = [point_id.id
+                         for point_id in
+                         transport_obj.browse(self._context.get('name')
+                                              ).trans_point_ids]
+            args.append(('id', 'in', point_ids))
         return super(TransportPoint, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
             access_rights_uid=access_rights_uid)
@@ -84,12 +84,12 @@ class TransportVehicle(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
         '''Override method to get vehicles of selected transport root'''
-        name = self._context.get('name')
-        transport_obj = self.env['student.transport']
-        if name:
-            transport_data = transport_obj.browse(name)
+        if self._context.get('name'):
+            transport_obj = self.env['student.transport']
             vehicle_ids = [std_id.id
-                           for std_id in transport_data.trans_vehicle_ids]
+                           for std_id in
+                           transport_obj.browse(self._context.get('name')
+                                                ).trans_vehicle_ids]
             args.append(('id', 'in', vehicle_ids))
         return super(TransportVehicle, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
@@ -123,10 +123,9 @@ class TransportParticipant(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        name = self._context.get('name')
-        if name:
+        if self._context.get('name'):
             student_obj = self.env['student.student']
-            for student_data in student_obj.browse(name):
+            for student_data in student_obj.browse(self._context.get('name')):
                 transport_ids = [transport_id.id
                                  for transport_id in
                                  student_data.transport_ids]
@@ -395,8 +394,8 @@ class TransportRegistration(models.Model):
         for rec in self:
             # registration months must one or more then one
             if rec.for_month <= 0:
-                raise UserError(_('Error! Sorry Registration months must be 1'
-                                  'or more then one.'))
+                raise UserError(_('Error!Registration months must be 1'
+                                  'or more then one month!'))
             # First Check Is there vacancy or not
             person = int(rec.vehicle_id.participant) + 1
             if rec.vehicle_id.capacity < person:
