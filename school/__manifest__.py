@@ -26,7 +26,6 @@
              'views/identity_card.xml',
              'views/template_view.xml'],
     'demo': ['demo/school_demo.xml'],
-    'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': True
 }

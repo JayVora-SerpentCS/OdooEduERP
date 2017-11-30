@@ -78,14 +78,13 @@ class StudentStudent(models.Model):
         parent_grp = self.env.user.has_group('school.group_school_parent')
         login_user = self.env['res.users'].browse(self._uid)
         name = self._context.get('student_id')
-        if name:
-            if teacher_group and parent_grp:
-                parent_login_stud = self.env['school.parent'
-                                             ].search([('partner_id', '=',
-                                                      login_user.partner_id.id)
-                                                       ])
-                childrens = parent_login_stud.student_id
-                args.append(('id', 'in', childrens.ids))
+        if name and teacher_group and parent_grp:
+            parent_login_stud = self.env['school.parent'
+                                         ].search([('partner_id', '=',
+                                                  login_user.partner_id.id)
+                                                   ])
+            childrens = parent_login_stud.student_id
+            args.append(('id', 'in', childrens.ids))
         return super(StudentStudent, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
             access_rights_uid=access_rights_uid)
