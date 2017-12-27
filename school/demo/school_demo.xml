@@ -608,57 +608,6 @@
             <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_7')])]"/>
         </record>
         <!-- Student Informations -->
-        <record id="demo_student_student_1" model="student.student">
-            <field name="name">Mary</field>
-            <field name="middle">Daniel</field>
-            <field name="last">Richardson</field>
-            <field name="state">draft</field>
-            <field name="year" ref="demo_academic_year_1"/>
-            <field name="pid">New</field>
-            <field name="date_of_birth">03/04/2006</field>
-            <field name="gender">female</field>
-            <field name="roll_no">1</field>
-            <field name="school_id" ref="demo_school_1"/>
-            <field name="country_id" ref="base.au"/>
-            <field name="city">Melbourne</field>
-            <field name="standard_id" ref="demo_school_standard_1"/>
-            <field name="division_id" ref="demo_standard_division_1"/>
-            <field name="medium_id" ref="demo_standard_medium_1"/>
-        </record>
-        <record id="demo_student_student_2" model="student.student">
-            <field name="name">William</field>
-            <field name="middle">Joseph</field>
-            <field name="last">Lee</field>
-            <field name="state">draft</field>
-            <field name="year" ref="demo_academic_year_2"/>
-            <field name="pid">New</field>
-            <field name="date_of_birth">02/14/2001</field>
-            <field name="gender">male</field>
-            <field name="roll_no">1</field>
-            <field name="school_id" ref="demo_school_1"/>
-            <field name="country_id" ref="base.au"/>
-            <field name="city">Sydney</field>
-            <field name="standard_id" ref="demo_school_standard_2"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_2"/>
-        </record>
-        <record id="demo_student_student_3" model="student.student">
-            <field name="name">Jacob</field>
-            <field name="middle">Caleb</field>
-            <field name="last">Clark</field>
-            <field name="state">draft</field>
-            <field name="year" ref="demo_academic_year_1"/>
-            <field name="pid">New</field>
-            <field name="date_of_birth">09/24/2007</field>
-            <field name="gender">male</field>
-            <field name="roll_no">1</field>
-            <field name="school_id" ref="demo_school_1"/>
-            <field name="country_id" ref="base.au"/>
-            <field name="city">Adelaide</field>
-            <field name="standard_id" ref="demo_school_standard_3"/>
-            <field name="division_id" ref="demo_standard_division_2"/>
-            <field name="medium_id" ref="demo_standard_medium_3"/>
-        </record>
         <record id="demo_student_student_4" model="student.student">
             <field name="name">Maria</field>
             <field name="middle">Samuel</field>
@@ -666,8 +615,8 @@
             <field name="state">done</field>
             <field name="student_code">0672/2018/001</field>
             <field name="year" ref="demo_academic_year_3"/>
-            <field name="pid">2017/10</field>
-            <field name="date_of_birth">02/11/2012</field>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-11-02 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">12</field>
             <field name="school_id" ref="demo_school_1"/>
@@ -684,8 +633,8 @@
             <field name="student_code">0671/2016/002</field>
             <field name="state">done</field>
             <field name="year" ref="demo_academic_year_1"/>
-            <field name="pid">2015/12</field>
-            <field name="date_of_birth">03/24/2003</field>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-03-24 %H:%M')"/>
             <field name="gender">male</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_1"/>
@@ -702,8 +651,8 @@
             <field name="state">done</field>
             <field name="student_code">0671/2017/003</field>
             <field name="year" ref="demo_academic_year_2"/>
-            <field name="pid">2016/11</field>
-            <field name="date_of_birth">05/12/2008</field>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=14)).strftime('%Y-05-12 %H:%M')"/>
             <field name="gender">male</field>
             <field name="roll_no">2</field>
             <field name="school_id" ref="demo_school_1"/>
@@ -720,8 +669,8 @@
             <field name="student_code">0673/2017/004</field>
             <field name="state">done</field>
             <field name="year" ref="demo_academic_year_2"/>
-            <field name="pid">2016/1</field>
-            <field name="date_of_birth">06/02/2006</field>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-06-02 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">3</field>
             <field name="school_id" ref="demo_school_1"/>
@@ -738,8 +687,8 @@
             <field name="student_code">0674/2017/005</field>
             <field name="state">done</field>
             <field name="year" ref="demo_academic_year_3"/>
-            <field name="pid">2017/2</field>
-            <field name="date_of_birth">06/06/2005</field>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-06-06 %H:%M')"/>
             <field name="gender">female</field>
             <field name="roll_no">3</field>
             <field name="school_id" ref="demo_school_1"/>
@@ -748,6 +697,57 @@
             <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
+        </record>
+        <record id="demo_student_student_1" model="student.student">
+            <field name="name">Mary</field>
+            <field name="middle">Daniel</field>
+            <field name="last">Richardson</field>
+            <field name="state">draft</field>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=11)).strftime('%Y-04-03 %H:%M')"/>
+            <field name="gender">female</field>
+            <field name="roll_no">1</field>
+            <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Melbourne</field>
+            <field name="standard_id" ref="demo_school_standard_1"/>
+            <field name="division_id" ref="demo_standard_division_1"/>
+            <field name="medium_id" ref="demo_standard_medium_1"/>
+        </record>
+        <record id="demo_student_student_2" model="student.student">
+            <field name="name">William</field>
+            <field name="middle">Joseph</field>
+            <field name="last">Lee</field>
+            <field name="state">draft</field>
+            <field name="year" ref="demo_academic_year_2"/>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=12)).strftime('%Y-02-14 %H:%M')"/>
+            <field name="gender">male</field>
+            <field name="roll_no">1</field>
+            <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Sydney</field>
+            <field name="standard_id" ref="demo_school_standard_2"/>
+            <field name="division_id" ref="demo_standard_division_2"/>
+            <field name="medium_id" ref="demo_standard_medium_2"/>
+        </record>
+        <record id="demo_student_student_3" model="student.student">
+            <field name="name">Jacob</field>
+            <field name="middle">Caleb</field>
+            <field name="last">Clark</field>
+            <field name="state">draft</field>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="pid">New</field>
+            <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=11)).strftime('%Y-09-24 %H:%M')"/>
+            <field name="gender">male</field>
+            <field name="roll_no">1</field>
+            <field name="school_id" ref="demo_school_1"/>
+            <field name="country_id" ref="base.au"/>
+            <field name="city">Adelaide</field>
+            <field name="standard_id" ref="demo_school_standard_3"/>
+            <field name="division_id" ref="demo_standard_division_2"/>
+            <field name="medium_id" ref="demo_standard_medium_3"/>
         </record>
 
         <!-- Student Parent Information -->
