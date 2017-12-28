@@ -10,38 +10,32 @@
             <field name="code">A1</field>
             <field name="user">student</field>
             <field name="book_limit">02</field>
+            <field name="student_id" ref="school.demo_student_student_7"/>
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
+            <field name="roll_no">3</field>
+            <field name="start_date" eval="(DateTime.today())"/>
+            <field name="duration">10</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=10))"/>
+            <field name="state">running</field>
         </record>
 
         <record id="demo_library_card_2" model="library.card">
             <field name="code">F1</field>
             <field name="user">teacher</field>
             <field name="book_limit">04</field>
-        </record>
-
-        <record id="demo_library_card_3" model="library.card">
-            <field name="code">A2</field>
-            <field name="user">student</field>
-            <field name="book_limit">02</field>
-        </record>
-
-        <record id="demo_library_card_4" model="library.card">
-            <field name="code">F2</field>
-            <field name="user">teacher</field>
-            <field name="book_limit">04</field>
-        </record>
-
-        <record id="demo_library_card_5" model="library.card">
-            <field name="code">F3</field>
-            <field name="user">teacher</field>
-            <field name="book_limit">04</field>
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field name="start_date" eval="(DateTime.today())"/>
+            <field name="duration">11</field>
+            <field name="end_date" eval="(DateTime.today() + relativedelta(months=11))"/>
+            <field name="state">running</field>
         </record>
 
         <!-- Product -->
 
-        <record id="library_product_b1" model="product.product">
+        <record id="library_product_b13" model="product.product">
             <field name="name">DBMS</field>
             <field name="type">product</field>
-            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="categ_id" ref="library.product_category_1"/>
         </record>
 
         <record id="library_product_b2" model="product.product">
@@ -53,17 +47,21 @@
         <!-- library.book.issue -->
 
         <record id="demo_library_book_1" model="library.book.issue">
-            <field name="issue_code">101</field>
-            <field name="name"  ref="product_product_b1"/>
+            <field name="issue_code">New</field>
+            <field name="name"  ref="library.product_product_b1"/>
             <field name="card_id" ref="demo_library_card_1"/>
-            <field name="user">Teacher</field>
+            <field name="user">Student</field>
+            <field name="student_id" ref="school.demo_student_student_7"/>
+            <field name="roll_no">3</field>
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
         </record>
 
         <record id="demo_library_book_2" model="library.book.issue">
-            <field name="issue_code">201</field>
+            <field name="issue_code">New</field>
             <field name="name"  ref="library_product_b2"/>
             <field name="card_id" ref="demo_library_card_2"/>
-            <field name="user">Student</field>
+            <field name="user">Teacher</field>
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
         </record>
 
         <!-- library.book.request -->
@@ -71,26 +69,14 @@
         <record id="demo_library_book_request_1" model="library.book.request">
             <field name="card_id" ref="demo_library_card_1"/>
             <field name="type">existing</field>
+            <field name="name" ref="library.product_product_b1"/>
+            
         </record>
 
         <record id="demo_library_book_request_2" model="library.book.request">
             <field name="card_id" ref="demo_library_card_2"/>
             <field name="type">existing</field>
-        </record>
-
-        <record id="demo_library_book_request_3" model="library.book.request">
-            <field name="card_id" ref="demo_library_card_3"/>
-            <field name="type">existing</field>
-        </record>
-
-        <record id="demo_library_book_request_4" model="library.book.request">
-            <field name="card_id" ref="demo_library_card_4"/>
-            <field name="type">existing</field>
-        </record>
-
-        <record id="demo_library_book_request_5" model="library.book.request">
-            <field name="card_id" ref="demo_library_card_5"/>
-            <field name="type">existing</field>
+            <field name="name" ref="library.product_product_b1"/>
         </record>
 
         <!-- library.rack -->

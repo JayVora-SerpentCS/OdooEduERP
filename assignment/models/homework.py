@@ -22,7 +22,7 @@ class SchoolTeacherAssignment(models.Model):
                                  help="Select Subject")
     standard_id = fields.Many2one('school.standard', 'Standard',
                                   help="Select Standard")
-    teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True,
+    teacher_id = fields.Many2one('school.teacher', 'Teacher', required=True,
                                  help="Select Teacher")
     assign_date = fields.Date('Assign Date', required=True,
                               help="Starting date of assignment")
@@ -33,10 +33,21 @@ class SchoolTeacherAssignment(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('active', 'Active'),
                               ('done', 'Done')],
-                             'Status', readonly=True, default='draft')
+                             'Status', default='draft')
     student_assign_ids = fields.One2many('school.student.assignment',
                                          'teacher_assignment_id',
                                          string="Student Assignments")
+    type_submission = fields.Selection([('hardcopy', 'Hardcopy(Paperwork)'),
+                                        ('softcopy', 'Softcopy')],
+                                       default="hardcopy",
+                                       string="Submission Type")
+    file_format = fields.Many2one('file.format', 'File Format')
+    attach_files = fields.Char("File Name")
+    subject_standard_assignment = fields.Many2one("standard.standard")
+
+    @api.onchange('standard_id')
+    def onchange_subject_standard(self):
+        self.subject_standard_assignment = self.standard_id.standard_id.id
 
     @api.multi
     def active_assignment(self):
@@ -51,6 +62,8 @@ class SchoolTeacherAssignment(models.Model):
             students = student_obj.search([('standard_id', '=',
                                             rec.standard_id.id),
                                            ('state', '=', 'done')])
+            if not rec.attached_homework:
+                raise ValidationError(_('''Please attach the homework!'''))
             for std in students:
                 ass_dict = {'name': rec.name,
                             'subject_id': rec.subject_id.id,
@@ -62,24 +75,32 @@ class SchoolTeacherAssignment(models.Model):
                             'teacher_id': rec.teacher_id.id,
                             'teacher_assignment_id': rec.id,
                             'student_id': std.id,
-                            'stud_roll_no': std.roll_no}
+                            'stud_roll_no': std.roll_no,
+                            'student_standard': std.standard_id.standard_id.id,
+                            'submission_type': self.type_submission,
+                            'attachfile_format': self.file_format.name}
                 assignment_id = assignment_obj.create(ass_dict)
-                if rec.attached_homework:
-                    attach = {'name': 'test',
-                              'datas': str(rec.attached_homework),
-                              'description': 'Assignment attachment',
-                              'res_model': 'school.student.assignment',
-                              'res_id': assignment_id.id}
-                    ir_attachment_obj.create(attach)
+                attach = {'name': 'test',
+                          'datas': str(rec.attached_homework),
+                          'description': 'Assignment attachment',
+                          'res_model': 'school.student.assignment',
+                          'res_id': assignment_id.id}
+                ir_attachment_obj.create(attach)
             rec.write({'state': 'active'})
         return True
 
     @api.multi
     def done_assignments(self):
         '''Changes the state to done'''
-        self.ensure_one()
-        self.state = 'done'
-        return True
+        self.write({'state': 'done'})
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('''You can delete record in unconfirm
+                state only!'''))
+        return super(SchoolTeacherAssignment, self).unlink()
 
 
 class SchoolStudentAssignment(models.Model):
@@ -90,7 +111,7 @@ class SchoolStudentAssignment(models.Model):
     def check_date(self):
         if self.due_date < self.assign_date:
             raise ValidationError(_('Due date of homework should be greater \
-                                   than Assign date'))
+                                   than Assign date!'))
 
     name = fields.Char('Assignment Name',
                        help="Assignment Name")
@@ -100,7 +121,7 @@ class SchoolStudentAssignment(models.Model):
                                   help="Select Standard")
     rejection_reason = fields.Text('Reject Reason',
                                    help="Reject Reason")
-    teacher_id = fields.Many2one('hr.employee', 'Teacher', required=True,
+    teacher_id = fields.Many2one('school.teacher', 'Teacher', required=True,
                                  help='''Teacher responsible to assign
                                  assignment''')
     assign_date = fields.Date('Assign Date', required=True,
@@ -110,8 +131,9 @@ class SchoolStudentAssignment(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('active', 'Active'),
                               ('reject', 'Reject'),
                               ('done', 'Done')], 'Status',
+                             default="draft",
                              help="States of assignment",
-                             readonly=True, default='draft')
+                             )
     student_id = fields.Many2one('student.student', 'Student', required=True,
                                  help="Name of Student")
     stud_roll_no = fields.Integer(string="Roll no",
@@ -120,12 +142,41 @@ class SchoolStudentAssignment(models.Model):
                                       help="Homework Attached by student")
     teacher_assignment_id = fields.Many2one('school.teacher.assignment',
                                             string="Teachers")
+    student_standard = fields.Many2one('standard.standard', 'Student Standard')
+    submission_type = fields.Selection([('hardcopy', 'Hardcopy(Paperwork)'),
+                                        ('softcopy', 'Softcopy')],
+                                       default="hardcopy",
+                                       string="Submission Type")
+    attachfile_format = fields.Char("Submission Fileformat")
+    submit_assign = fields.Binary("Submit Assignment")
+    file_name = fields.Char("File Name")
+
+    @api.constrains('submit_assign', 'file_name')
+    def check_file_format(self):
+        if self.file_name:
+            file_format = self.file_name.split('.')
+            if len(file_format) == 2:
+                file_format = file_format[1]
+            else:
+                raise ValidationError(_('''Kindly attach file with
+                format: %s!''') % self.attachfile_format)
+            if (file_format in self.attachfile_format or
+                    self.attachfile_format in file_format):
+                    return True
+            raise ValidationError(_('''Kindly attach file with
+                format: %s!''') % self.attachfile_format)
+
+    @api.onchange('student_id')
+    def onchange_student_standard(self):
+        '''Method to get standard of selected student'''
+        self.student_standard = self.student_id.standard_id.standard_id.id
 
     @api.multi
     def active_assignment(self):
         '''This method change state as active'''
-        self.ensure_one()
-        self.state = 'active'
+        if not self.attached_homework:
+            raise ValidationError(_('''Kindly attach homework!'''))
+        self.write({'state': 'active'})
 
     @api.multi
     def done_assignment(self):
@@ -133,9 +184,10 @@ class SchoolStudentAssignment(models.Model):
             for school student assignment
             @return : True
         '''
-        self.ensure_one()
-        self.state = 'done'
-        return True
+        if self.submission_type == 'softcopy' and not self.submit_assign:
+            raise ValidationError(_('''You have not attached the homework!
+            Please attach the homework!'''))
+        self.write({'state': 'done'})
 
     @api.multi
     def reassign_assignment(self):
@@ -143,3 +195,18 @@ class SchoolStudentAssignment(models.Model):
         self.ensure_one()
         self.state = 'active'
         return True
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('''You can delete record in unconfirm
+                state only!'''))
+        return super(SchoolStudentAssignment, self).unlink()
+
+
+class FileFormat(models.Model):
+
+        _name = "file.format"
+
+        name = fields.Char("Name")

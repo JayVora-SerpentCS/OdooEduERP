@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
         <!-- Exam Demo Data -->
         <record id="exam_exam_finalexam0" model="exam.exam">
             <field eval="30" name="weightage"/>
@@ -18,10 +18,6 @@
             <field eval="[(6,0,[ref('school.demo_standard_standard_1')])]" name="standard_id"/>
             <field name="academic_year" ref="school.demo_academic_year_3"/>
         </record>
-        <record id="exam_schedule_line_record" model="exam.schedule.line">
-            <field name="standard_id" ref="school.demo_standard_standard_1"/>
-            <field name="timetable_id" ref="exam.exam_exam_finalexam0"/>
-        </record>
         <record id="time_table_finalexamtimetable0" model="time.table">
             <field name="division_id" ref="school.demo_standard_division_1"/>
             <field name="name">Final Exam Timetable</field>
@@ -31,8 +27,13 @@
             <field name="year_id" ref="school.demo_academic_year_1"/>
             <field model="exam.exam" name="exam_id" search="[('name', '=', u'Final Exam')]"/>
         </record>
+        <record id="exam_schedule_line_record" model="exam.schedule.line">
+            <field name="standard_id" ref="school.demo_school_standard_1"/>
+            <field name="exam_id" ref="exam.exam_exam_finalexam0"/>
+            <field name="timetable_id" ref="exam.time_table_finalexamtimetable0"/>
+        </record>
         <record id="time_table_line_0" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_fpi"/>
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/06'"/>
             <field name="week_day" eval="DateTime.strptime((time.strftime('%Y')+'/03/06'), '%Y/%m/%d').strftime('%A').lower()"/>
@@ -41,7 +42,7 @@
             <field eval="10.0" name="start_time"/>
         </record>
         <record id="time_table_line_1" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_al"/>
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/07'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/07', '%Y/%m/%d').strftime('%A').lower()"/>
@@ -50,7 +51,7 @@
             <field eval="10.0" name="start_time"/>
         </record>
         <record id="time_table_line_2" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_mit"/>
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/08'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/08', '%Y/%m/%d').strftime('%A').lower()"/>
@@ -59,7 +60,7 @@
             <field eval="10.0" name="start_time"/>
         </record>
         <record id="time_table_line_3" model="time.table.line">
-            <field name="teacher_id" ref="hr.employee_stw"/>
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/09'"/>
             <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/09', '%Y/%m/%d').strftime('%A').lower()"/>
@@ -70,20 +71,20 @@
         
         <!-- Exam Result Demo Data -->
         <record id="exam_result_1" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_1"/>
+            <field name="student_id" ref="school.demo_student_student_7"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
         </record>
         <record id="exam_result_2" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_2"/>
+            <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
             <field name="result">Pass</field>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
         </record>
         <record id="exam_result_3" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_3"/>
+            <field name="student_id" ref="school.demo_student_student_6"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
             <field name="grade_system" ref="school.demo_student_grade_1"/>
@@ -95,7 +96,7 @@
             <field name="grade_system" ref="school.demo_student_grade_1"/>
         </record>
         <record id="exam_result_5" model="exam.result">
-            <field name="student_id" ref="school.demo_student_student_5"/>
+            <field name="student_id" ref="school.demo_student_student_8"/>
             <field name="s_exam_ids" ref="exam.exam_exam_finalexam0"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
             <field name="grade_system" ref="school.demo_student_grade_1"/>

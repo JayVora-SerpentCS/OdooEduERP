@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -8,21 +9,21 @@ class TestHostel(common.TransactionCase):
 
     def setUp(self):
         super(TestHostel, self).setUp()
-        self.bed_type_obj = self.env['bed.type']
         self.hostel_type_obj = self.env['hostel.type']
         self.hostel_room_obj = self.env['hostel.room']
         self.hostel_student_obj = self.env['hostel.student']
-        self.rector = self.env.ref('base.res_partner_2')
-        self.student = self.env.ref('school.demo_student_student_5')
-#       Create bed type
-        self.bed_type = self.bed_type_obj.\
-            create({'name': 'Single Bed',
-                    'description': 'single bed type',
+        self.student = self.env.ref('school.demo_student_student_7')
+        self.res_partner = self.env['res.partner']
+        # create hostel rector
+        self.rector = self.res_partner.\
+            create({'name': 'Hostel Rector',
+                    'is_hostel_rector': True,
+                    'email': 'hostelrec@demo.com',
                     })
 #        Create Hostel Type
         self.hostel_type = self.hostel_type_obj.\
             create({'name': 'Test Hostel',
-                    'type': 'boys',
+                    'type': 'female',
                     'rector': self.rector.id
                     })
 #        Create Hostel Room
@@ -44,7 +45,6 @@ class TestHostel(common.TransactionCase):
                     'room_id': self.hostel_room.id,
                     'admission_date': current_date,
                     'duration': 2,
-                    'bed_type': self.bed_type.id
                     })
         self.hostel_student.check_duration()
         self.hostel_student._compute_remaining_fee_amt()

@@ -22,14 +22,14 @@ class ReportAddExamResult(models.AbstractModel):
             result_data.append({'subject': subj,
                                 'max_mark': subject.maximum_marks or '',
                                 'mini_marks': subject.minimum_marks or '',
-                                'obt_marks': subject.obtain_marks or ''})
+                                'obt_marks': subject.obtain_marks or '',
+                                'reval_marks': subject.marks_reeval or ''})
         return result_data
 
     @api.model
     def render_html(self, docids, data=None):
         self.model = self.env.context.get('active_model')
-
-        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+        docs = self.env[self.model].browse(self.env.context.get('active_id',
                                                                 []))
         docargs = {
             'doc_ids': docids,

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
@@ -84,7 +85,7 @@ class TestLibrary(common.TransactionCase):
             create({'product_id': self.product_product.id,
                     'name': 'Java Book',
                     'date_planned': time.strftime('06-29-2017 16:58:10'),
-                    'company_id': self.company_id.id,
+                    'company_id': self.company_id.company_id.id,
                     'product_qty': 10.0,
                     'price_unit': 250,
                     'product_uom': self.prd_uom.id,

@@ -25,7 +25,7 @@
                                       </t>
                                   </tr>
                                   <tr>
-                                      <th width="20%"><span t-esc="o.month"/></th>
+                                      <th width="20%"><span t-esc="o.month.name"/></th>
                                       <t t-foreach="t.get('day_list')" t-as="day">
                                           <th style="background-color:goldenrod;color:white;">
                                               <span t-esc="day"/>
@@ -37,7 +37,7 @@
                           <tbody>
                               <tr t-foreach="get_student(data['form'])" t-as="student">
                                   <td style="text-align:left" width="20%">
-                                        <strong><span t-field="student.name"/></strong>
+                                        <strong><span t-field="student.sudo().name"/></strong>
                                   </td>
                                   <t t-foreach="get_header_data(data)" t-as="t">
                                       <td t-foreach="t.get('day_list')" t-as="day">

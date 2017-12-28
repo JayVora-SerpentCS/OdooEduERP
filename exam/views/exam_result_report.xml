@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
-
         <template id="exam_result_report">
             <t t-call="report.html_container">
                 <t t-foreach="docs" t-as="o">
@@ -17,7 +15,7 @@
                             <t t-foreach="o" t-as="result">
                                 <table width="100%">
                                     <center>
-                                        <h2 t-field="o and o[0].s_exam_ids.name"></h2>
+                                        <h2 t-field="o.s_exam_ids.name"></h2>
                                     </center>
                                     <tr>
                                         <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
@@ -27,7 +25,7 @@
                                             <span>:</span>
                                         </td>
                                         <td width="80%" style="font-family: 'Helvetica';font-size: 18px;">
-                                            <span t-field="result.student_id.name"></span>
+                                            <span t-field="result.sudo().student_id.name"></span>
                                         </td>
                                     </tr>
                                 </table>
@@ -49,7 +47,11 @@
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                                <b>Obtain Mark</b>
+                                                <b>Obtain Marks</b>
+                                            </td>
+                                            <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                                <b>Revaluation Marks</b>
                                             </td>
                                         </tr>
                                     </thead>
@@ -72,6 +74,10 @@
                                                     style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
                                                     <span t-esc="sub_res_info.get('obt_marks')"></span>
                                                 </td>
+                                                <td align="center"
+                                                    style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                    <span t-esc="sub_res_info.get('reval_marks')"></span>
+                                                </td>
                                             </tr>
                                         </t>
                                     </tbody>
@@ -82,5 +88,4 @@
                 </t>
             </t>
         </template>
-
 </odoo>

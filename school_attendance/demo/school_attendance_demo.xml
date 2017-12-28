@@ -9,7 +9,7 @@
         <record id="demo_daily_attendance_1" model="daily.attendance">
             <field name="date" eval="(DateTime.today())"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
-            <field name="user_id" ref="hr.employee_al"/>
+            <field name="user_id" ref="school.demo_school_teacher_1"/>
             <field name="state">draft</field>
         </record>
 

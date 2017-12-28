@@ -4,6 +4,8 @@
 import time
 from lxml import etree
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
 
 
 class SchoolEvaluation(models.Model):
@@ -61,7 +63,7 @@ class SchoolEvaluation(models.Model):
 
     student_id = fields.Many2one('student.student', 'Student Name',
                                  help="Select Student")
-    teacher_id = fields.Many2one('hr.employee', "Teacher")
+    teacher_id = fields.Many2one('school.teacher', "Teacher")
     type = fields.Selection([('student', 'Student'),
                              ('faculty', 'Faculty')],
                             'User Type', required=True,
@@ -73,7 +75,8 @@ class SchoolEvaluation(models.Model):
     eval_line = fields.One2many('school.evaluation.line', 'eval_id',
                                 'Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
-                         method=True, help="Total Points Obtained")
+                         method=True, help="Total Points Obtained",
+                         store="True")
     state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
@@ -83,40 +86,40 @@ class SchoolEvaluation(models.Model):
     @api.multi
     def set_start(self):
         '''change state to start'''
-        for rec in self:
-            rec.state = 'start'
-        return True
+        self.write({'state': 'start'})
 
     @api.model
     def default_get(self, fields):
         '''Override method to get default value of teacher'''
         res = super(SchoolEvaluation, self).default_get(fields)
         if res.get('type') == 'student':
-            hr_emp = self.env['hr.employee'].search([('user_id', '=',
-                                                      self._uid)])
+            hr_emp = self.env['school.teacher'].search([('user_id', '=',
+                                                         self._uid)])
             res.update({'teacher_id': hr_emp.id})
         return res
 
     @api.multi
     def set_finish(self):
         '''Change state to finished'''
-        for rec in self:
-            rec.state = 'finished'
-        return True
+        self.write({'state': 'finished'})
 
     @api.multi
     def set_cancel(self):
         '''Change state to cancelled'''
-        for rec in self:
-            rec.state = 'cancelled'
-        return True
+        self.write({'state': 'cancelled'})
 
     @api.multi
     def set_draft(self):
         '''Changes state to draft'''
+        self.write({'state': 'draft'})
+
+    @api.multi
+    def unlink(self):
         for rec in self:
-            rec.state = 'draft'
-        return True
+            if rec.state in ['start', 'finished']:
+                raise ValidationError(_('''You can delete record in unconfirm
+                state only.'''))
+        return super(SchoolEvaluation, self).unlink()
 
 
 class StudentEvaluationLine(models.Model):

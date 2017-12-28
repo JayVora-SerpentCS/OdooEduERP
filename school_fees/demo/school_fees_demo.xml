@@ -88,56 +88,38 @@
             <field name="code">ESFS</field>
             <field eval="[(6,0,[ref('demo_student_fees_structure_line_1'), ref('demo_student_fees_structure_line_2')])]" name="line_ids"/>
         </record>
-<!--         <record id="bnk" model="account.account"> -->
-<!--             <field name="code">X1014</field> -->
-<!--             <field name="name">Bank Current Account - (test)</field> -->
-<!--             <field name="user_type_id" ref="account.data_account_type_liquidity"/> -->
+<!--         <record id="demo_student_payslip_1" model="student.payslip"> -->
+<!--             <field name="name">Fees Receipt-1</field> -->
+<!--             <field name="number">SLIP/001</field> -->
+<!--             <field name="student_id" ref= 'school.demo_student_student_1'/> -->
+<!--             <field eval="time.strftime('%Y-%m-%d')" name="date"/> -->
+<!--             <field name="fees_structure_id" ref= 'demo_student_fees_structure_1'/> -->
+<!--             <field name="company_id" ref="base.main_company"/> -->
 <!--         </record> -->
-<!--         <record id="bank_journal" model="account.journal"> -->
-<!--             <field name="name">Bank - Test</field> -->
-<!--             <field name="code">TBNK</field> -->
-<!--             <field name="type">bank</field> -->
-<!--             <field name="default_debit_account_id" ref="bnk"/> -->
-<!--             <field name="default_credit_account_id" ref="bnk"/> -->
-<!--         </record> -->
-        <record id="demo_student_payslip_1" model="student.payslip">
-            <field name="name">Fees Receipt-1</field>
-            <field name="number">SLIP/001</field>
-            <field name="student_id" ref= 'school.demo_student_student_1'/>
-            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
-            <field name="fees_structure_id" ref= 'demo_student_fees_structure_1'/>
-<!--             <field name="journal_id" ref="bank_journal"/> -->
-            <field name="company_id" ref="base.main_company"/>
-        </record>
         <!--Student fees Registration -->
         <record id="demo_student_fees_registration_1_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>
             <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-01-15'"/>
-<!--             <field name="journal_id" ref= "bank_journal"/>  -->
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_2" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_2"/>
-            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-01-15'"/>
-<!--             <field name="journal_id" ref="bank_journal"/>  -->
+            <field name="date" eval="str(int(time.strftime('%Y'))) +'-01-15'"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_3" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_3"/>
-            <field name="date" eval="str(int(time.strftime('%Y'))-2) +'-04-09'"/>
-<!--             <field name="journal_id" ref="bank_journal"/>  -->
+            <field name="date" eval="str(int(time.strftime('%Y'))) +'-04-09'"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_4" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_4"/>
-            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-03-05'"/>
-<!--             <field name="journal_id" ref="bank_journal"/>  -->
+            <field name="date" eval="str(int(time.strftime('%Y'))) +'-03-05'"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
          <record id="demo_student_fees_registration_5" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_5"/>
-            <field name="date" eval="str(int(time.strftime('%Y'))-1) +'-10-10'"/>
-<!--             <field name="journal_id" ref="bank_journal"/>  -->
+            <field name="date" eval="str(int(time.strftime('%Y'))) +'-10-10'"/>
             <field name="company_id" ref="base.main_company"/>
          </record>
     </data>

@@ -2,8 +2,9 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
-import calendar
+# import calendar
 from datetime import datetime
+from dateutil.relativedelta import relativedelta as rd
 
 
 class BatchExamReport(models.AbstractModel):
@@ -12,19 +13,22 @@ class BatchExamReport(models.AbstractModel):
 
     @api.multi
     def get_header_data(self, data):
-        months = calendar.monthrange(data.get('form').get('year'),
-                                     data.get('form').get('month'))
+        attend_month = self.env['student.attendance.by.month'
+                                ].browse(self._context.get('active_id'))
+        start_dt = datetime.strptime(attend_month.month.date_start, '%Y-%m-%d')
+        end_dt = datetime.strptime(attend_month.month.date_stop, '%Y-%m-%d')
+#        delta = end_dt - start_dt
         data_dict = {}
         day_list = []
         week_day_list = []
-        for i in range(1, months[1] + 1):
-            tmp_date = (str(i) + '-' + str(data.get('form').get('month')) +
-                        '-' + str(data.get('form').get('year')))
-            week_day = datetime.strptime(tmp_date, '%d-%m-%Y').strftime('%a')
+        while start_dt <= end_dt:
+            week_day = start_dt.strftime('%a')
             week_day_list.append(week_day)
-            day_list.append(i)
+            day_list.append(start_dt.day)
+            start_dt = start_dt + rd(days=1)
         data_dict.update({'week_day': week_day_list,
-                          'day_list': day_list})
+                          'day_list': day_list
+                          })
         return [data_dict]
 
     @api.multi
@@ -35,12 +39,19 @@ class BatchExamReport(models.AbstractModel):
         return stu_list
 
     def daily_attendance(self, form, day, student):
+        attend_month = self.env['student.attendance.by.month'
+                                ].browse(self._context.get('active_id'))
+        st_date = attend_month.month.date_start
+#        end_dt = attend_month.month.date_stop
         attend_obj = self.env['daily.attendance']
-        attend_date = (str(form.get('month')) + '/' + str(day) + '/' +
-                       str(form.get('year')))
-        sheets = attend_obj.search([('state', '=', 'validate'), ('date',
-                                                                 '=',
-                                                                 attend_date)])
+        start_date = datetime.strptime(st_date, '%Y-%m-%d')
+        if day - start_date.day >= 0:
+            attend_date = start_date + rd(days=+day - start_date.day)
+        else:
+            attend_date = start_date + rd(days=+day + start_date.day)
+        sheets = attend_obj.search([('state', '=', 'validate'),
+                                    ('date',
+                                     '=', attend_date)])
         flag = 'A'
         for sheet in sheets:
             for line in sheet.student_ids:

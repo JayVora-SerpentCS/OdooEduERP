@@ -9,12 +9,18 @@ from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
+class ResPartner(models.Model):
+    _inherit = "res.partner"
+
+    is_hostel_rector = fields.Boolean('Hostel Rector')
+
+
 class HostelType(models.Model):
     _name = 'hostel.type'
 
     name = fields.Char('HOSTEL Name', required=True,
                        help="Name of Hostel")
-    type = fields.Selection([('boys', 'Boys'), ('girls', 'Girls'),
+    type = fields.Selection([('male', 'Boys'), ('female', 'Girls'),
                              ('common', 'Common')], 'HOSTEL Type',
                             help="Type of Hostel",
                             required=True, default='common')
@@ -24,6 +30,25 @@ class HostelType(models.Model):
     student_ids = fields.One2many('hostel.student', 'hostel_info_id',
                                   string='Students')
 
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Override method to get hostel of student selected'''
+        if self._context.get('student_id'):
+            stud_obj = self.env['student.student']
+            stud = stud_obj.browse(self._context['student_id'])
+            datas = []
+            if stud.gender:
+                self._cr.execute("""select id from hostel_type where type=%s or
+                type='common' """, (stud.gender,))
+                data = self._cr.fetchall()
+                for d in data:
+                    datas.append(d[0])
+            args.append(('id', 'in', datas))
+        return super(HostelType, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
+
 
 class HostelRoom(models.Model):
 
@@ -31,28 +56,28 @@ class HostelRoom(models.Model):
     _rec_name = 'room_no'
 
     @api.model
-    def fields_view_get(self, view_id=None, viewtype='form', toolbar=False,
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False,
                         submenu=False):
         res = super(HostelRoom, self).fields_view_get(view_id=view_id,
-                                                      view_type=viewtype,
+                                                      view_type=view_type,
                                                       toolbar=toolbar,
                                                       submenu=submenu)
         user_group = self.env.user.has_group('school_hostel.group_hostel_user')
         doc = etree.XML(res['arch'])
         if user_group:
-            if viewtype == 'tree':
+            if view_type == 'tree':
                 nodes = doc.xpath("//tree[@name='hostel_room']")
                 for node in nodes:
                     node.set('edit', 'false')
                 res['arch'] = etree.tostring(doc)
-            if viewtype == 'form':
+            if view_type == 'form':
                 nodes = doc.xpath("//form[@name='hostel_room']")
                 for node in nodes:
                     node.set('edit', 'false')
                 res['arch'] = etree.tostring(doc)
         return res
 
-    @api.depends('student_ids')
+    @api.depends('student_per_room', 'student_ids')
     def _compute_check_availability(self):
         '''Method to check room availability'''
         room_availability = 0
@@ -60,7 +85,8 @@ class HostelRoom(models.Model):
             count = 0
             if data.student_ids:
                 count += 1
-            room_availability = data.student_per_room - count
+            room_availability = data.student_per_room - len(
+                data.student_ids.ids)
             data.availability = room_availability
 
     name = fields.Many2one('hostel.type', 'HOSTEL',
@@ -107,7 +133,7 @@ class HostelStudent(models.Model):
     def check_duration(self):
         '''Method to check duration should be greater than zero'''
         if self.duration <= 0:
-            raise ValidationError(_('Duration should be greater than 0'))
+            raise ValidationError(_('Duration should be greater than 0!'))
 
     @api.multi
     def _compute_invoices(self):
@@ -124,6 +150,26 @@ class HostelStudent(models.Model):
             amt = rec.room_id.rent_amount or 0.0
             rec.room_rent = rec.duration * amt
 
+    @api.onchange('hostel_info_id')
+    def onchange_hostel(self):
+        '''Method to make room false when hostel changes'''
+        self.room_id = False
+
+    @api.constrains('room_id')
+    def check_room_avaliable(self):
+        '''Check Room Availability'''
+        if self.room_id.availability <= 0:
+                raise ValidationError(_('''There is no avalilability in the
+                room!'''))
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.status in ['reservation', 'pending', 'paid']:
+                raise ValidationError(_('''You can delete record in
+                unconfirm state only!'''))
+        return super(HostelStudent, self).unlink()
+
     @api.depends('status')
     def _get_hostel_user(self):
         user_group = self.env.ref('school_hostel.group_hostel_user')
@@ -133,8 +179,7 @@ class HostelStudent(models.Model):
             self.hostel_user = True
 
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
-                            default=lambda obj: obj.env['ir.sequence'].
-                            next_by_code('hostel.student'))
+                            default=lambda self: _('New'))
     compute_inv = fields.Integer('Number of invoice',
                                  compute="_compute_invoices")
     student_id = fields.Many2one('student.student', 'Student')
@@ -142,7 +187,7 @@ class HostelStudent(models.Model):
     room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
                              required=True,
                              help="Rent of room")
-    bed_type = fields.Many2one('bed.type', 'Bed Type')
+#    bed_type = fields.Many2one('bed.type', 'Bed Type')
     admission_date = fields.Datetime('Admission Date',
                                      help="Date of admission in hostel",
                                      default=fields.Date.context_today)
@@ -167,6 +212,8 @@ class HostelStudent(models.Model):
                                ('cancel', 'Cancel')],
                               string='Status',
                               default='draft')
+    hostel_types = fields.Char('Type')
+    stud_gender = fields.Char('Gender')
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
@@ -182,31 +229,64 @@ class HostelStudent(models.Model):
             rec.room_id.availability += 1
         return True
 
+    @api.onchange('hostel_info_id')
+    def onchange_hostel_types(self):
+        self.hostel_types = self.hostel_info_id.type
+
+    @api.onchange('student_id')
+    def onchange_student_gender(self):
+        '''Method to get gender of student'''
+        self.stud_gender = self.student_id.gender
+
     @api.multi
     def reservation_state(self):
         '''Method to change state to reservation'''
         for rec in self:
+            if rec.hostel_id == 'New':
+                rec.hostel_id = self.env['ir.sequence'
+                                         ].next_by_code('hostel.student'
+                                                        ) or _('New')
             rec.status = 'reservation'
-            # room availability is decreased
-            rec.room_id.availability -= 1
         return True
 
     @api.multi
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
         '''to calculate discharge date based on current date and duration'''
-        for rec in self:
-            if rec.admission_date:
-                date = datetime.strptime(rec.admission_date,
-                                         DEFAULT_SERVER_DATETIME_FORMAT)
-                rec.discharge_date = date + rd(months=rec.duration)
+        if self.admission_date:
+            date = datetime.strptime(self.admission_date,
+                                     DEFAULT_SERVER_DATETIME_FORMAT)
+            self.discharge_date = date + rd(months=self.duration)
 
     @api.model
     def create(self, vals):
         res = super(HostelStudent, self).create(vals)
-        if res:
-            res.onchnage_discharge_date()
+        date = datetime.strptime(res.admission_date,
+                                 DEFAULT_SERVER_DATETIME_FORMAT)
+        res.discharge_date = date + rd(months=res.duration)
+        vals.update({'discharge_date': res.discharge_date,
+                     })
         return res
+
+    @api.multi
+    def write(self, vals):
+        duration_months = vals.get('duration') or self.duration
+        addmissiondate = vals.get('admission_date') or self.admission_date
+        if addmissiondate and not vals.get('discharge_date'):
+            date = datetime.strptime(addmissiondate,
+                                     DEFAULT_SERVER_DATETIME_FORMAT)
+            discharge_date_student = date + rd(months=duration_months)
+            vals.update({'discharge_date': discharge_date_student,
+                         })
+        return super(HostelStudent, self).write(vals)
+
+    @api.constrains('student_id')
+    def check_student_registration(self):
+        student = self.search([('student_id', '=', self.student_id.id),
+                               ('id', 'not in', self.ids)])
+        if student:
+            raise ValidationError(_('''Selected student is already
+            registered!'''))
 
     @api.multi
     def discharge_state(self):
@@ -288,15 +368,6 @@ class HostelStudent(models.Model):
         return self.env['report'
                         ].get_action(self,
                                      'school_hostel.hostel_fee_reciept1')
-
-
-class BedType(models.Model):
-
-    _name = 'bed.type'
-    _description = 'Type of Bed in HOSTEL'
-
-    name = fields.Char('Name', required=True)
-    description = fields.Text('Description')
 
 
 class AccountInvoice(models.Model):

@@ -12,8 +12,8 @@
                 <form string="Student Monthly Attendance Report">
                     <separator string="Student Monthly Attendance Report" colspan="4" />
                     <group col="4" colspan="2">
-                        <field name="month" width="200" />
-                        <field name="year" width="200" />
+                        <field name="year" width="200" required="1" widget="selection"/>
+                        <field name="month" width="200" domain="[('year_id','=',year)]" required="1" widget="selection"/>
                     </group>
                     <footer>
                     <group colspan="4">

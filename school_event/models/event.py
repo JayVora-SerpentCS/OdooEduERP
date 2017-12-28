@@ -4,6 +4,7 @@
 import time
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from odoo.exceptions import ValidationError
 
 
 class SchoolStandard(models.Model):
@@ -28,7 +29,6 @@ class SchoolEventParticipant(models.Model):
     _name = 'school.event.participant'
     _description = 'Participant Information'
     _rec_name = "stu_pid"
-    _order = "sequence"
 
     name = fields.Many2one('student.student', 'Participant Name',
                            readonly=True,
@@ -41,8 +41,13 @@ class SchoolEventParticipant(models.Model):
                           readonly=True)
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
                                        readonly=True)
-    sequence = fields.Integer('Rank', help="The sequence field is used to Give\
-                               Rank to the Participant", default=0)
+    rank = fields.Integer('Rank', help="The sequence field is used to Give\
+                               Rank to the Participant")
+
+    @api.constrains('rank')
+    def check_rank(self):
+        if self.rank < 0:
+            raise ValidationError(_('''Rank should be greater than 0!'''))
 
 
 class SchoolEvent(models.Model):
@@ -86,9 +91,10 @@ class SchoolEvent(models.Model):
                                          'standard_id', 'event_id',
                                          'Participant Standards',
                                          help="The Participant is from\
-                                               which standard")
+                                               which standard",
+                                         )
     state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
-                              ('close', 'Close'), ('cancel', 'Cancel')],
+                              ('close', 'Close')],
                              string='State', readonly=True, default='draft')
     part_ids = fields.Many2many('school.event.participant',
                                 'event_participants_rel', 'participant_id',
@@ -101,12 +107,20 @@ class SchoolEvent(models.Model):
                                       on holiday.')
     color = fields.Integer('Color Index', default=0)
 
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state not in ['draft', 'close']:
+                raise ValidationError(_('''You can delete record in unconfirm
+                state only or close state only !'''))
+        return super(SchoolEvent, self).unlink()
+
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
         '''Raises constraint when start date is greater than end date'''
         sedt = self.start_date > self.end_date
         if (self.start_date and self.end_date and sedt):
-            raise UserError(_('Error! Event start-date must be lower\
+            raise ValidationError(_('Event start-date must be lower\
                               then Event end-date!'))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
@@ -117,25 +131,11 @@ class SchoolEvent(models.Model):
         if (self.start_date and self.end_date and dt):
 
             if self.start_reg_date > self.last_reg_date:
-                raise UserError(_('Error! Event Registration StartDate must be\
+                raise ValidationError(_('Event Registration StartDate must be\
                                   lower than Event Registration end-date.!'))
             elif self.last_reg_date >= self.start_date:
-                raise UserError(_('Error! Event Registration last-date must be\
+                raise ValidationError(_('Event Registration last-date must be\
                                     lower than Event start-date!.'))
-
-    @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False,
-                access_rights_uid=None):
-        '''Override method to find student of standard selected'''
-        if self._context.get('part_name_id'):
-            student_obj = self.env['student.student']
-            data = student_obj.browse(self._context.get('part_name_id'))
-            arg_domain = ('part_standard_ids', 'in', [data.standard_id.id])
-            args.append(arg_domain)
-        return super(SchoolEvent, self
-                     )._search(args=args, offset=offset,
-                               limit=limit, count=count,
-                               access_rights_uid=access_rights_uid)
 
     @api.multi
     def event_open(self):
@@ -143,8 +143,7 @@ class SchoolEvent(models.Model):
             if len(rec.part_ids) >= 1:
                 rec.state = 'open'
             else:
-                raise UserError(_('No Participants ! \
-                             No Participants to open the Event!'))
+                raise UserError(_('Enter participants to open the event!'))
 
     @api.multi
     def event_close(self):
@@ -164,6 +163,24 @@ class SchoolEvent(models.Model):
         self.write({'state': 'cancel'})
         return True
 
+    @api.model
+    def create(self, vals):
+        res = super(SchoolEvent, self).create(vals)
+        event_vals = {'name': vals.get('name'),
+                      'start_date': vals.get('start_date'),
+                      'stop_date': vals.get('end_date'),
+                      'allday': True,
+                      'start': vals.get('start_date'),
+                      'stop': vals.get('end_date')
+                      }
+        st_lst = []
+        for rec in res.part_standard_ids:
+            for student in rec.student_ids:
+                st_lst.append(student.user_id.partner_id.id)
+                event_vals.update({'partner_ids': [(6, 0, st_lst)]})
+        self.env['calendar.event'].create(event_vals)
+        return res
+
 
 class SchoolEventRegistration(models.Model):
     '''for registration by students for events'''
@@ -177,6 +194,7 @@ class SchoolEventRegistration(models.Model):
     part_name_id = fields.Many2one('student.student', 'Participant Name',
                                    required=True,
                                    help="Select Participant")
+    student_standard_id = fields.Many2one('school.standard', 'Student Std')
     reg_date = fields.Date('Registration Date', readonly=True,
                            help="Registration date of event",
                            default=lambda *a:
@@ -187,6 +205,10 @@ class SchoolEventRegistration(models.Model):
                              default='draft')
     is_holiday = fields.Boolean('Is Holiday(s)', help='Checked if the event is\
                                                     organized on holiday.')
+
+    @api.onchange('part_name_id')
+    def onchange_student_standard(self):
+        self.student_standard_id = self.part_name_id.standard_id.id
 
     @api.multi
     def regi_cancel(self):
@@ -203,6 +225,32 @@ class SchoolEventRegistration(models.Model):
             rec.write({'state': 'cancel'})
         return True
 
+    @api.constrains('name')
+    def check_event_state(self):
+        for rec in self:
+            if rec.name.state in ['open', 'close']:
+                raise ValidationError(_('''You cannot do registration in
+                                        event which is in running or closed!
+                                        '''))
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state != 'draft':
+                raise UserError(_('''You can delete record in unconfirm state
+                only!'''))
+        return super(SchoolEventRegistration, self).unlink()
+
+    @api.constrains('part_name_id')
+    def check_student_registration(self):
+        student_event = self.search([('part_name_id', '=',
+                                      self.part_name_id.id),
+                                     ('id', 'not in', self.ids),
+                                     ('state', '=', 'confirm')])
+        if student_event:
+            raise ValidationError(_('''Student is already
+                                    registered in this event!'''))
+
     @api.multi
     def regi_confirm(self):
         '''Method to confirm registration'''
@@ -213,13 +261,15 @@ class SchoolEventRegistration(models.Model):
 
             # check participation is full or not.
             if participants > rec.name.maximum_participants:
-                raise UserError(_('Error ! \
-                                 Participation in this Event is Full.'))
+                raise UserError(_('''Participation in this Event is Full!'''))
 
             # check last registration date is over or not
+            if rec.reg_date < rec.name.start_reg_date:
+                raise UserError(_('''Error ! Registration is not started
+                                   for this Event!'''))
             if rec.reg_date > rec.name.last_reg_date:
-                raise UserError(_('Error ! Last Registration date is over \
-                                   for this Event.'))
+                raise UserError(_('''Error ! Last Registration date is over
+                                   for this Event!'''))
             # make entry in participant
             vals = {'stu_pid': str(rec.part_name_id.pid),
                     'win_parameter_id': rec.name.parameter_id.id,
@@ -240,16 +290,3 @@ class StudentStudent(models.Model):
     event_ids = fields.Many2many('school.event.participant',
                                  'student_participants_rel', 'stud_id',
                                  'participant_id', 'Participants')
-
-    @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False,
-                access_rights_uid=None):
-        '''Override method to find event of standard selected'''
-        if self._context.get('name'):
-            event_obj = self.env['school.event']
-            event_data = event_obj.browse(self._context['name'])
-            std_ids = [std_id.id for std_id in event_data.part_standard_ids]
-            args.append(('standard_id', 'in', std_ids))
-        return super(StudentStudent, self)._search(
-            args=args, offset=offset, limit=limit, order=order, count=count,
-            access_rights_uid=access_rights_uid)

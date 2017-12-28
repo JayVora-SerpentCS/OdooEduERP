@@ -27,7 +27,7 @@
                                         <b>:-</b>
                                     </td>
                                     <td width="25%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <span t-field="result.student_id.name"></span>
+                                        <span t-field="result.sudo().student_id.name"></span>
                                     </td>
                                     <td width="20%"></td>
                                     <td width="5%"></td>

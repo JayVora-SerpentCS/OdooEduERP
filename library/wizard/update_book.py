@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class UpdateBooks(models.TransientModel):
@@ -16,5 +17,10 @@ class UpdateBooks(models.TransientModel):
         for rec in self:
             if self._context.get('active_ids'):
                 for active_id in self._context.get('active_ids'):
-                    lib_book_obj.browse(active_id).write({'name': rec.name.id})
+                    book_rec = lib_book_obj.browse(active_id)
+                    if rec.name.availability == 'notavailable':
+                        raise ValidationError(_('''This Book is not available!
+                        Please try after sometime !'''))
+                    else:
+                        book_rec.browse(active_id).write({'name': rec.name.id})
         return {}

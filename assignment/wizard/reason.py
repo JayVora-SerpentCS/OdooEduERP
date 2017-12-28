@@ -13,8 +13,7 @@ class RejectReason(models.TransientModel):
     def save_reason(self):
         student_assignment = self.env['school.student.assignment']
         for rec in self:
-            std_id = rec._context.get('active_id')
-            student = student_assignment.browse(std_id)
+            student = student_assignment.browse(rec._context.get('active_id'))
             if student:
                 student.write({'state': 'reject',
                                'rejection_reason': rec.reasons or ''})

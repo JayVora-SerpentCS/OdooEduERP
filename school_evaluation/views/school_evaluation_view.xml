@@ -15,19 +15,20 @@
             <field name="name">Student Evaluation</field>
             <field name="res_model">school.evaluation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','student')]</field>
             <field name="context">{'default_type':'student','search_default_student_id': active_id}</field>
         </record>
         <!-- Action of Teacher Evaluation -->
-        <record id="action_teacher_eval" model="ir.actions.act_window">
+       <!--  <record id="action_teacher_eval" model="ir.actions.act_window">
             <field name="name">Teacher Evaluation</field>
              <field name="res_model">school.evaluation</field>
              <field name="view_type">form</field>
              <field name="view_mode">tree,form</field>
              <field name="domain">[('type','=','faculty')]</field>
              <field name="context">{'default_type':'faculty'}</field>
-        </record>
+             <field name="search_view_id" ref="view_teacher_eval_search"/>
+        </record> -->
         <!-- Inherited Form View Of Student -->
         <record id="view_student_student_form2" model="ir.ui.view">
             <field name="name">student.student.form</field>
@@ -35,10 +36,19 @@
             <field name="inherit_id" ref="school.view_student_student_form_1"/>
             <field name="arch" type="xml">
                 <data>
+            <!--  <record id="action_teacher_eval" model="ir.actions.act_window">
+            <field name="name">Teacher Evaluation</field>
+             <field name="res_model">school.evaluation</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="domain">[('type','=','faculty')]</field>
+             <field name="context">{'default_type':'faculty'}</field>
+             <field name="search_view_id" ref="view_teacher_eval_search"/>
+        </record> -->
                     <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_student_eval_form_actions)d" type="action" class="oe_inline oe_stat_button">
-                            <img src="/school_evaluation/static/description/e.png" style="height:25px;width:50px;float:left;"/>
-                            <lable style="">Evaluation</lable>
+                        <button name="%(action_student_eval_form_actions)d" type="action" class="oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
+                             <img src="/school_evaluation/static/description/e.png" style="height:25px;width:50px;float:left;"/>
+                                <lable style = "">Evaluation</lable>
                         </button>
                     </xpath>
                 </data>
@@ -99,7 +109,7 @@
                                  <field name="student_id" placeholder="Select Or Create Student Name" domain="[('state','=','done')]"
                                      attrs="{'readonly':[('state','not in','draft')],'required':[('type','=','student')]}" options="{&quot;no_create&quot;: True}"/>
                                  <field name="date" style="width: 84%" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                 <field name="teacher_id" invisible="1"/>
+<!--                                  <field name="teacher_id" invisible="1"/> -->
                             </group>
                             <group>
                                  <field name="type" readonly="1"/>
@@ -155,7 +165,7 @@
                         <group attrs="{'readonly': [('state','in',['finished', 'cancelled'])]}">
                             <group>
                                 <field name="student_id" required="0" invisible="1"/>
-                                <field name="teacher_id" placeholder="Select Or Create Teacher Name" domain="[('is_school_teacher','=',True)]" context="{'default_is_school_teacher':1}"
+                                <field name="teacher_id" placeholder="Select Or Create Teacher Name"
                                         attrs="{'readonly':[('state','not in','draft')],
                                                 'required': [('type','=','faculty')]}" options="{&quot;no_create&quot;: True}"/>
                                 <field name="date" style="width: 84%%" attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -209,6 +219,82 @@
                 </tree>
             </field>
         </record>
+        
+        <!-- Search View  Of Student Evaluation -->
+        <record id="view_teacher_eval_search" model="ir.ui.view">
+            <field name="name">schoolteacher.evaluation.search</field>
+            <field name="model">school.evaluation</field>
+            <field name="arch" type="xml">
+                <search string="Student Evaluation Search">
+                    <group colspan="6" col="4">
+                        <field name="teacher_id"/>
+<!--                         <field name="evaluator_id"/> -->
+                        <field name="date"/>
+                    </group>
+                    <separator orientation="vertical"/>
+                    <newline />
+                    <group expand="0" string="Group By..." colspan="6" col="4">
+                        <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
+<!--                         <filter string="Faculty" icon="terp-personal" name="faculty_id" context="{'group_by':'evaluator_id'}"/> -->
+                        <filter string="Teacher" icon="terp-personal" name="student_id" context="{'group_by':'teacher_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        
+         <record id="action_teacher_eval" model="ir.actions.act_window">
+            <field name="name">Teacher Evaluation</field>
+             <field name="res_model">school.evaluation</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="domain">[('type','=','faculty')]</field>
+             <field name="context">{'default_type':'faculty'}</field>
+             <field name="search_view_id" ref="view_teacher_eval_search"/>
+        </record>
+        
+         <record id="action_teacher_eval_new" model="ir.actions.act_window">
+            <field name="name">Teacher Evaluation Finished</field>
+             <field name="res_model">school.evaluation</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="domain">[('type','=','faculty'),('state','=','finished')]</field>
+             <field name="context">{'default_type':'faculty'}</field>
+             <field name="search_view_id" ref="view_teacher_eval_search"/>
+        </record>
+        
+        <record id="action_view_teacher_evaluation_tree_new" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_teacher_evaluation_tree" />
+            <field name="act_window_id" ref="action_teacher_eval_new" />
+        </record>
+        <record id="action_view_teacher_evaluation_form_new" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="teacher_evaluation_form" />
+            <field name="act_window_id" ref="action_teacher_eval_new" />
+        </record>
+        
+        <record id="action_teacher_eval_new_draft" model="ir.actions.act_window">
+            <field name="name">Teacher Evaluation New Draft</field>
+             <field name="res_model">school.evaluation</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="domain">[('type','=','faculty'),('state','=','draft')]</field>
+             <field name="context">{'default_type':'faculty'}</field>
+             <field name="search_view_id" ref="view_teacher_eval_search"/>
+        </record>
+        
+        <record id="action_view_teacher_evaluation_tree_new_draft" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_teacher_evaluation_tree" />
+            <field name="act_window_id" ref="action_teacher_eval_new_draft" />
+        </record>
+        <record id="action_view_teacher_evaluation_form_new_draft" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="teacher_evaluation_form" />
+            <field name="act_window_id" ref="action_teacher_eval_new_draft" />
+        </record>
+        
         <!-- Student Evaluation Template Search View -->
         <record id="view_student_eval_temp_search" model="ir.ui.view">
             <field name="name">school.evaluation.template.search</field>
@@ -304,7 +390,7 @@
 
         <!-- Actions Of Form & Tree Views Of Student Evaluation Template -->
         <record id="action_student_eval_temp" model="ir.actions.act_window">
-            <field name="name">Student Evaluation Template</field>
+            <field name="name">Evaluation Templates</field>
             <field name="res_model">school.evaluation.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -321,7 +407,6 @@
         <!-- Actions View of the School Student Tree View -->
         <record id="action_view_student_evaluation_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
-            <field eval="31" name="sequence" />
             <field name="view_id" ref="view_student_evaluation_tree" />
             <field name="act_window_id" ref="action_student_eval_form" />
         </record>
@@ -329,7 +414,6 @@
         <!-- Actions View of the School Student Form View -->
         <record id="action_view_student_evaluation_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
-            <field eval="30" name="sequence" />
             <field name="view_id" ref="view_student_evaluation_form" />
             <field name="act_window_id" ref="action_student_eval_form" />
         </record>
@@ -337,7 +421,6 @@
         <!-- Actions View of the School Teacher Tree View -->
         <record id="action_view_teacher_evaluation_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
-            <field eval="30" name="sequence" />
             <field name="view_id" ref="view_teacher_evaluation_tree" />
             <field name="act_window_id" ref="action_teacher_eval" />
         </record>
@@ -345,11 +428,56 @@
         <!-- Actions View of the School Teacher Form View -->
         <record id="action_view_teacher_evaluation_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
-            <field eval="31" name="sequence" />
             <field name="view_id" ref="teacher_evaluation_form" />
             <field name="act_window_id" ref="action_teacher_eval" />
         </record>
 
+        <record id="action_student_eval_finished" model="ir.actions.act_window">
+            <field name="name">Student Evaluation Finished</field>
+            <field name="res_model">school.evaluation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','student'),('state','=','finished')]</field>
+            <field name="context">{'default_type':'student'}</field>
+        </record>
+        
+        <!-- Actions View of the School Student Tree View -->
+        <record id="action_view_student_evaluation_tree_finished" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_student_evaluation_tree" />
+            <field name="act_window_id" ref="action_student_eval_finished" />
+        </record>
+
+        <!-- Actions View of the School Student Form View -->
+        <record id="action_view_student_evaluation_form_finished" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_student_evaluation_form" />
+            <field name="act_window_id" ref="action_student_eval_finished" />
+        </record>
+        
+        <record id="action_student_eval_draft" model="ir.actions.act_window">
+            <field name="name">Student Evaluation Draft</field>
+            <field name="res_model">school.evaluation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','student'),('state','=','draft')]</field>
+            <field name="context">{'default_type':'student'}</field>
+        </record>
+        
+        <!-- Actions View of the School Student Tree View -->
+        <record id="action_view_student_evaluation_tree_draft" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_student_evaluation_tree" />
+            <field name="act_window_id" ref="action_student_eval_draft" />
+        </record>
+
+        <!-- Actions View of the School Student Form View -->
+        <record id="action_view_student_evaluation_form_draft" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_student_evaluation_form" />
+            <field name="act_window_id" ref="action_student_eval_draft" />
+        </record>
+        
         <!-- Menu Items of Student and Teacher Evaluation -->
         <menuitem id="menu_stu_eval" name="Evaluations" parent="school.menu_ems" sequence="8"/>
         <menuitem id="menu_evals" name="Student Evaluation" parent="menu_stu_eval" action="action_student_eval"

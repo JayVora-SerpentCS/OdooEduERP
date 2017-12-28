@@ -7,7 +7,6 @@
     'version': '10.0.1.0.4',
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
-    'images': ['static/description/SchoolTimetable.png'],
     'license': "AGPL-3",
     'category': 'School Management',
     'complexity': 'easy',

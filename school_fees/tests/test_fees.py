@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -50,7 +51,7 @@ class TestFees(common.TransactionCase):
                     'standard_id': self.standard.id,
                     'journal_id': self.journal.id
                     })
-        self.fees_register._total_amount()
+        self.fees_register._compute_total_amount()
         self.fees_register.fees_register_draft()
         self.fees_register.fees_register_confirm()
 #        Create Student Fees Receipt
