@@ -781,7 +781,7 @@
             <field name="email">jessie.warner@example.com</field>
             <field eval="[(6,0,[ref('demo_student_student_6')])]" name="student_id"/>
         </record>
-        <!-- Student cast -->
+        <!-- Student Religion/caste -->
         <record id="demo_student_cast_1" model="student.cast">
             <field name="name">Hindu</field>
         </record>
@@ -814,7 +814,7 @@
             <field name="doc_type">Leving Certificate</field>
         </record>
         <record id="demo_student_document_6" model="document.type">
-            <field name="doc_type">Cast certificate</field>
+            <field name="doc_type">Caste certificate</field>
         </record>
         <record id="demo_student_document_7" model="document.type">
             <field name="doc_type">Other certificate</field>

@@ -78,7 +78,7 @@
                             <page name="public" string="Public Information">
                                 <group>
                                     <group string="Contact Information">
-                                        <field name="address_id" context="{'show_address': 1}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                                        <field name="address_id" context="{'show_address': 1}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}" string="Work Address"/>
                                         <field name="mobile_phone" />
                                         <field name="work_location" />
                                         <field name="work_email" widget="email" required="1"/>

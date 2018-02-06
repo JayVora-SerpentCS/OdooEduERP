@@ -135,9 +135,8 @@ class LibraryCard(models.Model):
 
     @api.multi
     def running_state(self):
-        if self.code == 'New':
-            self.code = self.env['ir.sequence'].next_by_code('library.card'
-                                                             ) or _('New')
+        self.code = self.env['ir.sequence'].next_by_code('library.card'
+                                                         ) or _('New')
         self.state = 'running'
 
     @api.multi

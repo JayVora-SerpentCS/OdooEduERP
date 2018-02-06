@@ -254,7 +254,8 @@ class SchoolStandard(models.Model):
         self.remaining_seats = self.capacity - self.total_students
 
     school_id = fields.Many2one('school.school', 'School', required=True)
-    standard_id = fields.Many2one('standard.standard', 'Class', required=True)
+    standard_id = fields.Many2one('standard.standard', 'Standard',
+                                  required=True)
     division_id = fields.Many2one('standard.division', 'Division',
                                   required=True)
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)

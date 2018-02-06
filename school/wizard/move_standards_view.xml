@@ -8,7 +8,7 @@
             <field name="name">move_standards.form</field>
             <field name="model">move.standards</field>
             <field name="arch" type="xml">
-                <form string="Move Standards">
+                <form string="Move Classes">
                         <group>
                             <field name="academic_year_id" placeholder="Enter Academic Year" widget="selection"/>
                         </group>
@@ -20,9 +20,9 @@
             </field>
         </record>
         
-        <!-- Action Of Form & Tree Views Of Move Standards -->
+        <!-- Action Of Form & Tree Views Of Move Classes -->
         <record id="action_move_standards_form" model="ir.actions.act_window">
-            <field name="name">Move Standards</field>
+            <field name="name">Move Classes</field>
             <field name="res_model">move.standards</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -30,7 +30,7 @@
             <field name="target">new</field>
         </record>
 
-        <!-- MenuItem For Configurations->Move Standards -->
-        <menuitem id="menu_move_standards_form" name="Move Standards" parent="menu_configuration" action="action_move_standards_form" />
+        <!-- MenuItem For Configurations->Move Classes -->
+        <menuitem id="menu_move_standards_form" name="Move Classes" parent="menu_configuration" action="action_move_standards_form" />
 
 </odoo>

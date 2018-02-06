@@ -63,7 +63,7 @@
                         <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
                     <group col="4" string="Subject and Dates">
-                        <field name="standard_id" select="1" placeholder="Standard" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" domain="[('user_id','=',teacher_id)]" required="1"/>
+                        <field name="standard_id" select="1" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" domain="[('user_id','=',teacher_id)]" required="1"/>
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
                         <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',subject_standard_assignment)]" widget="selection"/>
                         <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -134,7 +134,7 @@
                     </group>
                     <group col="4" string="Standard and Division">
                         <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',student_standard)]"/>
-                        <field name="standard_id" placeholder="Standard" attrs="{'readonly':[('state','!=','draft')]}" domain="[('user_id','=',teacher_id)]" widget="selection"/>
+                        <field name="standard_id" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" domain="[('user_id','=',teacher_id)]" widget="selection"/>
                     </group>
                     <group col="4" string="Dates">
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>

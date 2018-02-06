@@ -175,7 +175,7 @@
                             <field name="participants" readonly="1" />
                         </group>
                         <notebook colspan="4">
-                            <page string="Participated Standards"
+                            <page string="Participated Classes"
                             attrs="{'readonly':[('state','!=','draft')]}">
                                 <field name="part_standard_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             </page>
@@ -456,7 +456,7 @@
         <!-- Action Of Form & Tree Views Of Event Parameter -->
 
         <record id="action_event_parameter" model="ir.actions.act_window">
-            <field name="name"> Event Perameter</field>
+            <field name="name"> Event Parameter</field>
             <field name="res_model">school.event.parameter</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

@@ -183,7 +183,7 @@
                             <field name="division_id" widget="selection" placeholder="Division"/>
                             <field name="medium_id" widget="selection" placeholder="Medium"/>
                             <field name="school_id" widget="selection" placeholder="School"/>
-                            <field name="user_id" placeholder="Create Or Select Faculty Name"
+                            <field name="user_id" placeholder="Select Faculty Name"
                                 widget="selection"/>
                             <field name="capacity"/>
                             <field name="total_students"/>
@@ -341,22 +341,22 @@
                 </search>
             </field>
         </record>
-        <!-- Tree View Of Student Cast -->
-        <record id="view_student_cast_tree" model="ir.ui.view">
-            <field name="name">student.cast.tree</field>
+        <!-- Tree View Of Student Caste -->
+        <record id="view_student_caste_tree" model="ir.ui.view">
+            <field name="name">student.caste.tree</field>
             <field name="model">student.cast</field>
             <field name="arch" type="xml">
-                <tree string="Cast Information" editable="bottom">
+                <tree string="Caste Information" editable="bottom">
                     <field name="name" placeholder="Enter Name"/>
                 </tree>
             </field>
         </record>
-        <!-- Form View Of Student Cast -->
-        <record id="view_student_cast_form" model="ir.ui.view">
-            <field name="name">student.cast.form</field>
+        <!-- Form View Of Student Caste -->
+        <record id="view_student_caste_form" model="ir.ui.view">
+            <field name="name">student.caste.form</field>
             <field name="model">student.cast</field>
             <field name="arch" type="xml">
-                <form string="Cast Information">
+                <form string="Caste Information">
                     <sheet>
                         <group>
                             <field name="name" placeholder="Religion" />
@@ -365,9 +365,9 @@
                 </form>
             </field>
         </record>
-        <!-- Action Of Form & Tree Views Of Student Cast -->
+        <!-- Action Of Form & Tree Views Of Student Caste -->
         <record id="action_student_cast_form_7" model="ir.actions.act_window">
-            <field name="name">Cast</field>
+            <field name="name">Religion/Caste</field>
             <field name="res_model">student.cast</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -517,7 +517,7 @@
             <field name="name">standard.medium.form</field>
             <field name="model">standard.medium</field>
             <field name="arch" type="xml">
-                <form string="Mediums">
+                <form string="Medium">
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="sequence" />
@@ -535,7 +535,7 @@
             <field name="name">standard.medium.tree</field>
             <field name="model">standard.medium</field>
             <field name="arch" type="xml">
-                <tree string="Mediums">
+                <tree string="Medium">
                     <field name="sequence" />
                     <field name="name" />
                     <field name="code" />
@@ -599,7 +599,7 @@
         </record>
         <!-- Action Of Form & Tree Views Of Student Document Type -->
         <record id="action_document_type_form" model="ir.actions.act_window">
-            <field name="name">Document Types</field>
+            <field name="name">Document Type</field>
             <field name="res_model">document.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -809,7 +809,7 @@
         </record>
         <!-- Action Of Form & Tree Views Of School Standard -->
         <record id="action_school_standard_form" model="ir.actions.act_window">
-            <field name="name">Standards</field>
+            <field name="name">Classes</field>
             <field name="res_model">school.standard</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -843,7 +843,7 @@
         </record>
         <!-- Action Of Form & Tree Views Of Standard Medium Information -->
         <record id="action_standard_medium_form" model="ir.actions.act_window">
-            <field name="name">Mediums</field>
+            <field name="name">Medium</field>
             <field name="res_model">standard.medium</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -864,7 +864,7 @@
         </record>
         <!-- Action Of Form & Tree Views Of Standard Information -->
         <record id="action_standard_standard_form" model="ir.actions.act_window">
-            <field name="name">Classes</field>
+            <field name="name">Standards</field>
             <field name="res_model">standard.standard</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -996,7 +996,7 @@
         <!-- MenuItem For Configurations->School Configurations -->
         <menuitem id="menu_school_config_form1" name="School Configurations" parent="menu_configuration" />
 <!--         <menuitem id="menu_grno" name="GR No." parent="menu_school_config_form1" action="action_student_grn_form" /> -->
-        <menuitem id="menu_cast" name="Cast" parent="menu_school_config_form1" action="action_student_cast_form_7" />
+        <menuitem id="menu_cast" name="Religion/Caste" parent="menu_school_config_form1" action="action_student_cast_form_7" />
         <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1" action="action_document_type_form" />
         <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1" action="action_grade_master_form" />
         <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_school_config_form1" action="view_student_news" />
@@ -1008,10 +1008,10 @@
         <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form" action="action_academic_month_form" />
         <!-- MenuItem For Configurations->Standards -->
         <menuitem id="menu_school_standard_form" name="Standards" parent="menu_configuration" />
-        <menuitem id="menu_sub_school_standard_form" name="Standard" parent="menu_school_standard_form" action="action_school_standard_form" />
-        <menuitem id="menu_standard_standard_form" name="Classes" parent="menu_school_standard_form" action="action_standard_standard_form" />
+        <menuitem id="menu_sub_school_standard_form" name="Classes" parent="menu_school_standard_form" action="action_school_standard_form" />
+        <menuitem id="menu_standard_standard_form" name="Standards" parent="menu_school_standard_form" action="action_standard_standard_form" />
         <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_school_standard_form" action="action_standard_division_form" />
-        <menuitem id="menu_standard_medium_form" name="Mediums" parent="menu_school_standard_form" action="action_standard_medium_form" />
+        <menuitem id="menu_standard_medium_form" name="Medium" parent="menu_school_standard_form" action="action_standard_medium_form" />
         <menuitem id="menu_class_room" name="Class Room" parent="menu_school_standard_form" action="action_class_room"/>
         <!-- MenuItem For Configurations->Subject -->
         <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
