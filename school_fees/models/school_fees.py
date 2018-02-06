@@ -44,7 +44,7 @@ class StudentFeesRegister(models.Model):
                                  browse([obj_c._uid])[0].company_id)
     fees_structure = fields.Many2one('student.fees.structure',
                                      'Fees Structure')
-    standard_id = fields.Many2one('standard.standard', 'Standard')
+    standard_id = fields.Many2one('standard.standard', 'Class')
 
     @api.multi
     def fees_register_draft(self):

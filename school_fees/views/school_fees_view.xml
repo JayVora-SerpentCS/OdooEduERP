@@ -300,7 +300,7 @@
                         </group>
                         <group string="Fees Register for" col="4" colspan="4">
                             <field name="fees_structure" placeholder="Fee structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                            <field name="standard_id" placeholder="Select Standard.." attrs="{'readonly':[('state','not in','draft')]}"
+                            <field name="standard_id" placeholder="Select Class" attrs="{'readonly':[('state','not in','draft')]}"
                                 required="1" widget="selection"/>
                         </group>
                         <notebook colspan="4">
