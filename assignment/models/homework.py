@@ -20,7 +20,7 @@ class SchoolTeacherAssignment(models.Model):
                        help="Name of Assignment")
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True,
                                  help="Select Subject")
-    standard_id = fields.Many2one('school.standard', 'Standard',
+    standard_id = fields.Many2one('school.standard', 'Class',
                                   help="Select Standard")
     teacher_id = fields.Many2one('school.teacher', 'Teacher', required=True,
                                  help="Select Teacher")
@@ -117,7 +117,7 @@ class SchoolStudentAssignment(models.Model):
                        help="Assignment Name")
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True,
                                  help="Select Subject")
-    standard_id = fields.Many2one('school.standard', 'Standard', required=True,
+    standard_id = fields.Many2one('school.standard', 'Class', required=True,
                                   help="Select Standard")
     rejection_reason = fields.Text('Reject Reason',
                                    help="Reject Reason")
