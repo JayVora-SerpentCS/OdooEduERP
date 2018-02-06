@@ -106,7 +106,7 @@
                         </group>
                         <group col="4" colspan="4">
                             <notebook colspan="4" >
-                                <page string="Standard">
+                                <page string="Class">
                                     <field name="standard_id" nolabel="1" colspan="4" attrs="{'readonly': [('state','!=','draft')]}"
                                         options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                                 </page>
@@ -115,7 +115,7 @@
                                             context="{'default_standard_ids':standard_id,'academic_year':academic_year}">
                                         <tree name="exam_schedule" string="Exam Schedule" editable="top">
                                             <field name="standard_ids" invisible="1"/>
-                                            <field name="standard_id" required="1" options="{&quot;no_create&quot;: True}"/>
+                                            <field name="standard_id" required="1" options="{&quot;no_create&quot;: True}" string="Class"/>
                                             <field name="timetable_id" required="1" domain="[('timetable_type','=','exam'),
                                                                                              ('year_id','=',context.get('academic_year')),
                                                                                              ('standard_id','=',standard_id)]"
@@ -251,7 +251,7 @@
                         <group col="4" string="Additional Exam Information" colspan="6">
                             <field name="addtional_exam_code" />
                             <field name="name"  placeholder="Exam Name"/>
-                            <field name="standard_id" placeholder="Select Standard" widget="selection"/>
+                            <field name="standard_id" placeholder="Select Class" widget="selection" string="Class"/>
                             <field name="subject_id" placeholder="Select Subject" widget="selection" required="1"/>
                             <field name="maximum_marks" required="1" />
                             <field name="minimum_marks" required="1"/>
@@ -346,8 +346,8 @@
                                 domain="[('state','!=','draft')]"
                                 readonly="1"/>
                             <field name="roll_no_id" readonly="1"/>
-                            <field name="standard_id" placeholder="Select or Create Standard" widget="selection"
-                                                    readonly="1"/>
+                            <field name="standard_id" placeholder="Select Standard" widget="selection"
+                                                    readonly="1" string="Class"/>
                             <field name="grade_system" required="1" widget="selection"
                                                     attrs="{'readonly' : [('state','!=','draft')]}"/>
                         </group>
@@ -551,7 +551,7 @@
                         <group col="4" string="Student Information" colspan="4">
                             <field name="student_id" domain="[('state','=','done')]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
                             <field name="roll_no_id"/>
-                            <field name="standard_id"/>
+                            <field name="standard_id" string="Class"/>
                         </group>
                         <group col="4" string="Result Information" colspan="4">
                             <field name="obtain_marks"/>

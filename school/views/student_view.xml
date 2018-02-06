@@ -74,7 +74,7 @@
                             <page string="General" name="general">
                                 <group>
                                     <group>
-                                        <field name="cast_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" widget="selection" placeholder="Cast"/>
+                                        <field name="cast_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" widget="selection" placeholder="Religion/Caste"/>
                                         <field name="date_of_birth" widget="date" placeholder="Birthdate" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                         <field name="gender" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" placeholder="Gender" required="1"/>
                                         <field name="age"/>
@@ -453,7 +453,7 @@
                             </group>
                             <group string="Class Information">
                                 <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                <field name="standard_id" placeholder="Standard" domain="[('school_id','=',school_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                <field name="standard_id" placeholder="Class" domain="[('school_id','=',school_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','alumni')]}" invisible="1"/>
                                 
                             </group>

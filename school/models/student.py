@@ -147,7 +147,7 @@ class StudentStudent(models.Model):
                                              False)))
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
                            default=check_current_year)
-    cast_id = fields.Many2one('student.cast', 'Religion')
+    cast_id = fields.Many2one('student.cast', 'Religion/Caste')
     relation = fields.Many2one('student.relation.master', 'Relation')
 
     admission_date = fields.Date('Admission Date', default=date.today())
@@ -228,7 +228,7 @@ class StudentStudent(models.Model):
     medium_id = fields.Many2one('standard.medium', 'Medium')
     cmp_id = fields.Many2one('res.company', 'Company Name',
                              related='school_id.company_id', store=True)
-    standard_id = fields.Many2one('school.standard', 'Standard')
+    standard_id = fields.Many2one('school.standard', 'Class')
     parent_id = fields.Many2many('school.parent', 'students_parents_rel',
                                  'student_id',
                                  'students_parent_id', 'Parent(s)',

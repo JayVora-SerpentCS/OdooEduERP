@@ -498,7 +498,7 @@
                             <separator colspan="4" col="4" />
                             <field name="student_id" widget="selection" domain="[('state','=','done')]" attrs="{'required':[('user','=','student')],'readonly':[('state','=','running')]}"/>
                             <field name="roll_no" readonly="1"/>
-                            <field name="standard_id" widget="selection" readonly="1"/>
+                            <field name="standard_id" widget="selection" readonly="1" string="Class"/>
                         </group>
                         <group col="2" colspan="2" attrs="{'invisible':[('user','!=','teacher')]}">
                             <separator colspan="2" col="2"/>
@@ -605,7 +605,7 @@
                             <separator string="Student Details" colspan="4" col="4"/>
                             <field name="student_id" attrs="{'invisible':[('user','=','teacher')]}" domain="[('state','=','done')]" readonly="1"/>
                             <field name="roll_no" attrs="{'invisible':[('user','=','teacher')]}" readonly="1"/>
-                            <field name="standard_id" attrs="{'invisible':[('user','=','teacher')]}" readonly="1"/>
+                            <field name="standard_id" attrs="{'invisible':[('user','=','teacher')]}" readonly="1" string="Class"/>
                             <field name="ebook_check" invisible="1"/>
                         </group>
                         <group col="2" colspan="2"
