@@ -8,7 +8,6 @@
             <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Books</field>
             <field name="book_categ" eval="True"/>
-            
         </record>
 
         <record id="product_product_b1" model="product.product" >
@@ -17,6 +16,5 @@
             <field name="categ_id" ref="product_category_1"/>
             <field name="book_return_days">5</field>
         </record>
-
     </data>
 </odoo>
