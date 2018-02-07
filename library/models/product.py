@@ -3,17 +3,7 @@
 
 import time
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
 from odoo.exceptions import ValidationError
-
-
-# class ProductState(models.Model):
-#    _name = "product.state"
-#    _description = "States of Books"
-#
-#    name = fields.Char('State', required=True)
-#    code = fields.Char('Code', required=True)
-#    active = fields.Boolean('Active')
 
 
 class Many2manySym(fields.Many2many):
@@ -42,11 +32,6 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     name = fields.Char('Name', required=True)
-
-#    @api.multi
-#    def _state_get(self):
-#        self._cr.execute('select name, name from product_state order by name')
-#        return self._cr.fetchall()
 
 
 class ProductCategory(models.Model):
@@ -373,7 +358,7 @@ class ProductProduct(models.Model):
         action = self.env.ref('purchase.purchase_form_action')
         result = action.read()[0]
         if not purchase:
-            raise UserError(_('There is no Books Purchase !'))
+            raise ValidationError(_('There is no Books Purchase !'))
         order = []
         [order.append(order_rec.order_id.id) for order_rec in purchase]
         if len(order) != 1:
@@ -393,7 +378,7 @@ class ProductProduct(models.Model):
             action = self.env.ref('library.action_lib_book_req')
             result = (action.read()[0])
             if not book_req:
-                raise UserError(_('There is no Book requested'))
+                raise ValidationError(_('There is no Book requested'))
             req = []
             [req.append(request_rec.id) for request_rec in book_req]
             if len(req) != 1:
