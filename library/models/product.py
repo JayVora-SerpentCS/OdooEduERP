@@ -4,6 +4,7 @@
 import time
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
+from odoo.exceptions import ValidationError
 
 
 # class ProductState(models.Model):
@@ -46,6 +47,19 @@ class ProductTemplate(models.Model):
 #    def _state_get(self):
 #        self._cr.execute('select name, name from product_state order by name')
 #        return self._cr.fetchall()
+
+
+class ProductCategory(models.Model):
+    _inherit = "product.category"
+
+    book_categ = fields.Boolean("Book Category", default=False)
+
+    @api.constrains('book_categ')
+    def _check_categ_library_books(self):
+        book_categ = self.search([('book_categ', '=', True)])
+        if len(book_categ) > 1:
+            raise ValidationError(_('''You cannot configure more
+            than one book category!'''))
 
 
 class ProductLang(models.Model):
