@@ -10,7 +10,6 @@
             <field name="model">library.author</field>
             <field name="arch" type="xml">
                 <form string="Authors">
-                    
                     <sheet>
                         <notebook>
                             <page string="General Information">
@@ -18,7 +17,7 @@
                                     <field name="name" placeholder="Author Name"/>
                                 </group>
                                 <separator string="Books" colspan="4"/>
-                                <field name="book_ids" nolabel="1" colspan="4" domain="[('categ_id.name','=','Books'),('is_ebook','=',False),('availability','=','available')]"/>
+                                <field name="book_ids" nolabel="1" colspan="4" domain="[('categ_id.book_categ','=',True),('is_ebook','=',False),('availability','=','available')]"/>
                             </page>
                             <page string="More Information">
                                 <separator string="Editors" colspan="4"/>
@@ -172,7 +171,7 @@
                                <field name="isbn" placeholder="ISBN Number"/>
                                <field name="default_code" placeholder="Enter Book Default code"/>
                                <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
-                               <field name="categ_id" placeholder="Select or Create Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                               <field name="categ_id" placeholder="Select or Create Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('book_categ','=',True)]"/>
                                <field name="author" placeholder="Name of Author" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                             </group>
                         </group>
@@ -595,7 +594,7 @@
                         <separator string="Book Issue" colspan="4" col="4"/>
                         <group col="4" colspan="4" attrs="{'readonly' : [('state', 'in', ['issue', 'reissue', 'return'])]}">
                             <field name="issue_code" readonly="1"/>
-                            <field name="name" domain="[('availability','=','available'),('categ_id.name', '=', 'Books'),('is_ebook','=',False)]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="name" domain="[('availability','=','available'),('categ_id.book_categ', '=', True),('is_ebook','=',False)]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('state', '=', 'running')]"/>
                             <field name="user" readonly="1"/>
                             <field name="gt_name" invisible="True"/>
@@ -624,10 +623,7 @@
                             <field name="lost_penalty" attrs="{'invisible':[('state','!=','lost')]}"/>
                         </group>
                         <group col="4" colspan="4" string="E Book Details" attrs="{'invisible':[('state','in',['issue','ressiue','cancel','return','lost','fine','draft'])],'readonly':[('state','in',('done'))]}">
-<!--                             <field name="payment_mode"/> -->
                             <field name="subscription_amt" attrs="{'invisible':[('state','=','paid')],'readonly':[('state','in',['pending','subscribe'])]}"/>
-<!--                             <field name="bank_teller_no"/> -->
-<!--                             <field name="bank_teller_amt"/> -->
                             <field name="ebook_download" attrs="{'readonly':[('state','in',['pending','subscribe','paid'])]}"/>
                         </group>
                     </sheet>
@@ -807,21 +803,14 @@
                             <group>
                                 <field name="ebook_name" attrs="{'invisible':[('type','!=','ebook')], 'required':
                                      [('type','=','ebook')], 'readonly':[('state','!=','draft')]}"
-                                     domain="['|',('categ_id.name', '=', 'Books'),('categ_id.parent_id.name', '=', 'All'),('is_ebook', '=', True)]" widget="selection"/>
-                                
+                                     domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', True)]" widget="selection"/>
                                 <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':
                                      [('type','=','existing')], 'readonly':[('state','!=','draft')]}"
-                                     domain="[('categ_id.name', '=', 'Books'),('categ_id.parent_id.name', '=', 'All'),('is_ebook', '=', False),('availability','=','available')]" widget="selection"/>
-<!--                                 <field name="name" attrs="{'invisible':[('type','!=','existing')],'required':[('type','=','exsiting')] ,'readonly':[('state','!=','draft')]}" -->
-<!--                                         domain="[('categ_id.name', '=', 'Books'),('is_ebook','=', False),('availability','=','available')]" -->
-<!--                                         widget="selection"/> -->
-                                
+                                     domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', False),('availability','=','available')]" widget="selection"/>
                                 <field name="bk_nm" invisible="1"/>
                                 <field name="type" attrs="{'readonly':[('state','!=','draft')]}" invisible="0" required="1"/>
                             </group>
                             <group>
-<!--                                 <field name="new_book" attrs="{'invisible':[('type','!=','ebook')],'required':[('type','!=','existing')], -->
-<!--                                      'readonly':[('state','!=','draft')]}" invisible="1"/> -->
                                 <field name="book_return_days" readonly="1" attrs="{'invisible':[('type','!=','existing')]}"/>
                             </group>
                         </group>
@@ -1225,7 +1214,8 @@ i
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <search string="Assignment Information">
-                    <filter name="book" string="Books" domain="[('categ_id.name', '=', 'Books')]" icon="terp-camera_test" />
+<!--                     <filter name="book" string="Books" domain="[('categ_id.name', '=', 'Books')]" icon="terp-camera_test" /> -->
+                    <filter name="book" string="Books" domain="[('categ_id.book_categ', '=', True)]" icon="terp-camera_test" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
                 </search>
@@ -1474,6 +1464,31 @@ i
                 </form>
             </field>
         </record>
+        <!-- Inherit Form View of Product Category -->
+        <record id="library_book_product_category_inherit" model="ir.ui.view">
+            <field name="name">library.product.categ.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="book_categ"/>
+                </field>
+            </field>
+        </record>
+        <!-- SearchView of product category -->
+        <record id="library_book_product_category_inherit_search" model="ir.ui.view">
+            <field name="name">library.product.categ.inherit.search</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_search_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="book_categ"/>
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-stock_symbol-selection" string="Book Category" help="By State" domain="[('book_categ','=',True)]" />
+                  </group>
+                </field>
+            </field>
+        </record>
         <report
             id="product.report_product_label"
             string="Products Labels"
@@ -1482,5 +1497,4 @@ i
             name="product.report_productlabel"
             file="product.report_productlabel"
             groups="library.group_librarian"/>
-
 </odoo>

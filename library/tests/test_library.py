@@ -46,7 +46,8 @@ class TestLibrary(common.TransactionCase):
             create({'name': 'NCERT'
                     })
         # Create product
-        categ = self.env['product.category'].search([('name', '=', 'Books')])
+        categ = self.env['product.category'].search([('book_categ', '=',
+                                                      True)], limit=1)
         self.product_product = self.product_product_obj.\
             create({'name': 'Java',
                     'categ_id': categ.id,
