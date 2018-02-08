@@ -10,7 +10,6 @@
             <field name="model">library.author</field>
             <field name="arch" type="xml">
                 <form string="Authors">
-                    
                     <sheet>
                         <notebook>
                             <page string="General Information">

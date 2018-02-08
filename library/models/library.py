@@ -2,11 +2,9 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-# from dateutil.relativedelta import relativedelta
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
-# from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from dateutil.relativedelta import relativedelta as rd
 
@@ -498,10 +496,6 @@ class LibraryBookIssue(models.Model):
         '''
         self.write({'state': 'reissue',
                     'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
-#        for rec in self:
-#            rec.state = 'reissue'
-#            rec.write({'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
-#        return True
 
     @api.multi
     def return_book(self):
@@ -694,7 +688,7 @@ class LibraryBookRequest(models.Model):
 
     req_id = fields.Char('Request ID', readonly=True, default='New')
     card_id = fields.Many2one("library.card", "Card No", required=True)
-    type = fields.Selection([('existing', 'Existing'), ('ebook', 'E Book')],
+    type = fields.Selection([('existing', 'HardCopy'), ('ebook', 'E Book')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
     new_book = fields.Char('Book Name')

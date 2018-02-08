@@ -39,13 +39,6 @@ class ProductCategory(models.Model):
 
     book_categ = fields.Boolean("Book Category", default=False)
 
-    @api.constrains('book_categ')
-    def _check_categ_library_books(self):
-        book_categ = self.search([('book_categ', '=', True)])
-        if len(book_categ) > 1:
-            raise ValidationError(_('''You cannot configure more
-            than one book category!'''))
-
 
 class ProductLang(models.Model):
     '''Book language'''
@@ -234,18 +227,7 @@ class ProductProduct(models.Model):
                     vals['seller_ids'] = [supplier]
                 else:
                     vals['seller_ids'].append(supplier)
-#        ebook_product = self.browse(vals.get('is_ebook'))
-#        if ebook_product:
-#            vals.update({'availability': available})
         return super(ProductProduct, self).create(vals)
-
-#    @api.onchange('day_to_return_book')
-#    def onchange_day_to_return_book(self):
-#        t = "%Y-%m-%d %H:%M:%S"
-#        rd = relativedelta(days=self.day_to_return_book or 0.0)
-#        if rd:
-#            ret_date = datetime.strptime(self.creation_date, t) + rd
-#            self.date_retour = ret_date
 
     @api.multi
     @api.depends('qty_available')
@@ -280,20 +262,16 @@ class ProductProduct(models.Model):
                               help="Shows Identification number of books")
     lang = fields.Many2one('product.lang', 'Language')
     editor_ids = fields.One2many('book.editor', "book_id", "Editor")
-#    editor = fields.Many2one('res.partner', 'Editor', change_default=True)
     author = fields.Many2one('library.author', 'Author')
     code = fields.Char(compute_="_product_code", method=True,
                        string='Acronym', store=True)
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
-#    date_parution = fields.Date('Release date',
-#                                help="Release(Issue) Date of book")
     creation_date = fields.Datetime('Creation date', readonly=True,
                                     help="Record creation date",
                                     default=lambda *a:
                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     date_retour = fields.Datetime('Return Date', help='Book Return date')
-#    book_price = fields.Float('Book Price')
     fine_lost = fields.Float('Fine Lost')
     fine_late_return = fields.Float('Late Return')
     tome = fields.Char('TOME',
@@ -312,9 +290,6 @@ class ProductProduct(models.Model):
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",
                             default='paper')
-#    collection = fields.Many2one('library.collection', 'Collection',
-#                                 help='Show collection in which\
-#                                 book is resides')
     pocket = fields.Char('Pocket')
     num_pocket = fields.Char('Collection No.',
                              help='Shows collection number in which'
@@ -341,15 +316,6 @@ class ProductProduct(models.Model):
     def onchange_availablilty(self):
         if self.is_ebook and self.attach_ebook:
             self.availability = 'available'
-
-#    @api.model
-#    def create(self, vals):
-#        res = super(ProductProduct, self).create(vals)
-#        print"vals1++++++++++", vals
-#        ebook_product = self.browse(vals.get('is_ebook'))
-#        if res.is_ebook:
-#            vals.update({'availability': 'available'})
-#        return res
 
     @api.multi
     def action_purchase_order(self):
@@ -388,12 +354,6 @@ class ProductProduct(models.Model):
                 result['views'] = [(res and res.id or False, 'form')]
                 result['res_id'] = book_req.id
             return result
-#
-#    @api.multi
-#    def _cal_book_return_date(self):
-#        for x in self:
-#            issue_date=datetime.strftime(x.creation_date,
-#                    DEFAULT_SERVER_DATE_FORMAT)
 
 
 class BookAttachment(models.Model):
