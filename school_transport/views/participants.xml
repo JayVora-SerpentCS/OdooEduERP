@@ -8,7 +8,7 @@
                 <t t-foreach="docs" t-as="transport">
                     <t t-call="report.external_layout">
                         <div class="page">
-                            <div class="oe_structure" />
+                            <div class="oe_structure"/>
                             <div class="row" align="center">
                                 <h1>Transport Information</h1>
                             </div>
@@ -135,11 +135,14 @@
                             <table width="100%" class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
                                             <b>Name</b>
                                         </td>
-                                        <td align="center" width="10%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <td align="center" width="15%" style="font-family: 'Helvetica';font-size: 18px;">
                                             <b>Standard</b>
+                                        </td>
+                                        <td align="center" width="10%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Division</b>
                                         </td>
                                         <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
                                             <b>Point</b>
@@ -155,11 +158,14 @@
                                 <tbody>
                                     <t t-foreach="transport.trans_participants_ids" t-as="trans_participants_ids">
                                         <tr>
-                                            <td width="30%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <td width="20%" style="font-family: 'Helvetica';font-size: 16px;">
                                                 <span t-field="trans_participants_ids.name.name"></span>
                                             </td>
+                                            <td align="center" width="15%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="trans_participants_ids.name.standard_id.standard_id.name"></span>
+                                            </td>
                                             <td align="center" width="10%" style="font-family: 'Helvetica';font-size: 16px;">
-                                                <span t-field="trans_participants_ids.name.standard_id"></span>
+                                                <span t-field="trans_participants_ids.name.standard_id.division_id.name"></span>
                                             </td>
                                             <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
                                                 <span t-field="trans_participants_ids.point_id.name"></span>
