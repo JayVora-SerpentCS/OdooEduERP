@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <form string="Books">
                     <group>
-                        <field name="name" widget="selection"/>
+                        <field name="name" widget="selection" domain="[('categ_id.book_categ','=',True)]"/>
                     </group>
                     <footer>
                     <group col="2">
