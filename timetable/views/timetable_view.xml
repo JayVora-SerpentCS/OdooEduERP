@@ -22,8 +22,8 @@
                                     <tree string="TimeTable" editable="top">
                                         <field name="week_day"/>
                                         <field name="subject_id" widget="selection"/>
-                                        <field name="start_time" widget="float_time"/>
-                                        <field name="end_time" widget="float_time"/>
+                                        <field name="start_time"/>
+                                        <field name="end_time"/>
                                         <field name="teacher_id" widget="selection" />
                                         <field name="class_room_id" widget="selection"/>
                                     </tree>
@@ -32,8 +32,8 @@
                                             <field name="week_day"/>
                                             <field name="subject_id"
                                                    placeholder="Select Subject" widget="selection"/>
-                                            <field name="start_time" widget="float_time"/>
-                                            <field name="end_time" widget="float_time"/>
+                                            <field name="start_time"/>
+                                            <field name="end_time"/>
                                             <field name="teacher_id" context="{'subject_id':subject_id}"
                                                    placeholder="Select Supervisior" widget="selection"/>
                                             <field name="class_room_id" widget="selection"/>
