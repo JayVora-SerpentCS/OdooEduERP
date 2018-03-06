@@ -50,7 +50,7 @@
                                         <b>:-</b>
                                     </td>
                                     <td align="left" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <span t-field="result.standard_id"></span>
+                                        <span t-field="result.standard_id.standard_id"></span>
                                     </td>
                                 </tr>
                                 <tr>
