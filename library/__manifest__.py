@@ -26,6 +26,7 @@
              'wizard/book_issue_no_view.xml',
              'wizard/card_no_view.xml'],
     'demo': ['demo/library_demo.xml'],
+    'image': ['static/description/SchoolLibrary.png'],
     'installable': True,
     'application': True
 }
