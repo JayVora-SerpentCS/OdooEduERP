@@ -43,7 +43,8 @@ class SchoolTeacher(models.Model):
                      'login': teacher_id.work_email,
                      'email': teacher_id.work_email,
                      'teacher_create': teacher_id,
-                     'school_id': teacher_id.school_id.id}
+#                     'school_id': teacher_id.school_id.id
+                     }
         user_id = self.env['res.users'].create(user_vals)
         teacher_id.employee_id.write({'user_id': user_id.id})
         if vals.get('is_parent'):
