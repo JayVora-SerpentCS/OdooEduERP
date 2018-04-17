@@ -55,7 +55,6 @@ class SchoolParent(models.Model):
                      'login': parent_id.email,
                      'email': parent_id.email,
                      'partner_id': parent_id.partner_id.id,
-#                     'parent_create': parent_id
                      }
         self.env['res.users'].create(user_vals)
         return parent_id
