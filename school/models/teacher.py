@@ -42,10 +42,9 @@ class SchoolTeacher(models.Model):
         user_vals = {'name': teacher_id.name,
                      'login': teacher_id.work_email,
                      'email': teacher_id.work_email,
-                     'teacher_create': teacher_id,
-                     'school_id': teacher_id.school_id.id
                      }
-        user_id = self.env['res.users'].create(user_vals)
+        user_id = self.env['res.users'].with_context({'teacher_create':True,
+                'school_id':teacher_id.school_id.company_id.id}).create(user_vals)
         teacher_id.employee_id.write({'user_id': user_id.id})
         if vals.get('is_parent'):
             self.parent_crt(teacher_id)
@@ -143,3 +142,15 @@ class SchoolTeacher(models.Model):
 #                                   faculty please change in Course\
 #                                   configuration.'))
 #            self.work_phone = self.school_id.company_id.partner_id.phone
+
+class ResUsers(models.Model):
+
+    _inherit = "res.users"
+
+    @api.model
+    def create(self, vals):
+        user_rec = super(ResUsers, self).create(vals)
+        if self._context.get('teacher_create',False):
+            user_rec.write({'company_id': self._context.get('school_id'),
+                            'company_ids': [(4, self._context.get('school_id'))]})
+        return user_rec
