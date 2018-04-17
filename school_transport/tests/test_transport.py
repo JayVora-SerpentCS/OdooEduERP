@@ -2,6 +2,9 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from datetime import datetime
+from dateutil.relativedelta import relativedelta as rd
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class TestTransport(common.TransactionCase):
@@ -19,6 +22,14 @@ class TestTransport(common.TransactionCase):
         self.contect_person = self.env.ref('hr.employee_al')
         self.student = self.env.ref('school.demo_student_student_5')
         self.new_vehicle = self.env.ref('school_transport.transport_vehicle_1')
+        currdt = datetime.now()
+        tr_start_dt = datetime.strftime(currdt, DEFAULT_SERVER_DATE_FORMAT)
+        tr_end_dt = currdt + rd(years=+1)
+        tr_end_date = datetime.strftime(tr_end_dt, DEFAULT_SERVER_DATE_FORMAT)
+        new_dt = currdt + rd(days=+2)
+        rg_start_date = datetime.strftime(new_dt, DEFAULT_SERVER_DATE_FORMAT)
+        rg_end_dt = new_dt + rd(months=+2)
+        rg_end_date = datetime.strftime(rg_end_dt, DEFAULT_SERVER_DATE_FORMAT)
 #       Create Driver
         self.driver = self.transport_driver_obj.\
             create({'name': 'Driver test',
@@ -42,8 +53,8 @@ class TestTransport(common.TransactionCase):
         self.transport_root = self.student_transport_obj.\
             create({'name': 'Transport-root-1',
                     'contact_per_id': self.contect_person.id,
-                    'start_date': '2017-06-05',
-                    'end_date': '2018-06-05',
+                    'start_date': tr_start_dt,
+                    'end_date': tr_end_date,
                     'trans_vehicle_ids': [(4, self.transport_vehicle.ids)],
                     'trans_point_ids': [(4, self.transport_point.ids)]
                     })
@@ -68,8 +79,8 @@ class TestTransport(common.TransactionCase):
             create({'name': self.student.id,
                     'transport_id': self.transport_root.id,
                     'stu_pid_id': self.student.pid,
-                    'tr_reg_date': '2017-06-10',
-                    'tr_end_date': '2017-08-10',
+                    'tr_reg_date': rg_start_date,
+                    'tr_end_date': rg_end_date,
                     'months': 2,
                     'vehicle_id': self.transport_vehicle.id,
                     'point_id': self.transport_point.id,
