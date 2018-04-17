@@ -26,5 +26,6 @@ class ResUsers(models.Model):
                                  contact_create.id]
             user_rec.write({'groups_id': [(6, 0, teacher_group_ids)],
                             'company_id': self._context.get('school_id'),
-                        'company_ids': [(4, self._context.get('school_id'))]})
+                            'company_ids': [(4, self._context.get('school_id'))
+                                            ]})
         return user_rec
