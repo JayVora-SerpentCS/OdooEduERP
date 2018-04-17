@@ -573,17 +573,17 @@
             <field name="teacher_ids" eval="[(6, 0, [])]"/>
         </record>
         <!-- School Teacher Information-->
-        <record id="school.demo_school_teacher_1" model="school.teacher">
+        <record id="demo_school_teacher_1" model="school.teacher">
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_5')])]" name="subject_id"/>
         </record>
 
-        <record id="school.demo_school_teacher_2" model="school.teacher">
+        <record id="demo_school_teacher_2" model="school.teacher">
             <field name="standard_id" ref="demo_school_standard_2"/>
             <field eval="[(6,0,[ref('demo_subject_subject_5'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
 
-        <record id="school.demo_school_teacher_3" model="school.teacher">
+        <record id="demo_school_teacher_3" model="school.teacher">
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
