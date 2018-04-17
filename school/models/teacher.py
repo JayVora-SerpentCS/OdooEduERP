@@ -142,4 +142,3 @@ class SchoolTeacher(models.Model):
 #                                   faculty please change in Course\
 #                                   configuration.'))
 #            self.work_phone = self.school_id.company_id.partner_id.phone
-
