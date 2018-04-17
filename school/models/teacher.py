@@ -143,15 +143,3 @@ class SchoolTeacher(models.Model):
 #                                   configuration.'))
 #            self.work_phone = self.school_id.company_id.partner_id.phone
 
-
-class ResUsers(models.Model):
-
-    _inherit = "res.users"
-
-    @api.model
-    def create(self, vals):
-        user_rec = super(ResUsers, self).create(vals)
-        if self._context.get('teacher_create', False):
-            user_rec.write({'company_id': self._context.get('school_id'),
-                'company_ids': [(4, self._context.get('school_id'))]})
-        return user_rec
