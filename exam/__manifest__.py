@@ -10,7 +10,7 @@
     'license': "AGPL-3",
     'summary': 'A Module For Exams Management Taken In School',
     'complexity': 'easy',
-    'images':['static/description/exam_banner.png'],
+    'images': ['static/description/exam_banner.png'],
     'depends': ['school', 'timetable', 'mail'],
     'data': ['security/exam_security.xml',
              'security/ir.model.access.csv',
