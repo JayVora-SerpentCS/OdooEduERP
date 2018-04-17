@@ -11,7 +11,7 @@
     'complexity': 'easy',
     'summary': 'A Module For Fees Management In School',
     'depends': ['account', 'account_accountant', 'school'],
-    'images':['static/description/SchoolFees.png'],
+    'images': ['static/description/SchoolFees.png'],
     'data': ['security/ir.model.access.csv',
              'security/security_fees.xml',
              'views/school_fees_view.xml',
