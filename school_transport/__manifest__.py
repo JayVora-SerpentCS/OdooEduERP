@@ -11,7 +11,7 @@
     'complexity': 'easy',
     'summary': 'A Module For Transport & Vehicle Management In School',
     'depends': ['hr', 'school', 'account', 'account_accountant'],
-    'images':['static/description/SchoolTransport.png'],
+    'images': ['static/description/SchoolTransport.png'],
     'data': ['security/transport_security.xml',
              'security/ir.model.access.csv',
              'views/transport_view.xml',
