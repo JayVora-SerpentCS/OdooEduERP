@@ -185,7 +185,7 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_8"/>
              <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"/>
-            <field name="reg_state">draft</field>
+            <!-- <field name="reg_state">draft</field> -->
             <field name="point_id" ref="transport_point_1"/>
             <field name="for_month">5</field>
             <field name="vehicle_id" ref="transport_vehicle_1"/>
@@ -194,7 +194,7 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_7"/>
              <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"/>
-            <field name="reg_state">draft</field>
+           <!--  <field name="reg_state">draft</field> -->
             <field name="point_id" ref="transport_point_2"/>
             <field name="for_month">4</field>
             <field name="vehicle_id" ref="transport_vehicle_2"/>
@@ -203,7 +203,7 @@
             <field name="name" ref="student_transport_1"/>
             <field name="part_name" ref="school.demo_student_student_6"/>
              <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"/>
-            <field name="reg_state">draft</field>
+            <!-- <field name="reg_state">draft</field> -->
             <field name="point_id" ref="transport_point_3"/>
             <field name="for_month">3</field>
             <field name="vehicle_id" ref="transport_vehicle_1"/>
@@ -212,7 +212,7 @@
             <field name="name" ref="student_transport_2"/>
             <field name="part_name" ref="school.demo_student_student_5"/>
              <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"/>
-            <field name="reg_state">draft</field>
+            <!-- <field name="reg_state">draft</field> -->
             <field name="point_id" ref="transport_point_4"/>
             <field name="for_month">2</field> 
             <field name="vehicle_id" ref="transport_vehicle_3"/>
