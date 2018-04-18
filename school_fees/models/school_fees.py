@@ -321,7 +321,6 @@ class StudentPayslip(models.Model):
                 line_vals = {'slip_id': rec.id,
                              'name': data.name,
                              'code': data.code,
-                             'sequence': data.sequence,
                              'type': data.type,
                              'account_id': data.account_id.id,
                              'amount': data.amount,
