@@ -11,6 +11,7 @@
     'complexity': 'easy',
     'summary': 'Module For HOSTEL Management In School',
     'depends': ['school', 'account', 'account_accountant'],
+    'images': ['static/description/SchoolHostel.png'],
     'data': ['security/hostel_security.xml',
              'security/ir.model.access.csv',
              'views/hostel_view.xml',
