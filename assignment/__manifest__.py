@@ -10,6 +10,7 @@
     'category': 'School Management',
     'summary': 'A Module For Assignment Management In School',
     'complexity': 'easy',
+    'images': ['static/description/Assignment_Management.png'],
     'depends': ['school'],
     'data': ['security/assignment_security.xml',
              'wizard/reason_wiz_view.xml',

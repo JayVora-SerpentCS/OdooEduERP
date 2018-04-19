@@ -250,10 +250,10 @@
                                 <field name="history_ids" nolabel="1" colspan="4" readonly="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
                                     options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                     <tree string="History">
-                                        <field name="academice_year_id" />
-                                        <field name="standard_id" />
-                                        <field name="percentage" />
-                                        <field name="result" />
+                                        <field name="academice_year_id" required="1"/>
+                                        <field name="standard_id" required="1"/>
+                                        <field name="percentage"/>
+                                        <field name="result"/>
                                     </tree>
                                     <form string="History">
                                         <group col="4" colspan="4">

@@ -251,7 +251,8 @@ class SchoolStandard(models.Model):
 
     @api.depends("capacity", "total_students")
     def _compute_remain_seats(self):
-        self.remaining_seats = self.capacity - self.total_students
+        for rec in self:
+            rec.remaining_seats = rec.capacity - rec.total_students
 
     school_id = fields.Many2one('school.school', 'School', required=True)
     standard_id = fields.Many2one('standard.standard', 'Standard',
@@ -359,9 +360,11 @@ class SubjectSubject(models.Model):
     weightage = fields.Integer("WeightAge")
     teacher_ids = fields.Many2many('school.teacher', 'subject_teacher_rel',
                                    'subject_id', 'teacher_id', 'Teachers')
+#    standard_ids = fields.Many2many('standard.standard',
+#                                    'subject_standards_rel',
+#                                    'standard_id', 'subject_id', 'Standards')
     standard_ids = fields.Many2many('standard.standard',
-                                    'subject_standards_rel',
-                                    'standard_id', 'subject_id', 'Standards')
+                                    string='Standards')
     standard_id = fields.Many2one('standard.standard', 'Class')
     is_practical = fields.Boolean('Is Practical',
                                   help='Check this if subject is practical.')
@@ -476,10 +479,10 @@ class StudentHistory(models.Model):
 
     student_id = fields.Many2one('student.student', 'Student')
     academice_year_id = fields.Many2one('academic.year', 'Academic Year',
-                                        required=True)
-    standard_id = fields.Many2one('school.standard', 'Standard', required=True)
+                                        )
+    standard_id = fields.Many2one('school.standard', 'Standard')
     percentage = fields.Float("Percentage", readonly=True)
-    result = fields.Char('Result', readonly=True, store=True)
+    result = fields.Char('Result', readonly=True)
 
 
 class StudentCertificate(models.Model):

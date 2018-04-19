@@ -67,7 +67,18 @@
                                                     <strong>: </strong>
                                                 </td>
                                                 <td>
-                                                    <span t-field="student.standard_id" />
+                                                    <span t-field="student.standard_id.standard_id.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                    <strong>Division</strong>
+                                                </td>
+                                                <td>
+                                                    <strong>: </strong>
+                                                </td>
+                                                <td>
+                                                    <span t-field="student.standard_id.division_id.name"/>
                                                 </td>
                                             </tr>
                                             <tr>

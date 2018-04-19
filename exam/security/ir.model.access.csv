@@ -7,7 +7,6 @@ access_additional_exam_result,additional.exam.result,model_additional_exam_resul
 access_time_table,time.table,model_time_table,school.group_school_administration,1,1,1,1
 access_time_table_line,time.table.line,model_time_table_line,school.group_school_administration,1,1,1,1
 access_exam_grade_line,exam.grade.line,model_exam_grade_line,school.group_school_administration,1,1,1,1
-access_exam_batchwise_result,exam.batchwise.result,model_exam_batchwise_result,school.group_school_administration,1,1,1,1
 access_student_student,student.student,model_student_student,school.group_school_administration,1,1,1,1
 access_exam_exam1,exam.exam,model_exam_exam,school.group_school_student,1,0,0,0
 access_additional_exam1,additional.exam,model_additional_exam,school.group_school_student,1,0,0,0
@@ -16,7 +15,6 @@ access_additional_exam_result1,additional.exam.result,model_additional_exam_resu
 access_time_table1,time.table,model_time_table,school.group_school_student,1,0,0,0
 access_time_table_line1,time.table.line,model_time_table_line,school.group_school_student,1,0,0,0
 access_exam_grade_line1,exam.grade.line,model_exam_grade_line,school.group_school_student,1,0,0,0
-access_exam_batchwise_result1,exam.batchwise.result,model_exam_batchwise_result,school.group_school_student,1,0,0,0
 access_student_student1,student.student,model_student_student,school.group_school_student,1,0,0,0
 access_exam_result_student1,exam.result,exam.model_exam_result,school.group_school_student,1,0,0,0
 access_exam_result_teacher2,exam.result,model_exam_result,school.group_school_teacher,1,1,1,0
@@ -27,7 +25,6 @@ access_additional_exam_result2,additional.exam.result,model_additional_exam_resu
 access_time_table2,time.table,model_time_table,school.group_school_teacher,1,0,0,0
 access_time_table_line2,time.table.line,model_time_table_line,school.group_school_teacher,1,0,0,0
 access_exam_grade_line2,exam.grade.line,model_exam_grade_line,school.group_school_teacher,1,1,1,0
-access_exam_batchwise_result2,exam.batchwise.result,model_exam_batchwise_result,school.group_school_teacher,1,1,1,0
 access_student_student2,student.student,model_student_student,school.group_school_teacher,1,1,1,0
 access_school_standard,school.standard,school.model_school_standard,school.group_school_teacher,1,1,0,0
 access_exam_result_parent3,exam.result,model_exam_result,school.group_school_parent,1,0,0,0
@@ -38,7 +35,6 @@ access_additional_exam_result3,additional.exam.result,model_additional_exam_resu
 access_time_table3,time.table,model_time_table,school.group_school_parent,1,0,0,0
 access_time_table_line3,time.table.line,model_time_table_line,school.group_school_parent,1,0,0,0
 access_exam_grade_line3,exam.grade.line,model_exam_grade_line,school.group_school_parent,1,0,0,0
-access_exam_batchwise_result3,exam.batchwise.result,model_exam_batchwise_result,school.group_school_parent,1,0,0,0
 access_student_student3,student.student,model_student_student,school.group_school_parent,1,0,0,0
 acess_parent_line,exam.schedule.line,model_exam_schedule_line,school.group_school_parent,1,0,0,0
 access_exam_schedule_line_all,access_exam_schedule_line,model_exam_schedule_line,school.group_school_teacher,1,1,1,0

@@ -32,7 +32,7 @@ class StudentFeesRegister(models.Model):
                                'PaySlips')
     total_amount = fields.Float("Total",
                                 compute="_compute_total_amount",
-                                store=True)
+                                )
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal',
@@ -50,9 +50,6 @@ class StudentFeesRegister(models.Model):
     def fees_register_draft(self):
         '''Changes the state to draft'''
         self.write({'state': 'draft'})
-#        for rec in self:
-#            rec.state = 'draft'
-#        return True
 
     @api.multi
     def fees_register_confirm(self):
@@ -324,7 +321,6 @@ class StudentPayslip(models.Model):
                 line_vals = {'slip_id': rec.id,
                              'name': data.name,
                              'code': data.code,
-                             'sequence': data.sequence,
                              'type': data.type,
                              'account_id': data.account_id.id,
                              'amount': data.amount,
@@ -336,6 +332,7 @@ class StudentPayslip(models.Model):
             amount = 0
             for data in rec.line_ids:
                 amount += data.amount
+            rec.register_id.write({'total_amount': rec.total})
             rec.write({'total': amount,
                        'state': 'confirm',
                        'due_amount': amount,

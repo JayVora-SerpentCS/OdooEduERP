@@ -949,8 +949,8 @@
                 <form string="Class Room Form View">
                     <sheet>
                         <group col="4" colspan="4">
-                            <field name="name"/>
-                            <field name="number"/>
+                            <field name="name" required="1"/>
+                            <field name="number" required="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -1100,5 +1100,4 @@
             res_model="account.move.line"
             src_model="res.partner"
             groups="school.group_school_administration"/>
-        
 </odoo>

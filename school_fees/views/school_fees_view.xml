@@ -385,7 +385,8 @@
         <!-- Action Of Form & Tree Views Of Student PaySlip Line Information -->
         <record id="action_student_payslip_line_form" model="ir.actions.act_window">
             <field name="name">Fees Head</field>
-            <field name="res_model">student.payslip.line</field>
+<!--             <field name="res_model">student.payslip.line</field> -->
+            <field name="res_model">student.fees.structure.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>

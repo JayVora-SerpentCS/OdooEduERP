@@ -276,9 +276,9 @@ class StudentStudent(models.Model):
         emp_group = self.env.ref('base.group_user')
         for rec in self:
             if not rec.standard_id:
-                raise ValidationError(_('''Please select the standard'''))
+                raise ValidationError(_('''Please select class!'''))
             if rec.standard_id.remaining_seats <= 0:
-                raise ValidationError(_('Seats of standard class %s are full'
+                raise ValidationError(_('Seats of class %s are full'
                                         ) % rec.standard_id.standard_id.name)
             domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
