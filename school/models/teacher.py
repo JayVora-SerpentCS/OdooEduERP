@@ -39,12 +39,14 @@ class SchoolTeacher(models.Model):
     @api.model
     def create(self, vals):
         teacher_id = super(SchoolTeacher, self).create(vals)
+        user_obj = self.env['res.users']
         user_vals = {'name': teacher_id.name,
                      'login': teacher_id.work_email,
                      'email': teacher_id.work_email,
-                     'teacher_create': teacher_id,
-                     'school_id': teacher_id.school_id.id}
-        user_id = self.env['res.users'].create(user_vals)
+                     }
+        ctx_vals = {'teacher_create': True,
+                    'school_id': teacher_id.school_id.company_id.id}
+        user_id = user_obj.with_context(ctx_vals).create(user_vals)
         teacher_id.employee_id.write({'user_id': user_id.id})
         if vals.get('is_parent'):
             self.parent_crt(teacher_id)

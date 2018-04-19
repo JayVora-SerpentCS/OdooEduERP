@@ -8,19 +8,19 @@
             <field name="student_id" ref="school.demo_student_student_7"/>
             <field name="type">student</field>
             <field name="date" eval="(DateTime.today())"/>
-            <field name="evaluator_id" ref="school.demo_school_teacher_1"/>
+            <!-- <field name="evaluator_id" ref="school.demo_school_teacher_1"/> -->
         </record>
         <record id="student_evaluation_4" model="school.evaluation">
             <field name="student_id" ref="school.demo_student_student_6"/>
             <field name="type">student</field>
             <field name="date" eval="(DateTime.today())"/>
-            <field name="evaluator_id" ref="school.demo_school_teacher_2"/>
+            <!-- <field name="evaluator_id" ref="school.demo_school_teacher_2"/> -->
         </record>
         <record id="student_evaluation_5" model="school.evaluation">
             <field name="student_id" ref="school.demo_student_student_5"/>
             <field name="type">student</field>
             <field name="date" eval="(DateTime.today())"/>
-            <field name="evaluator_id" ref="school.demo_school_teacher_3"/>
+            <!-- <field name="evaluator_id" ref="school.demo_school_teacher_3"/> -->
         </record>
         <record id="school_teacher_evaluations" model="school.evaluation">
             <field name="teacher_id" ref="school.demo_school_teacher_3"/>
