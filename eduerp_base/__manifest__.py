@@ -10,6 +10,7 @@
     'depends': ['assignment', 'exam', 'library', 'school_attendance',
                 'school_evaluation', 'school_event', 'school_fees',
                 'school_hostel', 'school_transport'],
+    'images': ['static/description/Education_erp.png'],
     'license': 'AGPL-3',
     'auto_install': False,
     'installable': True,
