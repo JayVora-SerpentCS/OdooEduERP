@@ -606,7 +606,6 @@ class DailyAttendance(models.Model):
                                      'name': student_id.stud_id.student_name}
                         sheet_line_obj.create(line_dict)
                         for student_id in line.student_ids:
-                            sheet_line_obj.read([student_id.roll_no])
                             domain = [('roll_no', '=', student_id.roll_no)]
                             search_id = sheet_line_obj.search(domain)
                             # compute attendance of each day
@@ -802,7 +801,6 @@ class DailyAttendance(models.Model):
 
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
-                        sheet_line_obj.read([student_id.roll_no])
                         domain = [('roll_no', '=', student_id.roll_no),
                                   ('standard_id', '=', attendance_sheet_id.id)]
                         search_id = sheet_line_obj.search(domain)

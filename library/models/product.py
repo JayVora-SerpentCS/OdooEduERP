@@ -379,7 +379,7 @@ class BookEditor(models.Model):
     _name = "book.editor"
 
     image = fields.Binary("Image")
-    name = fields.Char('Name', required=True, select=True)
+    name = fields.Char('Name', required=True, index=True)
     biography = fields.Text('Biography')
     note = fields.Text('Notes')
     phone = fields.Char('Phone')

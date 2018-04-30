@@ -3,13 +3,14 @@
 
 {
     'name': 'School',
-    'version': '10.0.1.0.13',
+    'version': '11.0.1.0.0',
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'license': "AGPL-3",
     'complexity': 'easy',
     'Summary': 'A Module For School Management',
+    'images': ['static/description/EMS.jpg'],
     'depends': ['hr', 'crm', 'account', 'web'],
     'data': ['security/school_security.xml',
              'security/ir.model.access.csv',

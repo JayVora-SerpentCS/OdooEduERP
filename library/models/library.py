@@ -740,7 +740,6 @@ class LibraryBookRequest(models.Model):
                 over!'''))
         if self.type == 'existing':
             vals.update({'card_id': self.card_id.id,
-                         'type': self.type,
                          'name': self.name.id})
 
         elif self.type == 'ebook':
