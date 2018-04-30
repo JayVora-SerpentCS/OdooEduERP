@@ -10,7 +10,7 @@
     'license': "AGPL-3",
     'complexity': 'easy',
     'Summary': 'A Module For School Management',
-    'depends': ['hr', 'crm', 'report', 'account', 'account_accountant'],
+    'depends': ['hr', 'crm', 'account', 'web'],
     'data': ['security/school_security.xml',
              'security/ir.model.access.csv',
              'wizard/terminate_reason_view.xml',

@@ -322,9 +322,10 @@
             <field name="model">student.student</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="standard_id" nocreate="1" create="false">
-                    <field name="color" />
-                    <field name="name" />
-                    <field name="email" />
+                    <field name="color"/>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="email"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)" />
@@ -355,7 +356,7 @@
                                             <tr width="300">
                                                 <td valign="top" width="64" align="left">
                                                     <a type="open">
-                                                        <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'photo', record.id.value)" />
+                                                        <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image_medium', record.id.raw_value)" />
                                                     </a>
                                                 </td>
                                                 <td valign="top" align="left" style="padding-left:10px;">
