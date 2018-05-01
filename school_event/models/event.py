@@ -230,7 +230,7 @@ class SchoolEventRegistration(models.Model):
         for rec in self:
             if rec.name.state in ['open', 'close']:
                 raise ValidationError(_('''You cannot do registration in
-                                        event which is in running or closed!
+                                        event which is running or closed!
                                         '''))
 
     @api.multi
@@ -276,8 +276,8 @@ class SchoolEventRegistration(models.Model):
                     'event_id': rec.name.id,
                     'name': rec.part_name_id.id}
             part_id = event_part_obj.sudo().create(vals)
-            rec.name.sudo().write({'part_ids': [(4, part_id.ids)]})
-            rec.part_name_id.sudo().write({'event_ids': [(4, part_id.ids)]})
+            rec.name.sudo().write({'part_ids': [(4, part_id.id)]})
+            rec.part_name_id.sudo().write({'event_ids': [(4, part_id.id)]})
             rec.write({'state': 'confirm'})
         return True
 

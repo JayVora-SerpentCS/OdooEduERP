@@ -74,17 +74,13 @@
             <field name="model">school.evaluation</field>
             <field name="arch" type="xml">
                 <search string="Student Evaluation Search">
-                    <group colspan="6" col="4">
-                        <field name="student_id"/>
-<!--                         <field name="evaluator_id"/> -->
-                        <field name="date"/>
-                    </group>
-                    <separator orientation="vertical"/>
-                    <newline />
-                    <group expand="0" string="Group By..." colspan="6" col="4">
-                        <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
-<!--                         <filter string="Faculty" icon="terp-personal" name="faculty_id" context="{'group_by':'evaluator_id'}"/> -->
-                        <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
+                    <field name="student_id"/>
+                    <field name="date"/>
+                    <field name="type"/>
+                    <newline/>
+                    <group expand="1" string="Group By">
+                        <filter string="Type" name="type" context="{'group_by':'type'}"/>
+                        <filter string="Student" name="students" context="{'group_by':'student_id'}"/>
                     </group>
                 </search>
             </field>

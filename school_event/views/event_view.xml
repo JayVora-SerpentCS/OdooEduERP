@@ -225,35 +225,32 @@
         <!-- Search View Of Event Information -->
 
         <record id="school_event_search_view" model="ir.ui.view">
-            <field name="name">event.search.1</field>
+            <field name="name">event.search</field>
             <field name="model">school.event</field>
             <field name="arch" type="xml">
-                <search string="Search">
-                    <group string="Filter" col="10" colspan="4">
-                        <filter string="Open" domain="[('state','=','open')]" icon="terp-camera_test" />
-                        <filter string="Close" domain="[('state','=','close')]" class="fa fa-ban"/>
-                        <filter string="Cancel" domain="[('state','=','cancel')]" class="fa fa-ban" />
-                        <field name="name" select="1" />
-                        <separator orientation="vertical" />
-                        <field name="contact_per_id" select="1" />
-                        <separator orientation="vertical" />
-                        <field name="supervisor_id" select="1" />
+                <search string="Event Search">
+                    <field name="name"/>
+                    <field name="contact_per_id"/>
+                    <field name="state"/>
+                    <field name="start_date"/>
+                    <field name="supervisor_id"/>
+                    <group string="Filter">
+                        <filter string="Open" domain="[('state','=','open')]"/>
+                        <filter string="Close" domain="[('state','=','close')]"/>
+                        <filter string="Cancel" domain="[('state','=','cancel')]"/>
                     </group>
-                    <newline />
-                    <group expand="0" string="Group By" colspan="12" col="10">
+                    <group expand="1" string="Group By">
                         <filter string="This Month" icon="terp-go-month" name="this_month"
                             domain="[('start_date','&lt;=',(context_today()+relativedelta
-                            (day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                              (day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Events in current month" />
-                        <separator orientation="vertical" />
-                        <filter icon="terp-personal" string="Contact Person" help="By Contact Person" context="{'group_by':'contact_per_id'}"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-personal" string="Supervisor" help="By Supervisor" context="{'group_by':'supervisor_id'}"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-stock_symbol-selection" string="Start Date" help="By Start Date" context="{'group_by':'start_date'}"/>
-                        <separator orientation="vertical" />
-                        <filter icon="terp-stock_symbol-selection" string="State"
-                            help="By State" context="{'group_by':'state'}" />
+                        <filter string="Contact Person" context="{'group_by':'contact_per_id'}"/>
+                        
+                        <filter string="Supervisor" context="{'group_by':'supervisor_id'}"/>
+                        
+                        <filter string="Start Date" context="{'group_by':'start_date'}"/>
+                        
+                        <filter string="State" context="{'group_by':'state'}" />
                     </group>
                 </search>
             </field>
@@ -280,9 +277,10 @@
             <field name="model">school.event</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="start_date">
-                    <field name="name" />
-                    <field name="start_date" />
-                    <field name="color" />
+                    <field name="name"/>
+                    <field name="start_date"/>
+                    <field name="color"/>
+                    <field name="contact_per_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
