@@ -6,9 +6,8 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field eval="'hostel.student'" name="model" />
-            <field eval="'student_expire'" name="function" />
+            <field ref="model_hostel_student" name="model_id"/>
             <field name="active" eval="True"/>
-            <field eval="'()'" name="args"/>
+            <field name="code">model.student_expire()</field>
         </record>
 </odoo>

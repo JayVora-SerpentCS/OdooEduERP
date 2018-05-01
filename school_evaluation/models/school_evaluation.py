@@ -27,7 +27,6 @@ class SchoolEvaluation(models.Model):
             rec.write({'eval_line': eval_list})
         return True
 
-    @api.multi
     @api.depends('eval_line')
     def _compute_total_points(self):
         '''Method to compute evaluation points'''
@@ -71,7 +70,6 @@ class SchoolEvaluation(models.Model):
     date = fields.Date('Evaluation Date', required=True,
                        help="Evaluation Date",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
-#    evaluator_id = fields.Many2one('hr.employee', 'Faculty Name')
     eval_line = fields.One2many('school.evaluation.line', 'eval_id',
                                 'Questionnaire')
     total = fields.Float('Total Points', compute='_compute_total_points',
@@ -132,8 +130,7 @@ class StudentEvaluationLine(models.Model):
             self.rating = self.point_id.rating
 
     eval_id = fields.Many2one('school.evaluation', 'Evaluation id')
-#    teacher_eval_id = fields.Many2one('teacher.evaluation',
-#                                      'Teacher Evaluation id')
+
     stu_eval_id = fields.Many2one('school.evaluation.template', 'Question')
     point_id = fields.Many2one('rating.rating', 'Rating',
                                domain="[('rating_id', '=', stu_eval_id)]")
