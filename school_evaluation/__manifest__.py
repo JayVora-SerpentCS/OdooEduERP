@@ -3,7 +3,7 @@
 
 {
     'name': 'Evaluation Management',
-    'version': "10.0.1.0.3",
+    'version': "11.0.1.0.3",
     'author': '''Serpent Consulting Services Pvt. Ltd.''',
     'website': 'http://www.almisnadtechnology.com',
     'category': 'School Management',
