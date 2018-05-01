@@ -217,7 +217,6 @@ class SchoolStandard(models.Model):
     _description = 'School Standards'
     _rec_name = "standard_id"
 
-    @api.multi
     @api.depends('standard_id', 'school_id', 'division_id', 'medium_id',
                  'school_id')
     def _compute_student(self):
@@ -323,7 +322,6 @@ class SchoolStandard(models.Model):
 class SchoolSchool(models.Model):
     ''' Defining School Information '''
     _name = 'school.school'
-    _inherits = {'res.company': 'company_id'}
     _description = 'School Information'
     _rec_name = "com_name"
 
@@ -335,7 +333,8 @@ class SchoolSchool(models.Model):
 
     company_id = fields.Many2one('res.company', 'Company',
                                  ondelete="cascade",
-                                 required=True)
+                                 required=True,
+                                 delegate=True)
     com_name = fields.Char('School Name', related='company_id.name',
                            store=True)
     code = fields.Char('Code', required=True)
@@ -380,7 +379,7 @@ class SubjectSyllabus(models.Model):
     _description = "Syllabus"
     _rec_name = "subject_id"
 
-    standard_id = fields.Many2one('standard.standard', 'Standard')
+    standard_id = fields.Many2one('school.standard', 'Standard')
     subject_id = fields.Many2one('subject.subject', 'Subject')
     syllabus_doc = fields.Binary("Syllabus Doc",
                                  help="Attach syllabus related to Subject")
@@ -726,14 +725,14 @@ class ClassRoom(models.Model):
 
 
 class Report(models.Model):
-    _inherit = "report"
+    _inherit = "ir.actions.report"
 
     @api.multi
-    def render(self, template, values=None):
+    def render_template(self, template, values=None):
         for data in values.get('docs'):
             if (values.get('doc_model') == 'student.student' and
                     data.state == 'draft'):
                     raise ValidationError(_('''You cannot print report for
                 student in unconfirm state!'''))
-        res = super(Report, self).render(template, values)
+        res = super(Report, self).render_template(template, values)
         return res

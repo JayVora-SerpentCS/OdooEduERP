@@ -81,7 +81,7 @@ class SchoolTeacherAssignment(models.Model):
                             'attachfile_format': self.file_format.name}
                 assignment_id = assignment_obj.create(ass_dict)
                 attach = {'name': 'test',
-                          'datas': str(rec.attached_homework),
+                          'datas': rec.attached_homework,
                           'description': 'Assignment attachment',
                           'res_model': 'school.student.assignment',
                           'res_id': assignment_id.id}
