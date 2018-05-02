@@ -43,9 +43,10 @@ class ReportTimetableInfo(models.AbstractModel):
         timetable_report = self.env['ir.actions.report'].\
         _get_report_from_name('timetable.timetable')
         docs = self.env['time.table'].browse(docids)
-        return {'doc_ids': docids,
-                'docs': docs,
-                'doc_model': timetable_report.model,
-                'data': data,
-                'get_timetable': self._get_timetable
-                }
+        return {
+            'doc_ids': docids,
+            'docs': docs,
+            'doc_model': timetable_report.model,
+            'data': data,
+            'get_timetable': self._get_timetable
+        }
