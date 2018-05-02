@@ -2,7 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 # ----------------------------------------------------------
-# A Module to Assignment Management System
+# A Module for Assignment Management System
 # ----------------------------------------------------------
 
 from . import models
