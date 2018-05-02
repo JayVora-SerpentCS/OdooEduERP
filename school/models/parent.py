@@ -59,12 +59,10 @@ class SchoolParent(models.Model):
         self.env['res.users'].create(user_vals)
         return parent_id
 
-    @api.multi
-    def onchange_state(self, state_id):
-        if state_id:
-            state = self.env['res.country.state'].browse(state_id)
-            return {'value': {'country_id': state.country_id.id}}
-        return {'value': {}}
+    @api.onchange('state_id')
+    def onchange_state(self):
+        if self.state_id:
+            self.country_id = self.state_id.country_id.id
 
 
 class StudentStudent(models.Model):
