@@ -235,14 +235,12 @@ class SchoolStandard(models.Model):
         self.name = str(self.standard_id.name
                         ) + '-' + str(self.division_id.name)
 
-    @api.multi
     @api.depends('subject_ids')
     def _compute_subject(self):
         '''Method to compute subjects'''
         for rec in self:
             rec.total_no_subjects = len(rec.subject_ids)
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_total_student(self):
         for rec in self:

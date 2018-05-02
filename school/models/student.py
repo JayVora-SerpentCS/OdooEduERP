@@ -3,17 +3,13 @@
 
 import time
 import base64
-# import re
 from datetime import date, datetime
-from odoo import models, fields, api
+from odoo import models, fields, api, tools, _
 from odoo.tools.translate import _
 from odoo.modules import get_module_resource
-# from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo import tools, _
-# from dateutil.relativedelta import relativedelta
 from .import school
 
 # from lxml import etree
@@ -32,7 +28,6 @@ class StudentStudent(models.Model):
     _table = "student_student"
     _description = 'Student Information'
 
-    @api.multi
     @api.depends('date_of_birth')
     def _compute_student_age(self):
         '''Method to calculate student age'''
@@ -101,7 +96,6 @@ class StudentStudent(models.Model):
                                                                   'rb').read()
                                                              ))
 
-    @api.multi
     @api.depends('state')
     def _compute_teacher_user(self):
         for rec in self:
