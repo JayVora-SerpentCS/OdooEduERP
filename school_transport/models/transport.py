@@ -197,7 +197,7 @@ class StudentTransports(models.Model):
         self.write({'state': 'close'})
         return True
 
-    @api.multi
+    @api.model
     def participant_expire(self):
         '''Schedular to change in participant state when registration date
             is over'''
@@ -361,14 +361,12 @@ class TransportRegistration(models.Model):
             rec.count_inv = inv_obj.search_count([('transport_student_id',
                                                    '=', rec.id)])
 
-    @api.multi
     @api.onchange('point_id')
     def onchange_point_id(self):
         '''Method to get amount of point selected'''
         if self.point_id:
             self.m_amount = self.point_id.amount or 0.0
 
-    @api.multi
     @api.onchange('for_month')
     def onchange_for_month(self):
         '''Method to compute registration end date'''

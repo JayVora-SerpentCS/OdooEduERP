@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//filter[4]" position="after">
-                        <filter icon="terp-personal" domain="[('job_id','=','Driver')]" name="job_id" string="Driver"/>
+                        <filter domain="[('job_id','=','Driver')]" name="job_id" string="Driver"/>
                     </xpath>
                 </data>
             </field>
@@ -56,7 +56,7 @@
                             <field name="is_driver" string="Is Driver" readonly="1"/>
                         </group>
                     </xpath>
-                    <xpath expr="//page[1]/group/group[2]/field[@name='calendar_id']" position="after">
+                    <xpath expr="//page[1]/group/group[2]/field[@name='resource_calendar_id']" position="after">
                         <field name="licence_no" attrs="{'required':[('is_driver','=',True)]}"/>
                     </xpath>
                     <xpath expr="//page[@name='hr_settings']" position="after">
@@ -81,7 +81,6 @@
                     <field name="months"/>
                     <field name="tr_reg_date"/>
                     <field name="tr_end_date"/>
-<!--                     <field name="amount"/> -->
                     <field name="state"/>
                 </tree>
             </field>
@@ -111,7 +110,6 @@
                         <field name="tr_reg_date" readonly="1"/>
                         <field name="tr_end_date" readonly="1"/>
                         <field name="amount"/>
-<!--                         <field name="state"/> -->
                     </group>
                     </sheet>
                 </form>
@@ -123,25 +121,21 @@
             <field name="model">transport.participant</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                <group string="Filter" col="10" colspan="4">
-                    <filter icon="terp-personal" string="Running" name="state_running" help="Running" domain="[('state','=','running')]"/>
-                    <filter icon="gtk-close" string="Over" help="Over" domain="[('state','=','over')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="transport_id"/>
-                    <field name="point_id"/>
+                <field name="name"/>
+                <field name="transport_id"/>
+                <field name="point_id"/>
+                <group string="Filter">
+                    <filter string="Running" name="state_running" domain="[('state','=','running')]"/>
+                    <filter string="Over" domain="[('state','=','over')]"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter icon="terp-personal" string="Name" help="By Name" context="{'group_by':'name'}"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" string="Root" help="By Root Name"
+                <group expand="1" string="Group By">
+                    <filter string="Name" context="{'group_by':'name'}"/>
+                    <filter string="Root"
                             context="{'group_by':'transport_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" string="Root Point" help="By Root Point Name"
+                    <filter string="Root Point"
                             context="{'group_by':'point_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" string="State" help="By State Name"
+                    <filter string="State"
                             context="{'group_by':'state'}"/>
                 </group>
                 </search>
@@ -306,7 +300,6 @@
                         <button name="trans_regi_confirm" class="fa fa-check" string="Confirm" states="draft" type='object'/>
                         <button name="trans_regi_cancel" class="fa fa-ban" string="Cancel" type='object' attrs="{'invisible':['|',('transport_user','=',True),('state','in' ,('draft','cancel','paid'))]}"/>
                         <button name="transport_fees_pay" string="Payment" type="object" states="confirm" groups="school_transport.group_transportation_manager"/>
-<!--                         <button name="cancel_ref" string="Cancel" type="object" states="confirm,pending,paid" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user"/> -->
                         <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,confirm,paid"/>
                     </header>
                     <sheet>
