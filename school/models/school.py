@@ -548,7 +548,6 @@ class StudentFamilyContact(models.Model):
     _name = "student.family.contact"
     _description = "Student Family Contact"
 
-    @api.multi
     @api.depends('relation', 'stu_name')
     def _compute_get_name(self):
         for rec in self:
