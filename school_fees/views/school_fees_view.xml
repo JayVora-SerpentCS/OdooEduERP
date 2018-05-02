@@ -22,14 +22,11 @@
             <field name="model">student.fees.structure</field>
             <field name="arch" type="xml">
                 <search string="Fees Structure">
-                    <group expand="0" string="Group By..." colspan="6" col="4">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <group expand="1" string="Group By">
                         <filter string="Code" icon="terp-flag" name="code" context="{'group_by':'code'}"/>
                         <filter string="Structure Name" icon="terp-flag" name="name" context="{'group_by':'name'}"/>
-                    </group>
-                    <separator orientation="vertical"/>
-                    <group colspan="6" col="4">
-                        <field name="name"/>
-                        <field name="code"/>
                     </group>
                 </search>
             </field>
@@ -116,7 +113,6 @@
                     <field name="type"/>
                     <field name="account_id"/>
                     <field name="amount"/>
-<!--                     <field name="company_id"/> -->
                     <field name="currency_id" invisible="1"/>
                     <field name="currency_symbol" invisible="1"/>
                 </tree>
@@ -207,7 +203,6 @@
                             </group>
                         </group>
                         <group col="4">
-<!--                             <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"/> -->
                             <separator string="Fees Structure" colspan="4"/>
                             <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                             <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/> 
@@ -224,7 +219,6 @@
                                 <page string="Other Information">
                                     <group col="4" colspan="4">
                                         <field name="type"  placeholder="Type" attrs="{'readonly':[('state','not in','draft')]}"/>
-                                        <!-- <field name="period_id" placeholder="Force Period"/> -->
                                         <field name="currency_id" placeholder="Currency" attrs="{'readonly':[('state','not in','draft')]}"/>
                                         <field name="currency_symbol" invisible="0"/>
                                         <field name="move_id" attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -243,7 +237,7 @@
             <field name="name">student.payslip.tree</field>
             <field name="model">student.payslip</field>
             <field name="arch" type="xml">
-                <tree string="Fees Payslip" colors="red:state in ('draft');blue:state in ('confirm');black:state in ('paid')">
+                <tree string="Fees Payslip" decoration-danger="state in '[draft,pending]'" decoration-info="state == 'paid'">
                     <field name="name"/>
                     <field name="number"/>
                     <field name="student_id"/>
@@ -305,7 +299,7 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Student Payslip">
-                                <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}" >
+                                <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}">
                                     <tree string="Student Payslip" create="false">
                                         <field name="name"/>
                                         <field name="number"/>
@@ -324,13 +318,11 @@
                                                 <field name="student_id" placeholder="Student Name"/>
                                                 <field name="total"/>
                                                 <field name="journal_id" placeholder="Journal"/>
-                                                <!-- <field name="period_id" placeholder="Period"/> -->
                                                 <field name="company_id" placeholder="School Name"/>
                                             </group>
                                         </sheet>
                                     </form>
                                 </field>
-<!--                                 <separator string="" /> -->
                                 <group class="oe_subtotal_footer oe_right" colspan="2">
                                     <field name="total_amount"/>
                                 </group>
@@ -385,7 +377,6 @@
         <!-- Action Of Form & Tree Views Of Student PaySlip Line Information -->
         <record id="action_student_payslip_line_form" model="ir.actions.act_window">
             <field name="name">Fees Head</field>
-<!--             <field name="res_model">student.payslip.line</field> -->
             <field name="res_model">student.fees.structure.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

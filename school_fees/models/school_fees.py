@@ -12,7 +12,6 @@ class StudentFeesRegister(models.Model):
     _name = 'student.fees.register'
     _description = 'Student fees Register'
 
-    @api.multi
     @api.depends('line_ids')
     def _compute_total_amount(self):
         '''Method to compute total amount'''
@@ -256,7 +255,6 @@ class StudentPayslip(models.Model):
                 only!'''))
         return super(StudentPayslip, self).unlink()
 
-    @api.multi
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         '''Method to get currency from journal'''

@@ -15,13 +15,15 @@ class ReportStudentPayslip(models.AbstractModel):
         return out_date
 
     @api.model
-    def render_html(self, docids, data=None):
-        ans = self.env['student.payslip'].search([('id', 'in', docids)])
-        docargs = {
+    def get_report_values(self, docids, data=None):
+        student_payslip = self.env['student.payslip'].search([('id', 'in',
+                                                               docids)])
+        payslip_model = self.env['ir.actions.report'].\
+        _get_report_from_name('school_fees.student_payslip')
+        return {
             'doc_ids': docids,
-            'doc_model': ans,
-            'docs': ans,
+            'doc_model': payslip_model.model,
+            'docs': student_payslip,
+            'data': data,
             'get_month': self.get_month,
         }
-        render_model = 'school_fees.student_payslip'
-        return self.env['report'].render(render_model, docargs)
