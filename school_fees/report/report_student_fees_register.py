@@ -20,9 +20,10 @@ class ReportStudentFeesRegister(models.AbstractModel):
                                                               docids)])
         fees_report = self.env['ir.actions.report'].\
         _get_report_from_name('school_fees.student_fees_register')
-        return {'doc_ids': docids,
-                'doc_model': fees_report.model,
-                'docs': students,
-                'data': data,
-                'get_month': self.get_month,
-                }
+        return {
+            'doc_ids': docids,
+            'doc_model': fees_report.model,
+            'docs': students,
+            'data': data,
+            'get_month': self.get_month
+        }
