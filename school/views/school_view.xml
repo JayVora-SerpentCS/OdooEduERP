@@ -754,10 +754,10 @@
                 <form string="Standard Information">
                     <sheet>
                         <group col="4" colspan="4">
-                            <field name="sequence" />
+                            <field name="sequence"/>
                             <newline />
-                            <field name="name" placeholder="Name" />
-                            <field name="code" placeholder="Code" />
+                            <field name="name" placeholder="Name"/>
+                            <field name="code" placeholder="Code"/>
                             <newline />
                             <field name="description" colspan="4" placeholder="Description"/>
                         </group>

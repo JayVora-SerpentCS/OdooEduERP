@@ -30,7 +30,6 @@ class TransferVehicle(models.TransientModel):
                 result.update({'name': student.id})
         return result
 
-    @api.multi
     @api.onchange('participation_id')
     def onchange_participation_id(self):
         '''Method to get transport id and vehicle of participant'''
