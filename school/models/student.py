@@ -2,6 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
+import base64
 # import re
 from datetime import date, datetime
 from odoo import models, fields, api
@@ -11,6 +12,7 @@ from odoo.modules import get_module_resource
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo import tools, _
 # from dateutil.relativedelta import relativedelta
 from .import school
 
@@ -91,18 +93,13 @@ class StudentStudent(models.Model):
         return res
 
     @api.model
-    def _get_default_image(self, is_company, colorize=False):
+    def _default_image(self):
         '''Method to get default Image'''
-        # added in try-except because import statements are in try-except
-        try:
-            img_path = get_module_resource('base', 'static/src/img',
-                                           'avatar.png')
-            with open(img_path, 'rb') as f:
-                image = f.read()
-            image = image_colorize(image)
-            return image_resize_image_big(image.encode('base64'))
-        except:
-            return False
+        image_path = get_module_resource('hr', 'static/src/img',
+                                         'default_image.png')
+        return tools.image_resize_image_big(base64.b64encode(open(image_path,
+                                                                  'rb').read()
+                                                             ))
 
     @api.multi
     @api.depends('state')
@@ -142,9 +139,7 @@ class StudentStudent(models.Model):
     contact_phone1 = fields.Char('Phone no.',)
     contact_mobile1 = fields.Char('Mobile no',)
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=lambda self: self._get_default_image
-                          (self._context.get('default_is_company',
-                                             False)))
+    photo = fields.Binary('Photo', default=_default_image)
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
                            default=check_current_year)
     cast_id = fields.Many2one('student.cast', 'Religion/Caste')

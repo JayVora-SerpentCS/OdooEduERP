@@ -63,7 +63,7 @@
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" 
-                                       options="{&quot;no_open&quot;: True}" on_change="onchange_state(state_id)"
+                                       options="{&quot;no_open&quot;: True}"
                                        context="{'country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" 
@@ -73,7 +73,6 @@
                         <group string="Communication" name="communication">
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
-                            <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" required="1"/>
                             <field name="title" options="{&quot;no_open&quot;: True}"/>
@@ -81,9 +80,9 @@
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </group>
                     </group>
-                    <notebook colspan="4">
-                        <page name="childern" String="Children">
-                            <field name="student_id" colspan="4" nolabel="1" domain="[('state','=','done')]"/>
+                    <notebook>
+                        <page name="children" string="Children">
+                            <field name="student_id" colspan="4" domain="[('state','=','done')]"/>
                         </page>
                         <page name="internal_notes" string="Internal Notes">
                             <field name="comment" placeholder="Internal note..."/>
