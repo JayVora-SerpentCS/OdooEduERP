@@ -9,7 +9,6 @@ class TimeTable(models.Model):
     _description = 'Time Table'
     _name = 'time.table'
 
-    @api.multi
     @api.depends('timetable_ids')
     def _compute_user(self):
         '''Method to compute user'''
@@ -33,7 +32,6 @@ class TimeTable(models.Model):
                                 compute="_compute_user", store=True)
     class_room_id = fields.Many2one('class.room', 'Room Number')
 
-    @api.multi
     @api.constrains('timetable_ids')
     def _check_lecture(self):
         '''Method to check same lecture is not assigned on same day'''
@@ -80,7 +78,6 @@ class TimeTableLine(models.Model):
     teacher_id = fields.Many2one('school.teacher', 'Faculty Name',
                                  help="Select Teacher")
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
-                                 required=True,
                                  help="Select Subject")
     table_id = fields.Many2one('time.table', 'TimeTable')
     start_time = fields.Float('Start Time', required=True,
