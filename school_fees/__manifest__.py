@@ -3,14 +3,14 @@
 
 {
     'name': 'Fees Management',
-    'version': "10.0.1.0.4",
-    'author': '''Serpent Consulting Services Pvt. Ltd.''',
+    'version': "11.0.1.0.4",
+    'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'license': "AGPL-3",
     'complexity': 'easy',
     'summary': 'A Module For Fees Management In School',
-    'depends': ['account', 'account_accountant', 'school'],
+    'depends': ['account', 'account_invoicing', 'school'],
     'images': ['static/description/SchoolFees.png'],
     'data': ['security/ir.model.access.csv',
              'security/security_fees.xml',

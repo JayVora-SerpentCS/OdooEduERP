@@ -4,12 +4,11 @@
 <odoo>
 
         <template id="student_payslip">
-            <t t-call="report.html_container">
+            <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    
-                    <t t-call="report.external_layout">
+                    <t t-call="web.external_layout">
                         <div class="page">
-                            <div class="oe_structure" />
+                            <div class="oe_structure"/>
                             <div class="row" align="center">
                                 <span>
                                     <h1>Student PaySlip</h1>
@@ -80,7 +79,6 @@
                                                 <span><t t-esc="counter"></t></span>
                                             </td>
                                             <td width="5%" align="center" style="font-family: 'Helvetica';font-size: 16px;">
-<!--                                                 <span t-esc="get_no()"></span> -->
                                             </td>
                                             <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 16px;">
                                                 <span t-field="l.name"></span>
