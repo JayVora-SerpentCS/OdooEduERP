@@ -25,5 +25,5 @@ class ReportStudentPayslip(models.AbstractModel):
             'doc_model': payslip_model.model,
             'docs': student_payslip,
             'data': data,
-            'get_month': self.get_month,
+            'get_month': self.get_month
         }
