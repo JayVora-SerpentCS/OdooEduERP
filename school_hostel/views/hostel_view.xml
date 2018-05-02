@@ -193,7 +193,7 @@
                             </button>
                          </div>
                         <separator string="Hostel Information"/>
-                        <group col="4" colspan="4">
+                        <group col="4">
                             <field name="student_id" attrs="{'readonly':[('status','not in','draft')]}" domain="[('state','=','done')]" required="1" options="{&quot;no_create&quot;: True}"/>
                             <field name="hostel_id" readonly="1"/>
                             <field name="hostel_info_id" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}" context="{'student_id':student_id}"/>
@@ -206,7 +206,7 @@
                             <field name="stud_gender" invisible="1"/>
                             <field name="paid_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}" />
                             <field name="acutal_discharge_date" readonly="1"/>
-                            <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/> -->
+                            <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -243,7 +243,7 @@
                     <field name="paid_amount" />
                     <field name="remaining_amount" />
                     <field name="status" />
-                    <group expand="0" string="Group By..." colspan="6" col="4">
+                    <group expand="1" string="Group By">
                         <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
                     </group>
                 </search>

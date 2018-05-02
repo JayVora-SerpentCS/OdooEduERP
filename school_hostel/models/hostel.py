@@ -249,7 +249,6 @@ class HostelStudent(models.Model):
             rec.status = 'reservation'
         return True
 
-    @api.multi
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
         '''to calculate discharge date based on current date and duration'''
@@ -365,9 +364,8 @@ class HostelStudent(models.Model):
     @api.multi
     def print_fee_receipt(self):
         '''Method to print fee reciept'''
-        return self.env['report'
-                        ].get_action(self,
-                                     'school_hostel.hostel_fee_reciept1')
+        return self.env.ref('school_hostel.report_hostel_fee_reciept_qweb').\
+            report_action(self)
 
 
 class AccountInvoice(models.Model):
