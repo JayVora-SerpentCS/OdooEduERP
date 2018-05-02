@@ -4,7 +4,7 @@
 {
     'name': 'School',
     'version': '11.0.1.0.0',
-    'author': '''Serpent Consulting Services Pvt. Ltd.''',
+    'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
     'license': "AGPL-3",
