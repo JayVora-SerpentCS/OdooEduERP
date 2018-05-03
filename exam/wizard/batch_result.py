@@ -20,5 +20,3 @@ class BatchExamResult(models.TransientModel):
         data = self.read()[0]
         return self.env.ref('exam.batch_result_qweb').report_action([],
                                                                     data=data)
-#        return self.env['report'].get_action(self, 'exam.exam_result_batch',
-#                                             data=data)

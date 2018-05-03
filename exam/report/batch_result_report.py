@@ -46,17 +46,3 @@ class BatchExamReport(models.AbstractModel):
                 'data': data,
                 'pass_student_count': self.pass_student,
                 }
-
-#    @api.model
-#    def render_html(self, docids, data=None):
-#        self.model = self.env.context.get('active_model')
-#        docs = self.env[self.model].browse(self.env.context.get('active_ids',
-#                                                                []))
-#        
-#        docargs = {'doc_ids': docids,
-#                   'doc_model': self.model,
-#                   'docs': docs,
-#                   'pass_student_count': self.pass_student,
-#                   }
-#        render_model = "exam.exam_result_batch"
-#        return self.env['report'].render(render_model, docargs)
