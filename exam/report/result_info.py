@@ -54,6 +54,7 @@ class ReportResultInfo(models.AbstractModel):
         list_exam.append(value)
         return list_exam
 
+    @api.model
     def get_report_values(self, docids, data=None):
         docs = self.env['student.student'].browse(docids)
         student_model = self.env['ir.actions.report'].\
@@ -62,7 +63,7 @@ class ReportResultInfo(models.AbstractModel):
             student_search = self.env['exam.result'].search([('student_id',
                                                               '=', rec.id)])
             if not student_search or rec.state == 'draft':
-                raise ValidationError(_('''You can not print report for student
+                raise ValidationError(_('''You cannot print report for student
                 in unconfirm state or when data is not found !'''))
             return {'doc_ids': docids,
                     'doc_model': student_model.model,
@@ -71,23 +72,3 @@ class ReportResultInfo(models.AbstractModel):
                     'get_lines': self.get_lines,
                     'get_exam_data': self.get_exam_data,
                     }
-
-#    @api.model
-#    def render_html(self, docids, data=None):
-#        docs = self.env['student.student'].browse(docids)
-#        for rec in docs:
-#            res_search = self.env['exam.result'].search([('student_id', '=',
-#                                                          rec.id)])
-#            if not res_search or rec.state == 'draft':
-#                raise ValidationError(_('''You can not print report for student
-#                in unconfirm state or when data is not found !'''))
-#        docargs = {
-#            'doc_ids': docids,
-#            'doc_model': self.env['student.student'],
-#            'data': data,
-#            'docs': docs,
-#            'get_lines': self.get_lines,
-#            'get_exam_data': self.get_exam_data,
-#        }
-#        return self.env['report'].render('exam.result_information_report',
-#                                         docargs)
