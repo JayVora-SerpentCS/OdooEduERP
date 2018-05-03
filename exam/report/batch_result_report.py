@@ -35,14 +35,28 @@ class BatchExamReport(models.AbstractModel):
                      'fail_student': len(exam_result_fail.ids) or 0.0}]
 
     @api.model
-    def render_html(self, docids, data=None):
-        self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_ids',
-                                                                []))
-        docargs = {'doc_ids': docids,
-                   'doc_model': self.model,
-                   'docs': docs,
-                   'pass_student_count': self.pass_student,
-                   }
-        render_model = "exam.exam_result_batch"
-        return self.env['report'].render(render_model, docargs)
+    def get_report_values(self, docids, data=None):
+        batch_result_report = self.env['ir.actions.report'].\
+        _get_report_from_name('exam.exam_result_batch')
+        batch_model = self.env[batch_result_report.model].\
+        browse(self.env.context.get('active_ids', []))
+        return {'doc_ids': docids,
+                'doc_model': batch_result_report.model,
+                'docs': batch_model,
+                'data': data,
+                'pass_student_count': self.pass_student,
+                }
+
+#    @api.model
+#    def render_html(self, docids, data=None):
+#        self.model = self.env.context.get('active_model')
+#        docs = self.env[self.model].browse(self.env.context.get('active_ids',
+#                                                                []))
+#        
+#        docargs = {'doc_ids': docids,
+#                   'doc_model': self.model,
+#                   'docs': docs,
+#                   'pass_student_count': self.pass_student,
+#                   }
+#        render_model = "exam.exam_result_batch"
+#        return self.env['report'].render(render_model, docargs)

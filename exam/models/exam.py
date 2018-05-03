@@ -53,7 +53,6 @@ class ExtendedTimeTable(models.Model):
                                               'TimeTable')
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
-    @api.multi
     @api.constrains('exam_timetable_line_ids')
     def _check_exam(self):
         '''Method to check same exam is not assigned on same day'''
@@ -84,7 +83,6 @@ class ExtendedTimeTableLine(models.Model):
     day_of_week = fields.Char('Week Day')
     class_room_id = fields.Many2one('class.room', 'Classroom')
 
-    @api.multi
     @api.onchange('exm_date')
     def onchange_date_day(self):
         '''Method to get weekday from date'''
@@ -308,7 +306,6 @@ class ExamExam(models.Model):
 class ExamScheduleLine(models.Model):
     _name = 'exam.schedule.line'
 
-    @api.multi
     @api.onchange('standard_ids')
     def onchange_standard(self):
         '''Method to get standard according to the standard selected'''
@@ -377,11 +374,10 @@ class AdditionalExam(models.Model):
 
 class ExamResult(models.Model):
     _name = 'exam.result'
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _inherit = ["mail.thread", "resource.mixin"]
     _rec_name = 'roll_no_id'
     _description = 'exam result Information'
 
-    @api.multi
     @api.depends('result_ids', 'result_ids.obtain_marks',
                  'result_ids.marks_reeval')
     def _compute_total(self):
@@ -396,7 +392,6 @@ class ExamResult(models.Model):
                     total += obtain_marks
             rec.total = total
 
-    @api.multi
     @api.depends('total')
     def _compute_per(self):
         '''Method to compute percentage'''
@@ -422,7 +417,6 @@ class ExamResult(models.Model):
             result.percentage = per
         return True
 
-    @api.multi
     @api.depends('percentage')
     def _compute_result(self):
         '''Method to compute result'''
@@ -607,7 +601,6 @@ class ExamSubject(models.Model):
             raise ValidationError(_('''The revaluation marks
             should not extend maximum marks!.'''))
 
-    @api.multi
     @api.depends('exam_id', 'obtain_marks', 'marks_reeval')
     def _compute_grade(self):
         '''Method to compute grade after re-evaluation'''
@@ -648,7 +641,6 @@ class AdditionalExamResult(models.Model):
     _description = 'subject result Information'
     _rec_name = 'roll_no_id'
 
-    @api.multi
     @api.depends('a_exam_id', 'obtain_marks')
     def _compute_student_result(self):
         '''Method to compute result of student'''

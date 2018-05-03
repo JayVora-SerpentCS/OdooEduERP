@@ -27,16 +27,16 @@ class ReportAddExamResult(models.AbstractModel):
         return result_data
 
     @api.model
-    def render_html(self, docids, data=None):
-        self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_id',
-                                                                []))
-        docargs = {
-            'doc_ids': docids,
-            'doc_model': self.model,
-            'docs': docs,
-            'time': time,
-            'get_result_detail': self._get_result_detail,
-        }
-        render_model = 'exam.exam_result_report'
-        return self.env['report'].render(render_model, docargs)
+    def get_report_values(self, docids, data=None):
+        active_model = self._context.get('active_model')
+        report_result = self.env['ir.actions.report'].\
+        _get_report_from_name('exam.exam_result_report')
+        result_data = self.env[active_model].\
+        browse(self._context.get('active_id'))
+        return {'doc_ids': docids,
+                'data': data,
+                'doc_model': report_result.model,
+                'docs': result_data,
+                'get_result_detail': self._get_result_detail,
+                'time': time,
+                }

@@ -4,9 +4,9 @@
 <odoo>
 
         <template id="additional_exam_result_report">
-            <t t-call="report.html_container">
+            <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="result">
-                    <t t-call="report.external_layout">
+                    <t t-call="web.external_layout">
                         <div class="page">
                             <div class="oe_structure" />
                             <br/>
