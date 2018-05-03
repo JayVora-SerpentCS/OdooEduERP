@@ -62,7 +62,7 @@
                     <filter string="Running" domain="[('state','=','running')]" help="Exam is Running"/>
                     <filter string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
                     <newline />
-                    <group expand="0" string="Group By" colspan="12" col="10">
+                    <group expand="1" string="Group By">
                         <filter icon="terp-project" string="Date" help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
                         <filter icon="terp-stock_symbol-selection" string="State"
                                 help="By State" domain="[]" context="{'group_by':'state'}"/>
@@ -278,7 +278,7 @@
                         <field name="standard_id"/>
                     </group>
                     <newline />
-                    <group expand="0" string="Group By" colspan="12" col="10">
+                    <group expand="1" string="Group By">
                         <filter icon="terp-stock_symbol-selection" string="Standard"
                                 help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
                         <separator orientation="vertical"/>
@@ -315,7 +315,6 @@
                     <field name="s_exam_ids"/>
                     <field name="percentage"/>
                     <field name="total"/>
-<!--                     <field name="re_total"/> -->
                     <field name="result"/>
                 </tree>
             </field>
@@ -353,7 +352,7 @@
                         </group>
                         <field name="result_ids" nolabel="1" colspan="4">
                             <tree string="Subjects" editable="bottom" create="false" delete="false">
-                                <field name="subject_id" placeholder="Select Subject" widget="selection" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}" required="1"/>
+                                <field name="subject_id" placeholder="Select Subject" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}" required="1"/>
                                 <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                 <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                 <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
@@ -362,19 +361,19 @@
                                 <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])],'readonly':[('state','in',['re-evaluation_confirm','done'])]}"/>
                             </tree>
                             <form string="Subjects">
-                                <group col = "4">
+                                <group col="4">
                                     <field name="subject_id" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                     <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                     <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                     <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
                                     <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])],'readonly':[('state','in',['re-evaluation_confirm','done'])]}"/>
                                     <field name="state" invisible="1"/>
+                                    <field name="grade_line_id" readonly="1"/>
                                 </group>
                             </form>
                         </field>
                         <group>
                             <group>
-<!--                                 <field name="re_total" attrs="{'invisible':[('state','in',['draft','confirm'])]}"/> -->
                                 <field name="total"/>
                                 <field name="percentage"/>
                             </group>
@@ -489,18 +488,13 @@
             <field name="model">exam.result</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <group col="10" colspan="4">
-                        <field name="student_id"  />
-                        <field name="standard_id"  />
-                    </group>
-                    <newline />
-                    <group expand="0" string="Group By" colspan="12" col="10">
+                    <field name="student_id"/>
+                    <field name="standard_id"/>
+                    <group expand="1" string="Group By">
                         <filter icon="terp-stock_symbol-selection" string="Student" help="By Name" domain="[]"
                                 context="{'group_by':'student_id'}" />
-                        <separator orientation="vertical" />
                         <filter icon="terp-stock_symbol-selection" string="Standard" help="By Name" domain="[]"
                                 context="{'group_by':'standard_id'}" />
-                        <separator orientation="vertical" />
                     </group>
                 </search>
             </field>
@@ -569,12 +563,9 @@
             <field name="model">additional.exam.result</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <group col="10" colspan="4">
-                        <field name="student_id" />
-                        <field name="standard_id" />
-                    </group>
-                    <newline />
-                    <group expand="0" string="Group By" colspan="12" col="10">
+                    <field name="student_id" />
+                    <field name="standard_id" />
+                    <group expand="1" string="Group By">
                         <filter icon="terp-stock_symbol-selection" string="Student" help="By Name" domain="[]"
                                 context="{'group_by':'student_id'}"/>
                         <separator orientation="vertical"/>

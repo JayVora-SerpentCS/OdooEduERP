@@ -2,7 +2,6 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.report import render_report
 from odoo.tools import config
 import os
 import time
@@ -131,13 +130,12 @@ class TestExam(common.TransactionCase):
         self.additional_exam_result.onchange_student()
         self.additional_exam_result._validate_obtain_marks()
         self.additional_exam_result._compute_student_result()
-        data, format = render_report(self.env.cr, self.env.uid,
-                                     self.additional_exam_result.ids,
-                                     'exam.additional_exam_result_report', {},
-                                     {})
+        data, data_format = self.env.\
+        ref('exam.additional_exam_result_id_qweb').\
+        render(self.additional_exam_result.ids)
         if config.get('test_report_directory'):
-            file(os.path.join(config['test_report_directory'],
-                 'Additional Exam Result.' + format),
+            open(os.path.join(config['test_report_directory'],
+                              'exam-Additional Exam Result.' + data_format),
                  'wb+').write(data)
 
     def test_exam(self):
