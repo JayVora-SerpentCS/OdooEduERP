@@ -29,10 +29,10 @@ class ReportAddExamResult(models.AbstractModel):
     @api.model
     def get_report_values(self, docids, data=None):
         active_model = self._context.get('active_model')
-        report_result = self.env['ir.actions.report'].\
-        _get_report_from_name('exam.exam_result_report')
-        result_data = self.env[active_model].\
-        browse(self._context.get('active_id'))
+        report_result = self.env['ir.actions.report']._get_report_from_name(
+            'exam.exam_result_report')
+        result_data = self.env[active_model
+                               ].browse(self._context.get('active_id'))
         return {'doc_ids': docids,
                 'data': data,
                 'doc_model': report_result.model,

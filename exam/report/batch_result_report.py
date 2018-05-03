@@ -36,12 +36,12 @@ class BatchExamReport(models.AbstractModel):
 
     @api.model
     def get_report_values(self, docids, data=None):
-        batch_result_report = self.env['ir.actions.report'].\
-        _get_report_from_name('exam.exam_result_batch')
-        batch_model = self.env[batch_result_report.model].\
-        browse(self.env.context.get('active_ids', []))
+        batch_result = self.env['ir.actions.report']._get_report_from_name(
+            'exam.exam_result_batch')
+        batch_model = self.env[batch_result.model
+                               ].browse(self.env.context.get('active_ids', []))
         return {'doc_ids': docids,
-                'doc_model': batch_result_report.model,
+                'doc_model': batch_result.model,
                 'docs': batch_model,
                 'data': data,
                 'pass_student_count': self.pass_student,
