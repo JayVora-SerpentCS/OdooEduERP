@@ -130,9 +130,9 @@ class TestExam(common.TransactionCase):
         self.additional_exam_result.onchange_student()
         self.additional_exam_result._validate_obtain_marks()
         self.additional_exam_result._compute_student_result()
-        data, data_format = self.env.\
-        ref('exam.additional_exam_result_id_qweb').\
-        render(self.additional_exam_result.ids)
+        data, data_format = self.env.ref('exam.additional_exam_result_id_qweb'
+                                         ).render(
+                                         self.additional_exam_result.ids)
         if config.get('test_report_directory'):
             open(os.path.join(config['test_report_directory'],
                               'exam-Additional Exam Result.' + data_format),
