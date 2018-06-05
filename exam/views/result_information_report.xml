@@ -4,9 +4,9 @@
 <odoo>
 
         <template id="result_information_report">
-            <t t-call="report.html_container">
+            <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="result">
-                    <t t-call="report.external_layout">
+                    <t t-call="web.external_layout">
                     <div class="page">
                         <div class="oe_structure" />
                         <div class="row" align="center">
@@ -15,7 +15,6 @@
                         <br />
                         <br />
                         <table width="100%">
-<!--                             <t t-esc="result.exam_results_ids.result=='Fail' "></t> -->
                             <tr>
                                 <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
                                     <b>Student Name</b>

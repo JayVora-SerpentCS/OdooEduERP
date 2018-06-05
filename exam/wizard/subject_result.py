@@ -23,5 +23,5 @@ class SubjectResultWiz(models.TransientModel):
     @api.multi
     def result_report(self):
         data = self.read()[0]
-        return self.env['report'].get_action(self, 'exam.exam_result_report',
-                                             data=data)
+        return self.env.ref('exam.add_exam_result_id_qweb').\
+            report_action([], data=data)
