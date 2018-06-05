@@ -8,7 +8,12 @@
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
     'license': "AGPL-3",
-    'summary': 'A Module For Library Management For School',
+    'summary': """A Module For Library Management For School
+                Library Management
+                Library
+                School Library
+                Books
+                """,
     'complexity': 'easy',
     'depends': ['report_intrastat', 'school', 'stock',
                 'account_accountant', 'product'],
