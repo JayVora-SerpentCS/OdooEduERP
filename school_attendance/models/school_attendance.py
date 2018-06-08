@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
-# from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
 from datetime import datetime
@@ -33,7 +31,6 @@ class AttendanceSheet(models.Model):
     attendance_type = fields.Selection([('daily', 'FullDay'),
                                         ('lecture', 'Lecture Wise')], 'Type')
 
-    @api.multi
     @api.onchange('standard_id')
     def onchange_class_info(self):
         '''Method to get student roll no'''
@@ -105,7 +102,7 @@ class AttendanceSheet(models.Model):
 
 class StudentleaveRequest(models.Model):
     _name = "studentleave.request"
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _inherit = ["mail.thread", "resource.mixin"]
 
     @api.model
     def create(self, vals):
@@ -354,7 +351,6 @@ class DailyAttendance(models.Model):
     _name = 'daily.attendance'
     _rec_name = 'standard_id'
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_total(self):
         '''Method to compute total student'''
@@ -366,7 +362,6 @@ class DailyAttendance(models.Model):
         if self.user_id:
             self.standard_id = False
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_present(self):
         '''Method to count present students'''
@@ -378,7 +373,6 @@ class DailyAttendance(models.Model):
                         count += 1
                 rec.total_presence = count
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_absent(self):
         '''Method to count absent students'''
@@ -431,18 +425,6 @@ class DailyAttendance(models.Model):
          'Attendance should be unique!')
     ]
 
-    @api.model
-    def create(self, vals):
-        child = ''
-        if vals:
-            if 'student_ids' in vals.keys():
-                child = vals.pop('student_ids')
-        ret_val = super(DailyAttendance, self).create(vals)
-        if child != '':
-            ret_val.write({'student_ids': child})
-        return ret_val
-
-    @api.multi
     @api.onchange('standard_id')
     def onchange_standard_id(self):
         '''Method to get standard of student selected'''
@@ -475,6 +457,68 @@ class DailyAttendance(models.Model):
                                              'stud_id': stud.id,
                                              'is_present': True})
             rec.student_ids = student_list
+
+    @api.model
+    def create(self, vals):
+        student_list = []
+        stud_obj = self.env['student.student']
+        standard_id = vals.get('student_id')
+        date = vals.get('date')
+        stud_ids = stud_obj.search([('standard_id', '=',
+                                     vals.get('standard_id')),
+                                    ('state', '=', 'done')])
+        for stud in stud_ids:
+            line_vals = {'roll_no': stud.roll_no,
+                         'stud_id': stud.id,
+                         'is_present': True}
+            student_leave = self.env['studentleave.request'
+                                     ].search([('state', '=',
+                                                'approve'),
+                                               ('student_id', '=',
+                                                stud.id),
+                                               ('standard_id', '=',
+                                                standard_id),
+                                               ('start_date', '<=',
+                                                date),
+                                               ('end_date', '>=',
+                                                date)
+                                               ])
+            if student_leave:
+                line_vals.update({'is_absent': True})
+            student_list.append((0, 0, line_vals))
+        vals.update({'student_ids': student_list})
+        return super(DailyAttendance, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        student_list = []
+        stud_obj = self.env['student.student']
+        standard_id = vals.get('student_id')
+        date = vals.get('date')
+        stud_ids = stud_obj.search([('standard_id', '=',
+                                     vals.get('standard_id')),
+                                    ('state', '=', 'done')])
+        for stud in stud_ids:
+            line_vals = {'roll_no': stud.roll_no,
+                         'stud_id': stud.id,
+                         'is_present': True}
+            student_leave = self.env['studentleave.request'
+                                     ].search([('state', '=',
+                                                'approve'),
+                                               ('student_id', '=',
+                                                stud.id),
+                                               ('standard_id', '=',
+                                                standard_id),
+                                               ('start_date', '<=',
+                                                date),
+                                               ('end_date', '>=',
+                                                date)
+                                               ])
+            if student_leave:
+                line_vals.update({'is_absent': True})
+            student_list.append((1, self.id, line_vals))
+        vals.update({'student_ids': student_list})
+        return super(DailyAttendance, self).write(vals)
 
     @api.multi
     def attendance_draft(self):
@@ -1005,9 +1049,9 @@ class DailyAttendanceLine(models.Model):
     _order = 'roll_no'
     _rec_name = 'roll_no'
 
-    roll_no = fields.Integer('Roll No.', required=True, help='Roll Number')
+    roll_no = fields.Integer('Roll No.', help='Roll Number')
     standard_id = fields.Many2one('daily.attendance', 'Standard')
-    stud_id = fields.Many2one('student.student', 'Name', required=True)
+    stud_id = fields.Many2one('student.student', 'Name')
     is_present = fields.Boolean('Present', help="Check if student is present")
     is_absent = fields.Boolean('Absent', help="Check if student is absent")
 

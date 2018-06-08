@@ -1,9 +1,9 @@
 
 <odoo>
     <template id="attendance_month">
-        <t t-call="report.html_container">
+        <t t-call="web.html_container">
            <t t-foreach="docs" t-as="o">
-               <t t-call="report.external_layout">
+               <t t-call="web.external_layout">
                  <div class="page">
                      <div class="oe_structure"/>
                      <br/><br/>
