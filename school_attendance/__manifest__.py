@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Attendance Management',
-    'version': "10.0.1.0.5",
-    'author': '''Serpent Consulting Services Pvt. Ltd.''',
+    'version': "11.0.1.0.5",
+    'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'images': ['static/description/SchoolAttendance.png'],
     'category': 'School Management',
