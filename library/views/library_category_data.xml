@@ -14,7 +14,6 @@
             <field name="name">C++</field>
             <field name="type">product</field>
             <field name="categ_id" ref="product_category_1"/>
-            <!-- <field name="book_return_days">5</field> -->
         </record>
     </data>
 </odoo>

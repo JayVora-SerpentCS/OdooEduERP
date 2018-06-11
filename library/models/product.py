@@ -6,28 +6,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
 
-class Many2manySym(fields.Many2many):
-
-    @api.multi
-    def get(self, offset=0):
-        res = {}
-        if not self.ids:
-            return res
-        ids_s = ','.join(map(str, self.ids))
-        for self_ids in self.ids:
-            res[self_ids] = []
-        limit_str = self._limit is not None and ' limit %d' % self._limit or ''
-        for (self._id2, self._id1) in [(self._id2, self._id1),
-                                       (self._id1, self._id2)]:
-            self._cr.execute('''select %s, %s from %s where %s in (%s)
-                                %s offset %s''', (self._id2, self._id1,
-                                                  self._rel, self._id1, ids_s,
-                                                  limit_str, offset))
-            for r in self._cr.fetchall():
-                res[r[1]].append(r[0])
-        return res
-
-
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
@@ -48,7 +26,7 @@ class ProductLang(models.Model):
     name = fields.Char('Name', required=True, translate=True)
 
     _sql_constraints = [('name_uniq', 'unique (name)',
-                         'The name of the product must be unique !')]
+                         'The name of the language must be unique !')]
 
 
 class ProductProduct(models.Model):
@@ -63,30 +41,6 @@ class ProductProduct(models.Model):
                                                         ])
         res.update({'categ_id': category.id})
         return res
-
-    @api.multi
-    def name_get(self):
-        ''' This method Returns the preferred display value
-            (text representation) for the records with the given IDs.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param context : context arguments, like language, time zone
-        @return : tuples with the text representation of requested objects
-                  for to-many relationships
-         '''
-
-        if not len(self.ids):
-            return []
-
-        def _name_get(d):
-            name = d.get('name', '')
-            barcode = d.get('barcode', False)
-            if barcode:
-                name = '[%s] %s' % (barcode or '', name)
-            return (d['id'], name)
-        return map(_name_get, self.read(['name', 'barcode']))
 
     @api.multi
     def _default_categ(self):
@@ -229,7 +183,6 @@ class ProductProduct(models.Model):
                     vals['seller_ids'].append(supplier)
         return super(ProductProduct, self).create(vals)
 
-    @api.multi
     @api.depends('qty_available')
     def _compute_books_available(self):
         '''Computes the available books'''
@@ -242,10 +195,9 @@ class ProductProduct(models.Model):
             if issue_ids:
                 occupied_no = len(issue_ids)
             # reduces the quantity when book is issued
-            rec.books_available = rec.sudo().qty_available - occupied_no
+            rec.books_available = rec.qty_available - occupied_no
         return True
 
-    @api.multi
     @api.depends('books_available')
     def _compute_books_availablity(self):
         '''Method to compute availability of book'''
@@ -263,8 +215,10 @@ class ProductProduct(models.Model):
     lang = fields.Many2one('product.lang', 'Language')
     editor_ids = fields.One2many('book.editor', "book_id", "Editor")
     author = fields.Many2one('library.author', 'Author')
-    code = fields.Char(compute_="_product_code", method=True,
-                       string='Acronym', store=True)
+    code = fields.Char(compute_="_product_code",
+                       string='Acronym',
+                       store=True
+                       )
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")
     creation_date = fields.Datetime('Creation date', readonly=True,
@@ -285,8 +239,6 @@ class ProductProduct(models.Model):
                                      ('notavailable', 'Not Available')],
                                     'Book Availability', default='available',
                                     compute="_compute_books_availablity")
-    link_ids = Many2manySym('product.product', 'book_book_rel', 'product_id1',
-                            'product_id2', 'Related Books')
     back = fields.Selection([('hard', 'HardBack'), ('paper', 'PaperBack')],
                             'Binding Type', help="Shows books-binding type",
                             default='paper')
@@ -306,11 +258,10 @@ class ProductProduct(models.Model):
     attchment_ids = fields.One2many('book.attachment', 'product_id',
                                     'Book Attachments')
 
-    _sql_constraints = [('unique_barcode', 'unique(barcode)',
-                         'barcode field must be unique across\
-                          all the products'),
-                        ('code_uniq', 'unique (code)',
-                         'Code of the product must be unique !')]
+    _sql_constraints = [('unique_barcode_code', 'unique(barcode,code)',
+                         'Barcode and Code must be unique across\
+                          all the products!'),
+                        ]
 
     @api.onchange('is_ebook', 'attach_ebook')
     def onchange_availablilty(self):
@@ -379,7 +330,7 @@ class BookEditor(models.Model):
     _name = "book.editor"
 
     image = fields.Binary("Image")
-    name = fields.Char('Name', required=True, index=True)
+    name = fields.Char('Name', required=True)
     biography = fields.Text('Biography')
     note = fields.Text('Notes')
     phone = fields.Char('Phone')

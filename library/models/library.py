@@ -676,7 +676,6 @@ class LibraryBookRequest(models.Model):
     _name = "library.book.request"
     _rec_name = 'req_id'
 
-    @api.multi
     @api.depends('type')
     def _compute_bname(self):
         if self.type:
