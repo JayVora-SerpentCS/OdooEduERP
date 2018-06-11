@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <form string="Book Name">
                    <group>
-                        <field name="name"/>
+                        <field name="name" domain="[('categ_id.book_categ','=',True)]" options="{'no_create': True}"/>
                    </group>
                    <footer>
                        <group col="2">

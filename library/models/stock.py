@@ -8,7 +8,6 @@ from odoo import workflow
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    customer_ref = fields.Char('Customer reference')
     origin_ref = fields.Char('Origin')
 
     @api.multi
@@ -28,7 +27,6 @@ class StockMove(models.Model):
         for res in self.read(['move_dest_id']):
             if res['move_dest_id']:
                 ids2.append(res['move_dest_id'][0])
-#        for stock_id in self.ids:
             self.trg_trigger()
         return True
 
@@ -37,9 +35,4 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
     _order = "create_date desc"
 
-    sale_id = fields.Many2one('sale.order', 'Sale Order', ondelete='set null',
-                              readonly=True, default=False)
-    purchase_id = fields.Many2one('purchase.order', 'Purchase Order',
-                                  ondelete='set null', readonly=True,
-                                  default=False)
-    date_done = fields.Datetime('Picking date', readonly=True)
+    date_done = fields.Datetime('Picking date')

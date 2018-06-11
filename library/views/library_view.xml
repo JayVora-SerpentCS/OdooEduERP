@@ -242,8 +242,14 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="name" />
-                    <field name="color" />
+                    <field name="name"/>
+                    <field name="color"/>
+                    <field name="author"/>
+                    <field name="num_edition"/>
+                    <field name="lang"/>
+                    <field name="availability"/>
+                    <field name="books_available"/>
+                    <field name='id'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -341,7 +347,7 @@
                                             </td>
                                             <td align="right" style="padding-left: 43px;">
                                                 <a type="open">
-                                                     <img t-att-src="kanban_image('product.product','image_medium', record.id.value)" class="oe_avatar"/>
+                                                     <img t-att-src="kanban_image('product.product','image_medium', record.id.raw_value)" class="oe_avatar"/>
                                                 </a>
                                             </td>
                                         </tr>
@@ -466,9 +472,8 @@
                     <field name="name" colspan="3"/>
                     <field name="date"/>
                     <field name="origin"/>
-                    <!-- <field name="address_id" /> -->
                     <field name="state" readonly="1"/>
-                    <field name="date_done"/>
+                    <field name="date_done" readonly='1'/>
                 </tree>
             </field>
         </record>
@@ -660,6 +665,7 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="state">
                     <field name="color"/>
+                    <field name='user'/>
                     <field name="name"/>
                     <field name="card_id"/>
                     <field name="gt_name"/>
@@ -803,7 +809,7 @@
                             <group>
                                 <field name="ebook_name" attrs="{'invisible':[('type','!=','ebook')], 'required':
                                      [('type','=','ebook')], 'readonly':[('state','!=','draft')]}"
-                                     domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', True)]" widget="selection"/>
+                                     domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', True)]" widget='selection'/>
                                 <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':
                                      [('type','=','existing')], 'readonly':[('state','!=','draft')]}"
                                      domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', False),('availability','=','available')]" widget="selection"/>
@@ -1042,7 +1048,6 @@ i
                                        attrs="{'invisible': [('is_company','=', True)]}"/>
                                 <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                                 <field name="mobile"/>
-                                <field name="fax"/>
                                 <field name="email" widget="email"/>
                                 <field name="title" domain="[('domain', '=', 'contact')]" groups="base.group_no_one"
                                        options='{"no_open": True}'
@@ -1214,7 +1219,6 @@ i
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <search string="Assignment Information">
-<!--                     <filter name="book" string="Books" domain="[('categ_id.name', '=', 'Books')]" icon="terp-camera_test" /> -->
                     <filter name="book" string="Books" domain="[('categ_id.book_categ', '=', True)]" icon="terp-camera_test" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
@@ -1264,206 +1268,6 @@ i
         <menuitem id="author_menu" name="Author" parent="menu_library_config" action="action_author_list"
                   groups="school.group_school_administration,library.group_librarian"/>
 
-        <!-- Overwritten Form View Of Stock Picking -->
-
-        <record id="stock.view_picking_in_form" model="ir.ui.view">
-            <field name="name">stock.picking.in.form</field>
-            <field name="model">stock.picking</field>
-            <field name="arch" type="xml">
-                <form string="Internal Picking List">
-                    <group colspan="4" col="6">
-                        <field name="name" readonly="1"/>
-                        <field name="origin" />
-                        <!-- <field name="address_id" on_change="onchange_partner_in(address_id)" 
-                                    select="2" context="{'contact_display':'partner'}"/> -->
-                        <field name="min_date" select="2" readonly="1"/>
-                        <field name="backorder_id" select="2" readonly="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"
-                                   default_get="{'move_line':move_lines, 'address_in_id': address_id}">
-                                <tree colors="grey:scrapped==True" string="Stock Moves">
-                                    <field name="product_id"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom" string="UoM" />
-                                    <button name="%(stock.stock_move_action)d" string="Scrap Products" type="action" icon="gtk-convert"
-                                            context="{'scrap': True}"
-                                            states="draft,waiting,confirmed,assigned" groups="base.group_extended"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <button name="setlast_tracking" string="Put in current pack"
-                                        type="object" groups="base.group_extended" icon="terp-stock_effects-object-colorize"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        states="draft,assigned,confirmed"/>
-                                    <field name="location_dest_id"/>
-                                    <field name="state"/>
-                                </tree>
-                                <form string="Stock Moves">
-                                    <group colspan="2" col="4">
-                                        <separator colspan="4" string="Move Information"/>
-                                        <field name="name" invisible="1" colspan="4"/>
-                                        <field name="product_id"
-                                            on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"
-                                            colspan="4"/>
-                                        <field name="product_qty"
-                                            on_change="onchange_quantity(product_id, product_qty, product_uom)"
-                                            colspan="3"/>
-                                        <button name="%(stock.stock_move_action)d" string="Scrap"
-                                            type="action" groups="base.group_extended" icon="gtk-convert"
-                                            context="{'scrap': True}" states="draft,waiting,confirmed,assigned"
-                                            colspan="1"/>
-                                        <field name="product_uom" string="Unit Of Measure" colspan="4"/>
-                                        <field groups="base.group_extended" name="product_packaging"
-                                            domain="[('product_id','=',product_id)]" colspan="4"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                        <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="Dates" colspan="2"/>
-                                        <field name="create_date" invisible="1"/>
-                                        <field name="date"/>
-                                        <field name="date_expected"/>
-                                    </group>
-                                    <group colspan="2" col="4" groups="base.group_extended">
-                                        <separator string="Traceability" colspan="4" groups="base.group_extended"/>
-                                    </group>
-                                    <label string="" colspan="4"/>
-                                    <field name="state"/>
-                                    <group col="4" colspan="2">
-                                        <button name="action_cancel" states="assigned" string="_Cancel" type="object" icon="gtk-cancel"/>
-                                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                                        <button name="force_assign" states="confirmed" string="Force Availability"
-                                                type="object" icon="gtk-jump-to"/>
-                                        <button name="cancel_assign" states="assigned"
-                                                string="Cancel Availability" type="object" icon="gtk-find"/>
-                                    </group>
-                                </form>
-                            </field>
-                            <group col="10" colspan="4">
-                                <field name="state" readonly="1"/>
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
-                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                                <group colspan="1" states="done">
-                                    <button name="%(stock.act_stock_return_picking)d" string="Return Products"
-                                            states="done" type="action" icon="gtk-execute"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        </page>
-                        <page string="Notes">
-                            <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-
-        <!-- Overwritten Form View Of Stock Picking Out -->
-
-        <record id="stock.view_picking_out_form" model="ir.ui.view">
-            <field name="name">stock.picking.out.form</field>
-            <field name="model">stock.picking</field>
-            <field name="arch" type="xml">
-                <form string="Internal Picking List">
-                    <group col="6" colspan="4">
-                        <field name="min_date" select="2"/>
-                        <field name="name" select="1" readonly="1"/>
-                        <field name="backorder_id" select="2" readonly="1"/>
-                        <field name="origin" select="2" readonly="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"
-                                   default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:scrapped==True" string="Stock Moves">
-                                    <field name="product_id"/>
-                                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom)"/>
-                                    <field name="product_uom" string="UoM"/>
-                                    <button name="%(stock.stock_move_action)d" string="Scrap Products" type="action" icon="gtk-convert"
-                                            context="{'scrap': True}" states="draft,waiting,confirmed,assigned"/>
-                                    <field name="scrapped" invisible="1"/>
-                                    <button name="setlast_tracking" string="Put in current pack"
-                                            type="object" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                            groups="base.group_extended" icon="terp-stock_effects-object-colorize"
-                                            states="draft,assigned,confirmed"/>
-                                    <field name="location_id"/>
-                                    <field name="date"/>
-                                    <field name="state"/>
-                                </tree>
-                                <form string="Stock Moves">
-                                    <group colspan="2" col="4">
-                                        <separator colspan="4" string="Move Information"/>
-                                        <field name="name" invisible="1" colspan="4"/>
-                                        <field name="product_id"
-                                            on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"
-                                            colspan="4"/>
-                                        <field name="product_qty"
-                                            on_change="onchange_quantity(product_id, product_qty, product_uom)" colspan="3"/>
-                                        <button name="%(stock.stock_move_action)d" string="Scrap" type="action" icon="gtk-convert"
-                                            context="{'scrap': True}" states="draft,waiting,confirmed,assigned" colspan="1"
-                                            groups="base.group_extended" />
-                                        <field name="product_uom" string="Unit Of Measure"
-                                            colspan="4"/>
-                                        <field groups="base.group_extended" name="product_packaging"
-                                            domain="[('product_id','=',product_id)]" colspan="4"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="Locations" colspan="2"/>
-                                        <field name="location_id" domain="[('usage','=','internal')]"/>
-                                        <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="Dates" colspan="2"/>
-                                        <field name="create_date" invisible="1"/>
-                                        <field name="date"/>
-                                        <field name="date_expected"/>
-                                    </group>
-                                    <label string="" colspan="4"/>
-                                    <field name="state" />
-                                    <group col="4" colspan="2">
-                                        <button name="action_cancel" states="assigned" string="Cancel"
-                                            type="object" icon="gtk-cancel"/>
-                                        <button name="action_confirm" states="draft" string="Confirm"
-                                            type="object" icon="gtk-apply"/>
-                                        <button name="force_assign" states="confirmed" string="Force Availability"
-                                            type="object" icon="gtk-jump-to"/>
-                                        <button name="cancel_assign" states="assigned"
-                                            string="Cancel Availability" type="object" icon="gtk-find"/>
-                                    </group>
-                                </form>
-                            </field>
-                            <group col="12" colspan="4">
-                                <field name="state" readonly="1" />
-                                <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
-                                <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
-                                <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
-                                <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-find"/>
-                                <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
-                                <button name="%(stock.act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
-                            </group>
-                        </page>
-                        <page string="Additional info" groups="base.group_extended,base.group_multi_company">
-                            <field name="date_done" groups="base.group_extended"/>
-                            <field name="move_type" groups="base.group_extended"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                        </page>
-                        <page string="Notes">
-                            <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
         <!-- Inherit Form View of Product Category -->
         <record id="library_book_product_category_inherit" model="ir.ui.view">
             <field name="name">library.product.categ.inherit</field>
