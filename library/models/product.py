@@ -216,8 +216,7 @@ class ProductProduct(models.Model):
     editor_ids = fields.One2many('book.editor', "book_id", "Editor")
     author = fields.Many2one('library.author', 'Author')
     code = fields.Char(compute_="_product_code",
-                       string='Acronym',
-                       store=True
+                       string='Acronym', store=True
                        )
     catalog_num = fields.Char('Catalog number',
                               help="Reference number of book")

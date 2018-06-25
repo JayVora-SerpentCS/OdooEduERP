@@ -678,12 +678,13 @@ class LibraryBookRequest(models.Model):
 
     @api.depends('type')
     def _compute_bname(self):
-        if self.type:
-            if self.type == 'existing':
-                book = self.name.name
-            else:
-                book = self.new_book
-            self.bk_nm = book
+        for rec in self:
+            if rec.type:
+                if rec.type == 'existing':
+                    book = rec.name.name
+                else:
+                    book = rec.new_book
+                rec.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default='New')
     card_id = fields.Many2one("library.card", "Card No", required=True)
