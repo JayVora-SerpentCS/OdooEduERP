@@ -74,7 +74,6 @@ class TestExam(common.TransactionCase):
         self.exam_exam.set_running()
         self.exam_exam.set_finish()
         self.exam_exam.set_cancel()
-        self.exam_exam._validate_date()
         self.exam_exam.generate_result()
         # Create exam result
         self.exam_result = self.exam_result_obj.\
