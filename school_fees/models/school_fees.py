@@ -298,13 +298,11 @@ class StudentPayslip(models.Model):
     def payslip_draft(self):
         '''Change state to draft'''
         self.write({'state': 'draft'})
-        return True
 
     @api.multi
     def payslip_paid(self):
         '''Change state to paid'''
         self.write({'state': 'paid'})
-        return True
 
     @api.multi
     def payslip_confirm(self):
@@ -336,7 +334,6 @@ class StudentPayslip(models.Model):
                        'due_amount': amount,
                        'currency_id': rec.company_id.currency_id.id or False
                        })
-        return True
 
     @api.multi
     def invoice_view(self):
@@ -346,14 +343,8 @@ class StudentPayslip(models.Model):
             invoices = invoice_obj.search([('student_payslip_id', '=',
                                             rec.id)])
             action = rec.env.ref('account.action_invoice_tree1').read()[0]
-            if len(invoices) > 1:
-                action['domain'] = [('id', 'in', invoices.ids)]
-            elif len(invoices) == 1:
-                action['views'] = [(rec.env.ref('account.invoice_form').id,
-                                    'form')]
-                action['res_id'] = invoices.ids[0]
-            else:
-                action = {'type': 'ir.actions.act_window_close'}
+            action['domain'] = [('id', 'in', invoices.ids or False)]
+            action['context'] = {'create': False}
         return action
 
     @api.multi
@@ -448,7 +439,6 @@ class StudentPayslip(models.Model):
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
-        return True
 
     @api.multi
     def student_pay_fees(self):
