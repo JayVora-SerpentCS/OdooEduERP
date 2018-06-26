@@ -6,7 +6,7 @@ Installation
 
 To install this module, you need to:
 
-install 'hr', 'mail', 'crm', 'report', 'board' module
+install 'hr', 'crm', 'account', module
 
 Configuration
 

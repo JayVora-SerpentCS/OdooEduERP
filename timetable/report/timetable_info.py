@@ -11,7 +11,7 @@ class ReportTimetableInfo(models.AbstractModel):
     def _get_timetable(self, timetable_id):
         timetable_detail = []
         self._cr.execute('''select t.start_time,t.end_time,s.name,week_day,
-                        st.employee_id, hr.name_related as
+                        st.employee_id, hr.name as
                         teacher from time_table_line t,
                         subject_subject s, resource_resource r, school_teacher
                         st, hr_employee
@@ -19,7 +19,7 @@ class ReportTimetableInfo(models.AbstractModel):
                         st.employee_id= hr.id
                         and  t.table_id = %s
                         group by start_time,end_time,s.name,week_day,
-                        st.employee_id,hr.name_related
+                        st.employee_id,hr.name
                         order by start_time''', tuple([timetable_id.id]))
         res = self._cr.dictfetchall()
         self._cr.execute('''select start_time,end_time from time_table_line
@@ -39,10 +39,14 @@ class ReportTimetableInfo(models.AbstractModel):
         return timetable_detail
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
+        timetable_report = self.env['ir.actions.report']._get_report_from_name(
+            'timetable.timetable')
         docs = self.env['time.table'].browse(docids)
-        docargs = {'doc_ids': docids,
-                   'doc_model': self.env['time.table'],
-                   'docs': docs,
-                   'get_timetable': self._get_timetable}
-        return self.env['report'].render('timetable.timetable', docargs)
+        return {
+            'doc_ids': docids,
+            'docs': docs,
+            'doc_model': timetable_report.model,
+            'data': data,
+            'get_timetable': self._get_timetable
+        }

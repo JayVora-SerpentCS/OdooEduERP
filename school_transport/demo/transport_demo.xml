@@ -153,7 +153,7 @@
             <field name="capacity">56</field>
             <field name="participant">1</field>
             <field name="vehi_participants_ids"
-                    eval="[(4,[ref('transport_participant_1')])]"/>
+                    eval="[(4,ref('transport_participant_1'))]"/>
         </record>
         <record id="transport_vehicle_2" model="transport.vehicle">
             <field name="vehicle"> GJW-2 9666</field>
@@ -161,7 +161,7 @@
             <field name="participant">1</field>
             <field name="driver_id" ref="hr_employee_driver_2"/>
             <field name="vehi_participants_ids"
-                    eval="[(4,[ref('transport_participant_2')])]"/>
+                    eval="[(4,ref('transport_participant_2'))]"/>
         </record>
         <record id="transport_vehicle_3" model="transport.vehicle">
             <field name="vehicle"> GJV-2 9666</field>
@@ -169,7 +169,7 @@
             <field name="capacity">56</field>
             <field name="participant">1</field>
             <field name="vehi_participants_ids"
-                    eval="[(4,[ref('transport_participant_3')])]"/>
+                    eval="[(4,ref('transport_participant_3'))]"/>
         </record>
         <record id="transport_vehicle_4" model="transport.vehicle">
             <field name="vehicle"> GJ-1 1906</field>
@@ -177,7 +177,7 @@
             <field name="capacity">56</field>
             <field name="participant">1</field>
             <field name="vehi_participants_ids"
-                    eval="[(4,[ref('transport_participant_4')])]"/>
+                    eval="[(4,ref('transport_participant_4'))]"/>
         </record>
          <!--transport.registration-->
 
