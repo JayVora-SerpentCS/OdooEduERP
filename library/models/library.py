@@ -56,7 +56,6 @@ class LibraryCard(models.Model):
         self.standard_id = student_data.standard_id.id
         self.roll_no = student_data.roll_no
 
-    @api.multi
     @api.depends('student_id')
     def _compute_name(self):
         for rec in self:
@@ -84,7 +83,6 @@ class LibraryCard(models.Model):
                          'roll_no': student.roll_no})
         return super(LibraryCard, self).write(vals)
 
-    @api.multi
     @api.depends('start_date', 'duration')
     def _compute_end_date(self):
         for rec in self:
@@ -187,7 +185,6 @@ class LibraryBookIssue(models.Model):
             ret_date = datetime.strptime(self.date_issue, t) + diff
             self.date_return = ret_date
 
-    @api.multi
     @api.depends('date_issue', 'day_to_return_book')
     def _compute_return_date(self):
         ''' This method calculate a book return date.
@@ -207,7 +204,6 @@ class LibraryBookIssue(models.Model):
                 ret_date = datetime.strptime(rec.date_issue, t) + diff
                 rec.date_return = ret_date
 
-    @api.multi
     @api.depends('actual_return_date', 'day_to_return_book')
     def _compute_penalty(self):
         ''' This method calculate a penalty on book .
@@ -233,7 +229,6 @@ class LibraryBookIssue(models.Model):
                     if line.day_to_return_book:
                         line.penalty = day * line.name.fine_late_return or 0.0
 
-    @api.multi
     @api.depends('state')
     def _compute_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
@@ -252,7 +247,6 @@ class LibraryBookIssue(models.Model):
             if rec.state and rec.state == 'lost':
                 rec.lost_penalty = rec.name.fine_lost or 0.0
 
-    @api.multi
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
         ''' This method used how many book can issue as per user type  .

@@ -21,7 +21,6 @@
              'views/library_sequence.xml',
              'views/library_category_data.xml',
              'data/library_card_schedular.xml',
-             'wizard/update_prices_view.xml',
              'wizard/update_book_view.xml',
              'wizard/book_issue_no_view.xml',
              'wizard/card_no_view.xml'],

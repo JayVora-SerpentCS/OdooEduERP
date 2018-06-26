@@ -16,4 +16,3 @@ class BookName(models.TransientModel):
     def create_new_books(self):
         for rec in self:
             rec.create({'name': rec.name.id, 'card_id': rec.card_id.id})
-        return {}
