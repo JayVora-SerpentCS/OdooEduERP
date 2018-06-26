@@ -13,7 +13,7 @@
                 <data>
                     <xpath expr="//page[1]" position="after">
                         <page string="Events">
-                            <field name="event_ids" readonly="1" nolabel= '1' />
+                            <field name="event_ids" readonly="1" nolabel= '1'/>
                         </page>
                     </xpath>
                 </data>
@@ -25,7 +25,7 @@
         <record id="student_standard_form_view" model="ir.ui.view">
             <field name="name">student.student.form</field>
             <field name="model">student.student</field>
-            <field name="inherit_id" ref="school.view_student_student_form_1" />
+            <field name="inherit_id" ref="school.view_student_student_form_1"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[1]" position="after">

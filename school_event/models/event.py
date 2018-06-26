@@ -149,19 +149,16 @@ class SchoolEvent(models.Model):
     def event_close(self):
         '''Method to change state to close'''
         self.write({'state': 'close'})
-        return True
 
     @api.multi
     def event_draft(self):
         '''Method to change state to draft'''
         self.write({'state': 'draft'})
-        return True
 
     @api.multi
     def event_cancel(self):
         '''Method to change state to cancel'''
         self.write({'state': 'cancel'})
-        return True
 
     @api.model
     def create(self, vals):
@@ -223,7 +220,6 @@ class SchoolEventRegistration(models.Model):
             stu_prt_data = event_part_obj.search(domain)
             stu_prt_data.sudo().unlink()
             rec.write({'state': 'cancel'})
-        return True
 
     @api.constrains('name')
     def check_event_state(self):
@@ -279,7 +275,6 @@ class SchoolEventRegistration(models.Model):
             rec.name.sudo().write({'part_ids': [(4, part_id.id)]})
             rec.part_name_id.sudo().write({'event_ids': [(4, part_id.id)]})
             rec.write({'state': 'confirm'})
-        return True
 
 
 class StudentStudent(models.Model):
