@@ -19,7 +19,7 @@ class ReportStudentPayslip(models.AbstractModel):
         student_payslip = self.env['student.payslip'].search([('id', 'in',
                                                                docids)])
         payslip_model = self.env['ir.actions.report'].\
-        _get_report_from_name('school_fees.student_payslip')
+            _get_report_from_name('school_fees.student_payslip')
         return {
             'doc_ids': docids,
             'doc_model': payslip_model.model,
