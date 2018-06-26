@@ -196,15 +196,6 @@
             <field name="view_mode">calendar,tree,form</field>
         </record>
 
-        <!-- Actions Of Form & Tree View Of Exam -->
-
-        <record id="action_exam_exam_tree" model="ir.actions.act_window">
-            <field name="name">Regular Exam</field>
-            <field name="res_model">exam.exam</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <!-- Menu Items Of Exam -->
 
         <menuitem id="menu_exam" name="Exam" parent="school.menu_ems" sequence="10" />

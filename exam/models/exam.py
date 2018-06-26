@@ -105,7 +105,6 @@ class ExtendedTimeTableLine(models.Model):
                         Either you have selected wrong day
                                        for the date or you have selected\
                                        invalid date!'''))
-        return True
 
     @api.constrains('teacher_id')
     def check_supervisior_exam(self):
@@ -204,8 +203,6 @@ class ExamExam(models.Model):
     start_date = fields.Date("Exam Start Date",
                              help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
-#    exam_timetable_ids = fields.One2many('', 'exam_id',
-#                                         'Exam Schedule')
     state = fields.Selection([('draft', 'Draft'),
                               ('running', 'Running'),
                               ('finished', 'Finished'),
@@ -233,7 +230,6 @@ class ExamExam(models.Model):
                 rec.state = 'running'
             else:
                 raise ValidationError(_('You must add one Exam Schedule!'))
-        return True
 
     @api.multi
     def set_finish(self):
@@ -244,14 +240,6 @@ class ExamExam(models.Model):
     def set_cancel(self):
         '''Method to set state to cancel'''
         self.write({'state': 'cancelled'})
-
-    @api.multi
-    def _validate_date(self):
-        '''Method to check start date should be less than end date'''
-        for exm in self:
-            if exm.start_date > exm.end_date:
-                return False
-        return True
 
     @api.multi
     def generate_result(self):
@@ -416,7 +404,6 @@ class ExamResult(models.Model):
                                 per <= grade_id.to_mark:
                             result.grade = grade_id.grade or ''
             result.percentage = per
-        return True
 
     @api.depends('percentage')
     def _compute_result(self):
@@ -532,7 +519,6 @@ class ExamResult(models.Model):
                     'state': 'confirm'
                     }
             rec.write(vals)
-        return True
 
     @api.multi
     def re_evaluation_confirm(self):
@@ -546,7 +532,6 @@ class ExamResult(models.Model):
             for line in rec.result_ids:
                 line.marks_reeval = line.obtain_marks
             rec.state = 're-evaluation'
-        return True
 
     @api.multi
     def set_done(self):
@@ -570,7 +555,6 @@ class ExamResult(models.Model):
             elif not history:
                 history_obj.create(vals)
             rec.write({'state': 'done'})
-        return True
 
 
 class ExamGradeLine(models.Model):
@@ -681,7 +665,6 @@ class AdditionalExamResult(models.Model):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
             raise ValidationError(_('''The obtained marks should not extend
                                     maximum marks!.'''))
-        return True
 
     a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
                                 required=True,
