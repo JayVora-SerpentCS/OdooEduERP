@@ -150,7 +150,6 @@ class StudentleaveRequest(models.Model):
     def reject_state(self):
         self.write({'state': 'reject'})
 
-    @api.multi
     @api.depends('start_date', 'end_date')
     def _compute_days(self):
         for rec in self:
