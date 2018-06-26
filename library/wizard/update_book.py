@@ -23,4 +23,3 @@ class UpdateBooks(models.TransientModel):
                         Please try after sometime !'''))
                     else:
                         book_rec.browse(active_id).write({'name': rec.name.id})
-        return {}
