@@ -58,7 +58,6 @@ class TransportPoint(models.Model):
 class TransportVehicle(models.Model):
     '''for vehicle detail'''
 
-    @api.multi
     @api.depends('vehi_participants_ids')
     def _compute_participants(self):
         '''Method to get number participant'''
@@ -119,6 +118,7 @@ class TransportParticipant(models.Model):
     state = fields.Selection([('running', 'Running'),
                               ('over', 'Over')],
                              'State', readonly=True,)
+    active = fields.Boolean('Active', default=True)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
@@ -154,7 +154,6 @@ class StudentTransports(models.Model):
     _name = 'student.transport'
     _description = 'Student Transport Information'
 
-    @api.multi
     @api.depends('trans_participants_ids')
     def _compute_total_participants(self):
         for rec in self:
@@ -189,13 +188,11 @@ class StudentTransports(models.Model):
     def transport_open(self):
         '''Method to change state open'''
         self.write({'state': 'open'})
-        return True
 
     @api.multi
     def transport_close(self):
         '''Method to change state to close'''
         self.write({'state': 'close'})
-        return True
 
     @api.model
     def participant_expire(self):
@@ -343,14 +340,8 @@ class TransportRegistration(models.Model):
             invoices = invoice_obj.search([('transport_student_id', '=',
                                             rec.id)])
             action = rec.env.ref('account.action_invoice_tree1').read()[0]
-            if len(invoices) > 1:
-                action['domain'] = [('id', 'in', invoices.ids)]
-            elif len(invoices) == 1:
-                action['views'] = [(rec.env.ref('account.invoice_form').id,
-                                    'form')]
-                action['res_id'] = invoices.ids[0]
-            else:
-                action = {'type': 'ir.actions.act_window_close'}
+            action['domain'] = [('id', 'in', invoices.ids or False)]
+            action['context'] = {'create': False}
             return action
 
     @api.multi
@@ -452,7 +443,6 @@ class TransportRegistration(models.Model):
             stu_tran_id = trans_obj.browse(rec.name.id)
             stu_tran_id.sudo().write({'trans_participants_ids':
                                       [(6, 0, list1)]})
-        return True
 
 
 class AccountInvoice(models.Model):
@@ -486,3 +476,20 @@ class AccountPayment(models.Model):
                             'remain_amt': invoice.residual}
                 invoice.transport_student_id.write(vals)
         return res
+
+
+class StudentExtend(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make record of student transport active false
+        when student is set to alumni state'''
+        for rec in self:
+            trans_student = self.env['transport.participant'].\
+                search([('name', '=', rec.id)])
+            if trans_student:
+                for trans_student_rec in trans_student:
+                    trans_student_rec.write({'active': False})
+                    trans_student_rec.vehicle_id._compute_participants()
+        return super(StudentExtend, self).set_alumni()
