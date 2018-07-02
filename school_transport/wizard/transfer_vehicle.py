@@ -68,4 +68,3 @@ class TransferVehicle(models.TransientModel):
             vehi_new_data.write({'vehi_participants_ids': [(6, 0, participants)
                                                            ]})
             rec.participation_id.write({'vehicle_id': rec.new_vehicle_id.id})
-        return True

@@ -110,6 +110,7 @@
                         <field name="tr_reg_date" readonly="1"/>
                         <field name="tr_end_date" readonly="1"/>
                         <field name="amount"/>
+                        <field name='active' invisible='1'/>
                     </group>
                     </sheet>
                 </form>
