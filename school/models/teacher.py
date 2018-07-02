@@ -70,9 +70,7 @@ class SchoolTeacher(models.Model):
             manager_id.write({'stu_parent_id': stu_parent.id})
         user = stu_parent.user_ids
         user_rec = user[0]
-        parent_grp_id = self.env['ir.model.data'
-                                 ].get_object('school',
-                                              'group_school_parent')
+        parent_grp_id = self.env.ref('school.group_school_parent')
         groups = parent_grp_id
         if user_rec.groups_id:
             groups = user_rec.groups_id
@@ -125,22 +123,7 @@ class SchoolTeacher(models.Model):
             self.mobile_phone = self.school_id.company_id.partner_id.mobile
             self.work_location = self.school_id.company_id.partner_id.city
             self.work_email = self.school_id.company_id.partner_id.email
-#            self.work_phone = self.school_id.company_id.phone or ''
             phone = str(self.school_id.company_id.partner_id.phone)
             self.work_phone = phone
             self.phone_numbers = phone
             phone = str(self.school_id.company_id.partner_id.phone)
-
-#    @api.constrains('standard_id')
-#    def check_standard_id(self):
-#        if self.standard_id:
-#            if (self.standard_id and
-#                self.standard_id.user_id and
-#                self.standard_id.user_id.id != self.id):
-#                raise except_orm(_('Warning'),
-#                                 _(str(self.standard_id.standard_id.name) +
-#                                   ' Course has already assigned\
-#                                   Faculty.\n If you need change the\
-#                                   faculty please change in Course\
-#                                   configuration.'))
-#            self.work_phone = self.school_id.company_id.partner_id.phone

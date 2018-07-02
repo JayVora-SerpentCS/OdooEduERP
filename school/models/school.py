@@ -731,5 +731,4 @@ class Report(models.Model):
                     data.state == 'draft'):
                     raise ValidationError(_('''You cannot print report for
                 student in unconfirm state!'''))
-        res = super(Report, self).render_template(template, values)
-        return res
+        return super(Report, self).render_template(template, values)
