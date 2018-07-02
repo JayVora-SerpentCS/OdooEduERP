@@ -36,7 +36,6 @@
                                 </group>
                             </div>
                         </div>
-<!--                         <div class="oe_right oe_button_box" name="buttons"></div> -->
                         <group>
                             <group string="Student Information">
                                 <field name="student_code" readonly="1" />
@@ -266,7 +265,6 @@
                                 </field>
                             </page>
                         </notebook>
-<!--                         <field name="state" invisible="1" /> -->
                     </sheet>
                 </form>
             </field>
@@ -615,9 +613,6 @@
             <field name="arch" type="xml">
                 <search string="Admission Register">
                     <filter icon="terp-project" string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" />
-<!--                     <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State" /> -->
-<!--                     <filter icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State" /> -->
-<!--                     <filter icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State" /> -->
                     <separator orientation="vertical" />
                     <field name="student_name" invisible="1" />
                     <field name="year" />
@@ -639,7 +634,6 @@
             <field name="name">Admission Register</field>
             <field name="res_model">student.student</field>
             <field name="domain">['|',('state','=','draft'),('state','=','cancel')]</field>
-<!--             <field name="context">{'search_default_state_student': 1}</field> -->
             <field name="view_type">form</field>
             <field name="view_id" ref="view_student_student_form_2" />
             <field name="search_view_id" ref="view_student_student_search_2" />

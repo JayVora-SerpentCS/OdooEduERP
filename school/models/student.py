@@ -5,7 +5,6 @@ import time
 import base64
 from datetime import date, datetime
 from odoo import models, fields, api, tools, _
-from odoo.tools.translate import _
 from odoo.modules import get_module_resource
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
