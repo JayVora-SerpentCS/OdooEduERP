@@ -16,7 +16,7 @@ access_student_manager,student.student,school.model_student_student,library.grou
 access_standard_manager,school.standard,school.model_school_standard,library.group_librarian,1,0,0,0
 access_standard_standard_manager,standard.standard,school.model_standard_standard,library.group_librarian,1,0,0,0
 access_standard_division_manager,standard.division,school.model_standard_division,library.group_librarian,1,0,0,0
-access_account_invoice_manager,account.invoice,account.model_account_invoice,library.group_librarian,1,0,0,0
+access_account_invoice_manager,account.invoice,account.model_account_invoice,library.group_librarian,1,1,1,0
 access_delivery_carrier_manager,delivery.carrier,delivery.model_delivery_carrier,library.group_librarian,1,0,0,0
 access_book_editor_librariean,book.editor,library.model_book_editor,library.group_librarian,1,1,1,1
 access_library_rack_user,library.rack,model_library_rack,library.group_userian,1,1,1,0
@@ -31,7 +31,7 @@ access_book_attachment_user,book.attachment,model_book_attachment,library.group_
 access_product_product_user,product.product,product.model_product_product,library.group_userian,1,0,0,0
 access_stock_move_user,stock.move,stock.model_stock_move,library.group_userian,1,1,1,0
 access_stock_picking_user,stock.picking,stock.model_stock_picking,library.group_userian,1,1,1,0
-access_account_invoice_line_user,account.invoice.line,account.model_account_invoice_line,library.group_userian,1,1,1,0
+access_account_invoice_line_user,account.invoice.line,account.model_account_invoice_line,library.group_userian,1,0,0,0
 access_account_invoice_user,account.invoice,account.model_account_invoice,library.group_userian,1,0,0,0
 access_res_partner_user,res.partner,base.model_res_partner,library.group_userian,1,0,0,0
 access_product_pricelist_user,product.pricelist,product.model_product_pricelist,library.group_userian,1,0,0,0
