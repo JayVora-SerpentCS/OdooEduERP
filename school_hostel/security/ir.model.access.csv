@@ -11,3 +11,4 @@ access_student_hostel_studnet_user,hostel.student,school_hostel.model_hostel_stu
 access_account_invoice_hostel_user,account.invoice,account.model_account_invoice,school_hostel.group_hostel_user,1,0,0,0
 access_student_hostel_room_student,hostel.room,school_hostel.model_hostel_room,school.group_school_student,1,0,0,0
 access_student_hostel_studnet_stu,hostel.student,school_hostel.model_hostel_student,school.group_school_student,1,1,1,0
+access_acctinvoice_hostelmanager,account.invoice.hostelmanager,account.model_account_invoice,school_hostel.group_hostel_manager,1,1,1,0
