@@ -214,6 +214,7 @@ class HostelStudent(models.Model):
                               default='draft')
     hostel_types = fields.Char('Type')
     stud_gender = fields.Char('Gender')
+    active = fields.Boolean('Active', default=True)
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
@@ -227,7 +228,6 @@ class HostelStudent(models.Model):
             rec.status = 'cancel'
             # increase room availability
             rec.room_id.availability += 1
-        return True
 
     @api.onchange('hostel_info_id')
     def onchange_hostel_types(self):
@@ -247,7 +247,6 @@ class HostelStudent(models.Model):
                                          ].next_by_code('hostel.student'
                                                         ) or _('New')
             rec.status = 'reservation'
-        return True
 
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
@@ -293,7 +292,7 @@ class HostelStudent(models.Model):
         curr_date = datetime.now()
         for rec in self:
             rec.status = 'discharge'
-            rec.room_id.availability -= 1
+            rec.room_id.availability += 1
             # set discharge date equal to current date
             rec.acutal_discharge_date = curr_date
 
@@ -307,7 +306,6 @@ class HostelStudent(models.Model):
         student_hostel = self.env['hostel.student'].search(domian)
         if student_hostel:
             for student in student_hostel:
-                student.write({'status': 'discharge'})
                 student.discharge_state()
         return True
 
@@ -319,14 +317,8 @@ class HostelStudent(models.Model):
             invoices = invoice_obj.search([('hostel_student_id', '=', rec.id)
                                            ])
             action = rec.env.ref('account.action_invoice_tree1').read()[0]
-            if len(invoices) > 1:
-                action['domain'] = [('id', 'in', invoices.ids)]
-            elif len(invoices) == 1:
-                action['views'] = [(rec.env.ref('account.invoice_form').id,
-                                    'form')]
-                action['res_id'] = invoices.ids[0]
-            else:
-                action = {'type': 'ir.actions.act_window_close'}
+            action['domain'] = [('id', 'in', invoices.ids or False)]
+            action['context'] = {'create': False}
         return action
 
     @api.multi
@@ -401,3 +393,20 @@ class AccountPayment(models.Model):
                                  'remaining_amount': inv.residual})
                 inv.hostel_student_id.write(vals)
         return res
+
+
+class Student(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''override method to make record of hostel student active false when
+        student is set to alumni'''
+        for rec in self:
+            student_hostel = self.env['hostel.student'].\
+                search([('student_id', '=', rec.id),
+                        ('status', 'in', ['reservation', 'pending', 'paid'])])
+            if student_hostel:
+                student_hostel.update({'active': False})
+                student_hostel.room_id._compute_check_availability()
+        return super(Student, self).set_alumni()

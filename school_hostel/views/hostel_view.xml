@@ -207,6 +207,7 @@
                             <field name="paid_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}" />
                             <field name="acutal_discharge_date" readonly="1"/>
                             <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/>
+                            <field name='active' invisible='1'/>
                         </group>
                     </sheet>
                 </form>
