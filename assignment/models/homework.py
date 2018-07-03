@@ -81,7 +81,7 @@ class SchoolTeacherAssignment(models.Model):
                             'attachfile_format': self.file_format.name}
                 assignment_id = assignment_obj.create(ass_dict)
                 attach = {'name': 'test',
-                          'datas': rec.attached_homework,
+                          'datas': str(rec.attached_homework),
                           'description': 'Assignment attachment',
                           'res_model': 'school.student.assignment',
                           'res_id': assignment_id.id}
@@ -150,6 +150,7 @@ class SchoolStudentAssignment(models.Model):
     attachfile_format = fields.Char("Submission Fileformat")
     submit_assign = fields.Binary("Submit Assignment")
     file_name = fields.Char("File Name")
+    active = fields.Boolean('Active', default=True)
 
     @api.constrains('submit_assign', 'file_name')
     def check_file_format(self):
@@ -206,7 +207,21 @@ class SchoolStudentAssignment(models.Model):
 
 
 class FileFormat(models.Model):
+    _name = "file.format"
 
-        _name = "file.format"
+    name = fields.Char("Name")
 
-        name = fields.Char("Name")
+
+class StudentAssign(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make student assignment active false when
+        student is alumni'''
+        for rec in self:
+            student_assign = self.env['school.student.assignment'].\
+                search([('student_id', '=', rec.id)])
+            for data in student_assign:
+                data.active = False
+        return super(StudentAssign, self).set_alumni()
