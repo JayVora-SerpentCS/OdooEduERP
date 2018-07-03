@@ -469,55 +469,26 @@ class DailyAttendance(models.Model):
         for stud in stud_ids:
             line_vals = {'roll_no': stud.roll_no,
                          'stud_id': stud.id,
-                         'is_present': True}
-            student_leave = self.env['studentleave.request'
-                                     ].search([('state', '=',
-                                                'approve'),
-                                               ('student_id', '=',
-                                                stud.id),
-                                               ('standard_id', '=',
-                                                standard_id),
-                                               ('start_date', '<=',
-                                                date),
-                                               ('end_date', '>=',
-                                                date)
-                                               ])
-            if student_leave:
-                line_vals.update({'is_absent': True})
+                         'is_present': True
+                         }
+            if not vals.get('student_ids')[0][2].get('present_absentcheck'):
+                student_leave = self.env['studentleave.request'
+                                         ].search([('state', '=',
+                                                    'approve'),
+                                                   ('student_id', '=',
+                                                    stud.id),
+                                                   ('standard_id', '=',
+                                                    standard_id),
+                                                   ('start_date', '<=',
+                                                    date),
+                                                   ('end_date', '>=',
+                                                    date)
+                                                   ])
+                if student_leave:
+                    line_vals.update({'is_absent': True})
             student_list.append((0, 0, line_vals))
         vals.update({'student_ids': student_list})
         return super(DailyAttendance, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        student_list = []
-        stud_obj = self.env['student.student']
-        standard_id = vals.get('student_id')
-        date = vals.get('date')
-        stud_ids = stud_obj.search([('standard_id', '=',
-                                     vals.get('standard_id')),
-                                    ('state', '=', 'done')])
-        for stud in stud_ids:
-            line_vals = {'roll_no': stud.roll_no,
-                         'stud_id': stud.id,
-                         'is_present': True}
-            student_leave = self.env['studentleave.request'
-                                     ].search([('state', '=',
-                                                'approve'),
-                                               ('student_id', '=',
-                                                stud.id),
-                                               ('standard_id', '=',
-                                                standard_id),
-                                               ('start_date', '<=',
-                                                date),
-                                               ('end_date', '>=',
-                                                date)
-                                               ])
-            if student_leave:
-                line_vals.update({'is_absent': True})
-            student_list.append((1, self.id, line_vals))
-        vals.update({'student_ids': student_list})
-        return super(DailyAttendance, self).write(vals)
 
     @api.multi
     def attendance_draft(self):
@@ -1053,18 +1024,21 @@ class DailyAttendanceLine(models.Model):
     stud_id = fields.Many2one('student.student', 'Name')
     is_present = fields.Boolean('Present', help="Check if student is present")
     is_absent = fields.Boolean('Absent', help="Check if student is absent")
+    present_absentcheck = fields.Boolean('Present/Absent Boolean')
 
     @api.onchange('is_present')
     def onchange_attendance(self):
         '''Method to make absent false when student is present'''
         if self.is_present:
             self.is_absent = False
+            self.present_absentcheck = True
 
     @api.onchange('is_absent')
     def onchange_absent(self):
         '''Method to make present false when student is absent'''
         if self.is_absent:
             self.is_present = False
+            self.present_absentcheck = True
 
     @api.constrains('is_present', 'is_absent')
     def check_present_absent(self):
