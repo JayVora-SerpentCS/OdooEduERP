@@ -148,17 +148,17 @@ class SchoolEvent(models.Model):
     @api.multi
     def event_close(self):
         '''Method to change state to close'''
-        self.write({'state': 'close'})
+        self.state = 'close'
 
     @api.multi
     def event_draft(self):
         '''Method to change state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def event_cancel(self):
         '''Method to change state to cancel'''
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.model
     def create(self, vals):
@@ -232,7 +232,7 @@ class SchoolEventRegistration(models.Model):
     @api.multi
     def unlink(self):
         for rec in self:
-            if rec.state != 'draft':
+            if rec.state not in ['draft', 'cancel']:
                 raise UserError(_('''You can delete record in unconfirm state
                 only!'''))
         return super(SchoolEventRegistration, self).unlink()
@@ -242,7 +242,8 @@ class SchoolEventRegistration(models.Model):
         student_event = self.search([('part_name_id', '=',
                                       self.part_name_id.id),
                                      ('id', 'not in', self.ids),
-                                     ('state', '=', 'confirm')])
+                                     ('state', '=', 'confirm'),
+                                     ('name', '=', self.name.id)])
         if student_event:
             raise ValidationError(_('''Student is already
                                     registered in this event!'''))
@@ -285,3 +286,19 @@ class StudentStudent(models.Model):
     event_ids = fields.Many2many('school.event.participant',
                                  'student_participants_rel', 'stud_id',
                                  'participant_id', 'Participants')
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to delete event participant and cancel event
+        registration of student when set to alumni'''
+        for rec in self:
+            event_regi = self.env['school.event.registration'].\
+                search([('part_name_id', '=', rec.id)])
+            if event_regi:
+                for rec in event_regi:
+                    rec.state = 'cancel'
+            event_participant = self.env['school.event.participant'].\
+                search([('name', '=', rec.id)])
+            if event_participant:
+                event_participant.unlink()
+        return super(StudentStudent, self).set_alumni()
