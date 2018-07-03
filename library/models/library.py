@@ -109,6 +109,7 @@ class LibraryCard(models.Model):
     duration = fields.Integer('Duration',
                               help="Duration in months")
     end_date = fields.Date('End Date', compute="_compute_end_date", store=True)
+    active = fields.Boolean('Active', default=True)
 
     @api.constrains('student_id', 'teacher_id')
     def check_member_card(self):
@@ -137,7 +138,7 @@ class LibraryCard(models.Model):
 
     @api.multi
     def draft_state(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def unlink(self):
@@ -424,7 +425,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def issue_book(self):
@@ -502,7 +503,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'return'})
+        self.state = 'return'
 
     @api.multi
     def lost_book(self):
@@ -535,7 +536,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.multi
     def user_fine(self):
@@ -584,7 +585,7 @@ class LibraryBookIssue(models.Model):
                                  'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line1))
             new_invoice_id.write({'invoice_line_ids': invoice_line_ids})
-        self.write({'state': 'fine'})
+        self.state = 'fine'
         view_id = self.env.ref('account.invoice_form')
         return {'name': _("New Invoice"),
                 'view_mode': 'form',
@@ -718,7 +719,7 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     def draft_book_request(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def confirm_book_request(self):
@@ -753,7 +754,7 @@ class LibraryBookRequest(models.Model):
                                 })
         else:
             issue_id.write({'state': 'draft'})
-        self.write({'state': 'confirm'})
+        self.state = 'confirm'
         # changes state to confirm
         if issue_id:
             issue_id.onchange_card_issue()
@@ -775,4 +776,20 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     def cancle_book_request(self):
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
+
+
+class StudentLibrary(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make library card of student active false
+        when student is alumni'''
+        lib_card = self.env['library.card']
+        for rec in self:
+            student_card = lib_card.search([('student_id',
+                                             '=', rec.id)])
+            if student_card:
+                student_card.active = False
+        return super(StudentLibrary, self).set_alumni()
