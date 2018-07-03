@@ -357,9 +357,6 @@ class SubjectSubject(models.Model):
     weightage = fields.Integer("WeightAge")
     teacher_ids = fields.Many2many('school.teacher', 'subject_teacher_rel',
                                    'subject_id', 'teacher_id', 'Teachers')
-#    standard_ids = fields.Many2many('standard.standard',
-#                                    'subject_standards_rel',
-#                                    'standard_id', 'subject_id', 'Standards')
     standard_ids = fields.Many2many('standard.standard',
                                     string='Standards')
     standard_id = fields.Many2one('standard.standard', 'Class')
