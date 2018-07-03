@@ -80,11 +80,12 @@ class SchoolEvaluation(models.Model):
                              'State', readonly=True, default='draft')
     username = fields.Many2one('res.users', 'User', readonly=True,
                                default=lambda self: self.env.user)
+    active = fields.Boolean('Active', default=True)
 
     @api.multi
     def set_start(self):
         '''change state to start'''
-        self.write({'state': 'start'})
+        self.state = 'start'
 
     @api.model
     def default_get(self, fields):
@@ -99,24 +100,24 @@ class SchoolEvaluation(models.Model):
     @api.multi
     def set_finish(self):
         '''Change state to finished'''
-        self.write({'state': 'finished'})
+        self.state = 'finished'
 
     @api.multi
     def set_cancel(self):
         '''Change state to cancelled'''
-        self.write({'state': 'cancelled'})
+        self.state = 'cancelled'
 
     @api.multi
     def set_draft(self):
         '''Changes state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def unlink(self):
         for rec in self:
             if rec.state in ['start', 'finished']:
                 raise ValidationError(_('''You can delete record in unconfirm
-                state only.'''))
+                state only!'''))
         return super(SchoolEvaluation, self).unlink()
 
 
@@ -163,3 +164,20 @@ class RatingRating(models.Model):
     point = fields.Integer('Rating in points', required=True,
                            help="Points")
     rating = fields.Char('Remarks', required=True)
+
+
+class StudentExtend(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to set active false student evaluation when
+        student is set to alumni'''
+        for rec in self:
+            student_eval = self.env['school.evaluation'].\
+                search([('type', '=', 'student'),
+                        ('student_id', '=', rec.id)])
+            if student_eval:
+                for data in student_eval:
+                    data.active = False
+        return super(StudentExtend, self).set_alumni()
