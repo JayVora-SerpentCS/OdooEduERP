@@ -27,6 +27,25 @@ class StudentStudent(models.Model):
     _table = "student_student"
     _description = 'Student Information'
 
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Method to get student of parent having group teacher'''
+        teacher_group = self.env.user.has_group('school.group_school_teacher')
+        parent_grp = self.env.user.has_group('school.group_school_parent')
+        login_user = self.env['res.users'].browse(self._uid)
+        name = self._context.get('student_id')
+        if name and teacher_group and parent_grp:
+            parent_login_stud = self.env['school.parent'
+                                         ].search([('partner_id', '=',
+                                                  login_user.partner_id.id)
+                                                   ])
+            childrens = parent_login_stud.student_id
+            args.append(('id', 'in', childrens.ids))
+        return super(StudentStudent, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
+
     @api.depends('date_of_birth')
     def _compute_student_age(self):
         '''Method to calculate student age'''
@@ -226,6 +245,7 @@ class StudentStudent(models.Model):
     teachr_user_grp = fields.Boolean("Teacher Group",
                                      compute="_compute_teacher_user",
                                      )
+    active = fields.Boolean(default=True)
 
     @api.multi
     def set_to_draft(self):
@@ -235,7 +255,15 @@ class StudentStudent(models.Model):
     @api.multi
     def set_alumni(self):
         '''Method to change state to alumni'''
-        self.write({'state': 'alumni'})
+        student_user = self.env['res.users']
+        for rec in self:
+            rec.state = 'alumni'
+            rec.standard_id._compute_total_student()
+            user = student_user.search([('id', '=',
+                                         rec.user_id.id)])
+            rec.active = False
+            if user:
+                user.active = False
 
     @api.multi
     def set_done(self):

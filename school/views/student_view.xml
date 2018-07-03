@@ -667,7 +667,7 @@
         <!-- Action of Alumni state -->
         <record id="action_student_alumni" model="ir.actions.act_window">
             <field name="name">Student Alumni</field>
-            <field name="domain">['|',('state','=','alumni'),('state','=','terminate')]</field>
+            <field name="domain">[('active','=',False)]</field>
             <field name="res_model">student.student</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
     <data>
 
         <!-- search View Of Teahcer's Profiles -->
@@ -150,4 +150,4 @@
 
 
     </data>
-</openerp>
+</odoo>
