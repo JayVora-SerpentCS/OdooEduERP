@@ -19,7 +19,8 @@
              'views/vehicle.xml',
              'views/participants.xml',
              'data/transport_schedular.xml',
-             'wizard/transfer_vehicle.xml'],
+             'wizard/transfer_vehicle.xml',
+             'wizard/terminate_reason_view.xml'],
     'demo': ['demo/transport_demo.xml'],
     'installable': True,
     'application': True
