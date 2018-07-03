@@ -371,6 +371,7 @@
                             <group>
                                 <field name="grade"/>
                                 <field name="result"/>
+                                <field name='active' invisible='1'/>
                             </group>
                         </group>
                     </sheet>
@@ -541,6 +542,7 @@
                         <group col="4" string="Result Information" colspan="4">
                             <field name="obtain_marks"/>
                             <field name="result"/>
+                            <field name='active' invisible='1'/>
                         </group>
                     </sheet>
                 </form>
