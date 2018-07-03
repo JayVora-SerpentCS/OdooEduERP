@@ -13,6 +13,23 @@ class StudentStudent(models.Model):
     exam_results_ids = fields.One2many('exam.result', 'student_id',
                                        'Exam History', readonly=True)
 
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make exam results of student active false
+        when student is alumni'''
+        for rec in self:
+            addexam_result = self.env['additional.exam.result'].\
+                search([('student_id', '=', rec.id)])
+            regular_examresult = self.env['exam.result'].\
+                search([('student_id', '=', rec.id)])
+            if addexam_result:
+                for data in addexam_result:
+                    data.active = False
+            if regular_examresult:
+                for reg in regular_examresult:
+                    reg.active = False
+        return super(StudentStudent, self).set_alumni()
+
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
@@ -219,7 +236,7 @@ class ExamExam(models.Model):
     @api.multi
     def set_to_draft(self):
         '''Method to set state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def set_running(self):
@@ -235,12 +252,12 @@ class ExamExam(models.Model):
     @api.multi
     def set_finish(self):
         '''Method to set state to finish'''
-        self.write({'state': 'finished'})
+        self.state = 'finished'
 
     @api.multi
     def set_cancel(self):
         '''Method to set state to cancel'''
-        self.write({'state': 'cancelled'})
+        self.state = 'cancelled'
 
     @api.multi
     def generate_result(self):
@@ -484,6 +501,7 @@ class ExamResult(models.Model):
                              track_visibility='onchange',
                              default='draft')
     color = fields.Integer('Color')
+    active = fields.Boolean('Active', default=True)
     grade_system = fields.Many2one('grade.master', "Grade System",
                                    help="Grade System selected")
     message_ids = fields.One2many('mail.message', 'res_id', 'Messages',
@@ -679,3 +697,4 @@ class AdditionalExamResult(models.Model):
     obtain_marks = fields.Float('Obtain Marks', help="Marks obtain in exam")
     result = fields.Char(compute='_compute_student_result', string='Result',
                          help="Result Obtained", store=True)
+    active = fields.Boolean('Active', default=True)
