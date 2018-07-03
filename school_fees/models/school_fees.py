@@ -48,7 +48,7 @@ class StudentFeesRegister(models.Model):
     @api.multi
     def fees_register_draft(self):
         '''Changes the state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def fees_register_confirm(self):
@@ -94,7 +94,6 @@ class StudentFeesRegister(models.Model):
                 amount += data.total
             rec.write({'total_amount': amount,
                        'state': 'confirm'})
-        return True
 
 
 class StudentPayslipLine(models.Model):
@@ -187,7 +186,6 @@ class StudentPayslip(models.Model):
         for rec in self:
             rec.invoice_count = inv_obj.search_count([('student_payslip_id',
                                                        '=', rec.id)])
-        return True
 
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
@@ -297,12 +295,12 @@ class StudentPayslip(models.Model):
     @api.multi
     def payslip_draft(self):
         '''Change state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def payslip_paid(self):
         '''Change state to paid'''
-        self.write({'state': 'paid'})
+        self.state = 'paid'
 
     @api.multi
     def payslip_confirm(self):
@@ -541,3 +539,21 @@ class AccountPayment(models.Model):
                             'paid_amount': fees_payment}
                 invoice.student_payslip_id.write(vals)
         return res
+
+
+class StudentFees(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to raise warning when fees payment of student is
+        remaining when student set to alumni state'''
+        for rec in self:
+            student_fees = self.env['student.payslip'].\
+                search([('student_id', '=', rec.id),
+                        ('state', 'in', ['confirm', 'pending'])])
+            if student_fees:
+                raise ValidationError(_('''You cannot alumni student because
+                payment of fees of student is remaining!'''))
+            else:
+                return super(StudentFees, self).set_alumni()
