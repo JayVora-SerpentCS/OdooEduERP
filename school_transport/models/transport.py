@@ -137,7 +137,7 @@ class TransportParticipant(models.Model):
 
     @api.multi
     def set_over(self):
-        self.write({'state': 'over'})
+        self.state = 'over'
 
     @api.multi
     def unlink(self):
@@ -187,12 +187,12 @@ class StudentTransports(models.Model):
     @api.multi
     def transport_open(self):
         '''Method to change state open'''
-        self.write({'state': 'open'})
+        self.state = 'open'
 
     @api.multi
     def transport_close(self):
         '''Method to change state to close'''
-        self.write({'state': 'close'})
+        self.state = 'close'
 
     @api.model
     def participant_expire(self):
@@ -233,6 +233,24 @@ class StudentStudent(models.Model):
 
     transport_ids = fields.Many2many('transport.participant', 'std_transport',
                                      'trans_id', 'stud_id', 'Transport')
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make record of student transport active false
+        when student is set to alumni state'''
+        for rec in self:
+            trans_student = self.env['transport.participant'].\
+                search([('name', '=', rec.id)])
+            trans_regi = self.env['transport.registration'].\
+                search([('part_name', '=', rec.id)])
+            if trans_regi:
+                for data in trans_regi:
+                    data.trans_regi_cancel()
+            if trans_student:
+                for trans_student_rec in trans_student:
+                    trans_student_rec.write({'active': False})
+                    trans_student_rec.vehicle_id._compute_participants()
+        return super(StudentStudent, self).set_alumni()
 
 
 class TransportRegistration(models.Model):
@@ -371,7 +389,7 @@ class TransportRegistration(models.Model):
     @api.multi
     def trans_regi_cancel(self):
         '''Method to set state to cancel'''
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.multi
     def trans_regi_confirm(self):
@@ -476,20 +494,3 @@ class AccountPayment(models.Model):
                             'remain_amt': invoice.residual}
                 invoice.transport_student_id.write(vals)
         return res
-
-
-class StudentExtend(models.Model):
-    _inherit = 'student.student'
-
-    @api.multi
-    def set_alumni(self):
-        '''Override method to make record of student transport active false
-        when student is set to alumni state'''
-        for rec in self:
-            trans_student = self.env['transport.participant'].\
-                search([('name', '=', rec.id)])
-            if trans_student:
-                for trans_student_rec in trans_student:
-                    trans_student_rec.write({'active': False})
-                    trans_student_rec.vehicle_id._compute_participants()
-        return super(StudentExtend, self).set_alumni()
