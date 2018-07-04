@@ -244,12 +244,9 @@ class StudentStudent(models.Model):
             trans_regi = self.env['transport.registration'].\
                 search([('part_name', '=', rec.id)])
             if trans_regi:
-                for data in trans_regi:
-                    data.trans_regi_cancel()
+                trans_regi.write({'state': 'cancel'})
             if trans_student:
-                for trans_student_rec in trans_student:
-                    trans_student_rec.write({'active': False})
-                    trans_student_rec.vehicle_id._compute_participants()
+                trans_student.write({'active': False})
         return super(StudentStudent, self).set_alumni()
 
 
@@ -358,8 +355,14 @@ class TransportRegistration(models.Model):
             invoices = invoice_obj.search([('transport_student_id', '=',
                                             rec.id)])
             action = rec.env.ref('account.action_invoice_tree1').read()[0]
-            action['domain'] = [('id', 'in', invoices.ids or False)]
-            action['context'] = {'create': False}
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
             return action
 
     @api.multi
