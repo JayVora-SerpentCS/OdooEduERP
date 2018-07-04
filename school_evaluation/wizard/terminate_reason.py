@@ -17,6 +17,5 @@ class TerminateReasonEvaluation(models.TransientModel):
             search([('type', '=', 'student'),
                     ('student_id', '=', student_obj.id)])
         if student_eval:
-            for rec in student_eval:
-                rec.active = False
+            student_eval.write({'active': False})
         return super(TerminateReasonEvaluation, self).save_terminate()
