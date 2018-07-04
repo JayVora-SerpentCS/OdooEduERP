@@ -195,7 +195,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <!-- Search View  Of Student Evaluation -->
         <record id="view_teacher_eval_search" model="ir.ui.view">
             <field name="name">schoolteacher.evaluation.search</field>
@@ -215,8 +215,7 @@
                 </search>
             </field>
         </record>
-        
-        
+
          <record id="action_teacher_eval" model="ir.actions.act_window">
             <field name="name">Teacher Evaluation</field>
              <field name="res_model">school.evaluation</field>
@@ -226,7 +225,7 @@
              <field name="context">{'default_type':'faculty'}</field>
              <field name="search_view_id" ref="view_teacher_eval_search"/>
         </record>
-        
+
          <record id="action_teacher_eval_new" model="ir.actions.act_window">
             <field name="name">Teacher Evaluation Finished</field>
              <field name="res_model">school.evaluation</field>
@@ -236,7 +235,7 @@
              <field name="context">{'default_type':'faculty'}</field>
              <field name="search_view_id" ref="view_teacher_eval_search"/>
         </record>
-        
+
         <record id="action_view_teacher_evaluation_tree_new" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_teacher_evaluation_tree" />
@@ -247,7 +246,7 @@
             <field name="view_id" ref="teacher_evaluation_form" />
             <field name="act_window_id" ref="action_teacher_eval_new" />
         </record>
-        
+
         <record id="action_teacher_eval_new_draft" model="ir.actions.act_window">
             <field name="name">Teacher Evaluation New Draft</field>
              <field name="res_model">school.evaluation</field>
@@ -257,7 +256,7 @@
              <field name="context">{'default_type':'faculty'}</field>
              <field name="search_view_id" ref="view_teacher_eval_search"/>
         </record>
-        
+
         <record id="action_view_teacher_evaluation_tree_new_draft" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_teacher_evaluation_tree" />
@@ -268,7 +267,7 @@
             <field name="view_id" ref="teacher_evaluation_form" />
             <field name="act_window_id" ref="action_teacher_eval_new_draft" />
         </record>
-        
+
         <!-- Student Evaluation Template Search View -->
         <record id="view_student_eval_temp_search" model="ir.ui.view">
             <field name="name">school.evaluation.template.search</field>
@@ -414,7 +413,7 @@
             <field name="domain">[('type','=','student'),('state','=','finished')]</field>
             <field name="context">{'default_type':'student'}</field>
         </record>
-        
+
         <!-- Actions View of the School Student Tree View -->
         <record id="action_view_student_evaluation_tree_finished" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -428,7 +427,7 @@
             <field name="view_id" ref="view_student_evaluation_form" />
             <field name="act_window_id" ref="action_student_eval_finished" />
         </record>
-        
+
         <record id="action_student_eval_draft" model="ir.actions.act_window">
             <field name="name">Student Evaluation Draft</field>
             <field name="res_model">school.evaluation</field>
@@ -437,7 +436,7 @@
             <field name="domain">[('type','=','student'),('state','=','draft')]</field>
             <field name="context">{'default_type':'student'}</field>
         </record>
-        
+
         <!-- Actions View of the School Student Tree View -->
         <record id="action_view_student_evaluation_tree_draft" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -451,7 +450,7 @@
             <field name="view_id" ref="view_student_evaluation_form" />
             <field name="act_window_id" ref="action_student_eval_draft" />
         </record>
-        
+
         <!-- Menu Items of Student and Teacher Evaluation -->
         <menuitem id="menu_stu_eval" name="Evaluations" parent="school.menu_ems" sequence="8"/>
         <menuitem id="menu_evals" name="Student Evaluation" parent="menu_stu_eval" action="action_student_eval"
