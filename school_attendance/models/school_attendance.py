@@ -136,19 +136,19 @@ class StudentleaveRequest(models.Model):
 
     @api.multi
     def approve_state(self):
-        self.write({'state': 'approve'})
+        self.state = 'approve'
 
     @api.multi
     def draft_state(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def toapprove_state(self):
-        self.write({'state': 'toapprove'})
+        self.state = 'toapprove'
 
     @api.multi
     def reject_state(self):
-        self.write({'state': 'reject'})
+        self.state = 'reject'
 
     @api.depends('start_date', 'end_date')
     def _compute_days(self):
@@ -580,7 +580,7 @@ class DailyAttendance(models.Model):
                     elif date.day == 31:
                         dic = {'three_1': False}
                     attendance_id.write(dic)
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
@@ -1008,7 +1008,7 @@ class DailyAttendance(models.Model):
                             val = {}
                         if search_id:
                             search_id.write(val)
-        self.write({'state': 'validate'})
+        self.state = 'validate'
         return True
 
 
