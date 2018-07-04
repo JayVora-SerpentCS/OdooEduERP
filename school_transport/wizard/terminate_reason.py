@@ -2,8 +2,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 
-from odoo import models, fields, api,_
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api
 
 
 class TerminateReasonTransport(models.TransientModel):
@@ -17,8 +16,8 @@ class TerminateReasonTransport(models.TransientModel):
         student = self._context.get('active_id')
         student_obj = self.env['student.student'].browse(student)
         student_transport = self.env['transport.registration'].\
-        search([('part_name', '=', student_obj.id),
-                ('state', 'in', ['confirm', 'pending', 'paid'])])
+            search([('part_name', '=', student_obj.id),
+                    ('state', 'in', ['confirm', 'pending', 'paid'])])
         transport_msg = ''
         if student_transport:
             for rec in student_transport:

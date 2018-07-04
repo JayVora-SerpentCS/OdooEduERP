@@ -122,23 +122,20 @@
             <field name="model">transport.participant</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                <field name="name"/>
-                <field name="transport_id"/>
-                <field name="point_id"/>
-                <group string="Filter">
-                    <filter string="Running" name="state_running" domain="[('state','=','running')]"/>
-                    <filter string="Over" domain="[('state','=','over')]"/>
-                </group>
-                <newline/>
-                <group expand="1" string="Group By">
-                    <filter string="Name" context="{'group_by':'name'}"/>
-                    <filter string="Root"
-                            context="{'group_by':'transport_id'}"/>
-                    <filter string="Root Point"
-                            context="{'group_by':'point_id'}"/>
-                    <filter string="State"
-                            context="{'group_by':'state'}"/>
-                </group>
+                  <field name="name"/>
+                  <field name="transport_id"/>
+                  <field name="point_id"/>
+                  <group string="Filter">
+                        <filter string="Running" name="state_running" domain="[('state','=','running')]"/>
+                        <filter string="Over" domain="[('state','=','over')]"/>
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By">
+                       <filter string="Name" context="{'group_by':'name'}"/>
+                       <filter string="Root" context="{'group_by':'transport_id'}"/>
+                       <filter string="Root Point" context="{'group_by':'point_id'}"/>
+                       <filter string="State" context="{'group_by':'state'}"/>
+                   </group>
                 </search>
             </field>
         </record>
@@ -152,7 +149,7 @@
                     <field name="amount"/>
                 </tree>
             </field>
-        </record>
+       </record>
        <!-- Form View Of Transport Point -->
        <record id="transport_point_form1" model="ir.ui.view">
             <field name="name">transport.point.form</field>
@@ -183,7 +180,7 @@
                     </group>
                 </search>
             </field>
-        </record>
+       </record>
        <!-- Tree View Of Transport Information -->
        <record id="view_student_transport_tree" model="ir.ui.view">
             <field name="name">transport.tree</field>
