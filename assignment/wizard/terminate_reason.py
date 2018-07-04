@@ -17,6 +17,5 @@ class TerminateReasonAssignment(models.TransientModel):
         student_assignment = self.env['school.student.assignment'].\
             search([('student_id', '=', student_obj.id)])
         if student_assignment:
-            for rec in student_assignment:
-                rec.active = False
+            student_assignment.update({'active': False})
         return super(TerminateReasonAssignment, self).save_terminate()

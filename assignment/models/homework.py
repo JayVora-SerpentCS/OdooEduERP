@@ -81,7 +81,7 @@ class SchoolTeacherAssignment(models.Model):
                             'attachfile_format': self.file_format.name}
                 assignment_id = assignment_obj.create(ass_dict)
                 attach = {'name': 'test',
-                          'datas': str(rec.attached_homework),
+                          'datas': rec.attached_homework,
                           'description': 'Assignment attachment',
                           'res_model': 'school.student.assignment',
                           'res_id': assignment_id.id}
@@ -222,6 +222,6 @@ class StudentAssign(models.Model):
         for rec in self:
             student_assign = self.env['school.student.assignment'].\
                 search([('student_id', '=', rec.id)])
-            for data in student_assign:
-                data.active = False
+            if student_assign:
+                student_assign.write({'active': False})
         return super(StudentAssign, self).set_alumni()
