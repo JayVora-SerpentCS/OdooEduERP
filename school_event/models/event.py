@@ -219,7 +219,7 @@ class SchoolEventRegistration(models.Model):
                       ('name', '=', prt_data.id)]
             stu_prt_data = event_part_obj.search(domain)
             stu_prt_data.sudo().unlink()
-            rec.write({'state': 'cancel'})
+            rec.state = 'cancel'
 
     @api.constrains('name')
     def check_event_state(self):
