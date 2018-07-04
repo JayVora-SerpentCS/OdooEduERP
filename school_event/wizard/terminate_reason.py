@@ -15,8 +15,7 @@ class TerminateReasonEvent(models.TransientModel):
         event_regi = self.env['school.event.registration'].\
             search([('part_name_id', '=', student_obj.id)])
         if event_regi:
-            for rec in event_regi:
-                rec.state = 'cancel'
+            event_regi.write({'state': 'cancel'})
         event_participant = self.env['school.event.participant'].\
             search([('name', '=', student_obj.id)])
         if event_participant:
