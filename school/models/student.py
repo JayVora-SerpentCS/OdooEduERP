@@ -250,7 +250,7 @@ class StudentStudent(models.Model):
     @api.multi
     def set_to_draft(self):
         '''Method to change state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def set_alumni(self):
@@ -268,20 +268,20 @@ class StudentStudent(models.Model):
     @api.multi
     def set_done(self):
         '''Method to change state to done'''
-        self.write({'state': 'done'})
+        self.state = 'done'
 
     @api.multi
     def admission_draft(self):
         '''Set the state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def set_terminate(self):
-        self.write({'state': 'terminate'})
+        self.state = 'terminate'
 
     @api.multi
     def cancel_admission(self):
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.multi
     def admission_done(self):

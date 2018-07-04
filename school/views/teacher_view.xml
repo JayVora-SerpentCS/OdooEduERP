@@ -134,7 +134,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!-- Action View Of school teacher-->
 
         <record id="action_school_teacher_form" model="ir.actions.act_window">
@@ -143,11 +143,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
         <menuitem id="teacher_profile_menu" name="Teachers" action="action_school_teacher_form" 
                   parent="menu_students_parents" sequence="32"
                   groups="school.group_school_administration,school.group_school_teacher"/>
-
 
     </data>
 </odoo>
