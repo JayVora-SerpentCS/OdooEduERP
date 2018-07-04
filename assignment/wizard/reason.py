@@ -17,4 +17,3 @@ class RejectReason(models.TransientModel):
             if student:
                 student.write({'state': 'reject',
                                'rejection_reason': rec.reasons or ''})
-        return True

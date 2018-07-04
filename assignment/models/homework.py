@@ -92,7 +92,7 @@ class SchoolTeacherAssignment(models.Model):
     @api.multi
     def done_assignments(self):
         '''Changes the state to done'''
-        self.write({'state': 'done'})
+        self.state = 'done'
 
     @api.multi
     def unlink(self):
@@ -177,7 +177,7 @@ class SchoolStudentAssignment(models.Model):
         '''This method change state as active'''
         if not self.attached_homework:
             raise ValidationError(_('''Kindly attach homework!'''))
-        self.write({'state': 'active'})
+        self.state = 'active'
 
     @api.multi
     def done_assignment(self):
@@ -188,7 +188,7 @@ class SchoolStudentAssignment(models.Model):
         if self.submission_type == 'softcopy' and not self.submit_assign:
             raise ValidationError(_('''You have not attached the homework!
             Please attach the homework!'''))
-        self.write({'state': 'done'})
+        self.state = 'done'
 
     @api.multi
     def reassign_assignment(self):
