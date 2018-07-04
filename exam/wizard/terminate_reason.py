@@ -19,9 +19,7 @@ class TerminateReasonExam(models.TransientModel):
         regular_examresult = self.env['exam.result'].\
             search([('student_id', '=', student_obj.id)])
         if addexam_result:
-            for data in addexam_result:
-                data.active = False
+            addexam_result.write({'active': False})
         if regular_examresult:
-            for reg in regular_examresult:
-                reg.active = False
+            regular_examresult.write({'active': False})
         return super(TerminateReasonExam, self).save_terminate()
