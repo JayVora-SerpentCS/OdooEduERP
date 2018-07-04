@@ -323,8 +323,14 @@ class HostelStudent(models.Model):
             invoices = invoice_obj.search([('hostel_student_id', '=', rec.id)
                                            ])
             action = rec.env.ref('account.action_invoice_tree1').read()[0]
-            action['domain'] = [('id', 'in', invoices.ids or False)]
-            action['context'] = {'create': False}
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
         return action
 
     @api.multi
