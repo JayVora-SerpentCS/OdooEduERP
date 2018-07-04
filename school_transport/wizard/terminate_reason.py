@@ -19,11 +19,10 @@ class TerminateReasonTransport(models.TransientModel):
             search([('part_name', '=', student_obj.id),
                     ('state', 'in', ['confirm', 'pending', 'paid'])])
         transport_msg = ''
-        if student_transport:
-            for rec in student_transport:
-                transport_msg += '\nStudent is registered for the root' + ' '\
-                    + rec.name.name + ' ' + 'the vehicle number is' + ' ' +\
-                    rec.vehicle_id.vehicle + ' and point number is ' +\
-                    rec.point_id.name
+        for rec in student_transport:
+            transport_msg += '\nStudent is registered for the root' + ' '\
+                + rec.name.name + ' ' + 'the vehicle number is' + ' ' +\
+                rec.vehicle_id.vehicle + ' and point number is ' +\
+                rec.point_id.name
         res.update({'transport_info': transport_msg})
         return res
