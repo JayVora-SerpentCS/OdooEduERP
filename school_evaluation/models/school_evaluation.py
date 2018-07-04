@@ -178,6 +178,5 @@ class StudentExtend(models.Model):
                 search([('type', '=', 'student'),
                         ('student_id', '=', rec.id)])
             if student_eval:
-                for data in student_eval:
-                    data.active = False
+                student_eval.write({'active': False})
         return super(StudentExtend, self).set_alumni()
