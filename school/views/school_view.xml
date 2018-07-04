@@ -913,7 +913,7 @@
                 </search>
             </field>
         </record>
-        
+
         <!-- Action Of Form, Tree & Kanban Views Of Student News -->
         <record id="view_student_news" model="ir.actions.act_window">
             <field name="name">Noticeboard</field>

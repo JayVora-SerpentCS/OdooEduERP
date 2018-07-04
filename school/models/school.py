@@ -103,7 +103,6 @@ class AcademicYear(models.Model):
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
                 raise ValidationError(_('''Error! You cannot define overlapping
                                           academic years.'''))
-        return True
 
     @api.constrains('current')
     def check_current_year(self):
