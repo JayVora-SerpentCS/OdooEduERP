@@ -118,6 +118,12 @@ class HostelRoom(models.Model):
                          'check(student_per_room < 10)',
                          'Error ! Student per room should be less than 10.')]
 
+    @api.constrains('rent_amount')
+    def _check_rent_amount(self):
+        if self.rent_amount < 0:
+            raise ValidationError(_('''Rent Amount Per Month should not
+            be a negative value!'''))
+
 
 class HostelStudent(models.Model):
     _name = 'hostel.student'
@@ -219,7 +225,7 @@ class HostelStudent(models.Model):
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
                          'Error ! Discharge Date cannot be set'
-                         'before Admission Date.')]
+                         'before Admission Date!')]
 
     @api.multi
     def cancel_state(self):
