@@ -16,7 +16,6 @@ class SchoolEvaluation(models.Model):
     def get_record(self):
         '''Method to get the evaluation questions'''
         eval_temp_obj = self.env['school.evaluation.template']
-#        eval_list = []
         for rec in self:
             eval_list = []
             eval_temps = eval_temp_obj.search([('type', '=', rec.type)])
