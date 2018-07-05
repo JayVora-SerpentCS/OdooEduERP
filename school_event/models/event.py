@@ -275,7 +275,7 @@ class SchoolEventRegistration(models.Model):
             part_id = event_part_obj.sudo().create(vals)
             rec.name.sudo().write({'part_ids': [(4, part_id.id)]})
             rec.part_name_id.sudo().write({'event_ids': [(4, part_id.id)]})
-            rec.write({'state': 'confirm'})
+            rec.state = 'confirm'
 
 
 class StudentStudent(models.Model):
