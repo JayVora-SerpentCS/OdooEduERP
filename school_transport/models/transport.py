@@ -40,6 +40,11 @@ class TransportPoint(models.Model):
     name = fields.Char('Point Name', required=True)
     amount = fields.Float('Amount', default=0.0)
 
+    @api.constrains('amount')
+    def _check_point_amount(self):
+        if self.amount < 0:
+            raise ValidationError(_('''Amount cannot be negative value!'''))
+
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
@@ -376,6 +381,7 @@ class TransportRegistration(models.Model):
     @api.onchange('point_id')
     def onchange_point_id(self):
         '''Method to get amount of point selected'''
+        self.m_amount = False
         if self.point_id:
             self.m_amount = self.point_id.amount or 0.0
 
@@ -409,7 +415,7 @@ class TransportRegistration(models.Model):
             # First Check Is there vacancy or not
             person = int(rec.vehicle_id.participant) + 1
             if rec.vehicle_id.capacity < person:
-                raise UserError(_('There is No More vacancy on this vehicle.'))
+                raise UserError(_('There is No More vacancy on this vehicle!'))
 
             rec.write({'state': 'confirm',
                        'remain_amt': rec.transport_fees})
