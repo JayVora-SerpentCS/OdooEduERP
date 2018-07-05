@@ -94,6 +94,7 @@ class StudentFeesRegister(models.Model):
                 amount += data.total
             rec.write({'total_amount': amount,
                        'state': 'confirm'})
+        return True
 
 
 class StudentPayslipLine(models.Model):
@@ -186,6 +187,7 @@ class StudentPayslip(models.Model):
         for rec in self:
             rec.invoice_count = inv_obj.search_count([('student_payslip_id',
                                                        '=', rec.id)])
+        return True
 
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
@@ -341,8 +343,14 @@ class StudentPayslip(models.Model):
             invoices = invoice_obj.search([('student_payslip_id', '=',
                                             rec.id)])
             action = rec.env.ref('account.action_invoice_tree1').read()[0]
-            action['domain'] = [('id', 'in', invoices.ids or False)]
-            action['context'] = {'create': False}
+            if len(invoices) > 1:
+                action['domain'] = [('id', 'in', invoices.ids)]
+            elif len(invoices) == 1:
+                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                                    'form')]
+                action['res_id'] = invoices.ids[0]
+            else:
+                action = {'type': 'ir.actions.act_window_close'}
         return action
 
     @api.multi
@@ -437,6 +445,7 @@ class StudentPayslip(models.Model):
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
+        return True
 
     @api.multi
     def student_pay_fees(self):
