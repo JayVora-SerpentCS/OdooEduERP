@@ -419,6 +419,6 @@ class Student(models.Model):
                 search([('student_id', '=', rec.id),
                         ('status', 'in', ['reservation', 'pending', 'paid'])])
             if student_hostel:
-                student_hostel.write({'active': False})
+                student_hostel.active = False
                 student_hostel.room_id._compute_check_availability()
         return super(Student, self).set_alumni()

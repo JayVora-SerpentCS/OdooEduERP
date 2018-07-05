@@ -37,6 +37,6 @@ class TerminateReasonHostel(models.TransientModel):
             search([('student_id', '=', student_obj.id),
                     ('status', 'in', ['reservation', 'pending', 'paid'])])
         if student_hostel:
-            student_hostel.update({'active': False})
+            student_hostel.active = False
             student_hostel.room_id._compute_check_availability()
         return super(TerminateReasonHostel, self).save_terminate()
