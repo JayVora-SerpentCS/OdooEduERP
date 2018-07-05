@@ -16,7 +16,7 @@ class SchoolEvaluation(models.Model):
     def get_record(self):
         '''Method to get the evaluation questions'''
         eval_temp_obj = self.env['school.evaluation.template']
-        eval_list = []
+#        eval_list = []
         for rec in self:
             eval_list = []
             eval_temps = eval_temp_obj.search([('type', '=', rec.type)])
@@ -127,6 +127,7 @@ class StudentEvaluationLine(models.Model):
     @api.onchange('point_id')
     def onchange_point(self):
         '''Method to get rating point based on rating'''
+        self.rating = False
         if self.point_id:
             self.rating = self.point_id.rating
 
