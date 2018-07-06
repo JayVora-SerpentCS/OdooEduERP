@@ -29,12 +29,26 @@ class SchoolTeacher(models.Model):
     department_id = fields.Many2one('hr.department', 'Department')
     job_id = fields.Many2one('hr.job', 'Job Title')
     is_parent = fields.Boolean('Is Parent')
-    stu_parent_id = fields.Many2one('school.parent', 'Parent ref')
+    stu_parent_id = fields.Many2one('school.parent', 'Related Parent')
     student_id = fields.Many2many('student.student',
                                   'students_teachers_parent_rel',
                                   'teacher_id', 'student_id',
                                   'Children')
     phone_numbers = fields.Char("Phone Number")
+
+    @api.onchange('is_parent')
+    def _onchange_isparent(self):
+        if self.is_parent:
+            self.stu_parent_id = False
+            self.student_id = [(6, 0, [])]
+
+    @api.onchange('stu_parent_id')
+    def _onchangestudent_parent(self):
+        stud_list = []
+        if self.stu_parent_id and self.stu_parent_id.student_id:
+            for student in self.stu_parent_id.student_id:
+                stud_list.append(student.id)
+            self.student_id = [(6, 0, stud_list)]
 
     @api.model
     def create(self, vals):
@@ -98,6 +112,8 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('address_id')
     def onchange_address_id(self):
+        self.work_phone = False
+        self.mobile_phone = False
         if self.address_id:
             self.work_phone = self.address_id.phone,
             self.mobile_phone = self.address_id.mobile
@@ -118,6 +134,11 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('school_id')
     def onchange_school(self):
+        self.address_id = False
+        self.mobile_phone = False
+        self.work_location = False
+        self.work_email = False
+        self.work_phone = False
         if self.school_id:
             self.address_id = self.school_id.company_id.partner_id.id
             self.mobile_phone = self.school_id.company_id.partner_id.mobile
