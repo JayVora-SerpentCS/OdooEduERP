@@ -102,6 +102,7 @@ class ExtendedTimeTableLine(models.Model):
     def onchange_date_day(self):
         '''Method to get weekday from date'''
         for rec in self:
+            rec.day_of_week = False
             if rec.exm_date:
                 week_day = datetime.strptime(rec.exm_date, "%Y-%m-%d")
                 rec.day_of_week = week_day.strftime("%A").title()
@@ -147,7 +148,7 @@ class ExtendedTimeTableLine(models.Model):
                             self.table_id.timetable_type == 'exam' and
                             self.class_room_id == record.class_room_id and
                             self.start_time == record.start_time):
-                            raise ValidationError(_("The room is occupied!."))
+                            raise ValidationError(_("The room is occupied!"))
 
     @api.constrains('subject_id', 'class_room_id')
     def check_exam_date(self):
@@ -459,12 +460,14 @@ class ExamResult(models.Model):
         for rec in self:
             if rec.state != 'draft':
                 raise ValidationError(_('''You can delete record in unconfirm
-                state only!.'''))
+                state only!'''))
         return super(ExamResult, self).unlink()
 
     @api.onchange('student_id')
     def onchange_student(self):
         '''Method to get standard and roll no of student selected'''
+        self.standard_id = False
+        self.roll_no_id = False
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.roll_no_id = self.student_id.roll_no
@@ -539,7 +542,7 @@ class ExamResult(models.Model):
     @api.multi
     def re_evaluation_confirm(self):
         '''Method to change state to re_evaluation_confirm'''
-        self.write({'state': 're-evaluation_confirm'})
+        self.state = 're-evaluation_confirm'
 
     @api.multi
     def result_re_evaluation(self):
@@ -570,7 +573,7 @@ class ExamResult(models.Model):
                 history_obj.write(vals)
             elif not history:
                 history_obj.create(vals)
-            rec.write({'state': 'done'})
+            rec.state = 'done'
 
 
 class ExamGradeLine(models.Model):
@@ -594,13 +597,13 @@ class ExamSubject(models.Model):
         '''Method to validate marks'''
         if self.obtain_marks > self.maximum_marks:
             raise ValidationError(_('''The obtained marks
-            should not extend maximum marks!.'''))
+            should not extend maximum marks!'''))
         if self.minimum_marks > self.maximum_marks:
             raise ValidationError(_('''The minimum marks
-            should not extend maximum marks!.'''))
+            should not extend maximum marks!'''))
         if(self.marks_reeval > self.maximum_marks):
             raise ValidationError(_('''The revaluation marks
-            should not extend maximum marks!.'''))
+            should not extend maximum marks!'''))
 
     @api.depends('exam_id', 'obtain_marks', 'marks_reeval')
     def _compute_grade(self):
@@ -680,7 +683,7 @@ class AdditionalExamResult(models.Model):
     def _validate_obtain_marks(self):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
             raise ValidationError(_('''The obtained marks should not extend
-                                    maximum marks!.'''))
+                                    maximum marks!'''))
 
     a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
                                 required=True,
