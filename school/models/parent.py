@@ -61,5 +61,6 @@ class SchoolParent(models.Model):
 
     @api.onchange('state_id')
     def onchange_state(self):
+        self.country_id = False
         if self.state_id:
             self.country_id = self.state_id.country_id.id
