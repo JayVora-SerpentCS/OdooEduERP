@@ -78,6 +78,12 @@ class StudentStudent(models.Model):
         if vals.get('email'):
             school.emailvalidation(vals.get('email'))
         res = super(StudentStudent, self).create(vals)
+        teacher = self.env['school.teacher']
+        for data in res.parent_id:
+            teacher_rec = teacher.search([('stu_parent_id',
+                                           '=', data.id)])
+            for record in teacher_rec:
+                record.write({'student_id': [(4, res.id)]})
         # Assign group to student based on condition
         emp_grp = self.env.ref('base.group_user')
         if res.state == 'draft':
@@ -89,6 +95,17 @@ class StudentStudent(models.Model):
             group_list = [done_student.id, emp_grp.id]
             res.user_id.write({'groups_id': [(6, 0, group_list)]})
         return res
+
+    @api.multi
+    def write(self, vals):
+        teacher = self.env['school.teacher']
+        if vals.get('parent_id'):
+            for parent in vals.get('parent_id')[0][2]:
+                teacher_rec = teacher.search([('stu_parent_id',
+                                               '=', parent)])
+                for data in teacher_rec:
+                    data.write({'student_id': [(4, self.id)]})
+        return super(StudentStudent, self).write(vals)
 
     @api.model
     def _get_default_image(self, is_company, colorize=False):
