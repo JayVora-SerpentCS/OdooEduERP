@@ -627,7 +627,7 @@ class LibraryBookIssue(models.Model):
                                  'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line3))
             new_invoice_id.write({'invoice_line_ids': invoice_line_ids})
-        self.write({'state': 'pending'})
+        self.state = 'pending'
         view_id = self.env.ref('account.invoice_form')
         return {'name': _("New Invoice"),
                 'view_mode': 'form',

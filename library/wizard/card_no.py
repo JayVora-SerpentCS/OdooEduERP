@@ -18,7 +18,7 @@ class CardNumber(models.TransientModel):
             domain = [('card_id', '=', rec.card_id.id)]
             search_card_ids = lib_book_obj.search(domain)
             if not search_card_ids:
-                raise UserError(_('Invalid Card Number.'))
+                raise UserError(_('Invalid Card Number!'))
             else:
                 return {'type': 'ir.actions.act_window',
                         'res_model': 'book.name',
