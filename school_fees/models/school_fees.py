@@ -48,7 +48,7 @@ class StudentFeesRegister(models.Model):
     @api.multi
     def fees_register_draft(self):
         '''Changes the state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def fees_register_confirm(self):
@@ -58,9 +58,9 @@ class StudentFeesRegister(models.Model):
         school_std_obj = self.env['school.standard']
         for rec in self:
             if not rec.journal_id:
-                raise ValidationError(_('Kindly, Select Account Journal'))
+                raise ValidationError(_('Kindly, Select Account Journal!'))
             if not rec.fees_structure:
-                raise ValidationError(_('Kindly, Select Fees Structure'))
+                raise ValidationError(_('Kindly, Select Fees Structure!'))
             school_std = school_std_obj.search([('standard_id', '=',
                                                  rec.standard_id.id)])
             student_ids = stud_obj.search([('standard_id', 'in',
@@ -187,7 +187,6 @@ class StudentPayslip(models.Model):
         for rec in self:
             rec.invoice_count = inv_obj.search_count([('student_payslip_id',
                                                        '=', rec.id)])
-        return True
 
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
@@ -242,6 +241,9 @@ class StudentPayslip(models.Model):
     @api.onchange('student_id')
     def onchange_student(self):
         '''Method to get standard , division , medium of student selected'''
+        self.standard_id = False
+        self.division_id = False
+        self.medium_id = False
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.division_id = self.student_id.standard_id.division_id.id
@@ -297,14 +299,12 @@ class StudentPayslip(models.Model):
     @api.multi
     def payslip_draft(self):
         '''Change state to draft'''
-        self.write({'state': 'draft'})
-        return True
+        self.state = 'draft'
 
     @api.multi
     def payslip_paid(self):
         '''Change state to paid'''
-        self.write({'state': 'paid'})
-        return True
+        self.state = 'paid'
 
     @api.multi
     def payslip_confirm(self):
@@ -336,7 +336,6 @@ class StudentPayslip(models.Model):
                        'due_amount': amount,
                        'currency_id': rec.company_id.currency_id.id or False
                        })
-        return True
 
     @api.multi
     def invoice_view(self):
@@ -366,6 +365,13 @@ class StudentPayslip(models.Model):
                 raise UserError(_('Please define sequence on'
                                   'the journal related to this'
                                   'invoice.'))
+            if fees.journal_id.centralisation:
+                raise UserError(_('You cannot create an invoice on a'
+                                  'centralized'
+                                  'journal. UnCheck the centralized'
+                                  'counterpart'
+                                  'box in the related journal from the'
+                                  'configuration menu.'))
             if fees.move_id:
                 continue
             ctx = self._context.copy()
@@ -387,13 +393,6 @@ class StudentPayslip(models.Model):
                 account_id = fees.student_id.property_account_receivable.id
                 cmp_id = fees.company_id.partner_id
                 comapny_ac_id = cmp_id.property_account_payable.id
-            if fees.journal_id.centralisation:
-                raise UserError(_('You cannot create an invoice on a'
-                                  'centralized'
-                                  'journal. UnCheck the centralized'
-                                  'counterpart'
-                                  'box in the related journal from the'
-                                  'configuration menu.'))
             move = {'ref': fees.name,
                     'journal_id': fees.journal_id.id,
                     'date': fees.payment_date or time.strftime('%Y-%m-%d')}
@@ -448,7 +447,6 @@ class StudentPayslip(models.Model):
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
-        return True
 
     @api.multi
     def student_pay_fees(self):
@@ -458,7 +456,7 @@ class StudentPayslip(models.Model):
                 rec.number = self.env['ir.sequence'
                                       ].next_by_code('student.payslip'
                                                      ) or _('New')
-            rec.write({'state': 'pending'})
+            rec.state = 'pending'
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
                     'date_invoice': rec.date,
@@ -551,3 +549,20 @@ class AccountPayment(models.Model):
                             'paid_amount': fees_payment}
                 invoice.student_payslip_id.write(vals)
         return res
+
+
+class StudentFees(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to raise warning when fees payment of student is
+        remaining when student set to alumni state'''
+        for rec in self:
+            student_fees = self.env['student.payslip'].\
+                search([('student_id', '=', rec.id),
+                        ('state', 'in', ['confirm', 'pending'])])
+            if student_fees:
+                raise ValidationError(_('''You cannot alumni student because
+                payment of fees of student is remaining!'''))
+            return super(StudentFees, self).set_alumni()
