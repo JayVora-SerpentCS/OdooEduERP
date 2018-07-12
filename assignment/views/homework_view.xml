@@ -154,6 +154,7 @@
                         </group>
                         <field name="teacher_assignment_id" invisible="1"/>
                         <field name="student_standard" invisible="1"/>
+                        <field name='active' invisible='1'/>
                    </sheet>
                 </form>
             </field>

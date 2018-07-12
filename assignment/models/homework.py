@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -92,7 +91,7 @@ class SchoolTeacherAssignment(models.Model):
     @api.multi
     def done_assignments(self):
         '''Changes the state to done'''
-        self.write({'state': 'done'})
+        self.state = 'done'
 
     @api.multi
     def unlink(self):
@@ -150,6 +149,7 @@ class SchoolStudentAssignment(models.Model):
     attachfile_format = fields.Char("Submission Fileformat")
     submit_assign = fields.Binary("Submit Assignment")
     file_name = fields.Char("File Name")
+    active = fields.Boolean('Active', default=True)
 
     @api.constrains('submit_assign', 'file_name')
     def check_file_format(self):
@@ -176,7 +176,7 @@ class SchoolStudentAssignment(models.Model):
         '''This method change state as active'''
         if not self.attached_homework:
             raise ValidationError(_('''Kindly attach homework!'''))
-        self.write({'state': 'active'})
+        self.state = 'active'
 
     @api.multi
     def done_assignment(self):
@@ -187,7 +187,7 @@ class SchoolStudentAssignment(models.Model):
         if self.submission_type == 'softcopy' and not self.submit_assign:
             raise ValidationError(_('''You have not attached the homework!
             Please attach the homework!'''))
-        self.write({'state': 'done'})
+        self.state = 'done'
 
     @api.multi
     def reassign_assignment(self):
@@ -206,7 +206,21 @@ class SchoolStudentAssignment(models.Model):
 
 
 class FileFormat(models.Model):
+    _name = "file.format"
 
-        _name = "file.format"
+    name = fields.Char("Name")
 
-        name = fields.Char("Name")
+
+class StudentAssign(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make student assignment active false when
+        student is alumni'''
+        for rec in self:
+            student_assign = self.env['school.student.assignment'].\
+                search([('student_id', '=', rec.id)])
+            if student_assign:
+                student_assign.write({'active': False})
+        return super(StudentAssign, self).set_alumni()
