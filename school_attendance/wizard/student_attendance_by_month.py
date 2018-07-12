@@ -1,8 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
 
 
 class StudentAttendanceByMonth(models.TransientModel):
