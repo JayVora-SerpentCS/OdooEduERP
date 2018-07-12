@@ -299,8 +299,8 @@
                     <field name="user_id" />
                     <field name="standard_id" />
                     <field name="student_ids">
-	                    <field name="roll_no" />
-	                    <field name="stud_id" />
+                        <field name="roll_no" />
+                        <field name="stud_id" />
                     </field>
                 </tree>
             </field>
