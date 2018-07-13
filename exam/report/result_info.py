@@ -1,8 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import models, api, _
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
 
 
 class ReportResultInfo(models.AbstractModel):
@@ -22,14 +21,14 @@ class ReportResultInfo(models.AbstractModel):
         list_result = []
         for sub_id in result_id:
             for sub in sub_id.result_ids:
-                std_id = sub_id.standard_id.standard_id.name
-                list_result.append({'standard_id': std_id,
-                                    'name': sub.subject_id.name,
-                                    'code': sub.subject_id.code,
-                                    'maximum_marks': sub.maximum_marks,
-                                    'minimum_marks': sub.minimum_marks,
-                                    'obtain_marks': sub.obtain_marks,
-                                    's_exam_ids': sub_id.s_exam_ids.name})
+                list_result.\
+                    append({'standard_id': sub_id.standard_id.standard_id.name,
+                            'name': sub.subject_id.name,
+                            'code': sub.subject_id.code,
+                            'maximum_marks': sub.maximum_marks,
+                            'minimum_marks': sub.minimum_marks,
+                            'obtain_marks': sub.obtain_marks,
+                            's_exam_ids': sub_id.s_exam_ids.name})
         return list_result
 
     @api.model

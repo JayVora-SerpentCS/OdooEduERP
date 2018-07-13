@@ -1,20 +1,26 @@
-exam
+====
+Exam
+====
 
 This module was written to extend the functionality of exam management to support school management and allow you to set an exam management functionality.
 
+============
 Installation
+============
 
 To install this module, you need to:
-
 install timetable module
 
+=============
 Configuration
+=============
 
 To configure this module, you need to:
-
 have a timetable management & exam management scanning functionality.
 
+=====
 Usage
+=====
 
 To use this module, you need to:
 
@@ -24,18 +30,23 @@ Try me on Runbot
 Known issues / Roadmap
 
 ...
-
+===========
 Bug Tracker
+===========
 
 Bugs are tracked on GitHub Issues. In case of trouble, please check there if your issue has already been reported. If you spotted it first, help us smashing it by providing a detailed and welcomed feedback here.
 
+=======
 Credits
+=======
 
 Contributors
+============
 
 Serpent Consulting Services PVT. LTD. <http://serpentcs.com>
 
 Maintainer
+==========
 
 Serpent Consulting Services PVT. LTD.
 
