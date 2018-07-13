@@ -10,7 +10,7 @@
     'summary': 'A Module For Exams Management Taken In School',
     'complexity': 'easy',
     'images': ['static/description/exam_banner.png'],
-    'depends': ['school', 'timetable', 'mail'],
+    'depends': ['school', 'timetable'],
     'data': ['security/exam_security.xml',
              'security/ir.model.access.csv',
              'views/exam_view.xml',
