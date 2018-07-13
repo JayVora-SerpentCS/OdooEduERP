@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
         <record id="student_rule_event_regi_record" model="ir.rule">
