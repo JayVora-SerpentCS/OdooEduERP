@@ -13,6 +13,7 @@
             <field name="name">C++</field>
             <field name="type">product</field>
             <field name="categ_id" ref="product_category_1"/>
+            <field name='default_code'>c++</field>
         </record>
     </data>
 </odoo>

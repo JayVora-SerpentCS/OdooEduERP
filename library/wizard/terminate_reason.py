@@ -13,8 +13,8 @@ class TerminateReasonLibrary(models.TransientModel):
         '''Override method to display message if student has issued book
         while terminate student'''
         res = super(TerminateReasonLibrary, self).default_get(fields)
-        student = self._context.get('active_id')
-        student_obj = self.env['student.student'].browse(student)
+        student_obj = self.env['student.student'].\
+            browse(self._context.get('active_id'))
         library_card = self.env['library.card'].\
             search([('student_id', '=', student_obj.id),
                     ('state', '=', 'running')])
