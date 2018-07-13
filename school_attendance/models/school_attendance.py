@@ -205,7 +205,7 @@ class StudentleaveRequest(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_dates(self):
         curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt, '%Y-%m-%d')
+        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
         if self.start_date > self.end_date:
             raise ValidationError(_('''Configure start date less than end date!
             '''))
@@ -217,7 +217,7 @@ class StudentleaveRequest(models.Model):
     @api.constrains('start_date')
     def check_daily_attend_date(self):
         curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt, '%Y-%m-%d')
+        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
         if self.start_date <= new_date:
             raise ValidationError(_('''Your leave request start date should be
             greater than current date!.'''))
@@ -386,7 +386,7 @@ class DailyAttendance(models.Model):
     @api.constrains('date')
     def validate_date(self):
         curr = datetime.now()
-        new_date = datetime.strftime(curr, '%Y-%m-%d')
+        new_date = datetime.strftime(curr, DEFAULT_SERVER_DATE_FORMAT)
         if self.date > new_date:
             raise ValidationError(_('''Date should be less than or equal to
             current date!'''))
@@ -501,7 +501,8 @@ class DailyAttendance(models.Model):
         for daily_attendance_data in self:
             if not daily_attendance_data.date:
                 raise UserError(_('Please enter todays date.'))
-            date = datetime.strptime(daily_attendance_data.date, "%Y-%m-%d")
+            date = datetime.strptime(daily_attendance_data.date,
+                                     DEFAULT_SERVER_DATE_FORMAT)
             year_search_ids = academic_year_obj.search([('code', '=',
                                                          date.year)])
             month_search_ids = academic_month_obj.search([('code', '=',
@@ -515,7 +516,7 @@ class DailyAttendance(models.Model):
             for data in sheet_ids:
                 for attendance_id in data.attendance_ids:
                     date = datetime.strptime(daily_attendance_data.date,
-                                             "%Y-%m-%d")
+                                             DEFAULT_SERVER_DATE_FORMAT)
                     if date.day == 1:
                         dic = {'one': False}
                     elif date.day == 2:
@@ -591,7 +592,7 @@ class DailyAttendance(models.Model):
         attendance_sheet_obj = self.env['attendance.sheet']
 
         for line in self:
-            date = datetime.strptime(line.date, "%Y-%m-%d")
+            date = datetime.strptime(line.date, DEFAULT_SERVER_DATE_FORMAT)
             year = date.year
             year_ids = acadmic_year_obj.search([('date_start', '<=', date),
                                                 ('date_stop', '>=', date)])
