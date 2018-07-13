@@ -4,7 +4,8 @@ import time
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
+DEFAULT_SERVER_DATETIME_FORMAT
 from dateutil.relativedelta import relativedelta as rd
 
 
@@ -152,7 +153,7 @@ class LibraryCard(models.Model):
         '''Schedular to change in librarycard state when end date
             is over'''
         current_date = datetime.now()
-        new_date = datetime.strftime(current_date, '%m/%d/%Y')
+        new_date = datetime.strftime(current_date, DEFAULT_SERVER_DATE_FORMAT)
         lib_card = self.env['library.card']
         lib_card_search = lib_card.search([('end_date', '<',
                                             new_date)])
@@ -220,9 +221,9 @@ class LibraryBookIssue(models.Model):
         for line in self:
             if line.date_return:
                 start_day = datetime.strptime(line.actual_return_date,
-                                              "%Y-%m-%d %H:%M:%S")
+                                              DEFAULT_SERVER_DATETIME_FORMAT)
                 end_day = datetime.strptime(line.date_return,
-                                            "%Y-%m-%d %H:%M:%S")
+                                            DEFAULT_SERVER_DATETIME_FORMAT)
                 if start_day > end_day:
                     diff = rd(start_day.date(), end_day.date())
                     day = float(diff.days) or 0.0
@@ -294,15 +295,15 @@ class LibraryBookIssue(models.Model):
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
-                                 time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
     date_return = fields.Datetime(compute="_compute_return_date",
                                   string='Return Date',
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date",
                                          help="Actual Return Date of Book",
-                                         default=lambda *
-                                         a: time.strftime('%Y-%m-%d %H:%M:%S'))
+                                         default=lambda *a:
+                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     penalty = fields.Float(compute="_compute_penalty",
                            string='Penalty', store=True,
                            help='It show the late book return penalty')
@@ -440,7 +441,7 @@ class LibraryBookIssue(models.Model):
 
         curr_dt = datetime.now()
         new_date = datetime.strftime(curr_dt,
-                                     '%m/%d/%Y')
+                                     DEFAULT_SERVER_DATE_FORMAT)
         if (self.card_id.end_date < new_date and
                 self.card_id.end_date > new_date):
                 raise ValidationError(_('''The Membership of library
@@ -489,7 +490,8 @@ class LibraryBookIssue(models.Model):
         @return : True
         '''
         self.write({'state': 'reissue',
-                    'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
+                    'date_issue': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT
+                                                )})
 
     @api.multi
     def return_book(self):
@@ -726,7 +728,7 @@ class LibraryBookRequest(models.Model):
         book_issue_obj = self.env['library.book.issue']
         curr_dt = datetime.now()
         new_date = datetime.strftime(curr_dt,
-                                     '%m/%d/%Y')
+                                     DEFAULT_SERVER_DATETIME_FORMAT)
         vals = {}
         if (new_date >= self.card_id.start_date and
                 new_date <= self.card_id.end_date):

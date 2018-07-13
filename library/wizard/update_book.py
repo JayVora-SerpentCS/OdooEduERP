@@ -21,4 +21,4 @@ class UpdateBooks(models.TransientModel):
                         raise ValidationError(_('''This Book is not available!
                         Please try after sometime !'''))
                     else:
-                        book_rec.browse(active_id).write({'name': rec.name.id})
+                        book_rec.name = rec.name.id
