@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE html>
 
 <odoo>
     <record id="wizard_batch_report" model="ir.ui.view">
