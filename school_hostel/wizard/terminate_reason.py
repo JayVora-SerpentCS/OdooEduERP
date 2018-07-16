@@ -23,7 +23,8 @@ class TerminateReasonHostel(models.TransientModel):
         if student_hostel:
             hostel_msg += '\nStudent is registered in the hostel' +\
                 ' ' + student_hostel.hostel_info_id.name + ' ' +\
-                'the hostel id is' + ' ' + student_hostel.hostel_id +\
+                'the hostel id is' + ' ' +\
+                student_hostel.hostel_id + ' ' +\
                 'and room number is ' + student_hostel.room_id.room_no
         res.update({'hostel_info': hostel_msg})
         return res
