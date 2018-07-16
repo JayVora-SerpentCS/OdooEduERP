@@ -12,8 +12,8 @@ class TerminateReasonTransport(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(TerminateReasonTransport, self).default_get(fields)
-        student = self._context.get('active_id')
-        student_obj = self.env['student.student'].browse(student)
+        student_obj = self.env['student.student'].\
+            browse(self._context.get('active_id'))
         student_transport = self.env['transport.registration'].\
             search([('part_name', '=', student_obj.id),
                     ('state', 'in', ['confirm', 'pending', 'paid'])])
