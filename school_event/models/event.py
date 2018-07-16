@@ -2,8 +2,7 @@
 
 import time
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SchoolStandard(models.Model):
@@ -213,10 +212,10 @@ class SchoolEventRegistration(models.Model):
         for rec in self:
             prt_data = rec.part_name_id
             # delete entry of participant
-            domain = [('stu_pid', '=', rec.part_name_id.pid),
-                      ('event_id', '=', rec.name.id),
-                      ('name', '=', prt_data.id)]
-            stu_prt_data = event_part_obj.search(domain)
+            stu_prt_data = event_part_obj.\
+                search([('stu_pid', '=', rec.part_name_id.pid),
+                        ('event_id', '=', rec.name.id),
+                        ('name', '=', prt_data.id)])
             stu_prt_data.sudo().unlink()
             rec.state = 'cancel'
 
