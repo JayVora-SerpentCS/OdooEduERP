@@ -143,7 +143,7 @@ class SchoolTeacher(models.Model):
             self.mobile_phone = self.school_id.company_id.partner_id.mobile
             self.work_location = self.school_id.company_id.partner_id.city
             self.work_email = self.school_id.company_id.partner_id.email
-            phone = str(self.school_id.company_id.partner_id.phone)
+            phone = self.school_id.company_id.partner_id.phone
             self.work_phone = phone
             self.phone_numbers = phone
-            phone = str(self.school_id.company_id.partner_id.phone)
+            phone = self.school_id.company_id.partner_id.phone

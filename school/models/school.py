@@ -221,12 +221,12 @@ class SchoolStandard(models.Model):
         '''Compute student of done state'''
         student_obj = self.env['student.student']
         for rec in self:
-            domain = [('standard_id', '=', rec.id),
-                      ('school_id', '=', rec.school_id.id),
-                      ('division_id', '=', rec.division_id.id),
-                      ('medium_id', '=', rec.medium_id.id),
-                      ('state', '=', 'done')]
-            rec.student_ids = student_obj.search(domain)
+            rec.student_ids = student_obj.\
+                search([('standard_id', '=', rec.id),
+                        ('school_id', '=', rec.school_id.id),
+                        ('division_id', '=', rec.division_id.id),
+                        ('medium_id', '=', rec.medium_id.id),
+                        ('state', '=', 'done')])
 
     @api.onchange('standard_id', 'division_id')
     def onchange_combine(self):

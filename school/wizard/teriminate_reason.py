@@ -16,8 +16,8 @@ class TerminateReason(models.TransientModel):
                           ).write({'state': 'terminate',
                                    'terminate_reason': self.reason,
                                    'active': False})
-        student = self._context.get('active_id')
-        student_obj = self.env['student.student'].browse(student)
+        student_obj = self.env['student.student'].\
+            browse(self._context.get('active_id'))
         student_obj.standard_id._compute_total_student()
         user = self.env['res.users'].\
             search([('id', '=', student_obj.user_id.id)])
@@ -26,4 +26,4 @@ class TerminateReason(models.TransientModel):
         for rec in student_reminder:
             rec.active = False
         if user:
-            user.write({'active': False})
+            user.active = False
