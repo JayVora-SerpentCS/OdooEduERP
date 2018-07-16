@@ -1,7 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
-from odoo.tools.translate import _
+from odoo import models, fields, api, _
 from odoo.exceptions import except_orm
 
 

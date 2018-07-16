@@ -4,8 +4,7 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class StudentTransport(models.Model):
@@ -62,15 +61,15 @@ class TransportPoint(models.Model):
 class TransportVehicle(models.Model):
     '''for vehicle detail'''
 
+    _name = 'transport.vehicle'
+    _rec_name = 'vehicle'
+    _description = 'Transport vehicle Information'
+
     @api.depends('vehi_participants_ids')
     def _compute_participants(self):
         '''Method to get number participant'''
         for rec in self:
             rec.participant = len(rec.vehi_participants_ids)
-
-    _name = 'transport.vehicle'
-    _rec_name = 'vehicle'
-    _description = 'Transport vehicle Information'
 
     driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
     vehicle = fields.Char('Vehicle No', required=True)
@@ -421,8 +420,7 @@ class TransportRegistration(models.Model):
             # calculate amount and Registration End date
             amount = rec.point_id.amount * rec.for_month
             tr_start_date = (rec.reg_date)
-            month = rec.for_month
-            mon1 = relativedelta(months=+month)
+            mon1 = relativedelta(months=+rec.for_month)
             tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon1
             date = datetime.strptime(rec.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
@@ -442,33 +440,35 @@ class TransportRegistration(models.Model):
                         'vehicle_id': rec.vehicle_id.id}
             temp = stu_prt_obj.sudo().create(dict_prt)
             # make entry in Transport vehicle.
-            list1 = []
+            vehi_participants_list = []
             for prt in rec.vehicle_id.vehi_participants_ids:
-                list1.append(prt.id)
+                vehi_participants_list.append(prt.id)
             flag = True
-            for prt in list1:
+            for prt in vehi_participants_list:
                 data = stu_prt_obj.browse(prt)
                 if data.name.id == rec.part_name.id:
                     flag = False
             if flag:
-                list1.append(temp.id)
+                vehi_participants_list.append(temp.id)
             vehicle_id = vehi_obj.browse(rec.vehicle_id.id)
-            vehicle_id.sudo().write({'vehi_participants_ids': [(6, 0, list1)]})
+            vehicle_id.sudo().write({'vehi_participants_ids':
+                                     [(6, 0, vehi_participants_list)]})
             # make entry in student.
-            list1 = []
+            transport_list = []
             for root in rec.part_name.transport_ids:
-                list1.append(root.id)
-            list1.append(temp.id)
+                transport_list.append(root.id)
+            transport_list.append(temp.id)
             part_name_id = prt_obj.browse(rec.part_name.id)
-            part_name_id.sudo().write({'transport_ids': [(6, 0, list1)]})
+            part_name_id.sudo().write({'transport_ids':
+                                       [(6, 0, transport_list)]})
             # make entry in transport.
-            list1 = []
+            trans_participants_list = []
             for prt in rec.name.trans_participants_ids:
-                list1.append(prt.id)
-            list1.append(temp.id)
+                trans_participants_list.append(prt.id)
+            trans_participants_list.append(temp.id)
             stu_tran_id = trans_obj.browse(rec.name.id)
             stu_tran_id.sudo().write({'trans_participants_ids':
-                                      [(6, 0, list1)]})
+                                      [(6, 0, trans_participants_list)]})
 
 
 class AccountInvoice(models.Model):
