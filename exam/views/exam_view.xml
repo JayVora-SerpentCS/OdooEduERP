@@ -157,23 +157,12 @@
                     <tree name="exam_timetable" string="Exam Timetable" editable="top">
                         <field name="exm_date"/>
                         <field name="day_of_week"/>
-                        <field name="subject_id" widget="selection"/>
+                        <field name="subject_id" options='{"no_open": True, "no_create": True}'/>
                         <field name="start_time"/>
                         <field name="end_time"/>
-                        <field name="teacher_id" string="Supervisor" widget="selection"/>
-                        <field name="class_room_id" widget="selection"/>
+                        <field name="teacher_id" string="Supervisor" options='{"no_open": True, "no_create": True}'/>
+                        <field name="class_room_id" options='{"no_open": True, "no_create": True}'/>
                     </tree>
-                    <form string="Exam Timetable">
-                        <group col="4" colspan="4">
-                            <field name="exm_date"/>
-                            <field name="day_of_week"/>
-                            <field name="subject_id" widget="selection"/>
-                            <field name="start_time"/>
-                            <field name="end_time"/>
-                            <field name="teacher_id" string="Supervisor" widget="selection"/>
-                            <field name="class_room_id" widget="selection"/>
-                        </group>
-                    </form>
                 </field>
             </field>
         </field>
