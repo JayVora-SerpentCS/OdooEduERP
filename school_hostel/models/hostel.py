@@ -110,10 +110,10 @@ class HostelRoom(models.Model):
                                   string="Students")
 
     _sql_constraints = [('room_no_unique', 'unique(room_no)',
-                         'Room number must be unique!')]
-    _sql_constraints = [('floor_per_hostel', 'check(floor_no < 10)',
-                         'Error ! Floor per HOSTEL should be less than 10.')]
-    _sql_constraints = [('student_per_room_greater',
+                         'Room number must be unique!'),
+                        ('floor_per_hostel', 'check(floor_no < 10)',
+                         'Error ! Floor per HOSTEL should be less than 10.'),
+                        ('student_per_room_greater',
                          'check(student_per_room < 10)',
                          'Error ! Student per room should be less than 10.')]
 
@@ -306,9 +306,9 @@ class HostelStudent(models.Model):
         ''' Schedular to discharge student from hostel'''
         current_date = datetime.now()
         new_date = current_date.strftime('%m-%d-%Y')
-        domian = [('discharge_date', '<', new_date),
-                  ('status', '!=', 'draft')]
-        student_hostel = self.env['hostel.student'].search(domian)
+        student_hostel = self.env['hostel.student'].\
+            search([('discharge_date', '<', new_date),
+                    ('status', '!=', 'draft')])
         if student_hostel:
             for student in student_hostel:
                 student.discharge_state()
