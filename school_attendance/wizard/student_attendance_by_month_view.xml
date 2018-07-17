@@ -33,6 +33,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="context">{'student_id': active_id}</field>
             <field name="binding_model_id" ref="school.model_student_student"/>
             <field name="binding_type">report</field>
         </record>
