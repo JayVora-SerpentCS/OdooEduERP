@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SchoolStandard(models.Model):
@@ -148,20 +146,17 @@ class SchoolEvent(models.Model):
     @api.multi
     def event_close(self):
         '''Method to change state to close'''
-        self.write({'state': 'close'})
-        return True
+        self.state = 'close'
 
     @api.multi
     def event_draft(self):
         '''Method to change state to draft'''
-        self.write({'state': 'draft'})
-        return True
+        self.state = 'draft'
 
     @api.multi
     def event_cancel(self):
         '''Method to change state to cancel'''
-        self.write({'state': 'cancel'})
-        return True
+        self.state = 'cancel'
 
     @api.model
     def create(self, vals):
@@ -217,13 +212,12 @@ class SchoolEventRegistration(models.Model):
         for rec in self:
             prt_data = rec.part_name_id
             # delete entry of participant
-            domain = [('stu_pid', '=', rec.part_name_id.pid),
-                      ('event_id', '=', rec.name.id),
-                      ('name', '=', prt_data.id)]
-            stu_prt_data = event_part_obj.search(domain)
+            stu_prt_data = event_part_obj.\
+                search([('stu_pid', '=', rec.part_name_id.pid),
+                        ('event_id', '=', rec.name.id),
+                        ('name', '=', prt_data.id)])
             stu_prt_data.sudo().unlink()
-            rec.write({'state': 'cancel'})
-        return True
+            rec.state = 'cancel'
 
     @api.constrains('name')
     def check_event_state(self):
@@ -236,7 +230,7 @@ class SchoolEventRegistration(models.Model):
     @api.multi
     def unlink(self):
         for rec in self:
-            if rec.state != 'draft':
+            if rec.state not in ['draft', 'cancel']:
                 raise UserError(_('''You can delete record in unconfirm state
                 only!'''))
         return super(SchoolEventRegistration, self).unlink()
@@ -246,7 +240,8 @@ class SchoolEventRegistration(models.Model):
         student_event = self.search([('part_name_id', '=',
                                       self.part_name_id.id),
                                      ('id', 'not in', self.ids),
-                                     ('state', '=', 'confirm')])
+                                     ('state', '=', 'confirm'),
+                                     ('name', '=', self.name.id)])
         if student_event:
             raise ValidationError(_('''Student is already
                                     registered in this event!'''))
@@ -278,8 +273,7 @@ class SchoolEventRegistration(models.Model):
             part_id = event_part_obj.sudo().create(vals)
             rec.name.sudo().write({'part_ids': [(4, part_id.id)]})
             rec.part_name_id.sudo().write({'event_ids': [(4, part_id.id)]})
-            rec.write({'state': 'confirm'})
-        return True
+            rec.state = 'confirm'
 
 
 class StudentStudent(models.Model):
@@ -290,3 +284,18 @@ class StudentStudent(models.Model):
     event_ids = fields.Many2many('school.event.participant',
                                  'student_participants_rel', 'stud_id',
                                  'participant_id', 'Participants')
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to delete event participant and cancel event
+        registration of student when set to alumni'''
+        for rec in self:
+            event_regi = self.env['school.event.registration'].\
+                search([('part_name_id', '=', rec.id)])
+            if event_regi:
+                event_regi.write({'state': 'cancel'})
+            event_participant = self.env['school.event.participant'].\
+                search([('name', '=', rec.id)])
+            if event_participant:
+                event_participant.unlink()
+        return super(StudentStudent, self).set_alumni()
