@@ -31,9 +31,6 @@ go to apps, then install module to apply this functionality.
 Try me on Runbot
 Known issues / Roadmap
 
-...
-
-
 Bug Tracker
 ===========
 
