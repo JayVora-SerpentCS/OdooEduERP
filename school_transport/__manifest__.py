@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 {
@@ -10,7 +9,7 @@
     'category': 'School Management',
     'complexity': 'easy',
     'summary': 'A Module For Transport & Vehicle Management In School',
-    'depends': ['hr', 'school', 'account', 'account_invoicing'],
+    'depends': ['school', 'account_invoicing'],
     'images': ['static/description/SchoolTransport.png'],
     'data': ['security/transport_security.xml',
              'security/ir.model.access.csv',
@@ -19,7 +18,8 @@
              'views/vehicle.xml',
              'views/participants.xml',
              'data/transport_schedular.xml',
-             'wizard/transfer_vehicle.xml'],
+             'wizard/transfer_vehicle.xml',
+             'wizard/terminate_reason_view.xml'],
     'demo': ['demo/transport_demo.xml'],
     'installable': True,
     'application': True

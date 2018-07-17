@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class StudentTransport(models.Model):
@@ -40,6 +38,11 @@ class TransportPoint(models.Model):
     name = fields.Char('Point Name', required=True)
     amount = fields.Float('Amount', default=0.0)
 
+    @api.constrains('amount')
+    def _check_point_amount(self):
+        if self.amount < 0:
+            raise ValidationError(_('''Amount cannot be negative value!'''))
+
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
@@ -58,16 +61,15 @@ class TransportPoint(models.Model):
 class TransportVehicle(models.Model):
     '''for vehicle detail'''
 
-    @api.multi
+    _name = 'transport.vehicle'
+    _rec_name = 'vehicle'
+    _description = 'Transport vehicle Information'
+
     @api.depends('vehi_participants_ids')
     def _compute_participants(self):
         '''Method to get number participant'''
         for rec in self:
             rec.participant = len(rec.vehi_participants_ids)
-
-    _name = 'transport.vehicle'
-    _rec_name = 'vehicle'
-    _description = 'Transport vehicle Information'
 
     driver_id = fields.Many2one('hr.employee', 'Driver Name', required=True)
     vehicle = fields.Char('Vehicle No', required=True)
@@ -119,6 +121,7 @@ class TransportParticipant(models.Model):
     state = fields.Selection([('running', 'Running'),
                               ('over', 'Over')],
                              'State', readonly=True,)
+    active = fields.Boolean('Active', default=True)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
@@ -137,7 +140,7 @@ class TransportParticipant(models.Model):
 
     @api.multi
     def set_over(self):
-        self.write({'state': 'over'})
+        self.state = 'over'
 
     @api.multi
     def unlink(self):
@@ -154,7 +157,6 @@ class StudentTransports(models.Model):
     _name = 'student.transport'
     _description = 'Student Transport Information'
 
-    @api.multi
     @api.depends('trans_participants_ids')
     def _compute_total_participants(self):
         for rec in self:
@@ -188,14 +190,12 @@ class StudentTransports(models.Model):
     @api.multi
     def transport_open(self):
         '''Method to change state open'''
-        self.write({'state': 'open'})
-        return True
+        self.state = 'open'
 
     @api.multi
     def transport_close(self):
         '''Method to change state to close'''
-        self.write({'state': 'close'})
-        return True
+        self.state = 'close'
 
     @api.model
     def participant_expire(self):
@@ -236,6 +236,21 @@ class StudentStudent(models.Model):
 
     transport_ids = fields.Many2many('transport.participant', 'std_transport',
                                      'trans_id', 'stud_id', 'Transport')
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make record of student transport active false
+        when student is set to alumni state'''
+        for rec in self:
+            trans_student = self.env['transport.participant'].\
+                search([('name', '=', rec.id)])
+            trans_regi = self.env['transport.registration'].\
+                search([('part_name', '=', rec.id)])
+            if trans_regi:
+                trans_regi.write({'state': 'cancel'})
+            if trans_student:
+                trans_student.write({'active': False})
+        return super(StudentStudent, self).set_alumni()
 
 
 class TransportRegistration(models.Model):
@@ -364,6 +379,7 @@ class TransportRegistration(models.Model):
     @api.onchange('point_id')
     def onchange_point_id(self):
         '''Method to get amount of point selected'''
+        self.m_amount = False
         if self.point_id:
             self.m_amount = self.point_id.amount or 0.0
 
@@ -380,7 +396,7 @@ class TransportRegistration(models.Model):
     @api.multi
     def trans_regi_cancel(self):
         '''Method to set state to cancel'''
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.multi
     def trans_regi_confirm(self):
@@ -397,15 +413,14 @@ class TransportRegistration(models.Model):
             # First Check Is there vacancy or not
             person = int(rec.vehicle_id.participant) + 1
             if rec.vehicle_id.capacity < person:
-                raise UserError(_('There is No More vacancy on this vehicle.'))
+                raise UserError(_('There is No More vacancy on this vehicle!'))
 
             rec.write({'state': 'confirm',
                        'remain_amt': rec.transport_fees})
             # calculate amount and Registration End date
             amount = rec.point_id.amount * rec.for_month
             tr_start_date = (rec.reg_date)
-            month = rec.for_month
-            mon1 = relativedelta(months=+month)
+            mon1 = relativedelta(months=+rec.for_month)
             tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon1
             date = datetime.strptime(rec.name.end_date, '%Y-%m-%d')
             if tr_end_date > date:
@@ -425,34 +440,35 @@ class TransportRegistration(models.Model):
                         'vehicle_id': rec.vehicle_id.id}
             temp = stu_prt_obj.sudo().create(dict_prt)
             # make entry in Transport vehicle.
-            list1 = []
+            vehi_participants_list = []
             for prt in rec.vehicle_id.vehi_participants_ids:
-                list1.append(prt.id)
+                vehi_participants_list.append(prt.id)
             flag = True
-            for prt in list1:
+            for prt in vehi_participants_list:
                 data = stu_prt_obj.browse(prt)
                 if data.name.id == rec.part_name.id:
                     flag = False
             if flag:
-                list1.append(temp.id)
+                vehi_participants_list.append(temp.id)
             vehicle_id = vehi_obj.browse(rec.vehicle_id.id)
-            vehicle_id.sudo().write({'vehi_participants_ids': [(6, 0, list1)]})
+            vehicle_id.sudo().write({'vehi_participants_ids':
+                                     [(6, 0, vehi_participants_list)]})
             # make entry in student.
-            list1 = []
+            transport_list = []
             for root in rec.part_name.transport_ids:
-                list1.append(root.id)
-            list1.append(temp.id)
+                transport_list.append(root.id)
+            transport_list.append(temp.id)
             part_name_id = prt_obj.browse(rec.part_name.id)
-            part_name_id.sudo().write({'transport_ids': [(6, 0, list1)]})
+            part_name_id.sudo().write({'transport_ids':
+                                       [(6, 0, transport_list)]})
             # make entry in transport.
-            list1 = []
+            trans_participants_list = []
             for prt in rec.name.trans_participants_ids:
-                list1.append(prt.id)
-            list1.append(temp.id)
+                trans_participants_list.append(prt.id)
+            trans_participants_list.append(temp.id)
             stu_tran_id = trans_obj.browse(rec.name.id)
             stu_tran_id.sudo().write({'trans_participants_ids':
-                                      [(6, 0, list1)]})
-        return True
+                                      [(6, 0, trans_participants_list)]})
 
 
 class AccountInvoice(models.Model):
