@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Library Management',
-    'version': "10.0.1.0.6",
+    'version': "11.0.1.0.6",
     'author': "Serpent Consulting Services Pvt. Ltd.",
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
@@ -11,7 +10,7 @@
     'summary': 'A Module For Library Management For School',
     'complexity': 'easy',
     'depends': ['report_intrastat', 'school', 'stock',
-                'account_accountant', 'product'],
+                'account_invoicing'],
     'data': ['security/library_security.xml',
              'security/ir.model.access.csv',
              'views/report_view.xml',
@@ -21,10 +20,10 @@
              'views/library_sequence.xml',
              'views/library_category_data.xml',
              'data/library_card_schedular.xml',
-             'wizard/update_prices_view.xml',
              'wizard/update_book_view.xml',
              'wizard/book_issue_no_view.xml',
-             'wizard/card_no_view.xml'],
+             'wizard/card_no_view.xml',
+             'wizard/terminate_reason.xml'],
     'demo': ['demo/library_demo.xml'],
     'image': ['static/description/SchoolLibrary.png'],
     'installable': True,

@@ -1,5 +1,4 @@
 <?xml version="1.0" ?>
-<!DOCTYPE html>
 
 <odoo>
     <data noupdate="1">
@@ -36,12 +35,14 @@
             <field name="name">DBMS</field>
             <field name="type">product</field>
             <field name="categ_id" ref="library.product_category_1"/>
+            <field name='default_code'>dbms</field>
         </record>
 
         <record id="library_product_b2" model="product.product">
             <field name="name">C</field>
             <field name="type">product</field>
             <field name="categ_id" ref="product.product_category_2"/>
+            <field name='default_code'>c</field>
         </record>
 
         <!-- library.book.issue -->

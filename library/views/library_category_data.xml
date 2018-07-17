@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE html>
 
 <odoo>
     <data noupdate="1">
@@ -14,7 +13,7 @@
             <field name="name">C++</field>
             <field name="type">product</field>
             <field name="categ_id" ref="product_category_1"/>
-            <!-- <field name="book_return_days">5</field> -->
+            <field name='default_code'>c++</field>
         </record>
     </data>
 </odoo>

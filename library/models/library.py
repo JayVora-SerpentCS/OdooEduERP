@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
 from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
+    DEFAULT_SERVER_DATETIME_FORMAT
 from dateutil.relativedelta import relativedelta as rd
 
 
@@ -56,7 +56,6 @@ class LibraryCard(models.Model):
         self.standard_id = student_data.standard_id.id
         self.roll_no = student_data.roll_no
 
-    @api.multi
     @api.depends('student_id')
     def _compute_name(self):
         for rec in self:
@@ -84,7 +83,6 @@ class LibraryCard(models.Model):
                          'roll_no': student.roll_no})
         return super(LibraryCard, self).write(vals)
 
-    @api.multi
     @api.depends('start_date', 'duration')
     def _compute_end_date(self):
         for rec in self:
@@ -111,6 +109,7 @@ class LibraryCard(models.Model):
     duration = fields.Integer('Duration',
                               help="Duration in months")
     end_date = fields.Date('End Date', compute="_compute_end_date", store=True)
+    active = fields.Boolean('Active', default=True)
 
     @api.constrains('student_id', 'teacher_id')
     def check_member_card(self):
@@ -139,7 +138,7 @@ class LibraryCard(models.Model):
 
     @api.multi
     def draft_state(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def unlink(self):
@@ -154,7 +153,7 @@ class LibraryCard(models.Model):
         '''Schedular to change in librarycard state when end date
             is over'''
         current_date = datetime.now()
-        new_date = datetime.strftime(current_date, '%m/%d/%Y')
+        new_date = datetime.strftime(current_date, DEFAULT_SERVER_DATE_FORMAT)
         lib_card = self.env['library.card']
         lib_card_search = lib_card.search([('end_date', '<',
                                             new_date)])
@@ -187,7 +186,6 @@ class LibraryBookIssue(models.Model):
             ret_date = datetime.strptime(self.date_issue, t) + diff
             self.date_return = ret_date
 
-    @api.multi
     @api.depends('date_issue', 'day_to_return_book')
     def _compute_return_date(self):
         ''' This method calculate a book return date.
@@ -207,7 +205,6 @@ class LibraryBookIssue(models.Model):
                 ret_date = datetime.strptime(rec.date_issue, t) + diff
                 rec.date_return = ret_date
 
-    @api.multi
     @api.depends('actual_return_date', 'day_to_return_book')
     def _compute_penalty(self):
         ''' This method calculate a penalty on book .
@@ -224,16 +221,15 @@ class LibraryBookIssue(models.Model):
         for line in self:
             if line.date_return:
                 start_day = datetime.strptime(line.actual_return_date,
-                                              "%Y-%m-%d %H:%M:%S")
+                                              DEFAULT_SERVER_DATETIME_FORMAT)
                 end_day = datetime.strptime(line.date_return,
-                                            "%Y-%m-%d %H:%M:%S")
+                                            DEFAULT_SERVER_DATETIME_FORMAT)
                 if start_day > end_day:
                     diff = rd(start_day.date(), end_day.date())
                     day = float(diff.days) or 0.0
                     if line.day_to_return_book:
                         line.penalty = day * line.name.fine_late_return or 0.0
 
-    @api.multi
     @api.depends('state')
     def _compute_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
@@ -252,7 +248,6 @@ class LibraryBookIssue(models.Model):
             if rec.state and rec.state == 'lost':
                 rec.lost_penalty = rec.name.fine_lost or 0.0
 
-    @api.multi
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
         ''' This method used how many book can issue as per user type  .
@@ -300,15 +295,15 @@ class LibraryBookIssue(models.Model):
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
-                                 time.strftime('%Y-%m-%d %H:%M:%S'))
+                                 time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
     date_return = fields.Datetime(compute="_compute_return_date",
                                   string='Return Date',
                                   store=True,
                                   help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date",
                                          help="Actual Return Date of Book",
-                                         default=lambda *
-                                         a: time.strftime('%Y-%m-%d %H:%M:%S'))
+                                         default=lambda *a:
+                                         time.strftime('%Y-%m-%d %H:%M:%S'))
     penalty = fields.Float(compute="_compute_penalty",
                            string='Penalty', store=True,
                            help='It show the late book return penalty')
@@ -430,7 +425,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def issue_book(self):
@@ -446,7 +441,7 @@ class LibraryBookIssue(models.Model):
 
         curr_dt = datetime.now()
         new_date = datetime.strftime(curr_dt,
-                                     '%m/%d/%Y')
+                                     DEFAULT_SERVER_DATE_FORMAT)
         if (self.card_id.end_date < new_date and
                 self.card_id.end_date > new_date):
                 raise ValidationError(_('''The Membership of library
@@ -495,7 +490,8 @@ class LibraryBookIssue(models.Model):
         @return : True
         '''
         self.write({'state': 'reissue',
-                    'date_issue': time.strftime('%Y-%m-%d %H:%M:%S')})
+                    'date_issue': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT
+                                                )})
 
     @api.multi
     def return_book(self):
@@ -508,7 +504,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'return'})
+        self.state = 'return'
 
     @api.multi
     def lost_book(self):
@@ -541,7 +537,7 @@ class LibraryBookIssue(models.Model):
         @param context : standard Dictionary
         @return : True
         '''
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.multi
     def user_fine(self):
@@ -590,7 +586,7 @@ class LibraryBookIssue(models.Model):
                                  'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line1))
             new_invoice_id.write({'invoice_line_ids': invoice_line_ids})
-        self.write({'state': 'fine'})
+        self.state = 'fine'
         view_id = self.env.ref('account.invoice_form')
         return {'name': _("New Invoice"),
                 'view_mode': 'form',
@@ -632,7 +628,7 @@ class LibraryBookIssue(models.Model):
                                  'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line3))
             new_invoice_id.write({'invoice_line_ids': invoice_line_ids})
-        self.write({'state': 'pending'})
+        self.state = 'pending'
         view_id = self.env.ref('account.invoice_form')
         return {'name': _("New Invoice"),
                 'view_mode': 'form',
@@ -676,15 +672,15 @@ class LibraryBookRequest(models.Model):
     _name = "library.book.request"
     _rec_name = 'req_id'
 
-    @api.multi
     @api.depends('type')
     def _compute_bname(self):
-        if self.type:
-            if self.type == 'existing':
-                book = self.name.name
-            else:
-                book = self.new_book
-            self.bk_nm = book
+        for rec in self:
+            if rec.type:
+                if rec.type == 'existing':
+                    book = rec.name.name
+                else:
+                    book = rec.new_book
+                rec.bk_nm = book
 
     req_id = fields.Char('Request ID', readonly=True, default='New')
     card_id = fields.Many2one("library.card", "Card No", required=True)
@@ -724,7 +720,7 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     def draft_book_request(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def confirm_book_request(self):
@@ -732,7 +728,7 @@ class LibraryBookRequest(models.Model):
         book_issue_obj = self.env['library.book.issue']
         curr_dt = datetime.now()
         new_date = datetime.strftime(curr_dt,
-                                     '%m/%d/%Y')
+                                     DEFAULT_SERVER_DATETIME_FORMAT)
         vals = {}
         if (new_date >= self.card_id.start_date and
                 new_date <= self.card_id.end_date):
@@ -759,7 +755,7 @@ class LibraryBookRequest(models.Model):
                                 })
         else:
             issue_id.write({'state': 'draft'})
-        self.write({'state': 'confirm'})
+        self.state = 'confirm'
         # changes state to confirm
         if issue_id:
             issue_id.onchange_card_issue()
@@ -781,4 +777,20 @@ class LibraryBookRequest(models.Model):
 
     @api.multi
     def cancle_book_request(self):
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
+
+
+class StudentLibrary(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''Override method to make library card of student active false
+        when student is alumni'''
+        lib_card = self.env['library.card']
+        for rec in self:
+            student_card = lib_card.search([('student_id',
+                                             '=', rec.id)])
+            if student_card:
+                student_card.active = False
+        return super(StudentLibrary, self).set_alumni()

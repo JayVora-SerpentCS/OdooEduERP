@@ -1,13 +1,15 @@
 <odoo>
-      <record id="ir_cron_library_card_every_day_schedule" model="ir.cron">
-            <field name="name">Library Card</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
-            <field eval="'library.card'" name="model" />
-            <field eval="'librarycard_expire'" name="function" />
-            <field name="active" eval="True"/>
-            <field eval="'()'" name="args"/>
-        </record>
+    <data noupdate='1'>
+          <record id="ir_cron_library_card_every_day_schedule" model="ir.cron">
+                <field name="name">Library Card</field>
+                <field name="interval_number">1</field>
+                <field name="interval_type">days</field>
+                <field name="numbercall">-1</field>
+                <field name="state">code</field>
+                <field name="doall" eval="False"/>
+                <field ref='library.model_library_card' name="model_id"/>
+                <field name="code">model.librarycard_expire()</field>
+                <field name="active" eval="True"/>
+            </record>
+    </data>
 </odoo>

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
@@ -22,5 +21,4 @@ class UpdateBooks(models.TransientModel):
                         raise ValidationError(_('''This Book is not available!
                         Please try after sometime !'''))
                     else:
-                        book_rec.browse(active_id).write({'name': rec.name.id})
-        return {}
+                        book_rec.name = rec.name.id
