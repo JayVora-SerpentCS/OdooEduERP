@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
@@ -18,8 +17,7 @@ class ReportAddExamResult(models.AbstractModel):
         subject_exam_ids = sub_obj.search([('id', 'in', sub_list),
                                            ('exam_id', '=', result.id)])
         for subject in subject_exam_ids:
-            subj = subject.subject_id and subject.subject_id.name or ''
-            result_data.append({'subject': subj,
+            result_data.append({'subject': subject.subject_id.name or '',
                                 'max_mark': subject.maximum_marks or '',
                                 'mini_marks': subject.minimum_marks or '',
                                 'obt_marks': subject.obtain_marks or '',
