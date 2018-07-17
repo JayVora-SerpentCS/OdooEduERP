@@ -9,27 +9,22 @@ Installation
 =============
 
 To install this module, you need to:
-
 install school module
 
 Configuration
 ==============
 
 To configure this module, you need to:
-
 have a HOSTEL Management functionality.
 
 Usage
 =====
 
 To use this module, you need to:
-
 go to apps, then install module to apply this functionality.
 
 Try me on Runbot
 Known issues / Roadmap
-
-...
 
 Bug Tracker
 ===========
@@ -50,7 +45,5 @@ Maintainer
 ==========
 
 Serpent Consulting Services PVT. LTD.
-
 This module is maintained by the SerpentCS.
-
 To contribute to this module, please visit http://serpentcs.com.
