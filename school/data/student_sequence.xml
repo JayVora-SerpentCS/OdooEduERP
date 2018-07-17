@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
     <data noupdate="1">
-
-        <!-- Sequences For student.grn (Student GRN) -->
-
-<!--         <record id="sequence_grn" model="ir.sequence"> -->
-<!--              <field name="name">GRN</field> -->
-<!--              <field name="code">student.grn</field> -->
-<!--              <field name="padding">4</field> -->
-<!--              <field name="prefix"></field> -->
-<!--              <field name="suffix"></field> -->
-<!--              <field name="number_next">1</field> -->
-<!--              <field name="number_increment">1</field> -->
-<!--         </record> -->
 
         <!-- Sequences For student.code (Student Code) -->
 

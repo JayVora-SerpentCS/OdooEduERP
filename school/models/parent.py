@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
@@ -49,40 +48,22 @@ class SchoolParent(models.Model):
     @api.model
     def create(self, vals):
         parent_id = super(SchoolParent, self).create(vals)
+        parent_grp_id = self.env.ref('school.group_school_parent')
+        emp_grp = self.env.ref('base.group_user')
+        parent_group_ids = [emp_grp.id, parent_grp_id.id]
         if vals.get('parent_create_mng'):
             return parent_id
         user_vals = {'name': parent_id.name,
                      'login': parent_id.email,
                      'email': parent_id.email,
                      'partner_id': parent_id.partner_id.id,
+                     'groups_id': [(6, 0, parent_group_ids)]
                      }
         self.env['res.users'].create(user_vals)
         return parent_id
 
     @api.onchange('state_id')
     def onchange_state(self):
+        self.country_id = False
         if self.state_id:
             self.country_id = self.state_id.country_id.id
-
-
-class StudentStudent(models.Model):
-    _inherit = "student.student"
-
-    @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False,
-                access_rights_uid=None):
-        '''Method to get student of parent having group teacher'''
-        teacher_group = self.env.user.has_group('school.group_school_teacher')
-        parent_grp = self.env.user.has_group('school.group_school_parent')
-        login_user = self.env['res.users'].browse(self._uid)
-        name = self._context.get('student_id')
-        if name and teacher_group and parent_grp:
-            parent_login_stud = self.env['school.parent'
-                                         ].search([('partner_id', '=',
-                                                  login_user.partner_id.id)
-                                                   ])
-            childrens = parent_login_stud.student_id
-            args.append(('id', 'in', childrens.ids))
-        return super(StudentStudent, self)._search(
-            args=args, offset=offset, limit=limit, order=order, count=count,
-            access_rights_uid=access_rights_uid)

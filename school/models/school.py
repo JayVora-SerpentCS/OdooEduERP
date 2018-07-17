@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 # import time
@@ -103,7 +102,6 @@ class AcademicYear(models.Model):
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
                 raise ValidationError(_('''Error! You cannot define overlapping
                                           academic years.'''))
-        return True
 
     @api.constrains('current')
     def check_current_year(self):
@@ -223,12 +221,12 @@ class SchoolStandard(models.Model):
         '''Compute student of done state'''
         student_obj = self.env['student.student']
         for rec in self:
-            domain = [('standard_id', '=', rec.id),
-                      ('school_id', '=', rec.school_id.id),
-                      ('division_id', '=', rec.division_id.id),
-                      ('medium_id', '=', rec.medium_id.id),
-                      ('state', '=', 'done')]
-            rec.student_ids = student_obj.search(domain)
+            rec.student_ids = student_obj.\
+                search([('standard_id', '=', rec.id),
+                        ('school_id', '=', rec.school_id.id),
+                        ('division_id', '=', rec.division_id.id),
+                        ('medium_id', '=', rec.medium_id.id),
+                        ('state', '=', 'done')])
 
     @api.onchange('standard_id', 'division_id')
     def onchange_combine(self):
@@ -357,9 +355,6 @@ class SubjectSubject(models.Model):
     weightage = fields.Integer("WeightAge")
     teacher_ids = fields.Many2many('school.teacher', 'subject_teacher_rel',
                                    'subject_id', 'teacher_id', 'Teachers')
-#    standard_ids = fields.Many2many('standard.standard',
-#                                    'subject_standards_rel',
-#                                    'standard_id', 'subject_id', 'Standards')
     standard_ids = fields.Many2many('standard.standard',
                                     string='Standards')
     standard_id = fields.Many2one('standard.standard', 'Class')
@@ -726,10 +721,9 @@ class Report(models.Model):
 
     @api.multi
     def render_template(self, template, values=None):
-        for data in values.get('docs'):
-            if (values.get('doc_model') == 'student.student' and
-                    data.state == 'draft'):
-                    raise ValidationError(_('''You cannot print report for
+        student_id = self.env['student.student'].\
+            browse(self._context.get('student_id', False))
+        if student_id and student_id.state == 'draft':
+            raise ValidationError(_('''You cannot print report for
                 student in unconfirm state!'''))
-        res = super(Report, self).render_template(template, values)
-        return res
+        return super(Report, self).render_template(template, values)

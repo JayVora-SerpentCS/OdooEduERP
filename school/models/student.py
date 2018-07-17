@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
 import base64
 from datetime import date, datetime
 from odoo import models, fields, api, tools, _
-from odoo.tools.translate import _
 from odoo.modules import get_module_resource
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
@@ -27,6 +25,25 @@ class StudentStudent(models.Model):
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False,
+                access_rights_uid=None):
+        '''Method to get student of parent having group teacher'''
+        teacher_group = self.env.user.has_group('school.group_school_teacher')
+        parent_grp = self.env.user.has_group('school.group_school_parent')
+        login_user = self.env['res.users'].browse(self._uid)
+        name = self._context.get('student_id')
+        if name and teacher_group and parent_grp:
+            parent_login_stud = self.env['school.parent'
+                                         ].search([('partner_id', '=',
+                                                  login_user.partner_id.id)
+                                                   ])
+            childrens = parent_login_stud.student_id
+            args.append(('id', 'in', childrens.ids))
+        return super(StudentStudent, self)._search(
+            args=args, offset=offset, limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid)
 
     @api.depends('date_of_birth')
     def _compute_student_age(self):
@@ -75,6 +92,12 @@ class StudentStudent(models.Model):
         if vals.get('email'):
             school.emailvalidation(vals.get('email'))
         res = super(StudentStudent, self).create(vals)
+        teacher = self.env['school.teacher']
+        for data in res.parent_id:
+            teacher_rec = teacher.search([('stu_parent_id',
+                                           '=', data.id)])
+            for record in teacher_rec:
+                record.write({'student_id': [(4, res.id, None)]})
         # Assign group to student based on condition
         emp_grp = self.env.ref('base.group_user')
         if res.state == 'draft':
@@ -86,6 +109,17 @@ class StudentStudent(models.Model):
             group_list = [done_student.id, emp_grp.id]
             res.user_id.write({'groups_id': [(6, 0, group_list)]})
         return res
+
+    @api.multi
+    def write(self, vals):
+        teacher = self.env['school.teacher']
+        if vals.get('parent_id'):
+            for parent in vals.get('parent_id')[0][2]:
+                teacher_rec = teacher.search([('stu_parent_id',
+                                               '=', parent)])
+                for data in teacher_rec:
+                    data.write({'student_id': [(4, self.id)]})
+        return super(StudentStudent, self).write(vals)
 
     @api.model
     def _default_image(self):
@@ -227,34 +261,43 @@ class StudentStudent(models.Model):
     teachr_user_grp = fields.Boolean("Teacher Group",
                                      compute="_compute_teacher_user",
                                      )
+    active = fields.Boolean(default=True)
 
     @api.multi
     def set_to_draft(self):
         '''Method to change state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def set_alumni(self):
         '''Method to change state to alumni'''
-        self.write({'state': 'alumni'})
+        student_user = self.env['res.users']
+        for rec in self:
+            rec.state = 'alumni'
+            rec.standard_id._compute_total_student()
+            user = student_user.search([('id', '=',
+                                         rec.user_id.id)])
+            rec.active = False
+            if user:
+                user.active = False
 
     @api.multi
     def set_done(self):
         '''Method to change state to done'''
-        self.write({'state': 'done'})
+        self.state = 'done'
 
     @api.multi
     def admission_draft(self):
         '''Set the state to draft'''
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def set_terminate(self):
-        self.write({'state': 'terminate'})
+        self.state = 'terminate'
 
     @api.multi
     def cancel_admission(self):
-        self.write({'state': 'cancel'})
+        self.state = 'cancel'
 
     @api.multi
     def admission_done(self):

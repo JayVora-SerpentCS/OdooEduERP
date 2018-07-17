@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api
@@ -27,11 +26,11 @@ class MoveStandards(models.TransientModel):
             # Assign the academic year
             if next_class_id:
                 division = (stud.standard_id.division_id.id or False)
-                domain = [('standard_id', '=', next_class_id),
-                          ('division_id', '=', division),
-                          ('school_id', '=', stud.school_id.id),
-                          ('medium_id', '=', stud.medium_id.id)]
-                next_stand = school_stand_obj.search(domain)
+                next_stand = school_stand_obj.\
+                    search([('standard_id', '=', next_class_id),
+                            ('division_id', '=', division),
+                            ('school_id', '=', stud.school_id.id),
+                            ('medium_id', '=', stud.medium_id.id)])
                 if next_stand:
                     std_vals = {'year': academic_year.id,
                                 'standard_id': next_stand.id}

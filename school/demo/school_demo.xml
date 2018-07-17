@@ -457,19 +457,19 @@
             <field name="sequence">2</field>
         </record>
         <!-- School Teacher Information-->
-        <record id="school.demo_school_teacher_1" model="school.teacher">
+        <record id="demo_school_teacher_1" model="school.teacher">
             <field name="name">Winely</field>
             <field name="work_email">winely@demo.com</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
 
-        <record id="school.demo_school_teacher_2" model="school.teacher">
+        <record id="demo_school_teacher_2" model="school.teacher">
             <field name="name">Peter White</field>
             <field name="work_email">peter@demo.com</field>
             <field name="school_id" ref="demo_school_1"/>
         </record>
 
-        <record id="school.demo_school_teacher_3" model="school.teacher">
+        <record id="demo_school_teacher_3" model="school.teacher">
             <field name="name">Winparker Gabriel</field>
             <field name="work_email">winparker@demo.com</field>
             <field name="school_id" ref="demo_school_1"/>
