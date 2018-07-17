@@ -1,316 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
-        <!-- Inherit partner form view -->
-        <record id="school_hostel_partner_form_inheited" model="ir.ui.view">
-            <field name="name">res.partner.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@name='sales_purchases']/group[@name='container_row_2']/group[@name='sale']" position="after">
-                    <group name="hostel" string="Hostel">
-                        <field name="is_hostel_rector"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
+    <!-- Inherit partner form view -->
+    <record id="school_hostel_partner_form_inheited" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']/group[@name='container_row_2']/group[@name='sale']" position="after">
+                <group name="hostel" string="Hostel">
+                    <field name="is_hostel_rector"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
 
-        <!-- Form View Of HOSTEL Type -->
-        <record id="view_hostel_type_form" model="ir.ui.view">
-            <field name="name">view.hostel.type.form</field>
-            <field name="model">hostel.type</field>
-            <field name="arch" type="xml">
-                <form string="Hostel Type">
-                    <sheet>
-                        <group col="4">
-                            <field name="name" placeholder="Hostel Name"/>
-                            <field name="type"/>
-                            <newline/>
-                            <field name="rector" options="{&quot;no_create&quot;: True}" domain="[('is_hostel_rector','=',True)]"/>
-                        </group>
-                        <group col="2">
-                            <field name="other_info"/>
-                        </group>
-                        <notebook>
-                            <page string="Room Detail">
-                                <field name="room_ids" readonly="1">
-                                    <tree>
+    <!-- Form View Of HOSTEL Type -->
+    <record id="view_hostel_type_form" model="ir.ui.view">
+        <field name="name">view.hostel.type.form</field>
+        <field name="model">hostel.type</field>
+        <field name="arch" type="xml">
+            <form string="Hostel Type">
+                <sheet>
+                    <group col="4">
+                        <field name="name" placeholder="Hostel Name"/>
+                        <field name="type"/>
+                        <newline/>
+                        <field name="rector" options="{&quot;no_create&quot;: True}" domain="[('is_hostel_rector','=',True)]"/>
+                    </group>
+                    <group col="2">
+                        <field name="other_info"/>
+                    </group>
+                    <notebook>
+                        <page string="Room Detail">
+                            <field name="room_ids" readonly="1">
+                                <tree>
+                                    <field name="floor_no"/>
+                                    <field name="room_no"/>
+                                    <field name="student_per_room"/>
+                                    <field name="availability"/>
+                                </tree>
+                                <form>
+                                    <group col="4">
                                         <field name="floor_no"/>
                                         <field name="room_no"/>
                                         <field name="student_per_room"/>
                                         <field name="availability"/>
-                                    </tree>
-                                    <form>
-                                        <group col="4">
-                                            <field name="floor_no"/>
-                                            <field name="room_no"/>
-                                            <field name="student_per_room"/>
-                                            <field name="availability"/>
-                                            <field name="telephone"/>
-                                            <field name="ac"/>
-                                            <field name="private_bathroom"/>
-                                            <field name="guest_sofa"/>
-                                            <field name="tv"/>
-                                            <field name="internet"/>
-                                            <field name="refrigerator"/>
-                                            <field name="microwave"/>
-                                        </group>
-                                    </form>
-                                </field>
-                             </page>
-                             <page string="Student Details">
-                                 <field name="student_ids" readonly="1">
-                                     <tree>
-                                         <field name="hostel_id"/>
-                                         <field name="student_id"/>
-                                         <field name="room_id"/>
-                                         <field name="admission_date"/>
-                                         <field name="discharge_date"/>
-                                         <field name="status"/>
-                                     </tree>
-                                 </field>
-                             </page>
-                         </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <!-- Tree View Of HOSTEL Type -->
-        <record id="view_hostel_type_tree" model="ir.ui.view">
-            <field name="name">view.hostel.type.tree</field>
-            <field name="model">hostel.type</field>
-            <field name="arch" type="xml">
-                <tree string="Hostel Type">
-                    <field name="name"/>
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record>
-        <!-- Actions Of Form & Tree Views Of HOSTEL Type -->
-        <record id="action_hostel_type" model="ir.actions.act_window">
-            <field name="name">Hostel</field>
-            <field name="res_model">hostel.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <!-- MenuItem Of HOSTEL -->
-        <menuitem id="hostel_main_menu" name="Hostel" parent="school.menu_ems" sequence="12" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+                                        <field name="telephone"/>
+                                        <field name="ac"/>
+                                        <field name="private_bathroom"/>
+                                        <field name="guest_sofa"/>
+                                        <field name="tv"/>
+                                        <field name="internet"/>
+                                        <field name="refrigerator"/>
+                                        <field name="microwave"/>
+                                    </group>
+                                </form>
+                            </field>
+                         </page>
+                         <page string="Student Details">
+                             <field name="student_ids" readonly="1">
+                                 <tree>
+                                     <field name="hostel_id"/>
+                                     <field name="student_id"/>
+                                     <field name="room_id"/>
+                                     <field name="admission_date"/>
+                                     <field name="discharge_date"/>
+                                     <field name="status"/>
+                                 </tree>
+                             </field>
+                         </page>
+                     </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <menuitem id="hostel_type_menu" name="Hostel" parent="hostel_main_menu" action="action_hostel_type"
-                  groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user" sequence="121"/>
+    <!-- Tree View Of HOSTEL Type -->
+    <record id="view_hostel_type_tree" model="ir.ui.view">
+        <field name="name">view.hostel.type.tree</field>
+        <field name="model">hostel.type</field>
+        <field name="arch" type="xml">
+            <tree string="Hostel Type">
+                <field name="name"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
 
-        <!-- Form View Of HOSTEL Room -->
-        <record id="view_hostel_room_form" model="ir.ui.view">
-            <field name="name">view.hostel.room.form</field>
-            <field name="model">hostel.room</field>
-            <field name="arch" type="xml">
-                <form name="hostel_room" string="Hostel Room">
-                    <sheet style="width: 10%%,height:10%%">
-                        <separator string="Room Information"/>
-                        <group col="4">
-                            <field name="name" required="1" options="{&quot;no_create&quot;: True}"/>
-                            <field name="floor_no"/>
-                            <field name="room_no"/>
-                            <field name="student_per_room"/>
-                            <field name="rent_amount" required="1"/>
-                            <field name="availability"/>
-                        </group>
-                        <separator string="Room Facilities"/>
-                        <group col="4">
-                            <field name="telephone"/>
-                            <field name="ac"/>
-                            <field name="private_bathroom"/>
-                            <field name="guest_sofa"/>
-                            <field name="tv"/>
-                            <field name="internet"/>
-                            <field name="refrigerator"/>
-                            <field name="microwave"/>
-                        </group>
-                        <notebook>
-                            <page string="Students">
-                                <field name="student_ids" readonly="1">
-                                    <tree>
-                                        <field name="hostel_id"/>
-                                         <field name="student_id"/>
-                                         <field name="room_id" />
-                                         <field name="admission_date"/>
-                                         <field name="discharge_date"/>
-                                         <field name="status"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <!-- Tree View Of HOSTEL Room -->
-        <record id="view_hostel_room_tree" model="ir.ui.view">
-            <field name="name">view.hostel.room.tree</field>
-            <field name="model">hostel.room</field>
-            <field name="arch" type="xml">
-                <tree name="hostel_room" string="Hostel Room" >
-                    <field name="name" />
-                    <field name="floor_no" />
-                    <field name="room_no" />
-                    <field name="student_per_room" />
-                    <field name="availability" />
-                </tree>
-            </field>
-        </record>
-        <!-- Action Of Form & Tree Views Of HOSTEL Room -->
-        <record id="action_hostel_room" model="ir.actions.act_window">
-            <field name="name">Hostel Room</field>
-            <field name="res_model">hostel.room</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
+    <!-- Actions Of Form & Tree Views Of HOSTEL Type -->
+    <record id="action_hostel_type" model="ir.actions.act_window">
+        <field name="name">Hostel</field>
+        <field name="res_model">hostel.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
-        <!-- MenuItem Of HOSTEL Room -->
-        <menuitem id="hostel_room_menu" name="Hostel Room" parent="hostel_main_menu"
-                  action="action_hostel_room"
-                  groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user" sequence="122"/>
+    <!-- MenuItem Of HOSTEL -->
+    <menuitem id="hostel_main_menu" name="Hostel" parent="school.menu_ems" sequence="12" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
 
-        <!-- Form View Of HOSTEL Student -->
-        <record id="view_hostel_student_form" model="ir.ui.view">
-            <field name="name">view.hostel.student.form</field>
-            <field name="model">hostel.student</field>
-            <field name="arch" type="xml">
-                <form name="hostel_information" string="Hostel Information">
-                    <header>
-                        <button name="reservation_state" string="Reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['paid','reservation','cancel','pending','discharge'])]}"/>
-                        <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"/>
-                        <button name="cancel_state" string="Cancel" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['paid','cancel','reservation','discharge'])]}"/>
-                        <button name="pay_fees" string="Payment" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','paid','cancel','pending','discharge'])]}"/>
-                        <button name="discharge_state" string="Discharge" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager"/>
-                        <field name="status" widget="statusbar" nolabel="1" statusbar_visible="draft,reservation,paid" />
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" widget="stateinfo" class="oe_stat_button" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager">
-                                <field name="compute_inv"/>
-                            </button>
-                         </div>
-                        <separator string="Hostel Information"/>
-                        <group col="4">
-                            <field name="student_id" attrs="{'readonly':[('status','not in','draft')]}" domain="[('state','=','done')]" required="1" options="{&quot;no_create&quot;: True}"/>
-                            <field name="hostel_id" readonly="1"/>
-                            <field name="hostel_info_id" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}" context="{'student_id':student_id}"/>
-                            <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                            <field name="admission_date" required="1" attrs="{'readonly':[('status','not in','draft')]}" />
-                            <field name="duration" required="1" attrs="{'readonly':[('status','not in','draft')]}"/>
-                            <field name="discharge_date" readonly="1"/>
-                            <field name="room_rent" readonly="1"/>
-                            <field name="hostel_types" invisible="1"/>
-                            <field name="stud_gender" invisible="1"/>
-                            <field name="paid_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}" />
-                            <field name="acutal_discharge_date" readonly="1"/>
-                            <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <!-- Tree View Of HOSTEL Student -->
-        <record id="view_hostel_student_tree" model="ir.ui.view">
-            <field name="name">view.hostel.room.student</field>
-            <field name="model">hostel.student</field>
-            <field name="arch" type="xml">
-                <tree string="Hostel student" >
-                    <field name="hostel_id" />
-                    <field name="student_id" />
-                    <field name="admission_date" />
-                    <field name="discharge_date" />
-                    <field name="room_rent" />
-                    <field name="paid_amount" />
-                    <field name="remaining_amount" />
-                    <field name="status" />
-                </tree>
-            </field>
-        </record>
-        <!-- Search View Of HOSTEL Student -->
-        <record id="view_hostel_student_search" model="ir.ui.view">
-            <field name="name">view.hostel.room.student.search</field>
-            <field name="model">hostel.student</field>
-            <field name="arch" type="xml">
-                <search string="Hostel student" >
-                    <field name="hostel_id" />
-                    <field name="student_id" />
-                    <field name="admission_date" />
-                    <field name="discharge_date" />
-                    <field name="room_rent" />
-                    <field name="paid_amount" />
-                    <field name="remaining_amount" />
-                    <field name="status" />
-                    <group expand="1" string="Group By">
-                        <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
+    <menuitem id="hostel_type_menu" name="Hostel" parent="hostel_main_menu" action="action_hostel_type"
+              groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user" sequence="121"/>
+
+    <!-- Form View Of HOSTEL Room -->
+    <record id="view_hostel_room_form" model="ir.ui.view">
+        <field name="name">view.hostel.room.form</field>
+        <field name="model">hostel.room</field>
+        <field name="arch" type="xml">
+            <form name="hostel_room" string="Hostel Room">
+                <sheet style="width: 10%%,height:10%%">
+                    <separator string="Room Information"/>
+                    <group col="4">
+                        <field name="name" required="1" options="{&quot;no_create&quot;: True}"/>
+                        <field name="floor_no"/>
+                        <field name="room_no"/>
+                        <field name="student_per_room"/>
+                        <field name="rent_amount" required="1"/>
+                        <field name="availability"/>
                     </group>
-                </search>
-            </field>
-        </record>
-        <!-- Actions Of Form & Tree Views Of HOSTEL Student Button -->
-        <record id="action_hostel_student_button" model="ir.actions.act_window">
-            <field name="name">Hostel Student</field>
-            <field name="res_model">hostel.student</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_student_id': active_id}</field>
-        </record>
-        <!-- Inherited Form View Of Student -->
-        <record id="view_student_student_form2" model="ir.ui.view">
-            <field name="name">student.student.form</field>
-            <field name="model">student.student</field>
-            <field name="inherit_id" ref="school.view_student_student_form_1"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//div[@name='buttons']" position="inside">
-                        <button name="%(action_hostel_student_button)d" type="action" class="oe_right oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user">
-                            <img src="/school_hostel/static/description/hostel291.jpg" style="height:25px;width:50px;float:left;"/>
-                            <lable style="">Hostel</lable>
+                    <separator string="Room Facilities"/>
+                    <group col="4">
+                        <field name="telephone"/>
+                        <field name="ac"/>
+                        <field name="private_bathroom"/>
+                        <field name="guest_sofa"/>
+                        <field name="tv"/>
+                        <field name="internet"/>
+                        <field name="refrigerator"/>
+                        <field name="microwave"/>
+                    </group>
+                    <notebook>
+                        <page string="Students">
+                            <field name="student_ids" readonly="1">
+                                <tree>
+                                    <field name="hostel_id"/>
+                                     <field name="student_id"/>
+                                     <field name="room_id" />
+                                     <field name="admission_date"/>
+                                     <field name="discharge_date"/>
+                                     <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View Of HOSTEL Room -->
+    <record id="view_hostel_room_tree" model="ir.ui.view">
+        <field name="name">view.hostel.room.tree</field>
+        <field name="model">hostel.room</field>
+        <field name="arch" type="xml">
+            <tree name="hostel_room" string="Hostel Room" >
+                <field name="name" />
+                <field name="floor_no" />
+                <field name="room_no" />
+                <field name="student_per_room" />
+                <field name="availability" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action Of Form & Tree Views Of HOSTEL Room -->
+    <record id="action_hostel_room" model="ir.actions.act_window">
+        <field name="name">Hostel Room</field>
+        <field name="res_model">hostel.room</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- MenuItem Of HOSTEL Room -->
+    <menuitem id="hostel_room_menu" name="Hostel Room" parent="hostel_main_menu"
+              action="action_hostel_room"
+              groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user" sequence="122"/>
+
+    <!-- Form View Of HOSTEL Student -->
+    <record id="view_hostel_student_form" model="ir.ui.view">
+        <field name="name">view.hostel.student.form</field>
+        <field name="model">hostel.student</field>
+        <field name="arch" type="xml">
+            <form name="hostel_information" string="Hostel Information">
+                <header>
+                    <button name="reservation_state" string="Reservation" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['paid','reservation','cancel','pending','discharge'])]}"/>
+                    <button name="print_fee_receipt" string="Print Fee Slip" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"/>
+                    <button name="cancel_state" string="Cancel" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user" attrs="{'invisible':[('status','in',['paid','cancel','reservation','discharge'])]}"/>
+                    <button name="pay_fees" string="Payment" type="object" groups="school.group_school_administration,school_hostel.group_hostel_manager" attrs="{'invisible':[('status','in',['draft','paid','cancel','pending','discharge'])]}"/>
+                    <button name="discharge_state" string="Discharge" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager"/>
+                    <field name="status" widget="statusbar" nolabel="1" statusbar_visible="draft,reservation,paid" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" widget="stateinfo" class="oe_stat_button" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager">
+                            <field name="compute_inv"/>
                         </button>
-                    </xpath>
-                </data>
-            </field>
-        </record>
+                     </div>
+                    <separator string="Hostel Information"/>
+                    <group col="4">
+                        <field name="student_id" attrs="{'readonly':[('status','not in','draft')]}" domain="[('state','=','done')]" required="1" options="{&quot;no_create&quot;: True}"/>
+                        <field name="hostel_id" readonly="1"/>
+                        <field name="hostel_info_id" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}" context="{'student_id':student_id}"/>
+                        <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                        <field name="admission_date" required="1" attrs="{'readonly':[('status','not in','draft')]}" />
+                        <field name="duration" required="1" attrs="{'readonly':[('status','not in','draft')]}"/>
+                        <field name="discharge_date" readonly="1"/>
+                        <field name="room_rent" readonly="1"/>
+                        <field name="hostel_types" invisible="1"/>
+                        <field name="stud_gender" invisible="1"/>
+                        <field name="paid_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}" />
+                        <field name="acutal_discharge_date" readonly="1"/>
+                        <field name="remaining_amount" readonly="1" attrs="{'readonly':[('status','not in','draft')]}"/>
+                        <field name='active' invisible='1'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <!-- Inheit View of Account Invoice -->
-        <record id="hostel_student_accunt_inherit" model="ir.ui.view">
-            <field name="name">Account Extended</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@name='other_info']/group/group[2]/field[@name='name']" position="before">
-                    <field name="hostel_student_id" invisible="1"/>
-                    <field name="hostel_ref" readonly="1"/>
+    <!-- Tree View Of HOSTEL Student -->
+    <record id="view_hostel_student_tree" model="ir.ui.view">
+        <field name="name">view.hostel.room.student</field>
+        <field name="model">hostel.student</field>
+        <field name="arch" type="xml">
+            <tree string="Hostel student" >
+                <field name="hostel_id" />
+                <field name="student_id" />
+                <field name="admission_date" />
+                <field name="discharge_date" />
+                <field name="room_rent" />
+                <field name="paid_amount" />
+                <field name="remaining_amount" />
+                <field name="status" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View Of HOSTEL Student -->
+    <record id="view_hostel_student_search" model="ir.ui.view">
+        <field name="name">view.hostel.room.student.search</field>
+        <field name="model">hostel.student</field>
+        <field name="arch" type="xml">
+            <search string="Hostel student" >
+                <field name="hostel_id" />
+                <field name="student_id" />
+                <field name="admission_date" />
+                <field name="discharge_date" />
+                <field name="room_rent" />
+                <field name="paid_amount" />
+                <field name="remaining_amount" />
+                <field name="status" />
+                <group expand="1" string="Group By">
+                    <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions Of Form & Tree Views Of HOSTEL Student Button -->
+    <record id="action_hostel_student_button" model="ir.actions.act_window">
+        <field name="name">Hostel Student</field>
+        <field name="res_model">hostel.student</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_student_id': active_id}</field>
+    </record>
+
+    <!-- Inherited Form View Of Student -->
+    <record id="view_student_student_form2" model="ir.ui.view">
+        <field name="name">student.student.form</field>
+        <field name="model">student.student</field>
+        <field name="inherit_id" ref="school.view_student_student_form_1"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="%(action_hostel_student_button)d" type="action" class="oe_right oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user">
+                        <img src="/school_hostel/static/description/hostel291.jpg" style="height:25px;width:50px;float:left;"/>
+                        <lable style="">Hostel</lable>
+                    </button>
                 </xpath>
-            </field>
-        </record>
+            </data>
+        </field>
+    </record>
 
-        <!-- Actions Of Form & Tree Views Of HOSTEL Student -->
-        <record id="action_hostel_student" model="ir.actions.act_window">
-            <field name="name">Hostel Student</field>
-            <field name="res_model">hostel.student</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
+    <!-- Inheit View of Account Invoice -->
+    <record id="hostel_student_accunt_inherit" model="ir.ui.view">
+        <field name="name">Account Extended</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']/group/group[2]/field[@name='name']" position="before">
+                <field name="hostel_student_id" invisible="1"/>
+                <field name="hostel_ref" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
 
-        <!-- MenuItem Of HOSTEL Student -->
-        <menuitem id="hostel_student_menu" name="Hostel Student" parent="hostel_main_menu"
-                  action="action_hostel_student" sequence="123"
-                  groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+    <!-- Actions Of Form & Tree Views Of HOSTEL Student -->
+    <record id="action_hostel_student" model="ir.actions.act_window">
+        <field name="name">Hostel Student</field>
+        <field name="res_model">hostel.student</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
-        <record id="menu_hostel_rector_action" model="ir.actions.act_window">
-            <field name="name">Hostel Rector</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('is_hostel_rector','=',True)]</field>
-            <field name="context">{'default_is_hostel_rector': 1,'default_customer':False}</field>
-        </record>
+    <!-- MenuItem Of HOSTEL Student -->
+    <menuitem id="hostel_student_menu" name="Hostel Student" parent="hostel_main_menu"
+              action="action_hostel_student" sequence="123"
+              groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
 
+    <record id="menu_hostel_rector_action" model="ir.actions.act_window">
+        <field name="name">Hostel Rector</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_hostel_rector','=',True)]</field>
+        <field name="context">{'default_is_hostel_rector': 1,'default_customer':False}</field>
+    </record>
 
-        <!-- MenuItems Of HOSTEL & HOSTEL->Bed Type -->
-        <menuitem id="menu_hostel" name="Hostel" parent="school.menu_configuration" sequence="4" groups="school_hostel.group_hostel_manager"/>
-        <menuitem id="hostel_rector_menu" name="Hostel Rector" parent="menu_hostel" action="menu_hostel_rector_action"/>
+    <!-- MenuItems Of HOSTEL & HOSTEL->Bed Type -->
+    <menuitem id="menu_hostel" name="Hostel" parent="school.menu_configuration" sequence="4" groups="school_hostel.group_hostel_manager"/>
+    <menuitem id="hostel_rector_menu" name="Hostel Rector" parent="menu_hostel" action="menu_hostel_rector_action"/>
 </odoo>

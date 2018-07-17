@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
@@ -111,12 +110,18 @@ class HostelRoom(models.Model):
                                   string="Students")
 
     _sql_constraints = [('room_no_unique', 'unique(room_no)',
-                         'Room number must be unique!')]
-    _sql_constraints = [('floor_per_hostel', 'check(floor_no < 10)',
-                         'Error ! Floor per HOSTEL should be less than 10.')]
-    _sql_constraints = [('student_per_room_greater',
+                         'Room number must be unique!'),
+                        ('floor_per_hostel', 'check(floor_no < 10)',
+                         'Error ! Floor per HOSTEL should be less than 10.'),
+                        ('student_per_room_greater',
                          'check(student_per_room < 10)',
                          'Error ! Student per room should be less than 10.')]
+
+    @api.constrains('rent_amount')
+    def _check_rent_amount(self):
+        if self.rent_amount < 0:
+            raise ValidationError(_('''Rent Amount Per Month should not
+            be a negative value!'''))
 
 
 class HostelStudent(models.Model):
@@ -214,11 +219,12 @@ class HostelStudent(models.Model):
                               default='draft')
     hostel_types = fields.Char('Type')
     stud_gender = fields.Char('Gender')
+    active = fields.Boolean('Active', default=True)
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
                          'Error ! Discharge Date cannot be set'
-                         'before Admission Date.')]
+                         'before Admission Date!')]
 
     @api.multi
     def cancel_state(self):
@@ -227,7 +233,6 @@ class HostelStudent(models.Model):
             rec.status = 'cancel'
             # increase room availability
             rec.room_id.availability += 1
-        return True
 
     @api.onchange('hostel_info_id')
     def onchange_hostel_types(self):
@@ -247,7 +252,6 @@ class HostelStudent(models.Model):
                                          ].next_by_code('hostel.student'
                                                         ) or _('New')
             rec.status = 'reservation'
-        return True
 
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
@@ -293,7 +297,7 @@ class HostelStudent(models.Model):
         curr_date = datetime.now()
         for rec in self:
             rec.status = 'discharge'
-            rec.room_id.availability -= 1
+            rec.room_id.availability += 1
             # set discharge date equal to current date
             rec.acutal_discharge_date = curr_date
 
@@ -302,12 +306,11 @@ class HostelStudent(models.Model):
         ''' Schedular to discharge student from hostel'''
         current_date = datetime.now()
         new_date = current_date.strftime('%m-%d-%Y')
-        domian = [('discharge_date', '<', new_date),
-                  ('status', '!=', 'draft')]
-        student_hostel = self.env['hostel.student'].search(domian)
+        student_hostel = self.env['hostel.student'].\
+            search([('discharge_date', '<', new_date),
+                    ('status', '!=', 'draft')])
         if student_hostel:
             for student in student_hostel:
-                student.write({'status': 'discharge'})
                 student.discharge_state()
         return True
 
@@ -401,3 +404,20 @@ class AccountPayment(models.Model):
                                  'remaining_amount': inv.residual})
                 inv.hostel_student_id.write(vals)
         return res
+
+
+class Student(models.Model):
+    _inherit = 'student.student'
+
+    @api.multi
+    def set_alumni(self):
+        '''override method to make record of hostel student active false when
+        student is set to alumni'''
+        for rec in self:
+            student_hostel = self.env['hostel.student'].\
+                search([('student_id', '=', rec.id),
+                        ('status', 'in', ['reservation', 'pending', 'paid'])])
+            if student_hostel:
+                student_hostel.active = False
+                student_hostel.room_id._compute_check_availability()
+        return super(Student, self).set_alumni()

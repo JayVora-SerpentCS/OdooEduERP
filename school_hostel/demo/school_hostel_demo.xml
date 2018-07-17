@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!--  School HOSTEL -->
         <record id="demo_school_hostel_1" model="hostel.type">
             <field name="name">International HOSTEL</field>
@@ -81,21 +80,5 @@
             <field name="room_id" ref="demo_school_hostel_room_4"/>
             <field name="paid_amount">0</field>
         </record>
-<!--         <record id="demo_school_hostel_Student_4" model="hostel.student"> -->
-<!--             <field name="student_id" ref="school.demo_student_student_7"/> -->
-<!--             <field name="admission_date" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/> -->
-<!--             <field name="discharge_date" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-30 %H:%M')"/> -->
-<!--             <field name="hostel_info_id" ref="demo_school_hostel_2"/> -->
-<!--             <field name="room_id" ref="demo_school_hostel_room_2"/> -->
-<!--             <field name="paid_amount">0</field> -->
-<!--         </record> -->
-<!--         <record id="demo_school_hostel_Student_5" model="hostel.student"> -->
-<!--             <field name="student_id" ref="school.demo_student_student_8"/> -->
-<!--             <field name="admission_date" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/> -->
-<!--             <field name="discharge_date" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-12-30 %H:%M')"/> -->
-<!--             <field name="hostel_info_id" ref="demo_school_hostel_1"/> -->
-<!--             <field name="room_id" ref="demo_school_hostel_room_5"/> -->
-<!--             <field name="paid_amount">0</field> -->
-<!--         </record> -->
     </data>
 </odoo>
