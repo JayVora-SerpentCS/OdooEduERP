@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-# import time
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
-# from datetime import datetime
 
 
 class StudentAttendanceByMonth(models.TransientModel):
@@ -37,15 +33,9 @@ class StudentAttendanceByMonth(models.TransientModel):
         @param context : standard Dictionary
         @return : printed report
         '''
-#        curr_dt = datetime.now()
         stud_search = self.env['student.student'
                                ].search([('id', '=', vals.get('active_id')),
                                          ('state', '=', 'done')])
-#        attend_line = self.env['daily.attendance.line'
-#                               ].search([('stud_id', '=', stud_search.id)])
-#        k = curr_dt.strftime('%B')
-#        months = False
-#        years = False
         daily_attend = self.env['daily.attendance']
         for rec in self:
             attend_stud = daily_attend.search([('standard_id', '=',
@@ -65,7 +55,5 @@ class StudentAttendanceByMonth(models.TransientModel):
                  'model': 'student.student',
                  'type': 'ir.actions.report.xml',
                  'form': data}
-        return self.env['report'
-                        ].get_action(self,
-                                     'school_attendance.attendance_month',
-                                     data=datas)
+        return self.env.ref('school_attendance.attendace_month_report'
+                            ).report_action([], data=datas)

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
 
@@ -124,12 +123,8 @@
             <field name="model">attendance.sheet</field>
             <field name="arch" type="xml">
                 <search string="Monthly Attendance Sheet">
-                    <group col="10" colspan="4">
-                        <separator orientation="vertical" />
-                        <field name="standard_id" select="1" />
-                    </group>
-                    <newline />
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <field name="standard_id"/>
+                    <group expand="1" string="Group By...">
                         <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}"/>
                     </group>
                 </search>
@@ -251,6 +246,7 @@
                                         <field name="stud_id" required="1" options="{&quot;no_create&quot;: True}" domain="[('state','=','done')]" readonly="1"/>
                                         <field name="is_present"/>
                                         <field name="is_absent"/>
+                                        <field name='present_absentcheck' invisible='1'/>
                                     </tree>
                                     <form string="Student Information">
                                         <group col="4">
@@ -258,6 +254,7 @@
                                                 <field name="roll_no" />
                                                 <field name="is_present" attrs="{'readonly':[('is_present','=',True)]}" />
                                                 <field name="is_absent" attrs="{'readonly':[('is_absent','=',True)]}" />
+                                                <field name='present_absentcheck' invisible='1'/>
                                             </field>
                                         </group>
                                     </form>
@@ -281,12 +278,8 @@
             <field name="model">daily.attendance</field>
             <field name="arch" type="xml">
                 <search string="Daily Attendance Sheet">
-                    <group col="10" colspan="4">
-                        <separator orientation="vertical" />
-                        <field name="standard_id" select="1" />
-                    </group>
-                    <newline />
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <field name="standard_id"/>
+                    <group expand="1" string="Group By...">
                         <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     </group>
                 </search>

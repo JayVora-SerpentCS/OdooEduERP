@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
-# from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import Warning as UserError
 from datetime import datetime
@@ -33,7 +31,6 @@ class AttendanceSheet(models.Model):
     attendance_type = fields.Selection([('daily', 'FullDay'),
                                         ('lecture', 'Lecture Wise')], 'Type')
 
-    @api.multi
     @api.onchange('standard_id')
     def onchange_class_info(self):
         '''Method to get student roll no'''
@@ -105,7 +102,7 @@ class AttendanceSheet(models.Model):
 
 class StudentleaveRequest(models.Model):
     _name = "studentleave.request"
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _inherit = ["mail.thread", "resource.mixin"]
 
     @api.model
     def create(self, vals):
@@ -139,21 +136,20 @@ class StudentleaveRequest(models.Model):
 
     @api.multi
     def approve_state(self):
-        self.write({'state': 'approve'})
+        self.state = 'approve'
 
     @api.multi
     def draft_state(self):
-        self.write({'state': 'draft'})
+        self.state = 'draft'
 
     @api.multi
     def toapprove_state(self):
-        self.write({'state': 'toapprove'})
+        self.state = 'toapprove'
 
     @api.multi
     def reject_state(self):
-        self.write({'state': 'reject'})
+        self.state = 'reject'
 
-    @api.multi
     @api.depends('start_date', 'end_date')
     def _compute_days(self):
         for rec in self:
@@ -209,7 +205,7 @@ class StudentleaveRequest(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_dates(self):
         curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt, '%Y-%m-%d')
+        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
         if self.start_date > self.end_date:
             raise ValidationError(_('''Configure start date less than end date!
             '''))
@@ -221,7 +217,7 @@ class StudentleaveRequest(models.Model):
     @api.constrains('start_date')
     def check_daily_attend_date(self):
         curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt, '%Y-%m-%d')
+        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
         if self.start_date <= new_date:
             raise ValidationError(_('''Your leave request start date should be
             greater than current date!.'''))
@@ -354,7 +350,6 @@ class DailyAttendance(models.Model):
     _name = 'daily.attendance'
     _rec_name = 'standard_id'
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_total(self):
         '''Method to compute total student'''
@@ -366,7 +361,6 @@ class DailyAttendance(models.Model):
         if self.user_id:
             self.standard_id = False
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_present(self):
         '''Method to count present students'''
@@ -378,7 +372,6 @@ class DailyAttendance(models.Model):
                         count += 1
                 rec.total_presence = count
 
-    @api.multi
     @api.depends('student_ids')
     def _compute_absent(self):
         '''Method to count absent students'''
@@ -393,7 +386,7 @@ class DailyAttendance(models.Model):
     @api.constrains('date')
     def validate_date(self):
         curr = datetime.now()
-        new_date = datetime.strftime(curr, '%Y-%m-%d')
+        new_date = datetime.strftime(curr, DEFAULT_SERVER_DATE_FORMAT)
         if self.date > new_date:
             raise ValidationError(_('''Date should be less than or equal to
             current date!'''))
@@ -431,18 +424,6 @@ class DailyAttendance(models.Model):
          'Attendance should be unique!')
     ]
 
-    @api.model
-    def create(self, vals):
-        child = ''
-        if vals:
-            if 'student_ids' in vals.keys():
-                child = vals.pop('student_ids')
-        ret_val = super(DailyAttendance, self).create(vals)
-        if child != '':
-            ret_val.write({'student_ids': child})
-        return ret_val
-
-    @api.multi
     @api.onchange('standard_id')
     def onchange_standard_id(self):
         '''Method to get standard of student selected'''
@@ -476,6 +457,40 @@ class DailyAttendance(models.Model):
                                              'is_present': True})
             rec.student_ids = student_list
 
+    @api.model
+    def create(self, vals):
+        student_list = []
+        stud_obj = self.env['student.student']
+        standard_id = vals.get('student_id')
+        date = vals.get('date')
+        stud_ids = stud_obj.search([('standard_id', '=',
+                                     vals.get('standard_id')),
+                                    ('state', '=', 'done')])
+        for stud in stud_ids:
+            line_vals = {'roll_no': stud.roll_no,
+                         'stud_id': stud.id,
+                         'is_present': True
+                         }
+            if vals.get('student_ids') and not vals.get(
+                    'student_ids')[0][2].get('present_absentcheck'):
+                student_leave = self.env['studentleave.request'
+                                         ].search([('state', '=',
+                                                    'approve'),
+                                                   ('student_id', '=',
+                                                    stud.id),
+                                                   ('standard_id', '=',
+                                                    standard_id),
+                                                   ('start_date', '<=',
+                                                    date),
+                                                   ('end_date', '>=',
+                                                    date)
+                                                   ])
+                if student_leave:
+                    line_vals.update({'is_absent': True})
+            student_list.append((0, 0, line_vals))
+        vals.update({'student_ids': student_list})
+        return super(DailyAttendance, self).create(vals)
+
     @api.multi
     def attendance_draft(self):
         '''Changes the state of attendance to draft'''
@@ -486,23 +501,22 @@ class DailyAttendance(models.Model):
         for daily_attendance_data in self:
             if not daily_attendance_data.date:
                 raise UserError(_('Please enter todays date.'))
-            date = datetime.strptime(daily_attendance_data.date, "%Y-%m-%d")
-            domain_year = [('code', '=', date.year)]
-            domain_month = [('code', '=', date.month)]
-            year_search_ids = academic_year_obj.search(domain_year)
-            month_search_ids = academic_month_obj.search(domain_month)
-#            for line in daily_attendance_data.student_ids:
-#                line.write({'is_present': True, 'is_absent': False})
-            domain = [('standard_id', '=',
-                       daily_attendance_data.standard_id.id),
-                      ('month_id', '=', month_search_ids.id),
-                      ('year_id', '=', year_search_ids.id)]
-        sheet_ids = attendance_sheet_obj.search(domain)
+            date = datetime.strptime(daily_attendance_data.date,
+                                     DEFAULT_SERVER_DATE_FORMAT)
+            year_search_ids = academic_year_obj.search([('code', '=',
+                                                         date.year)])
+            month_search_ids = academic_month_obj.search([('code', '=',
+                                                           date.month)])
+        sheet_ids = attendance_sheet_obj.\
+            search([('standard_id', '=',
+                     daily_attendance_data.standard_id.id),
+                    ('month_id', '=', month_search_ids.id),
+                    ('year_id', '=', year_search_ids.id)])
         if sheet_ids:
             for data in sheet_ids:
                 for attendance_id in data.attendance_ids:
                     date = datetime.strptime(daily_attendance_data.date,
-                                             "%Y-%m-%d")
+                                             DEFAULT_SERVER_DATE_FORMAT)
                     if date.day == 1:
                         dic = {'one': False}
                     elif date.day == 2:
@@ -566,7 +580,7 @@ class DailyAttendance(models.Model):
                     elif date.day == 31:
                         dic = {'three_1': False}
                     attendance_id.write(dic)
-        self.write({'state': 'draft'})
+        self.state = 'draft'
         return True
 
     @api.multi
@@ -578,7 +592,7 @@ class DailyAttendance(models.Model):
         attendance_sheet_obj = self.env['attendance.sheet']
 
         for line in self:
-            date = datetime.strptime(line.date, "%Y-%m-%d")
+            date = datetime.strptime(line.date, DEFAULT_SERVER_DATE_FORMAT)
             year = date.year
             year_ids = acadmic_year_obj.search([('date_start', '<=', date),
                                                 ('date_stop', '>=', date)])
@@ -588,9 +602,10 @@ class DailyAttendance(models.Model):
                                                    year_ids.ids)])
             if month_ids:
                 month_data = month_ids
-                domain = [('month_id', 'in', month_ids.ids),
-                          ('year_id', 'in', year_ids.ids)]
-                att_sheet_ids = attendance_sheet_obj.search(domain)
+                att_sheet_ids = attendance_sheet_obj.search([('month_id', 'in',
+                                                              month_ids.ids),
+                                                             ('year_id', 'in',
+                                                              year_ids.ids)])
                 attendance_sheet_id = (att_sheet_ids and att_sheet_ids[0] or
                                        False)
                 if not attendance_sheet_id:
@@ -606,8 +621,8 @@ class DailyAttendance(models.Model):
                                      'name': student_id.stud_id.student_name}
                         sheet_line_obj.create(line_dict)
                         for student_id in line.student_ids:
-                            domain = [('roll_no', '=', student_id.roll_no)]
-                            search_id = sheet_line_obj.search(domain)
+                            search_id = sheet_line_obj.\
+                                search([('roll_no', '=', student_id.roll_no)])
                             # compute attendance of each day
                             if date.day == 1 and student_id.is_absent:
                                 val = {'one': False}
@@ -801,9 +816,10 @@ class DailyAttendance(models.Model):
 
                 if attendance_sheet_id:
                     for student_id in line.student_ids:
-                        domain = [('roll_no', '=', student_id.roll_no),
-                                  ('standard_id', '=', attendance_sheet_id.id)]
-                        search_id = sheet_line_obj.search(domain)
+                        search_id = sheet_line_obj.\
+                            search([('roll_no', '=', student_id.roll_no),
+                                    ('standard_id', '=',
+                                     attendance_sheet_id.id)])
 
                         if date.day == 1 and student_id.is_absent:
                             val = {'one': False}
@@ -994,7 +1010,7 @@ class DailyAttendance(models.Model):
                             val = {}
                         if search_id:
                             search_id.write(val)
-        self.write({'state': 'validate'})
+        self.state = 'validate'
         return True
 
 
@@ -1005,23 +1021,26 @@ class DailyAttendanceLine(models.Model):
     _order = 'roll_no'
     _rec_name = 'roll_no'
 
-    roll_no = fields.Integer('Roll No.', required=True, help='Roll Number')
+    roll_no = fields.Integer('Roll No.', help='Roll Number')
     standard_id = fields.Many2one('daily.attendance', 'Standard')
-    stud_id = fields.Many2one('student.student', 'Name', required=True)
+    stud_id = fields.Many2one('student.student', 'Name')
     is_present = fields.Boolean('Present', help="Check if student is present")
     is_absent = fields.Boolean('Absent', help="Check if student is absent")
+    present_absentcheck = fields.Boolean('Present/Absent Boolean')
 
     @api.onchange('is_present')
     def onchange_attendance(self):
         '''Method to make absent false when student is present'''
         if self.is_present:
             self.is_absent = False
+            self.present_absentcheck = True
 
     @api.onchange('is_absent')
     def onchange_absent(self):
         '''Method to make present false when student is absent'''
         if self.is_absent:
             self.is_present = False
+            self.present_absentcheck = True
 
     @api.constrains('is_present', 'is_absent')
     def check_present_absent(self):

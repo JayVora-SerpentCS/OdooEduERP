@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
@@ -61,17 +60,17 @@ class BatchExamReport(models.AbstractModel):
         return flag
 
     @api.model
-    def render_html(self, docids, data):
-        self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(self.env.context.get('active_ids',
-                                                                []))
-        docargs = {'doc_ids': docids,
-                   'doc_model': self.model,
-                   'docs': docs,
-                   'data': data,
-                   'get_header_data': self.get_header_data,
-                   'get_student': self.get_student,
-                   'daily_attendance': self.daily_attendance
-                   }
-        render_model = "school_attendance.attendance_month"
-        return self.env['report'].render(render_model, docargs)
+    def get_report_values(self, docids, data=None):
+        attendance_data = self.env['ir.actions.report']._get_report_from_name(
+            'school_attendance.attendance_month')
+        active_model = self._context.get('active_model')
+        docs = self.env[active_model
+                        ].browse(self._context.get('active_ids'))
+        return {'doc_ids': docids,
+                'doc_model': attendance_data.model,
+                'data': data,
+                'docs': docs,
+                'get_header_data': self.get_header_data,
+                'daily_attendance': self.daily_attendance,
+                'get_student': self.get_student,
+                }

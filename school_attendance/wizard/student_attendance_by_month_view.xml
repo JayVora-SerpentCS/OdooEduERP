@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 
 <odoo>
 
@@ -34,17 +33,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="context">{'student_id': active_id}</field>
+            <field name="binding_model_id" ref="school.model_student_student"/>
+            <field name="binding_type">report</field>
         </record>
-
-        <record id="student_attendance_by_month_values" model="ir.values">
-            <field name="model_id" ref="school.model_student_student" />
-            <field name="object" eval="1" />
-            <field name="name">Student Attendances By Month</field>
-            <field name="key2">client_print_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_student_attendance_by_month'))" />
-            <field name="key">action</field>
-            <field name="model">student.student</field>
-        </record>
-        
 
 </odoo>
