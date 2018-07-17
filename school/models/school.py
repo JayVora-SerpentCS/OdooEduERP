@@ -721,9 +721,9 @@ class Report(models.Model):
 
     @api.multi
     def render_template(self, template, values=None):
-        for data in values.get('docs'):
-            if (values.get('doc_model') == 'student.student' and
-                    data.state == 'draft'):
-                    raise ValidationError(_('''You cannot print report for
+        student_id = self.env['student.student'].\
+            browse(self._context.get('student_id', False))
+        if student_id and student_id.state == 'draft':
+            raise ValidationError(_('''You cannot print report for
                 student in unconfirm state!'''))
         return super(Report, self).render_template(template, values)

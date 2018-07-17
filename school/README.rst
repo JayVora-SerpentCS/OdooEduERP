@@ -8,7 +8,6 @@ Installation
 ============
 
 To install this module, you need to:
-
 install 'hr', 'crm', 'account', module
 
 
@@ -16,7 +15,6 @@ Configuration
 =============
 
 To configure this module, you need to:
-
 have a school management functionality.
 
 Usage
@@ -28,8 +26,6 @@ go to apps, then install module to apply this functionality.
 
 Try me on Runbot
 Known issues / Roadmap
-
-...
 
 
 Bug Tracker
@@ -44,8 +40,6 @@ Credits
 
 Contributors
 ============
-
-
 
 Serpent Consulting Services PVT. LTD. <http://serpentcs.com>
 
