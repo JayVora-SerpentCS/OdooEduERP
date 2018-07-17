@@ -5,7 +5,7 @@ from datetime import datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
-DEFAULT_SERVER_DATETIME_FORMAT
+    DEFAULT_SERVER_DATETIME_FORMAT
 from dateutil.relativedelta import relativedelta as rd
 
 
