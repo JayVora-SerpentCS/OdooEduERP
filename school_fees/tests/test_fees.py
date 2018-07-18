@@ -36,7 +36,7 @@ class TestFees(common.TransactionCase):
         self.fees_structure = self.fees_structure_obj.\
             create({'name': 'fees structure-2017',
                     'code': 'FS-2017',
-                    'line_ids': [(4, self.fees_structure_line.ids)]
+                    'line_ids': [(4, self.fees_structure_line.id)]
                     })
 #        find the sale type journal
         self.journal = self.env['account.journal'].search([('type', '=',
