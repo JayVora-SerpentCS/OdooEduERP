@@ -54,8 +54,8 @@ class TestTransport(common.TransactionCase):
                     'contact_per_id': self.contect_person.id,
                     'start_date': tr_start_dt,
                     'end_date': tr_end_date,
-                    'trans_vehicle_ids': [(4, self.transport_vehicle.ids)],
-                    'trans_point_ids': [(4, self.transport_point.ids)]
+                    'trans_vehicle_ids': [(4, self.transport_vehicle.id)],
+                    'trans_point_ids': [(4, self.transport_point.id)]
                     })
         self.transport_root.transport_open()
         self.transport_root.transport_close()
