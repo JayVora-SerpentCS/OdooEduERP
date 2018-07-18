@@ -97,9 +97,9 @@ class TestLibrary(common.TransactionCase):
         self.purchase_order_line.onchange_product_id()
         self.stock_picking = self.stock_picking_obj.\
             search([('origin', '=', self.purchase_order.name)])
-        self.stock_picking.do_new_transfer()
+        self.stock_picking.button_validate()
         self.imm = self.immideate_transfer.\
-            create({'pick_id': self.stock_picking.id})
+            create({'pick_ids': [(4, self.stock_picking.id)]})
         for rec in self.imm:
             rec.process()
         # Book request created
