@@ -51,10 +51,14 @@ class SchoolParent(models.Model):
         parent_id = super(SchoolParent, self).create(vals)
         if vals.get('parent_create_mng'):
             return parent_id
+        parent_grp_id = self.env.ref('school.group_school_parent')
+        emp_grp = self.env.ref('base.group_user')
+        parent_group_ids = [emp_grp.id, parent_grp_id.id]
         user_vals = {'name': parent_id.name,
                      'login': parent_id.email,
                      'email': parent_id.email,
                      'partner_id': parent_id.partner_id.id,
+                     'groups_id': [(6, 0, parent_group_ids)]
                      }
         self.env['res.users'].create(user_vals)
         return parent_id
