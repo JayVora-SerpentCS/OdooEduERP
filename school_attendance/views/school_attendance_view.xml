@@ -125,7 +125,7 @@
                 <search string="Monthly Attendance Sheet">
                     <field name="standard_id"/>
                     <group expand="1" string="Group By...">
-                        <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}"/>
+                        <filter icon="terp-project" name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}"/>
                     </group>
                 </search>
             </field>
@@ -147,11 +147,11 @@
                         <group>
                             <group string="Leave Details">
                                 <field name="name" attrs="{'readonly':[('state','in',['approve','reject','toapprove'])]}"/>
-                                    <label for="days" string="Duration"/>
+                                    <label for="days" class="oe_edit_only"/>
                                     <div>
                                         <div>
                                             <field name="start_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject','toapprove'])]}"/>
-                                            <label string="-" class="oe_inline"/>
+                                            <span class="oe_grey"> - </span>
                                             <field name="end_date" class="oe_inline" required="1" attrs="{'readonly':[('state','in',['approve','reject','toapprove'])]}"/>
                                         </div>
                                        <div>
@@ -173,6 +173,10 @@
                             <field name="reason" required="1" attrs="{'readonly':[('state','in',['approve','reject','toapprove'])]}"/>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
                         <field name="message_ids" widget="mail_thread"/>
@@ -280,7 +284,7 @@
                 <search string="Daily Attendance Sheet">
                     <field name="standard_id"/>
                     <group expand="1" string="Group By...">
-                        <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
+                        <filter icon="terp-project" name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
                     </group>
                 </search>
             </field>
