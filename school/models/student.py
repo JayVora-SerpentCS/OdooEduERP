@@ -2,12 +2,11 @@
 
 import time
 import base64
-from datetime import date, datetime
+from datetime import date
 from odoo import models, fields, api, tools, _
 from odoo.modules import get_module_resource
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from .import school
 
 # from lxml import etree

@@ -6,8 +6,7 @@ import calendar
 from datetime import datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
-    DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
@@ -349,6 +348,7 @@ class SchoolSchool(models.Model):
         res.company_id.parent_id = main_company.id
         return res
 
+
 class SubjectSubject(models.Model):
     '''Defining a subject '''
     _name = "subject.subject"
@@ -457,7 +457,7 @@ class DocumentType(models.Model):
 class StudentDescription(models.Model):
     ''' Defining a Student Description'''
     _name = 'student.description'
-    _description ="Student Description"
+    _description = "Student Description"
 
     des_id = fields.Many2one('student.student', 'Description')
     name = fields.Char('Name')
@@ -478,7 +478,7 @@ class StudentDescipline(models.Model):
 
 class StudentHistory(models.Model):
     _name = "student.history"
-    _description ="Student History"
+    _description = "Student History"
 
     student_id = fields.Many2one('student.student', 'Student')
     academice_year_id = fields.Many2one('academic.year', 'Academic Year',
@@ -600,7 +600,7 @@ class GradeMaster(models.Model):
 
 class GradeLine(models.Model):
     _name = 'grade.line'
-    _description ="Grades"
+    _description = "Grades"
     _rec_name = 'grade'
 
     from_mark = fields.Integer('From Marks', required=True,
@@ -700,7 +700,7 @@ class StudentNews(models.Model):
 
 class StudentReminder(models.Model):
     _name = 'student.reminder'
-    _description ="Student Reminder"
+    _description = "Student Reminder"
 
     @api.model
     def check_user(self):
