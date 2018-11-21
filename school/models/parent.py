@@ -41,7 +41,7 @@ class SchoolParent(models.Model):
     stand_id = fields.Many2many('standard.standard',
                                 'standard_standard_parent_rel',
                                 'standard_parent_id', 'standard_id',
-                                'Academic Class')
+                                'Academic Standard')
     teacher_id = fields.Many2one('school.teacher', 'Teacher',
                                  related="standard_id.user_id", store=True)
 
