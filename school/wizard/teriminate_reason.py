@@ -5,6 +5,7 @@ from odoo import models, fields, api
 
 class TerminateReason(models.TransientModel):
     _name = "terminate.reason"
+    _description =" Terminate Reason"
 
     reason = fields.Text('Reason')
 

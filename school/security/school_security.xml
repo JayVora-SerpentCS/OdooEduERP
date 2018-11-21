@@ -59,7 +59,7 @@
             <field name="name">Rule Student Profile Record As An Administrator</field>
             <field name="model_id" ref="model_student_student"/>
             <field name="global" eval="True"/>
-            <field name="domain_force"> ['|','|',('cmp_id.child_ids','child_of',[user.company_id.id]),('cmp_id','child_of',[user.company_id.id]),('cmp_id','in',False)]</field>
+            <field name="domain_force"> ['|','|',('cmp_id.child_ids','child_of',[user.company_id.id]),('cmp_id','child_of',[user.company_id.id]),('cmp_id','=',False)]</field>
             <field name="groups" eval="[(4, ref('group_school_administration'))]"/>
         </record>
 
@@ -97,7 +97,7 @@
             <field name="name">Rule School Standard Record As An Administrator</field>
             <field name="model_id" ref="model_school_standard"/>
             <field name="global" eval="True"/>
-            <field name="domain_force"> ['|','|',('cmp_id.child_ids','child_of',[user.company_id.id]),('cmp_id','child_of',[user.company_id.id]),('cmp_id','in',False)]</field>
+            <field name="domain_force"> ['|','|',('cmp_id.child_ids','child_of',[user.company_id.id]),('cmp_id','child_of',[user.company_id.id]),('cmp_id','=',False)]</field>
             <field name="groups" eval="[(4, ref('group_school_administration'))]"/>
         </record>
         <!-- Record Rule teacher can see standards related to school -->

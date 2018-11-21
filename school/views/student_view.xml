@@ -300,16 +300,16 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
-                    <filter icon="terp-project" string="Name" help="By Class" context="{'group_by':'student_name'}" />
-                    <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
-                    <filter icon="terp-project" string="State" help="By State" context="{'group_by':'state'}"/>
+                    <filter name="class" icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="gender" icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
+                    <filter name="name" icon="terp-project" string="Name" help="By Class" context="{'group_by':'student_name'}" />
+                    <filter name="school" icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
+                    <filter name="state" icon="terp-project" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
                 <separator/>
-                <filter icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
-                <filter icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
-                <filter icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
+                <filter name="alumni" icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
+                <filter name="terminate" icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
+                <filter name="done" icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
             </search>
         </field>
     </record>
@@ -353,7 +353,7 @@
                                         <tr width="300">
                                             <td valign="top" width="64" align="left">
                                                 <a type="open">
-                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image_medium', record.id.raw_value)" />
+                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'photo', record.id.raw_value)" alt="image"/>
                                                 </a>
                                             </td>
                                             <td valign="top" align="left" style="padding-left:10px;">
@@ -398,8 +398,8 @@
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
-                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color" />
+                                        <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
+                                        <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear" />
                                 </div>
@@ -620,10 +620,10 @@
                 <field name="school_id" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter icon="terp-project" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter icon="terp-project" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
-                    <filter icon="terp-project" string="Name" domain="[]" help="By Class" context="{'group_by':'student_name'}" />
-                    <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
+                    <filter name="class" icon="terp-project" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="gender" icon="terp-project" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
+                    <filter name="name" icon="terp-project" string="Name" domain="[]" help="By Class" context="{'group_by':'student_name'}" />
+                    <filter name="school" icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
                 </group>
             </search>
         </field>
