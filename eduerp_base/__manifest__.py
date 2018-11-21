@@ -2,7 +2,7 @@
 
 {
     'name': 'Education ERP',
-    'version': '10.0.1.0.0',
+    'version': '12.0.1.0.0',
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'category': 'EduERP Management',
     'website': 'http://www.serpentcs.com',
