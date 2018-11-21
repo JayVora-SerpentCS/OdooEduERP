@@ -26,7 +26,6 @@ class SchoolTeacher(models.Model):
                                     'employee_category_rel', 'emp_id',
                                     'category_id', 'Tags')
     department_id = fields.Many2one('hr.department', 'Department')
-    job_id = fields.Many2one('hr.job', 'Job Title')
     is_parent = fields.Boolean('Is Parent')
     stu_parent_id = fields.Many2one('school.parent', 'Related Parent')
     student_id = fields.Many2many('student.student',

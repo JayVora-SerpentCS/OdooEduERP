@@ -459,7 +459,7 @@ class StudentDescription(models.Model):
     _name = 'student.description'
     _description = "Student Description"
 
-    des_id = fields.Many2one('student.student', 'Description')
+    des_id = fields.Many2one('student.student', 'Student Ref.')
     name = fields.Char('Name')
     description = fields.Char('Description')
 
@@ -563,17 +563,15 @@ class StudentFamilyContact(models.Model):
             else:
                 rec.relative_name = rec.name
 
-    family_contact_id = fields.Many2one('student.student', 'Student')
-    exsting_student = fields.Many2one('student.student',
-                                      'Student')
+    family_contact_id = fields.Many2one('student.student', 'Student Ref.')
     rel_name = fields.Selection([('exist', 'Link to Existing Student'),
                                  ('new', 'Create New Relative Name')],
                                 'Related Student', help="Select Name",
                                 required=True)
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade")
-    stu_name = fields.Many2one('student.student', 'Name',
+    stu_name = fields.Many2one('student.student', 'Existing Student',
                                help="Select Student From Existing List")
-    name = fields.Char('Name')
+    name = fields.Char('Relative Name')
     relation = fields.Many2one('student.relation.master', 'Relation',
                                required=True)
     phone = fields.Char('Phone', required=True)
@@ -595,7 +593,7 @@ class GradeMaster(models.Model):
     _description = "Grade Master"
 
     name = fields.Char('Grade', required=True)
-    grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Name')
+    grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Lines')
 
 
 class GradeLine(models.Model):
@@ -611,7 +609,7 @@ class GradeLine(models.Model):
     sequence = fields.Integer('Sequence', help="Sequence order of the grade.")
     fail = fields.Boolean('Fail', help='If fail field is set to True,\
                                   it will allow you to set the grade as fail.')
-    grade_id = fields.Many2one("grade.master", 'Grade')
+    grade_id = fields.Many2one("grade.master", 'Grade Ref.')
     name = fields.Char('Name')
 
 
