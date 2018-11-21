@@ -66,11 +66,11 @@ class AcademicYear(models.Model):
         interval = 1
         month_obj = self.env['academic.month']
         for data in self:
-            ds = datetime.strptime(data.date_start, '%Y-%m-%d')
-            while ds.strftime('%Y-%m-%d') < data.date_stop:
+            ds = data.date_start
+            while ds < data.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
-                if de.strftime('%Y-%m-%d') > data.date_stop:
-                    de = datetime.strptime(data.date_stop, '%Y-%m-%d')
+                if de > data.date_stop:
+                    de = data.date_stop
                 month_obj.create({
                     'name': ds.strftime('%B'),
                     'code': ds.strftime('%m/%Y'),
@@ -86,8 +86,8 @@ class AcademicYear(models.Model):
         '''Method to check start date should be greater than end date
            also check that dates are not overlapped with existing academic
            year'''
-        new_start_date = datetime.strptime(self.date_start, '%Y-%m-%d')
-        new_stop_date = datetime.strptime(self.date_stop, '%Y-%m-%d')
+        new_start_date = self.date_start
+        new_stop_date = self.date_stop
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
             raise ValidationError(_('''Error! The duration of the academic year
@@ -342,6 +342,12 @@ class SchoolSchool(models.Model):
                                 will be printed in this language.
                                 If not, it will be English.''')
 
+    @api.model
+    def create(self, vals):
+        res = super(SchoolSchool, self).create(vals)
+        main_company = self.env.ref('base.main_company')
+        res.company_id.parent_id = main_company.id
+        return res
 
 class SubjectSubject(models.Model):
     '''Defining a subject '''
@@ -381,6 +387,7 @@ class SubjectSyllabus(models.Model):
 class SubjectElective(models.Model):
     ''' Defining Subject Elective '''
     _name = 'subject.elective'
+    _description = "Elective Subject"
 
     name = fields.Char("Name")
     subject_ids = fields.One2many('subject.subject', 'elective_id',
@@ -413,6 +420,7 @@ class AttendanceType(models.Model):
 
 class StudentDocument(models.Model):
     _name = 'student.document'
+    _description = "Student Document"
     _rec_name = "doc_type"
 
     doc_id = fields.Many2one('student.student', 'Student')
@@ -449,6 +457,7 @@ class DocumentType(models.Model):
 class StudentDescription(models.Model):
     ''' Defining a Student Description'''
     _name = 'student.description'
+    _description ="Student Description"
 
     des_id = fields.Many2one('student.student', 'Description')
     name = fields.Char('Name')
@@ -457,6 +466,7 @@ class StudentDescription(models.Model):
 
 class StudentDescipline(models.Model):
     _name = 'student.descipline'
+    _description = "Student Descipline"
 
     student_id = fields.Many2one('student.student', 'Student')
     teacher_id = fields.Many2one('school.teacher', 'Teacher')
@@ -468,6 +478,7 @@ class StudentDescipline(models.Model):
 
 class StudentHistory(models.Model):
     _name = "student.history"
+    _description ="Student History"
 
     student_id = fields.Many2one('student.student', 'Student')
     academice_year_id = fields.Many2one('academic.year', 'Academic Year',
@@ -479,6 +490,7 @@ class StudentHistory(models.Model):
 
 class StudentCertificate(models.Model):
     _name = "student.certificate"
+    _description = "Student Certificate"
 
     student_id = fields.Many2one('student.student', 'Student')
     description = fields.Char('Description')
@@ -580,6 +592,7 @@ class StudentRelationMaster(models.Model):
 
 class GradeMaster(models.Model):
     _name = 'grade.master'
+    _description = "Grade Master"
 
     name = fields.Char('Grade', required=True)
     grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Name')
@@ -587,6 +600,7 @@ class GradeMaster(models.Model):
 
 class GradeLine(models.Model):
     _name = 'grade.line'
+    _description ="Grades"
     _rec_name = 'grade'
 
     from_mark = fields.Integer('From Marks', required=True,
@@ -618,8 +632,7 @@ class StudentNews(models.Model):
 
     @api.constrains("date")
     def checknews_dates(self):
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATETIME_FORMAT)
+        new_date = datetime.now()
         if self.date < new_date:
             raise ValidationError(_('''Configure expiry date greater than
             current date!'''))
@@ -656,8 +669,7 @@ class StudentNews(models.Model):
                 if not email_list:
                     raise except_orm(_('Email Configuration!'),
                                      _("Email not defined!"))
-            news_date = datetime.strptime(news.date,
-                                          DEFAULT_SERVER_DATETIME_FORMAT)
+            news_date = news.date
             # Add company name while sending email
             company = user.company_id.name or ''
             body = """Hi,<br/><br/>
@@ -688,6 +700,7 @@ class StudentNews(models.Model):
 
 class StudentReminder(models.Model):
     _name = 'student.reminder'
+    _description ="Student Reminder"
 
     @api.model
     def check_user(self):
@@ -705,12 +718,14 @@ class StudentReminder(models.Model):
 
 class StudentCast(models.Model):
     _name = "student.cast"
+    _description = "Student Cast"
 
     name = fields.Char("Name", required=True)
 
 
 class ClassRoom(models.Model):
     _name = "class.room"
+    _description = "Class Room"
 
     name = fields.Char("Name")
     number = fields.Char("Room Number")

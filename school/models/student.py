@@ -48,11 +48,10 @@ class StudentStudent(models.Model):
     @api.depends('date_of_birth')
     def _compute_student_age(self):
         '''Method to calculate student age'''
-        current_dt = datetime.today()
+        current_dt = date.today()
         for rec in self:
             if rec.date_of_birth:
-                start = datetime.strptime(rec.date_of_birth,
-                                          DEFAULT_SERVER_DATE_FORMAT)
+                start = rec.date_of_birth
                 age_calc = ((current_dt - start).days / 365)
                 # Age should be greater than 0
                 if age_calc > 0.0:
@@ -61,10 +60,9 @@ class StudentStudent(models.Model):
     @api.constrains('date_of_birth')
     def check_age(self):
         '''Method to check age should be greater than 5'''
-        current_dt = datetime.today()
+        current_dt = date.today()
         if self.date_of_birth:
-            start = datetime.strptime(self.date_of_birth,
-                                      DEFAULT_SERVER_DATE_FORMAT)
+            start = self.date_of_birth
             age_calc = ((current_dt - start).days / 365)
             # Check if age less than 5 years
             if age_calc < 5:
@@ -245,7 +243,7 @@ class StudentStudent(models.Model):
                                       readonly=True)
     stu_name = fields.Char('First Name', related='user_id.name',
                            readonly=True)
-    Acadamic_year = fields.Char('Academic Year', related='year.name',
+    Acadamic_year = fields.Char('Year', related='year.name',
                                 help='Academic Year', readonly=True)
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
