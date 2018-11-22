@@ -86,8 +86,8 @@ class SchoolEvaluation(models.Model):
         for rec in self:
             if not rec.eval_line:
                 raise ValidationError(_('Please Get the Questions First!\
-                \nTo Get the Questions please click on "Get Questions" Button!'
-                ))
+                \nTo Get the Questions please click on "Get Questions"\
+                Button!'))
         self.state = 'start'
 
     @api.model
@@ -106,9 +106,9 @@ class SchoolEvaluation(models.Model):
         for rec in self:
             if [line.id for line in rec.eval_line
                 if not line.point_id or not line.rating]:
-                raise ValidationError(_("You can't mark the evaluation as\
-                Finished untill the Rating/Remarks are not added for all\
-                the Questions!"))
+                    raise ValidationError(_("You can't mark the evaluation as\
+                    Finished untill the Rating/Remarks are not added for all\
+                    the Questions!"))
         self.state = 'finished'
 
     @api.multi
