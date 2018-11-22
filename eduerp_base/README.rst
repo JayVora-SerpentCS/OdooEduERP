@@ -41,7 +41,7 @@ Contributors
 ============
 
 Serpent Consulting Services PVT. LTD. <http://serpentcs.com>
-===========
+
 Maintainer
 ===========
 
