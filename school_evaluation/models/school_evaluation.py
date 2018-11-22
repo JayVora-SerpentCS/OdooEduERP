@@ -104,11 +104,11 @@ class SchoolEvaluation(models.Model):
     def set_finish(self):
         '''Change state to finished'''
         for rec in self:
-            if [line.id for line in rec.eval_line
-                if not line.point_id or not line.rating]:
-                    raise ValidationError(_("You can't mark the evaluation as\
-                    Finished untill the Rating/Remarks are not added for all\
-                    the Questions!"))
+            if [line.id for line in rec.eval_line if (not line.point_id or
+                                                      not line.rating)]:
+                raise ValidationError(_("You can't mark the evaluation as\
+                Finished untill the Rating/Remarks are not added for all\
+                the Questions!"))
         self.state = 'finished'
 
     @api.multi
