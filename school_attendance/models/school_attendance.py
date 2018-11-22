@@ -476,21 +476,21 @@ class DailyAttendance(models.Model):
     @api.multi
     def attendance_draft(self):
         '''Changes the state of attendance to draft'''
-        attendance_sheet_obj = self.env['attendance.sheet']
+        att_sheet_obj = self.env['attendance.sheet']
         academic_year_obj = self.env['academic.year']
         academic_month_obj = self.env['academic.month']
 
         for rec in self:
             if not rec.date:
                 raise UserError(_('Please enter todays date.'))
-            year_search_ids = academic_year_obj.search([
-                                                ('code', '=', rec.date.year)])
-            month_search_ids = academic_month_obj.search([
-                                              ('code', '=', rec.date.month)])
-            sheet_ids = attendance_sheet_obj.search([
-                             ('standard_id', '=', rec.standard_id.id),
-                             ('month_id', '=', month_search_ids.id),
-                             ('year_id', '=', year_search_ids.id)])
+            year_search_ids = academic_year_obj.search([('code', '=',
+                                                         rec.date.year)])
+            month_search_ids = academic_month_obj.search([('code', '=',
+                                                           rec.date.month)])
+            sheet_ids = att_sheet_obj.search(
+                             [('standard_id', '=', rec.standard_id.id),
+                              ('month_id', '=', month_search_ids.id),
+                              ('year_id', '=', year_search_ids.id)])
             if sheet_ids:
                 for data in sheet_ids:
                     for attendance_id in data.attendance_ids:
@@ -570,11 +570,11 @@ class DailyAttendance(models.Model):
         attendance_sheet_obj = self.env['attendance.sheet']
 
         for line in self:
-            year = line.date.year
-            year_ids = acadmic_year_obj.search([('date_start', '<=', line.date),
-                                                ('date_stop', '>=', line.date)])
-            month_ids = acadmic_month_obj.search([
-                                      ('date_start', '<=', line.date),
+            year_ids = acadmic_year_obj.search(
+                                           [('date_start', '<=', line.date),
+                                            ('date_stop', '>=', line.date)])
+            month_ids = acadmic_month_obj.search(
+                                     [('date_start', '<=', line.date),
                                       ('date_stop', '>=', line.date),
                                       ('year_id', 'in', year_ids.ids)])
             if month_ids:
