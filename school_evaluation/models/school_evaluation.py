@@ -9,6 +9,7 @@ from odoo.tools.translate import _
 
 class SchoolEvaluation(models.Model):
     _name = "school.evaluation"
+    _description = "School Evaluation details"
     _rec_name = 'type'
 
     @api.multi
@@ -132,6 +133,7 @@ class SchoolEvaluation(models.Model):
 
 class StudentEvaluationLine(models.Model):
     _name = 'school.evaluation.line'
+    _description = 'School Evaluation Line Details'
 
     @api.onchange('point_id')
     def onchange_point(self):
@@ -155,6 +157,7 @@ class StudentEvaluationLine(models.Model):
 
 class SchoolEvaluationTemplate(models.Model):
     _name = "school.evaluation.template"
+    _description = "School Evaluation Template Details"
     _rec_name = 'desc'
 
     desc = fields.Char('Description', required=True)
@@ -166,6 +169,7 @@ class SchoolEvaluationTemplate(models.Model):
 
 class RatingRating(models.Model):
     _name = 'rating.rating'
+    _description = "Rating details"
     _rec_name = 'point'
     _order = "point desc"
 
