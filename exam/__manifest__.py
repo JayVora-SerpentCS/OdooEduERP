@@ -2,7 +2,7 @@
 
 {
     'name': 'Exam Management',
-    'version': "11.0.1.0.15",
+    'version': "12.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',

@@ -5,6 +5,7 @@ from odoo import models, api
 
 class ReportTimetableInfo(models.AbstractModel):
     _name = 'report.timetable.timetable'
+    _description = "Timetable details"
 
     @api.multi
     def _get_timetable(self, timetable_id):
