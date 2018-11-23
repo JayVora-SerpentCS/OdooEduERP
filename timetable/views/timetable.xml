@@ -95,6 +95,7 @@
                                             </table>
                                         </t>
                                         <t t-if="o.timetable_type == 'exam'">
+                                            <br/>
                                             <table width="100%" style="border: 2px solid black;">
                                                 <tr>
                                                     <td width="15%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
