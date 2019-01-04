@@ -25,8 +25,8 @@
                 <field name="name"/>
                 <field name="code"/>
                 <group expand="1" string="Group By">
-                    <filter string="Code" icon="terp-flag" name="code" context="{'group_by':'code'}"/>
-                    <filter string="Structure Name" icon="terp-flag" name="name" context="{'group_by':'name'}"/>
+                    <filter string="Code" name="code" context="{'group_by':'code'}"/>
+                    <filter string="Structure Name" name="name" context="{'group_by':'name'}"/>
                 </group>
             </search>
         </field>
@@ -254,8 +254,8 @@
         <field name="arch" type="xml">
             <search string="Payslip">
                 <group col="10" colspan="4">
-                    <filter icon="terp-document-new" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
-                    <filter icon="terp-camera_test" name="confirm" string="Confirm" domain="[('state','=','confirm')]" help="Confirm Slip"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                    <filter name="confirm" string="Confirm" domain="[('state','=','confirm')]" help="Confirm Slip"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="student_id"/>
@@ -264,11 +264,11 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
+                    <filter string="Student" name="student_id" context="{'group_by':'student_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
+                    <filter string="Register" name="register_id" context="{'group_by':'register_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="States" name="state" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
@@ -352,8 +352,8 @@
         <field name="arch" type="xml">
             <search string="Fees Register">
                 <group col="10" colspan="4">
-                    <filter icon="terp-document-new" name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
-                    <filter icon="terp-camera_test" name="confirm" string="Confirm" domain="[('state','=','confirm')]" help="Confirm Slip"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                    <filter name="confirm" string="Confirm" domain="[('state','=','confirm')]" help="Confirm Slip"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="number"/>
@@ -361,7 +361,7 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="States" name="state" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
