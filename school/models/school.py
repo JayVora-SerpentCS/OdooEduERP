@@ -466,7 +466,7 @@ class StudentDescription(models.Model):
 
 class StudentDescipline(models.Model):
     _name = 'student.descipline'
-    _description = "Student Descipline"
+    _description = "Student Discipline"
 
     student_id = fields.Many2one('student.student', 'Student')
     teacher_id = fields.Many2one('school.teacher', 'Teacher')
