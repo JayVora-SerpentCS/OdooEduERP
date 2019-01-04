@@ -59,8 +59,8 @@
                 <filter name="uncomming" string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
                 <newline />
                 <group expand="1" string="Group By">
-                    <filter icon="terp-project" name="date" string="Date" help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
-                    <filter icon="terp-stock_symbol-selection" name="state" string="State"
+                    <filter  name="date" string="Date" help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
+                    <filter name="state" string="State"
                             help="By State" domain="[]" context="{'group_by':'state'}"/>
                 </group>
             </search>
@@ -246,10 +246,10 @@
                 </group>
                 <newline />
                 <group expand="1" string="Group By">
-                    <filter icon="terp-stock_symbol-selection" name="standard" string="Standard"
+                    <filter name="standard" string="Standard"
                             help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-personal" name="subject" string="Subject" help="By Subject Name" domain="[]"
+                    <filter name="subject" string="Subject" help="By Subject Name" domain="[]"
                             context="{'group_by':'subject_id'}"/>
                 </group>
             </search>
@@ -453,9 +453,9 @@
                 <field name="student_id"/>
                 <field name="standard_id"/>
                 <group expand="1" string="Group By">
-                    <filter icon="terp-stock_symbol-selection" name="student" string="Student" help="By Name" domain="[]"
+                    <filter name="student" string="Student" help="By Name" domain="[]"
                             context="{'group_by':'student_id'}" />
-                    <filter icon="terp-stock_symbol-selection" name="standard" string="Standard" help="By Name" domain="[]"
+                    <filter name="standard" string="Standard" help="By Name" domain="[]"
                             context="{'group_by':'standard_id'}" />
                 </group>
             </search>
@@ -523,10 +523,10 @@
                 <field name="student_id" />
                 <field name="standard_id" />
                 <group expand="1" string="Group By">
-                    <filter icon="terp-stock_symbol-selection" name="student" string="Student" help="By Name" domain="[]"
+                    <filter name="student" string="Student" help="By Name" domain="[]"
                             context="{'group_by':'student_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" name="standard" string="Standard" help="By Name" domain="[]"
+                    <filter name="standard" string="Standard" help="By Name" domain="[]"
                             context="{'group_by':'standard_id'}"/>
                     <separator orientation="vertical"/>
                 </group>
