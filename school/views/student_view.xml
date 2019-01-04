@@ -300,16 +300,16 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="class" icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter name="gender" icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
-                    <filter name="name" icon="terp-project" string="Name" help="By Class" context="{'group_by':'student_name'}" />
-                    <filter name="school" icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
-                    <filter name="state" icon="terp-project" string="State" help="By State" context="{'group_by':'state'}"/>
+                    <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="gender" string="Gender" help="By Gender" context="{'group_by':'gender'}" />
+                    <filter name="name" string="Name" help="By Class" context="{'group_by':'student_name'}" />
+                    <filter name="school" string="School" help="By School" context="{'group_by':'school_id'}" />
+                    <filter name="state" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
                 <separator/>
-                <filter name="alumni" icon="terp-project" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
-                <filter name="terminate" icon="terp-project" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
-                <filter name="done" icon="terp-project" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
+                <filter name="alumni" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
+                <filter name="terminate" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
+                <filter name="done" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
             </search>
         </field>
     </record>
@@ -611,7 +611,7 @@
         <field name="model">student.student</field>
         <field name="arch" type="xml">
             <search string="Admission Register">
-                <filter icon="terp-project" string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" />
+                <filter string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" />
                 <separator orientation="vertical" />
                 <field name="student_name" invisible="1" />
                 <field name="year" />
@@ -620,10 +620,10 @@
                 <field name="school_id" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="class" icon="terp-project" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter name="gender" icon="terp-project" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
-                    <filter name="name" icon="terp-project" string="Name" domain="[]" help="By Class" context="{'group_by':'student_name'}" />
-                    <filter name="school" icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
+                    <filter name="class" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="gender" string="Gender" domain="[]" help="By Gender" context="{'group_by':'gender'}" />
+                    <filter name="name" string="Name" domain="[]" help="By Class" context="{'group_by':'student_name'}" />
+                    <filter name="school" string="School" help="By School" context="{'group_by':'school_id'}" />
                 </group>
             </search>
         </field>
