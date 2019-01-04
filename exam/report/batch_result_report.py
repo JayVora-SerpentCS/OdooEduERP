@@ -36,6 +36,8 @@ class BatchExamReport(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        '''Now in v12 the method name have changed from get_report_values
+        to _get_report_values.'''
         batch_result = self.env['ir.actions.report']._get_report_from_name(
             'exam.exam_result_batch')
         batch_model = self.env[batch_result.model
