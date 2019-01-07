@@ -7,7 +7,7 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <div class="oe_structure" />
+                        <div class="oe_structure" /><br/><br/>
                         <table>
                             <tr>
                                 <td style="font-family: 'Helvetica';font-size: 18px;border:1px solid black;">
