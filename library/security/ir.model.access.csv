@@ -38,7 +38,7 @@ access_product_pricelist_user,product.pricelist,product.model_product_pricelist,
 access_delivery_carrier_user,delivery.carrier,delivery.model_delivery_carrier,library.group_userian,1,0,0,0
 access_stock_warehouse_user,stock.warehouse,stock.model_stock_warehouse,library.group_userian,1,0,0,0
 access_stock_location_user,stock.location,stock.model_stock_location,library.group_userian,1,0,0,0
-access_product_uom_user,product.uom,product.model_product_uom,library.group_userian,1,0,0,0
+access_uom_uom_user,uom.uom.userian,uom.model_uom_uom,library.group_userian,1,0,0,0
 access_account_tax_user,account.tax,account.model_account_tax,library.group_userian,1,0,0,0
 access_library_editor_user,book.editor,library.model_book_editor,library.group_userian,1,0,0,0
 access_library_book_request_student,library.book.request,model_library_book_request,school.group_school_student,1,1,1,0
