@@ -64,7 +64,7 @@ class ExtendedTimeTable(models.Model):
                                       string='Time Table Type', required=True,
                                       inivisible=False)
     exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
-                                              'TimeTable')
+                                              'TimeTable Lines')
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
     @api.constrains('exam_timetable_line_ids')
@@ -307,6 +307,7 @@ class ExamExam(models.Model):
 
 class ExamScheduleLine(models.Model):
     _name = 'exam.schedule.line'
+    _description = "Exam Schedule Line Details"
 
     @api.onchange('standard_ids')
     def onchange_standard(self):
