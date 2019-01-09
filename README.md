@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/JayVora-SerpentCS/OdooEduERP.svg?branch=12.0)](https://travis-ci.org/JayVora-SerpentCS/OdooEduERP)
 
-# EduERPv11
+# EduERPv12
 Education ERP v12
 Serpent Consulting Services Pvt Ltd, the Official Odoo Silver partner has here contributed the Education ERP.
 
