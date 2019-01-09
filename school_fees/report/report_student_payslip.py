@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
@@ -7,6 +6,7 @@ from odoo import models, api
 
 class ReportStudentPayslip(models.AbstractModel):
     _name = 'report.school_fees.student_payslip'
+    _description = "School Fees Payslip Report"
 
     @api.multi
     def get_month(self, indate):
