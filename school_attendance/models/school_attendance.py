@@ -488,9 +488,9 @@ class DailyAttendance(models.Model):
             month_search_ids = academic_month_obj.search([('code', '=',
                                                            rec.date.month)])
             sheet_ids = att_sheet_obj.search(
-                             [('standard_id', '=', rec.standard_id.id),
-                              ('month_id', '=', month_search_ids.id),
-                              ('year_id', '=', year_search_ids.id)])
+                [('standard_id', '=', rec.standard_id.id),
+                 ('month_id', '=', month_search_ids.id),
+                 ('year_id', '=', year_search_ids.id)])
             if sheet_ids:
                 for data in sheet_ids:
                     for attendance_id in data.attendance_ids:
@@ -571,12 +571,12 @@ class DailyAttendance(models.Model):
 
         for line in self:
             year_ids = acadmic_year_obj.search(
-                                           [('date_start', '<=', line.date),
-                                            ('date_stop', '>=', line.date)])
+                [('date_start', '<=', line.date),
+                 ('date_stop', '>=', line.date)])
             month_ids = acadmic_month_obj.search(
-                                     [('date_start', '<=', line.date),
-                                      ('date_stop', '>=', line.date),
-                                      ('year_id', 'in', year_ids.ids)])
+                [('date_start', '<=', line.date),
+                 ('date_stop', '>=', line.date),
+                 ('year_id', 'in', year_ids.ids)])
             if month_ids:
                 month_data = month_ids
                 att_sheet_ids = attendance_sheet_obj.search([('month_id', 'in',
