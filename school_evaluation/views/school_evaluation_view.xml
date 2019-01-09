@@ -213,8 +213,8 @@
                 <separator orientation="vertical"/>
                 <newline />
                 <group expand="0" string="Group By..." colspan="6" col="4">
-                    <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
-                    <filter string="Teacher" icon="terp-personal" name="student_id" context="{'group_by':'teacher_id'}"/>
+                    <filter string="Type" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Teacher" name="student_id" context="{'group_by':'teacher_id'}"/>
                 </group>
             </search>
         </field>
@@ -283,7 +283,7 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="6" col="4">
-                    <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Type" name="type" context="{'group_by':'type'}"/>
                 </group>
             </search>
         </field>
