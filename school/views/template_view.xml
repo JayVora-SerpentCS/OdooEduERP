@@ -4,7 +4,7 @@
     <data>
         <template id="assets_backend" name="school assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <link rel="stylesheet" href="/school/static/src/less/schoolcss.less"/>
+                <link rel="stylesheet" href="/school/static/src/scss/schoolcss.scss"/>
             </xpath>
         </template>
     </data>

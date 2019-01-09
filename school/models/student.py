@@ -2,12 +2,11 @@
 
 import time
 import base64
-from datetime import date, datetime
+from datetime import date
 from odoo import models, fields, api, tools, _
 from odoo.modules import get_module_resource
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from .import school
 
 # from lxml import etree
@@ -48,11 +47,10 @@ class StudentStudent(models.Model):
     @api.depends('date_of_birth')
     def _compute_student_age(self):
         '''Method to calculate student age'''
-        current_dt = datetime.today()
+        current_dt = date.today()
         for rec in self:
             if rec.date_of_birth:
-                start = datetime.strptime(rec.date_of_birth,
-                                          DEFAULT_SERVER_DATE_FORMAT)
+                start = rec.date_of_birth
                 age_calc = ((current_dt - start).days / 365)
                 # Age should be greater than 0
                 if age_calc > 0.0:
@@ -61,10 +59,9 @@ class StudentStudent(models.Model):
     @api.constrains('date_of_birth')
     def check_age(self):
         '''Method to check age should be greater than 5'''
-        current_dt = datetime.today()
+        current_dt = date.today()
         if self.date_of_birth:
-            start = datetime.strptime(self.date_of_birth,
-                                      DEFAULT_SERVER_DATE_FORMAT)
+            start = self.date_of_birth
             age_calc = ((current_dt - start).days / 365)
             # Check if age less than 5 years
             if age_calc < 5:
@@ -85,9 +82,8 @@ class StudentStudent(models.Model):
             raise except_orm(_('Error!'),
                              _('''PID not valid
                                  so record will not be saved.'''))
-        if vals.get('cmp_id', False):
-            company_vals = {'company_ids': [(4, vals.get('cmp_id'))],
-                            'company_id': vals.get('cmp_id')}
+        if vals.get('company_id', False):
+            company_vals = {'company_ids': [(4, vals.get('company_id'))]}
             vals.update(company_vals)
         if vals.get('email'):
             school.emailvalidation(vals.get('email'))
@@ -164,8 +160,8 @@ class StudentStudent(models.Model):
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
     student_code = fields.Char('Student Code')
-    contact_phone1 = fields.Char('Phone no.',)
-    contact_mobile1 = fields.Char('Mobile no',)
+    contact_phone = fields.Char('Phone no.')
+    contact_mobile = fields.Char('Mobile no')
     roll_no = fields.Integer('Roll No.', readonly=True)
     photo = fields.Binary('Photo', default=_default_image)
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
@@ -199,7 +195,7 @@ class StudentStudent(models.Model):
                                                             True)]})
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
     designation = fields.Char('Designation')
-    doctor_phone = fields.Char('Phone')
+    doctor_phone = fields.Char('Contact No.')
     blood_group = fields.Char('Blood Group')
     height = fields.Float('Height', help="Hieght in C.M")
     weight = fields.Float('Weight', help="Weight in K.G")
@@ -220,7 +216,7 @@ class StudentStudent(models.Model):
                               ('terminate', 'Terminate'),
                               ('cancel', 'Cancel'),
                               ('alumni', 'Alumni')],
-                             'State', readonly=True, default="draft")
+                             'Status', readonly=True, default="draft")
     history_ids = fields.One2many('student.history', 'student_id', 'History')
     certificate_ids = fields.One2many('student.certificate', 'student_id',
                                       'Certificate')
@@ -229,28 +225,14 @@ class StudentStudent(models.Model):
     document = fields.One2many('student.document', 'doc_id', 'Documents')
     description = fields.One2many('student.description', 'des_id',
                                   'Description')
-    student_id = fields.Many2one('student.student', 'Name')
-    contact_phone = fields.Char('Phone No', related='student_id.phone',
-                                readonly=True)
-    contact_mobile = fields.Char('Mobile No', related='student_id.mobile',
-                                 readonly=True)
-    contact_email = fields.Char('Email', related='student_id.email',
-                                readonly=True)
-    contact_website = fields.Char('WebSite', related='student_id.website',
-                                  readonly=True)
     award_list = fields.One2many('student.award', 'award_list_id',
                                  'Award List')
-    student_status = fields.Selection('Status', related='student_id.state',
-                                      help="Shows Status Of Student",
-                                      readonly=True)
     stu_name = fields.Char('First Name', related='user_id.name',
                            readonly=True)
-    Acadamic_year = fields.Char('Academic Year', related='year.name',
+    Acadamic_year = fields.Char('Year', related='year.name',
                                 help='Academic Year', readonly=True)
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
-    cmp_id = fields.Many2one('res.company', 'Company Name',
-                             related='school_id.company_id', store=True)
     standard_id = fields.Many2one('school.standard', 'Class')
     parent_id = fields.Many2many('school.parent', 'students_parents_rel',
                                  'student_id',

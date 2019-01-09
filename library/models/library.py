@@ -87,9 +87,7 @@ class LibraryCard(models.Model):
     def _compute_end_date(self):
         for rec in self:
             if rec.start_date:
-                date_diff = datetime.strptime(rec.start_date,
-                                              DEFAULT_SERVER_DATE_FORMAT)
-                rec.end_date = date_diff + rd(months=rec.duration)
+                rec.end_date = rec.start_date + rd(months=rec.duration)
 
     code = fields.Char('Card No', required=True, default=lambda self: _('New'))
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
@@ -671,6 +669,7 @@ class LibraryBookRequest(models.Model):
     '''Request for Book'''
     _name = "library.book.request"
     _rec_name = 'req_id'
+    _description = 'Book Request Information'
 
     @api.depends('type')
     def _compute_bname(self):
@@ -687,7 +686,7 @@ class LibraryBookRequest(models.Model):
     type = fields.Selection([('existing', 'HardCopy'), ('ebook', 'E Book')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
-    new_book = fields.Char('Book Name')
+    new_book = fields.Char('New Book Name')
     bk_nm = fields.Char('Name', compute="_compute_bname", store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),

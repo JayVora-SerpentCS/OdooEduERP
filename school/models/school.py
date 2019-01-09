@@ -6,8 +6,7 @@ import calendar
 from datetime import datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, \
-    DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
@@ -66,11 +65,11 @@ class AcademicYear(models.Model):
         interval = 1
         month_obj = self.env['academic.month']
         for data in self:
-            ds = datetime.strptime(data.date_start, '%Y-%m-%d')
-            while ds.strftime('%Y-%m-%d') < data.date_stop:
+            ds = data.date_start
+            while ds < data.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
-                if de.strftime('%Y-%m-%d') > data.date_stop:
-                    de = datetime.strptime(data.date_stop, '%Y-%m-%d')
+                if de > data.date_stop:
+                    de = data.date_stop
                 month_obj.create({
                     'name': ds.strftime('%B'),
                     'code': ds.strftime('%m/%Y'),
@@ -86,8 +85,8 @@ class AcademicYear(models.Model):
         '''Method to check start date should be greater than end date
            also check that dates are not overlapped with existing academic
            year'''
-        new_start_date = datetime.strptime(self.date_start, '%Y-%m-%d')
-        new_stop_date = datetime.strptime(self.date_stop, '%Y-%m-%d')
+        new_start_date = self.date_start
+        new_stop_date = self.date_stop
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
             raise ValidationError(_('''Error! The duration of the academic year
@@ -342,6 +341,13 @@ class SchoolSchool(models.Model):
                                 will be printed in this language.
                                 If not, it will be English.''')
 
+    @api.model
+    def create(self, vals):
+        res = super(SchoolSchool, self).create(vals)
+        main_company = self.env.ref('base.main_company')
+        res.company_id.parent_id = main_company.id
+        return res
+
 
 class SubjectSubject(models.Model):
     '''Defining a subject '''
@@ -381,6 +387,7 @@ class SubjectSyllabus(models.Model):
 class SubjectElective(models.Model):
     ''' Defining Subject Elective '''
     _name = 'subject.elective'
+    _description = "Elective Subject"
 
     name = fields.Char("Name")
     subject_ids = fields.One2many('subject.subject', 'elective_id',
@@ -413,6 +420,7 @@ class AttendanceType(models.Model):
 
 class StudentDocument(models.Model):
     _name = 'student.document'
+    _description = "Student Document"
     _rec_name = "doc_type"
 
     doc_id = fields.Many2one('student.student', 'Student')
@@ -449,14 +457,16 @@ class DocumentType(models.Model):
 class StudentDescription(models.Model):
     ''' Defining a Student Description'''
     _name = 'student.description'
+    _description = "Student Description"
 
-    des_id = fields.Many2one('student.student', 'Description')
+    des_id = fields.Many2one('student.student', 'Student Ref.')
     name = fields.Char('Name')
     description = fields.Char('Description')
 
 
 class StudentDescipline(models.Model):
     _name = 'student.descipline'
+    _description = "Student Descipline"
 
     student_id = fields.Many2one('student.student', 'Student')
     teacher_id = fields.Many2one('school.teacher', 'Teacher')
@@ -468,6 +478,7 @@ class StudentDescipline(models.Model):
 
 class StudentHistory(models.Model):
     _name = "student.history"
+    _description = "Student History"
 
     student_id = fields.Many2one('student.student', 'Student')
     academice_year_id = fields.Many2one('academic.year', 'Academic Year',
@@ -479,6 +490,7 @@ class StudentHistory(models.Model):
 
 class StudentCertificate(models.Model):
     _name = "student.certificate"
+    _description = "Student Certificate"
 
     student_id = fields.Many2one('student.student', 'Student')
     description = fields.Char('Description')
@@ -551,17 +563,15 @@ class StudentFamilyContact(models.Model):
             else:
                 rec.relative_name = rec.name
 
-    family_contact_id = fields.Many2one('student.student', 'Student')
-    exsting_student = fields.Many2one('student.student',
-                                      'Student')
+    family_contact_id = fields.Many2one('student.student', 'Student Ref.')
     rel_name = fields.Selection([('exist', 'Link to Existing Student'),
                                  ('new', 'Create New Relative Name')],
                                 'Related Student', help="Select Name",
                                 required=True)
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade")
-    stu_name = fields.Many2one('student.student', 'Name',
+    stu_name = fields.Many2one('student.student', 'Existing Student',
                                help="Select Student From Existing List")
-    name = fields.Char('Name')
+    name = fields.Char('Relative Name')
     relation = fields.Many2one('student.relation.master', 'Relation',
                                required=True)
     phone = fields.Char('Phone', required=True)
@@ -580,13 +590,15 @@ class StudentRelationMaster(models.Model):
 
 class GradeMaster(models.Model):
     _name = 'grade.master'
+    _description = "Grade Master"
 
     name = fields.Char('Grade', required=True)
-    grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Name')
+    grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Lines')
 
 
 class GradeLine(models.Model):
     _name = 'grade.line'
+    _description = "Grades"
     _rec_name = 'grade'
 
     from_mark = fields.Integer('From Marks', required=True,
@@ -597,7 +609,7 @@ class GradeLine(models.Model):
     sequence = fields.Integer('Sequence', help="Sequence order of the grade.")
     fail = fields.Boolean('Fail', help='If fail field is set to True,\
                                   it will allow you to set the grade as fail.')
-    grade_id = fields.Many2one("grade.master", 'Grade')
+    grade_id = fields.Many2one("grade.master", 'Grade Ref.')
     name = fields.Char('Name')
 
 
@@ -618,8 +630,7 @@ class StudentNews(models.Model):
 
     @api.constrains("date")
     def checknews_dates(self):
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt, DEFAULT_SERVER_DATETIME_FORMAT)
+        new_date = datetime.now()
         if self.date < new_date:
             raise ValidationError(_('''Configure expiry date greater than
             current date!'''))
@@ -656,8 +667,7 @@ class StudentNews(models.Model):
                 if not email_list:
                     raise except_orm(_('Email Configuration!'),
                                      _("Email not defined!"))
-            news_date = datetime.strptime(news.date,
-                                          DEFAULT_SERVER_DATETIME_FORMAT)
+            news_date = news.date
             # Add company name while sending email
             company = user.company_id.name or ''
             body = """Hi,<br/><br/>
@@ -688,6 +698,7 @@ class StudentNews(models.Model):
 
 class StudentReminder(models.Model):
     _name = 'student.reminder'
+    _description = "Student Reminder"
 
     @api.model
     def check_user(self):
@@ -705,12 +716,14 @@ class StudentReminder(models.Model):
 
 class StudentCast(models.Model):
     _name = "student.cast"
+    _description = "Student Cast"
 
     name = fields.Char("Name", required=True)
 
 
 class ClassRoom(models.Model):
     _name = "class.room"
+    _description = "Class Room"
 
     name = fields.Char("Name")
     number = fields.Char("Room Number")
