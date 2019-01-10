@@ -302,8 +302,7 @@ class HostelStudent(models.Model):
         ''' Schedular to discharge student from hostel'''
         current_date = datetime.now().strftime('%m-%d-%Y')
         for student in self.env['hostel.student'].search([
-              ('discharge_date', '<', current_date),
-              ('status', '!=', 'draft')]):
+          ('discharge_date', '<', current_date), ('status', '!=', 'draft')]):
             student.discharge_state()
         return True
 
