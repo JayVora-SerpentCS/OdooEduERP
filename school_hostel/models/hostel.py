@@ -301,8 +301,9 @@ class HostelStudent(models.Model):
     def student_expire(self):
         ''' Schedular to discharge student from hostel'''
         current_date = datetime.now().strftime('%m-%d-%Y')
-        for student in self.env['hostel.student'].search([
-          ('discharge_date', '<', current_date), ('status', '!=', 'draft')]):
+        for student in self.env['hostel.student'].\
+                search([('discharge_date', '<', current_date),
+                        ('status', '!=', 'draft')]):
             student.discharge_state()
         return True
 
