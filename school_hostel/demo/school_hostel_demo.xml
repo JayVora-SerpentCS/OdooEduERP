@@ -56,6 +56,7 @@
             <field name="student_per_room">3</field>
         </record>
         <!--HOSTEL Student -->
+        <!-- 
         <record id="demo_school_hostel_Student_1" model="hostel.student">
             <field name="student_id" ref="school.demo_student_student_4"/>
             <field name="admission_date" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/>
@@ -80,5 +81,6 @@
             <field name="room_id" ref="demo_school_hostel_room_4"/>
             <field name="paid_amount">0</field>
         </record>
+         -->
     </data>
 </odoo>

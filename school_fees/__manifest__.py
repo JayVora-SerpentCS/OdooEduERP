@@ -14,6 +14,7 @@
     'data': ['security/ir.model.access.csv',
              'security/security_fees.xml',
              'views/school_fees_view.xml',
+             'views/student_fees_view.xml',
              'views/school_fees_sequence.xml',
              'views/student_payslip.xml',
              'views/student_fees_register.xml',

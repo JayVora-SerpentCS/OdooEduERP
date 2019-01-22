@@ -76,7 +76,7 @@
     </record>
 
     <!-- Search View OF Event Participation -->
-
+	<!-- 
     <record id="participant_event_search_view" model="ir.ui.view">
         <field name="name">participant.search.2</field>
         <field name="model">school.event.participant</field>
@@ -99,7 +99,7 @@
             </search>
         </field>
     </record>
-
+ 	-->
     <!-- Form View Event parameter -->
 
     <record id="parameter_event_form_view" model="ir.ui.view">
@@ -222,7 +222,7 @@
     </record>
 
     <!-- Search View Of Event Information -->
-
+	<!-- 
     <record id="school_event_search_view" model="ir.ui.view">
         <field name="name">event.search</field>
         <field name="model">school.event</field>
@@ -251,7 +251,7 @@
             </search>
         </field>
     </record>
-
+	 -->
     <!-- Calendar View Of Event Information -->
 
     <record id="school_event_calander_view" model="ir.ui.view">
@@ -417,7 +417,7 @@
     </record>
 
     <!-- Search View Of Event Registration -->
-
+	<!-- 
     <record id="school_event_registration_search_view" model="ir.ui.view">
         <field name="name">event.registration.search</field>
         <field name="model">school.event.registration</field>
@@ -446,7 +446,7 @@
             </search>
         </field>
     </record>
-
+ 	-->
     <!-- Action Of Form & Tree Views Of Event Parameter -->
 
     <record id="action_event_parameter" model="ir.actions.act_window">

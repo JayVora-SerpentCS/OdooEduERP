@@ -123,6 +123,7 @@
     </record>
 
     <!-- Search View Of Transport Participation -->
+    <!-- 
     <record id="view_transport_participant_search" model="ir.ui.view">
         <field name="name">transport.participant.search</field>
         <field name="model">transport.participant</field>
@@ -145,7 +146,8 @@
             </search>
         </field>
     </record>
-
+	 -->
+	 
     <!-- Tree View Of Transport Point -->
     <record id="view_transport_point_tree_1" model="ir.ui.view">
         <field name="name">transport.point.tree</field>
@@ -175,6 +177,7 @@
     </record>
 
     <!-- Search View Of Transport Point -->
+    <!-- 
     <record id="view_transport_point_search" model="ir.ui.view">
         <field name="name">transport.point.search</field>
         <field name="model">transport.point</field>
@@ -190,7 +193,7 @@
             </search>
         </field>
    </record>
-
+ 	-->
    <!-- Tree View Of Transport Information -->
    <record id="view_student_transport_tree" model="ir.ui.view">
         <field name="name">transport.tree</field>
@@ -273,6 +276,7 @@
     </record>
 
     <!-- Search View Of Transport Information -->
+    <!-- 
     <record id="view_student_transport_search" model="ir.ui.view">
         <field name="name">student.transport.search</field>
         <field name="model">student.transport</field>
@@ -300,7 +304,7 @@
             </search>
         </field>
     </record>
-
+ 	-->
    <!-- Form View Of Transport Registration -->
    <record id="transport_registration_form1" model="ir.ui.view">
         <field name="name">transport.registration.form</field>
@@ -412,6 +416,7 @@
     </record>
 
     <!-- Search View Of Transport vehicle Information -->
+    <!-- 
     <record id="view_transport_vehicle_search" model="ir.ui.view">
         <field name="name">transport.vehicle.search</field>
         <field name="model">transport.vehicle</field>
@@ -429,7 +434,8 @@
             </search>
         </field>
     </record>
-
+	-->
+	 
     <!-- Inherited View of Account Invoice -->
     <record id="account_invoice_inherited" model="ir.ui.view">
         <field name="name">Account Invoice Iherits</field>
