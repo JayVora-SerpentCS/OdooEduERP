@@ -1,82 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-
 <odoo>
     <data noupdate="1">
+    
+		<!-- Product Information -->
+		<record id="school_fees_product_01" model="product.product">
+            <field name="name">Educational Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">4000</field>
+            <field name="list_price">4000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>
+        <record id="school_fees_product_02" model="product.product">
+            <field name="name">Library Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">2000</field>
+            <field name="list_price">2000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>
+        <record id="school_fees_product_03" model="product.product">
+            <field name="name">Laboratory</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">3000</field>
+            <field name="list_price">3000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>
+        <record id="school_fees_product_04" model="product.template">
+            <field name="name">Transportation Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">4000</field>
+            <field name="list_price">4000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>    
+        <record id="school_fees_product_05" model="product.template">
+            <field name="name">IDCard Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">20</field>
+            <field name="list_price">20</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>    
+        <record id="school_fees_product_06" model="product.template">
+            <field name="name">Sport Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">1000</field>
+            <field name="list_price">1000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>    
+        <record id="school_fees_product_07" model="product.template">
+            <field name="name">Exam Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">1000</field>
+            <field name="list_price">1000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>    
+        <record id="school_fees_product_08" model="product.template">
+            <field name="name">Cultural Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">1000</field>
+            <field name="list_price">1000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>    
+        <record id="school_fees_product_09" model="product.template">
+            <field name="name">Tuition Fees</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">2000</field>
+            <field name="list_price">2000</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>    
+        
         <!--Fees Head Information-->
         <record id="demo_school_fees_1" model="student.payslip.line">
             <field name="name">Educational Fees</field>
             <field name="code">01</field>
             <field name="type">month</field>
             <field name="amount">4000.00</field>
+            <field name="product_id" ref= 'school_fees_product_01'/>
         </record>
         <record id="demo_school_fees_2" model="student.payslip.line">
             <field name="name">Library Fees</field>
             <field name="code">02</field>
             <field name="type">month</field>
             <field name="amount">2000.00</field>
+            <field name="product_id" ref= 'school_fees_product_02'/>
         </record>
         <record id="demo_school_fees_3" model="student.payslip.line">
             <field name="name">Laboratory Fees</field>
             <field name="code">03</field>
             <field name="type">month</field>
             <field name="amount">3000.00</field>
+            <field name="product_id" ref= 'school_fees_product_03'/>
         </record>
         <record id="demo_school_fees_4" model="student.payslip.line">
             <field name="name">Transportation Fees</field>
             <field name="code">04</field>
             <field name="type">month</field>
             <field name="amount">4000.00</field>
+            <field name="product_id" ref= 'school_fees_product_04'/>
         </record>
         <record id="demo_school_fees_5" model="student.payslip.line">
-            <field name="name">ICard Fees</field>
+            <field name="name">IDCard Fees</field>
             <field name="code">05</field>
             <field name="type">month</field>
             <field name="amount">20.00</field>
+            <field name="product_id" ref= 'school_fees_product_05'/>
         </record>
         <record id="demo_school_fees_6" model="student.payslip.line">
             <field name="name">Sport Fees</field>
             <field name="code">06</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>
+            <field name="product_id" ref= 'school_fees_product_06'/>
         </record>
         <record id="demo_school_fees_7" model="student.payslip.line">
             <field name="name">Exam Fees</field>
             <field name="code">07</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>
+            <field name="product_id" ref= 'school_fees_product_07'/>
         </record>
         <record id="demo_school_fees_8" model="student.payslip.line">
             <field name="name">Cultural Fees</field>
             <field name="code">08</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>
+            <field name="product_id" ref= 'school_fees_product_08'/>
         </record>
         <record id="demo_school_fees_9" model="student.payslip.line">
             <field name="name">Tuition Fees</field>
             <field name="code">09</field>
             <field name="type">month</field>
             <field name="amount">2000.00</field>
+            <field name="product_id" ref= 'school_fees_product_09'/>
         </record>
+        
         <!--Student Fees Structure Line-->
         <record id="demo_student_fees_structure_line_1" model="student.fees.structure.line">
             <field name="name">Educational Fees</field>
             <field name="code">01</field>
             <field name="type">month</field>
             <field name="amount">4000.00</field>
+            <field name="product_id" ref= 'school_fees_product_01'/>
         </record>
         <record id="demo_student_fees_structure_line_2" model="student.fees.structure.line">
             <field name="name">Library Fees</field>
             <field name="code">02</field>
             <field name="type">month</field>
             <field name="amount">2000.00</field>
+            <field name="product_id" ref= 'school_fees_product_02'/>
         </record>
         <record id="demo_student_fees_structure_line_3" model="student.fees.structure.line">
             <field name="name">Laboratory Fees</field>
             <field name="code">03</field>
             <field name="type">month</field>
             <field name="amount">3000.00</field>
+            <field name="product_id" ref= 'school_fees_product_03'/>
         </record>
+        
+        <!-- Student Fees Price list -->
+        <record id="normal_fee_list" model="product.pricelist">
+            <field name="name">Regular Student Fee</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="teacher_fee_list" model="product.pricelist">
+            <field name="name">Teacher(Son) Student Fee</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="sibling_fee_list" model="product.pricelist">
+            <field name="name">Siblings Student Fee</field>
+            <field name="sequence">5</field>
+        </record>
+        
         <!-- Fees Structure Information -->
         <record id="demo_student_fees_structure_1" model="student.fees.structure">
             <field name="name">Student Fees Structure</field>

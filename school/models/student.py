@@ -244,7 +244,23 @@ class StudentStudent(models.Model):
                                      compute="_compute_teacher_user",
                                      )
     active = fields.Boolean(default=True)
-
+    
+    # image: all image fields are base64 encoded and PIL-supported
+    image = fields.Binary(
+        "Photo", default=_default_image, attachment=True,
+        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
+    image_medium = fields.Binary(
+        "Medium-sized photo", attachment=True,
+        help="Medium-sized photo of the employee. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
+             "Use this field in form views or some kanban views.")
+    image_small = fields.Binary(
+        "Small-sized photo", attachment=True,
+        help="Small-sized photo of the employee. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
+    
+    
     @api.multi
     def set_to_draft(self):
         '''Method to change state to draft'''

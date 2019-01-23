@@ -120,10 +120,12 @@ class StudentPayslipLine(models.Model):
     currency_symbol = fields.Char(related="currency_id.symbol",
                                   string='Symbol')
     account_id = fields.Many2one('account.account', "Account")
-
+    product_id = fields.Many2one('product.product', 'Product')
+    
     @api.onchange('company_id')
     def set_currency_onchange(self):
         for rec in self:
+            rec.product_id = rec.line_ids.slipline1_id.product_id
             rec.currency_id = rec.company_id.currency_id.id
 
 
@@ -151,6 +153,11 @@ class StudentFeesStructureLine(models.Model):
     currency_id = fields.Many2one('res.currency', 'Currency')
     currency_symbol = fields.Char(related="currency_id.symbol",
                                   string='Symbol')
+    product_id = fields.Many2one('product.product', string='Product')
+
+    @api.onchange('product_id')
+    def compute_product_amount(self):
+        self.amount = self.product_id.list_price
 
     @api.onchange('company_id')
     def set_currency_company(self):
@@ -302,26 +309,48 @@ class StudentPayslip(models.Model):
                 raise ValidationError(_('Kindly, Select Account Journal!'))
             if not rec.fees_structure_id:
                 raise ValidationError(_('Kindly, Select Fees Structure!'))
+            
             lines = []
+            total_amount = 0
             for data in rec.fees_structure_id.line_ids or []:
+
+                student_amount = 0
+                check_student_pricelist = self.student_id.product_list_id
+                
+                if check_student_pricelist:
+                    invoice_obj = self.env['product.pricelist.item'].search([('product_tmpl_id','=',data.product_id.product_tmpl_id.id),('pricelist_id','=',check_student_pricelist.id)])
+                    if invoice_obj.fixed_price:
+                        student_amount = invoice_obj.fixed_price
+                    else:
+                        student_amount = data.amount
+                else:
+                    student_amount = data.product_id.list_price
+                
                 line_vals = {'slip_id': rec.id,
                              'name': data.name,
                              'code': data.code,
                              'type': data.type,
                              'account_id': data.account_id.id,
-                             'amount': data.amount,
+                             'amount': student_amount,
+                             #'amount': data.amount,
                              'currency_id': data.currency_id.id or False,
                              'currency_symbol': data.currency_symbol or False}
                 lines.append((0, 0, line_vals))
+                total_amount += student_amount
+                
             rec.write({'line_ids': lines})
+            
             # Compute amount
-            amount = 0
-            for data in rec.line_ids:
-                amount += data.amount
+            #amount = 0
+            #for data in rec.line_ids:
+            #    amount += data.amount
+                
             rec.register_id.write({'total_amount': rec.total})
-            rec.write({'total': amount,
+            rec.write({'total': total_amount,
+                       #'total': amount,
                        'state': 'confirm',
-                       'due_amount': amount,
+                       'due_amount': total_amount,
+                       #'due_amount': amount,
                        'currency_id': rec.company_id.currency_id.id or False
                        })
 
@@ -465,6 +494,7 @@ class StudentPayslip(models.Model):
                     else:
                         acc_id = rec.journal_id.default_debit_account_id.id
                 invoice_line_vals = {'name': line.name,
+                                     'product_id': line.product_id.id,
                                      'account_id': acc_id,
                                      'quantity': 1.000,
                                      'price_unit': line.amount}

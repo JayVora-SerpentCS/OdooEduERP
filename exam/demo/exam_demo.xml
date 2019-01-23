@@ -154,6 +154,7 @@
         </record>
 
         <!-- Additional Exam Demo Data -->
+        <!-- 
         <record id="additional_exam_supplementaryexam0" model="additional.exam">
             <field name="weightage">30</field>
             <field eval="40" name="minimum_marks"/>
@@ -181,6 +182,8 @@
             <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
+         -->
+         
         <!-- Additional Exam Result Demo Data -->
         <record id="additional_exam_result_0" model="additional.exam.result">
             <field name="student_id" ref="school.demo_student_student_7"/>

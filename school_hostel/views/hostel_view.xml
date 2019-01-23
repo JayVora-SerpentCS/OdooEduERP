@@ -282,8 +282,9 @@
             </data>
         </field>
     </record>
-
+	
     <!-- Inheit View of Account Invoice -->
+    <!-- 
     <record id="hostel_student_accunt_inherit" model="ir.ui.view">
         <field name="name">Account Extended</field>
         <field name="model">account.invoice</field>
@@ -295,7 +296,7 @@
             </xpath>
         </field>
     </record>
-
+ 	-->
     <!-- Actions Of Form & Tree Views Of HOSTEL Student -->
     <record id="action_hostel_student" model="ir.actions.act_window">
         <field name="name">Hostel Student</field>
