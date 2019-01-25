@@ -333,6 +333,7 @@ class StudentPayslip(models.Model):
                              'account_id': data.account_id.id,
                              'amount': student_amount,
                              #'amount': data.amount,
+                             'product_id': data.product_id.id,
                              'currency_id': data.currency_id.id or False,
                              'currency_symbol': data.currency_symbol or False}
                 lines.append((0, 0, line_vals))

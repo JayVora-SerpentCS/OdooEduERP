@@ -9,8 +9,6 @@
             <field name="standard_price">4000</field>
             <field name="list_price">4000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>
         <record id="school_fees_product_02" model="product.product">
@@ -19,8 +17,6 @@
             <field name="standard_price">2000</field>
             <field name="list_price">2000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>
         <record id="school_fees_product_03" model="product.product">
@@ -29,8 +25,6 @@
             <field name="standard_price">3000</field>
             <field name="list_price">3000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>
         <record id="school_fees_product_04" model="product.template">
@@ -39,8 +33,6 @@
             <field name="standard_price">4000</field>
             <field name="list_price">4000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>    
         <record id="school_fees_product_05" model="product.template">
@@ -49,8 +41,6 @@
             <field name="standard_price">20</field>
             <field name="list_price">20</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>    
         <record id="school_fees_product_06" model="product.template">
@@ -59,8 +49,6 @@
             <field name="standard_price">1000</field>
             <field name="list_price">1000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>    
         <record id="school_fees_product_07" model="product.template">
@@ -69,8 +57,6 @@
             <field name="standard_price">1000</field>
             <field name="list_price">1000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>    
         <record id="school_fees_product_08" model="product.template">
@@ -79,8 +65,6 @@
             <field name="standard_price">1000</field>
             <field name="list_price">1000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>    
         <record id="school_fees_product_09" model="product.template">
@@ -89,8 +73,6 @@
             <field name="standard_price">2000</field>
             <field name="list_price">2000</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
         </record>    
         
