@@ -2,14 +2,29 @@
 
 
 <odoo>
-
+<record id="paperformat_margin" model="report.paperformat">
+        <field name="name">Report margin</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">30</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">45</field>
+        <field name="dpi">80</field>
+    </record>
         <report id="report_transport_vehicle_qweb"
                 name="school_transport.vehicle"
                 string="Vehicle Detail"
                 model="transport.vehicle"
                 report_type = "qweb-pdf"
                 file="school_transport.vehicle"
-                groups="school_transport.group_transportation_manager"/>
+                groups="school_transport.group_transportation_manager"
+                paperformat="school_transport.paperformat_margin"/>
 
         <report id="report_student_transport_qweb"
                 name="school_transport.participants"
@@ -17,5 +32,6 @@
                 model="student.transport"
                 report_type = "qweb-pdf"
                 file="school_transport.participants"
-                groups="school_transport.group_transportation_manager"/>
+                groups="school_transport.group_transportation_manager"
+                paperformat="school_transport.paperformat_margin"/>
 </odoo>
