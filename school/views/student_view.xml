@@ -40,7 +40,7 @@
                             <field name="student_code" readonly="1" />
                             <field name="roll_no" help="Roll number of Student" readonly="1"/>
                             <field name="year" placeholder="Year" widget="selection" help="Academic year of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
-                            <field name="school_id" placeholder="School" widget="selection" help="School of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
+                            <field name="school_id" placeholder="Schoolz" widget="selection" help="School of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
                         </group>
                         <group string="Standard Information">
                             <field name="standard_id" placeholder="Standard" readonly="1" domain="[('school_id','=',school_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
@@ -665,7 +665,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="" />
         <field name="search_view_id" ref="view_student_student_search_1" />
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph</field>
     </record>
 
     <!-- Action of Alumni state -->
@@ -674,7 +674,7 @@
         <field name="domain">[('active','=',False)]</field>
         <field name="res_model">student.student</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph</field>
     </record>
 
     <!-- Action View 1 Of Kanban View Of Student Information-->

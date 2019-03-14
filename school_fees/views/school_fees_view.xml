@@ -108,7 +108,7 @@
         <field name="name">student.payslip.line.tree</field>
         <field name="model">student.payslip.line</field>
         <field name="arch" type="xml">
-            <tree string="Fees Structure">
+            <tree string="Fees Structure" editable="bottom">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="type"/>
@@ -211,7 +211,7 @@
                         <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/> 
                         <notebook colspan="4">
                             <page string="Fees Structure">
-                                <field name="line_ids" colspan="4" nolabel="1" readonly="1"/>
+                                <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}"/>
                                 <separator string="" colspan="4"/>
                                 <group class="oe_subtotal_footer oe_right" colspan="2">
                                     <field name="total"/>
@@ -303,7 +303,7 @@
                     <notebook colspan="4">
                         <page string="Student Payslip">
                             <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}">
-                                <tree string="Student Payslip" create="false">
+                                <tree string="Student Payslip" editable="bottom">
                                     <field name="name"/>
                                     <field name="number"/>
                                     <field name="student_id"/>

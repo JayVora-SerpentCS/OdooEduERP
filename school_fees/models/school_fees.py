@@ -55,38 +55,48 @@ class StudentFeesRegister(models.Model):
         stud_obj = self.env['student.student']
         slip_obj = self.env['student.payslip']
         school_std_obj = self.env['school.standard']
+        
         for rec in self:
             if not rec.journal_id:
                 raise ValidationError(_('Kindly, Select Account Journal!'))
+            
+            school_std = school_std_obj.search([('standard_id', '=', rec.standard_id.id)])
+            
             if not rec.fees_structure:
-                raise ValidationError(_('Kindly, Select Fees Structure!'))
-            school_std = school_std_obj.search([('standard_id', '=',
-                                                 rec.standard_id.id)])
-            student_ids = stud_obj.search([('standard_id', 'in',
-                                            school_std.ids),
+                #raise ValidationError(_('Kindly, Select Fees Structure!'))
+                student_ids = stud_obj.search([('standard_id', 'in',school_std.ids),
                                            ('state', '=', 'done')])
+            else:
+                student_ids = stud_obj.search([('standard_id', 'in',school_std.ids),
+                                           ('fees_structure', '=',rec.fees_structure.id),
+                                           ('state', '=', 'done')])
+            records_exist = False
             for stu in student_ids:
-                old_slips = slip_obj.search([('student_id', '=', stu.id),
-                                             ('date', '=', rec.date)])
                 # Check if payslip exist of student
+                old_slips = slip_obj.search([('student_id', '=', stu.id), ('date', '=', rec.date)])
                 if old_slips:
                     raise UserError(_('There is already a Payslip exist for\
                     student: %s for same date.!') % stu.name)
-                else:
-                    rec.number = self.env['ir.sequence'].\
-                        next_by_code('student.fees.register') or _('New')
-                    res = {'student_id': stu.id,
-                           'register_id': rec.id,
-                           'name': rec.name,
-                           'date': rec.date,
-                           'company_id': rec.company_id.id,
-                           'currency_id':
-                           rec.company_id.currency_id.id or False,
-                           'journal_id': rec.journal_id.id,
-                           'fees_structure_id': rec.fees_structure.id or False}
-                    slip_id = slip_obj.create(res)
-                    slip_id.onchange_student()
+                
+                rec.number = self.env['ir.sequence'].\
+                next_by_code('student.fees.register') or _('New')
+                res = {'student_id': stu.id,
+                       'register_id': rec.id,
+                       'name': rec.name,
+                       'date': rec.date,
+                       'company_id': rec.company_id.id,
+                       'currency_id':
+                       rec.company_id.currency_id.id or False,
+                       'journal_id': rec.journal_id.id,
+                       'fees_structure_id': rec.fees_structure.id or False}
+                slip_id = slip_obj.create(res)
+                slip_id.onchange_student()
+                records_exist = True
+
             # Calculate the amount
+            if not records_exist:
+                    raise UserError(_('No Records are Found!'))
+                
             amount = 0
             for data in rec.line_ids:
                 amount += data.total
@@ -186,8 +196,7 @@ class StudentPayslip(models.Model):
     _description = 'Student PaySlip'
 
     fees_structure_id = fields.Many2one('student.fees.structure',
-                                        'Fees Structure',
-                                        states={'paid': [('readonly', True)]})
+                                        'Fees Structure', states={'paid': [('readonly', True)]})
     standard_id = fields.Many2one('school.standard', 'Class')
     division_id = fields.Many2one('standard.division', 'Division')
     medium_id = fields.Many2one('standard.medium', 'Medium')
@@ -199,8 +208,7 @@ class StudentPayslip(models.Model):
     date = fields.Date('Date', readonly=True,
                        help="Current Date of payslip",
                        default=lambda * a: time.strftime('%Y-%m-%d'))
-    line_ids = fields.One2many('student.payslip.line', 'slip_id',
-                               'PaySlip Line')
+    line_ids = fields.One2many('student.payslip.line', 'slip_id', 'PaySlip Line')
     total = fields.Monetary("Total", readonly=True,
                             help="Total Amount")
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),

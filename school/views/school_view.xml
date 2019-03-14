@@ -775,7 +775,7 @@
         <field name="name">Students Reminder</field>
         <field name="res_model">student.reminder</field>
         <field name="view_type">form</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">kanban,form,graph,pivot</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Reminder.

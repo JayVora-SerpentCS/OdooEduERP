@@ -239,7 +239,8 @@
                         <separator string="Daily Attendance Sheet" />
                         <group colspan="4" col="4">
                             <field name="user_id" placeholder="Select" required="1" options="{&quot;no_create&quot;: True}"/>
-                            <field name="standard_id" widget="selection" domain="[('user_id','=',user_id)]"/>
+                            <!-- <field name="standard_id" widget="selection" domain="[('user_id','=',user_id)]"/> -->
+                            <field name="standard_id" widget="selection"/>
                             <field name="date" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
                         </group>
                         <notebook colspan="4">

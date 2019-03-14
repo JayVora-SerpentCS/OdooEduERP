@@ -14,7 +14,7 @@ class SchoolTeacher(models.Model):
     standard_id = fields.Many2one('school.standard',
                                   "Responsibility of Academic Class",
                                   help="Standard for which the teacher\
-                                  responsible for.")
+                                  responsible for.", required=True)
     stand_id = fields.Many2one('standard.standard', "Course",
                                related="standard_id.standard_id", store=True)
     subject_id = fields.Many2many('subject.subject', 'subject_teacher_rel',
@@ -22,9 +22,9 @@ class SchoolTeacher(models.Model):
                                   'Course-Subjects')
     school_id = fields.Many2one('school.school', "Campus",
                                 related="standard_id.school_id", store=True)
-    category_ids = fields.Many2many('hr.employee.category',
-                                    'employee_category_rel', 'emp_id',
-                                    'category_id', 'Tags')
+#     category_ids = fields.Many2many('hr.employee.category',
+#                                     'employee_category_rel', 'emp_id',
+#                                     'category_id', 'Tags')
     department_id = fields.Many2one('hr.department', 'Department')
     is_parent = fields.Boolean('Is Parent')
     stu_parent_id = fields.Many2one('school.parent', 'Related Parent')

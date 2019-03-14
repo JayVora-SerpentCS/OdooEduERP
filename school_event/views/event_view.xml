@@ -409,7 +409,7 @@
         <field name="arch" type="xml">
             <tree string="Event Registration">
                 <field name="part_name_id" />
-                <field name="name" />
+                <field name="name"  domain="[('state','=','draft')]"/>
                 <field name="reg_date" />
                 <field name="state" />
             </tree>
