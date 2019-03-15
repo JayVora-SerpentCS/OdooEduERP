@@ -267,8 +267,7 @@ class ExamExam(models.Model):
                 domain = [('standard_id', '=', exam_schedule.standard_id.id),
                           ('year', '=', rec.academic_year.id),
                           ('state', '=', 'done'),
-                          ('school_id', '=',
-                           exam_schedule.standard_id.school_id.id)]
+                          ('school_id', '=', exam_schedule.standard_id.school_id.id)]
                 students = student_obj.search(domain)
                 for student in students:
                     domain = [('standard_id', '=',
@@ -296,6 +295,7 @@ class ExamExam(models.Model):
                             exam_line.append((0, 0, sub_vals))
                         rs_dict.update({'result_ids': exam_line})
                         result = result_obj.create(rs_dict)
+                        
                         result_list.append(result.id)
         return {'name': _('Result Info'),
                 'view_type': 'form',
@@ -594,16 +594,18 @@ class ExamSubject(models.Model):
     @api.constrains('obtain_marks', 'minimum_marks', 'maximum_marks',
                     'marks_reeval')
     def _validate_marks(self):
-        '''Method to validate marks'''
-        if self.obtain_marks > self.maximum_marks:
-            raise ValidationError(_('''The obtained marks
-            should not extend maximum marks!'''))
-        if self.minimum_marks > self.maximum_marks:
-            raise ValidationError(_('''The minimum marks
-            should not extend maximum marks!'''))
-        if(self.marks_reeval > self.maximum_marks):
-            raise ValidationError(_('''The revaluation marks
-            should not extend maximum marks!'''))
+        
+        for rec in self:
+            '''Method to validate marks'''
+            if rec.obtain_marks > rec.maximum_marks:
+                raise ValidationError(_('''The obtained marks
+                should not extend maximum marks!'''))
+            if rec.minimum_marks > rec.maximum_marks:
+                raise ValidationError(_('''The minimum marks
+                should not extend maximum marks!'''))
+            if(rec.marks_reeval > rec.maximum_marks):
+                raise ValidationError(_('''The revaluation marks
+                should not extend maximum marks!'''))
 
     @api.depends('exam_id', 'obtain_marks', 'marks_reeval')
     def _compute_grade(self):
