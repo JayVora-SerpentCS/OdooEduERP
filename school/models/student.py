@@ -9,21 +9,14 @@ from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
 from .import school
 
-# from lxml import etree
-# added import statement in try-except because when server runs on
-# windows operating system issue arise because this library is not in Windows.
-try:
-    from odoo.tools import image_colorize, image_resize_image_big
-except:
-    image_colorize = False
-    image_resize_image_big = False
-
 
 class StudentStudent(models.Model):
     ''' Defining a student information '''
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
+    #_inherit = ['mail.thread', 'mail.activity.mixin', 'resource.mixin']
+
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
@@ -119,13 +112,9 @@ class StudentStudent(models.Model):
 
     @api.model
     def _default_image(self):
-        '''Method to get default Image'''
-        image_path = get_module_resource('hr', 'static/src/img',
-                                         'default_image.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path,
-                                                                  'rb').read()
-                                                             ))
-
+        image_path = get_module_resource('hr', 'static/description', 'EMS.jpg')
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
+    
     @api.depends('state')
     def _compute_teacher_user(self):
         for rec in self:
@@ -163,7 +152,7 @@ class StudentStudent(models.Model):
     contact_phone = fields.Char('Phone no.')
     contact_mobile = fields.Char('Mobile no')
     roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=_default_image)
+    #photo = fields.Binary('Photo', default=_default_image)
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
                            default=check_current_year)
     cast_id = fields.Many2one('student.cast', 'Religion/Caste')
@@ -260,6 +249,12 @@ class StudentStudent(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
     
+    street = fields.Char("Street")
+    street2 = fields.Char("Street2")
+    city = fields.Char("City")
+    state_id = fields.Many2one("res.country.state", "State")
+    zip = fields.Char("Zip")
+    country_id = fields.Many2one("res.country", "Country")
     
     @api.multi
     def set_to_draft(self):

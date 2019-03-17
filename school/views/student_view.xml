@@ -22,7 +22,8 @@
                             <field name="reg_code" readonly="1" />
                         </b>
                         <br />
-                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
+                        <!-- <field name="image" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/> -->
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
                         <div class="oe_title">
                             <group>
                                 <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
@@ -313,103 +314,48 @@
             </search>
         </field>
     </record>
-    <!-- Kanban View Of Student's Profiles -->
-    <record id="student_student_kanban_view" model="ir.ui.view">
-        <field name="name">Student KANBAN</field>
+	
+	<record id="student_kanban_view_student" model="ir.ui.view">
+        <field name="name">student.student.kanban</field>
         <field name="model">student.student</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="standard_id" nocreate="1" create="false">
-                <field name="color"/>
-                <field name="id"/>
-                <field name="name"/>
-                <field name="email"/>
+            <kanban class="o_hr_employee_kanban">
+                <!-- <field name="id"/>
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
+                <field name="message_needaction_counter"/> -->
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)" />
-                        <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
-                                                <h4>
-                                                    <a type="open">
-                                                        <field name="name" />
-                                                        <field name="middle" />
-                                                        <field name="last" />
-                                                        <field name="student_name" invisible="1" />
-                                                        <field name="standard_id" invisible="1" />
-                                                        <field name="school_id" invisible="1" />
-                                                        <field name="gender" invisible="1" />
-                                                        <field name="state" invisible="1" />
-                                                    </a>
-                                                </h4>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                    <table class="oe_kanban_table">
-                                        <tr width="300">
-                                            <td valign="top" width="64" align="left">
-                                                <a type="open">
-                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image_medium', record.id.raw_value)" />
-                                                </a>
-                                            </td>
-                                            <td valign="top" align="left" style="padding-left:10px;">
-                                                <table>
-                                                    <tr>
-                                                        <td>Student ID :</td>
-                                                        <td style="padding-left:10px;">
-                                                            <b>
-                                                                <field name="pid" />
-                                                            </b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Standard : </td>
-                                                        <td style="padding-left:10px;">
-                                                            <b>
-                                                                <field name="standard_id" />
-                                                            </b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Admission Date : </td>
-                                                        <td style="padding-left:10px;">
-                                                            <b>
-                                                                <field name="admission_date" />
-                                                            </b>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <center>
-                                                    <b>
-                                                        <field name="gender" />
-                                                    </b>
-                                                </center>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
-                                        <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
-                                    </div>
-                                    <br class="oe_kanban_clear" />
+                    <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                        <!-- Medium employee's picture -->
+                        <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('student.student', 'image_medium', record.id.raw_value)})" role="img"/>
+                        <!-- Employee's picture optimized for mobile -->
+                        <div class="o_kanban_image d-md-none rounded-circle" t-attf-style="background-image: url(#{kanban_image('student.student', 'image_small', record.id.raw_value)})" role="img"/>
+
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <span t-if="record.year.raw_value" class="o_kanban_record_subtitle"><field name="year"/></span>
                                 </div>
                             </div>
+                            <field name="parent_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <ul>
+                                <li id="last_login"/>
+                                <li t-if="record.contact_phone.raw_value"><field name="contact_phone"/></li>
+                            </ul>
                         </div>
+                    </div>
                     </t>
                 </templates>
             </kanban>
+
         </field>
     </record>
+
     <!-- Form View Of Admission Register Information -->
     <record id="view_student_student_form_2" model="ir.ui.view">
         <field name="name">student.student.form.2</field>
@@ -427,7 +373,7 @@
                     <div class="oe_inline">
                         <newline />
                         <separator string="Personal Information" />
-                        <field name="photo" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;" />
+                        <field name="image" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;" />
                         <div class="oe_title">
                             <group>
                                 <field name="pid" nolabel="1" readonly="1"/>
@@ -644,7 +590,7 @@
     <record id="action_view_student_student_kanban_2" model="ir.actions.act_window.view">
         <field name="view_mode">kanban</field>
         <field eval="21" name="sequence" />
-        <field name="view_id" ref="student_student_kanban_view" />
+        <field name="view_id" ref="student_kanban_view_student" />
         <field name="act_window_id" ref="action_student_student_form_2" />
     </record>
 
@@ -681,7 +627,7 @@
     <record id="action_view_student_student_kanban_1" model="ir.actions.act_window.view">
         <field name="view_mode">kanban</field>
         <field eval="31" name="sequence" />
-        <field name="view_id" ref="student_student_kanban_view" />
+        <field name="view_id" ref="student_kanban_view_student" />
         <field name="act_window_id" ref="action_student_student_form_12" />
     </record>
 </odoo>

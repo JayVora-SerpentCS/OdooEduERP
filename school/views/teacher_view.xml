@@ -142,7 +142,7 @@
             <field name="name">Teacher Profile</field>
             <field name="res_model">school.teacher</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <menuitem id="teacher_profile_menu" name="Teachers" action="action_school_teacher_form" 
