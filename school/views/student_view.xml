@@ -22,7 +22,7 @@
                             <field name="reg_code" readonly="1" />
                         </b>
                         <br />
-                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
+                        <field name="image" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
                         <div class="oe_title">
                             <group>
                                 <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
@@ -353,7 +353,7 @@
                                         <tr width="300">
                                             <td valign="top" width="64" align="left">
                                                 <a type="open">
-                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'photo', record.id.raw_value)" />
+                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image', record.id.raw_value)" />
                                                 </a>
                                             </td>
                                             <td valign="top" align="left" style="padding-left:10px;">
@@ -427,8 +427,7 @@
                     <div class="oe_inline">
                         <newline />
                         <separator string="Personal Information" />
-                        <field name="photo" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;" />
-                        <div class="oe_title">
+;                        <div class="oe_title">
                             <group>
                                 <field name="pid" nolabel="1" readonly="1"/>
                                 <br />
