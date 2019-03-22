@@ -353,7 +353,7 @@
                                         <tr width="300">
                                             <td valign="top" width="64" align="left">
                                                 <a type="open">
-                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image_medium', record.id.raw_value)" />
+                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'photo', record.id.raw_value)" />
                                                 </a>
                                             </td>
                                             <td valign="top" align="left" style="padding-left:10px;">
