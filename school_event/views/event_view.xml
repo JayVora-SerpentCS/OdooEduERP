@@ -1,7 +1,8 @@
-<?xml version='1.0' encoding='us-ascii'?>
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
     
+    <!-- Inherited Form View Of Student Information -->
 
     <record id="school_standard_form_view" model="ir.ui.view">
         <field name="name">school.standard.form</field>
@@ -18,7 +19,7 @@
         </field>
     </record>
 
-    
+    <!-- Inherited Form View Of Student Standard -->
 
     <record id="student_standard_form_view" model="ir.ui.view">
         <field name="name">student.student.form</field>
@@ -35,7 +36,7 @@
         </field>
     </record>
 
-    
+    <!-- Form View Of Event Participation -->
 
     <record id="participant_event_form_view" model="ir.ui.view">
         <field name="name">participant.form.2</field>
@@ -57,7 +58,7 @@
         </field>
     </record>
 
-    
+    <!-- Tree View Of Event Participation -->
 
     <record id="participant_event_tree_view" model="ir.ui.view">
         <field name="name">participant.tree.2</field>
@@ -74,7 +75,7 @@
         </field>
     </record>
 
-    
+    <!-- Search View OF Event Participation -->
 
     <record id="participant_event_search_view" model="ir.ui.view">
         <field name="name">participant.search.2</field>
@@ -97,7 +98,7 @@
         </field>
     </record>
 
-    
+    <!-- Form View Event parameter -->
 
     <record id="parameter_event_form_view" model="ir.ui.view">
         <field name="name">event.parameter.form</field>
@@ -112,8 +113,8 @@
             </form>
         </field>
     </record>
-
     
+    <!-- Tree View Of Event parameter -->
 
     <record id="parameter_event_tree_view" model="ir.ui.view">
         <field name="name">event.parameter.tree</field>
@@ -125,7 +126,7 @@
         </field>
     </record>
 
-    
+    <!-- Search View Of Event parameter -->
 
     <record id="parameter_event_search_view" model="ir.ui.view">
         <field name="name">event.parameter.search</field>
@@ -137,7 +138,7 @@
         </field>
     </record>
 
-    
+    <!-- Form View Of Event Information -->
 
     <record id="school_event_form_view" model="ir.ui.view">
         <field name="name">event.form.1</field>
@@ -198,7 +199,7 @@
         </field>
     </record>
 
-    
+    <!-- Tree View Of Event Information -->
 
     <record id="school_event_tree_view" model="ir.ui.view">
         <field name="name">event.tree.1</field>
@@ -215,7 +216,7 @@
         </field>
     </record>
 
-    
+    <!-- Search View Of Event Information -->
 
     <record id="school_event_search_view" model="ir.ui.view">
         <field name="name">event.search</field>
@@ -243,7 +244,7 @@
         </field>
     </record>
 
-    
+    <!-- Calendar View Of Event Information -->
 
     <record id="school_event_calander_view" model="ir.ui.view">
         <field name="name">event.calendar</field>
@@ -258,6 +259,7 @@
     </record>
 
     
+    <!-- Kanban View Of Event Information -->
 
     <record id="student_event_kanban_view" model="ir.ui.view">
         <field name="name">student.event.kanban.view</field>
@@ -349,7 +351,7 @@
         </field>
     </record>
 
-    
+    <!-- Action Of Form, Tree, Calendar & KanBan Views Of Event Information -->
 
     <record id="action_school_event_form_1" model="ir.actions.act_window">
         <field name="name">Event Information</field>
@@ -366,7 +368,7 @@
         </field>
     </record>
 
-    
+    <!--Form View Of School Event Registration -->
 
     <record id="event_registration_form" model="ir.ui.view">
         <field name="name">event.registration.form</field>
@@ -391,7 +393,7 @@
         </field>
     </record>
 
-    
+    <!--Tree View Of School Event Registration -->
 
     <record id="school_event_registration_tree_view" model="ir.ui.view">
         <field name="name">event.registration.tree</field>
@@ -406,7 +408,7 @@
         </field>
     </record>
 
-    
+    <!--Search View Of School Event Registration -->
 
     <record id="school_event_registration_search_view" model="ir.ui.view">
         <field name="name">event.registration.search</field>
@@ -435,7 +437,7 @@
         </field>
     </record>
 
-    
+    <!-- Action Of Form & Tree Views Of Event Parameter -->
 
     <record id="action_event_parameter" model="ir.actions.act_window">
         <field name="name"> Event Parameter</field>
@@ -445,6 +447,7 @@
     </record>
 
     
+    <!-- Action Of Form & Tree Views Of Event Participants -->
 
     <record id="action_school_event_Participant_tree" model="ir.actions.act_window">
         <field name="name">Event Participant</field>
@@ -453,8 +456,8 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    
-
+    <!-- Action Of Form & Tree Views Of Event Registration -->
+  
     <record id="action_school_event_registration_form" model="ir.actions.act_window">
         <field name="name">Event Registration</field>
         <field name="res_model">school.event.registration</field>
@@ -463,7 +466,7 @@
         <field name="context">{'search_default_confirm':True}</field> 
     </record>
 
-    
+    <!-- Menu Items for Event -->
 
     <menuitem id="menu_event_form_1" name="Events" parent="school.menu_ems" sequence="4" />
 
@@ -474,6 +477,7 @@
     <menuitem action="action_school_event_Participant_tree" id="menu_event_Participation" name="Event Participation" parent="menu_event_form_1" sequence="43" />
 
     
+    <!-- MenuItem Of Event In Configurations -->
 
     <menuitem id="menu_event_parameter" name="Event" parent="school.menu_configuration" />
 
