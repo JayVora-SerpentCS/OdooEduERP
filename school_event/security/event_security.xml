@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='us-ascii'?>
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
         <record id="student_rule_event_regi_record" model="ir.rule">
             <field name="name">Personal Event REgistation Record</field>
@@ -8,7 +8,8 @@
             <field eval="[(4, ref('school.group_school_student'))]" name="groups" />
         </record>
 
-        
+        <!-- Record Rule parents can event registration of own child -->
+
         <record id="parents_rule_event_registration" model="ir.rule">
             <field name="name">Parents Registration record rule</field>
             <field name="model_id" ref="model_school_event_registration" />
@@ -17,7 +18,8 @@
             <field eval="[(4, ref('school.group_school_parent'))]" name="groups" />
         </record>
 
-        
+        <!-- Record Rule Student can see own standard event -->
+      
          <record id="student_rule_event_record" model="ir.rule">
             <field name="name">Personal Event Record</field>
             <field name="model_id" ref="model_school_event" />
@@ -25,9 +27,10 @@
             <field name="domain_force">[('part_standard_ids.student_ids.user_id.id','=',user.id)]</field>
             <field eval="[(4, ref('school.group_school_student'))]" name="groups" />
         </record>
+
+        <!-- Record Rule Parent can see own chlid standard event -->
         
-        
-         <record id="parent_rule_event_record" model="ir.rule">
+        <record id="parent_rule_event_record" model="ir.rule">
             <field name="name">Parent can see own child event rcord</field>
             <field name="model_id" ref="model_school_event" />
             <field eval="1" name="global" />
@@ -35,6 +38,8 @@
             <field eval="[(4, ref('school.group_school_parent'))]" name="groups" />
         </record>
         
+        <!-- Record rule teacher teacher can see all events -->
+
          <record id="teacher_evnet_rule_event_record" model="ir.rule">
             <field name="name">Teacher can see all events</field>
             <field name="model_id" ref="model_school_event" />
@@ -43,6 +48,7 @@
             <field eval="[(4, ref('school.group_school_teacher'))]" name="groups" />
         </record>
          
+         <!-- Record rule Teacher can see all events participants -->
          
          <record id="teacher_event_rule_event_registration" model="ir.rule">
             <field name="name">Teacher Event Registration record rule</field>
@@ -51,8 +57,9 @@
             <field name="domain_force">[]</field>
             <field eval="[(4, ref('school.group_school_teacher'))]" name="groups" />
         </record>
-         
-        
+
+        <!-- Students can see own calendar event -->
+                 
         <record id="students_grp_event_calendar_record_rule" model="ir.rule">
             <field name="name">Children can see own record rule of calendar event</field>
             <field name="model_id" ref="calendar.model_calendar_event" />
@@ -60,6 +67,7 @@
             <field name="domain_force">[('partner_ids','=',user.partner_id.id)]</field>
             <field eval="[(4, ref('school.group_school_student'))]" name="groups" />
         </record>
+
         <record id="teacher_school_regi_rules" model="ir.rule">
             <field name="name">Teacher Event Registration Record Rule</field>
             <field name="model_id" ref="model_school_event_registration" />
