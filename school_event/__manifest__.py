@@ -2,12 +2,12 @@
 
 {
     'name': 'School Event Management',
-    'version': "11.0.1.0.3",
+    'version': "12.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'images': ['static/description/SchoolEvent.png'],
     'category': 'School Management',
-    'license': "AGPL-3",
+    'license': "LGPL-3",
     'complexity': 'easy',
     'summary': 'A Module For Event Management In School',
     'depends': ['school'],
