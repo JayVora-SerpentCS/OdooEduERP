@@ -362,13 +362,6 @@ class AdditionalExam(models.Model):
             raise ValidationError(_('''Configure Maximum marks greater than
             minimum marks!'''))
 
-    @api.model
-    def create(self, vals):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
-        vals.update({'create_date': new_dt})
-        return super(AdditionalExam, self).create(vals)
-
     @api.multi
     def write(self, vals):
         curr_dt = datetime.now()

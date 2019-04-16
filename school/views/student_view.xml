@@ -353,7 +353,10 @@
                                         <tr width="300">
                                             <td valign="top" width="64" align="left">
                                                 <a type="open">
-                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image', record.id.raw_value)" />
+                                                    <img heigh="80" width="80" t-att-src="kanban_image('student.student', 'image', record.id.raw_value)" 
+			                                        t-att-title="record.id.value"
+			                                        t-att-alt="record.id.value"
+			                                        class="oe_kanban_avatar float-left mr4 col-md-"/>
                                                 </a>
                                             </td>
                                             <td valign="top" align="left" style="padding-left:10px;">

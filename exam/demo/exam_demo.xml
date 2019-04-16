@@ -12,7 +12,7 @@
             <field name="end_date" eval="time.strftime('%Y')+'/03/09'"/>
             <field name="start_date" eval="time.strftime('%Y')+'/03/06'"/>
             <field eval="[(6,0,[ref('school.demo_standard_standard_1')])]" name="standard_id"/>
-            <field name="academic_year" ref="school.demo_academic_year_3"/>
+            <field name="academic_year" ref="school.demo_academic_year_1"/>
         </record>
         <record id="time_table_finalexamtimetable0" model="time.table">
             <field name="name">Final Exam Timetable</field>
@@ -154,14 +154,13 @@
         </record>
 
         <!-- Additional Exam Demo Data -->
-        <!-- 
         <record id="additional_exam_supplementaryexam0" model="additional.exam">
             <field name="weightage">30</field>
             <field eval="40" name="minimum_marks"/>
             <field name="name">Supplementary Exam_10</field>
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_1"/>
-            <field name="exam_date" eval="time.strftime('%Y')+'/03/17'"/>
+ 			<field eval="(DateTime.today()).strftime('%Y-03-15 %H:%M')" name="exam_date"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
         <record id="additional_exam_supplementaryexam1" model="additional.exam">
@@ -170,7 +169,7 @@
             <field name="name">Supplementry Exam_11</field>
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
-            <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
+			<field eval="(DateTime.today()).strftime('%Y-08-20 %H:%M')" name="exam_date"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
         <record id="additional_exam_supplementaryexam12" model="additional.exam">
@@ -179,10 +178,9 @@
             <field name="name">Supplementry Exam_12</field>
             <field eval="100" name="maximum_marks"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
-            <field name="exam_date" eval="time.strftime('%Y')+'/08/20'"/>
+			<field eval="(DateTime.today()).strftime('%Y-08-30 %H:%M')" name="exam_date"/>
             <field model="subject.subject" name="subject_id" search="[('name', '=', u'Science')]"/>
         </record>
-         -->
          
         <!-- Additional Exam Result Demo Data -->
         <record id="additional_exam_result_0" model="additional.exam.result">
@@ -211,12 +209,12 @@
             <field name="standard_id" ref="school.demo_school_standard_1"/>
         </record>
         <record id="batchwise_exam_result_2" model="exam.batchwise.result">
-            <field name="year" ref="school.demo_academic_year_2"/>
+            <field name="year" ref="school.demo_academic_year_1"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
             <!-- <field name="grade">B</field> -->
         </record>
         <record id="batchwise_exam_result_3" model="exam.batchwise.result">
-            <field name="year" ref="school.demo_academic_year_3"/>
+            <field name="year" ref="school.demo_academic_year_1"/>
             <field name="standard_id" ref="school.demo_school_standard_3"/>
         </record>
     </data>

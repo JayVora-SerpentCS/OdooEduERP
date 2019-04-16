@@ -275,7 +275,11 @@
             <data>
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="%(action_hostel_student_button)d" type="action" class="oe_right oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user">
-                        <img src="/school_hostel/static/description/hostel291.jpg" style="height:25px;width:50px;float:left;"/>
+                        <img src="/school_hostel/static/description/hostel291.jpg" style="height:25px;width:50px;float:left;"
+						t-att-title="record.id.value"
+			            t-att-alt="record.id.value"
+			            class="oe_kanban_avatar float-left mr4 col-md-"/>
+
                         <lable style="">Hostel</lable>
                     </button>
                 </xpath>
