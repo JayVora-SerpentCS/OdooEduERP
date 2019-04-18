@@ -867,11 +867,11 @@
           	<field name="image" type="base64" file="school/static/src/img/student-08.jpg"/>
         </record>
 
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_1')]]"/>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_2')]]"/>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_3')]]"/>
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_5')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_6')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_7')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_8')]]"/>
 
         <!-- Student Parent Information -->
 
