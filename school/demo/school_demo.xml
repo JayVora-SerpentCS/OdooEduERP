@@ -846,7 +846,7 @@
             <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-07.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-07.png"/>
         </record>
         <record id="demo_student_student_8" model="student.student">
             <field name="name">Jacob</field>
@@ -864,7 +864,7 @@
             <field name="standard_id" ref="demo_school_standard_3"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-08.png"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-08.jpg"/>
         </record>
 
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
