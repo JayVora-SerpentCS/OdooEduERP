@@ -34,6 +34,13 @@ class MonthlyAttendanceSheet(models.TransientModel):
         dummy, tree_view = models_data.\
             get_object_reference('school_attendance',
                                  'view_attendance_sheet_tree')
+        
+        attendance_sheet = self.env['attendance.sheet'].search([('standard_id', '=', data['standard_id'][0]), 
+                                                                ('month_id', '=', data['month_id'][0]),
+                                                                ('year_id', '=', data['year_id'][0])])
+        if not attendance_sheet:
+            self.env['attendance.sheet'].create({'standard_id':data['standard_id'][0],'month_id':data['month_id'][0],'year_id':data['year_id'][0]})
+        
         return {'view_type': 'form',
                 'view_mode': 'tree, form',
                 'res_model': 'attendance.sheet',
