@@ -733,7 +733,7 @@
             <field name="standard_id" ref="demo_school_standard_3"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
-         	<field name="image" type="base64" file="school/static/src/img/student-1.JPG"/>
+         	<field name="image" type="base64" file="school/static/src/img/student-01.JPG"/>
         </record>
         <record id="demo_student_student_2" model="student.student">
             <field name="name">Maria</field>
@@ -752,7 +752,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-2.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-02.jpg"/>
 	    </record>
         <record id="demo_student_student_3" model="student.student">
             <field name="name">John</field>
@@ -771,7 +771,7 @@
             <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-3.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-03.jpg"/>
         </record>
         <record id="demo_student_student_4" model="student.student">
             <field name="name">Sarah</field>
@@ -790,7 +790,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-4.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-04.jpg"/>
         </record>
         <record id="demo_student_student_5" model="student.student">
             <field name="name">Lucy</field>
@@ -809,7 +809,7 @@
             <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-5.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-05.jpg"/>
         </record>
 
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
@@ -834,7 +834,7 @@
             <field name="standard_id" ref="demo_school_standard_1"/>
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-6.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-06.jpg"/>
         </record>
         <record id="demo_student_student_7" model="student.student">
             <field name="name">William</field>
@@ -852,7 +852,7 @@
             <field name="standard_id" ref="demo_school_standard_2"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-7.jpg"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-07.jpg"/>
         </record>
         <record id="demo_student_student_8" model="student.student">
             <field name="name">Jacob</field>
@@ -870,7 +870,7 @@
             <field name="standard_id" ref="demo_school_standard_3"/>
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
-          	<field name="image" type="base64" file="school/static/src/img/student-8.png"/>
+          	<field name="image" type="base64" file="school/static/src/img/student-08.png"/>
         </record>
 
         <!-- Student Parent Information -->
