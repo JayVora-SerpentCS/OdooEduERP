@@ -812,12 +812,6 @@
           	<field name="image" type="base64" file="school/static/src/img/student-05.jpg"/>
         </record>
 
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_5')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_6')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_7')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_8')]]"/>
-
         <record id="demo_student_student_6" model="student.student">
             <field name="name">Mary</field>
             <field name="middle">Daniel</field>
@@ -872,6 +866,12 @@
             <field name="medium_id" ref="demo_standard_medium_3"/>
           	<field name="image" type="base64" file="school/static/src/img/student-08.png"/>
         </record>
+
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_5')]]"/>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_6')]]"/>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_7')]]"/>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_8')]]"/>
 
         <!-- Student Parent Information -->
 
