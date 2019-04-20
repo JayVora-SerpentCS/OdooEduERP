@@ -38,12 +38,27 @@ class AttendanceSheet(models.Model):
         stud_obj = self.env['student.student']
         for rec in self:
             if rec.standard_id:
-                stud_list = [{'roll_no': stu.roll_no, 'name': stu.name}
-                             for stu in stud_obj.search([('standard_id', '=',
-                                                          rec.standard_id),
-                                                         ('state', '=',
-                                                          'done')])]
+                stud_list = [{'roll_no': stu.roll_no, 'name': stu.name} 
+                             for stu in stud_obj.search([('standard_id', '=',rec.standard_id.id),('state', '=','done')])]
+                
             rec.attendance_ids = stud_list
+
+    @api.multi
+    def update_students(self):
+        """ Method used to Upload Missing Students"""
+        stud_obj = self.env['student.student']
+        for rec in self:
+            students = stud_obj.search([('standard_id', '=',rec.standard_id.id),('state', '=','done')])
+            
+            for student in students:
+                std_exist = False
+                for line in rec.attendance_ids:
+                    if student.roll_no == line.roll_no:
+                        std_exist = True
+                        break
+                if not std_exist:
+                    rec.update({'attendance_ids': [(0,0,{'roll_no': student.roll_no, 'name': student.name})]})
+        return True
 
     @api.model
     def fields_view_get(self, view_id=None,

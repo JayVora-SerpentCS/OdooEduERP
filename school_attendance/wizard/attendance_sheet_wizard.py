@@ -39,7 +39,11 @@ class MonthlyAttendanceSheet(models.TransientModel):
                                                                 ('month_id', '=', data['month_id'][0]),
                                                                 ('year_id', '=', data['year_id'][0])])
         if not attendance_sheet:
-            self.env['attendance.sheet'].create({'standard_id':data['standard_id'][0],'month_id':data['month_id'][0],'year_id':data['year_id'][0]})
+            stud_list = [(0,0, {'roll_no': stu.roll_no, 'name': stu.name}) 
+                             for stu in self.env['student.student'].search([('standard_id', '=',data['standard_id'][0]),('state', '=','done')])]
+                
+            self.env['attendance.sheet'].create({'standard_id':data['standard_id'][0],'month_id':data['month_id'][0],
+                                                 'year_id':data['year_id'][0], 'attendance_ids':stud_list})
         
         return {'view_type': 'form',
                 'view_mode': 'tree, form',

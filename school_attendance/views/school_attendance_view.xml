@@ -9,6 +9,10 @@
             <field name="model">attendance.sheet</field>
             <field name="arch" type="xml">
                 <form string="Attendance Sheet" >
+					<header>
+						<button name="update_students" id="action_update_students" string="Update Students" class="btn-primary" type="object"/>
+                    
+					</header>
                     <group>
                         <field name="name"/>
                         <field name="standard_id" widget="selection" readonly="1"/>
