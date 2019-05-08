@@ -2,14 +2,14 @@
 
 {
     'name': 'Transport Management',
-    'version': "11.0.1.0.4",
+    'version': "12.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
-    'license': "AGPL-3",
+    'license': "LGPL-3",
     'category': 'School Management',
     'complexity': 'easy',
     'summary': 'A Module For Transport & Vehicle Management In School',
-    'depends': ['school', 'account_invoicing'],
+    'depends': ['school', 'account'],
     'images': ['static/description/SchoolTransport.png'],
     'data': ['security/transport_security.xml',
              'security/ir.model.access.csv',
