@@ -76,8 +76,8 @@ class StudentStudent(models.Model):
         '''Method to create user when student is created'''
         if vals.get('pid', _('New')) == _('New'):
             vals['pid'] = self.env['ir.sequence'
-                                   ].next_by_code('student.student'
-                                                  ) or _('New')
+                                   ].sudo().next_by_code('student.student'
+                                                         ) or _('New')
         if vals.get('pid', False):
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
@@ -327,12 +327,12 @@ class StudentStudent(models.Model):
                 rec_std.roll_no = number
                 number += 1
             # Assign registration code to student
-            reg_code = ir_sequence.next_by_code('student.registration')
+            reg_code = ir_sequence.sudo().next_by_code('student.registration')
             registation_code = (str(rec.school_id.state_id.name) + str('/') +
                                 str(rec.school_id.city) + str('/') +
                                 str(rec.school_id.name) + str('/') +
                                 str(reg_code))
-            stu_code = ir_sequence.next_by_code('student.code')
+            stu_code = ir_sequence.sudo().next_by_code('student.code')
             student_code = (str(rec.school_id.code) + str('/') +
                             str(rec.year.code) + str('/') +
                             str(stu_code))
