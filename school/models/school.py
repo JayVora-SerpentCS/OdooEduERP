@@ -7,8 +7,15 @@ from datetime import date, datetime
 from openerp import models, fields, api
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import image_colorize, image_resize_image_big
 from openerp.exceptions import except_orm, Warning as UserError
+# added import statement in try-except because when server runs on
+# windows operating system issue arise as
+# this library is not available in Windows.
+try:
+    from odoo.tools import image_colorize, image_resize_image_big
+except:
+    image_colorize = False
+    image_resize_image_big = False
 
 
 class BoardBoard(models.Model):
@@ -307,11 +314,15 @@ class StudentStudent(models.Model):
 
     @api.model
     def _get_img(self, is_company, colorize=False):
-        avatar_img = openerp.modules.get_module_resource('base',
+        # added in try-except because import statements are in try-except
+        try:
+            avatar_img = openerp.modules.get_module_resource('base',
                                                          'static/src/img',
                                                          'avatar.png')
-        image = image_colorize(open(avatar_img).read())
-        return image_resize_image_big(image.encode('base64'))
+            image = image_colorize(open(avatar_img).read())
+            return image_resize_image_big(image.encode('base64'))
+        except:
+            return False
 
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
                               select=True, required=True)
