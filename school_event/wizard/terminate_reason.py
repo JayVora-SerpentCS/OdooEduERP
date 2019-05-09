@@ -8,10 +8,8 @@ class TerminateReasonEvent(models.TransientModel):
 
     @api.multi
     def save_terminate(self):
-        """Override method to delete event participant and cancel event\.
-
-        registration of student when he is terminated.
-        """
+        """Override method to delete event participant and cancel
+        event registration of student when he is terminated. """
         student_obj = self.env['student.student'
                                ].browse(self._context.get('active_id'))
         event_regi = self.env['school.event.registration'
