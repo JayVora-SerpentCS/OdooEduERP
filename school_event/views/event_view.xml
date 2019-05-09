@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
-    
     <!-- Inherited Form View Of Student Information -->
 
     <record id="school_standard_form_view" model="ir.ui.view">
