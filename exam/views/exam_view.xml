@@ -561,4 +561,19 @@
     <menuitem id="menu_additional_exam_result" name="Additional Exam Results" parent="additional_exam"
               action="action_additional_exam_result_form01" sequence="105"/>
 
+	<!-- Inherited Form View Of Promotion -->
+    <record id="view_student_promotion_form2" model="ir.ui.view">
+        <field name="name">student.promotion.form</field>
+        <field name="model">student.promotion</field>
+        <field name="inherit_id" ref="school.view_student_promotion_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='standard_id_to']" position="after">
+                	<field name="exam_id" />
+                 </xpath>
+            </data>
+        </field>
+    </record>
+	
+	
 </odoo>

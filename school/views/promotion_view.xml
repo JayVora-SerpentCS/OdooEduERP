@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!--  Student Promotion Form -->
+    <record id="view_student_promotion_form" model="ir.ui.view">
+        <field name="name">student.promtion.form</field>
+        <field name="model">student.promotion</field>
+        <field name="arch" type="xml">
+            <form string="Student Promotion">
+                <header>
+                   <button name="upload_students" class="fa fa-check" string="Upload Students" type="object" />
+                </header>
+				<sheet>
+                    <group col="4" colspan="4">
+                        <field name="academic_year_from" widget="selection" placeholder="Academic Year From" />
+                         <field name="academic_year_to" widget="selection" placeholder="Academic Year To" />
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="standard_id_from" widget="selection" placeholder="Class From" />
+                         <field name="standard_id_to" widget="selection" placeholder="Class To" />
+                    </group>
+                    <field name="promotion_lines" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+  	</record>
+  
+    <!--  Student Promotion Form -->
+    <record id="view_student_promotion_line_tree" model="ir.ui.view">
+        <field name="name">student.promtion.line.tree</field>
+        <field name="model">student.promotion.line</field>
+        <field name="arch" type="xml">
+            <tree string="Students" editable="bottom">
+				<field name="name"/>
+				<field name="obtain_marks"/>
+				<field name="percentage"/>
+				<field name="status"/>
+            </tree>
+       </field>
+    </record>
+        
+     <!-- Action Of Form & Tree Views Of Promotion Information -->
+        <record id="action_student_promotion_form" model="ir.actions.act_window">
+            <field name="name">Promotion</field>
+            <field name="res_model">student.promotion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    
+    <menuitem id="menu_school_adminitration" name="Administrative Tasks" parent="school.menu_ems" groups="school.group_school_administration"/>
+    <menuitem id="menu_student_promotion" name="Promotion" parent="menu_school_adminitration" action="action_student_promotion_form" groups="school.group_school_administration"/>
+ 
+   </odoo>

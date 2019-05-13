@@ -516,7 +516,7 @@ class StudentPayslip(models.Model):
                     'context': {}}
 
 
-class StudentPayslipLine(models.Model):
+class StudentPayslipLineLine(models.Model):
     '''Function Line'''
     _name = 'student.payslip.line.line'
     _description = 'Function Line'

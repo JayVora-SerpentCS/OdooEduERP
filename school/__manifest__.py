@@ -24,7 +24,8 @@
              'wizard/move_standards_view.xml',
              'views/report_view.xml',
              'views/identity_card.xml',
-             'views/template_view.xml'],
+             'views/template_view.xml',
+             'views/promotion_view.xml'],
     'demo': ['demo/school_demo.xml'],
     'installable': True,
     'application': True

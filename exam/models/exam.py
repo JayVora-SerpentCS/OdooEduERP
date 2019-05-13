@@ -692,3 +692,14 @@ class AdditionalExamResult(models.Model):
     result = fields.Char(compute='_compute_student_result', string='Result',
                          help="Result Obtained", store=True)
     active = fields.Boolean('Active', default=True)
+
+
+
+class StudentPromotion(models.Model):
+    ''' Defining a student information '''
+    _name = 'student.promotion'
+    _inherit = "student.promotion"
+    _description = 'Student Promotion Information'
+    
+    exam_id = fields.Many2one("exam.exam", "Examination", required=True, 
+                                   help="Select Exam")
