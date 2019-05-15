@@ -109,13 +109,28 @@ class HostelRoom(models.Model):
     student_ids = fields.One2many('hostel.student', 'room_id',
                                   string="Students")
 
-    _sql_constraints = [('room_no_unique', 'unique(room_no)',
-                         'Room number must be unique!'),
-                        ('floor_per_hostel', 'check(floor_no < 10)',
+    _sql_constraints = [('floor_per_hostel', 'check(floor_no < 10)',
                          'Error ! Floor per HOSTEL should be less than 10.'),
                         ('student_per_room_greater',
                          'check(student_per_room < 10)',
                          'Error ! Student per room should be less than 10.')]
+
+    @api.model
+    def create(self, vals):
+        # context = self.env.context.get('ifsc_code_changed')
+        rec = self.search([('room_no', '=', vals.get('room_no')), ('name', '=', vals.get('name'))], limit=1)
+        if rec.id:
+            raise ValidationError(_('Hostel Room. must be unique.!'))
+        return super(HostelRoom, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        rec = self.search(['|', ('name', '=', vals.get('name')),
+                           ('name', '=', self.name.id),
+                           ('room_no', '=', vals.get('room_no'))], limit=1)
+        if rec.id:
+            raise ValidationError(_('Hostel Room. must be unique.!'))
+        return super(HostelRoom, self).write(vals)
 
     @api.constrains('rent_amount')
     def _check_rent_amount(self):
