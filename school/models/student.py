@@ -160,6 +160,9 @@ class StudentStudent(models.Model):
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
     student_code = fields.Char('Student Code')
+    
+    academic_ids = fields.One2many('student.academic','student_id', "Academics")
+
     contact_phone = fields.Char('Phone no.')
     contact_mobile = fields.Char('Mobile no')
     roll_no = fields.Integer('Roll No.', readonly=True)
@@ -218,6 +221,8 @@ class StudentStudent(models.Model):
                               ('alumni', 'Alumni')],
                              'Status', readonly=True, default="draft")
     history_ids = fields.One2many('student.history', 'student_id', 'History')
+    
+    
     certificate_ids = fields.One2many('student.certificate', 'student_id',
                                       'Certificate')
     student_discipline_line = fields.One2many('student.descipline',
@@ -338,4 +343,33 @@ class StudentStudent(models.Model):
                        'admission_date': time.strftime('%Y-%m-%d'),
                        'student_code': student_code,
                        'reg_code': registation_code})
+            
+            parent_vals = {'student_id': rec.id,
+                           'academice_year_id': rec.year.id,
+                           'standard_id': rec.standard_id.id,
+                           'state': 'active'}
+            self.env['student.academic'].create(parent_vals)
+           
+                
         return True
+
+
+class studentAcademic(models.Model):
+    
+    _name = "student.academic"
+    _description = "Student Academic"
+    
+    student_id = fields.Many2one('student.student', 'Student')
+    academice_year_id = fields.Many2one('academic.year', 'Academic Year')
+    standard_id = fields.Many2one('school.standard', 'Standard')
+    state = fields.Selection([('inactive', 'Inactive'),
+                              ('active', 'Active'),
+                              ('complete', 'Complete')], 'State',
+                              default='active')
+    
+   
+
+    
+    
+    
+    

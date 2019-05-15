@@ -172,3 +172,4 @@ access_parent_relation_parent_grp,parent.relation,school.model_parent_relation,g
 access_parent_relation_teacher_grp,parent.relation,school.model_parent_relation,group_school_teacher,1,0,0,0
 access_student_promotion_admin,student.promotion,model_student_promotion,group_school_administration,1,1,1,0
 access_student_promotion_line_admin,student.promotion.line,model_student_promotion_line,group_school_administration,1,1,1,0
+access_student_academic,student.academic,model_student_academic,group_school_administration,1,1,1,0

@@ -27,7 +27,7 @@
         <field name="inherit_id" ref="school.view_student_student_form_1"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//page[1]" position="after">
+                <xpath expr="//page[2]" position="after">
                     <page string="Events">
                         <field name="event_ids" readonly="1" nolabel= '1' />
                     </page>

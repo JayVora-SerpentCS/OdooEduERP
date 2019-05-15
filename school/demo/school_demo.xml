@@ -873,8 +873,40 @@
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_5')]]"/>
 
+		<!-- 
+        <record id="demo_student_academics_1" model="student.academic">
+            <field name="student_id" ref="demo_student_student_1"/>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="standard_id" ref="demo_school_standard_3"/>
+            <field name="state">active</field>
+        </record>
+        <record id="demo_student_academics_2" model="student.academic">
+            <field name="student_id" ref="demo_student_student_2"/>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="standard_id" ref="demo_school_standard_1"/>
+            <field name="state">active</field>
+        </record>
+        <record id="demo_student_academics_3" model="student.academic">
+            <field name="student_id" ref="demo_student_student_3"/>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="standard_id" ref="demo_school_standard_2"/>
+            <field name="state">active</field>
+        </record>
+        <record id="demo_student_academics_4" model="student.academic">
+            <field name="student_id" ref="demo_student_student_4"/>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="standard_id" ref="demo_school_standard_1"/>
+            <field name="state">active</field>
+        </record>
+		<record id="demo_student_academics_5" model="student.academic">
+            <field name="student_id" ref="demo_student_student_5"/>
+            <field name="year" ref="demo_academic_year_1"/>
+            <field name="standard_id" ref="demo_school_standard_2"/>
+            <field name="state">active</field>
+        </record>
+         -->
+        
         <!-- Student Parent Information -->
-
         <record id="demo_student_parent_1" model="school.parent">
             <field name="name">Jim Davis</field>
             <field name="email">jim.davis@example.com</field>

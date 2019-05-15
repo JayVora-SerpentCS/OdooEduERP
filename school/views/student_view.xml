@@ -97,6 +97,17 @@
                                     <field name="terminate_reason" attrs="{'invisible':[('state','in',['draft','done','alumni'])]}" readonly="1"/>
                               </group>
                         </page>
+                        
+                        <page string="Academics"  name="academics" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent,school.group_school_student">
+                            <field name="academic_ids" nolabel="1" readonly="1" >
+                              <tree string="Record">
+                                    <field name="academice_year_id" required="1"/>
+                                    <field name="standard_id" required="1"/>
+                                    <field name="state"/>
+                                </tree>
+                                </field>
+                        </page>
+                        
                         <page string="Parents">
                             <field name="parent_id" 
                                         attrs="{'readonly':[('state','in',['alumni','terminate'])]}" 

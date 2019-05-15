@@ -9,7 +9,7 @@
         <field name="inherit_id" ref="school.view_student_student_form_1"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//page[@name='general']" position="after">
+                <xpath expr="//page[@name='academics']" position="after">
                     <page string="Transport">
                         <separator string="Transportation Details" colspan="4"/>
                         <field name="transport_ids" readonly="1" nolabel= '1'/>
