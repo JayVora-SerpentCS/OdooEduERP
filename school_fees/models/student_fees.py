@@ -23,5 +23,6 @@ class StudentPromotionLine(models.Model):
     
     fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
     fees_structure_new = fields.Many2one('student.fees.structure','Fees Structure New')
-    
+    product_list_id = fields.Many2one('product.pricelist', string='Product List')
+    product_list_id_new = fields.Many2one('product.pricelist', string='Product List New')
     

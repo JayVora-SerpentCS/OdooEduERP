@@ -46,6 +46,8 @@
 			<field name="name" position="after">
 				<field name="fees_structure"/>
 				<field name="fees_structure_new"/>
+				<field name="product_list_id"/>
+				<field name="product_list_id_new"/>
 	        </field>
 	    </field>
     </record>

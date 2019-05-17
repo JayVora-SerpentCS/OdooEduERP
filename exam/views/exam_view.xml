@@ -569,7 +569,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='standard_id_to']" position="after">
-                	<field name="exam_id" />
+                	<field name="exam_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                  </xpath>
             </data>
         </field>

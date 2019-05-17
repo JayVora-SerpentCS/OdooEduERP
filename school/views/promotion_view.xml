@@ -9,18 +9,21 @@
         <field name="arch" type="xml">
             <form string="Student Promotion">
                 <header>
-                   <button name="upload_students" class="fa fa-check" string="Upload Students" type="object" />
+                   <button name="load_students" class="fa fa-check" string="Load Students" type="object" states="draft"/>
+                   <button name="promote_students" class="fa fa-check" string="Promote Students" type="object" states="loaded"/>
+                	<field name="state" widget="statusbar" statusbar_visible="draft,loaded,promoted" />	
+                
                 </header>
 				<sheet>
                     <group col="4" colspan="4">
-                        <field name="academic_year_from" widget="selection" placeholder="Academic Year From" />
-                         <field name="academic_year_to" widget="selection" placeholder="Academic Year To" />
+                         <field name="academic_year_from" widget="selection" placeholder="Academic Year From" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                         <field name="academic_year_to" widget="selection" placeholder="Academic Year To" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                     </group>
                     <group col="4" colspan="4">
-                        <field name="standard_id_from" widget="selection" placeholder="Class From" />
-                         <field name="standard_id_to" widget="selection" placeholder="Class To" />
+                        <field name="standard_id_from" widget="selection" placeholder="Class From" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                         <field name="standard_id_to" widget="selection" placeholder="Class To" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                     </group>
-                    <field name="promotion_lines" nolabel="1"/>
+                    <field name="promotion_lines" nolabel="1" attrs="{'readonly': [('state', '=', 'promoted')]}"/>
                 </sheet>
             </form>
         </field>
@@ -31,11 +34,11 @@
         <field name="name">student.promtion.line.tree</field>
         <field name="model">student.promotion.line</field>
         <field name="arch" type="xml">
-            <tree string="Students" editable="bottom">
+            <tree string="Students" editable="bottom" decoration-success="state=='ready_to_promote'" decoration-danger="state=='fail'">
 				<field name="name"/>
 				<field name="obtain_marks"/>
 				<field name="percentage"/>
-				<field name="status"/>
+				<field name="state"/>
             </tree>
        </field>
     </record>
