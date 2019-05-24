@@ -63,9 +63,9 @@
                         <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
                     <group col="4" string="Subject and Dates">
-                        <field name="standard_id" select="1" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" domain="[('user_id','=',teacher_id)]" required="1"/>
+                        <field name="standard_id" select="1" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" required="1"/>
                         <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',subject_standard_assignment)]" widget="selection"/>
+                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" widget="selection"/>
                         <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
                         <field name="subject_standard_assignment" invisible="1"/>
                     </group>
@@ -113,9 +113,9 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information">
                     <header>
-                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active" 
+                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active"
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
-                        <button name="done_assignment" class="oe_stat_button fa fa-check" states="active" string="Done" 
+                        <button name="done_assignment" class="oe_stat_button fa fa-check" states="active" string="Done"
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
                         <button name="%(assignment.student_homework_reject)d" string="Reject" type="action" states="active"
                                 groups="school.group_school_teacher,school.group_school_administration"/>
