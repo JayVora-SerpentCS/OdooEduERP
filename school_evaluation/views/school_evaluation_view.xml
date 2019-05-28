@@ -316,7 +316,7 @@
                         <field name="desc" placeholder="Enter Description"/>
                         <field name="type"/>
                     </group>
-                    <field name="rating_line" nolabel="1"/>
+                    <field name="rating_line_ids" nolabel="1"/>
                 </sheet>
             </form>
         </field>
