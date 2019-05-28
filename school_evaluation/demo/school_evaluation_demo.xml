@@ -32,180 +32,57 @@
             <field name="type">faculty</field>
             <field name="date" eval="(DateTime.today())"/>
         </record>
+        <!-- Rating evalution -->
+        <record id="teacher_rating_evaluation_excellent" model="rating.rating">
+            <field name="point">5</field>
+            <field name="rating">Excellent</field>
+        </record>
+        <record id="teacher_rating_evaluation_very_good" model="rating.rating">
+            <field name="point">4</field>
+            <field name="rating">Very Good</field>
+        </record>
+        <record id="teacher_rating_evaluation_good" model="rating.rating">
+            <field name="point">3</field>
+            <field name="rating">Good</field>
+        </record>
+        <record id="teacher_rating_evaluation_average" model="rating.rating">
+            <field name="point">2</field>
+            <field name="rating">Average</field>
+        </record>
+        <record id="teacher_rating_evaluation_poor" model="rating.rating">
+            <field name="point">1</field>
+            <field name="rating">Poor</field>
+        </record>
         <!-- school.evaluation.template -->
         <record id="school_evaluation_template_1" model="school.evaluation.template">
             <field name="desc">How do you plan to assess student achievement of the goals?</field>
             <field name="type">student</field>
-        </record>
-        <record id="student_rating_4509" model="rating.rating">
-            <field name="point">5</field>
-            <field name="rating">Excellent</field>
-            <field name="rating_id" ref="school_evaluation_template_1"/>
-        </record>
-        <record id="student_rating_9509" model="rating.rating">
-            <field name="point">4</field>
-            <field name="rating">Very Good</field>
-            <field name="rating_id" ref="school_evaluation_template_1"/>
-        </record>
-        <record id="student_rating_990509" model="rating.rating">
-            <field name="point">3</field>
-            <field name="rating">Good</field>
-            <field name="rating_id" ref="school_evaluation_template_1"/>
-        </record>
-        <record id="student_rating_4509_evaluation" model="rating.rating">
-            <field name="point">2</field>
-            <field name="rating">Average</field>
-            <field name="rating_id" ref="school_evaluation_template_1"/>
-        </record>
-        <record id="student_rating_77565" model="rating.rating">
-            <field name="point">1</field>
-            <field name="rating">Poor</field>
-            <field name="rating_id" ref="school_evaluation_template_1"/>
+            <field name="rating_line_ids" eval="[(6,0,[ref('teacher_rating_evaluation_excellent'),ref('teacher_rating_evaluation_very_good'),ref('teacher_rating_evaluation_good'),ref('teacher_rating_evaluation_average'),ref('teacher_rating_evaluation_poor')])]"/>
         </record>
         <record id="school_evaluation_template_2" model="school.evaluation.template">
             <field name="desc">Communication with students</field>
             <field name="type">faculty</field>
-        </record>
-        <record id="teacher_rating_45" model="rating.rating">
-            <field name="point">5</field>
-            <field name="rating">Excellent</field>
-            <field name="rating_id" ref="school_evaluation_template_2"/>
-        </record>
-        <record id="teacher_rating_456411" model="rating.rating">
-            <field name="point">4</field>
-            <field name="rating">Very Good</field>
-            <field name="rating_id" ref="school_evaluation_template_2"/>
-        </record>
-        <record id="teacher_rating_4500" model="rating.rating">
-            <field name="point">3</field>
-            <field name="rating">Good</field>
-            <field name="rating_id" ref="school_evaluation_template_2"/>
-        </record>
-        <record id="teacher_rating12234" model="rating.rating">
-            <field name="point">2</field>
-            <field name="rating">Average</field>
-            <field name="rating_id" ref="school_evaluation_template_2"/>
-        </record>
-        <record id="teacher_rating_45_rating77" model="rating.rating">
-            <field name="point">1</field>
-            <field name="rating">Poor</field>
-            <field name="rating_id" ref="school_evaluation_template_2"/>
+            <field name="rating_line_ids" eval="[(6,0,[ref('teacher_rating_evaluation_excellent'),ref('teacher_rating_evaluation_very_good'),ref('teacher_rating_evaluation_good'),ref('teacher_rating_evaluation_average'),ref('teacher_rating_evaluation_poor')])]"/>
         </record>
         <record id="school_student_evaluation_template" model="school.evaluation.template">
             <field name="desc">Respect for student</field>
             <field name="type">student</field>
-        </record>
-        <record id="student_rating_new5" model="rating.rating">
-            <field name="point">5</field>
-            <field name="rating">Excellent</field>
-            <field name="rating_id" ref="school_student_evaluation_template"/>
-        </record>
-        <record id="student_rating" model="rating.rating">
-            <field name="point">4</field>
-            <field name="rating">Very Good</field>
-            <field name="rating_id" ref="school_student_evaluation_template"/>
-        </record>
-        <record id="student_rating_2" model="rating.rating">
-            <field name="point">3</field>
-            <field name="rating">Good</field>
-            <field name="rating_id" ref="school_student_evaluation_template"/>
-        </record>
-        <record id="student_rating_21" model="rating.rating">
-            <field name="point">2</field>
-            <field name="rating">Average</field>
-            <field name="rating_id" ref="school_student_evaluation_template"/>
-        </record>
-        <record id="student_rating_22" model="rating.rating">
-            <field name="point">1</field>
-            <field name="rating">Poor</field>
-            <field name="rating_id" ref="school_student_evaluation_template"/>
+            <field name="rating_line_ids" eval="[(6,0,[ref('teacher_rating_evaluation_excellent'),ref('teacher_rating_evaluation_very_good'),ref('teacher_rating_evaluation_good'),ref('teacher_rating_evaluation_average'),ref('teacher_rating_evaluation_poor')])]"/>
         </record>
         <record id="school_student_evaluation_template_2" model="school.evaluation.template">
             <field name="desc">Communication of Information</field>
             <field name="type">student</field>
-        </record>
-        <record id="student_rating_345" model="rating.rating">
-            <field name="point">5</field>
-            <field name="rating">Excellent</field>
-            <field name="rating_id" ref="school_student_evaluation_template_2"/>
-        </record>
-        <record id="student_rating_3" model="rating.rating">
-            <field name="point">4</field>
-            <field name="rating">Very Good</field>
-            <field name="rating_id" ref="school_student_evaluation_template_2"/>
-        </record>
-        <record id="student_rating_5" model="rating.rating">
-            <field name="point">3</field>
-            <field name="rating">Good</field>
-            <field name="rating_id" ref="school_student_evaluation_template_2"/>
-        </record>
-        <record id="student_rating_78" model="rating.rating">
-            <field name="point">2</field>
-            <field name="rating">Average</field>
-            <field name="rating_id" ref="school_student_evaluation_template_2"/>
-        </record>
-        <record id="student_rating_52" model="rating.rating">
-            <field name="point">1</field>
-            <field name="rating">Poor</field>
-            <field name="rating_id" ref="school_student_evaluation_template_2"/>
+            <field name="rating_line_ids" eval="[(6,0,[ref('teacher_rating_evaluation_excellent'),ref('teacher_rating_evaluation_very_good'),ref('teacher_rating_evaluation_good'),ref('teacher_rating_evaluation_average'),ref('teacher_rating_evaluation_poor')])]"/>
         </record>
         <record id="school_evaluation_template_teacher" model="school.evaluation.template">
             <field name="desc">Effort put in the subject</field>
             <field name="type">faculty</field>
-        </record>
-        <record id="student_rating98" model="rating.rating">
-            <field name="point">5</field>
-            <field name="rating">Excellent</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher"/>
-        </record>
-        <record id="student_rating981" model="rating.rating">
-            <field name="point">4</field>
-            <field name="rating">Very Good</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher"/>
-        </record>
-        <record id="student_rating9823" model="rating.rating">
-            <field name="point">3</field>
-            <field name="rating">Good</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher"/>
-        </record>
-        <record id="student_rating444" model="rating.rating">
-            <field name="point">2</field>
-            <field name="rating">Average</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher"/>
-        </record>
-        <record id="student_rating122" model="rating.rating">
-            <field name="point">1</field>
-            <field name="rating">Poor</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher"/>
+            <field name="rating_line_ids" eval="[(6,0,[ref('teacher_rating_evaluation_excellent'),ref('teacher_rating_evaluation_very_good'),ref('teacher_rating_evaluation_good'),ref('teacher_rating_evaluation_average'),ref('teacher_rating_evaluation_poor')])]"/>
         </record>
         <record id="school_evaluation_template_teacher_question" model="school.evaluation.template">
             <field name="desc">Based on your daily interactions with your students, how do you think they perceive you?</field>
             <field name="type">faculty</field>
-        </record>
-        <record id="teacher_rating_evaluatiom3454" model="rating.rating">
-            <field name="point">5</field>
-            <field name="rating">Excellent</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher_question"/>
-        </record>
-        <record id="teacher_rating_evaluatiom34549" model="rating.rating">
-            <field name="point">4</field>
-            <field name="rating">Very Good</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher_question"/>
-        </record>
-        <record id="teacher_rating_evaluation34" model="rating.rating">
-            <field name="point">3</field>
-            <field name="rating">Good</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher_question"/>
-        </record>
-        <record id="teacher_rating_evaluations" model="rating.rating">
-            <field name="point">2</field>
-            <field name="rating">Average</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher_question"/>
-        </record>
-        <record id="teacher_rating_evaluation_323" model="rating.rating">
-            <field name="point">1</field>
-            <field name="rating">Poor</field>
-            <field name="rating_id" ref="school_evaluation_template_teacher_question"/>
+            <field name="rating_line_ids" eval="[(6,0,[ref('teacher_rating_evaluation_excellent'),ref('teacher_rating_evaluation_very_good'),ref('teacher_rating_evaluation_good'),ref('teacher_rating_evaluation_average'),ref('teacher_rating_evaluation_poor')])]"/>
         </record>
      </data>
 </odoo>
