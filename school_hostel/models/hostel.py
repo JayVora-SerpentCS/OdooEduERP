@@ -107,7 +107,7 @@ class HostelRoom(models.Model):
     student_ids = fields.One2many('hostel.student', 'room_id',
                                   string="Students")
 
-    _sql_constraints = [('room_no_unique', 'unique(room_no)',
+    _sql_constraints = [('room_no_unique', 'unique(room_no,name)',
                          'Room number must be unique!'),
                         ('floor_per_hostel', 'check(floor_no < 10)',
                          'Error ! Floor per HOSTEL should be less than 10.'),
@@ -120,7 +120,6 @@ class HostelRoom(models.Model):
         if self.rent_amount < 0:
             raise ValidationError(_('''Rent Amount Per Month should not
             be a negative value!'''))
-
 
 class HostelStudent(models.Model):
     _name = 'hostel.student'
