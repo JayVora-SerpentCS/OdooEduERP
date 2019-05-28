@@ -50,12 +50,14 @@ class SchoolTeacherAssignment(models.Model):
 
     @api.onchange('standard_id', 'teacher_id')
     def onchange_stamdard_id(self):
-        if self.standard_id and self.teacher_id:
-            domain = [('teacher_ids', '=', self.teacher_id.id), ('standard_ids', '=',self.standard_id.standard_id.id)]
-            return {'domain': {'subject_id': domain}}
-        elif self.teacher_id:
-            domain = [('teacher_ids', '=', self.teacher_id.id)]
-            return {'domain': {'subject_id': domain}}
+        domain = []
+        if self.teacher_id:
+            domain.append(
+                    ('teacher_ids', '=', self.teacher_id.id))
+        if self.standard_id:
+            domain.append(
+                ('standard_ids', '=', self.standard_id.standard_id.id))
+        return {'domain': {'subject_id': domain}}
 
     @api.multi
     def active_assignment(self):
