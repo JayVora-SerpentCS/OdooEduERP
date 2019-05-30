@@ -2,7 +2,7 @@
 
 import time
 from odoo import models, api
-from datetime import datetime
+import datetime
 
 class ReportAddExamResult(models.AbstractModel):
     _name = 'report.exam.exam_result_report'
@@ -36,9 +36,12 @@ class ReportAddExamResult(models.AbstractModel):
 
     @api.model
     def _get_current_date(self):
-        return [{'current_date': datetime.today()}]
+        return datetime.date.today()
 
-
+    @api.model
+    def _get_student_attendance(self):
+        return "__"
+    
     @api.model
     def _get_report_values(self, docids, data=None):
         active_model = self._context.get('active_model')
@@ -53,5 +56,6 @@ class ReportAddExamResult(models.AbstractModel):
                 'docs': result_data,
                 'get_result_detail': self._get_result_detail,
                 'get_current_date': self._get_current_date,
+                'get_student_attendance': self._get_student_attendance,
                 'time': time,
                 }

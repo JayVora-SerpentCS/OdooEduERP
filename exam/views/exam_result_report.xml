@@ -162,20 +162,21 @@
                             <br/><br/>
                             <table width="100%" border="1" style="padding-top:10px;">
                            
-                            <tr><td width="15%">Grade:</td><td><span t-field="o.grade"></span></td></tr>
-                            <tr><td width="15%">Position:</td><td><b t-field="o.position"></b></td></tr>
-                            <tr><td width="15%">Remarks:</td><td> <span t-field="o.result"></span></td></tr>
-                            <tr><td width="15%">Attendance:</td><td>....</td></tr>
+                            <tr><td width="15%"><b>Grade:</b></td><td><span t-field="o.grade"></span></td></tr>
+                            <tr><td width="15%"><b>Position:</b></td><td> <span t-field="o.position"></span></td></tr>
+                            <tr><td width="15%"><b>Remarks:</b></td><td> <span t-field="o.result"></span></td></tr>
+                            <tr><td width="15%"><b>Attendance:</b></td><td> <span t-esc="get_student_attendance()"> </span></td></tr>
                        
                             <tr><td height="100" style="padding-top:50px;" width="15%"><b><u>Principle:</u></b></td><td></td></tr>
                             <tr><td height="100" style="padding-top:80px;" width="15%"><b><u>Parent Sign:</u></b></td><td></td></tr>
-                             <t t-foreach="get_current_date()" t-as="date_info">
                                                                                 
+                            <t t-set="current_date" t-value="get_current_date()" />
                             
-                            <tr><td height="30" style="padding-top:30px;" width="15%">Date Issued:</td><td>  <span t-esc="date_info.get('current_date')" ></span><b t-field="o.s_exam_ids.start_date"></b> </td> </tr>
+                            <tr><td height="30" style="padding-top:30px;" width="15%"><b>Result Date:</b></td>
+                            	<td> <span t-field="o.s_exam_ids.start_date"> </span></td> </tr>
+                            <tr><td height="30" style="padding-top:30px;" width="15%"><b>Issue Date:</b></td>
+                            	<td>  <span t-esc="current_date" ></span> </td> </tr>
                             
-                                        
-                           </t>
                             </table>
                         </t>
                     </div>
