@@ -717,9 +717,9 @@
 
         <!-- Student Informations -->
         <record id="demo_student_student_1" model="student.student">
-            <field name="name">Alexander</field>
-            <field name="middle">Robert</field>
-            <field name="last">Martin</field>
+            <field name="name">Bahar</field>
+            <field name="middle">Ali</field>
+            <field name="last">Khan</field>
             <!-- <field name="state">done</field> -->
             <field name="student_code">0671/2017/003</field>
             <field name="year" ref="demo_academic_year_1"/>
