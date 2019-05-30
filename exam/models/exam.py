@@ -436,8 +436,6 @@ class ExamResult(models.Model):
         postions_obj = self.env['exam.result'].search([('standard_id','=',self.standard_id.id),('s_exam_ids','=',self.s_exam_ids.id)])
         
         for position_obj in postions_obj:
-            print("percentage ...",position_obj.percentage)
-            
             if student_percentage < position_obj.percentage:
                 pos_count = pos_count +1
            

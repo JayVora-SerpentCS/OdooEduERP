@@ -40,7 +40,26 @@ class ReportAddExamResult(models.AbstractModel):
 
     @api.model
     def _get_student_attendance(self):
-        return "__"
+        active_model = self._context.get('active_model')
+        result_data = self.env[active_model].browse(self._context.get('active_id'))
+        student_id = result_data.student_id.id
+        standard_id = result_data.standard_id.id
+        
+        student_att_ids = self.env['daily.attendance'].search([('standard_id','=',standard_id)]).ids
+        student_att_lines = self.env['daily.attendance.line'].search([('stud_id','=', student_id),('standard_id','in',student_att_ids)])
+
+        if student_att_lines:
+            total_taken = 0;
+            total_attended = 0;
+            
+            for student_att_line in student_att_lines:
+                total_taken += 1
+                if student_att_line.is_present:
+                    total_attended += 1
+            return str((total_attended/total_taken)*100) + "%"
+            
+        else:
+            return "__"
     
     @api.model
     def _get_report_values(self, docids, data=None):
