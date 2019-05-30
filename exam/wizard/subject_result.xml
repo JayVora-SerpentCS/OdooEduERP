@@ -10,11 +10,22 @@
             <form string="Result Report">
                 <field name="result_ids">
                     <form string="Subjects">
+                    <group>
+						<field name="subject_id" />
+						<field name="obtain_marks" />
+						<field name="minimum_marks" />
+						<field name="maximum_marks" />
+						<field name="marks_reeval" />
+						<field name="grade_line_id" />
+						<field name="state" />
+	        		</group>
+                    </form>
+                    <tree string="Subjects">
                         <field name="subject_id"/>
                         <field name="maximum_marks"/>
                         <field name="minimum_marks"/>
                         <field name="obtain_marks"/>
-                    </form>
+                    </tree>
                 </field>
                 <footer>
                     <button class="btn btn-sm btn-default fa fa-book" name='result_report' type='object' string='Result'/>

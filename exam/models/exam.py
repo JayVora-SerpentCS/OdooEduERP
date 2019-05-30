@@ -427,7 +427,23 @@ class ExamResult(models.Model):
                         flag = True
             if flag:
                 rec.result = 'Fail'
-
+    
+    @api.multi
+    def _compute_pos(self):
+        student_percentage = self.percentage
+        
+        pos_count = 1
+        postions_obj = self.env['exam.result'].search([('standard_id','=',self.standard_id.id),('s_exam_ids','=',self.s_exam_ids.id)])
+        
+        for position_obj in postions_obj:
+            print("percentage ...",position_obj.percentage)
+            
+            if student_percentage < position_obj.percentage:
+                pos_count = pos_count +1
+           
+        self.position = pos_count
+        
+        
     @api.model
     def create(self, vals):
         if vals.get('student_id'):
@@ -482,6 +498,8 @@ class ExamResult(models.Model):
     percentage = fields.Float("Percentage", compute="_compute_per",
                               store=True,
                               help="Percentage Obtained")
+    position = fields.Char("Position",compute="_compute_pos")
+    
     result = fields.Char(compute='_compute_result', string='Result',
                          store=True, help="Result Obtained")
     grade = fields.Char("Grade", compute="_compute_per",
@@ -613,7 +631,27 @@ class ExamSubject(models.Model):
                         r_id = rec.marks_reeval <= grade_id.to_mark
                         if (rec.marks_reeval >= grade_id.from_mark and r_id):
                             rec.grade_line_id = grade_id
+    
+    
+    # Start of danish subject wise percentage verify by Bahar
+    @api.depends('obtain_marks')
+    def _compute_sub_per(self):
+        '''Method to compute percentage'''
+        total = 0.0
+        obtained_total = 0.0
+        obtain_marks = 0.0
+        per = 0.0
+            
+        obtained_total = self.obtain_marks 
+        total = self.maximum_marks
+        per = (obtained_total / total) * 100
+        
+        print("perr",per)
+        self.subject_percentage = per
 
+    # end of danish subject wise percentage verify by Bahar
+    
+    
     exam_id = fields.Many2one('exam.result', 'Result')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
@@ -630,7 +668,7 @@ class ExamSubject(models.Model):
                                 help="Marks Obtain after Re-evaluation")
     grade_line_id = fields.Many2one('grade.line', "Grade",
                                     compute='_compute_grade')
-
+    subject_percentage = fields.Float("Subject Percentage",compute='_compute_sub_per')
 
 class AdditionalExamResult(models.Model):
     _name = 'additional.exam.result'

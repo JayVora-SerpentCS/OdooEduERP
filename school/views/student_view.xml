@@ -25,15 +25,17 @@
                         <field name="image" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
                         <div class="oe_title">
                             <group>
-                                <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <br />
-                                <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <br />
-                                <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <br />
+                                <field name="name" placeholder="First Name" nolabel="0" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="middle" placeholder="Middle Name" nolabel="0" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                                <field name="last" placeholder="Last Name" nolabel="0" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 <field name="pid" invisible="1"/>
+                                <field name="father_name" placeholder="Father Name" nolabel="0"/>
                             </group>
                         </div>
+                        
+                        
+                        
+                            
                     </div>
                     <group>
                         <group string="Student Information">
@@ -304,10 +306,13 @@
             <search string="Student Information">
                 <group col="10" colspan="4">
                     <field name="pid" />
-                    <field name="student_name" invisible="1" />
+                    <field name="student_name" />
+                    <field name="standard_id" />
                     <field name="year" />
                     <field name="gender" />
                     <field name="school_id" placeholder="School"/>
+	                <field name="contact_phone" />
+	                <field name="contact_mobile" />
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
@@ -450,6 +455,8 @@
                                 <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
                                 <br />
                                 <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                                <br/>
+                                <field name="father_name" placeholder="Father Name" />
                                 <br/>
                                 <field name="active" invisible="1"/>
                             </group>
@@ -626,11 +633,14 @@
             <search string="Admission Register">
                 <filter string="Draft" name="state_student" domain="[('state','=', 'draft')]" help="Admission In Draft State" />
                 <separator orientation="vertical" />
-                <field name="student_name" invisible="1" />
+                <field name="student_name"  />
                 <field name="year" />
                 <field name="standard_id" />
                 <field name="gender" />
                 <field name="school_id" />
+                <field name="pid" />
+                 <field name="contact_phone" />
+                 <field name="contact_mobile" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter name="class" string="Class" domain="[]" help="By Class" context="{'group_by':'standard_id'}" />
@@ -687,6 +697,7 @@
         <field name="domain">[('active','=',False)]</field>
         <field name="res_model">student.student</field>
         <field name="view_type">form</field>
+        <field name="search_view_id" ref="view_student_student_search_1" />
         <field name="view_mode">kanban,tree,form</field>
     </record>
 

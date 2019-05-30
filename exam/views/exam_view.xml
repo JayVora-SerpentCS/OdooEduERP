@@ -54,6 +54,8 @@
         <field name="model">exam.exam</field>
         <field name="arch" type="xml">
             <search string="Exam Information Search">
+            	<field name="academic_year" string="Academic Year"/>
+            	<field name="standard_id" string="Class"/>
                 <field name="exam_code" string="Exam Code"/>
                 <field name="name" string="Name"/>
                 <field name="start_date" string="Start Date"/>
@@ -456,6 +458,7 @@
             <search string="Search">
                 <field name="student_id"/>
                 <field name="standard_id"/>
+                <field name="roll_no_id"/>
                 <group expand="1" string="Group By">
                     <filter name="student" string="Student" help="By Name" domain="[]"
                             context="{'group_by':'student_id'}" />
@@ -575,5 +578,44 @@
         </field>
     </record>
 	
+
+<!-- Danish Exam Subject Form View Of Result Information -->
+    <record id="view_exam_subject_form" model="ir.ui.view">
+        <field name="name">exam.subject.form</field>
+        <field name="model">exam.subject</field>
+        <field name="arch" type="xml">
+            <form string="Exam Subject" >
+               <sheet>
+               <group>
+               		<field name="subject_id" />
+					<field name="obtain_marks" />
+					<field name="minimum_marks" />
+					<field name="maximum_marks" />
+					<field name="state" />
+                </group>
+                </sheet>
+                
+            </form>
+        </field>
+    </record>
+    <!-- Tree View Of Exam Information -->
+    <record id="view_exam_subject_tree" model="ir.ui.view">
+        <field name="name">exam.subject.tree</field>
+        <field name="model">exam.subject</field>
+        <field name="arch" type="xml">
+            <tree string="Subject Information">
+                	<field name="subject_id" />
+                	<field name="obtain_marks" />
+					<field name="minimum_marks" />
+					<field name="maximum_marks" />
+					<field name="marks_reeval" />
+					<field name="grade_line_id" />
+					<field name="exam_id" />
+					<field name="state" /> 
+            </tree>
+        </field>
+    </record>
+
+
 	
 </odoo>

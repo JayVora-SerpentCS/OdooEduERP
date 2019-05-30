@@ -12,8 +12,15 @@
                         <t t-foreach="o" t-as="result">
                             <table width="100%">
                                 <center>
-                                    <h2 t-field="o.s_exam_ids.name"></h2>
+                                	<h2><b>Detailed Marks Certificate</b></h2>
+                                    <h3><b t-field="result.s_exam_ids.name"></b>
+                                    <b>:</b> 
+                                    <b t-field="result.standard_id.name"></b></h3>
+                                    <b t-field="result.s_exam_ids.academic_year"></b>
+                                    <br/>
+                                    
                                 </center>
+                                <br/><br/>
                                 <tr>
                                     <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <b>Student Name</b>
@@ -21,15 +28,53 @@
                                     <td width="1%">
                                         <span>:</span>
                                     </td>
-                                    <td width="80%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <span t-field="result.sudo().student_id.name"></span>
+                                    <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <span t-field="o.student_id.name"></span>
                                     </td>
+                                    
+                                    <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Father Name</b>
+                                    </td>
+                                    <td width="1%">
+                                        <span>:</span>
+                                    </td>
+                                    <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <span t-field="o.student_id.father_name"></span>
+                                        
+                                    </td>
+                                </tr>
+                                        <tr>
+                                    <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Class</b>
+                                    </td>
+                                    <td width="1%">
+                                        <span>:</span>
+                                    </td>
+                                    <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                     
+                                        <span t-field="o.standard_id.name"></span>
+                                     
+                                    </td>
+                                    <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>	Grade System</b>
+                                    </td>
+                                    <td width="1%">
+                                        <span>:</span>
+                                    </td>
+                                    <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <span t-field="o.grade_system"></span>
+                                    </td>
+                                    
                                 </tr>
                             </table>
                             <br />
                             <table width="100%">
                                 <thead>
                                     <tr>
+                                      <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>No</b>
+                                        </td>
                                         <td align="center"
                                             style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
                                             <b>Subject Name</b>
@@ -48,13 +93,17 @@
                                         </td>
                                         <td align="center"
                                             style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                            <b>Revaluation Marks</b>
+                                            <b> Percentage</b>
                                         </td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="get_result_detail(result.result_ids,result)" t-as="sub_res_info">
+                                    <t t-foreach="get_result_detail(result.result_ids)" t-as="sub_res_info">
                                         <tr>
+                                          <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                <span t-esc="sub_res_info.get('no')"></span>
+                                            </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
                                                 <span t-esc="sub_res_info.get('subject')"></span>
@@ -73,11 +122,60 @@
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('reval_marks')"></span>
+                                                <span t-esc="sub_res_info.get('subject_percentage')"></span>
                                             </td>
                                         </tr>
+                                        
+                                        
                                     </t>
+                                    
+                                    
+                                                                        
+                                     <tr>
+                                      <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>Total</b>
+                                        </td>
+                                        <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            
+                                        </td>
+                                        <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b></b>
+                                        </td>
+                                        <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b></b>
+                                        </td>
+                                        <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b> <span t-field="o.total"></span></b>
+                                        </td>
+                                        <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                              <b> <span t-field="o.percentage"></span></b>
+                                        </td>
+                                    </tr>
                                 </tbody>
+                            </table>
+                            <br/><br/>
+                            <table width="100%" border="1" style="padding-top:10px;">
+                           
+                            <tr><td width="15%">Grade:</td><td><span t-field="o.grade"></span></td></tr>
+                            <tr><td width="15%">Position:</td><td><b t-field="o.position"></b></td></tr>
+                            <tr><td width="15%">Remarks:</td><td> <span t-field="o.result"></span></td></tr>
+                            <tr><td width="15%">Attendance:</td><td>....</td></tr>
+                       
+                            <tr><td height="100" style="padding-top:50px;" width="15%"><b><u>Principle:</u></b></td><td></td></tr>
+                            <tr><td height="100" style="padding-top:80px;" width="15%"><b><u>Parent Sign:</u></b></td><td></td></tr>
+                             <t t-foreach="get_current_date()" t-as="date_info">
+                                                                                
+                            
+                            <tr><td height="30" style="padding-top:30px;" width="15%">Date Issued:</td><td>  <span t-esc="date_info.get('current_date')" ></span><b t-field="o.s_exam_ids.start_date"></b> </td> </tr>
+                            
+                                        
+                           </t>
                             </table>
                         </t>
                     </div>

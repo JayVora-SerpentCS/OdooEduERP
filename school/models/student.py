@@ -154,6 +154,7 @@ class StudentStudent(models.Model):
                               required=True, delegate=True)
     student_name = fields.Char('Student Name', related='user_id.name',
                                store=True, readonly=True)
+    father_name = fields.Char('Father Name')
     pid = fields.Char('Student ID', required=True,
                       default=lambda self: _('New'),
                       help='Personal IDentification Number')
