@@ -5,6 +5,10 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
 from datetime import datetime
 
+class ResPartner(models.Model):
+    _inherit = "res.partner"
+    student_ids = fields.One2many('student.student', 'partner_id', 'Students')
+
 
 class StudentFeesRegister(models.Model):
     '''Student fees Register'''

@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import datetime
+from datetime import datetime, date
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, Warning as UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT,\
@@ -437,9 +437,7 @@ class LibraryBookIssue(models.Model):
         @return : True
         '''
 
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt,
-                                     DEFAULT_SERVER_DATE_FORMAT)
+        new_date = date.today()
         if (self.card_id.end_date < new_date and
                 self.card_id.end_date > new_date):
                 raise ValidationError(_('''The Membership of library
@@ -725,11 +723,11 @@ class LibraryBookRequest(models.Model):
     def confirm_book_request(self):
         '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt,
-                                     DEFAULT_SERVER_DATETIME_FORMAT)
+        
+        new_date = date.today()
         vals = {}
-        if (new_date >= self.card_id.start_date and
+        
+        if not (new_date >= self.card_id.start_date and
                 new_date <= self.card_id.end_date):
                 raise ValidationError(_('''The Membership of library card is
                 over!'''))
