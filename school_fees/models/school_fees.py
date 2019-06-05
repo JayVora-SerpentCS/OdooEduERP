@@ -47,6 +47,23 @@ class StudentFeesRegister(models.Model):
     fees_structure = fields.Many2one('student.fees.structure',
                                      'Fees Structure')
     standard_id = fields.Many2one('standard.standard', 'Class')
+    
+    student_ids = fields.Many2many('student.student', 'student_fees_register_student_rel',
+                                'fees_register_id', 'student_id', 'Students')
+
+    @api.onchange('standard_id')
+    def _onchange_standard_id(self):
+        domain = {}
+        
+        student_ids = []
+        student_academics = self.env['student.academic'].search([('standard_id','=',self.standard_id.id), ('state', '=', 'active')])
+        for student_academic in student_academics:
+                student = student_academic.student_id.id
+                student_ids.append(student)
+            
+        print(student_ids)
+        domain['student_ids'] = [('id', '=', student_ids)]
+        return {'domain': domain}
 
     @api.multi
     def fees_register_draft(self):
@@ -58,17 +75,18 @@ class StudentFeesRegister(models.Model):
         '''Method to confirm payslip'''
         stud_obj = self.env['student.student']
         slip_obj = self.env['student.payslip']
-        school_std_obj = self.env['school.standard']
         for rec in self:
             if not rec.journal_id:
                 raise ValidationError(_('Kindly, Select Account Journal!'))
             if not rec.fees_structure:
                 raise ValidationError(_('Kindly, Select Fees Structure!'))
-            school_std = school_std_obj.search([('standard_id', '=',
-                                                 rec.standard_id.id)])
-            student_ids = stud_obj.search([('standard_id', 'in',
-                                            school_std.ids),
-                                           ('state', '=', 'done')])
+            
+            
+            if rec.student_ids:
+                student_ids = rec.student_ids
+            else:
+                student_ids = stud_obj.search([('standard_id', '=',  rec.standard_id.id), ('state', '=', 'done')])
+
             for stu in student_ids:
                 old_slips = slip_obj.search([('student_id', '=', stu.id),
                                              ('date', '=', rec.date)])

@@ -330,6 +330,18 @@
                                 <field name="total_amount"/>
                             </group>
                         </page>
+                        <page string="Select Students">
+                        	<field name="student_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in','draft')]}">
+                                <tree string="Select Students">
+                                    <field name="roll_no"/>
+                                    <field name="name"/>
+                                    <field name="father_name"/>
+                                    <field name="year"/>
+                                    <field name="standard_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
