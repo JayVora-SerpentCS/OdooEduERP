@@ -20,7 +20,7 @@
             <field name="description">Example of product to invoice on order.</field>
         </record>
         <record id="school_fees_product_03" model="product.product">
-            <field name="name">Laboratory</field>
+            <field name="name">Laboratory Fee</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="standard_price">3000</field>
             <field name="list_price">3000</field>
