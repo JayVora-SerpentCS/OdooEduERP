@@ -104,14 +104,14 @@ class StudentPromotion(models.Model):
                   
                     # insert student history information
                     history_vals = {'student_id': promotion_id.name.id,
-                                   'academice_year_id': rec.academic_year_to.id,
-                                   'standard_id': rec.standard_id_to.id,
+                                   'academice_year_id': rec.academic_year_from.id,
+                                   'standard_id': rec.standard_id_from.id,
                                    'percentage': student_percentage,
                                    'result':student_result
                     }
                     self.env['student.history'].create(history_vals)
                     
-                    # insert student history information
+                    # update student new class information
                     student_next_class = self.env['student.student'].search([('id','=',promotion_id.name.id)])
                     if student_next_class:
                         student_next_class.write({'year': rec.academic_year_to.id,'standard_id':rec.standard_id_to.id})
