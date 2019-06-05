@@ -33,8 +33,8 @@ class StudentPromotion(models.Model):
             student_academics = self.env['student.academic'].search([('academice_year_id','=',rec.academic_year_from.id),('standard_id','=',rec.standard_id_from.id), ('state', '=', 'active')])
             for student_academic in student_academics:
                 student = student_academic.student_id
-                fees_structure = student.fees_structure.id
-                fees_structure_new = student.fees_structure.id
+                #fees_structure = student.fees_structure.id
+                #fees_structure_new = student.fees_structure.id
                 product_list_id = student.product_list_id.id
                 product_list_id_new = student.product_list_id.id
                 student_id = student.id
@@ -58,8 +58,8 @@ class StudentPromotion(models.Model):
                              'obtain_marks': total_marks,
                              'percentage': percentage,
                              'state': stud_result,
-                             'fees_structure': fees_structure,
-                             'fees_structure_new': fees_structure,
+                             #'fees_structure': fees_structure,
+                             #'fees_structure_new': fees_structure,
                              'product_list_id': product_list_id,
                              'product_list_id_new': product_list_id_new
                              }

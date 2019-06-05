@@ -11,7 +11,7 @@
             <data>
 				<xpath expr="//sheet/group[2]" position="after">
                 	<group string="Fee Information">
-						<field name="fees_structure" required='1'/>
+						<!-- <field name="fees_structure" required='1'/> -->
                         <field name="product_list_id"/>
 					</group>
 				</xpath>
@@ -44,8 +44,8 @@
         <field name="inherit_id" ref="school.view_student_promotion_line_tree"/>
         <field name="arch" type="xml">
 			<field name="name" position="after">
-				<field name="fees_structure"/>
-				<field name="fees_structure_new"/>
+				<!-- <field name="fees_structure"/> -->
+				<!-- <field name="fees_structure_new"/> -->
 				<field name="product_list_id"/>
 				<field name="product_list_id_new"/>
 	        </field>

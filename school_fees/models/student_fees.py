@@ -12,7 +12,7 @@ class StudentStudent(models.Model):
     _name = 'student.student'
     _inherit = "student.student"
     
-    fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
+    #fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
     product_list_id = fields.Many2one('product.pricelist', string='Product List')
 
 
@@ -21,8 +21,8 @@ class StudentPromotionLine(models.Model):
     _inherit = "student.promotion.line"
     _description = "Student Promotion Line"
     
-    fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
-    fees_structure_new = fields.Many2one('student.fees.structure','Fees Structure New')
+    #fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
+    #fees_structure_new = fields.Many2one('student.fees.structure','Fees Structure New')
     product_list_id = fields.Many2one('product.pricelist', string='Product List')
     product_list_id_new = fields.Many2one('product.pricelist', string='Product List New')
     
