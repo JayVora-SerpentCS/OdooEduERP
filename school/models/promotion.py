@@ -36,7 +36,11 @@ class StudentPromotion(models.Model):
                 #fees_structure = student.fees_structure.id
                 #fees_structure_new = student.fees_structure.id
                 product_list_id = student.product_list_id.id
-                product_list_id_new = student.product_list_id.id
+                if rec.product_list_id:
+                    product_list_id_new = rec.product_list_id.id
+                else:
+                    product_list_id_new = student.product_list_id.id
+                    
                 student_id = student.id
                 
                 result_obj= self.env['exam.result'].search([('student_id','=',student_id),('standard_id','=',rec.standard_id_from.id)])
@@ -114,7 +118,7 @@ class StudentPromotion(models.Model):
                     # update student new class information
                     student_next_class = self.env['student.student'].search([('id','=',promotion_id.name.id)])
                     if student_next_class:
-                        student_next_class.write({'year': rec.academic_year_to.id,'standard_id':rec.standard_id_to.id})
+                        student_next_class.write({'year': rec.academic_year_to.id,'standard_id':rec.standard_id_to.id,'product_list_id':rec.product_list_id.id})
                 
                 if promote_flag:
                     rec.state = "promoted"
@@ -126,7 +130,7 @@ class StudentPromotionLine(models.Model):
     _table = "student_promotion_line"
     _description = "Student Promotion Line"
     
-    name = fields.Many2one('student.student', 'Student Name')
+    name = fields.Many2one('student.student', 'Student Name', required=True)
     promotion_id = fields.Many2one('student.promotion', 'Name')
     obtain_marks = fields.Float(string="Marks")
     percentage = fields.Text(string="Percentage")

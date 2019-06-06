@@ -19,24 +19,20 @@
         </field>
     </record>
  
-  <!-- Inherited Form View Of Student -->
- <!--  <record id="view_student_promotion_form_fee" model="ir.ui.view">
-        <field name="name">student.promotion.line.form</field>
-        <field name="model">student.promotion.line</field>
+  	<!-- Inherited Form View Of Student -->
+  	<record id="view_student_promotion_form_fee" model="ir.ui.view">
+        <field name="name">student.promotion.form</field>
+        <field name="model">student.promotion</field>
         <field name="inherit_id" ref="school.view_student_promotion_form"/>
         <field name="arch" type="xml">
             <data>
 				<xpath expr="//field[@name='standard_id_to']" position="after">
-                	<group string="Fee Information">
-						<field name="fees_structure" required='1'/>
-                        
-					</group>
+                	<field name="product_list_id"/>
 				</xpath>
             </data>
         </field>
-    </record> -->  
-	
-	
+    </record>  
+	    
   	<!-- Inherited Tree of Promotion Lines -->
  	<record id="view_student_promotion_line_tree_inherit" model="ir.ui.view">
         <field name="name">student.promotion.line.tree</field>

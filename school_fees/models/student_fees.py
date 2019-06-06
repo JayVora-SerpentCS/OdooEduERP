@@ -15,6 +15,12 @@ class StudentStudent(models.Model):
     #fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
     product_list_id = fields.Many2one('product.pricelist', string='Product List')
 
+class StudentPromotionLine(models.Model):
+    _name = "student.promotion"
+    _inherit = "student.promotion"
+    _description = "Student Promotion"
+    
+    product_list_id = fields.Many2one('product.pricelist', string='Default Price List')
 
 class StudentPromotionLine(models.Model):
     _name = "student.promotion.line"
@@ -23,6 +29,6 @@ class StudentPromotionLine(models.Model):
     
     #fees_structure = fields.Many2one('student.fees.structure','Fees Structure')
     #fees_structure_new = fields.Many2one('student.fees.structure','Fees Structure New')
-    product_list_id = fields.Many2one('product.pricelist', string='Product List')
-    product_list_id_new = fields.Many2one('product.pricelist', string='Product List New')
+    product_list_id = fields.Many2one('product.pricelist', string='Product List', readonly=True)
+    product_list_id_new = fields.Many2one('product.pricelist', string='Product List New', required=True)
     
