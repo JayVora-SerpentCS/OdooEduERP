@@ -61,7 +61,6 @@ class StudentFeesRegister(models.Model):
                 student = student_academic.student_id.id
                 student_ids.append(student)
             
-        print(student_ids)
         domain['student_ids'] = [('id', '=', student_ids)]
         return {'domain': domain}
 

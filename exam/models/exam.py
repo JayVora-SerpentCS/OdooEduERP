@@ -567,13 +567,13 @@ class ExamResult(models.Model):
         history_obj = self.env['student.history']
         for rec in self:
             vals = {'student_id': rec.student_id.id,
-                    'academice_year_id': rec.student_id.year.id,
+                    'academic_year_id': rec.student_id.year.id,
                     'standard_id': rec.standard_id.id,
                     'percentage': rec.percentage,
                     'result': rec.result}
             history = history_obj.search([('student_id', '=',
                                            rec.student_id.id),
-                                          ('academice_year_id', '=',
+                                          ('academic_year_id', '=',
                                            rec.student_id.year.id),
                                           ('standard_id', '=',
                                            rec.standard_id.id)

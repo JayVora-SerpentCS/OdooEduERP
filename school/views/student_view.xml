@@ -103,7 +103,7 @@
                         <page string="Academics"  name="academics" groups="school.group_school_administration,school.group_school_teacher,school.group_school_parent,school.group_school_student">
                             <field name="academic_ids" nolabel="1" readonly="1" >
                               <tree string="Record">
-                                    <field name="academice_year_id" required="1"/>
+                                    <field name="academic_year_id" required="1"/>
                                     <field name="standard_id" required="1"/>
                                     <field name="state"/>
                                 </tree>
@@ -261,14 +261,14 @@
                             <field name="history_ids" nolabel="1" colspan="4" readonly="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
                                 options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                 <tree string="History">
-                                    <field name="academice_year_id" required="1"/>
+                                    <field name="academic_year_id" required="1"/>
                                     <field name="standard_id" required="1"/>
                                     <field name="percentage"/>
                                     <field name="result"/>
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
-                                        <field name="academice_year_id" placeholder="Acadamic Year" />
+                                        <field name="academic_year_id" placeholder="Acadamic Year" />
                                         <field name="standard_id" placeholder="Select or Create Standard" />
                                         <field name="percentage" />
                                         <field name="result" />

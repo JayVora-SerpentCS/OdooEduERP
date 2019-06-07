@@ -20,7 +20,7 @@ class MoveStandards(models.TransientModel):
             for stud in student_obj.search([('state', '=', 'done')]):
                 # check the student history for same academic year
                 stud_year_ids = stud_history_obj.\
-                    search([('academice_year_id', '=',
+                    search([('academic_year_id', '=',
                              rec.academic_year_id.id),
                             ('student_id', '=', stud.id)])
                 year_id = academic_obj.next_year(stud.year.sequence)

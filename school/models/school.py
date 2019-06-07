@@ -481,7 +481,7 @@ class StudentHistory(models.Model):
     _description = "Student History"
 
     student_id = fields.Many2one('student.student', 'Student')
-    academice_year_id = fields.Many2one('academic.year', 'Academic Year',
+    academic_year_id = fields.Many2one('academic.year', 'Academic Year',
                                         )
     standard_id = fields.Many2one('school.standard', 'Standard')
     percentage = fields.Float("Percentage", readonly=True)

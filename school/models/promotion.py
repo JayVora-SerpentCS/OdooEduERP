@@ -3,6 +3,7 @@
 from odoo import models, fields, api, tools, _
 from docutils.parsers.rst.directives import percentage
 from _ast import For
+import datetime
 
 
 
@@ -30,7 +31,7 @@ class StudentPromotion(models.Model):
         '''Method to confirm promotion'''
         for rec in self:
             lines = []
-            student_academics = self.env['student.academic'].search([('academice_year_id','=',rec.academic_year_from.id),('standard_id','=',rec.standard_id_from.id), ('state', '=', 'active')])
+            student_academics = self.env['student.academic'].search([('academic_year_id','=',rec.academic_year_from.id),('standard_id','=',rec.standard_id_from.id), ('state', '=', 'active')])
             for student_academic in student_academics:
                 student = student_academic.student_id
                 #fees_structure = student.fees_structure.id
@@ -79,12 +80,13 @@ class StudentPromotion(models.Model):
     
         for rec in self:
             promote_flag = False
+            student_ids = []
             
             promotion_ids   = rec.promotion_lines
             for promotion_id in promotion_ids:
                 
                 student_academic_exist = self.env['student.academic'].search([('student_id','=',promotion_id.name.id),
-                                                                              ('academice_year_id','=',rec.academic_year_from.id),
+                                                                              ('academic_year_id','=',rec.academic_year_from.id),
                                                                               ('standard_id','=',rec.standard_id_from.id), ('state', '=', 'active')])
                 if promotion_id.state == 'ready_to_promote' and student_academic_exist:
                     promote_flag = True
@@ -100,7 +102,7 @@ class StudentPromotion(models.Model):
                          
                     # insert current student academics information
                     parent_vals = {'student_id': promotion_id.name.id,
-                                   'academice_year_id': rec.academic_year_to.id,
+                                   'academic_year_id': rec.academic_year_to.id,
                                    'standard_id': rec.standard_id_to.id,
                                    'state': 'active'}
                     self.env['student.academic'].create(parent_vals)
@@ -108,21 +110,39 @@ class StudentPromotion(models.Model):
                   
                     # insert student history information
                     history_vals = {'student_id': promotion_id.name.id,
-                                   'academice_year_id': rec.academic_year_from.id,
+                                   'academic_year_id': rec.academic_year_from.id,
                                    'standard_id': rec.standard_id_from.id,
                                    'percentage': student_percentage,
                                    'result':student_result
                     }
                     self.env['student.history'].create(history_vals)
                     
+                    student_ids.append((4, promotion_id.name.id))
+
                     # update student new class information
                     student_next_class = self.env['student.student'].search([('id','=',promotion_id.name.id)])
                     if student_next_class:
                         student_next_class.write({'year': rec.academic_year_to.id,'standard_id':rec.standard_id_to.id,'product_list_id':rec.product_list_id.id})
                 
-                if promote_flag:
-                    rec.state = "promoted"
-            
+            if promote_flag:
+                
+                # Charge Fee to student
+                company_id = self.env['res.users'].browse(self._uid).company_id.id
+                register_vals = {'name':'Promotion: ' + str(rec.standard_id_from.name) + "-to-" + str(rec.standard_id_to.name), 
+                                 'date': datetime.date.today(),
+                                 'state': 'draft',
+                                 'journal_id': rec.journal_id.id,
+                                 'company_id': company_id,
+                                 'fees_structure': rec.fees_structure.id,
+                                 'standard_id': rec.standard_id_to.id,
+                                 'student_ids': student_ids 
+                                 }
+
+                fee_register = self.env['student.fees.register'].create(register_vals)
+                fee_register.fees_register_confirm()
+
+                rec.state = "promoted"
+        
                     
                 
 class StudentPromotionLine(models.Model):

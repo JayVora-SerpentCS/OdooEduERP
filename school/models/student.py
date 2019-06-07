@@ -346,7 +346,7 @@ class StudentStudent(models.Model):
                        'reg_code': registation_code})
             
             parent_vals = {'student_id': rec.id,
-                           'academice_year_id': rec.year.id,
+                           'academic_year_id': rec.year.id,
                            'standard_id': rec.standard_id.id,
                            'state': 'active'}
             self.env['student.academic'].create(parent_vals)
@@ -361,7 +361,7 @@ class studentAcademic(models.Model):
     _description = "Student Academic"
     
     student_id = fields.Many2one('student.student', 'Student')
-    academice_year_id = fields.Many2one('academic.year', 'Academic Year')
+    academic_year_id = fields.Many2one('academic.year', 'Academic Year')
     standard_id = fields.Many2one('school.standard', 'Standard')
     state = fields.Selection([('inactive', 'Inactive'),
                               ('active', 'Active'),
