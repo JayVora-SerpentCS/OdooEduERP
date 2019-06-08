@@ -131,9 +131,10 @@
                     <field name="code"/>
                 </group>
                 <group col="4" string="Calculations">
+					<field name="sequence"/>
 					<field name="product_id" required='1'/>
 					<field name="type"/>
-                    <field name="amount" readonly="1"/>
+                    <field name="amount"/>
                     <field name="account_id" required="1"/>
                     <field name="company_id"/>
                     <field name="currency_id"/>
