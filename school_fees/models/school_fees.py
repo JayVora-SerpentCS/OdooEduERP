@@ -90,10 +90,7 @@ class StudentFeesRegister(models.Model):
                 old_slips = slip_obj.search([('student_id', '=', stu.id),
                                              ('date', '=', rec.date)])
                 # Check if payslip exist of student
-                if old_slips:
-                    raise UserError(_('There is already a Payslip exist for\
-                    student: %s for same date.!') % stu.name)
-                else:
+                if True:
                     rec.number = self.env['ir.sequence'].\
                         next_by_code('student.fees.register') or _('New')
                     res = {'student_id': stu.id,
@@ -197,9 +194,7 @@ class StudentFeesStructure(models.Model):
                                 'fees_structure_payslip_rel',
                                 'fees_id', 'slip_id', 'Fees Structure')
 
-    _sql_constraints = [('code_uniq', 'unique(code)',
-                         '''The code of the Fees Structure must
-                         be unique !''')]
+    _sql_constraints = [('code_uniq', 'unique(code)', 'The code of the Fees Structure must be unique !')]
 
 
 class StudentPayslip(models.Model):
@@ -251,8 +246,7 @@ class StudentPayslip(models.Model):
                                  default=lambda obj_c: obj_c.env['res.users'].
                                  browse([obj_c._uid])[0].company_id)
 
-    _sql_constraints = [('code_uniq', 'unique(student_id,date,state)',
-                         'The code of the Fees Structure must be unique !')]
+    #_sql_constraints = [('code_uniq', 'unique(student_id,date,state)', 'The code of the Fees Structure must be unique !')]
 
     @api.onchange('student_id')
     def onchange_student(self):
