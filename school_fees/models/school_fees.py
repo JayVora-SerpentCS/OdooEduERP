@@ -142,12 +142,19 @@ class StudentPayslipLine(models.Model):
                                   string='Symbol')
     account_id = fields.Many2one('account.account', "Account")
     product_id = fields.Many2one('product.product', 'Product')
+    product_uom_qty = fields.Integer('Quantity')
+    amount_total = fields.Float('Subtotal', digits=(16, 2), store=True, readonly=True, compute='_set_amount_total', track_visibility='always')
     
     @api.onchange('company_id')
     def set_currency_onchange(self):
         for rec in self:
             rec.product_id = rec.line_ids.slipline1_id.product_id
             rec.currency_id = rec.company_id.currency_id.id
+
+    @api.depends('amount', 'product_uom_qty')
+    def _set_amount_total(self):
+        for rec in self:
+            rec.amount_total = rec.amount * rec.product_uom_qty
 
 
 class StudentFeesStructureLine(models.Model):
@@ -222,14 +229,14 @@ class StudentPayslip(models.Model):
                        default=lambda * a: time.strftime('%Y-%m-%d'))
     line_ids = fields.One2many('student.payslip.line', 'slip_id',
                                'PaySlip Line')
-    total = fields.Monetary("Total", readonly=True,
-                            help="Total Amount")
+    total = fields.Monetary("Total", help="Total Amount", store=True, readonly=True, compute='_amount_all', track_visibility='always')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('pending', 'Pending'), ('paid', 'Paid')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=False)
     paid_amount = fields.Monetary('Paid Amount', help="Amount Paid")
-    due_amount = fields.Monetary('Due Amount', help="Amount Remaining")
+    due_amount = fields.Monetary('Due Amount', help="Amount Remaining", store=True, readonly=True, compute='_amount_all', track_visibility='always')
+    
     currency_id = fields.Many2one('res.currency', 'Currency')
     currency_symbol = fields.Char(related='currency_id.symbol',
                                   string='Symbol')
@@ -253,6 +260,24 @@ class StudentPayslip(models.Model):
 
     _sql_constraints = [('code_uniq', 'unique(student_id,date,state)',
                          'The code of the Fees Structure must be unique !')]
+
+    @api.depends('line_ids.amount_total','line_ids.amount','line_ids.product_uom_qty')
+    def _amount_all(self):
+        """
+        Compute the total amounts of the Pay slip.
+        """
+        for order in self:
+            amount_due = 0
+            amount_total = 0
+            
+            for line in order.line_ids:
+                amount_total += line.amount * line.product_uom_qty
+            
+            amount_due = amount_total - order.paid_amount 
+            
+            order.update({
+                'total': amount_total,
+                'due_amount': amount_due})
 
     @api.onchange('student_id')
     def onchange_student(self):
@@ -353,12 +378,14 @@ class StudentPayslip(models.Model):
                              'type': data.type,
                              'account_id': data.account_id.id,
                              'amount': student_amount,
+                             'amount_total': student_amount * 1.0,
                              #'amount': data.amount,
+                             'product_uom_qty': 1.0,
                              'product_id': data.product_id.id,
                              'currency_id': data.currency_id.id or False,
                              'currency_symbol': data.currency_symbol or False}
                 lines.append((0, 0, line_vals))
-                total_amount += student_amount
+                total_amount += student_amount * 1.0
                 
             rec.write({'line_ids': lines})
             
@@ -518,7 +545,7 @@ class StudentPayslip(models.Model):
                 invoice_line_vals = {'name': line.name,
                                      'product_id': line.product_id.id,
                                      'account_id': acc_id,
-                                     'quantity': 1.000,
+                                     'quantity': line.product_uom_qty,
                                      'price_unit': line.amount}
                 invoice_line.append((0, 0, invoice_line_vals))
             vals.update({'invoice_line_ids': invoice_line})

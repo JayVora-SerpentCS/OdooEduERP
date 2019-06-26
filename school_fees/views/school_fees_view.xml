@@ -75,12 +75,15 @@
                     </group>
                     <group col="4" string="Calculations">
                         <field name="type"/>
-                        <field name="amount" />
+                        <field name="product_uom_qty" />
+                       	<field name="amount" />
 						<field name="product_id" />
                         <field name="account_id" options="{&quot;no_create&quot;: True}"/>
                         <field name="company_id"/>
                         <field name="currency_id" invisible="0"/>
                         <field name="currency_symbol" invisible="0"/>
+                        <field name="amount_total"/>
+                
                     </group>
                     <group col="2" attrs="{'invisible':[('type','=','range')]}" string="Description">
                         <field name="description" />
@@ -108,15 +111,18 @@
         <field name="name">student.payslip.line.tree</field>
         <field name="model">student.payslip.line</field>
         <field name="arch" type="xml">
-            <tree string="Fees Structure">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="type"/>
-                <field name="account_id"/>
-                <field name="amount"/>
-                <field name="product_id" />
+            <tree string="Fees Structure" editable='bottom'>
+                <field name="name" readonly="1" />
+                <field name="code" readonly="1"/>
+                <field name="type" readonly="1"/>
+                <field name="account_id" readonly="1"/>
+                <field name="product_uom_qty" />
+                <field name="amount" readonly="1"/>
+                <field name="product_id" readonly="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="currency_symbol" invisible="1"/>
+                <field name="amount_total" readonly="1"/>
+                
             </tree>
         </field>
     </record>
@@ -212,7 +218,7 @@
                         <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/> 
                         <notebook colspan="4">
                             <page string="Fees Structure">
-                                <field name="line_ids" colspan="4" nolabel="1" readonly="1"/>
+                                <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('state','not in',['draft','confirm'])]}"/>
                                 <separator string="" colspan="4"/>
                                 <group class="oe_subtotal_footer oe_right" colspan="2">
                                     <field name="total"/>
