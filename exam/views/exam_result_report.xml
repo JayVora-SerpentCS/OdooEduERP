@@ -23,20 +23,20 @@
                                 <br/><br/>
                                 <tr>
                                     <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Student Name</b>
+                                        <b>Student Name:</b>
                                     </td>
                                     <td width="1%">
-                                        <span>:</span>
+                                        <span></span>
                                     </td>
                                     <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <span t-field="o.student_id.name"></span>
                                     </td>
                                     
                                     <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Father Name</b>
+                                        <b>Father Name:</b>
                                     </td>
                                     <td width="1%">
-                                        <span>:</span>
+                                        <span></span>
                                     </td>
                                     <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <span t-field="o.student_id.father_name"></span>
@@ -45,10 +45,10 @@
                                 </tr>
                                         <tr>
                                     <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Class</b>
+                                        <b>Class:</b>
                                     </td>
                                     <td width="1%">
-                                        <span>:</span>
+                                        <span></span>
                                     </td>
                                     <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
                                      
@@ -56,10 +56,10 @@
                                      
                                     </td>
                                     <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>	Grade System</b>
+                                        <b>	Grade System:</b>
                                     </td>
                                     <td width="1%">
-                                        <span>:</span>
+                                        <span></span>
                                     </td>
                                     <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <span t-field="o.grade_system"></span>
@@ -162,22 +162,17 @@
                             <br/><br/>
                             <table width="100%" border="1" style="padding-top:10px;">
                            
-                            <tr><td width="15%"><b>Grade:</b></td><td><span t-field="o.grade"></span></td></tr>
-                            <tr><td width="15%"><b>Position:</b></td><td> <span t-field="o.position"></span></td></tr>
-                            <tr><td width="15%"><b>Remarks:</b></td><td> <span t-field="o.result"></span></td></tr>
-                            <tr><td width="15%"><b>Attendance:</b></td><td> <span t-esc="get_student_attendance()"> </span></td></tr>
-                       
-                            <tr><td height="100" style="padding-top:50px;" width="15%"><b><u>Principle:</u></b></td><td></td></tr>
-                            <tr><td height="100" style="padding-top:80px;" width="15%"><b><u>Parent Sign:</u></b></td><td></td></tr>
+                            <tr><td width="15%"><b>Grade:</b></td><td width="55%" ><span t-field="o.grade"></span></td><td></td></tr>
+                            <tr><td width="15%"><b>Position:</b></td><td width="55%"> <span t-field="o.position"></span></td><td></td></tr>
+                            <tr><td width="15%"><b>Remarks:</b></td><td width="55%"> <span t-field="o.result"></span></td><td></td></tr>
                                                                                 
                             <t t-set="current_date" t-value="get_current_date()" />
-                            
-                            <tr><td height="30" style="padding-top:30px;" width="15%"><b>Result Date:</b></td>
-                            	<td> <span t-field="o.s_exam_ids.start_date"> </span></td> </tr>
-                            <tr><td height="30" style="padding-top:30px;" width="15%"><b>Issue Date:</b></td>
-                            	<td>  <span t-esc="current_date" ></span> </td> </tr>
-                            
+                          
+                            <tr><td width="15%"><b>Attendance:</b></td><td width="55%"> <span t-esc="get_student_attendance()"> </span></td><td><b>Principle: _____________________</b></td></tr>
+                       		<tr><td width="15%"><b>Result Date:</b></td><td width="55%"> <span t-field="o.s_exam_ids.start_date"> </span></td><td><b>Issue Date: </b><span t-esc="current_date" ></span>  </td> </tr>
+                               
                             </table>
+                           
                         </t>
                     </div>
                 </t>

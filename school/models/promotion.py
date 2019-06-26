@@ -122,7 +122,7 @@ class StudentPromotion(models.Model):
                     # update student new class information
                     student_next_class = self.env['student.student'].search([('id','=',promotion_id.name.id)])
                     if student_next_class:
-                        student_next_class.write({'year': rec.academic_year_to.id,'standard_id':rec.standard_id_to.id,'product_list_id':rec.product_list_id.id})
+                        student_next_class.write({'year': rec.academic_year_to.id,'standard_id':rec.standard_id_to.id,'product_list_id':promotion_id.product_list_id_new.id})
                 
             if promote_flag:
                 
