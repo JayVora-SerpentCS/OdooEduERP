@@ -15,7 +15,7 @@ class ReportStudentPayslip(models.AbstractModel):
         return out_date
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         student_payslip = self.env['student.payslip'].search([('id', 'in',
                                                                docids)])
         payslip_model = self.env['ir.actions.report'].\
