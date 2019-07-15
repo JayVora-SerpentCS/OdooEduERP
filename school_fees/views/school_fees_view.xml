@@ -197,7 +197,7 @@
                     </div>
                     <h2>
                         <field name="student_id" placeholder="Student Name" colspan="4" attrs="{'readonly':[('state','not in','draft')]}"
-                                domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                                domain="[('state','in',['draft','done'])]" options="{&quot;no_create&quot;: True}"/>
                         </h2>
                     <group>
                         <group col="2" string="Information">
@@ -437,7 +437,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_student">
+                    <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button" attrs="{'invisible':[('state', 'in', ['terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_student">
                         <img src="/school_fees/static/description/icon.png" alt="logo"
                             style="height:25px;width:50px;float:left;"/>
                         <lable style="">Fees Receipt</lable>

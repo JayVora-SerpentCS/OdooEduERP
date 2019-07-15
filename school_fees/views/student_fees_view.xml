@@ -20,6 +20,23 @@
     </record>
  
   	<!-- Inherited Form View Of Student -->
+    <record id="view_student_student_form_fee_2" model="ir.ui.view">
+        <field name="name">student.student.form.fee</field>
+        <field name="model">student.student</field>
+        <field name="inherit_id" ref="school.view_student_student_form_2"/>
+        <field name="arch" type="xml">
+            <data>
+				<xpath expr="//sheet/group[2]" position="after">
+                	<group string="Fee Information">
+						<!-- <field name="fees_structure" required='1'/> -->
+                        <field name="product_list_id"/>
+					</group>
+				</xpath>
+            </data>
+        </field>
+    </record>
+ 
+  	<!-- Inherited Form View Of Student -->
   	<record id="view_student_promotion_form_fee" model="ir.ui.view">
         <field name="name">student.promotion.form</field>
         <field name="model">student.promotion</field>
