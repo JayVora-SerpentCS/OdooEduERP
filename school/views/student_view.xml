@@ -443,6 +443,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,cancel"/>
                 </header>
                 <sheet>
+					<div class="oe_button_box" name="buttons"></div>
                     <div class="oe_inline">
                         <newline />
                         <separator string="Personal Information" />

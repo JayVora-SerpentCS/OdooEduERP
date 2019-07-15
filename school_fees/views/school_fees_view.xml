@@ -447,6 +447,24 @@
         </field>
     </record>
 
+    <!-- Inherited Form View Of Student -->
+    <record id="view_student_student_form2" model="ir.ui.view">
+        <field name="name">student.student.form</field>
+        <field name="model">student.student</field>
+        <field name="inherit_id" ref="school.view_student_student_form_2"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button" attrs="{'invisible':[('state', 'in', ['terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_student">
+                        <img src="/school_fees/static/description/icon.png" alt="logo"
+                            style="height:25px;width:50px;float:left;"/>
+                        <lable style="">Fees Receipt</lable>
+                    </button>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
     <!-- memu Items for Fees -->
     <menuitem id="menu_fees" name="Fees" parent="school.menu_ems" groups="school.group_school_administration,school.group_school_student,school.group_school_parent" sequence="11"/>
     <menuitem id="menu_student_payslip" name="Fees Receipts" parent="menu_fees" action="action_student_payslip_form"
