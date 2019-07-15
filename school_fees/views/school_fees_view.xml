@@ -448,7 +448,7 @@
     </record>
 
     <!-- Inherited Form View Of Student -->
-    <record id="view_student_student_form2" model="ir.ui.view">
+    <record id="view_student_student_draft_form2" model="ir.ui.view">
         <field name="name">student.student.form</field>
         <field name="model">student.student</field>
         <field name="inherit_id" ref="school.view_student_student_form_2"/>
