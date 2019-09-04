@@ -10,12 +10,11 @@ class ReportStudentFeesRegister(models.AbstractModel):
 
     @api.multi
     def get_month(self, indate):
-        new_date = datetime.strptime(indate, '%Y-%m-%d')
-        out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
+        out_date = indate.strftime('%B') + '-' + indate.strftime('%Y')
         return out_date
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         students = self.env['student.fees.register'].search([('id', 'in',
                                                               docids)])
         fees_report = self.env['ir.actions.report'].\
