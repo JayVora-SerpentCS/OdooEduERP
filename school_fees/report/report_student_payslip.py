@@ -10,8 +10,7 @@ class ReportStudentPayslip(models.AbstractModel):
 
     @api.multi
     def get_month(self, indate):
-        new_date = datetime.strptime(indate, '%Y-%m-%d')
-        out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
+        out_date = indate.strftime('%B') + '-' + indate.strftime('%Y')
         return out_date
 
     @api.model
