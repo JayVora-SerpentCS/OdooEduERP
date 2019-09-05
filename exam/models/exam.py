@@ -103,8 +103,7 @@ class ExtendedTimeTableLine(models.Model):
         for rec in self:
             rec.day_of_week = False
             if rec.exm_date:
-                week_day = datetime.strptime(rec.exm_date, "%Y-%m-%d")
-                rec.day_of_week = week_day.strftime("%A").title()
+                rec.day_of_week = rec.exm_date.strftime("%A").title()
 
     @api.multi
     def _check_date(self):
