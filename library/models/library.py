@@ -437,11 +437,12 @@ class LibraryBookIssue(models.Model):
         @return : True
         '''
 
-        curr_dt = datetime.now()
+        curr_dt = fields.Date.today()
+
         new_date = datetime.strftime(curr_dt,
                                      DEFAULT_SERVER_DATE_FORMAT)
-        if (self.card_id.end_date < new_date and
-                self.card_id.end_date > new_date):
+        if (self.card_id.end_date < curr_dt and
+                self.card_id.end_date > curr_dt):
                 raise ValidationError(_('''The Membership of library
                 card is over!'''))
 #        if self.issue_code == 'New':
@@ -725,12 +726,10 @@ class LibraryBookRequest(models.Model):
     def confirm_book_request(self):
         '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt,
-                                     DEFAULT_SERVER_DATETIME_FORMAT)
+        curr_dt = fields.Date.today()
         vals = {}
-        if (new_date >= self.card_id.start_date and
-                new_date <= self.card_id.end_date):
+        if (curr_dt >= self.card_id.start_date and
+                curr_dt <= self.card_id.end_date):
                 raise ValidationError(_('''The Membership of library card is
                 over!'''))
         if self.type == 'existing':
