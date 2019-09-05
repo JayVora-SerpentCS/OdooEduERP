@@ -583,7 +583,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button fa-archive" groups="library.group_librarian">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="library.group_librarian">
                             <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}" groups="library.group_librarian" />
                         </button>
                     </div>
