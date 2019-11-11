@@ -7,7 +7,7 @@
     'website': 'http://www.serpentcs.com',
     'images': ['static/description/SchoolEvent.png'],
     'category': 'School Management',
-    'license': "LGPL-3",
+    'license': "AGPL-3",
     'complexity': 'easy',
     'summary': 'A Module For Event Management In School',
     'depends': ['school'],
