@@ -5,7 +5,7 @@
     'version': "12.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
-    'license': "LGPL-3",
+    'license': "AGPL-3",
     'category': 'School Management',
     'complexity': 'easy',
     'summary': 'A Module For Transport & Vehicle Management In School',
