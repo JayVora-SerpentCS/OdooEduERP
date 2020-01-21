@@ -3,7 +3,7 @@
 # import time
 import re
 import calendar
-from datetime import datetime
+from datetime import datetime, date
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
@@ -527,10 +527,8 @@ class StudentPreviousSchool(models.Model):
 
     @api.constrains('admission_date', 'exit_date')
     def check_date(self):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt,
-                                   DEFAULT_SERVER_DATE_FORMAT)
-        if self.admission_date >= new_dt or self.exit_date >= new_dt:
+        curr_dt = date.today()
+        if self.admission_date >= curr_dt or self.exit_date >= curr_dt:
             raise ValidationError(_('''Your admission date and exit date
             should be less than current date in previous school details!'''))
         if self.admission_date > self.exit_date:
