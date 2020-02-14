@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sms_provider1,sms.provider,model_sms_provider,school.group_school_administration,1,1,1,1
+access_sms_settings1,sms.settings,model_sms_settings,school.group_school_administration,1,1,1,1
+access_sms_sending1,sms.sending,model_sms_sending,school.group_school_administration,1,1,1,1
+access_sms_sending_line1,sms.sending.line,model_sms_sending_line,school.group_school_administration,1,1,1,1
+
+access_sms_provider2,sms.provider,model_sms_provider,group_school_sms_manager,1,1,1,1
+access_sms_settings2,sms.settings,model_sms_settings,group_school_sms_manager,1,1,1,1
+access_sms_sending2,sms.sending,model_sms_sending,group_school_sms_manager,1,1,1,1
+access_sms_sending_line2,sms.sending.line,model_sms_sending_line,group_school_sms_manager,1,1,1,1
+
+

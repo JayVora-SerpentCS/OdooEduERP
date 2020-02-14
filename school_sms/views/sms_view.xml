@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+
+<odoo>
+
+    <!-- SMS Provider Form -->
+    <record id="view_sms_provider_form" model="ir.ui.view">
+        <field name="name">sms.provider.form</field>
+        <field name="model">sms.provider</field>
+        <field name="arch" type="xml">
+		<form string="SMS Provider">
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            	</form>
+        </field>
+    </record>
+
+    <!-- SMS Provider Tree -->
+    <record id="view_sms_provider_tree" model="ir.ui.view">
+        <field name="name">sms.provider.tree</field>
+        <field name="model">sms.provider</field>
+        <field name="arch" type="xml">
+            <tree string="SMS Provider">
+                <field name="name" select="1"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- SMS Provider Action -->
+    <record id="action_sms_provider" model="ir.actions.act_window">
+        <field name="name">SMS Provider</field>
+        <field name="res_model">sms.provider</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- SMS Settings Form -->
+    <record id="view_sms_settings_form" model="ir.ui.view">
+        <field name="name">sms.settings.form</field>
+        <field name="model">sms.settings</field>
+        <field name="arch" type="xml">
+		<form string="SMS Settings">
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="service_provider_id"/>
+                        <field name="sender_number"/>
+                        <field name="password"/>
+                        <field name="masking"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SMS Settings Tree -->
+    <record id="view_sms_settings_tree" model="ir.ui.view">
+        <field name="name">sms.settings.tree</field>
+        <field name="model">sms.settings</field>
+        <field name="arch" type="xml">
+   		<tree string="SMS Settings">
+	            <field name="name"/>
+	            <field name="service_provider_id"/>
+	            <field name="sender_number"/>
+	            <field name="password"/>
+	            <field name="masking"/>
+	            <field name="active"/>
+            	</tree>
+        </field>
+    </record>
+
+
+    <!-- SMS Settings Action -->
+    <record id="action_sms_settings" model="ir.actions.act_window">
+        <field name="name">SMS Settings</field>
+        <field name="res_model">sms.settings</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- SMS Sending Form -->
+    <record id="view_sms_sending_form" model="ir.ui.view">
+        <field name="name">sms.sending.form</field>
+        <field name="model">sms.sending</field>
+        <field name="arch" type="xml">
+		<form string="SMS Sending">
+	            <header>
+	                <button name="load_students" string="Load Students" states="draft" type="object" groups="school.group_school_administration"/>
+	                <button name="send_sms" string="Send SMS" states="loaded" type="object" groups="school.group_school_administration"/>
+	                <field name="state" widget="statusbar"/>
+	            </header>
+	            <sheet>
+	                <separator string="Daily Attendance Sheet"/>
+	                <group colspan="4" col="4">
+	                    <field name="name"/>
+	                    <field name="service_id" domain="[('active','=',True)]"/>
+	                    <field name="school_id"/>
+	                    <field name="standard_id" widget="selection"/>
+	                    <field name="student_type"/>
+	                    <field name="sms_date"/>
+	                </group>
+	                    <field name="message"/>
+	                <notebook colspan="4">
+	                    <page string="Students">
+	                        <field name="recipient_ids" nolabel="1" colspan="4">
+	                            <tree string="Student Information" editable="top" create="false" delete="false">
+	                                <field name="roll_no" required="1" readonly="1"/>
+	                                <field name="name" required="1" readonly="1"/>
+	                                <field name="mobile_number" required="1" readonly="1"/>
+	                            </tree>
+	                        </field>
+	                    </page>
+	                </notebook>
+	            </sheet>
+	        </form>
+        </field>
+    </record>
+
+    <!-- SMS Sending Tree -->
+    <record id="view_sms_sending_tree" model="ir.ui.view">
+        <field name="name">sms.sending.tree</field>
+        <field name="model">sms.sending</field>
+        <field name="arch" type="xml">
+ 		<tree string="Recipients">
+	            <field name="name"/>
+	            <field name="service_id"/>
+	            <field name="school_id"/>
+	            <field name="standard_id"/>
+	            <field name="student_type"/>
+	            <field name="state"/>
+	        </tree>
+       </field>
+    </record>
+
+    <!-- SMS Sending Action -->
+    <record id="action_sms_sending" model="ir.actions.act_window">
+        <field name="name">SMS Sending</field>
+        <field name="res_model">sms.sending</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

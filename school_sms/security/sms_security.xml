@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="group_school_sms_manager" model="res.groups">
+            <field name="name">School SMS Manager</field>
+            <field name="category_id" ref="school.module_category_school"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+    </data>
+</odoo>

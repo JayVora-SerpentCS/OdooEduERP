@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<record id="demo_sms_provider_1" model="sms.provider">
+            <field name="name">Smile</field>
+        </record>
+
+    	<record id="demo_sms_settings_1" model="sms.settings">
+            <field name="service_provider_id" ref="demo_sms_provider_1"/>
+            <field name="sender_number">8583</field>
+            <field name="password">3030cee5b7de52fcaad0312f1e2acaf0e6353491</field>
+            <field name="masking">IPS</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<odoo>
+	<menuitem id="menu_school_sms" name="SMS" parent="school.menu_ems" sequence="10" groups="school.group_school_administration,group_school_sms_manager"/>
+    <menuitem id="menu_school_sms_provider" name="SMS Provider" action="action_sms_provider" parent="menu_school_sms" sequence="1" groups="school.group_school_administration,group_school_sms_manager"/>
+    <menuitem id="menu_school_sms_setting" name="SMS Settings" action="action_sms_settings" parent="menu_school_sms" sequence="2" groups="school.group_school_administration,group_school_sms_manager"/>
+    <menuitem id="menu_school_sms_sending" name="SMS Sending" action="action_sms_sending" parent="menu_school_sms" sequence="3" groups="school.group_school_administration,group_school_sms_manager"/>
+</odoo>
