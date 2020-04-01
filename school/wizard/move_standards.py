@@ -1,16 +1,17 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class MoveStandards(models.TransientModel):
+    """Defining TransientModel to move standard."""
+
     _name = 'move.standards'
     _description = "Move Standards"
 
     academic_year_id = fields.Many2one('academic.year', 'Academic Year',
                                        required=True)
 
-    @api.multi
     def move_start(self):
         '''Code for moving student to next standard'''
         academic_obj = self.env['academic.year']

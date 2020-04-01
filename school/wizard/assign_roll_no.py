@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class AssignRollNo(models.TransientModel):
@@ -12,7 +12,6 @@ class AssignRollNo(models.TransientModel):
     standard_id = fields.Many2one('school.standard', 'Class', required=True)
     medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
 
-    @api.multi
     def assign_rollno(self):
         '''Method to assign roll no to students'''
         student_obj = self.env['student.student']

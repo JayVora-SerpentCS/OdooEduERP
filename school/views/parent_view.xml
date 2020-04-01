@@ -45,7 +45,7 @@
                         </button>
                     </div>
                     <field name="type" invisible="1"/>
-                    <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/>
+                    <!-- <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/> -->
                     <div class="oe_title">
                         <h1>
                             <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
@@ -98,7 +98,6 @@
         <record id="action_school_parent_form" model="ir.actions.act_window">
             <field name="name">Parent Profile</field>
             <field name="res_model">school.parent</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 

@@ -16,10 +16,10 @@ EM = (r"[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$")
 
 
 def emailvalidation(email):
-
+    """Check valid email."""
     if email:
-        EMAIL_REGEX = re.compile(EM)
-        if not EMAIL_REGEX.match(email):
+        email_regex = re.compile(EM)
+        if not email_regex.match(email):
             raise ValidationError(_('''This seems not to be valid email.
             Please enter email in correct format!'''))
         else:
@@ -27,7 +27,8 @@ def emailvalidation(email):
 
 
 class AcademicYear(models.Model):
-    ''' Defines an academic year '''
+    '''Defines an academic year.'''
+
     _name = "academic.year"
     _description = "Academic Year"
     _order = "sequence"
@@ -55,13 +56,12 @@ class AcademicYear(models.Model):
             return year_id.id
         return False
 
-    @api.multi
     def name_get(self):
         '''Method to display name and code'''
         return [(rec.id, ' [' + rec.code + ']' + rec.name) for rec in self]
 
-    @api.multi
     def generate_academicmonth(self):
+        """Generate academic months."""
         interval = 1
         month_obj = self.env['academic.month']
         for data in self:
@@ -106,12 +106,13 @@ class AcademicYear(models.Model):
     def check_current_year(self):
         check_year = self.search([('current', '=', True)])
         if len(check_year.ids) >= 2:
-            raise ValidationError(_('''Error! You cannot set two current
-            year active!'''))
+            raise ValidationError(_('''Error! You cannot set two current \
+year active!'''))
 
 
 class AcademicMonth(models.Model):
-    ''' Defining a month of an academic year '''
+    '''Defining a month of an academic year.'''
+
     _name = "academic.month"
     _description = "Academic Month"
     _order = "date_start"
@@ -153,18 +154,19 @@ class AcademicMonth(models.Model):
 
     @api.constrains('date_start', 'date_stop')
     def check_months(self):
+        """Check start date should be less than stop date."""
         for old_month in self.search([('id', 'not in', self.ids)]):
-            # Check start date should be less than stop date
             if old_month.date_start <= \
                     self.date_start <= old_month.date_stop \
                     or old_month.date_start <= \
                     self.date_stop <= old_month.date_stop:
-                    raise ValidationError(_('''Error! You cannot define
+                raise ValidationError(_('''Error! You cannot define
                     overlapping months!'''))
 
 
 class StandardMedium(models.Model):
     ''' Defining a medium(ENGLISH, HINDI, GUJARATI) related to standard'''
+
     _name = "standard.medium"
     _description = "Standard Medium"
     _order = "sequence"
@@ -176,7 +178,8 @@ class StandardMedium(models.Model):
 
 
 class StandardDivision(models.Model):
-    ''' Defining a division(A, B, C) related to standard'''
+    '''Defining a division(A, B, C) related to standard'''
+
     _name = "standard.division"
     _description = "Standard Division"
     _order = "sequence"
@@ -188,7 +191,8 @@ class StandardDivision(models.Model):
 
 
 class StandardStandard(models.Model):
-    ''' Defining Standard Information '''
+    '''Defining Standard Information.'''
+
     _name = 'standard.standard'
     _description = 'Standard Information'
     _order = "sequence"
@@ -209,7 +213,8 @@ class StandardStandard(models.Model):
 
 
 class SchoolStandard(models.Model):
-    ''' Defining a standard related to school '''
+    '''Defining a standard related to school.'''
+
     _name = 'school.standard'
     _description = 'School Standards'
     _rec_name = "standard_id"
@@ -234,7 +239,7 @@ class SchoolStandard(models.Model):
 
     @api.depends('subject_ids')
     def _compute_subject(self):
-        '''Method to compute subjects'''
+        '''Method to compute subjects.'''
         for rec in self:
             rec.total_no_subjects = len(rec.subject_ids)
 
@@ -280,6 +285,7 @@ class SchoolStandard(models.Model):
 
     @api.constrains('standard_id', 'division_id')
     def check_standard_unique(self):
+        """Method to check unique standard."""
         standard_search = self.env['school.standard'
                                    ].search([('standard_id', '=',
                                               self.standard_id.id),
@@ -292,7 +298,6 @@ class SchoolStandard(models.Model):
             raise ValidationError(_('''Division and class should be unique!'''
                                     ))
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
@@ -303,11 +308,11 @@ class SchoolStandard(models.Model):
 
     @api.constrains('capacity')
     def check_seats(self):
+        """Methd to check seats."""
         if self.capacity <= 0:
             raise ValidationError(_('''Total seats should be greater than
                 0!'''))
 
-    @api.multi
     def name_get(self):
         '''Method to display standard and division'''
         return [(rec.id, rec.standard_id.name + '[' + rec.division_id.name +
@@ -315,7 +320,8 @@ class SchoolStandard(models.Model):
 
 
 class SchoolSchool(models.Model):
-    ''' Defining School Information '''
+    ''' Defining School Information'''
+
     _name = 'school.school'
     _description = 'School Information'
     _rec_name = "com_name"
@@ -340,6 +346,7 @@ class SchoolSchool(models.Model):
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
+    required_age = fields.Integer("Student Admission Age Required", default=5)
 
     @api.model
     def create(self, vals):
@@ -395,6 +402,8 @@ class SubjectElective(models.Model):
 
 
 class MotherTongue(models.Model):
+    """Defining mother tongue."""
+
     _name = 'mother.toungue'
     _description = "Mother Toungue"
 
@@ -402,6 +411,8 @@ class MotherTongue(models.Model):
 
 
 class StudentAward(models.Model):
+    """Defining student award."""
+
     _name = 'student.award'
     _description = "Student Awards"
 
@@ -411,6 +422,8 @@ class StudentAward(models.Model):
 
 
 class AttendanceType(models.Model):
+    """Defining attendance type."""
+
     _name = "attendance.type"
     _description = "School Type"
 
@@ -419,6 +432,7 @@ class AttendanceType(models.Model):
 
 
 class StudentDocument(models.Model):
+    """Defining Student document."""
     _name = 'student.document'
     _description = "Student Document"
     _rec_name = "doc_type"
@@ -465,6 +479,8 @@ class StudentDescription(models.Model):
 
 
 class StudentDescipline(models.Model):
+    """Definign student dscipline."""
+
     _name = 'student.descipline'
     _description = "Student Discipline"
 
@@ -477,6 +493,8 @@ class StudentDescipline(models.Model):
 
 
 class StudentHistory(models.Model):
+    """Defining Student History."""
+
     _name = "student.history"
     _description = "Student History"
 
@@ -489,6 +507,8 @@ class StudentHistory(models.Model):
 
 
 class StudentCertificate(models.Model):
+    """Defining student certificate."""
+
     _name = "student.certificate"
     _description = "Student Certificate"
 
@@ -499,6 +519,7 @@ class StudentCertificate(models.Model):
 
 class StudentReference(models.Model):
     ''' Defining a student reference information '''
+
     _name = "student.reference"
     _description = "Student Reference"
 
@@ -589,6 +610,8 @@ class StudentRelationMaster(models.Model):
 
 
 class GradeMaster(models.Model):
+    """Defining grade master."""
+
     _name = 'grade.master'
     _description = "Grade Master"
 
@@ -597,6 +620,8 @@ class GradeMaster(models.Model):
 
 
 class GradeLine(models.Model):
+    """Defining grade line."""
+
     _name = 'grade.line'
     _description = "Grades"
     _rec_name = 'grade'
@@ -614,6 +639,8 @@ class GradeLine(models.Model):
 
 
 class StudentNews(models.Model):
+    """Defining studen news."""
+
     _name = 'student.news'
     _description = 'Student News'
     _rec_name = 'subject'
@@ -630,12 +657,12 @@ class StudentNews(models.Model):
 
     @api.constrains("date")
     def checknews_dates(self):
+        """Check news date."""
         new_date = datetime.now()
         if self.date < new_date:
-            raise ValidationError(_('''Configure expiry date greater than
-            current date!'''))
+            raise ValidationError(_('''Configure expiry date greater than \
+current date!'''))
 
-    @api.multi
     def news_update(self):
         '''Method to send email to student for news update'''
         emp_obj = self.env['hr.employee']
@@ -645,8 +672,8 @@ class StudentNews(models.Model):
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
             raise except_orm(_('Mail Error'),
-                             _('''No mail outgoing mail server
-                               specified!'''))
+                             _('''No mail outgoing mail server \
+specified!'''))
         mail_server_record = mail_server_ids[0]
         email_list = []
         # Check email is defined in student
@@ -697,6 +724,8 @@ class StudentNews(models.Model):
 
 
 class StudentReminder(models.Model):
+    """Defining student reminder."""
+
     _name = 'student.reminder'
     _description = "Student Reminder"
 
@@ -715,6 +744,8 @@ class StudentReminder(models.Model):
 
 
 class StudentCast(models.Model):
+    """Defining student cast."""
+
     _name = "student.cast"
     _description = "Student Cast"
 
@@ -722,6 +753,8 @@ class StudentCast(models.Model):
 
 
 class ClassRoom(models.Model):
+    """Defining class room."""
+
     _name = "class.room"
     _description = "Class Room"
 
@@ -732,7 +765,6 @@ class ClassRoom(models.Model):
 class Report(models.Model):
     _inherit = "ir.actions.report"
 
-    @api.multi
     def render_template(self, template, values=None):
         student_id = self.env['student.student'].\
             browse(self._context.get('student_id', False))

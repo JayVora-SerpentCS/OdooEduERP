@@ -23,7 +23,6 @@
     <record id="action_move_standards_form" model="ir.actions.act_window">
         <field name="name">Move Classes</field>
         <field name="res_model">move.standards</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_move_standards_form" />
         <field name="target">new</field>
