@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
             <form string="Send Email">
                 <field name='note' nolabel="0" height="350" width="350" placeholder="Notes"/>
-                <newline/>
+                <br/>
                 <footer>
                     <button name="send_email" string="Send Email" class="btn btn-sm btn-default fa fa-envelope" type="object"/>
                     <button special="cancel" string="Cancel"/>
@@ -24,10 +24,11 @@
     <act_window id="act_send_email"
         name="Send Email"
         res_model="send.email"
-        src_model="student.student"
+        binding_model="student.student"
         view_mode="form"
         target="new"
-        view_type="form" groups="school.group_school_administration,school.group_school_teacher"
+        binding_views="form"
+        groups="school.group_school_administration,school.group_school_teacher"
         />
 
 </odoo>

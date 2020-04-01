@@ -9,7 +9,7 @@ class ResUsers(models.Model):
 
     @api.model
     def create(self, vals):
-        '''Inherit Method to create user of group teacher or parent'''
+        """Inherit Method to create user of group teacher or parent."""
         vals.update({'employee_ids': False})
         user_rec = super(ResUsers, self).create(vals)
         if self._context.get('teacher_create', False):

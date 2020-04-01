@@ -134,6 +134,7 @@
                     <group col="4" colspan="4">
                         <field name="currency_id" placeholder="Select Or Create Currency" />
                         <field name="lang" placeholder="Language"/>
+                        <field name="required_age" required="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Standards">
@@ -368,7 +369,6 @@
     <record id="action_student_cast_form_7" model="ir.actions.act_window">
         <field name="name">Religion/Caste</field>
         <field name="res_model">student.cast</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- From View Of Grade System -->
@@ -593,14 +593,12 @@
     <record id="action_mother_toungue" model="ir.actions.act_window">
         <field name="name">Mother Tongue</field>
         <field name="res_model">mother.toungue</field>
-         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student Document Type -->
     <record id="action_document_type_form" model="ir.actions.act_window">
         <field name="name">Document Type</field>
         <field name="res_model">document.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Form View Of Standard Division Information-->
@@ -774,7 +772,6 @@
     <record id="action_student_reminder" model="ir.actions.act_window">
         <field name="name">Students Reminder</field>
         <field name="res_model">student.reminder</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -798,21 +795,18 @@
     <record id="action_school_school_form" model="ir.actions.act_window">
         <field name="name">Schools</field>
         <field name="res_model">school.school</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of School Standard -->
     <record id="action_school_standard_form" model="ir.actions.act_window">
         <field name="name">Classes</field>
         <field name="res_model">school.standard</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Elective Subject -->
     <record id="action_elective_subject_form" model="ir.actions.act_window">
         <field name="name">Elective Group</field>
         <field name="res_model">subject.elective</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Grade System -->
@@ -825,42 +819,36 @@
     <record id="action_academic_year_form" model="ir.actions.act_window">
         <field name="name">Academic Years</field>
         <field name="res_model">academic.year</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Academic Month Information -->
     <record id="action_academic_month_form" model="ir.actions.act_window">
         <field name="name">Months</field>
         <field name="res_model">academic.month</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Standard Medium Information -->
     <record id="action_standard_medium_form" model="ir.actions.act_window">
         <field name="name">Medium</field>
         <field name="res_model">standard.medium</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Standard Division Information Action -->
     <record id="action_standard_division_form" model="ir.actions.act_window">
         <field name="name">Divisions</field>
         <field name="res_model">standard.division</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Subject Information -->
     <record id="action_subject_subject_form" model="ir.actions.act_window">
         <field name="name">Subjects</field>
         <field name="res_model">subject.subject</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Standard Information -->
     <record id="action_standard_standard_form" model="ir.actions.act_window">
         <field name="name">Standards</field>
         <field name="res_model">standard.standard</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Form View Of Student News -->
@@ -919,7 +907,6 @@
         <field name="name">Noticeboard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">student.news</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Form View of Class Room -->
@@ -953,7 +940,6 @@
     <record id="action_class_room" model="ir.actions.act_window">
         <field name="name">Class Room</field>
         <field name="res_model">class.room</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -1035,7 +1021,7 @@
         name="Partner Ledger: Payable"
         res_model="account.move.line"
         context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
-        src_model="res.partner"
+        binding_model="res.partner"
         groups="school.group_school_administration"/>
     <act_window
         id="account.act_account_partner_ledger_payable_no_partner"
@@ -1043,14 +1029,14 @@
         res_model="account.move.line"
         context="{'search_default_unreconciled':1, 'search_default_payable':1}"
         domain="[('partner_id', '=', False)]"
-        src_model="res.partner"
+        binding_model="res.partner"
         groups="school.group_school_administration"/>
     <act_window
         id="account.act_account_partner_ledger_receivable"
         name="Partner Ledger: Receivable"
         res_model="account.move.line"
         context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
-        src_model="res.partner"
+        binding_model="res.partner"
         groups="school.group_school_administration"/>
     <act_window
         id="account.act_account_partner_ledger_receivable_no_partner"
@@ -1058,7 +1044,7 @@
         res_model="account.move.line"
         context="{'search_default_unreconciled':1, 'search_default_receivable':1}"
         domain="[('partner_id', '=', False)]"
-        src_model="res.partner"
+        binding_model="res.partner"
         groups="school.group_school_administration"/>
     <act_window
         id="account.action_move_select"
@@ -1072,6 +1058,6 @@
         name="Journal Items"
         context="{'search_default_partner_id': [active_id]}"
         res_model="account.move.line"
-        src_model="res.partner"
+        binding_model="res.partner"
         groups="school.group_school_administration"/>
 </odoo>

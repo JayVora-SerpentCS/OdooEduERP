@@ -1,14 +1,13 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class MailTemplate(models.Model):
     _inherit = "mail.template"
 
-    @api.multi
     def generate_email(self, res_ids, fields=None):
-        '''Method to generate email'''
+        '''Method to generate email.'''
         ret = super(MailTemplate, self).generate_email(res_ids, fields=fields)
 
         if (self._context.get('body_html', False) or
@@ -23,14 +22,15 @@ class MailTemplate(models.Model):
 
 
 class SendMail(models.TransientModel):
+    """Defining TransientModel to send mail."""
+
     _name = "send.email"
     _description = "Send Mail"
 
     note = fields.Text('Text')
 
-    @api.multi
     def send_email(self):
-        '''Method to send email'''
+        '''Method to send email.'''
         body = ''
         email_template_obj = self.env['mail.template']
         # search the model student.student
