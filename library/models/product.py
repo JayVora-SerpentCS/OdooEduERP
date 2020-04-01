@@ -20,6 +20,7 @@ class ProductCategory(models.Model):
 class ProductLang(models.Model):
     '''Book language'''
     _name = "product.lang"
+    _description = "Book's Language"
 
     code = fields.Char('Code', required=True)
     name = fields.Char('Name', required=True, translate=True)
@@ -326,6 +327,7 @@ class LibraryAuthor(models.Model):
 class BookEditor(models.Model):
     '''Book Editor Information'''
     _name = "book.editor"
+    _description = 'Information of Editor of the Book'
 
     image = fields.Binary("Image")
     name = fields.Char('Name', required=True, index=True)
