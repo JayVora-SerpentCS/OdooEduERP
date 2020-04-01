@@ -19,7 +19,6 @@ class SubjectResultWiz(models.TransientModel):
         res.update({'result_ids': subjectlist})
         return res
 
-    @api.multi
     def result_report(self):
         data = self.read()[0]
         return self.env.ref('exam.add_exam_result_id_qweb').\

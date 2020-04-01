@@ -7,7 +7,6 @@ from odoo import models, api
 class TerminateReasonExam(models.TransientModel):
     _inherit = 'terminate.reason'
 
-    @api.multi
     def save_terminate(self):
         '''Override method to make exam results false when student is
         terminated'''
