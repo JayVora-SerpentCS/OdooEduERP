@@ -7,7 +7,6 @@ class ReportTimetableInfo(models.AbstractModel):
     _name = 'report.timetable.timetable'
     _description = "Timetable details"
 
-    @api.multi
     def _get_timetable(self, timetable_id):
         timetable_detail = []
         self._cr.execute('''select t.start_time,t.end_time,s.name,week_day,
