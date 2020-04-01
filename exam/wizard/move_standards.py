@@ -6,7 +6,6 @@ from odoo import models, api
 class MoveStandards(models.TransientModel):
     _inherit = 'move.standards'
 
-    @api.multi
     def move_start(self):
         '''Method to change standard of student after he passes the exam'''
         academic_obj = self.env['academic.year']
