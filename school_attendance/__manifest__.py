@@ -2,7 +2,7 @@
 
 {
     'name': 'Attendance Management',
-    'version': "11.0.1.0.5",
+    'version': "13.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'images': ['static/description/SchoolAttendance.png'],

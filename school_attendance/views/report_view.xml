@@ -7,22 +7,22 @@
             <field name="page_height">0</field>
             <field name="page_width">0</field>
             <field name="orientation">Landscape</field>
-            <field name="margin_top">15</field>
+            <field name="margin_top">25</field>
             <field name="margin_bottom">25</field>
-            <field name="margin_left">10</field>
+            <field name="margin_left">5</field>
             <field name="margin_right">5</field>
             <field name="header_line" eval="False"/>
-            <field name="header_spacing">10</field>
+            <field name="header_spacing">20</field>
             <field name="dpi">90</field>
     </record>
 
     <report id="attendace_month_report"
-                string="Student Attendances by Month"
-                model="student.student"
-                report_type="qweb-pdf"
-                file="school_attendance.attendance_month"
-                name="school_attendance.attendance_month"
-                paperformat="school_attendance.monthly_attendance_report"
-                menu="False" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher"
-                />
+            string="Student Attendances by Month"
+            model="student.student"
+            report_type="qweb-pdf"
+            file="school_attendance.attendance_month"
+            name="school_attendance.attendance_month"
+            paperformat="school_attendance.monthly_attendance_report"
+            menu="False" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher"
+            />
 </odoo>
