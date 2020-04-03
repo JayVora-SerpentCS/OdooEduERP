@@ -33,13 +33,11 @@
 
         <act_window id="act_transfer_vehicle"
             name="Transfer Vehicle"
-            multi="False"
-            key2="client_action_multi" 
             res_model="transfer.vehicle" 
-            src_model="student.student"
+            binding_model="student.student"
             view_mode="form" 
             target="new" 
-            view_type="form"
+            binding_views="form"
             groups="school_transport.group_transportation_manager"/>
 
 </odoo>
