@@ -20,7 +20,8 @@
             <data>
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="%(action_stu_result_form)d" class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
-                        <img src="/exam/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
+                        <img src="/exam/static/description/icon.png" alt="Logo"
+                            style="height:25px;width:50px;float:left;"/>
                         <lable style="">Result</lable>
                     </button>
                 </xpath>
@@ -54,12 +55,12 @@
                 <field name="start_date" string="Start Date"/>
                 <field name="end_date" string="End Date"/>
                 <newline />
-                <filter string="Running" domain="[('state','=','running')]" help="Exam is Running"/>
-                <filter string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
+                <filter name="running" string="Running" domain="[('state','=','running')]" help="Exam is Running"/>
+                <filter name="uncomming" string="Upcoming" domain="[('state','=','draft')]" help="Exam is Upcoming"/>
                 <newline />
                 <group expand="1" string="Group By">
-                    <filter icon="terp-project" string="Date" help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
-                    <filter icon="terp-stock_symbol-selection" string="State"
+                    <filter  name="date" string="Date" help="By Date" domain="[]" context="{'group_by':'start_date'}"/>
+                    <filter name="state" string="State"
                             help="By State" domain="[]" context="{'group_by':'state'}"/>
                 </group>
             </search>
@@ -245,10 +246,10 @@
                 </group>
                 <newline />
                 <group expand="1" string="Group By">
-                    <filter icon="terp-stock_symbol-selection" string="Standard"
+                    <filter name="standard" string="Standard"
                             help="By Name" domain="[]" context="{'group_by':'standard_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-personal" string="Subject" help="By Subject Name" domain="[]"
+                    <filter name="subject" string="Subject" help="By Subject Name" domain="[]"
                             context="{'group_by':'subject_id'}"/>
                 </group>
             </search>
@@ -430,8 +431,8 @@
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
-                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
-                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a string="Edit" role="button" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
+                                        <a string="Change Color" role="button" icon="color-picker" type="color" name="color"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
@@ -452,9 +453,9 @@
                 <field name="student_id"/>
                 <field name="standard_id"/>
                 <group expand="1" string="Group By">
-                    <filter icon="terp-stock_symbol-selection" string="Student" help="By Name" domain="[]"
+                    <filter name="student" string="Student" help="By Name" domain="[]"
                             context="{'group_by':'student_id'}" />
-                    <filter icon="terp-stock_symbol-selection" string="Standard" help="By Name" domain="[]"
+                    <filter name="standard" string="Standard" help="By Name" domain="[]"
                             context="{'group_by':'standard_id'}" />
                 </group>
             </search>
@@ -522,10 +523,10 @@
                 <field name="student_id" />
                 <field name="standard_id" />
                 <group expand="1" string="Group By">
-                    <filter icon="terp-stock_symbol-selection" string="Student" help="By Name" domain="[]"
+                    <filter name="student" string="Student" help="By Name" domain="[]"
                             context="{'group_by':'student_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" string="Standard" help="By Name" domain="[]"
+                    <filter name="standard" string="Standard" help="By Name" domain="[]"
                             context="{'group_by':'standard_id'}"/>
                     <separator orientation="vertical"/>
                 </group>

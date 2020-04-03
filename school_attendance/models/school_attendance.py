@@ -213,6 +213,8 @@ for the same student!'''))
         if self.start_date < date.today():
             raise ValidationError(_("Your leave request start date should be \
 greater than current date!"))
+            raise ValidationError(_("Your leave request start date should be\
+greater than current date!"))
 
 
 class AttendanceSheetLine(models.Model):

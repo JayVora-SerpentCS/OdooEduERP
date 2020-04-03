@@ -4,6 +4,7 @@
             <field name="name">Student Hostel</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
+            <field name="state">code</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
             <field ref="model_hostel_student" name="model_id"/>
