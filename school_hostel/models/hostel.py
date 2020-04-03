@@ -163,7 +163,8 @@ class HostelStudent(models.Model):
         '''Check Room Availability'''
         if self.room_id.availability <= 0:
             raise ValidationError(_('''There is no availability in the
-                room!'''))
+                raise ValidationError(_('''There is no availability in the\
+room!'''))
 
     def unlink(self):
         for rec in self:
@@ -182,7 +183,7 @@ class HostelStudent(models.Model):
 
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda self: _('New'))
-    compute_inv = fields.Integer('Number of invoice',
+    compute_inv = fields.Integer('Number of invoice',                
                                  compute="_compute_invoices")
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')

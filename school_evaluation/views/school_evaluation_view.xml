@@ -29,9 +29,12 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="%(action_student_eval_form_actions)d" type="action" class="oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
-                         <img src="/school_evaluation/static/description/e.png" style="height:25px;width:50px;float:left;"/>
-                            <lable style = "">Evaluation</lable>
+                    <button name="%(action_student_eval_form_actions)d" type="action" class="oe_stat_button"
+                        attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}"
+                        groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
+                         <img src="/school_evaluation/static/description/e.png" alt="Logo"
+                             style="height:25px;width:50px;float:left;"/>
+                            <lable>Evaluation</lable>
                     </button>
                 </xpath>
             </data>
@@ -98,7 +101,8 @@
                              <button name="get_record" type='object' class="oe_inline oe_stat_button"
                                 attrs="{'invisible' : [('state', '!=', 'draft')]}"
                                 groups="school.group_school_administration,school.group_school_teacher">
-                            <img src="/school_evaluation/static/description/index1.png" style="height:25px;width:50px;float:left;"/>
+                            <img src="/school_evaluation/static/description/index1.png" alt="Logo"
+                                style="height:25px;width:50px;float:left;"/>
                             <lable style="">Get Question</lable>
                         </button>
                         </group>
@@ -106,17 +110,13 @@
                     <newline />
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="eval_line" nolabel='1'  context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
+                            <field name="eval_line" nolabel='1'  context="{'type':type}"
+                                attrs="{'readonly':[('state','!=','start')]}">
                                 <tree string="Evaluation Line" editable='top'>
                                     <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
                                     <field name="point_id" options="{&quot;no_create&quot;: True}"/>
                                     <field name="rating"/>
                                 </tree>
-                                <form string="Evaluation Line">
-                                    <field name="stu_eval_id" placeholder="Select Or Create Question" options="{&quot;no_create&quot;: True}"/>
-                                    <field name="point_id" placeholder="Select Or Create Rating" options="{&quot;no_create&quot;: True}"/>
-                                    <field name="rating" placeholder="Enter Remarks"/>
-                                </form>
                             </field>
                             <group colspan="4">
                                 <field name="total"/>
@@ -158,7 +158,8 @@
                              <button name="get_record" type='object' class="oe_inline oe_stat_button"
                                 attrs="{'invisible' : [('state', '!=', 'draft')]}"
                                 groups="school.group_school_administration">
-                            <img src="/school_evaluation/static/description/index1.png" style="height:25px;width:50px;float:left;"/>
+                            <img src="/school_evaluation/static/description/index1.png" alt="Logo"
+                                style="height:25px;width:50px;float:left;"/>
                             <lable style="">Get Question</lable>
                             </button>
                         </group>
@@ -166,17 +167,13 @@
                     <newline/>
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="eval_line" nolabel='1' context="{'type':type}" attrs="{'readonly':[('state','not in','draft')]}">
+                            <field name="eval_line" nolabel='1' context="{'type':type}"
+                                attrs="{'readonly':[('state','!=','start')]}">
                                 <tree string="Evaluation Line" editable='top'>
                                     <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
                                     <field name="point_id" options="{&quot;no_create&quot;: True}"/>
                                     <field name="rating"/>
-                                </tree>
-                                <form string="Evaluation Line">
-                                    <field name="stu_eval_id" placeholder="Select Or Create Question" options="{&quot;no_create&quot;: True}"/>
-                                    <field name="point_id" placeholder="Select Or Create Rating" options="{&quot;no_create&quot;: True}"/>
-                                    <field name="rating" placeholder="Enter Remarks"/>
-                                </form>
+                                </tree> 
                             </field>
                             <group colspan="4">
                                 <field name="total"/>
@@ -216,8 +213,8 @@
                 <separator orientation="vertical"/>
                 <newline />
                 <group expand="0" string="Group By..." colspan="6" col="4">
-                    <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
-                    <filter string="Teacher" icon="terp-personal" name="student_id" context="{'group_by':'teacher_id'}"/>
+                    <filter string="Type" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Teacher" name="student_id" context="{'group_by':'teacher_id'}"/>
                 </group>
             </search>
         </field>
@@ -286,7 +283,7 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="6" col="4">
-                    <filter string="Type" icon="terp-stock_symbol-selection" name="type" context="{'group_by':'type'}"/>
+                    <filter string="Type" name="type" context="{'group_by':'type'}"/>
                 </group>
             </search>
         </field>

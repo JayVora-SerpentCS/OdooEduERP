@@ -5,6 +5,7 @@ from odoo import models, fields, api
 
 class RejectReason(models.TransientModel):
     _name = "reject.reason"
+    _description = "Reason of Rejection Details"
 
     reasons = fields.Text('Reject Reason')
 
