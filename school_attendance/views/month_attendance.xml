@@ -25,7 +25,7 @@
                                       </t>
                                   </tr>
                                   <tr>
-                                      <th width="20%"><span t-esc="o.month.name"/></th>
+                                      <th width="20%"><span t-esc="data['form']['month']"/></th>
                                       <t t-foreach="t.get('day_list')" t-as="day">
                                           <th style="background-color:goldenrod;color:white;">
                                               <span t-esc="day"/>

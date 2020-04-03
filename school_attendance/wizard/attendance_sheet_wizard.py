@@ -4,7 +4,8 @@ from odoo import models, fields, api
 
 
 class MonthlyAttendanceSheet(models.TransientModel):
-    '''For Monthly Attendance Sheet'''
+    '''For Monthly Attendance Sheet.'''
+
     _name = "monthly.attendance.sheet"
     _description = "Monthly Attendance Sheet Wizard"
 
@@ -13,7 +14,6 @@ class MonthlyAttendanceSheet(models.TransientModel):
     year_id = fields.Many2one('academic.year', 'Year', required=True)
     month_id = fields.Many2one('academic.month', 'Month', required=True)
 
-    @api.multi
     def monthly_attendance_sheet_open_window(self):
         ''' This method open new window with monthly attendance sheet
             @param self : Object Pointer

@@ -12,7 +12,8 @@ import json
 
 
 class AttendanceSheet(models.Model):
-    ''' Defining Monthly Attendance sheet Information '''
+    '''Defining Monthly Attendance sheet Information.'''
+
     _description = 'Attendance Sheet'
     _name = 'attendance.sheet'
 
@@ -55,10 +56,13 @@ class AttendanceSheet(models.Model):
                                                            submenu=submenu)
         start = self._context.get('start_date')
         end = self._context.get('end_date')
-        st_dates = datetime.strptime(start,
-                                     DEFAULT_SERVER_DATE_FORMAT)
-        end_dates = datetime.strptime(end,
-                                      DEFAULT_SERVER_DATE_FORMAT)
+        st_dates = end_dates = False
+        if start:
+            st_dates = datetime.strptime(start,
+                                         DEFAULT_SERVER_DATE_FORMAT)
+        if end:
+            end_dates = datetime.strptime(end,
+                                          DEFAULT_SERVER_DATE_FORMAT)
         if view_type == 'form':
             digits_temp_dict = {1: 'one', 2: 'two', 3: 'three', 4: 'four',
                                 5: 'five', 6: 'six', 7: 'seven', 8: 'eight',
@@ -72,16 +76,17 @@ class AttendanceSheet(models.Model):
                                 29: 'two_9', 30: 'two_0',
                                 31: 'three_1'}
             flag = 1
-            while st_dates <= end_dates:
-                res['fields']['attendance_ids'
-                              ]['views'
-                                ]['tree'
-                                  ]['fields'
-                                    ][digits_temp_dict.get(flag)
-                                      ]['string'
-                                        ] = st_dates.day
-                st_dates += rd(days=1)
-                flag += 1
+            if st_dates and end_dates:
+                while st_dates <= end_dates:
+                    res['fields']['attendance_ids'
+                                  ]['views'
+                                    ]['tree'
+                                      ]['fields'
+                                        ][digits_temp_dict.get(flag)
+                                          ]['string'
+                                            ] = st_dates.day
+                    st_dates += rd(days=1)
+                    flag += 1
             if flag < 32:
                 res['fields']['attendance_ids'
                               ]['views']['tree'
@@ -101,7 +106,10 @@ class AttendanceSheet(models.Model):
 
 
 class StudentleaveRequest(models.Model):
+    """Defining Model Student Leave Request."""
+
     _name = "studentleave.request"
+    _description = "Student Leave Request"
     _inherit = ["mail.thread", "resource.mixin"]
 
     @api.model
@@ -115,7 +123,6 @@ class StudentleaveRequest(models.Model):
                          })
         return super(StudentleaveRequest, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('student_id'):
             student = self.env['student.student'].browse(vals.get('student_id')
@@ -134,20 +141,20 @@ class StudentleaveRequest(models.Model):
             self.roll_no = self.student_id.roll_no
             self.teacher_id = self.student_id.standard_id.user_id.id or False
 
-    @api.multi
     def approve_state(self):
+        """Change state to approve."""
         self.state = 'approve'
 
-    @api.multi
     def draft_state(self):
+        """Change state to draft."""
         self.state = 'draft'
 
-    @api.multi
     def toapprove_state(self):
+        """Change state to toapprove."""
         self.state = 'toapprove'
 
-    @api.multi
     def reject_state(self):
+        """Change state to reject."""
         self.state = 'reject'
 
     @api.depends('start_date', 'end_date')
@@ -195,8 +202,8 @@ class StudentleaveRequest(models.Model):
                                      ('end_date', '=', self.end_date),
                                      ('id', 'not in', self.ids)])
         if leave_request:
-            raise ValidationError(_('''You cannot take leave on same date
-            for the same student!'''))
+            raise ValidationError(_('''You cannot take leave on same date \
+for the same student!'''))
 
     @api.constrains('start_date', 'end_date')
     def check_dates(self):
@@ -204,16 +211,21 @@ class StudentleaveRequest(models.Model):
             raise ValidationError(_('''Start date should be less than end date!
             '''))
         if self.start_date < date.today():
+<<<<<<< HEAD
             raise ValidationError(_("Your leave request start date should be\
             greater than current date!"))
+=======
+            raise ValidationError(_("Your leave request start date should be \
+greater than current date!"))
+>>>>>>> [13.0][MIG]Migrated module school_attendance
 
 
 class AttendanceSheetLine(models.Model):
-    ''' Defining Attendance Sheet Line Information '''
+    '''Defining Attendance Sheet Line Information.'''
 
-    @api.multi
     def _compute_percentage(self):
-        '''Method to get attendance percent'''
+        '''Method to get attendance percent.'''
+
         res = {}
         for attendance_sheet_data in self:
             att_count = 0
@@ -330,7 +342,8 @@ class AttendanceSheetLine(models.Model):
 
 
 class DailyAttendance(models.Model):
-    ''' Defining Daily Attendance Information '''
+    '''Defining Daily Attendance Information.'''
+
     _description = 'Daily Attendance'
     _name = 'daily.attendance'
     _rec_name = 'standard_id'
@@ -349,14 +362,13 @@ class DailyAttendance(models.Model):
 
     @api.depends('student_ids')
     def _compute_present(self):
-        '''Method to count present students'''
+        '''Method to count present students.'''
         for rec in self:
             count = 0
-            if rec.student_ids:
-                for att in rec.student_ids:
-                    if att.is_present:
-                        count += 1
-                rec.total_presence = count
+            for att in rec.student_ids:
+                if att.is_present:
+                    count += 1
+            rec.total_presence = count
 
     @api.depends('student_ids')
     def _compute_absent(self):
@@ -429,14 +441,20 @@ class DailyAttendance(models.Model):
                                                        ('end_date', '>=',
                                                         rec.date)
                                                        ])
+                    stud_vals_abs = (0, 0, {'roll_no': stud.roll_no,
+                                            'stud_id': stud.id,
+                                            'is_absent': True
+                                            })
+                    stud_vals = (0, 0, {'roll_no': stud.roll_no,
+                                        'stud_id': stud.id,
+                                        'is_present': True
+                                        })
                     if student_leave:
-                        student_list.append({'roll_no': stud.roll_no,
-                                             'stud_id': stud.id,
-                                             'is_absent': True})
+
+                        student_list.append(stud_vals_abs)
                     else:
-                        student_list.append({'roll_no': stud.roll_no,
-                                             'stud_id': stud.id,
-                                             'is_present': True})
+                        student_list.append(stud_vals)
+            rec.student_ids = [(5,)]
             rec.student_ids = student_list
 
     @api.model
@@ -473,9 +491,12 @@ class DailyAttendance(models.Model):
         vals.update({'student_ids': student_list})
         return super(DailyAttendance, self).create(vals)
 
-    @api.multi
     def attendance_draft(self):
+<<<<<<< HEAD
         '''Changes the state of attendance to draft'''
+=======
+        '''Change the state of attendance to draft'''
+>>>>>>> [13.0][MIG]Migrated module school_attendance
         att_sheet_obj = self.env['attendance.sheet']
         academic_year_obj = self.env['academic.year']
         academic_month_obj = self.env['academic.month']
@@ -561,9 +582,8 @@ class DailyAttendance(models.Model):
             rec.state = 'draft'
         return True
 
-    @api.multi
     def attendance_validate(self):
-        '''Method to validate attendance'''
+        '''Method to validate attendance.'''
         sheet_line_obj = self.env['attendance.sheet.line']
         acadmic_year_obj = self.env['academic.year']
         acadmic_month_obj = self.env['academic.month']
@@ -587,8 +607,13 @@ class DailyAttendance(models.Model):
                                        False)
                 date = line.date
                 if not attendance_sheet_id:
+<<<<<<< HEAD
                     sheet = {'name':  (month_data.name + '-' +
                                        str(line.date.year)),
+=======
+                    sheet = {'name': (month_data.name + '-' +
+                                      str(line.date.year)),
+>>>>>>> [13.0][MIG]Migrated module school_attendance
                              'standard_id': line.standard_id.id,
                              'user_id': line.user_id.id,
                              'month_id': month_data.id,
@@ -993,7 +1018,8 @@ class DailyAttendance(models.Model):
 
 
 class DailyAttendanceLine(models.Model):
-    ''' Defining Daily Attendance Sheet Line Information '''
+    '''Defining Daily Attendance Sheet Line Information.'''
+
     _description = 'Daily Attendance Line'
     _name = 'daily.attendance.line'
     _order = 'roll_no'
@@ -1008,20 +1034,24 @@ class DailyAttendanceLine(models.Model):
 
     @api.onchange('is_present')
     def onchange_attendance(self):
-        '''Method to make absent false when student is present'''
+        '''Method to make absent false when student is present.'''
         if self.is_present:
             self.is_absent = False
             self.present_absentcheck = True
 
     @api.onchange('is_absent')
     def onchange_absent(self):
-        '''Method to make present false when student is absent'''
+        '''Method to make present false when student is absent.'''
         if self.is_absent:
             self.is_present = False
             self.present_absentcheck = True
 
     @api.constrains('is_present', 'is_absent')
     def check_present_absent(self):
+<<<<<<< HEAD
+=======
+        '''Method to check present or absent.'''
+>>>>>>> [13.0][MIG]Migrated module school_attendance
         for rec in self:
             if not rec.is_present and not rec.is_absent:
                 raise ValidationError(_('Check Present or Absent!'))
