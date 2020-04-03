@@ -11,8 +11,10 @@ class TerminateReasonHostel(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        '''Override method to dispaly message if student is registered in
-        hostel while terminationg'''
+        '''Override method to dispaly message if student is registered in.
+
+        hostel while terminationg.
+        '''
         res = super(TerminateReasonHostel, self).default_get(fields)
         student = self._context.get('active_id')
         student_obj = self.env['student.student'].browse(student)
@@ -29,7 +31,6 @@ class TerminateReasonHostel(models.TransientModel):
         res.update({'hostel_info': hostel_msg})
         return res
 
-    @api.multi
     def save_terminate(self):
         student = self._context.get('active_id')
         student_obj = self.env['student.student'].browse(student)

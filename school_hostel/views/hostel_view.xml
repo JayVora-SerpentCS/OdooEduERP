@@ -92,7 +92,6 @@
     <record id="action_hostel_type" model="ir.actions.act_window">
         <field name="name">Hostel</field>
         <field name="res_model">hostel.type</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -167,7 +166,6 @@
     <record id="action_hostel_room" model="ir.actions.act_window">
         <field name="name">Hostel Room</field>
         <field name="res_model">hostel.room</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -251,7 +249,7 @@
                 <field name="remaining_amount" />
                 <field name="status" />
                 <group expand="1" string="Group By">
-                    <filter string="Student" icon="terp-personal" name="student_id" context="{'group_by':'student_id'}"/>
+                    <filter string="Student" name="student_id" context="{'group_by':'student_id'}"/>
                 </group>
             </search>
         </field>
@@ -261,7 +259,6 @@
     <record id="action_hostel_student_button" model="ir.actions.act_window">
         <field name="name">Hostel Student</field>
         <field name="res_model">hostel.student</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_student_id': active_id}</field>
     </record>
@@ -275,7 +272,8 @@
             <data>
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="%(action_hostel_student_button)d" type="action" class="oe_right oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user">
-                        <img src="/school_hostel/static/description/hostel291.jpg" style="height:25px;width:50px;float:left;"/>
+                        <img src="/school_hostel/static/description/hostel291.jpg" style="height:25px;width:50px;float:left;"
+                            alt="Logo"/>
                         <lable style="">Hostel</lable>
                     </button>
                 </xpath>
@@ -284,15 +282,18 @@
     </record>
 
     <!-- Inheit View of Account Invoice -->
-    <record id="hostel_student_accunt_inherit" model="ir.ui.view">
-        <field name="name">Account Extended</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+    <record id="hostel_student_account_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='other_info']/group/group[2]/field[@name='name']" position="before">
-                <field name="hostel_student_id" invisible="1"/>
-                <field name="hostel_ref" readonly="1"/>
-            </xpath>
+            <data>
+                <xpath expr="//page[@name='other_info']//field[@name='invoice_user_id']" position="before">
+                    <field name="hostel_student_id" invisible="1"/>
+                    <field name="hostel_ref" readonly="1"
+                        attrs="{'invisible': [('hostel_ref', '=', False)]}"/>
+                </xpath>
+            </data>
         </field>
     </record>
 
@@ -300,7 +301,6 @@
     <record id="action_hostel_student" model="ir.actions.act_window">
         <field name="name">Hostel Student</field>
         <field name="res_model">hostel.student</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -312,7 +312,6 @@
     <record id="menu_hostel_rector_action" model="ir.actions.act_window">
         <field name="name">Hostel Rector</field>
         <field name="res_model">res.partner</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="domain">[('is_hostel_rector','=',True)]</field>
         <field name="context">{'default_is_hostel_rector': 1,'default_customer':False}</field>

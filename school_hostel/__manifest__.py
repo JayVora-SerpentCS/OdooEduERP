@@ -2,14 +2,14 @@
 
 {
     'name': 'HOSTEL',
-    'version': "11.0.1.0.2",
+    'version': "13.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',
     'license': "AGPL-3",
     'complexity': 'easy',
     'summary': 'Module For HOSTEL Management In School',
-    'depends': ['school', 'account_invoicing'],
+    'depends': ['school', 'account'],
     'images': ['static/description/SchoolHostel.png'],
     'data': ['security/hostel_security.xml',
              'security/ir.model.access.csv',
