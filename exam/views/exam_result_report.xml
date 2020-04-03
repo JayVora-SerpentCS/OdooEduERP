@@ -9,9 +9,6 @@
                         <div class="oe_structure" />
                         <br/>
                         <br/>
-                        <br/>
-                        <br/>
-                        <br/>
                         <t t-foreach="o" t-as="result">
                             <table width="100%">
                                 <center>

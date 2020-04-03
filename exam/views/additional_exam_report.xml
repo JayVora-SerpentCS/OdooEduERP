@@ -10,9 +10,6 @@
                         <div class="oe_structure" />
                         <br/>
                         <br/>
-                        <br />
-                        <br/>
-                        <br/>
                         <table width="100%">
                             <center>
                                 <h3 t-field="result.a_exam_id.name"></h3>
