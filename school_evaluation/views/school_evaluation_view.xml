@@ -6,7 +6,6 @@
     <record id="action_student_eval_form" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student','search_default_student_id': active_id}</field>
@@ -15,7 +14,6 @@
     <record id="action_student_eval_form_actions" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student','search_default_student_id': active_id}</field>
@@ -223,7 +221,6 @@
      <record id="action_teacher_eval" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_type">form</field>
          <field name="view_mode">tree,form</field>
          <field name="domain">[('type','=','faculty')]</field>
          <field name="context">{'default_type':'faculty'}</field>
@@ -233,7 +230,6 @@
      <record id="action_teacher_eval_new" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation Finished</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_type">form</field>
          <field name="view_mode">tree,form</field>
          <field name="domain">[('type','=','faculty'),('state','=','finished')]</field>
          <field name="context">{'default_type':'faculty'}</field>
@@ -254,7 +250,6 @@
     <record id="action_teacher_eval_new_draft" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation New Draft</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_type">form</field>
          <field name="view_mode">tree,form</field>
          <field name="domain">[('type','=','faculty'),('state','=','draft')]</field>
          <field name="context">{'default_type':'faculty'}</field>
@@ -364,7 +359,6 @@
     <record id="action_student_eval" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student'}</field>
@@ -374,7 +368,6 @@
     <record id="action_student_eval_temp" model="ir.actions.act_window">
         <field name="name">Evaluation Templates</field>
         <field name="res_model">school.evaluation.template</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -382,7 +375,6 @@
     <record id="action_student_rating" model="ir.actions.act_window">
         <field name="name">Student Rating</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -417,7 +409,6 @@
     <record id="action_student_eval_finished" model="ir.actions.act_window">
         <field name="name">Student Evaluation Finished</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student'),('state','=','finished')]</field>
         <field name="context">{'default_type':'student'}</field>
@@ -440,7 +431,6 @@
     <record id="action_student_eval_draft" model="ir.actions.act_window">
         <field name="name">Student Evaluation Draft</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student'),('state','=','draft')]</field>
         <field name="context">{'default_type':'student'}</field>
