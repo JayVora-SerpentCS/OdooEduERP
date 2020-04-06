@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Evaluation Management',
-    'version': "11.0.1.0.3",
+    'version': "13.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.almisnadtechnology.com',
     'category': 'School Management',

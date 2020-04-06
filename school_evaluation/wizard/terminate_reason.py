@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import models
 
 
 class TerminateReasonEvaluation(models.TransientModel):
     _inherit = 'terminate.reason'
 
-    @api.multi
     def save_terminate(self):
         '''Override method to make student evaluation active false when
         student is terminated'''

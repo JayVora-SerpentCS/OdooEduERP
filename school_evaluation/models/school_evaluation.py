@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
@@ -9,10 +8,12 @@ from odoo.tools.translate import _
 
 
 class SchoolEvaluation(models.Model):
+    """Defining School Evaluation."""
+
     _name = "school.evaluation"
+    _description = "School Evaluation details"
     _rec_name = 'type'
 
-    @api.multi
     def get_record(self):
         '''Method to get the evaluation questions'''
         eval_temp_obj = self.env['school.evaluation.template']
@@ -74,16 +75,20 @@ class SchoolEvaluation(models.Model):
     total = fields.Float('Total Points', compute='_compute_total_points',
                          method=True, help="Total Points Obtained",
                          store="True")
-    state = fields.Selection([('draft', 'Draft'), ('start', 'Start'),
+    state = fields.Selection([('draft', 'Draft'), ('start', 'In Progress'),
                               ('finished', 'Finish'), ('cancelled', 'Cancel')],
                              'State', readonly=True, default='draft')
     username = fields.Many2one('res.users', 'User', readonly=True,
                                default=lambda self: self.env.user)
     active = fields.Boolean('Active', default=True)
 
-    @api.multi
     def set_start(self):
         '''change state to start'''
+        for rec in self:
+            if not rec.eval_line:
+                raise ValidationError(_('Please Get the Questions First!\
+                \nTo Get the Questions please click on "Get Questions" \
+Button!'))
         self.state = 'start'
 
     @api.model
@@ -96,32 +101,37 @@ class SchoolEvaluation(models.Model):
             res.update({'teacher_id': hr_emp.id})
         return res
 
-    @api.multi
     def set_finish(self):
         '''Change state to finished'''
+        for rec in self:
+            if [line.id for line in rec.eval_line if (not line.point_id or
+                                                      not line.rating)]:
+                raise ValidationError(_("You can't mark the evaluation as \
+Finished untill the Rating/Remarks are not added for all \
+the Questions!"))
         self.state = 'finished'
 
-    @api.multi
     def set_cancel(self):
         '''Change state to cancelled'''
         self.state = 'cancelled'
 
-    @api.multi
     def set_draft(self):
         '''Changes state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state in ['start', 'finished']:
-                raise ValidationError(_('''You can delete record in unconfirm
-                state only!'''))
+                raise ValidationError(_("You can delete record in unconfirmed \
+state only!"))
         return super(SchoolEvaluation, self).unlink()
 
 
 class StudentEvaluationLine(models.Model):
+    """Defining School Evaluation Line."""
+
     _name = 'school.evaluation.line'
+    _description = 'School Evaluation Line Details'
 
     @api.onchange('point_id')
     def onchange_point(self):
@@ -144,7 +154,10 @@ class StudentEvaluationLine(models.Model):
 
 
 class SchoolEvaluationTemplate(models.Model):
+    """Defining School Evaluation Template."""
+
     _name = "school.evaluation.template"
+    _description = "School Evaluation Template Details"
     _rec_name = 'desc'
 
     desc = fields.Char('Description', required=True)
@@ -155,7 +168,10 @@ class SchoolEvaluationTemplate(models.Model):
 
 
 class RatingRating(models.Model):
+    """Defining Rating."""
+
     _name = 'rating.rating'
+    _description = "Rating details"
     _rec_name = 'point'
     _order = "point desc"
 
@@ -169,7 +185,6 @@ class RatingRating(models.Model):
 class StudentExtend(models.Model):
     _inherit = 'student.student'
 
-    @api.multi
     def set_alumni(self):
         '''Override method to set active false student evaluation when
         student is set to alumni'''
