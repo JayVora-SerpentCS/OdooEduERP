@@ -207,6 +207,7 @@ class SchoolStudentAssignment(models.Model):
 
 class FileFormat(models.Model):
     _name = "file.format"
+    _description = "File Format Details"
 
     name = fields.Char("Name")
 

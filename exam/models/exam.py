@@ -64,7 +64,7 @@ class ExtendedTimeTable(models.Model):
                                       string='Time Table Type', required=True,
                                       inivisible=False)
     exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
-                                              'TimeTable')
+                                              'TimeTable Lines')
     exam_id = fields.Many2one('exam.exam', 'Exam')
 
     @api.constrains('exam_timetable_line_ids')
@@ -103,8 +103,7 @@ class ExtendedTimeTableLine(models.Model):
         for rec in self:
             rec.day_of_week = False
             if rec.exm_date:
-                week_day = datetime.strptime(rec.exm_date, "%Y-%m-%d")
-                rec.day_of_week = week_day.strftime("%A").title()
+                rec.day_of_week = rec.exm_date.strftime("%A").title()
 
     @api.multi
     def _check_date(self):
@@ -307,6 +306,7 @@ class ExamExam(models.Model):
 
 class ExamScheduleLine(models.Model):
     _name = 'exam.schedule.line'
+    _description = "Exam Schedule Line Details"
 
     @api.onchange('standard_ids')
     def onchange_standard(self):

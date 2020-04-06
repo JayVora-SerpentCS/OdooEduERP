@@ -87,9 +87,7 @@ class LibraryCard(models.Model):
     def _compute_end_date(self):
         for rec in self:
             if rec.start_date:
-                date_diff = datetime.strptime(rec.start_date,
-                                              DEFAULT_SERVER_DATE_FORMAT)
-                rec.end_date = date_diff + rd(months=rec.duration)
+                rec.end_date = rec.start_date + rd(months=rec.duration)
 
     code = fields.Char('Card No', required=True, default=lambda self: _('New'))
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
@@ -439,11 +437,12 @@ class LibraryBookIssue(models.Model):
         @return : True
         '''
 
-        curr_dt = datetime.now()
+        curr_dt = fields.Date.today()
+
         new_date = datetime.strftime(curr_dt,
                                      DEFAULT_SERVER_DATE_FORMAT)
-        if (self.card_id.end_date < new_date and
-                self.card_id.end_date > new_date):
+        if (self.card_id.end_date < curr_dt and
+                self.card_id.end_date > curr_dt):
                 raise ValidationError(_('''The Membership of library
                 card is over!'''))
 #        if self.issue_code == 'New':
@@ -671,6 +670,7 @@ class LibraryBookRequest(models.Model):
     '''Request for Book'''
     _name = "library.book.request"
     _rec_name = 'req_id'
+    _description = 'Book Request Information'
 
     @api.depends('type')
     def _compute_bname(self):
@@ -687,7 +687,7 @@ class LibraryBookRequest(models.Model):
     type = fields.Selection([('existing', 'HardCopy'), ('ebook', 'E Book')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
-    new_book = fields.Char('Book Name')
+    new_book = fields.Char('New Book Name')
     bk_nm = fields.Char('Name', compute="_compute_bname", store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
@@ -726,12 +726,10 @@ class LibraryBookRequest(models.Model):
     def confirm_book_request(self):
         '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt,
-                                     DEFAULT_SERVER_DATETIME_FORMAT)
+        curr_dt = fields.Date.today()
         vals = {}
-        if (new_date >= self.card_id.start_date and
-                new_date <= self.card_id.end_date):
+        if (curr_dt >= self.card_id.start_date and
+                curr_dt <= self.card_id.end_date):
                 raise ValidationError(_('''The Membership of library card is
                 over!'''))
         if self.type == 'existing':

@@ -476,7 +476,7 @@ class StudentPayslip(models.Model):
 
 class StudentPayslipLineLine(models.Model):
     '''Function Line.'''
-
+    
     _name = 'student.payslip.line.line'
     _description = 'Function Line'
     _order = 'sequence'

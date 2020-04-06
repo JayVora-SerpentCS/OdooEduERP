@@ -8,10 +8,11 @@
                 <t t-call="web.external_layout">
                 <div class="page">
                     <div class="oe_structure" />
+                    <br />
+                    <br />
                     <div class="row" align="center">
                         <h1>Transcript Of Academic Record</h1>
                     </div>
-                    <br />
                     <br />
                     <table width="100%">
                         <tr>
