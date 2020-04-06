@@ -52,7 +52,7 @@ class SchoolEventParticipant(models.Model):
 
 class SchoolEvent(models.Model):
     """Defining events."""
-
+    
     _name = 'school.event'
     _description = 'Event Information'
     _rec_name = 'name'

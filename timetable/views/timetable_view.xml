@@ -57,9 +57,9 @@
                     <field name="year_id"/>
                     <newline/>
                     <group expand="1" string="Group By">
-                        <filter string="Academic Class" help="By class"
+                        <filter name="class" string="Academic Class" help="By class"
                                 context="{'group_by':'standard_id'}"/>
-                        <filter string="Year" help="By year" context="{'group_by':'year_id'}"/>
+                        <filter name="year" string="Year" help="By year" context="{'group_by':'year_id'}"/>
                     </group>
                 </search>
             </field>
