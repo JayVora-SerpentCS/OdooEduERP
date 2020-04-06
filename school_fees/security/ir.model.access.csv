@@ -12,7 +12,7 @@ access_student_payslip_line_parent,student.payslip.line,model_student_payslip_li
 access_student_payslip_line_line_parent,student.payslip.line.line,model_student_payslip_line_line,school.group_school_parent,1,0,0,0
 access_student_fees_structure_line_parent,student.fees.structure.line,model_student_fees_structure_line,school.group_school_parent,1,0,0,0
 access_parents_account_journal_parent,account.journal,account.model_account_journal,school.group_school_parent,1,0,0,0
-access_parents_account_invoice_parent,account.invoice,account.model_account_invoice,school.group_school_parent,1,0,0,0
+access_parents_account_move_parent,account.move,account.model_account_move,school.group_school_parent,1,0,0,0
 access_student_fees_register_student,student.fees.register,school_fees.model_student_fees_register,school.group_school_student,1,0,0,0
 access_student_fees_structure_student,student.fees.structure,model_student_fees_structure,school.group_school_student,1,0,0,0
 access_student_payslip_student,student.payslip,school_fees.model_student_payslip,school.group_school_student,1,0,0,0
@@ -20,7 +20,7 @@ access_student_payslip_line_student,student.payslip.line,school_fees.model_stude
 access_student_payslip_line_line_student,student.payslip.line.line,model_student_payslip_line_line,school.group_school_student,1,0,0,0
 access_student_fees_structure_line_student,student.fees.structure.line,model_student_fees_structure_line,school.group_school_student,1,0,0,0
 access_student_account_journal_student,account.journal,account.model_account_journal,school.group_school_student,1,0,0,0
-access_parents_account_invoice_student,account.invoice,account.model_account_invoice,school.group_school_student,1,0,0,0
+access_parents_account_move_student,account.move,account.model_account_move,school.group_school_student,1,0,0,0
 access_student_fees_register_teacher,student.fees.register,model_student_fees_register,school.group_school_teacher,1,0,0,0
 access_student_fees_structure_teacher,student.fees.structure,model_student_fees_structure,school.group_school_teacher,1,0,0,0
 access_student_payslip_teacher,student.payslip,model_student_payslip,school.group_school_teacher,1,0,0,0

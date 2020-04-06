@@ -1,6 +1,5 @@
 # See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from odoo import models, api
 
 
@@ -8,7 +7,6 @@ class ReportStudentFeesRegister(models.AbstractModel):
     _name = 'report.school_fees.student_fees_register'
     _description = "School Fees Register Report"
 
-    @api.multi
     def get_month(self, indate):
         out_date = indate.strftime('%B') + '-' + indate.strftime('%Y')
         return out_date
