@@ -204,7 +204,7 @@
         <field name="name">event.tree.1</field>
         <field name="model">school.event</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state=='open';red:state in ('close')" string="Event Information">
+            <tree decoration-info="state == 'draft'" decoration-danger="state == 'close'" string="Event Information">
                 <field name="name" />
                 <field name="start_date" />
                 <field name="end_date" />
@@ -355,7 +355,6 @@
     <record id="action_school_event_form_1" model="ir.actions.act_window">
         <field name="name">Event Information</field>
         <field name="res_model">school.event</field>
-        <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,calendar</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -441,7 +440,6 @@
     <record id="action_event_parameter" model="ir.actions.act_window">
         <field name="name"> Event Parameter</field>
         <field name="res_model">school.event.parameter</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -451,7 +449,6 @@
     <record id="action_school_event_Participant_tree" model="ir.actions.act_window">
         <field name="name">Event Participant</field>
         <field name="res_model">school.event.participant</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -460,7 +457,6 @@
     <record id="action_school_event_registration_form" model="ir.actions.act_window">
         <field name="name">Event Registration</field>
         <field name="res_model">school.event.registration</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form,search</field>
         <field name="context">{'search_default_confirm':True}</field> 
     </record>
