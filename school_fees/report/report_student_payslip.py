@@ -1,21 +1,18 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from odoo import models, api
 
 
 class ReportStudentPayslip(models.AbstractModel):
     _name = 'report.school_fees.student_payslip'
+    _description = "School Fees Payslip Report"
 
-    @api.multi
     def get_month(self, indate):
-        new_date = datetime.strptime(indate, '%Y-%m-%d')
-        out_date = new_date.strftime('%B') + '-' + new_date.strftime('%Y')
+        out_date = indate.strftime('%B') + '-' + indate.strftime('%Y')
         return out_date
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         student_payslip = self.env['student.payslip'].search([('id', 'in',
                                                                docids)])
         payslip_model = self.env['ir.actions.report'].\
