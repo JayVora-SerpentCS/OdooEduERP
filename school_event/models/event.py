@@ -15,7 +15,8 @@ class SchoolStandard(models.Model):
 
 
 class SchoolEventParameter(models.Model):
-    '''for event parameter based on which score will given'''
+    """For event parameter based on which score will given."""
+
     _name = 'school.event.parameter'
     _description = 'Event Parameter'
 
@@ -23,7 +24,8 @@ class SchoolEventParameter(models.Model):
 
 
 class SchoolEventParticipant(models.Model):
-    '''for Participant which are participated in events'''
+    """For Participant which are participated in events."""
+
     _name = 'school.event.participant'
     _description = 'Participant Information'
     _rec_name = "stu_pid"
@@ -49,20 +51,21 @@ class SchoolEventParticipant(models.Model):
 
 
 class SchoolEvent(models.Model):
-    '''for events'''
+    """Defining events."""
+
     _name = 'school.event'
     _description = 'Event Information'
     _rec_name = 'name'
 
     @api.depends('part_ids')
     def _compute_participants(self):
-        '''Method to calculate number of participant'''
+        """Method to calculate number of participant."""
         for rec in self:
             rec.participants = len(rec.part_ids)
 
     name = fields.Char('Event Name', help="Full Name of the event")
     event_type = fields.Selection([('intra', 'IntraSchool'),
-                                  ('inter', 'InterSchool')],
+                                   ('inter', 'InterSchool')],
                                   'Event Type',
                                   help='Event is either IntraSchool\
                                         or InterSchool')
@@ -105,7 +108,6 @@ class SchoolEvent(models.Model):
                                       on holiday.')
     color = fields.Integer('Color Index', default=0)
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft', 'close']:
@@ -115,7 +117,7 @@ class SchoolEvent(models.Model):
 
     @api.constrains('start_date', 'end_date')
     def _check_dates(self):
-        '''Raises constraint when start date is greater than end date'''
+        """Raise constraint when start date is greater than end date."""
         sedt = self.start_date > self.end_date
         if (self.start_date and self.end_date and sedt):
             raise ValidationError(_('Event start-date must be lower\
@@ -135,7 +137,6 @@ class SchoolEvent(models.Model):
                 raise ValidationError(_('Event Registration last-date must be\
                                     lower than Event start-date!.'))
 
-    @api.multi
     def event_open(self):
         for rec in self:
             if len(rec.part_ids) >= 1:
@@ -143,19 +144,16 @@ class SchoolEvent(models.Model):
             else:
                 raise UserError(_('Enter participants to open the event!'))
 
-    @api.multi
     def event_close(self):
-        '''Method to change state to close'''
+        """Method to change state to close."""
         self.state = 'close'
 
-    @api.multi
     def event_draft(self):
-        '''Method to change state to draft'''
+        """Method to change state to draft."""
         self.state = 'draft'
 
-    @api.multi
     def event_cancel(self):
-        '''Method to change state to cancel'''
+        """Method to change state to cancel."""
         self.state = 'cancel'
 
     @api.model
@@ -178,7 +176,8 @@ class SchoolEvent(models.Model):
 
 
 class SchoolEventRegistration(models.Model):
-    '''for registration by students for events'''
+    """For registration by students for events."""
+
     _name = 'school.event.registration'
     _description = 'Event Registration'
     _rec_name = "reg_date"
@@ -205,17 +204,16 @@ class SchoolEventRegistration(models.Model):
     def onchange_student_standard(self):
         self.student_standard_id = self.part_name_id.standard_id.id
 
-    @api.multi
     def regi_cancel(self):
-        '''Method to cancel registration'''
+        """Method to cancel registration."""
         event_part_obj = self.env['school.event.participant']
         for rec in self:
             prt_data = rec.part_name_id
             # delete entry of participant
-            stu_prt_data = event_part_obj.\
-                search([('stu_pid', '=', rec.part_name_id.pid),
-                        ('event_id', '=', rec.name.id),
-                        ('name', '=', prt_data.id)])
+            stu_prt_data = event_part_obj.search([
+                ('stu_pid', '=', rec.part_name_id.pid),
+                ('event_id', '=', rec.name.id),
+                ('name', '=', prt_data.id)])
             stu_prt_data.sudo().unlink()
             rec.state = 'cancel'
 
@@ -227,7 +225,6 @@ class SchoolEventRegistration(models.Model):
                                         event which is running or closed!
                                         '''))
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state not in ['draft', 'cancel']:
@@ -246,9 +243,8 @@ class SchoolEventRegistration(models.Model):
             raise ValidationError(_('''Student is already
                                     registered in this event!'''))
 
-    @api.multi
     def regi_confirm(self):
-        '''Method to confirm registration'''
+        """Method to confirm registration."""
         event_part_obj = self.env['school.event.participant']
 
         for rec in self:
@@ -285,10 +281,11 @@ class StudentStudent(models.Model):
                                  'student_participants_rel', 'stud_id',
                                  'participant_id', 'Participants')
 
-    @api.multi
     def set_alumni(self):
-        '''Override method to delete event participant and cancel event
-        registration of student when set to alumni'''
+        """Override method to delete event participant and cancel event.
+
+        registration of student when set to alumni.
+        """
         for rec in self:
             event_regi = self.env['school.event.registration'].\
                 search([('part_name_id', '=', rec.id)])

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <data noupdate="1">
+    <data noupdate="0">
 
         <!--school.event.parameter-->
 
@@ -17,7 +17,7 @@
 
         <record id="school_event_1" model="school.event">
             <field name="name"> Hockey(Demo-1)</field>
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="start_reg_date" />
+            <field eval="time.strftime('%Y-%m-%d 00:00:00')" name="start_reg_date" />
             <field eval="(DateTime.today() + timedelta(days=2)).strftime('%Y-%m-%d')" name="last_reg_date" />
             <field eval="(DateTime.today() + timedelta(days=4)).strftime('%Y-%m-%d')" name="start_date" />
             <field eval="(DateTime.today() + timedelta(days=6)).strftime('%Y-%m-%d')" name="end_date" />
@@ -30,7 +30,7 @@
 
         <record id="school_event_2" model="school.event">
             <field name="name"> Badminton(Demo-1)</field>
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="start_reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="start_reg_date" />
             <field eval="(DateTime.today() + timedelta(days=1)).strftime('%Y-%m-%d')" name="last_reg_date" />
             <field eval="(DateTime.today() + timedelta(days=3)).strftime('%Y-%m-%d')" name="start_date" />
             <field eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d')" name="end_date" />
@@ -47,14 +47,14 @@
             <field name="name" ref="school_event_1" />
             <field name="part_name_id" ref="school.demo_student_student_5" />
             <field name="student_standard_id" ref="school.demo_school_standard_2"/>
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="reg_date" />
             <field name="state">draft</field>
         </record>
 
         <record id="event_registration_2" model="school.event.registration">
             <field name="name" ref="school_event_1" />
             <field name="part_name_id" ref="school.demo_student_student_6" />
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="reg_date" />
             <field name="student_standard_id" ref="school.demo_school_standard_3"/>
             <field name="state">draft</field>
         </record>
@@ -62,7 +62,7 @@
         <record id="event_registration_3" model="school.event.registration">
             <field name="name" ref="school_event_1" />
             <field name="part_name_id" ref="school.demo_student_student_7" />
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="reg_date" />
             <field name="student_standard_id" ref="school.demo_school_standard_1"/>
             <field name="state">draft</field>
         </record>
@@ -70,7 +70,7 @@
         <record id="event_registration_4" model="school.event.registration">
             <field name="name" ref="school_event_2" />
             <field name="part_name_id" ref="school.demo_student_student_8" />
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="reg_date" />
             <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field name="state">draft</field>
         </record>
@@ -78,7 +78,7 @@
         <record id="event_registration_5" model="school.event.registration">
             <field name="name" ref="school_event_2" />
             <field name="part_name_id" ref="school.demo_student_student_4" />
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="reg_date" />
             <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field name="state">draft</field>
         </record>
@@ -86,7 +86,7 @@
         <record id="event_registration_6" model="school.event.registration">
             <field name="name" ref="school_event_2" />
             <field name="part_name_id" ref="school.demo_student_student_5" />
-            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="reg_date" />
             <field name="student_standard_id" ref="school.demo_school_standard_2"/>
             <field name="state">draft</field>
         </record>
@@ -99,8 +99,8 @@
             <field name="event_id" ref="school_event_1" />
             <field name="win_parameter_id" ref="event_parameter_1" />
             <field name="score">101</field>
-            <!-- <field name="sequence">19</field> -->
-         </record>
+<!--             <field name="sequence">19</field>
+ -->         </record>
 
         <record id="event_participant_2" model="school.event.participant">
             <field name="stu_pid">102</field>
