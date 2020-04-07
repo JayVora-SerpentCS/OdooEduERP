@@ -31,7 +31,8 @@ class HrEmployee(models.Model):
 
 
 class TransportPoint(models.Model):
-    '''for points on root'''
+    """for points on root."""
+
     _name = 'transport.point'
     _description = 'Transport Point Information'
 
@@ -59,7 +60,7 @@ class TransportPoint(models.Model):
 
 
 class TransportVehicle(models.Model):
-    '''for vehicle detail'''
+    """for vehicle detail."""
 
     _name = 'transport.vehicle'
     _rec_name = 'vehicle'
@@ -67,7 +68,7 @@ class TransportVehicle(models.Model):
 
     @api.depends('vehi_participants_ids')
     def _compute_participants(self):
-        '''Method to get number participant'''
+        """Method to get number participant."""
         for rec in self:
             rec.participant = len(rec.vehi_participants_ids)
 
@@ -85,7 +86,7 @@ class TransportVehicle(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        '''Override method to get vehicles of selected transport root'''
+        """Override method to get vehicles of selected transport root."""
         if self._context.get('name'):
             transport_obj = self.env['student.transport']
             vehicle_ids = [std_id.id
@@ -99,7 +100,8 @@ class TransportVehicle(models.Model):
 
 
 class TransportParticipant(models.Model):
-    '''for participants'''
+    """for participants."""
+
     _name = 'transport.participant'
     _rec_name = 'stu_pid_id'
     _description = 'Transport Participant Information'
@@ -152,7 +154,7 @@ class TransportParticipant(models.Model):
 
 
 class StudentTransports(models.Model):
-    '''for root detail'''
+    """for root detail."""
 
     _name = 'student.transport'
     _description = 'Student Transport Information'
@@ -189,18 +191,20 @@ class StudentTransports(models.Model):
 
     @api.multi
     def transport_open(self):
-        '''Method to change state open'''
+        """Method to change state open."""
         self.state = 'open'
 
     @api.multi
     def transport_close(self):
-        '''Method to change state to close'''
+        """Method to change state to close."""
         self.state = 'close'
 
     @api.model
     def participant_expire(self):
-        '''Schedular to change in participant state when registration date
-            is over'''
+        """Schedular to change in participant state when registration date.
+
+        is over.
+        """
         current_date = datetime.now()
         trans_parti = self.env['transport.participant']
         parti_obj_search = trans_parti.search([('tr_end_date', '<',
@@ -212,8 +216,10 @@ class StudentTransports(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_dates(self):
         for rec in self:
-            st_date = datetime.strptime(rec.start_date, '%Y-%m-%d')
-            ed_date = datetime.strptime(rec.end_date, '%Y-%m-%d')
+            st_date_str = rec.start_date.strftime('%Y-%m-%d')
+            ed_date_str = rec.end_date.strftime('%Y-%m-%d')
+            st_date = datetime.strptime(st_date_str, '%Y-%m-%d')
+            ed_date = datetime.strptime(ed_date_str, '%Y-%m-%d')
             delta = ed_date - st_date
             if rec.start_date > rec.end_date:
                 raise ValidationError(_('''Start date should be less than end
@@ -239,8 +245,10 @@ class StudentStudent(models.Model):
 
     @api.multi
     def set_alumni(self):
-        '''Override method to make record of student transport active false
-        when student is set to alumni state'''
+        """Override method to make record of student transport active false.
+
+        when student is set to alumni state.
+        """
         for rec in self:
             trans_student = self.env['transport.participant'].\
                 search([('name', '=', rec.id)])
@@ -254,7 +262,8 @@ class StudentStudent(models.Model):
 
 
 class TransportRegistration(models.Model):
-    '''for registration'''
+    """for registration."""
+
     _name = 'transport.registration'
     _description = 'Transport Registration'
 
@@ -322,7 +331,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def transport_fees_pay(self):
-        '''Method to generate invoice of participant'''
+        """Method to generate invoice of participant."""
         invoice_obj = self.env['account.invoice']
         for rec in self:
             rec.state = 'pending'
@@ -352,7 +361,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def view_invoice(self):
-        '''Method to view invoice of participant'''
+        """Method to view invoice of participant."""
         invoice_obj = self.env['account.invoice']
         for rec in self:
             invoices = invoice_obj.search([('transport_student_id', '=',
@@ -370,7 +379,7 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def _compute_invoice(self):
-        '''Method to compute number of invoice of participant'''
+        """Method to compute number of invoice of participant."""
         inv_obj = self.env['account.invoice']
         for rec in self:
             rec.count_inv = inv_obj.search_count([('transport_student_id',
@@ -378,14 +387,14 @@ class TransportRegistration(models.Model):
 
     @api.onchange('point_id')
     def onchange_point_id(self):
-        '''Method to get amount of point selected'''
+        """Method to get amount of point selected."""
         self.m_amount = False
         if self.point_id:
             self.m_amount = self.point_id.amount or 0.0
 
     @api.onchange('for_month')
     def onchange_for_month(self):
-        '''Method to compute registration end date'''
+        """Method to compute registration end date."""
         tr_start_date = time.strftime("%Y-%m-%d")
         mon = relativedelta(months=+self.for_month)
         tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d'
@@ -395,12 +404,12 @@ class TransportRegistration(models.Model):
 
     @api.multi
     def trans_regi_cancel(self):
-        '''Method to set state to cancel'''
+        """Method to set state to cancel."""
         self.state = 'cancel'
 
     @api.multi
     def trans_regi_confirm(self):
-        '''Method to confirm registration'''
+        """Method to confirm registration."""
         trans_obj = self.env['student.transport']
         prt_obj = self.env['student.student']
         stu_prt_obj = self.env['transport.participant']
@@ -420,9 +429,11 @@ class TransportRegistration(models.Model):
             # calculate amount and Registration End date
             amount = rec.point_id.amount * rec.for_month
             tr_start_date = (rec.reg_date)
+            st_date = tr_start_date.strftime('%Y-%m-%d')
+            ed_date = rec.name.end_date.strftime('%Y-%m-%d')
             mon1 = relativedelta(months=+rec.for_month)
-            tr_end_date = datetime.strptime(tr_start_date, '%Y-%m-%d') + mon1
-            date = datetime.strptime(rec.name.end_date, '%Y-%m-%d')
+            tr_end_date = datetime.strptime(st_date, '%Y-%m-%d') + mon1
+            date = datetime.strptime(ed_date, '%Y-%m-%d')
             if tr_end_date > date:
                 raise UserError(_('For this much Months\
                                   Registration is not Possible because\
@@ -483,7 +494,7 @@ class AccountPayment(models.Model):
 
     @api.multi
     def post(self):
-        '''Method to compute paid amount and due amount'''
+        """Method to compute paid amount and due amount."""
         res = super(AccountPayment, self).post()
         for rec in self:
             for invoice in rec.invoice_ids:

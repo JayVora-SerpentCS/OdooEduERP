@@ -97,8 +97,8 @@
                             <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                 <div class="oe_kanban_left" style="margin-left:10px;">
                                     <br />
-                                    <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
-                                    <a string="Change Color" icon="color-picker" type="color" name="color" />
+                                    <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" title="edit"/>
+                                    <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                 </div>
                                 <br class="oe_kanban_clear" />
                             </div>
@@ -305,9 +305,9 @@
                                 </div>
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
-                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" />
-                                        <a string="Delete" class="btn btn-sm btn-default fa fa-trash" type="delete" />
-                                        <a string="Change Color" icon="color-picker" type="color" name="color" />
+                                        <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" />
+                                        <a role="button" string="Delete" class="btn btn-sm btn-default fa fa-trash" type="delete" aria-label="delete"/>
+                                        <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear" />
                                 </div>
@@ -332,10 +332,10 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
-                    <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter icon="terp-project" string="Division" help="By Division" context="{'group_by':'division_id'}" />
-                    <filter icon="terp-project" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
+                    <filter name="school" string="School" help="By School" context="{'group_by':'school_id'}" />
+                    <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
+                    <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
                 </group>
             </search>
         </field>
@@ -964,7 +964,7 @@
     <menuitem id="menu_admission_form" name="Admission Register" parent="admission_register" action="action_student_student_form_2" sequence="21" groups="school.group_school_administration,school.group_is_admission"/>
     <!-- Menu Item Of Students & Parents -->
     <menuitem id="menu_students_parents" name="Profiles" parent="menu_ems" sequence="3"/>
-    <menuitem id="menu_student_profile" name="Students Profiles" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" sequence="31"/>
+    <menuitem id="menu_student_profile" name="Students" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" sequence="31"/>
     <!-- MenuItem For Reminders -->
     <menuitem id="menu_reminders" name="Reminders" parent="menu_ems" action="action_student_reminder" sequence="8" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
     <!-- MenuItem For Configurations -->

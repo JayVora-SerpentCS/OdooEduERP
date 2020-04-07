@@ -24,6 +24,7 @@ class MailTemplate(models.Model):
 
 class SendMail(models.TransientModel):
     _name = "send.email"
+    _description = "Send Mail"
 
     note = fields.Text('Text')
 

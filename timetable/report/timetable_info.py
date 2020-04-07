@@ -5,6 +5,7 @@ from odoo import models, api
 
 class ReportTimetableInfo(models.AbstractModel):
     _name = 'report.timetable.timetable'
+    _description = "Timetable details"
 
     @api.multi
     def _get_timetable(self, timetable_id):
@@ -38,7 +39,7 @@ class ReportTimetableInfo(models.AbstractModel):
         return timetable_detail
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         timetable_report = self.env['ir.actions.report']._get_report_from_name(
             'timetable.timetable')
         docs = self.env['time.table'].browse(docids)

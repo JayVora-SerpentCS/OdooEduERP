@@ -6,6 +6,7 @@ from odoo.exceptions import ValidationError
 
 class ReportResultInfo(models.AbstractModel):
     _name = 'report.exam.result_information_report'
+    _description = "Exam result information report"
 
     @api.model
     def get_grade(self, result_id, student):
@@ -53,7 +54,7 @@ class ReportResultInfo(models.AbstractModel):
         return list_exam
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         docs = self.env['student.student'].browse(docids)
         student_model = self.env['ir.actions.report']._get_report_from_name(
             'exam.result_information_report')
