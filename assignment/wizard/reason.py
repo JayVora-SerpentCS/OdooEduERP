@@ -1,14 +1,16 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class RejectReason(models.TransientModel):
+    """Defining TransientModel for Reason of Rejection Details."""
+
     _name = "reject.reason"
+    _description = "Reason of Rejection Details"
 
     reasons = fields.Text('Reject Reason')
 
-    @api.multi
     def save_reason(self):
         student_assignment = self.env['school.student.assignment']
         for rec in self:
