@@ -31,8 +31,8 @@ class SchoolEvaluation(models.Model):
         '''Method to compute evaluation points'''
         for rec in self:
             if rec.eval_line:
-                rec.total = sum(line.point_id.point for line in rec.eval_line
-                                if line.point_id.point)
+                rec.total = sum(line.point_id.rating for line in rec.eval_line
+                                if line.point_id.rating)
 
     @api.model
     def fields_view_get(self, view_id=None, viewtype='form', toolbar=False,
@@ -140,13 +140,12 @@ class StudentEvaluationLine(models.Model):
         '''Method to get rating point based on rating'''
         self.rating = False
         if self.point_id:
-            self.rating = self.point_id.rating
+            self.rating = self.point_id.feedback
 
     eval_id = fields.Many2one('school.evaluation', 'Evaluation id')
 
     stu_eval_id = fields.Many2one('school.evaluation.template', 'Question')
-    point_id = fields.Many2one('rating.rating', 'Rating',
-                               domain="[('rating_id', '=', stu_eval_id)]")
+    point_id = fields.Many2one('rating.rating', 'Rating')
     rating = fields.Char('Remarks')
 
     _sql_constraints = [
@@ -169,17 +168,28 @@ class SchoolEvaluationTemplate(models.Model):
 
 
 class RatingRating(models.Model):
-    _name = 'rating.rating'
-    _description = "Rating details"
-    _rec_name = 'point'
-    _order = "point desc"
+    _inherit = 'rating.rating'
+
+    @api.model
+    def create(self, vals):
+        res_model = self.env['school.evaluation.template'].browse(
+            vals.get('res_id'))
+        vals.update({'res_model_id': res_model.id})
+        res = super(RatingRating, self).create(vals)
+        return res
+
+    @api.one
+    @api.depends('res_model', 'res_id')
+    def _compute_res_name(self):
+        # cannot change the rec_name of session since it is use to create the bus channel
+        # so, need to override this method to set the same alternative rec_name as rating
+        if self.res_model == 'base':
+            self.res_name = self.rating
+        else:
+            super(RatingRating, self)._compute_res_name()
 
     rating_id = fields.Many2one('school.evaluation.template', 'Stud',
                                 help="Ratings")
-    point = fields.Integer('Rating in points', required=True,
-                           help="Points")
-    rating = fields.Char('Remarks', required=True)
-
 
 class StudentExtend(models.Model):
     _inherit = 'student.student'
