@@ -88,14 +88,6 @@
             <field name="code">ESFS</field>
             <field eval="[(6,0,[ref('demo_student_fees_structure_line_1'), ref('demo_student_fees_structure_line_2')])]" name="line_ids"/>
         </record>
-<!--         <record id="demo_student_payslip_1" model="student.payslip"> -->
-<!--             <field name="name">Fees Receipt-1</field> -->
-<!--             <field name="number">SLIP/001</field> -->
-<!--             <field name="student_id" ref= 'school.demo_student_student_1'/> -->
-<!--             <field eval="time.strftime('%Y-%m-%d')" name="date"/> -->
-<!--             <field name="fees_structure_id" ref= 'demo_student_fees_structure_1'/> -->
-<!--             <field name="company_id" ref="base.main_company"/> -->
-<!--         </record> -->
         <!--Student fees Registration -->
         <record id="demo_student_fees_registration_1_1" model="student.fees.register">
             <field name="name" ref= "school.demo_student_student_1"/>

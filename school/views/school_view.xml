@@ -332,10 +332,10 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="school" icon="terp-project" string="School" help="By School" context="{'group_by':'school_id'}" />
-                    <filter name="class" icon="terp-project" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter name="division" icon="terp-project" string="Division" help="By Division" context="{'group_by':'division_id'}" />
-                    <filter name="medium" icon="terp-project" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
+                    <filter name="school" string="School" help="By School" context="{'group_by':'school_id'}" />
+                    <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
+                    <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
+                    <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
                 </group>
             </search>
         </field>

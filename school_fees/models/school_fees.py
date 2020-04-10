@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # See LICENSE file for full copyright and licensing details.
 
 import time
@@ -72,8 +71,7 @@ class StudentFeesRegister(models.Model):
                 # Check if payslip exist of student
                 if old_slips:
                     raise UserError(_('There is already a Payslip exist for\
-                                           student: %s\
-                                           for same date.!') % stu.name)
+                    student: %s for same date.!') % stu.name)
                 else:
                     rec.number = self.env['ir.sequence'].\
                         next_by_code('student.fees.register') or _('New')
@@ -180,14 +178,6 @@ class StudentPayslip(models.Model):
     _name = 'student.payslip'
     _description = 'Student PaySlip'
 
-    @api.multi
-    def _compute_invoice(self):
-        '''Method to compute number invoice'''
-        inv_obj = self.env['account.invoice']
-        for rec in self:
-            rec.invoice_count = inv_obj.search_count([('student_payslip_id',
-                                                       '=', rec.id)])
-
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
                                         states={'paid': [('readonly', True)]})
@@ -197,7 +187,7 @@ class StudentPayslip(models.Model):
     register_id = fields.Many2one('student.fees.register', 'Register')
     name = fields.Char('Description')
     number = fields.Char('Number', readonly=True,
-                         default=lambda self: _('New'))
+                         default=lambda self: _('/'))
     student_id = fields.Many2one('student.student', 'Student', required=True)
     date = fields.Date('Date', readonly=True,
                        help="Current Date of payslip",
@@ -210,8 +200,6 @@ class StudentPayslip(models.Model):
                               ('pending', 'Pending'), ('paid', 'Paid')],
                              'State', readonly=True, default='draft')
     journal_id = fields.Many2one('account.journal', 'Journal', required=False)
-    invoice_count = fields.Integer(string="# of Invoices",
-                                   compute="_compute_invoice")
     paid_amount = fields.Monetary('Paid Amount', help="Amount Paid")
     due_amount = fields.Monetary('Due Amount', help="Amount Remaining")
     currency_id = fields.Many2one('res.currency', 'Currency')
@@ -253,8 +241,8 @@ class StudentPayslip(models.Model):
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_('''You can delete record in unconfirm state
-                only!'''))
+                raise UserError(_("You can delete record in unconfirm\
+                state only!"))
         return super(StudentPayslip, self).unlink()
 
     @api.onchange('journal_id')
@@ -452,7 +440,7 @@ class StudentPayslip(models.Model):
     def student_pay_fees(self):
         '''Generate invoice of student fee'''
         for rec in self:
-            if rec.number == 'New':
+            if rec.number == '/':
                 rec.number = self.env['ir.sequence'
                                       ].next_by_code('student.payslip'
                                                      ) or _('New')
@@ -462,7 +450,7 @@ class StudentPayslip(models.Model):
                     'date_invoice': rec.date,
                     'account_id': partner.property_account_receivable_id.id,
                     'journal_id': rec.journal_id.id,
-                    'slip_ref': rec.number,
+                    'name': rec.number,
                     'student_payslip_id': rec.id,
                     'type': 'out_invoice'}
             invoice_line = []
@@ -497,13 +485,13 @@ class StudentPayslip(models.Model):
                     'context': {}}
 
 
-class StudentPayslipLineLine(models.Model):
+class StudentPayslipLine(models.Model):
     '''Function Line'''
     _name = 'student.payslip.line.line'
     _description = 'Function Line'
     _order = 'sequence'
 
-    slipline_id = fields.Many2one('student.payslip.line', 'Slip Line')
+    slipline_id = fields.Many2one('student.payslip.line', 'Slip Line Ref')
     slipline1_id = fields.Many2one('student.fees.structure.line', 'Slip Line')
     sequence = fields.Integer('Sequence')
     from_month = fields.Many2one('academic.month', 'From Month')
@@ -513,8 +501,6 @@ class StudentPayslipLineLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
-    slip_ref = fields.Char('Fees Slip Reference',
-                           help="Payslip Reference")
     student_payslip_id = fields.Many2one('student.payslip',
                                          string="Student Payslip")
 

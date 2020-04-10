@@ -9,7 +9,7 @@ Installation
 =============
 
 To install this module, you need to:
-install 'report_intrastat', 'school' module
+install 'school' module
 
 =============
 Configuration
