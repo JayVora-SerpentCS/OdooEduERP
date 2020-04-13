@@ -188,8 +188,9 @@ class RatingRating(models.Model):
         else:
             super(RatingRating, self)._compute_res_name()
 
-    rating_id = fields.Many2one('school.evaluation.template', 'Stud',
-                                help="Ratings")
+    template_id = fields.Many2one('school.evaluation.template', 'Stud',
+                                  help="Ratings")
+
 
 class StudentExtend(models.Model):
     _inherit = 'student.student'
