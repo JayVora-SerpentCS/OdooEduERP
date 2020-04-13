@@ -172,6 +172,7 @@ class RatingRating(models.Model):
 
     @api.model
     def create(self, vals):
+        """Update model name for rating using res_id."""
         res_model = self.env['school.evaluation.template'].browse(
             vals.get('res_id'))
         vals.update({'res_model_id': res_model.id})
