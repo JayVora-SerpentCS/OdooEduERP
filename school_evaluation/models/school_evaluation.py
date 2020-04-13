@@ -163,7 +163,6 @@ class SchoolEvaluationTemplate(models.Model):
     type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')],
                             'User Type', required=True, default='faculty',
                             help="Type of Evaluation")
-    # rating_line = fields.One2many('rating.rating', 'rating_id', 'Rating')
     rating_line_ids = fields.Many2many('rating.rating', 'rating_table')
 
 
@@ -172,9 +171,9 @@ class RatingRating(models.Model):
 
     @api.model
     def create(self, vals):
-        """Update model name for rating using res_id."""
-        res_model = self.env['school.evaluation.template'].browse(
-            vals.get('res_id'))
+        """Set Document model name for rating."""
+        res_model = self.env['ir.model'].search([
+            ('model', '=', 'school.evaluation.template')])
         vals.update({'res_model_id': res_model.id})
         res = super(RatingRating, self).create(vals)
         return res
@@ -184,7 +183,7 @@ class RatingRating(models.Model):
     def _compute_res_name(self):
         # cannot change the rec_name of session since it is use to create the bus channel
         # so, need to override this method to set the same alternative rec_name as rating
-        if self.res_model == 'base':
+        if self.res_model == 'school.evaluation.template':
             self.res_name = self.rating
         else:
             super(RatingRating, self)._compute_res_name()

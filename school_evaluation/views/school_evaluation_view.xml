@@ -313,7 +313,7 @@
                         <field name="desc" placeholder="Enter Description"/>
                         <field name="type"/>
                     </group>
-                    <field name="rating_line_ids" nolabel="1" context="{'default_res_id': active_id, 'default_res_model': 'school.evaluation.template'}">
+                    <field name="rating_line_ids" nolabel="1" context="{'default_res_id': active_id}">
                         <tree>
                             <field name="rating"/>
                             <field name="feedback"/>
