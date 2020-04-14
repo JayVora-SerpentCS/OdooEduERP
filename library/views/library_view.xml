@@ -125,7 +125,9 @@
                     </div>
                     <group>
                         <group>
-                            <h1><field name="name" placeholder="Book Name" nolabel="1"/></h1>
+                            <h1>
+                                <field name="name" placeholder="Book Name" nolabel="1" />
+                            </h1>
                         </group>
                     </group>
                     <group col="5">
@@ -134,11 +136,11 @@
                         </group>
                         <group col="2"/>
                         <group col="2" colspan="2">
-                           <field name="isbn" placeholder="ISBN Number"/>
-                           <field name="default_code" placeholder="Enter Book Default code"/>
-                           <field name="barcode" placeholder="Barcode e.g.5941246894325"/>
-                           <field name="categ_id" placeholder="Select or Create Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('book_categ','=',True)]"/>
-                           <field name="author" placeholder="Name of Author" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                            <field name="isbn" placeholder="ISBN Number" />
+                            <field name="default_code" placeholder="Enter Book Default code" />
+                            <field name="barcode" placeholder="Barcode e.g.5941246894325" />
+                            <field name="categ_id" placeholder="Select or Create Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('book_categ','=',True)]" />
+                            <field name="author" placeholder="Name of Author" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" />
                         </group>
                     </group>
                     <notebook>
@@ -214,7 +216,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                             <div class="o_kanban_image_fill_left d-none d-md-block" t-attf-style="background-image: url(#{kanban_image('product.product', 'image_512', record.id.raw_value)})" role="img" />
-                            <div class="oe_kanban_details">
+                             <div class="oe_kanban_details">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title oe_partner_heading">
@@ -850,7 +852,7 @@
                                     </templates>
                                 </kanban>
                                 <form string="Contact">
-                                    <field name="image_1920" widget="image" class="oe_avatar oe_left" options="{'image_preview': 'image_512'}" />
+                                  <field name="image_1920" widget="image" class="oe_avatar oe_left" options="{'image_preview': 'image_512'}" />
                                     <div class="oe_title">
                                         <group>
                                             <field name="name" />
