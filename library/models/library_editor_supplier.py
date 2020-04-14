@@ -4,6 +4,8 @@ from odoo import models, fields
 
 
 class LibraryEditorSupplier(models.Model):
+    """Defining Library Editor Supplier."""
+
     _name = "library.editor.supplier"
     _description = "Editor Relations"
 

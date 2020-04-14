@@ -10,6 +10,8 @@ from dateutil.relativedelta import relativedelta as rd
 
 
 class LibraryRack(models.Model):
+    """Defining Library Rack."""
+
     _name = 'library.rack'
     _description = "Library Rack"
 
@@ -20,6 +22,8 @@ class LibraryRack(models.Model):
 
 
 class LibraryAuthor(models.Model):
+    """Defining Library Author."""
+
     _name = 'library.author'
     _description = "Author"
 
@@ -36,6 +40,8 @@ class LibraryAuthor(models.Model):
 
 
 class LibraryCard(models.Model):
+    """Defining Library Card."""
+
     _name = "library.card"
     _description = "Library Card information"
     _rec_name = "code"
@@ -44,12 +50,7 @@ class LibraryCard(models.Model):
     def on_change_student(self):
         '''  This method automatically fill up student roll number
              and standard field  on student_id field
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
         @student : Apply method on this Field name
-        @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
             and the value of student roll number and standard'''
         student_data = self.env['student.student'].browse(self.student_id.id)
@@ -74,7 +75,6 @@ class LibraryCard(models.Model):
                          'roll_no': student.roll_no})
         return super(LibraryCard, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('student_id'):
             student = self.env['student.student'].browse(vals.get('student_id'
@@ -87,9 +87,7 @@ class LibraryCard(models.Model):
     def _compute_end_date(self):
         for rec in self:
             if rec.start_date:
-                date_diff = datetime.strptime(rec.start_date,
-                                              DEFAULT_SERVER_DATE_FORMAT)
-                rec.end_date = date_diff + rd(months=rec.duration)
+                rec.end_date = rec.start_date + rd(months=rec.duration)
 
     code = fields.Char('Card No', required=True, default=lambda self: _('New'))
     book_limit = fields.Integer('No Of Book Limit On Card', required=True)
@@ -130,25 +128,21 @@ class LibraryCard(models.Model):
                 raise ValidationError(_('''You cannot assign library card to
                 same teacher more than once!'''))
 
-    @api.multi
     def running_state(self):
         self.code = self.env['ir.sequence'].next_by_code('library.card'
                                                          ) or _('New')
         self.state = 'running'
 
-    @api.multi
     def draft_state(self):
         self.state = 'draft'
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state == 'running':
-                raise ValidationError(_('''You cannot delete a confirmed
-                library card!'''))
+                raise ValidationError(_('''You cannot delete a confirmed \
+library card!'''))
         return super(LibraryCard, self).unlink()
 
-    @api.multi
     def librarycard_expire(self):
         '''Schedular to change in librarycard state when end date
             is over'''
@@ -163,7 +157,8 @@ class LibraryCard(models.Model):
 
 
 class LibraryBookIssue(models.Model):
-    '''Book variant of product'''
+    '''Book variant of product.'''
+
     _name = "library.book.issue"
     _description = "Library information"
     _rec_name = "standard_id"
@@ -171,13 +166,6 @@ class LibraryBookIssue(models.Model):
     @api.onchange('date_issue', 'day_to_return_book')
     def onchange_day_to_return_book(self):
         ''' This method calculate a book return date.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
@@ -189,40 +177,27 @@ class LibraryBookIssue(models.Model):
     @api.depends('date_issue', 'day_to_return_book')
     def _compute_return_date(self):
         ''' This method calculate a book return date.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and the book return date as value'''
         t = "%Y-%m-%d %H:%M:%S"
         for rec in self:
             diff = rd(days=rec.day_to_return_book or 0.0)
             if rec.date_issue and diff:
-                ret_date = datetime.strptime(rec.date_issue, t) + diff
+                ret_date = datetime.strptime(
+                    rec.date_issue.strftime('%Y-%m-%d %H:%M:%S'), t) + diff
                 rec.date_return = ret_date
 
     @api.depends('actual_return_date', 'day_to_return_book')
     def _compute_penalty(self):
         ''' This method calculate a penalty on book .
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and penalty as value
         '''
         for line in self:
             if line.date_return:
-                start_day = datetime.strptime(line.actual_return_date,
+                start_day = datetime.strptime(line.actual_return_date.strftime('%Y-%m-%d %H:%M:%S'),
                                               DEFAULT_SERVER_DATETIME_FORMAT)
-                end_day = datetime.strptime(line.date_return,
+                end_day = datetime.strptime(line.date_return.strftime('%Y-%m-%d %H:%M:%S'),
                                             DEFAULT_SERVER_DATETIME_FORMAT)
                 if start_day > end_day:
                     diff = rd(start_day.date(), end_day.date())
@@ -233,13 +208,6 @@ class LibraryBookIssue(models.Model):
     @api.depends('state')
     def _compute_lost_penalty(self):
         ''' This method calculate a penalty on book lost .
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param name : Functional field's name
-        @param args : Other arguments
-        @param context : standard Dictionary
         @return : Dictionary having identifier of the record as key
                   and book lost penalty as value
         '''
@@ -250,13 +218,8 @@ class LibraryBookIssue(models.Model):
 
     @api.constrains('card_id', 'state')
     def _check_issue_book_limit(self):
-        ''' This method used how many book can issue as per user type  .
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True or False
+        ''' This method used how many book can issue as per user type.
+        @return : True or False.
         '''
         for rec in self:
             if rec.card_id:
@@ -268,20 +231,22 @@ class LibraryBookIssue(models.Model):
                     else:
                         # Check the book issue limit on card if it is over it
                         # give warning
-                        raise ValidationError(_('''Book issue limit is over on
-                        this card!'''))
+                        raise ValidationError(_('''Book issue limit is over on \
+this card!'''))
                 else:
                     if rec.card_id.book_limit > len(card_ids):
                         return True
                     else:
-                        raise ValidationError(_('''Book issue limit is over on
-                        this card!'''))
+                        raise ValidationError(_('''Book issue limit is over on \
+this card!'''))
 
     @api.depends('name')
     def _compute_check_ebook(self):
         for rec in self:
             if rec.name.is_ebook:
                 rec.ebook_check = True
+            else:
+                rec.ebook_check = False
 
     name = fields.Many2one('product.product', 'Book Name', required=True)
     issue_code = fields.Char('Issue No.', required=True,
@@ -291,7 +256,7 @@ class LibraryBookIssue(models.Model):
     gt_name = fields.Char('Name')
     standard_id = fields.Many2one('school.standard', 'Standard')
     roll_no = fields.Integer('Roll No')
-    invoice_id = fields.Many2one('account.invoice', "User's Invoice")
+    invoice_id = fields.Many2one('account.move', "User's Invoice")
     date_issue = fields.Datetime('Release Date', required=True,
                                  help="Release(Issue) date of the book",
                                  default=lambda *a:
@@ -310,7 +275,6 @@ class LibraryBookIssue(models.Model):
     lost_penalty = fields.Float(compute="_compute_lost_penalty",
                                 string='Fine', store=True,
                                 help='It show the penalty for lost book')
-#    return_days = fields.Integer('Return Days')
     day_to_return_book = fields.Integer('Book Return Days')
     card_id = fields.Many2one("library.card", "Card No", required=True)
     state = fields.Selection([('draft', 'Draft'), ('issue', 'Issued'),
@@ -338,12 +302,6 @@ class LibraryBookIssue(models.Model):
     @api.onchange('card_id')
     def onchange_card_issue(self):
         ''' This method automatically fill up values on card.
-            @param self : Object Pointer
-            @param cr : Database Cursor
-            @param uid : Current Logged in User
-            @param ids : Current Records
-            @param card : applied change on this field
-            @param context : standard Dictionary
             @return : Dictionary having identifier of the record as key
                       and the user info as value
         '''
@@ -367,8 +325,8 @@ class LibraryBookIssue(models.Model):
                                   ('state', 'not in', ['draft', 'cancel',
                                                        'return', 'paid'])])
         if book_issue:
-            raise ValidationError(_('''You cannot issue same book on
-                                    same card more than once at same time!'''))
+            raise ValidationError(_('''You cannot issue same book on \
+same card more than once at same time!'''))
 
     @api.model
     def create(self, vals):
@@ -392,7 +350,6 @@ class LibraryBookIssue(models.Model):
                          })
         return super(LibraryBookIssue, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         '''Override write method'''
         # update the details of user type student
@@ -414,47 +371,26 @@ class LibraryBookIssue(models.Model):
                          })
         return super(LibraryBookIssue, self).write(vals)
 
-    @api.multi
     def draft_book(self):
-        '''
-        This method for books in draft state.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True
-        '''
+        '''This method for books in draft state.'''
         self.state = 'draft'
 
-    @api.multi
     def issue_book(self):
-        '''
-        This method used for issue a books.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True
-        '''
+        '''This method used for issue a books.'''
 
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt,
-                                     DEFAULT_SERVER_DATE_FORMAT)
-        if (self.card_id.end_date < new_date and
-                self.card_id.end_date > new_date):
-                raise ValidationError(_('''The Membership of library
-                card is over!'''))
-#        if self.issue_code == 'New':
+        curr_dt = fields.Date.today()
+        if (self.card_id.end_date < curr_dt and
+                self.card_id.end_date > curr_dt):
+            raise ValidationError(_('''The Membership of library \
+card is over!'''))
         code_issue = self.env['ir.sequence'
                               ].next_by_code('library.book.issue'
                                              ) or _('New')
         for rec in self:
             if (rec.name and rec.name.availability == 'notavailable' and
                     not rec.name.is_ebook):
-                    raise ValidationError(_('''The book you have selected is
-                    not available now. Please try after sometime!'''))
+                raise ValidationError(_('''The book you have selected is \
+not available now. Please try after sometime!'''))
             if rec.student_id:
                 issue_str = ''
                 book_fines = rec.search([('card_id', '=', rec.card_id.id),
@@ -478,35 +414,16 @@ class LibraryBookIssue(models.Model):
                                })
             return True
 
-    @api.multi
     def reissue_book(self):
-        '''
-        This method used for reissue a books.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True
-        '''
+        '''This method used for reissue a books.'''
         self.write({'state': 'reissue',
                     'date_issue': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT
                                                 )})
 
-    @api.multi
     def return_book(self):
-        '''
-        This method used for return a books.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True
-        '''
+        '''This method used for return a books.'''
         self.state = 'return'
 
-    @api.multi
     def lost_book(self):
         stock_scrap_obj = self.env['stock.scrap']
         for rec in self:
@@ -526,44 +443,27 @@ class LibraryBookIssue(models.Model):
             rec.lost_penalty = self.name.fine_lost
         return True
 
-    @api.multi
     def cancel_book(self):
-        '''
-        This method used for cancel book issue.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : True
-        '''
+        '''This method used for cancel book issue.'''
         self.state = 'cancel'
 
-    @api.multi
     def user_fine(self):
         '''
         This method used when penalty on book either late return or book lost
         and generate invoice of fine.
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids : Current Records
-        @param context : standard Dictionary
-        @return : new form of account.invoice
         '''
-#
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for record in self:
             if record.user == 'Student':
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
-                    raise UserError(_('Error!'
-                                    'The Student must have a Home address!'))
+                    raise UserError(_('Error! \
+The Student must have a Home address!'))
             else:
                 usr = record.teacher_id.employee_id.user_id.partner_id.id
                 if not record.teacher_id.employee_id.address_home_id:
-                    raise UserError(_('Error ! Teacher must have a Home'
-                                      'address.'))
+                    raise UserError(_('Error ! Teacher must have a Home \
+address.'))
             vals_invoice = {'type': 'out_invoice',
                             'partner_id': usr,
                             'book_issue': record.id,
@@ -575,44 +475,42 @@ class LibraryBookIssue(models.Model):
                 lost_pen = record.lost_penalty
                 invoice_line2 = {'name': 'Book Lost Fine',
                                  'price_unit': lost_pen,
-                                 'invoice_id': new_invoice_id.id,
+                                 'move_id': new_invoice_id.id,
                                  'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line2))
             if record.penalty:
                 pen = record.penalty
                 invoice_line1 = {'name': 'Late Return Penalty',
                                  'price_unit': pen,
-                                 'invoice_id': new_invoice_id.id,
+                                 'move_id': new_invoice_id.id,
                                  'account_id': acc_id}
                 invoice_line_ids.append((0, 0, invoice_line1))
             new_invoice_id.write({'invoice_line_ids': invoice_line_ids})
         self.state = 'fine'
-        view_id = self.env.ref('account.invoice_form')
+        view_id = self.env.ref('account.view_move_form')
         return {'name': _("New Invoice"),
                 'view_mode': 'form',
                 'view_id': view_id.ids,
-                'view_type': 'form',
-                'res_model': 'account.invoice',
+                'res_model': 'account.move',
                 'type': 'ir.actions.act_window',
                 'nodestroy': True,
                 'res_id': new_invoice_id.id,
                 'target': 'current',
                 'context': {'default_type': 'out_invoice'}}
 
-    @api.multi
     def subscription_pay(self):
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for record in self:
             if record.user == 'Student':
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
-                    raise UserError(_('Error !'
-                                    'The Student must have a Home address.'))
+                    raise UserError(_('Error ! \
+The Student must have a Home address.'))
             else:
                 usr = record.teacher_id.employee_id.user_id.partner_id.id
                 if not record.teacher_id.employee_id.address_home_id:
-                    raise UserError(_('Error ! Teacher must have a Home'
-                                      'address!.'))
+                    raise UserError(_('Error ! Teacher must have a Home \
+address!.'))
             vals_invoice = {'type': 'out_invoice',
                             'partner_id': usr,
                             'book_issue': record.id,
@@ -629,38 +527,36 @@ class LibraryBookIssue(models.Model):
                 invoice_line_ids.append((0, 0, invoice_line3))
             new_invoice_id.write({'invoice_line_ids': invoice_line_ids})
         self.state = 'pending'
-        view_id = self.env.ref('account.invoice_form')
+        view_id = self.env.ref('account.view_move_form')
         return {'name': _("New Invoice"),
                 'view_mode': 'form',
                 'view_id': view_id.ids,
-                'view_type': 'form',
-                'res_model': 'account.invoice',
+                'res_model': 'account.move',
                 'type': 'ir.actions.act_window',
                 'nodestroy': True,
                 'res_id': new_invoice_id.id,
                 'target': 'current',
                 'context': {'default_type': 'out_invoice'}}
 
-    @api.multi
     def view_invoice(self):
         '''this method is use for the view invoice of penalty'''
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for rec in self:
             invoices = invoice_obj.search([('book_issue', '=', rec.id)])
-            action = self.env.ref('account.action_invoice_tree1').read()[0]
+            action = self.env.ref(
+                'account.action_move_out_invoice_type').read()[0]
             if len(invoices) > 1:
                 action['domain'] = [('id', 'in', invoices.ids)]
             elif len(invoices) == 1:
-                action['views'] = [(self.env.ref('account.invoice_form').id,
+                action['views'] = [(self.env.ref('account.view_move_form').id,
                                     'form')]
                 action['res_id'] = invoices.ids[0]
             else:
                 action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    @api.multi
     def _compute_invoices(self):
-        inv_obj = self.env['account.invoice']
+        inv_obj = self.env['account.move']
         for rec in self:
             count_invoice = inv_obj.search_count([('book_issue', '=', rec.id)
                                                   ])
@@ -668,9 +564,11 @@ class LibraryBookIssue(models.Model):
 
 
 class LibraryBookRequest(models.Model):
-    '''Request for Book'''
+    '''Request for Book.'''
+
     _name = "library.book.request"
     _rec_name = 'req_id'
+    _description = 'Book Request Information'
 
     @api.depends('type')
     def _compute_bname(self):
@@ -687,7 +585,7 @@ class LibraryBookRequest(models.Model):
     type = fields.Selection([('existing', 'HardCopy'), ('ebook', 'E Book')],
                             'Book Type')
     name = fields.Many2one('product.product', 'Book Name')
-    new_book = fields.Char('Book Name')
+    new_book = fields.Char('New Book Name')
     bk_nm = fields.Char('Name', compute="_compute_bname", store=True)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
@@ -706,8 +604,8 @@ class LibraryBookRequest(models.Model):
                                     ('id', 'not in', self.ids),
                                     ('type', '=', 'existing')])
         if book_request:
-            raise ValidationError(_('''You cannot request same book on same
-                                    card number more than once at same time!'''
+            raise ValidationError(_('''You cannot request same book on same \
+card number more than once at same time!'''
                                     ))
 
     @api.model
@@ -718,22 +616,18 @@ class LibraryBookRequest(models.Model):
                                                    ) or 'New')})
         return res
 
-    @api.multi
     def draft_book_request(self):
         self.state = 'draft'
 
-    @api.multi
     def confirm_book_request(self):
         '''Method to confirm book request'''
         book_issue_obj = self.env['library.book.issue']
-        curr_dt = datetime.now()
-        new_date = datetime.strftime(curr_dt,
-                                     DEFAULT_SERVER_DATETIME_FORMAT)
+        curr_dt = fields.Date.today()
         vals = {}
-        if (new_date >= self.card_id.start_date and
-                new_date <= self.card_id.end_date):
-                raise ValidationError(_('''The Membership of library card is
-                over!'''))
+        if (curr_dt <= self.card_id.start_date and
+                curr_dt >= self.card_id.end_date):
+            raise ValidationError(_('''The Membership of library card is \
+over!'''))
         if self.type == 'existing':
             vals.update({'card_id': self.card_id.id,
                          'name': self.name.id})
@@ -761,21 +655,18 @@ class LibraryBookRequest(models.Model):
             issue_id.onchange_card_issue()
         return {'name': ('Book Issue'),
                 'view_mode': 'form',
-                'view_type': 'form',
                 'res_id': issue_id.id,
                 'res_model': 'library.book.issue',
                 'type': 'ir.actions.act_window',
                 'target': 'current'}
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state == 'confirm':
-                raise ValidationError(_('''You cannot delete a confirmed
-                record of library book request!'''))
+                raise ValidationError(_('''You cannot delete a confirmed \
+record of library book request!'''))
         return super(LibraryBookRequest, self).unlink()
 
-    @api.multi
     def cancle_book_request(self):
         self.state = 'cancel'
 
@@ -783,7 +674,6 @@ class LibraryBookRequest(models.Model):
 class StudentLibrary(models.Model):
     _inherit = 'student.student'
 
-    @api.multi
     def set_alumni(self):
         '''Override method to make library card of student active false
         when student is alumni'''

@@ -19,7 +19,9 @@ class ProductCategory(models.Model):
 
 class ProductLang(models.Model):
     '''Book language'''
+
     _name = "product.lang"
+    _description = "Book's Language"
 
     code = fields.Char('Code', required=True)
     name = fields.Char('Name', required=True, translate=True)
@@ -30,6 +32,7 @@ class ProductLang(models.Model):
 
 class ProductProduct(models.Model):
     """Book variant of product"""
+
     _inherit = "product.product"
 
     @api.model
@@ -41,14 +44,8 @@ class ProductProduct(models.Model):
         res.update({'categ_id': category.id})
         return res
 
-    @api.multi
     def _default_categ(self):
-        ''' This method put default category of product
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param context : context arguments, like language, time zone
-        '''
+        ''' This method put default category of product'''
 
         if self._context is None:
             self._context = {}
@@ -62,18 +59,8 @@ class ProductProduct(models.Model):
             res = False
         return res
 
-    @api.multi
     def _tax_incl(self):
-        ''' This method include tax in product
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param field_name : name of fields
-        @param arg : other arguments
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
-         '''
+        ''' This method include tax in product'''
         res = {}
 
         for product in self:
@@ -85,18 +72,8 @@ class ProductProduct(models.Model):
             res[product.id] = round(val + product.list_price, 2)
         return res
 
-    @api.multi
     def _get_partner_code_name(self, product, parent_id):
-        ''' This method get the partner code name
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param product : name of field
-        @param partner_id : name of field
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
-         '''
+        ''' This method get the partner code name'''
         for supinfo in product.seller_ids:
             if supinfo.name.id == parent_id:
                 return {'code': supinfo.product_code or product.default_code,
@@ -104,53 +81,17 @@ class ProductProduct(models.Model):
         res = {'code': product.default_code, 'name': product.name}
         return res
 
-    @api.multi
     def _product_code(self):
-        ''' This method get the product code
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param ids :list of IDs
-        @param name : name of field
-        @param arg : other argument
-        @param context : context arguments, like language, time zone
-        @return : Dictionary
-         '''
+        ''' This method get the product code'''
         res = {}
         parent_id = self._context.get('parent_id', None)
         for p in self:
             res[p.id] = self._get_partner_code_name(p, parent_id)['code']
         return res
 
-    @api.multi
-    def copy(self, default=None):
-        ''' This method Duplicate record
-            with given id updating it with default values
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param id : id of the record to copy
-        @param default : dictionary of field values
-               to override in the original values of the copied record
-        @param context : standard Dictionary
-        @return : id of the newly created record
-        '''
-
-        if default is None:
-            default = {}
-        default.update({'author_ids': []})
-        return super(ProductProduct, self).copy(default)
-
     @api.model
     def create(self, vals):
-        ''' This method is Create new student
-        @param self : Object Pointer
-        @param cr : Database Cursor
-        @param uid : Current Logged in User
-        @param vals : dictionary of new values to be set
-        @param context : standard Dictionary
-        @return :ID of newly created record.
-        '''
+        ''' This method is Create new student'''
 
         def _uniq(seq):
             keys = {}
@@ -266,7 +207,6 @@ class ProductProduct(models.Model):
         if self.is_ebook and self.attach_ebook:
             self.availability = 'available'
 
-    @api.multi
     def action_purchase_order(self):
         purchase_line_obj = self.env['purchase.order.line']
         purchase = purchase_line_obj.search([('product_id', '=', self.id)])
@@ -284,7 +224,6 @@ class ProductProduct(models.Model):
             result['res_id'] = purchase.order_id.id
         return result
 
-    @api.multi
     def action_book_req(self):
         '''Method to request book'''
         for rec in self:
@@ -306,6 +245,8 @@ class ProductProduct(models.Model):
 
 
 class BookAttachment(models.Model):
+    """Defining Book Attachment."""
+
     _name = "book.attachment"
     _description = "Stores attachments of the book"
 
@@ -325,7 +266,9 @@ class LibraryAuthor(models.Model):
 
 class BookEditor(models.Model):
     '''Book Editor Information'''
+
     _name = "book.editor"
+    _description = 'Information of Editor of the Book'
 
     image = fields.Binary("Image")
     name = fields.Char('Name', required=True, index=True)
