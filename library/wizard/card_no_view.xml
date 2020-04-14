@@ -27,10 +27,10 @@
          <act_window id="card_number_ok"
             name="Card Number"
             res_model="card.number"
-            src_model="library.book.issue"
+            binding_model="library.book.issue"
             view_mode="form"
             target="new"
-            view_type="form"
+            binding_views="form"
             groups="library.group_librarian"/>
 
 </odoo>
