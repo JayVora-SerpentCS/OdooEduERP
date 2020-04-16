@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
     <!-- Inherited Form View Of Student Information -->
@@ -11,8 +10,8 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//page[1]" position="after">
-                    <page string="Events">
-                        <field name="event_ids" readonly="1" nolabel= '1'/>
+                    <page name="events" string="Events">
+                        <field name="event_ids" nolabel="1" readonly="1" />
                     </page>
                 </xpath>
             </data>
@@ -24,12 +23,12 @@
     <record id="student_standard_form_view" model="ir.ui.view">
         <field name="name">student.student.form</field>
         <field name="model">student.student</field>
-        <field name="inherit_id" ref="school.view_student_student_form_1"/>
+        <field name="inherit_id" ref="school.view_student_student_form_1" />
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//page[1]" position="after">
-                    <page string="Events">
-                        <field name="event_ids" readonly="1" nolabel= '1' />
+                    <page name="events" string="Events">
+                        <field name="event_ids" nolabel="1" readonly="1" />
                     </page>
                 </xpath>
             </data>
@@ -42,7 +41,7 @@
         <field name="name">participant.form.2</field>
         <field name="model">school.event.participant</field>
         <field name="arch" type="xml">
-            <form string="Event Participant Information" create="false">
+            <form create="false" string="Event Participant Information">
                 <sheet>
                     <separator string="Event Participant" />
                     <group col="4" colspan="4">
@@ -50,8 +49,8 @@
                         <field name="name" />
                         <field name="event_id" />
                         <field name="win_parameter_id" />
-                        <field name="score"/>
-                        <field name="rank"/>
+                        <field name="score" />
+                        <field name="rank" />
                     </group>
                 </sheet>
             </form>
@@ -64,13 +63,13 @@
         <field name="name">participant.tree.2</field>
         <field name="model">school.event.participant</field>
         <field name="arch" type="xml">
-            <tree string="Event Participant Information" create="false">
+            <tree create="false" string="Event Participant Information">
                 <field name="stu_pid" />
                 <field name="name" />
                 <field name="event_id" />
                 <field name="win_parameter_id" />
                 <field name="score" />
-                <field name="rank"/>
+                <field name="rank" />
             </tree>
         </field>
     </record>
@@ -83,18 +82,16 @@
         <field name="arch" type="xml">
             <search string="Search">
                 <group col="10" colspan="4">
-                    <field name="name"/>
-                    <field name="event_id"/>
-                    <field name="score"/>
-                    <field name="rank"/>
+                    <field name="name" />
+                    <field name="event_id" />
+                    <field name="score" />
+                    <field name="rank" />
                 </group>
                 <newline />
-                <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter icon="terp-personal" string="Name" 
-                        help="By Name" context="{'group_by':'name'}" />
+                <group col="10" colspan="12" expand="0" string="Group By">
+                    <filter context="{'group_by':'name'}" help="By Name" icon="terp-personal" name="name" string="Name" />
                     <separator orientation="vertical" />
-                    <filter icon="terp-stock_symbol-selection" 
-                        string="Event" help="By Event Name" context="{'group_by':'event_id'}" />
+                    <filter context="{'group_by':'event_id'}" help="By Event Name" icon="terp-stock_symbol-selection" name="event" string="Event" />
                 </group>
             </search>
         </field>
@@ -115,7 +112,7 @@
             </form>
         </field>
     </record>
-
+    
     <!-- Tree View Of Event parameter -->
 
     <record id="parameter_event_tree_view" model="ir.ui.view">
@@ -148,37 +145,34 @@
         <field name="arch" type="xml">
             <form string="Event Information">
                 <header>
-                    <button name="event_open" type="object"
-                        string="Open" class="fa fa-folder-open-o" states="draft" groups="school.group_school_administration,school.group_school_teacher" />
-                    <button name="event_draft" class="fa fa-file-text" icon="terp-gtk-go-back-ltr" type="object"
-                        string="Draft" states="cancel" groups="school.group_school_administration,school.group_school_teacher" />
-                    <button name="event_close" type="object" class="fa fa-ban" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
+                    <button class="fa fa-folder-open-o" groups="school.group_school_administration,school.group_school_teacher" name="event_open" states="draft" string="Open" type="object" />
+                    <button class="fa fa-file-text" groups="school.group_school_administration,school.group_school_teacher" icon="terp-gtk-go-back-ltr" name="event_draft" states="cancel" string="Draft" type="object" />
+                    <button class="fa fa-ban" groups="school.group_school_administration,school.group_school_teacher" name="event_close" states="open" string="Close" type="object" />
                     <field name="state" nolabel="1" widget="statusbar" />
                 </header>
                 <sheet>
                     <separator string="Event Information" />
-                    <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                        <field name="name" placeholder="Enter Event Name" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
-                        <field name="code" string="Organiser school" placeholder="Select School" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                    <group attrs="{'readonly':[('state','!=','draft')]}" col="4" colspan="4">
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="name" placeholder="Enter Event Name" required="1" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="code" options="{&quot;no_create&quot;: True}" placeholder="Select School" string="Organiser school" />
                    </group>
-                    <group colspan="4" col="4">
-                        <field name="start_reg_date" placeholder="Enter Start Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
-                        <field name="last_reg_date" placeholder="Enter Last Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
-                        <field name="start_date" placeholder="Start Date Of Event" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
-                        <field name="end_date" placeholder="End Date Of Event" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
-                        <field name="contact_per_id" placeholder="Select Organiser Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" />
-                        <field name="supervisor_id" placeholder="Select Supervisor Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" />
-                        <field name="maximum_participants" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        <field name="parameter_id" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        <field name="is_holiday" attrs="{'readonly':[('state','not in','draft')]}"/>
+                    <group col="4" colspan="4">
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="start_reg_date" placeholder="Enter Start Date Of Registration" required="1" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="last_reg_date" placeholder="Enter Last Date Of Registration" required="1" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="start_date" placeholder="Start Date Of Event" required="1" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="end_date" placeholder="End Date Of Event" required="1" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="contact_per_id" options="{&quot;no_create&quot;: True}" placeholder="Select Organiser Name" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="supervisor_id" options="{&quot;no_create&quot;: True}" placeholder="Select Supervisor Name" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="maximum_participants" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="parameter_id" widget="selection" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="is_holiday" />
                         <field name="participants" readonly="1" />
                     </group>
                     <notebook colspan="4">
-                        <page string="Participated Classes"
-                        attrs="{'readonly':[('state','!=','draft')]}">
-                            <field name="part_standard_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                        <page attrs="{'readonly':[('state','!=','draft')]}" name="participated_classes" string="Participated Classes">
+                            <field attrs="{'readonly':[('state','not in','draft')]}" name="part_standard_ids" nolabel="1" options="{&quot;no_create&quot;: True}" />
                         </page>
-                        <page string="Participants">
+                        <page name="participants" string="Participants">
                             <field name="part_ids">
                                 <tree string="Participant Information">
                                     <field name="stu_pid" />
@@ -210,7 +204,7 @@
         <field name="name">event.tree.1</field>
         <field name="model">school.event</field>
         <field name="arch" type="xml">
-            <tree string="Event Information" colors="blue:state=='open';red:state in ('close')">
+            <tree colors="blue:state=='open';red:state in ('close')" string="Event Information">
                 <field name="name" />
                 <field name="start_date" />
                 <field name="end_date" />
@@ -228,25 +222,22 @@
         <field name="model">school.event</field>
         <field name="arch" type="xml">
             <search string="Event Search">
-                <field name="name"/>
-                <field name="contact_per_id"/>
-                <field name="state"/>
-                <field name="start_date"/>
-                <field name="supervisor_id"/>
+                <field name="name" />
+                <field name="contact_per_id" />
+                <field name="state" />
+                <field name="start_date" />
+                <field name="supervisor_id" />
                 <group string="Filter">
-                    <filter string="Open" domain="[('state','=','open')]"/>
-                    <filter string="Close" domain="[('state','=','close')]"/>
-                    <filter string="Cancel" domain="[('state','=','cancel')]"/>
+                    <filter domain="[('state','=','open')]" name="open" string="Open" />
+                    <filter domain="[('state','=','close')]" name="close" string="Close" />
+                    <filter domain="[('state','=','cancel')]" name="cancel" string="Cancel" />
                 </group>
                 <group expand="1" string="Group By">
-                    <filter string="This Month" icon="terp-go-month" name="this_month"
-                        domain="[('start_date','&lt;=',(context_today()+relativedelta
-                          (day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                        help="Events in current month" />
-                    <filter string="Contact Person" context="{'group_by':'contact_per_id'}"/>
-                    <filter string="Supervisor" context="{'group_by':'supervisor_id'}"/>
-                    <filter string="Start Date" context="{'group_by':'start_date'}"/>
-                    <filter string="State" context="{'group_by':'state'}" />
+                    <filter domain="[('start_date','&lt;=',(context_today()+relativedelta                           (day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]" help="Events in current month" icon="terp-go-month" name="this_month" string="This Month" />
+                    <filter context="{'group_by':'contact_per_id'}" name="contact_person" string="Contact Person" />
+                    <filter context="{'group_by':'supervisor_id'}" name="supervisor" string="Supervisor" />
+                    <filter context="{'group_by':'start_date'}" name="start_date" string="Start Date" />
+                    <filter context="{'group_by':'state'}" name="state" string="State" />
                 </group>
             </search>
         </field>
@@ -259,31 +250,32 @@
         <field name="model">school.event</field>
         <field name="arch" type="xml">
             <calendar color="name" date_start="start_date" string="Events">
-                <field name="name"/>
-                <field name="start_date"/>
-                <field name="end_date"/>
+                <field name="name" />
+                <field name="start_date" />
+                <field name="end_date" />
             </calendar>
         </field>
     </record>
 
-    <!-- KanBan View Of DashBoard Event -->
+    
+    <!-- Kanban View Of Event Information -->
 
     <record id="student_event_kanban_view" model="ir.ui.view">
-        <field name="name">STUDENT EVENT KANBAN</field>
+        <field name="name">student.event.kanban.view</field>
         <field name="model">school.event</field>
         <field name="arch" type="xml">
             <kanban default_group_by="start_date">
-                <field name="name"/>
-                <field name="start_date"/>
-                <field name="color"/>
-                <field name="contact_per_id"/>
+                <field name="name" />
+                <field name="start_date" />
+                <field name="color" />
+                <field name="contact_per_id" />
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <ul class="oe_dropdown_menu">
                                     <li>
-                                        <a type="edit" >Edit...</a>
+                                        <a type="edit">Edit...</a>
                                     </li>
                                     <li>
                                         <a type="delete">Delete</a>
@@ -296,7 +288,7 @@
                             <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                 <table class="oe_kanban_table">
                                     <tr>
-                                        <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
+                                        <td align="left" class="oe_kanban_title1" style="padding-left:10px;" valign="middle">
                                             <h4>
                                                 <a type="open">
                                                     <field name="start_date" />
@@ -309,15 +301,15 @@
                                 <br />
                             </div>
                             <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
-                                <table class="oe_kanban_table" >
+                                <table class="oe_kanban_table">
                                     <tr width="300">
-                                        <td valign="top" align="left" style="padding-left:10px;">
+                                        <td align="left" style="padding-left:10px;" valign="top">
                                             <table>
                                                 <tr>
                                                     <td>Name :</td>
                                                     <td style="padding-left:10px;">
                                                         <b>
-                                                            <field name="name"/>
+                                                            <field name="name" />
                                                         </b>
                                                     </td>
                                                 </tr>
@@ -325,7 +317,7 @@
                                                     <td>Start Date : </td>
                                                     <td style="padding-left:10px;">
                                                         <b>
-                                                            <field name="start_date"/>
+                                                            <field name="start_date" />
                                                         </b>
                                                     </td>
                                                 </tr>
@@ -333,7 +325,7 @@
                                                     <td>Contact Faculty : </td>
                                                     <td style="padding-left:10px;">
                                                         <b>
-                                                            <field name="contact_per_id"/>
+                                                            <field name="contact_per_id" />
                                                         </b>
                                                     </td>
                                                 </tr>
@@ -345,10 +337,11 @@
                             </div>
                             <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                 <div class="oe_kanban_left" style="padding-left:10px;">
-                                    <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
-                                    <a string="Change Color" icon="color-picker" type="color" name="color" />
+                                    <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration" aria-label="edit" title="edit"/>
+                                    
+                                    <a role="button" string="Change Color" icon="color-picker" type="color" name="color"/>
                                 </div>
-                                <br class="oe_kanban_clear"/>
+                                <br class="oe_kanban_clear" />
                             </div>
                         </div>
                     </t>
@@ -382,18 +375,16 @@
         <field name="arch" type="xml">
             <form string="Event Registration">
                 <header>
-                    <button name="regi_confirm" class="btn btn-sm btn-default fa fa-check" string="Confirm" 
-                            states="draft" type='object' groups="school.group_school_administration,school.group_school_teacher,school.group_school_student" />
-                    <button name="regi_cancel" string="Cancel" class="btn btn-sm btn-default fa fa-ban" 
-                            states="draft,confirm" type='object' groups="school.group_school_administration,school.group_school_teacher,school.group_school_student" />
-                    <field name="state" widget="statusbar" nolabel="1" />
+                    <button class="btn btn-sm btn-default fa fa-check" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student" name="regi_confirm" states="draft" string="Confirm" type="object" />
+                    <button class="btn btn-sm btn-default fa fa-ban" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student" name="regi_cancel" states="draft,confirm" string="Cancel" type="object" />
+                    <field name="state" nolabel="1" widget="statusbar" />
                 </header>
                 <sheet>
                     <separator string="Event Registration" />
-                    <group colspan="4" col="4">
-                        <field name="part_name_id" placeholder="Select Participant Name" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}" widget="selection" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="student_standard_id" invisible="1"/>
-                        <field name="name" placeholder="Select Event Name" widget="selection" attrs="{'readonly':[('state','!=','draft')]}" domain="[('part_standard_ids','=',student_standard_id)]"/>
+                    <group col="4" colspan="4">
+                        <field attrs="{'readonly':[('state','!=','draft')]}" domain="[('state','=','done')]" name="part_name_id" options="{&quot;no_create&quot;: True}" placeholder="Select Participant Name" widget="selection" />
+                        <field invisible="1" name="student_standard_id" />
+                        <field attrs="{'readonly':[('state','!=','draft')]}" domain="[('part_standard_ids','=',student_standard_id)]" name="name" placeholder="Select Event Name" widget="selection" />
                         <field name="reg_date" />
                     </group>
                 </sheet>
@@ -401,7 +392,7 @@
         </field>
     </record>
 
-    <!-- Tree View Of Event Registration -->
+    <!--Tree View Of School Event Registration -->
 
     <record id="school_event_registration_tree_view" model="ir.ui.view">
         <field name="name">event.registration.tree</field>
@@ -416,32 +407,30 @@
         </field>
     </record>
 
-    <!-- Search View Of Event Registration -->
+    <!--Search View Of School Event Registration -->
 
     <record id="school_event_registration_search_view" model="ir.ui.view">
         <field name="name">event.registration.search</field>
         <field name="model">school.event.registration</field>
         <field name="arch" type="xml">
-            <search string ="Search Registrations">
-                <group string="Filter" col="10" colspan="4">
-                    <filter name="draft" string="Draft" domain="[('state','=','draft')]" icon="terp-camera_test" />
-                    <filter name="confirm" string="Confirm" domain="[('state','=','confirm')]" icon="gtk-close" />
-                    <filter name="cancle" string="Cancel" domain="[('state','=','cancel')]" icon="gtk-cancel" />
-                    <field name="name"/>
+            <search string="Search Registrations">
+                <group col="10" colspan="4" string="Filter">
+                    <filter domain="[('state','=','draft')]" icon="terp-camera_test" name="draft" string="Draft" />
+                    <filter domain="[('state','=','confirm')]" icon="gtk-close" name="confirm" string="Confirm" />
+                    <filter domain="[('state','=','cancel')]" icon="gtk-cancel" name="cancle" string="Cancel" />
+                    <field name="name" />
                     <separator orientation="vertical" />
-                    <field name="part_name_id"/>
+                    <field name="part_name_id" />
                 </group>
                 <newline />
-                <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter string="Today" icon="terp-go-month" name="today"
-                         domain="[('reg_date','=',context_today().strftime('%%Y-%%m-%%d'))]"
-                        help="Event Registration in today" />
+                <group col="10" colspan="12" expand="0" string="Group By">
+                    <filter domain="[('reg_date','=',context_today().strftime('%%Y-%%m-%%d'))]" help="Event Registration in today" icon="terp-go-month" name="today" string="Today" />
                     <separator orientation="vertical" />
-                    <filter icon="terp-personal" string="Event Name" help="By Event name" context="{'group_by':'name'}" />
+                    <filter context="{'group_by':'name'}" help="By Event name" icon="terp-personal" name="event_name" string="Event Name" />
                     <separator orientation="vertical" />
-                    <filter icon="terp-personal" string="Participater" help="By Participater" context="{'group_by':'part_name_id'}" />
+                    <filter context="{'group_by':'part_name_id'}" help="By Participater" icon="terp-personal" name="participater" string="Participater" />
                     <separator orientation="vertical" />
-                    <filter icon="terp-stock_symbol-selection" string="Registration Date" help="By Start Date" context="{'group_by':'reg_date'}" />
+                    <filter context="{'group_by':'reg_date'}" help="By Start Date" icon="terp-stock_symbol-selection" name="registration_date" string="Registration Date" />
                 </group>
             </search>
         </field>
@@ -456,7 +445,8 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- Action Of Form & Tree Views Of Event Participant -->
+    
+    <!-- Action Of Form & Tree Views Of Event Participants -->
 
     <record id="action_school_event_Participant_tree" model="ir.actions.act_window">
         <field name="name">Event Participant</field>
@@ -466,7 +456,7 @@
     </record>
 
     <!-- Action Of Form & Tree Views Of Event Registration -->
-
+  
     <record id="action_school_event_registration_form" model="ir.actions.act_window">
         <field name="name">Event Registration</field>
         <field name="res_model">school.event.registration</field>
@@ -479,20 +469,17 @@
 
     <menuitem id="menu_event_form_1" name="Events" parent="school.menu_ems" sequence="4" />
 
-    <menuitem id="menu_event_sub_form_1" name="Event Informations" parent="menu_event_form_1"
-              action="action_school_event_form_1" sequence="41"/>
+    <menuitem action="action_school_event_form_1" id="menu_event_sub_form_1" name="Event Informations" parent="menu_event_form_1" sequence="41" />
 
-    <menuitem id="menu_event_registration_form" name="Event Registration" parent="menu_event_form_1"
-              action="action_school_event_registration_form" sequence="42"/>
+    <menuitem action="action_school_event_registration_form" id="menu_event_registration_form" name="Event Registration" parent="menu_event_form_1" sequence="42" />
 
-    <menuitem id="menu_event_Participation" name="Event Participation" parent="menu_event_form_1"
-              action="action_school_event_Participant_tree" sequence="43"/>
+    <menuitem action="action_school_event_Participant_tree" id="menu_event_Participation" name="Event Participation" parent="menu_event_form_1" sequence="43" />
 
+    
     <!-- MenuItem Of Event In Configurations -->
 
-    <menuitem id="menu_event_parameter" name="Event" parent="school.menu_configuration"/>
+    <menuitem id="menu_event_parameter" name="Event" parent="school.menu_configuration" />
 
-    <menuitem id="menu_event_sub_parameter" name="Event Parameter" parent="menu_event_parameter"
-              action="action_event_parameter"/>
+    <menuitem action="action_event_parameter" id="menu_event_sub_parameter" name="Event Parameter" parent="menu_event_parameter" />
 
 </odoo>

@@ -127,20 +127,20 @@
         <field name="name">transport.participant.search</field>
         <field name="model">transport.participant</field>
         <field name="arch" type="xml">
-            <search string="Search">
+            <search>
               <field name="name"/>
               <field name="transport_id"/>
-              <field name="point_id"/>
+               <field name="point_id"/>
               <group string="Filter">
                     <filter string="Running" name="state_running" domain="[('state','=','running')]"/>
-                    <filter string="Over" domain="[('state','=','over')]"/>
+                    <filter string="Over" name="state_over" domain="[('state','=','over')]"/>
                </group>
                <newline/>
                <group expand="1" string="Group By">
-                   <filter string="Name" context="{'group_by':'name'}"/>
-                   <filter string="Root" context="{'group_by':'transport_id'}"/>
-                   <filter string="Root Point" context="{'group_by':'point_id'}"/>
-                   <filter string="State" context="{'group_by':'state'}"/>
+                   <filter string="Name"  name="name_name" context="{'group_by':'name'}"/>
+                   <filter string="Root"  name="root" context="{'group_by':'transport_id'}"/>
+                   <filter string="Root Point" name="root_point" context="{'group_by':'point_id'}"/>
+                   <filter string="State" name="state" context="{'group_by':'state'}"/>
                </group>
             </search>
         </field>
@@ -185,7 +185,7 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter icon="terp-stock_symbol-selection" string="Amount" help="By Ammount" context="{'group_by':'amount'}"/>
+                    <filter icon="terp-stock_symbol-selection" name="amount" string="Amount" help="By Ammount" context="{'group_by':'amount'}"/>
                 </group>
             </search>
         </field>
@@ -279,8 +279,8 @@
         <field name="arch" type="xml">
             <search string="Search">
                 <group string="Filter" col="10" colspan="4">
-                    <filter icon="terp-personal" string="Open" help="Open" domain="[('state','=','open')]"/>
-                    <filter icon="gtk-close" string="Close" help="Close" domain="[('state','=','close')]"/>
+                    <filter name="open" icon="terp-personal" string="Open" help="Open" domain="[('state','=','open')]"/>
+                    <filter name="close" icon="gtk-close" string="Close" help="Close" domain="[('state','=','close')]"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="contact_per_id"/>
@@ -291,11 +291,11 @@
                             domain="[('start_date','&lt;=',(context_today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]" 
                             help="Events in current month"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" string="Root Name" help="By Root Name" context="{'group_by':'name'}"/>
+                    <filter name="root_name" icon="terp-stock_symbol-selection" string="Root Name" help="By Root Name" context="{'group_by':'name'}"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-personal" string="Contact Person" help="By Contact Person" context="{'group_by':'contact_per_id'}"/>
+                    <filter name="contact" icon="terp-personal" string="Contact Person" help="By Contact Person" context="{'group_by':'contact_per_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_symbol-selection" string="State" help="By State" context="{'group_by':'state'}"/>
+                    <filter name="state" icon="terp-stock_symbol-selection" string="State" help="By State" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
@@ -424,7 +424,7 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter icon="terp-stock_symbol-selection" string="Driver Name" help="By Driver Name" context="{'group_by':'driver_id'}"/>
+                    <filter name="driver" icon="terp-stock_symbol-selection" string="Driver Name" help="By Driver Name" context="{'group_by':'driver_id'}"/>
                 </group>
             </search>
         </field>
@@ -448,6 +448,8 @@
         <field name="res_model">transport.vehicle</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_transport_vehicle_search"/>
+
     </record>
 
     <!-- Actions Of Form & Tree Views Of Transport Registration -->
@@ -467,6 +469,8 @@
         <field name="context">{'search_default_state_running':1}</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_transport_participant_search"/>
+
     </record>
 
     <!-- Actions Of Form & Tree Views Of Transport Information -->
@@ -475,6 +479,8 @@
         <field name="res_model">student.transport</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_student_transport_search"/>
+
     </record>
 
     <!-- Actions Of Form & Tree Views Of Driver Information -->
@@ -493,6 +499,8 @@
         <field name="res_model">transport.point</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_transport_point_search"/>
+
     </record>
 
     <!-- Actions Of Form & Tree Views Of Vehicle Driver Information -->

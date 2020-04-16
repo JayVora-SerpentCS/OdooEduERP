@@ -89,6 +89,7 @@ class SchoolEvaluation(models.Model):
                 raise ValidationError(_('Please Get the Questions First!\
                 \nTo Get the Questions please click on "Get Questions" \
 Button!'))
+
         self.state = 'start'
 
     @api.model
