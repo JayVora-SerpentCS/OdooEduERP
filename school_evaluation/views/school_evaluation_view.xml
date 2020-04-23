@@ -173,7 +173,7 @@
                                     <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
                                     <field name="point_id" options="{&quot;no_create&quot;: True}"/>
                                     <field name="rating"/>
-                                </tree> 
+                                </tree>
                             </field>
                             <group colspan="4">
                                 <field name="total"/>
@@ -313,52 +313,21 @@
                         <field name="desc" placeholder="Enter Description"/>
                         <field name="type"/>
                     </group>
-                    <field name="rating_line" nolabel="1"/>
+                    <field name="rating_line_ids" nolabel="1" context="{'default_res_id': active_id}">
+                        <tree>
+                            <field name="rating"/>
+                            <field name="feedback"/>
+                        </tree>
+                        <form>
+                            <field name="rating"/>
+                            <field name="feedback"/>
+                        </form>
+                    </field>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Form View Of Student Rating -->
-    <record id="view_student_rating_form" model="ir.ui.view">
-        <field name="name">student.rating.form</field>
-        <field name="model">rating.rating</field>
-        <field name="arch" type="xml">
-            <form string="Student Rating">
-                <sheet>
-                    <separator string="Student Rating" />
-                    <group col="4" colspan="2">
-                        <field name="point" placeholder="Enter Rating Point" />
-                        <field name="rating" placeholder="Enter Remarks" />
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Tree View Of Student Rating -->
-    <record id="view_student_rating_tree" model="ir.ui.view">
-        <field name="name">student.rating.tree</field>
-        <field name="model">rating.rating</field>
-        <field name="arch" type="xml">
-            <tree string="Student Rating">
-                <field name="point"/>
-                <field name="rating"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Search View Of Student Rating -->
-    <record id="view_student_rating_search" model="ir.ui.view">
-        <field name="name">student.rating.search</field>
-        <field name="model">rating.rating</field>
-        <field name="arch" type="xml">
-            <search string="Student Rating">
-                <field name="point"/>
-                <field name="rating"/>
-            </search>
-        </field>
-    </record>
 
     <!-- Actions Of Form & Tree Views Of Student Evaluation -->
     <record id="action_student_eval" model="ir.actions.act_window">
@@ -374,14 +343,6 @@
     <record id="action_student_eval_temp" model="ir.actions.act_window">
         <field name="name">Evaluation Templates</field>
         <field name="res_model">school.evaluation.template</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <!-- Actions Of Form & Tree Views Of Student Rating -->
-    <record id="action_student_rating" model="ir.actions.act_window">
-        <field name="name">Student Rating</field>
-        <field name="res_model">rating.rating</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -467,5 +428,4 @@
     <menuitem id="menu_teacher_eval" name="Teacher Evaluation" parent="menu_stu_eval" action="action_teacher_eval" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/>
     <menuitem id="menu_eval_temps" name="Evaluation Templates" parent="menu_stu_eval" action="action_student_eval_temp"
               groups="school.group_school_administration" sequence="11"/>
-    <menuitem id="menu_rating" name="Rating" parent="school.menu_configuration" action="action_student_rating"/>
 </odoo>
