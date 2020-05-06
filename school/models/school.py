@@ -297,7 +297,7 @@ class SchoolStandard(models.Model):
         if standard_search:
             raise ValidationError(_('''Division and class should be unique!'''
                                     ))
-
+  
     def unlink(self):
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:

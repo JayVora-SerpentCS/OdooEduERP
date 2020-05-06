@@ -7,6 +7,7 @@ class BatchExamResult(models.TransientModel):
     '''designed for printing batch report'''
 
     _name = "exam.batchwise.result"
+    _description = "Batch wise Exam Result"
 
     standard_id = fields.Many2one("school.standard",
                                   "Standard",
