@@ -44,12 +44,10 @@ class StudentFeesRegister(models.Model):
                                      'Fees Structure')
     standard_id = fields.Many2one('standard.standard', 'Class')
 
-    @api.multi
     def fees_register_draft(self):
         '''Changes the state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def fees_register_confirm(self):
         '''Method to confirm payslip'''
         stud_obj = self.env['student.student']
@@ -71,7 +69,7 @@ class StudentFeesRegister(models.Model):
                 # Check if payslip exist of student
                 if old_slips:
                     raise UserError(_('There is already a Payslip exist for\
-                    student: %s for same date.!') % stu.name)
+student: %s for same date.!') % stu.name)
                 else:
                     rec.number = self.env['ir.sequence'].\
                         next_by_code('student.fees.register') or _('New')
@@ -160,6 +158,7 @@ class StudentFeesStructureLine(models.Model):
 
 class StudentFeesStructure(models.Model):
     '''Fees structure'''
+
     _name = 'student.fees.structure'
     _description = 'Student Fees Structure'
 
@@ -237,7 +236,6 @@ class StudentPayslip(models.Model):
             self.division_id = self.student_id.standard_id.division_id.id
             self.medium_id = self.student_id.medium_id
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
@@ -264,7 +262,6 @@ class StudentPayslip(models.Model):
                          'medium_id': student.medium_id.id})
         return super(StudentPayslip, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('student_id'):
             student = self.env['student.student'].browse(vals.get('student_id')
@@ -274,7 +271,6 @@ class StudentPayslip(models.Model):
                          'medium_id': student.medium_id.id})
         return super(StudentPayslip, self).write(vals)
 
-    @api.multi
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -284,17 +280,14 @@ class StudentPayslip(models.Model):
                         'line_ids': []})
         return super(StudentPayslip, self).copy(default)
 
-    @api.multi
     def payslip_draft(self):
         '''Change state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def payslip_paid(self):
         '''Change state to paid'''
         self.state = 'paid'
 
-    @api.multi
     def payslip_confirm(self):
         '''Method to confirm payslip'''
         for rec in self:
@@ -325,25 +318,24 @@ class StudentPayslip(models.Model):
                        'currency_id': rec.company_id.currency_id.id or False
                        })
 
-    @api.multi
     def invoice_view(self):
         '''View number of invoice of student'''
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for rec in self:
             invoices = invoice_obj.search([('student_payslip_id', '=',
                                             rec.id)])
-            action = rec.env.ref('account.action_invoice_tree1').read()[0]
+            action = rec.env.ref(
+                'account.action_move_out_invoice_type').read()[0]
             if len(invoices) > 1:
                 action['domain'] = [('id', 'in', invoices.ids)]
             elif len(invoices) == 1:
-                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                action['views'] = [(rec.env.ref('account.view_move_form').id,
                                     'form')]
                 action['res_id'] = invoices.ids[0]
             else:
                 action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    @api.multi
     def action_move_create(self):
         cur_obj = self.env['res.currency']
         move_obj = self.env['account.move']
@@ -366,7 +358,7 @@ class StudentPayslip(models.Model):
             ctx.update({'lang': fees.student_id.lang})
             if not fees.payment_date:
                 self.write([fees.id], {'payment_date': time.strftime
-                           ('%Y-%m-%d')})
+                                       ('%Y-%m-%d')})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = fees.currency_id and fees.currency_id.id\
@@ -436,7 +428,6 @@ class StudentPayslip(models.Model):
             fees.write({'move_id': move_id})
             move_obj.post([move_id])
 
-    @api.multi
     def student_pay_fees(self):
         '''Generate invoice of student fee'''
         for rec in self:
@@ -447,8 +438,7 @@ class StudentPayslip(models.Model):
             rec.state = 'pending'
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
-                    'date_invoice': rec.date,
-                    'account_id': partner.property_account_receivable_id.id,
+                    'invoice_date': rec.date,
                     'journal_id': rec.journal_id.id,
                     'name': rec.number,
                     'student_payslip_id': rec.id,
@@ -471,12 +461,11 @@ class StudentPayslip(models.Model):
                 invoice_line.append((0, 0, invoice_line_vals))
             vals.update({'invoice_line_ids': invoice_line})
             # creates invoice
-            account_invoice_id = self.env['account.invoice'].create(vals)
-            invoice_obj = self.env.ref('account.invoice_form')
+            account_invoice_id = self.env['account.move'].create(vals)
+            invoice_obj = self.env.ref('account.view_move_form')
             return {'name': _("Pay Fees"),
                     'view_mode': 'form',
-                    'view_type': 'form',
-                    'res_model': 'account.invoice',
+                    'res_model': 'account.move',
                     'view_id': invoice_obj.id,
                     'type': 'ir.actions.act_window',
                     'nodestroy': True,
@@ -485,8 +474,9 @@ class StudentPayslip(models.Model):
                     'context': {}}
 
 
-class StudentPayslipLine(models.Model):
-    '''Function Line'''
+class StudentPayslipLineLine(models.Model):
+    '''Function Line.'''
+    
     _name = 'student.payslip.line.line'
     _description = 'Function Line'
     _order = 'sequence'
@@ -498,8 +488,8 @@ class StudentPayslipLine(models.Model):
     to_month = fields.Many2one('academic.month', 'To Month')
 
 
-class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+class AccountMove(models.Model):
+    _inherit = "account.move"
 
     student_payslip_id = fields.Many2one('student.payslip',
                                          string="Student Payslip")
@@ -508,31 +498,33 @@ class AccountInvoice(models.Model):
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    @api.multi
     def post(self):
         '''Method to change state to paid when state in invoice is paid'''
         res = super(AccountPayment, self).post()
         curr_date = datetime.now()
+        vals = {}
         for rec in self:
             for invoice in rec.invoice_ids:
-                vals = {'due_amount': invoice.residual}
-                if invoice.student_payslip_id and invoice.state == 'paid':
+                vals.update({'due_amount': invoice.amount_residual})
+                if invoice.student_payslip_id and \
+                        invoice.invoice_payment_state == 'paid':
                     # Calculate paid amount and changes state to paid
                     fees_payment = (invoice.student_payslip_id.paid_amount +
                                     rec.amount)
-                    vals = {'state': 'paid',
-                            'payment_date': curr_date,
-                            'move_id': invoice.move_id.id or False,
-                            'paid_amount': fees_payment,
-                            'due_amount': invoice.residual}
-                if invoice.student_payslip_id and invoice.state == 'open':
+                    vals.update({'state': 'paid',
+                                 'payment_date': curr_date,
+                                 'move_id': invoice.id or False,
+                                 'paid_amount': fees_payment,
+                                 'due_amount': invoice.amount_residual})
+                if invoice.student_payslip_id and \
+                        invoice.invoice_payment_state == 'not_paid':
                     # Calculate paid amount and due amount and changes state
                     # to pending
                     fees_payment = (invoice.student_payslip_id.paid_amount +
                                     rec.amount)
-                    vals = {'state': 'pending',
-                            'due_amount': invoice.residual,
-                            'paid_amount': fees_payment}
+                    vals.update({'state': 'pending',
+                                 'due_amount': invoice.amount_residual,
+                                 'paid_amount': fees_payment})
                 invoice.student_payslip_id.write(vals)
         return res
 
@@ -540,7 +532,6 @@ class AccountPayment(models.Model):
 class StudentFees(models.Model):
     _inherit = 'student.student'
 
-    @api.multi
     def set_alumni(self):
         '''Override method to raise warning when fees payment of student is
         remaining when student set to alumni state'''
