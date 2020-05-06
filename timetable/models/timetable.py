@@ -83,13 +83,13 @@ class TimeTableLine(models.Model):
                               help="Time according to timeformat of 24 hours")
     end_time = fields.Float('End Time', required=True,
                             help="Time according to timeformat of 24 hours")
-    week_day = fields.Selection([('monday', 'Monday'),
-                                 ('tuesday', 'Tuesday'),
-                                 ('wednesday', 'Wednesday'),
-                                 ('thursday', 'Thursday'),
-                                 ('friday', 'Friday'),
-                                 ('saturday', 'Saturday'),
-                                 ('sunday', 'Sunday')], "Week day",)
+    week_day = fields.Selection([('mon', 'Monday'),
+                                 ('tue', 'Tuesday'),
+                                 ('wed', 'Wednesday'),
+                                 ('thu', 'Thursday'),
+                                 ('fri', 'Friday'),
+                                 ('sat', 'Saturday'),
+                                 ('sun', 'Sunday')], "Week day")
     class_room_id = fields.Many2one('class.room', 'Room Number')
 
     @api.constrains('teacher_id', 'class_room_id')
