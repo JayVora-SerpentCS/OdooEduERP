@@ -5,12 +5,14 @@ from odoo.exceptions import ValidationError
 
 
 class TimeTable(models.Model):
+    """Defining model for time table."""
+
     _description = 'Time Table'
     _name = 'time.table'
 
     @api.depends('timetable_ids')
     def _compute_user(self):
-        '''Method to compute user'''
+        '''Method to compute user.'''
         for rec in self:
             rec.user_ids = [teacher.teacher_id.employee_id.user_id.id
                             for teacher in rec.timetable_ids
@@ -33,7 +35,7 @@ class TimeTable(models.Model):
 
     @api.constrains('timetable_ids')
     def _check_lecture(self):
-        '''Method to check same lecture is not assigned on same day'''
+        '''Method to check same lecture is not assigned on same day.'''
         if self.timetable_type == 'regular':
             domain = [('table_id', 'in', self.ids)]
             line_ids = self.env['time.table.line'].search(domain)
@@ -44,35 +46,35 @@ class TimeTable(models.Model):
                                rec.end_time == rec_check.end_time and
                                rec.teacher_id.id == rec.teacher_id.id)]
                 if len(records) > 1:
-                    raise ValidationError(_('''You cannot set lecture at same
-                                            time %s  at same day %s for teacher
-                                            %s..!''') % (rec.start_time,
+                    raise ValidationError(_('''You cannot set lecture at same \
+time %s  at same day %s for teacher \
+%s..!''') % (rec.start_time,
                                                          rec.week_day,
                                                          rec.teacher_id.name))
                 # Checks if time is greater than 24 hours than raise error
                 if rec.start_time > 24:
-                    raise ValidationError(_('''Start Time should be less than
-                                            24 hours!'''))
+                    raise ValidationError(_('''Start Time should be less than \
+24 hours!'''))
                 if rec.end_time > 24:
-                    raise ValidationError(_('''End Time should be less than
-                                            24 hours!'''))
+                    raise ValidationError(_('''End Time should be less than \
+24 hours!'''))
             return True
 
 
 class TimeTableLine(models.Model):
+    """Defining model for time table."""
+
     _description = 'Time Table Line'
     _name = 'time.table.line'
     _rec_name = 'table_id'
 
-    @api.multi
     @api.constrains('teacher_id', 'subject_id')
     def check_teacher(self):
-        '''Check if lecture is not related to teacher than raise error'''
+        '''Check if lecture is not related to teacher than raise error.'''
         if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
                 self.table_id.timetable_type == 'regular'):
-            raise ValidationError(_('''The subject %s is not assigned to
-                                    teacher %s.''') % (self.subject_id.name,
-                                                       self.teacher_id.name))
+            raise ValidationError(_('''The subject %s is not assigned to \
+teacher %s.''') % (self.subject_id.name, self.teacher_id.name))
 
     teacher_id = fields.Many2one('school.teacher', 'Faculty Name',
                                  help="Select Teacher")
@@ -94,6 +96,7 @@ class TimeTableLine(models.Model):
 
     @api.constrains('teacher_id', 'class_room_id')
     def check_teacher_room(self):
+        """Check available room for teacher."""
         timetable_rec = self.env['time.table'].search([('id', '!=',
                                                         self.table_id.id)])
         if timetable_rec:
@@ -104,13 +107,13 @@ class TimeTableLine(models.Model):
                             self.teacher_id == record.teacher_id and
                             self.week_day == record.week_day and
                             self.start_time == record.start_time):
-                            raise ValidationError(_('''There is a lecture of
-                            Lecturer at same time!'''))
+                        raise ValidationError(_('''There is a lecture of \
+Lecturer at same time!'''))
                     if (data.timetable_type == 'regular' and
                             self.table_id.timetable_type == 'regular' and
                             self.class_room_id == record.class_room_id and
                             self.start_time == record.start_time):
-                            raise ValidationError(_("The room is occupied."))
+                        raise ValidationError(_("The room is occupied."))
 
 
 class SubjectSubject(models.Model):
@@ -119,7 +122,7 @@ class SubjectSubject(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        '''Override method to get subject related to teacher'''
+        '''Override method to get subject related to teacher.'''
         teacher_id = self._context.get('teacher_id')
         if teacher_id:
             for teacher_data in self.env['school.teacher'].browse(teacher_id):

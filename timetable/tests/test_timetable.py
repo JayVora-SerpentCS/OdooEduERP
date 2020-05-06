@@ -1,6 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
+from odoo.exceptions import ValidationError, UserError
 
 
 class TestTimetable(common.TransactionCase):
@@ -35,3 +36,4 @@ class TestTimetable(common.TransactionCase):
 
     def test_timetable(self):
         self.assertIn(self.subject_id, self.teacher_id.subject_id)
+
