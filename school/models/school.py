@@ -308,7 +308,7 @@ class SchoolStandard(models.Model):
 
     @api.constrains('capacity')
     def check_seats(self):
-        """Methd to check seats."""
+        """Method to check seats."""
         if self.capacity <= 0:
             raise ValidationError(_('''Total seats should be greater than
                 0!'''))
