@@ -36,7 +36,6 @@
         <record id="action_monthly_attendance_sheet" model="ir.actions.act_window">
             <field name="name">Monthly Attendance Sheet</field>
             <field name="res_model">monthly.attendance.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_monthly_attendance_sheet" />
             <field name="target">new</field>
