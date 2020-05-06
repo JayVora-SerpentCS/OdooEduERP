@@ -27,8 +27,7 @@
     <record id="view_book_name_form" model="ir.actions.act_window">
         <field name="name">Book Name</field>
         <field name="res_model">book.name</field>
-        <field name= "src_model">library.book.issue</field>
-        <field name="view_type">form</field>
+        <field name= "binding_model_id" ref="library.model_library_book_issue" />
         <field name="target">new</field>
         <field name="view_mode">form</field>
     </record>
