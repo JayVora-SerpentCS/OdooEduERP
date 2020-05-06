@@ -4,7 +4,8 @@ from odoo import models, fields, api
 
 
 class SchoolTeacher(models.Model):
-    ''' Defining a Teacher information '''
+    '''Defining a Teacher information.'''
+
     _name = 'school.teacher'
     _description = 'Teacher Information'
 
@@ -23,8 +24,8 @@ class SchoolTeacher(models.Model):
     school_id = fields.Many2one('school.school', "Campus",
                                 related="standard_id.school_id", store=True)
     category_ids = fields.Many2many('hr.employee.category',
-                                    'employee_category_rel', 'emp_id',
-                                    'category_id', 'Tags')
+                                    'teacher_category_rel', 'emp_id',
+                                    'categ_id', 'Tags')
     department_id = fields.Many2one('hr.department', 'Department')
     is_parent = fields.Boolean('Is Parent')
     stu_parent_id = fields.Many2one('school.parent', 'Related Parent')
@@ -64,7 +65,6 @@ class SchoolTeacher(models.Model):
             self.parent_crt(teacher_id)
         return teacher_id
 
-    @api.multi
     def parent_crt(self, manager_id):
         stu_parent = []
         if manager_id.stu_parent_id:
@@ -90,7 +90,6 @@ class SchoolTeacher(models.Model):
         group_ids = [group.id for group in groups]
         user_rec.write({'groups_id': [(6, 0, group_ids)]})
 
-    @api.multi
     def write(self, vals):
         if vals.get('is_parent'):
             self.parent_crt(self)
@@ -110,6 +109,7 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('address_id')
     def onchange_address_id(self):
+        """Onchange method for address."""
         self.work_phone = False
         self.mobile_phone = False
         if self.address_id:
@@ -118,6 +118,7 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('department_id')
     def onchange_department_id(self):
+        """Onchange method for deepartment."""
         if self.department_id:
             self.parent_id = (self.department_id and
                               self.department_id.manager_id and
@@ -125,6 +126,7 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('user_id')
     def onchange_user(self):
+        """Onchange method for user."""
         if self.user_id:
             self.name = self.name or self.user_id.name
             self.work_email = self.user_id.email
@@ -132,6 +134,7 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('school_id')
     def onchange_school(self):
+        """Onchange method for school."""
         self.address_id = False
         self.mobile_phone = False
         self.work_location = False
