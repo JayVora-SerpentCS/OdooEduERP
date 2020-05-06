@@ -139,10 +139,9 @@ class HostelStudent(models.Model):
         if self.duration <= 0:
             raise ValidationError(_('Duration should be greater than 0!'))
 
-    @api.multi
     def _compute_invoices(self):
         '''Method to compute number of invoice of student'''
-        inv_obj = self.env['account.invoice']
+        inv_obj = self.env['account.move']
         for rec in self:
             rec.compute_inv = inv_obj.search_count([('hostel_student_id', '=',
                                                      rec.id)])
@@ -163,10 +162,10 @@ class HostelStudent(models.Model):
     def check_room_avaliable(self):
         '''Check Room Availability'''
         if self.room_id.availability <= 0:
-                raise ValidationError(_('''There is no availability in the
-                room!'''))
+            raise ValidationError(_('''There is no availability in the
+                raise ValidationError(_('''There is no availability in the\
+room!'''))
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.status in ['reservation', 'pending', 'paid']:
@@ -184,7 +183,7 @@ class HostelStudent(models.Model):
 
     hostel_id = fields.Char('HOSTEL ID', readonly=True,
                             default=lambda self: _('New'))
-    compute_inv = fields.Integer('Number of invoice',
+    compute_inv = fields.Integer('Number of invoice',                
                                  compute="_compute_invoices")
     student_id = fields.Many2one('student.student', 'Student')
     school_id = fields.Many2one('school.school', 'School')
@@ -213,7 +212,7 @@ class HostelStudent(models.Model):
                                ('paid', 'Done'),
                                ('discharge', 'Discharge'),
                                ('cancel', 'Cancel')],
-                              string='Status',
+                              string='Status', copy=False,
                               default='draft')
     hostel_types = fields.Char('Type')
     stud_gender = fields.Char('Gender')
@@ -224,7 +223,6 @@ class HostelStudent(models.Model):
                          'Error ! Discharge Date cannot be set'
                          'before Admission Date!')]
 
-    @api.multi
     def cancel_state(self):
         '''Method to change state to cancel'''
         for rec in self:
@@ -241,7 +239,6 @@ class HostelStudent(models.Model):
         '''Method to get gender of student'''
         self.stud_gender = self.student_id.gender
 
-    @api.multi
     def reservation_state(self):
         '''Method to change state to reservation'''
         for rec in self:
@@ -253,7 +250,7 @@ class HostelStudent(models.Model):
 
     @api.onchange('admission_date', 'duration')
     def onchnage_discharge_date(self):
-        '''to calculate discharge date based on current date and duration'''
+        '''To calculate discharge date based on current date and duration'''
         if self.admission_date:
             self.discharge_date = (self.admission_date +
                                    rd(months=self.duration))
@@ -266,10 +263,11 @@ class HostelStudent(models.Model):
         res.discharge_date = res.admission_date + rd(months=res.duration)
         return res
 
-    @api.multi
     def write(self, vals):
-        '''This method is to set Discharge Date according to changes in
-        admission date or duration fields.'''
+        '''This method is to set Discharge Date according to changes in.
+
+        admission date or duration fields.
+        '''
         addmissiondate = self.admission_date
         if vals.get('admission_date'):
             addmissiondate = datetime.strptime(vals.get('admission_date'),
@@ -288,7 +286,6 @@ class HostelStudent(models.Model):
             raise ValidationError(_('''Selected student is already registered!
             '''))
 
-    @api.multi
     def discharge_state(self):
         '''Method to change state to discharge'''
         for rec in self:
@@ -297,7 +294,6 @@ class HostelStudent(models.Model):
             # set discharge date equal to current date
             rec.acutal_discharge_date = datetime.now()
 
-    @api.multi
     def student_expire(self):
         ''' Schedular to discharge student from hostel'''
         current_date = datetime.now().strftime('%m-%d-%Y')
@@ -307,46 +303,44 @@ class HostelStudent(models.Model):
             student.discharge_state()
         return True
 
-    @api.multi
     def invoice_view(self):
         '''Method to view number of invoice of student'''
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for rec in self:
             invoices = invoice_obj.search([('hostel_student_id', '=', rec.id)])
-            action = rec.env.ref('account.action_invoice_tree1').read()[0]
+            action = rec.env.ref(
+                'account.action_move_out_invoice_type').read()[0]
             if len(invoices) > 1:
                 action['domain'] = [('id', 'in', invoices.ids)]
             elif len(invoices) == 1:
-                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                action['views'] = [(rec.env.ref('account.view_move_form').id,
                                     'form')]
                 action['res_id'] = invoices.ids[0]
             else:
                 action = {'type': 'ir.actions.act_window_close'}
         return action
 
-    @api.multi
     def pay_fees(self):
         '''Method generate invoice of hostel fees of student'''
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for rec in self:
             rec.write({'status': 'pending'})
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
-                    'account_id': partner.property_account_receivable_id.id,
+                    'type': 'out_invoice',
                     'hostel_student_id': rec.id,
                     'hostel_ref': rec.hostel_id}
             account_inv_id = invoice_obj.create(vals)
             acc_id = account_inv_id.journal_id.default_credit_account_id.id
-            account_view_id = rec.env.ref('account.invoice_form')
+            account_view_id = rec.env.ref('account.view_move_form')
             line_vals = {'name': rec.hostel_info_id.name,
                          'account_id': acc_id,
                          'quantity': rec.duration,
                          'price_unit': rec.room_id.rent_amount}
             account_inv_id.write({'invoice_line_ids': [(0, 0, line_vals)]})
             return {'name': _("Pay Hostel Fees"),
-                    'view_type': 'form',
                     'view_mode': 'form',
-                    'res_model': 'account.invoice',
+                    'res_model': 'account.move',
                     'view_id': account_view_id.id,
                     'type': 'ir.actions.act_window',
                     'nodestroy': True,
@@ -354,16 +348,15 @@ class HostelStudent(models.Model):
                     'res_id': account_inv_id.id,
                     'context': {}}
 
-    @api.multi
     def print_fee_receipt(self):
         '''Method to print fee reciept'''
         return self.env.ref('school_hostel.report_hostel_fee_reciept_qweb').\
             report_action(self)
 
 
-class AccountInvoice(models.Model):
+class AccountMove(models.Model):
 
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     hostel_student_id = fields.Many2one('hostel.student',
                                         string="Hostel Student")
@@ -374,24 +367,25 @@ class AccountInvoice(models.Model):
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    @api.multi
     def post(self):
         res = super(AccountPayment, self).post()
         for rec in self:
             for inv in rec.invoice_ids:
                 vals = {}
-                if inv.hostel_student_id and inv.state == 'paid':
+                if inv.hostel_student_id and\
+                        inv.invoice_payment_state == 'paid':
                     fees_payment = (inv.hostel_student_id.paid_amount +
                                     rec.amount)
                     vals.update({'status': 'paid',
                                  'paid_amount': fees_payment})
                     inv.hostel_student_id.write(vals)
-                elif inv.hostel_student_id and inv.state == 'open':
+                elif inv.hostel_student_id and\
+                        inv.invoice_payment_state == 'not_paid':
                     fees_payment = (inv.hostel_student_id.paid_amount +
                                     rec.amount)
                     vals.update({'status': 'pending',
                                  'paid_amount': fees_payment,
-                                 'remaining_amount': inv.residual})
+                                 'remaining_amount': inv.amount_residual})
                 inv.hostel_student_id.write(vals)
         return res
 
@@ -399,10 +393,11 @@ class AccountPayment(models.Model):
 class Student(models.Model):
     _inherit = 'student.student'
 
-    @api.multi
     def set_alumni(self):
-        '''override method to make record of hostel student active false when
-        student is set to alumni'''
+        """Override method to make record of hostel student active false when.
+
+        student is set to alumni.
+        """
         for rec in self:
             student_hostel = self.env['hostel.student'].\
                 search([('student_id', '=', rec.id),
