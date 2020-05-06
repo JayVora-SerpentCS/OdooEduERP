@@ -12,7 +12,6 @@ class StudentStudent(models.Model):
     exam_results_ids = fields.One2many('exam.result', 'student_id',
                                        'Exam History', readonly=True)
 
-    @api.multi
     def set_alumni(self):
         '''Override method to make exam results of student active false
         when student is alumni'''
@@ -30,7 +29,7 @@ class StudentStudent(models.Model):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
                 access_rights_uid=None):
-        '''Override method to get exam of student selected'''
+        '''Override method to get exam of student selected.'''
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
             exam_data = exam_obj.browse(self._context['exam'])
@@ -44,7 +43,6 @@ class StudentStudent(models.Model):
 class ExtendedTimeTable(models.Model):
     _inherit = 'time.table'
 
-    @api.multi
     def unlink(self):
         exam = self.env['exam.exam']
         schedule_line = self.env['exam.schedule.line']
@@ -69,7 +67,7 @@ class ExtendedTimeTable(models.Model):
 
     @api.constrains('exam_timetable_line_ids')
     def _check_exam(self):
-        '''Method to check same exam is not assigned on same day'''
+        '''Method to check same exam is not assigned on same day.'''
         if self.timetable_type == 'exam':
             if not self.exam_timetable_line_ids:
                 raise ValidationError(_(''' Please Enter Exam Timetable!'''))
@@ -105,7 +103,6 @@ class ExtendedTimeTableLine(models.Model):
             if rec.exm_date:
                 rec.day_of_week = rec.exm_date.strftime("%A").title()
 
-    @api.multi
     def _check_date(self):
         '''Method to check constraint of start date and end date'''
         for line in self:
@@ -115,28 +112,29 @@ class ExtendedTimeTableLine(models.Model):
                     return False
                 elif dt.__str__() < datetime.strptime(date.today().__str__(),
                                                       "%Y-%m-%d").__str__():
-                    raise ValidationError(_('''Invalid Date Error !
-                        Either you have selected wrong day
-                                       for the date or you have selected\
-                                       invalid date!'''))
+                    raise ValidationError(_('''Invalid Date Error !\
+                        Either you have selected wrong day\
+for the date or you have selected invalid date!'''))
 
     @api.constrains('teacher_id')
     def check_supervisior_exam(self):
-            for rec in self:
-                if (rec.table_id.timetable_type == 'exam' and
-                        not rec.teacher_id):
-                        raise ValidationError(_('''PLease Enter Supervisior!
-                        '''))
+        """Method to check supervisor in exam."""
+        for rec in self:
+            if (rec.table_id.timetable_type == 'exam' and
+                    not rec.teacher_id):
+                    raise ValidationError(_('''PLease Enter Supervisior!'''))
 
     @api.constrains('start_time', 'end_time')
     def check_time(self):
+        '''Method to check constraint of start time and end time.'''
         for rec in self:
             if rec.start_time >= rec.end_time:
-                raise ValidationError(_('''Start time should be less than end
-                time!'''))
+                raise ValidationError(_('''Start time should be less than end \
+time!'''))
 
     @api.constrains('teacher_id', 'class_room_id')
     def check_teacher_room(self):
+        """Method to Check room."""
         timetable_rec = self.env['time.table'].search([('id', '!=',
                                                         self.table_id.id)])
         if timetable_rec:
@@ -150,6 +148,7 @@ class ExtendedTimeTableLine(models.Model):
 
     @api.constrains('subject_id', 'class_room_id')
     def check_exam_date(self):
+        """Method to Check Exam Date."""
         for rec in self.table_id.exam_timetable_line_ids:
             record = self.table_id
             if rec.id not in self.ids:
@@ -174,12 +173,14 @@ class ExtendedTimeTableLine(models.Model):
 
 
 class ExamExam(models.Model):
+    """Defining model for Exam."""
+
     _name = 'exam.exam'
     _description = 'Exam Information'
 
     @api.constrains('start_date', 'end_date')
     def check_date_exam(self):
-        '''Method to check constraint of exam start date and end date'''
+        '''Method to check constraint of exam start date and end date.'''
         for rec in self:
             if rec.end_date < rec.start_date:
                 raise ValidationError(_('''Exam end date should be
@@ -229,12 +230,10 @@ class ExamExam(models.Model):
     exam_schedule_ids = fields.One2many('exam.schedule.line', 'exam_id',
                                         'Exam Schedule')
 
-    @api.multi
     def set_to_draft(self):
         '''Method to set state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def set_running(self):
         '''Method to set state to running'''
         for rec in self:
@@ -245,17 +244,14 @@ class ExamExam(models.Model):
             else:
                 raise ValidationError(_('You must add one Exam Schedule!'))
 
-    @api.multi
     def set_finish(self):
         '''Method to set state to finish'''
         self.state = 'finished'
 
-    @api.multi
     def set_cancel(self):
         '''Method to set state to cancel'''
         self.state = 'cancelled'
 
-    @api.multi
     def generate_result(self):
         '''Method to generate result'''
         result_obj = self.env['exam.result']
@@ -297,7 +293,6 @@ class ExamExam(models.Model):
                         result = result_obj.create(rs_dict)
                         result_list.append(result.id)
         return {'name': _('Result Info'),
-                'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'exam.result',
                 'type': 'ir.actions.act_window',
@@ -305,6 +300,8 @@ class ExamExam(models.Model):
 
 
 class ExamScheduleLine(models.Model):
+    """Defining model for exam schedule line details."""
+
     _name = 'exam.schedule.line'
     _description = "Exam Schedule Line Details"
 
@@ -326,10 +323,11 @@ class ExamScheduleLine(models.Model):
 
 
 class AdditionalExam(models.Model):
+    """Defining model for additional exam."""
+
     _name = 'additional.exam'
     _description = 'additional Exam Information'
 
-    @api.multi
     def _compute_color_name(self):
         for rec in self:
             rec.color_name = rec.subject_id.id
@@ -357,9 +355,10 @@ class AdditionalExam(models.Model):
 
     @api.constrains('maximum_marks', 'minimum_marks')
     def check_marks(self):
+        """Method to check marks."""
         if self.minimum_marks > self.maximum_marks:
-            raise ValidationError(_('''Configure Maximum marks greater than
-            minimum marks!'''))
+            raise ValidationError(_('''Configure Maximum marks greater than \
+minimum marks!'''))
 
     @api.model
     def create(self, vals):
@@ -368,7 +367,6 @@ class AdditionalExam(models.Model):
         vals.update({'create_date': new_dt})
         return super(AdditionalExam, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         curr_dt = datetime.now()
         new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
@@ -377,6 +375,8 @@ class AdditionalExam(models.Model):
 
 
 class ExamResult(models.Model):
+    """Defining Exam Result."""
+
     _name = 'exam.result'
     _inherit = ["mail.thread", "resource.mixin"]
     _rec_name = 'roll_no_id'
@@ -444,7 +444,6 @@ class ExamResult(models.Model):
                          })
         return super(ExamResult, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('student_id'):
             student = self.env['student.student'].browse(vals.get('student_id'
@@ -454,7 +453,6 @@ class ExamResult(models.Model):
                          })
         return super(ExamResult, self).write(vals)
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
@@ -516,7 +514,6 @@ class ExamResult(models.Model):
                                                                  self._name
                                                                  )])
 
-    @api.multi
     def result_confirm(self):
         '''Method to confirm result'''
         for rec in self:
@@ -538,12 +535,10 @@ class ExamResult(models.Model):
                     }
             rec.write(vals)
 
-    @api.multi
     def re_evaluation_confirm(self):
         '''Method to change state to re_evaluation_confirm'''
         self.state = 're-evaluation_confirm'
 
-    @api.multi
     def result_re_evaluation(self):
         '''Method to set state to re-evaluation'''
         for rec in self:
@@ -551,7 +546,6 @@ class ExamResult(models.Model):
                 line.marks_reeval = line.obtain_marks
             rec.state = 're-evaluation'
 
-    @api.multi
     def set_done(self):
         '''Method to obtain history of student'''
         history_obj = self.env['student.history']
@@ -576,6 +570,8 @@ class ExamResult(models.Model):
 
 
 class ExamGradeLine(models.Model):
+    """Defining model for Exam Grade Line."""
+
     _name = "exam.grade.line"
     _description = 'Exam Subject Information'
     _rec_name = 'standard_id'
@@ -586,6 +582,8 @@ class ExamGradeLine(models.Model):
 
 
 class ExamSubject(models.Model):
+    """Defining model for Exam Subject Information."""
+
     _name = "exam.subject"
     _description = 'Exam Subject Information'
     _rec_name = 'subject_id'
@@ -639,6 +637,8 @@ class ExamSubject(models.Model):
 
 
 class AdditionalExamResult(models.Model):
+    """Defining model for Additional Exam Result."""
+
     _name = 'additional.exam.result'
     _description = 'subject result Information'
     _rec_name = 'roll_no_id'
@@ -663,7 +663,6 @@ class AdditionalExamResult(models.Model):
                      })
         return super(AdditionalExamResult, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         '''Override write method to get roll no and standard'''
         student = self.env['student.student'].browse(vals.get('student_id'))
@@ -681,8 +680,8 @@ class AdditionalExamResult(models.Model):
     @api.constrains('obtain_marks')
     def _validate_obtain_marks(self):
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
-            raise ValidationError(_('''The obtained marks should not extend
-                                    maximum marks!'''))
+            raise ValidationError(_('''The obtained marks should not extend \
+maximum marks!'''))
 
     a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
                                 required=True,
