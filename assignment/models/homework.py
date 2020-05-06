@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 
 
 class SchoolTeacherAssignment(models.Model):
+    """Defining Model for Teacher Assignment Information."""
+
     _name = 'school.teacher.assignment'
     _description = 'Teacher Assignment Information'
 
@@ -13,7 +15,7 @@ class SchoolTeacherAssignment(models.Model):
         '''Method to check constraint of due date and assign date'''
         if self.due_date < self.assign_date:
             raise ValidationError(_('Due date of homework should \
-                                    be greater than assign date'))
+be greater than assign date'))
 
     name = fields.Char('Assignment Name',
                        help="Name of Assignment")
@@ -48,7 +50,6 @@ class SchoolTeacherAssignment(models.Model):
     def onchange_subject_standard(self):
         self.subject_standard_assignment = self.standard_id.standard_id.id
 
-    @api.multi
     def active_assignment(self):
         ''' This method change state as active state
             and create assignment line
@@ -88,21 +89,21 @@ class SchoolTeacherAssignment(models.Model):
             rec.write({'state': 'active'})
         return True
 
-    @api.multi
     def done_assignments(self):
         '''Changes the state to done'''
         self.state = 'done'
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
-                raise ValidationError(_('''You can delete record in unconfirm
-                state only!'''))
+                raise ValidationError(_('''You can delete record in unconfirm \
+state only!'''))
         return super(SchoolTeacherAssignment, self).unlink()
 
 
 class SchoolStudentAssignment(models.Model):
+    """Defining Model for Student Assignment Information."""
+
     _name = 'school.student.assignment'
     _description = 'Student Assignment Information'
 
@@ -163,49 +164,47 @@ class SchoolStudentAssignment(models.Model):
             if (file_format in self.attachfile_format or
                     self.attachfile_format in file_format):
                     return True
-            raise ValidationError(_('''Kindly attach file with
-                format: %s!''') % self.attachfile_format)
+            raise ValidationError(_('''Kindly attach file with \
+format: %s!''') % self.attachfile_format)
 
     @api.onchange('student_id')
     def onchange_student_standard(self):
         '''Method to get standard of selected student'''
         self.student_standard = self.student_id.standard_id.standard_id.id
 
-    @api.multi
     def active_assignment(self):
         '''This method change state as active'''
         if not self.attached_homework:
             raise ValidationError(_('''Kindly attach homework!'''))
         self.state = 'active'
 
-    @api.multi
     def done_assignment(self):
         ''' This method change state as done
             for school student assignment
             @return : True
         '''
         if self.submission_type == 'softcopy' and not self.submit_assign:
-            raise ValidationError(_('''You have not attached the homework!
-            Please attach the homework!'''))
+            raise ValidationError(_('''You have not attached the homework! \
+Please attach the homework!'''))
         self.state = 'done'
 
-    @api.multi
     def reassign_assignment(self):
         '''This method change state as active'''
         self.ensure_one()
         self.state = 'active'
         return True
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state != 'draft':
-                raise ValidationError(_('''You can delete record in unconfirm
-                state only!'''))
+                raise ValidationError(_('''You can delete record in unconfirm \
+state only!'''))
         return super(SchoolStudentAssignment, self).unlink()
 
 
 class FileFormat(models.Model):
+    """Defining Model for File Format Details."""
+
     _name = "file.format"
     _description = "File Format Details"
 
@@ -215,7 +214,6 @@ class FileFormat(models.Model):
 class StudentAssign(models.Model):
     _inherit = 'student.student'
 
-    @api.multi
     def set_alumni(self):
         '''Override method to make student assignment active false when
         student is alumni'''

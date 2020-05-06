@@ -1,13 +1,12 @@
 # See LICENSE file for full copyright and licensing details.
 
 
-from odoo import models, api
+from odoo import models
 
 
 class TerminateReasonAssignment(models.TransientModel):
     _inherit = 'terminate.reason'
 
-    @api.multi
     def save_terminate(self):
         '''Override method to make student assignment active false
         when terminated'''
