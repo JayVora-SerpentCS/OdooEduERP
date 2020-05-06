@@ -36,7 +36,6 @@ class TransferVehicle(models.TransientModel):
                 rec.root_id = rec.participation_id.transport_id.id
                 rec.old_vehicle_id = rec.participation_id.vehicle_id.id
 
-    @api.multi
     def vehicle_transfer(self):
         """Method to transfer vehicle."""
         for rec in self:

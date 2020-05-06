@@ -26,8 +26,8 @@ class HrEmployee(models.Model):
         driver = self.search([('licence_no', '=', self.licence_no),
                               ('id', 'not in', self.ids)])
         if driver:
-            raise ValidationError(_('''The licence number you have entered
-            already exist. Please enter different licence number!'''))
+            raise ValidationError(_('''The licence number you have entered \
+already exist. Please enter different licence number!'''))
 
 
 class TransportPoint(models.Model):
@@ -140,16 +140,14 @@ class TransportParticipant(models.Model):
                                limit=limit, count=count,
                                access_rights_uid=access_rights_uid)
 
-    @api.multi
     def set_over(self):
         self.state = 'over'
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state == 'running':
-                raise ValidationError(_('''You cannot delete record in running
-                state!.'''))
+                raise ValidationError(_('''You cannot delete record in running \
+state!.'''))
         return super(TransportParticipant, self).unlink()
 
 
@@ -189,12 +187,10 @@ class StudentTransports(models.Model):
                               ('close', 'Close')],
                              'State', readonly=True, default='draft')
 
-    @api.multi
     def transport_open(self):
         """Method to change state open."""
         self.state = 'open'
 
-    @api.multi
     def transport_close(self):
         """Method to change state to close."""
         self.state = 'close'
@@ -227,7 +223,6 @@ class StudentTransports(models.Model):
             if delta.days < 30:
                 raise ValidationError(_('Enter duration of month!'))
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state == 'open':
@@ -243,7 +238,6 @@ class StudentStudent(models.Model):
     transport_ids = fields.Many2many('transport.participant', 'std_transport',
                                      'trans_id', 'stud_id', 'Transport')
 
-    @api.multi
     def set_alumni(self):
         """Override method to make record of student transport active false.
 
@@ -274,6 +268,8 @@ class TransportRegistration(models.Model):
                 for group in self.env['res.users'].browse(self._uid).groups_id]
         if user_group.id in grps:
             self.transport_user = True
+        else:
+            self.transport_user = False
 
     name = fields.Many2one('student.transport', 'Transport Root Name',
                            domain=[('state', '=', 'open')], required=True)
@@ -321,37 +317,34 @@ class TransportRegistration(models.Model):
     def _compute_transport_fees(self):
         self.transport_fees = self.m_amount * self.for_month
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state in ['confirm', 'pending', 'paid']:
-                raise ValidationError(_('''You can delete record in
-                unconfirm state and cancel state only!'''))
+                raise ValidationError(_('''You can delete record in \
+unconfirm state and cancel state only!'''))
         return super(TransportRegistration, self).unlink()
 
-    @api.multi
     def transport_fees_pay(self):
         """Method to generate invoice of participant."""
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for rec in self:
             rec.state = 'pending'
             partner = rec.part_name and rec.part_name.partner_id
             vals = {'partner_id': partner.id,
-                    'account_id': partner.property_account_receivable_id.id,
+                    'type': 'out_invoice',
                     'transport_student_id': rec.id}
             invoice = invoice_obj.create(vals)
             journal = invoice.journal_id
             acct_journal_id = journal.default_credit_account_id.id
-            account_view_id = self.env.ref('account.invoice_form')
+            account_view_id = self.env.ref('account.view_move_form')
             line_vals = {'name': 'Transport Fees',
                          'account_id': acct_journal_id,
                          'quantity': rec.for_month,
                          'price_unit': rec.m_amount}
             invoice.write({'invoice_line_ids': [(0, 0, line_vals)]})
             return {'name': _("Pay Transport Fees"),
-                    'view_type': 'form',
                     'view_mode': 'form',
-                    'res_model': 'account.invoice',
+                    'res_model': 'account.move',
                     'view_id': account_view_id.id,
                     'type': 'ir.actions.act_window',
                     'nodestroy': True,
@@ -359,28 +352,27 @@ class TransportRegistration(models.Model):
                     'res_id': invoice.id,
                     'context': {}}
 
-    @api.multi
     def view_invoice(self):
         """Method to view invoice of participant."""
-        invoice_obj = self.env['account.invoice']
+        invoice_obj = self.env['account.move']
         for rec in self:
             invoices = invoice_obj.search([('transport_student_id', '=',
                                             rec.id)])
-            action = rec.env.ref('account.action_invoice_tree1').read()[0]
+            action = rec.env.ref(
+                'account.action_move_out_invoice_type').read()[0]
             if len(invoices) > 1:
                 action['domain'] = [('id', 'in', invoices.ids)]
             elif len(invoices) == 1:
-                action['views'] = [(rec.env.ref('account.invoice_form').id,
+                action['views'] = [(rec.env.ref('account.view_move_form').id,
                                     'form')]
                 action['res_id'] = invoices.ids[0]
             else:
                 action = {'type': 'ir.actions.act_window_close'}
             return action
 
-    @api.multi
     def _compute_invoice(self):
         """Method to compute number of invoice of participant."""
-        inv_obj = self.env['account.invoice']
+        inv_obj = self.env['account.move']
         for rec in self:
             rec.count_inv = inv_obj.search_count([('transport_student_id',
                                                    '=', rec.id)])
@@ -402,12 +394,10 @@ class TransportRegistration(models.Model):
         date = datetime.strftime(tr_end_date, '%Y-%m-%d')
         self.reg_end_date = date
 
-    @api.multi
     def trans_regi_cancel(self):
         """Method to set state to cancel."""
         self.state = 'cancel'
 
-    @api.multi
     def trans_regi_confirm(self):
         """Method to confirm registration."""
         trans_obj = self.env['student.transport']
@@ -483,7 +473,7 @@ class TransportRegistration(models.Model):
 
 
 class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     transport_student_id = fields.Many2one('transport.registration',
                                            string="Transport Student")
@@ -492,24 +482,25 @@ class AccountInvoice(models.Model):
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    @api.multi
     def post(self):
         """Method to compute paid amount and due amount."""
         res = super(AccountPayment, self).post()
         for rec in self:
             for invoice in rec.invoice_ids:
                 vals = {}
-                if invoice.transport_student_id and invoice.state == 'paid':
+                if invoice.transport_student_id and\
+                        invoice.invoice_payment_state == 'paid':
                     fees_payment = (invoice.transport_student_id.paid_amount +
                                     rec.amount)
-                    vals = {'state': 'paid',
-                            'paid_amount': fees_payment,
-                            'remain_amt': 0.0}
-                elif invoice.transport_student_id and invoice.state == 'open':
+                    vals.update({'state': 'paid',
+                                 'paid_amount': fees_payment,
+                                 'remain_amt': 0.0})
+                elif invoice.transport_student_id and\
+                        invoice.invoice_payment_state == 'not_paid':
                     fees_payment = (invoice.transport_student_id.paid_amount +
                                     rec.amount)
-                    vals = {'status': 'pending',
-                            'paid_amount': fees_payment,
-                            'remain_amt': invoice.residual}
+                    vals.update({'state': 'pending',
+                                 'paid_amount': fees_payment,
+                                 'remain_amt': invoice.amount_residual})
                 invoice.transport_student_id.write(vals)
         return res
