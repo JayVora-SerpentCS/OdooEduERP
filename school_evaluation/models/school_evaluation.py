@@ -8,11 +8,12 @@ from odoo.tools.translate import _
 
 
 class SchoolEvaluation(models.Model):
+    """Defining School Evaluation."""
+
     _name = "school.evaluation"
     _description = "School Evaluation details"
     _rec_name = 'type'
 
-    @api.multi
     def get_record(self):
         '''Method to get the evaluation questions'''
         eval_temp_obj = self.env['school.evaluation.template']
@@ -31,8 +32,8 @@ class SchoolEvaluation(models.Model):
         '''Method to compute evaluation points'''
         for rec in self:
             if rec.eval_line:
-                rec.total = sum(line.point_id.point for line in rec.eval_line
-                                if line.point_id.point)
+                rec.total = sum(line.point_id.rating for line in rec.eval_line
+                                if line.point_id.rating)
 
     @api.model
     def fields_view_get(self, view_id=None, viewtype='form', toolbar=False,
@@ -81,14 +82,14 @@ class SchoolEvaluation(models.Model):
                                default=lambda self: self.env.user)
     active = fields.Boolean('Active', default=True)
 
-    @api.multi
     def set_start(self):
         '''change state to start'''
         for rec in self:
             if not rec.eval_line:
                 raise ValidationError(_('Please Get the Questions First!\
-                \nTo Get the Questions please click on "Get Questions"\
-                Button!'))
+                \nTo Get the Questions please click on "Get Questions" \
+Button!'))
+
         self.state = 'start'
 
     @api.model
@@ -101,37 +102,35 @@ class SchoolEvaluation(models.Model):
             res.update({'teacher_id': hr_emp.id})
         return res
 
-    @api.multi
     def set_finish(self):
         '''Change state to finished'''
         for rec in self:
             if [line.id for line in rec.eval_line if (not line.point_id or
                                                       not line.rating)]:
-                raise ValidationError(_("You can't mark the evaluation as\
-                Finished untill the Rating/Remarks are not added for all\
-                the Questions!"))
+                raise ValidationError(_("You can't mark the evaluation as \
+Finished untill the Rating/Remarks are not added for all \
+the Questions!"))
         self.state = 'finished'
 
-    @api.multi
     def set_cancel(self):
         '''Change state to cancelled'''
         self.state = 'cancelled'
 
-    @api.multi
     def set_draft(self):
         '''Changes state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def unlink(self):
         for rec in self:
             if rec.state in ['start', 'finished']:
-                raise ValidationError(_("You can delete record in unconfirmed\
-                state only!"))
+                raise ValidationError(_("You can delete record in unconfirmed \
+state only!"))
         return super(SchoolEvaluation, self).unlink()
 
 
 class StudentEvaluationLine(models.Model):
+    """Defining School Evaluation Line."""
+
     _name = 'school.evaluation.line'
     _description = 'School Evaluation Line Details'
 
@@ -140,13 +139,13 @@ class StudentEvaluationLine(models.Model):
         '''Method to get rating point based on rating'''
         self.rating = False
         if self.point_id:
-            self.rating = self.point_id.rating
+            self.rating = self.point_id.feedback
 
     eval_id = fields.Many2one('school.evaluation', 'Evaluation id')
 
     stu_eval_id = fields.Many2one('school.evaluation.template', 'Question')
     point_id = fields.Many2one('rating.rating', 'Rating',
-                               domain="[('rating_id', '=', stu_eval_id)]")
+                               domain="[('template_id', '=', stu_eval_id)]")
     rating = fields.Char('Remarks')
 
     _sql_constraints = [
@@ -156,6 +155,8 @@ class StudentEvaluationLine(models.Model):
 
 
 class SchoolEvaluationTemplate(models.Model):
+    """Defining School Evaluation Template."""
+
     _name = "school.evaluation.template"
     _description = "School Evaluation Template Details"
     _rec_name = 'desc'
@@ -164,26 +165,41 @@ class SchoolEvaluationTemplate(models.Model):
     type = fields.Selection([('faculty', 'Faculty'), ('student', 'Student')],
                             'User Type', required=True, default='faculty',
                             help="Type of Evaluation")
-    rating_line = fields.One2many('rating.rating', 'rating_id', 'Rating')
+    rating_line = fields.One2many('rating.rating', 'template_id', 'Rating')
 
 
 class RatingRating(models.Model):
-    _name = 'rating.rating'
-    _description = "Rating details"
-    _rec_name = 'point'
-    _order = "point desc"
+    """Defining Rating."""
 
-    rating_id = fields.Many2one('school.evaluation.template', 'Stud',
-                                help="Ratings")
-    point = fields.Integer('Rating in points', required=True,
-                           help="Points")
-    rating = fields.Char('Remarks', required=True)
+    _inherit = 'rating.rating'
+    _description = "Rating"
+
+    @api.model
+    def create(self, vals):
+        """Set Document model name for rating."""
+        res_model = self.env['ir.model'].search([
+            ('model', '=', 'school.evaluation.template')])
+        vals.update({'res_model_id': res_model.id})
+        res = super(RatingRating, self).create(vals)
+        return res
+
+    @api.depends('res_model', 'res_id')
+    def _compute_res_name(self):
+        # cannot change the rec_name of session since it is use to create the bus channel
+        # so, need to override this method to set the same alternative rec_name as rating
+        for rate in self:
+            if rate.res_model == 'school.evaluation.template':
+                rate.res_name = rate.rating
+            else:
+                super(RatingRating, self)._compute_res_name()
+
+    template_id = fields.Many2one('school.evaluation.template', 'Stud',
+                                  help="Ratings")
 
 
 class StudentExtend(models.Model):
     _inherit = 'student.student'
 
-    @api.multi
     def set_alumni(self):
         '''Override method to set active false student evaluation when
         student is set to alumni'''
