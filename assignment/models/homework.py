@@ -48,6 +48,17 @@ class SchoolTeacherAssignment(models.Model):
     def onchange_subject_standard(self):
         self.subject_standard_assignment = self.standard_id.standard_id.id
 
+    @api.onchange('standard_id', 'teacher_id')
+    def onchange_stamdard_id(self):
+        domain = []
+        if self.teacher_id:
+            domain.append(
+                    ('teacher_ids', '=', self.teacher_id.id))
+        if self.standard_id:
+            domain.append(
+                ('standard_ids', '=', self.standard_id.standard_id.id))
+        return {'domain': {'subject_id': domain}}
+
     @api.multi
     def active_assignment(self):
         ''' This method change state as active state
