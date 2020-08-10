@@ -7,7 +7,6 @@ class BatchExamReport(models.AbstractModel):
     _name = 'report.exam.exam_result_batch'
     _description = "Batch wise Exam Result"
 
-    @api.multi
     def pass_student(self, year, standard_id):
         '''Method to determine students who pass the exam'''
         exam = self.env['exam.exam'].search([('standard_id', '=',
