@@ -2,7 +2,7 @@
 
 {
     'name': 'Library Management',
-    'version': "12.0.1.0.0",
+    'version': "13.0.1.0.0",
     'author': "Serpent Consulting Services Pvt. Ltd.",
     'category': 'School Management',
     'website': 'http://www.serpentcs.com',

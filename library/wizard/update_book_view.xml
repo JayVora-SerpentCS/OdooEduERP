@@ -27,10 +27,10 @@
         <act_window id="action_update_books"
             name="Update Books"
             res_model="update.books"
-            src_model="library.book.issue"
+            binding_model="library.book.issue"
             view_mode="form"
             target="new"
-            view_type="form"
+            binding_views="form"
             groups="library.group_librarian"
             />
 
