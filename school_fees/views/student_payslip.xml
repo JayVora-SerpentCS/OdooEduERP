@@ -83,7 +83,7 @@
                                             <span t-field="l.name"></span>
                                         </td>
                                         <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="l.amount" t-options='{"widget": "monetary","display_currency": l.currency_id}'></span>
+                                            <span t-field="l.amount" t-options='{"widget": "monetary","display_currency": l.company_id.currency_id}'></span>
                                         </td>
                                     </tr>
                                 </t>

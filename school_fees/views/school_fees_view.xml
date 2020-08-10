@@ -371,14 +371,12 @@
     <record model="ir.actions.act_window" id="action_student_fees_structure_form">
         <field name="name">Fees Structure</field>
         <field name="res_model">student.fees.structure</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student PaySlip Line Information -->
     <record id="action_student_payslip_line_form" model="ir.actions.act_window">
         <field name="name">Fees Head</field>
         <field name="res_model">student.fees.structure.line</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student PaySlip Information -->
@@ -386,14 +384,12 @@
     <record id="action_student_payslip_form" model="ir.actions.act_window">
         <field name="name">Fees Receipt</field>
         <field name="res_model">student.payslip</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student Fees Register Information -->
     <record id="action_student_fees_register_form" model="ir.actions.act_window">
         <field name="name">Fees Register</field>
         <field name="res_model">student.fees.register</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="view_student_fees_register_tree"/>
         <field name="search_view_id" ref="view_student_fees_register_search"/>
         <field name="view_mode">tree,form</field>
@@ -402,7 +398,6 @@
     <record id="action_stu_fees_form" model="ir.actions.act_window">
         <field name="name">Fees Register</field>
         <field name="res_model">student.payslip</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_student_id': active_id}</field>
     </record>
