@@ -19,7 +19,6 @@
     <record id="student_homework_reject" model="ir.actions.act_window">
         <field name="name">Assigment Rejection Reason</field>
         <field name="res_model">reject.reason</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
      </record>

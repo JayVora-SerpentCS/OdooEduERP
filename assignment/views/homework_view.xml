@@ -101,7 +101,6 @@
         <record id="action_school_teacher_assignment_form" model="ir.actions.act_window">
             <field name="name">Assign Assignment</field>
             <field name="res_model">school.teacher.assignment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_active_assign':1}</field>
         </record>
@@ -212,7 +211,6 @@
         <record id="action_school_student_assignment_form_btn" model="ir.actions.act_window">
             <field name="name">Student Assignment</field>
             <field name="res_model">school.student.assignment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_student_id': active_id}</field>
         </record>
@@ -239,7 +237,6 @@
         <record id="action_school_student_assignment_form" model="ir.actions.act_window">
             <field name="name">Student Assignment</field>
             <field name="res_model">school.student.assignment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_active_assigns':1}</field>
         </record>

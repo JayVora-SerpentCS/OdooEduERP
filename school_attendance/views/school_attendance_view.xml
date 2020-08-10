@@ -207,7 +207,6 @@
         <record id="action_attendance_sheet_form" model="ir.actions.act_window">
             <field name="name">Attendance Sheet</field>
             <field name="res_model">attendance.sheet</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
         
@@ -215,7 +214,6 @@
         <record id="action_student_leave_form" model="ir.actions.act_window">
             <field name="name">Student Leave Request Action</field>
             <field name="res_model">studentleave.request</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
@@ -314,7 +312,6 @@
         <record id="action_daily_attendance_form" model="ir.actions.act_window">
             <field name="name">Daily Attendance Information</field>
             <field name="res_model">daily.attendance</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 

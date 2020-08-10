@@ -7,15 +7,18 @@ from dateutil.relativedelta import relativedelta as rd
 
 
 class BatchExamReport(models.AbstractModel):
+    """Defining Batch exam report."""
 
     _name = 'report.school_attendance.attendance_month'
+    _description = "Report attendance Month"
 
-    @api.multi
     def get_header_data(self, data):
         attend_month = self.env['student.attendance.by.month'
-                                ].browse(self._context.get('active_id'))
-        start_dt = datetime.strptime(attend_month.month.date_start, '%Y-%m-%d')
-        end_dt = datetime.strptime(attend_month.month.date_stop, '%Y-%m-%d')
+                                ].browse(data['form']['id'])
+        strtdate_str = attend_month.month.date_start.strftime('%Y-%m-%d')
+        enddate_str = attend_month.month.date_stop.strftime('%Y-%m-%d')
+        start_dt = datetime.strptime(strtdate_str, '%Y-%m-%d')
+        end_dt = datetime.strptime(enddate_str, '%Y-%m-%d')
 #        delta = end_dt - start_dt
         data_dict = {}
         day_list = []
@@ -30,7 +33,6 @@ class BatchExamReport(models.AbstractModel):
                           })
         return [data_dict]
 
-    @api.multi
     def get_student(self, form):
         stu_list = []
         for student in self.env['student.student'].browse(form['stud_ids']):
@@ -39,8 +41,8 @@ class BatchExamReport(models.AbstractModel):
 
     def daily_attendance(self, form, day, student):
         attend_month = self.env['student.attendance.by.month'
-                                ].browse(self._context.get('active_id'))
-        st_date = attend_month.month.date_start
+                                ].browse(form.get('id'))
+        st_date = attend_month.month.date_start.strftime('%Y-%m-%d')
 #        end_dt = attend_month.month.date_stop
         attend_obj = self.env['daily.attendance']
         start_date = datetime.strptime(st_date, '%Y-%m-%d')
@@ -60,7 +62,7 @@ class BatchExamReport(models.AbstractModel):
         return flag
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         attendance_data = self.env['ir.actions.report']._get_report_from_name(
             'school_attendance.attendance_month')
         active_model = self._context.get('active_model')
