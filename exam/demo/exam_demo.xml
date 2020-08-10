@@ -30,7 +30,7 @@
             <field name="teacher_id" ref="school.demo_school_teacher_1"/>
             <field name="subject_id" ref="school.demo_subject_subject_1"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/06'"/>
-            <field name="week_day" eval="DateTime.strptime((time.strftime('%Y')+'/03/06'), '%Y/%m/%d').strftime('%A').lower()"/>
+            <field name="week_day" eval="DateTime.strptime((time.strftime('%Y')+'/03/06'), '%Y/%m/%d').strftime('%a').lower()"/>
             <field model="time.table" name="table_id" search="[('name', '=', u'Final Exam Timetable')]"/>
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
@@ -39,7 +39,7 @@
             <field name="teacher_id" ref="school.demo_school_teacher_2"/>
             <field name="subject_id" ref="school.demo_subject_subject_2"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/07'"/>
-            <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/07', '%Y/%m/%d').strftime('%A').lower()"/>
+            <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/07', '%Y/%m/%d').strftime('%a').lower()"/>
             <field model="time.table" name="table_id" search="[('name', '=', u'Final Exam Timetable')]"/>
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
@@ -48,7 +48,7 @@
             <field name="teacher_id" ref="school.demo_school_teacher_3"/>
             <field name="subject_id" ref="school.demo_subject_subject_3"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/08'"/>
-            <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/08', '%Y/%m/%d').strftime('%A').lower()"/>
+            <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/08', '%Y/%m/%d').strftime('%a').lower()"/>
             <field model="time.table" name="table_id" search="[('name', '=', u'Final Exam Timetable')]"/>
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>
@@ -57,7 +57,7 @@
             <field name="teacher_id" ref="school.demo_school_teacher_1"/>
             <field name="subject_id" ref="school.demo_subject_subject_5"/>
             <field name="exm_date" eval="time.strftime('%Y')+'/03/09'"/>
-            <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/09', '%Y/%m/%d').strftime('%A').lower()"/>
+            <field name="week_day" eval="DateTime.strptime(time.strftime('%Y')+'/03/09', '%Y/%m/%d').strftime('%a').lower()"/>
             <field model="time.table" name="table_id" search="[('name', '=', u'Final Exam Timetable')]"/>
             <field eval="12.0" name="end_time"/>
             <field eval="10.0" name="start_time"/>

@@ -24,7 +24,7 @@ class TestTimetable(common.TransactionCase):
                     })
 #       Create timetable line
         self.time_table_line = self.time_table_line_obj.\
-            create({'week_day': 'monday',
+            create({'week_day': 'mon',
                     'teacher_id': self.teacher_id.id,
                     'subject_id': self.subject_id.id,
                     'start_time': '17.0',

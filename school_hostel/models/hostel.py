@@ -109,7 +109,7 @@ class HostelRoom(models.Model):
     student_ids = fields.One2many('hostel.student', 'room_id',
                                   string="Students")
 
-    _sql_constraints = [('room_no_unique', 'unique(room_no)',
+    _sql_constraints = [('room_no_unique', 'unique(room_no, name)',
                          'Room number must be unique!'),
                         ('floor_per_hostel', 'check(floor_no < 10)',
                          'Error ! Floor per HOSTEL should be less than 10.'),
