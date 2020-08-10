@@ -6,7 +6,6 @@
     <record id="action_student_eval_form" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student','search_default_student_id': active_id}</field>
@@ -15,7 +14,6 @@
     <record id="action_student_eval_form_actions" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student','search_default_student_id': active_id}</field>
@@ -223,7 +221,6 @@
      <record id="action_teacher_eval" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_type">form</field>
          <field name="view_mode">tree,form</field>
          <field name="domain">[('type','=','faculty')]</field>
          <field name="context">{'default_type':'faculty'}</field>
@@ -233,7 +230,6 @@
      <record id="action_teacher_eval_new" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation Finished</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_type">form</field>
          <field name="view_mode">tree,form</field>
          <field name="domain">[('type','=','faculty'),('state','=','finished')]</field>
          <field name="context">{'default_type':'faculty'}</field>
@@ -254,7 +250,6 @@
     <record id="action_teacher_eval_new_draft" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation New Draft</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_type">form</field>
          <field name="view_mode">tree,form</field>
          <field name="domain">[('type','=','faculty'),('state','=','draft')]</field>
          <field name="context">{'default_type':'faculty'}</field>
@@ -313,58 +308,27 @@
                         <field name="desc" placeholder="Enter Description"/>
                         <field name="type"/>
                     </group>
-                    <field name="rating_line" nolabel="1"/>
+                    <field name="rating_line" nolabel="1" context="{'default_res_id': active_id}">
+                        <tree>
+                            <field name="rating"/>
+                            <field name="feedback"/>
+                        </tree>
+                        <form>
+                            <field name="rating"/>
+                            <field name="feedback"/>
+                            <field name="res_id" invisible="1"/>
+                        </form>
+                    </field>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Form View Of Student Rating -->
-    <record id="view_student_rating_form" model="ir.ui.view">
-        <field name="name">student.rating.form</field>
-        <field name="model">rating.rating</field>
-        <field name="arch" type="xml">
-            <form string="Student Rating">
-                <sheet>
-                    <separator string="Student Rating" />
-                    <group col="4" colspan="2">
-                        <field name="point" placeholder="Enter Rating Point" />
-                        <field name="rating" placeholder="Enter Remarks" />
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Tree View Of Student Rating -->
-    <record id="view_student_rating_tree" model="ir.ui.view">
-        <field name="name">student.rating.tree</field>
-        <field name="model">rating.rating</field>
-        <field name="arch" type="xml">
-            <tree string="Student Rating">
-                <field name="point"/>
-                <field name="rating"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Search View Of Student Rating -->
-    <record id="view_student_rating_search" model="ir.ui.view">
-        <field name="name">student.rating.search</field>
-        <field name="model">rating.rating</field>
-        <field name="arch" type="xml">
-            <search string="Student Rating">
-                <field name="point"/>
-                <field name="rating"/>
-            </search>
-        </field>
-    </record>
 
     <!-- Actions Of Form & Tree Views Of Student Evaluation -->
     <record id="action_student_eval" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student'}</field>
@@ -374,17 +338,9 @@
     <record id="action_student_eval_temp" model="ir.actions.act_window">
         <field name="name">Evaluation Templates</field>
         <field name="res_model">school.evaluation.template</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- Actions Of Form & Tree Views Of Student Rating -->
-    <record id="action_student_rating" model="ir.actions.act_window">
-        <field name="name">Student Rating</field>
-        <field name="res_model">rating.rating</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
 
     <!-- Actions View of the School Student Tree View -->
     <record id="action_view_student_evaluation_tree" model="ir.actions.act_window.view">
@@ -417,7 +373,6 @@
     <record id="action_student_eval_finished" model="ir.actions.act_window">
         <field name="name">Student Evaluation Finished</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student'),('state','=','finished')]</field>
         <field name="context">{'default_type':'student'}</field>
@@ -440,7 +395,6 @@
     <record id="action_student_eval_draft" model="ir.actions.act_window">
         <field name="name">Student Evaluation Draft</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('type','=','student'),('state','=','draft')]</field>
         <field name="context">{'default_type':'student'}</field>
@@ -465,7 +419,5 @@
     <menuitem id="menu_evals" name="Student Evaluation" parent="menu_stu_eval" action="action_student_eval"
               groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" sequence="9"/>
     <menuitem id="menu_teacher_eval" name="Teacher Evaluation" parent="menu_stu_eval" action="action_teacher_eval" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/>
-    <menuitem id="menu_eval_temps" name="Evaluation Templates" parent="menu_stu_eval" action="action_student_eval_temp"
-              groups="school.group_school_administration" sequence="11"/>
-    <menuitem id="menu_rating" name="Rating" parent="school.menu_configuration" action="action_student_rating"/>
+    <menuitem id="menu_eval_temps" name="Evaluation Templates" parent="menu_stu_eval" action="action_student_eval_temp" groups="school.group_school_administration" sequence="11"/>
 </odoo>

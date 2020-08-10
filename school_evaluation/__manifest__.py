@@ -2,7 +2,7 @@
 
 {
     'name': 'Evaluation Management',
-    'version': "12.0.1.0.0",
+    'version': "13.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.almisnadtechnology.com',
     'category': 'School Management',
@@ -10,7 +10,7 @@
     'complexity': 'easy',
     'summary': 'A Module For Evaluation Management In School',
     'images': ['static/description/Evaluation1.jpg'],
-    'depends': ['hr', 'school'],
+    'depends': ['hr', 'school', 'rating'],
     'data': ['security/evaluation_security.xml',
              'views/school_evaluation_view.xml',
              'views/templates.xml',
