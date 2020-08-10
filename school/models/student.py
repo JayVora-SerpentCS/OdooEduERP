@@ -3,7 +3,7 @@
 import time
 import base64
 from datetime import date
-from odoo import models, fields, api, tools, _
+from odoo import models, fields, api, _
 from odoo.modules import get_module_resource
 from odoo.exceptions import except_orm
 from odoo.exceptions import ValidationError
@@ -13,14 +13,14 @@ from .import school
 # added import statement in try-except because when server runs on
 # windows operating system issue arise because this library is not in Windows.
 try:
-    from odoo.tools import image_colorize, image_resize_image_big
+    from odoo.tools import image_colorize
 except:
     image_colorize = False
-    image_resize_image_big = False
 
 
 class StudentStudent(models.Model):
-    ''' Defining a student information '''
+    '''Defining a student information.'''
+
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
@@ -36,7 +36,7 @@ class StudentStudent(models.Model):
         if name and teacher_group and parent_grp:
             parent_login_stud = self.env['school.parent'
                                          ].search([('partner_id', '=',
-                                                  login_user.partner_id.id)
+                                                    login_user.partner_id.id)
                                                    ])
             childrens = parent_login_stud.student_id
             args.append(('id', 'in', childrens.ids))
@@ -55,6 +55,8 @@ class StudentStudent(models.Model):
                 # Age should be greater than 0
                 if age_calc > 0.0:
                     rec.age = age_calc
+            else:
+                rec.age = 0
 
     @api.constrains('date_of_birth')
     def check_age(self):
@@ -63,10 +65,10 @@ class StudentStudent(models.Model):
         if self.date_of_birth:
             start = self.date_of_birth
             age_calc = ((current_dt - start).days / 365)
-            # Check if age less than 5 years
-            if age_calc < 5:
-                raise ValidationError(_('''Age of student should be greater
-                than 5 years!'''))
+            # Check if age less than required age
+            if age_calc < self.school_id.required_age:
+                raise ValidationError(_('''Age of student should be greater \
+than %s years!''' % (self.school_id.required_age)))
 
     @api.model
     def create(self, vals):
@@ -106,7 +108,6 @@ class StudentStudent(models.Model):
             res.user_id.write({'groups_id': [(6, 0, group_list)]})
         return res
 
-    @api.multi
     def write(self, vals):
         teacher = self.env['school.teacher']
         if vals.get('parent_id'):
@@ -122,9 +123,7 @@ class StudentStudent(models.Model):
         '''Method to get default Image'''
         image_path = get_module_resource('hr', 'static/src/img',
                                          'default_image.png')
-        return tools.image_resize_image_big(base64.b64encode(open(image_path,
-                                                                  'rb').read()
-                                                             ))
+        return base64.b64encode(open(image_path, 'rb').read())
 
     @api.depends('state')
     def _compute_teacher_user(self):
@@ -141,8 +140,8 @@ class StudentStudent(models.Model):
         res = self.env['academic.year'].search([('current', '=',
                                                  True)])
         if not res:
-            raise ValidationError(_('''There is no current Academic Year
-                                    defined!Please contact to Administator!'''
+            raise ValidationError(_('''There is no current Academic Year \
+defined!Please contact to Administator!'''
                                     ))
         return res.id
 
@@ -245,12 +244,10 @@ class StudentStudent(models.Model):
                                      )
     active = fields.Boolean(default=True)
 
-    @api.multi
     def set_to_draft(self):
         '''Method to change state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def set_alumni(self):
         '''Method to change state to alumni'''
         student_user = self.env['res.users']
@@ -263,25 +260,22 @@ class StudentStudent(models.Model):
             if user:
                 user.active = False
 
-    @api.multi
     def set_done(self):
         '''Method to change state to done'''
         self.state = 'done'
 
-    @api.multi
     def admission_draft(self):
         '''Set the state to draft'''
         self.state = 'draft'
 
-    @api.multi
     def set_terminate(self):
+        '''Set the state to terminate'''
         self.state = 'terminate'
 
-    @api.multi
     def cancel_admission(self):
+        '''Set the state to cancel.'''
         self.state = 'cancel'
 
-    @api.multi
     def admission_done(self):
         '''Method to confirm admission'''
         school_standard_obj = self.env['school.standard']
