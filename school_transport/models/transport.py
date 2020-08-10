@@ -216,11 +216,7 @@ class StudentTransports(models.Model):
     @api.constrains('start_date', 'end_date')
     def check_dates(self):
         for rec in self:
-            st_date_str = rec.start_date.strftime('%Y-%m-%d')
-            ed_date_str = rec.end_date.strftime('%Y-%m-%d')
-            st_date = datetime.strptime(st_date_str, '%Y-%m-%d')
-            ed_date = datetime.strptime(ed_date_str, '%Y-%m-%d')
-            delta = ed_date - st_date
+            delta = rec.end_date - rec.start_date
             if rec.start_date > rec.end_date:
                 raise ValidationError(_('''Start date should be less than end
                 date!'''))
