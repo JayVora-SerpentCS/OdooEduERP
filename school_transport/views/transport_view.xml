@@ -25,11 +25,9 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name = 'name']" position="after">
-                    <field name="licence_no"/>
-                </xpath>
-            </data>
+            <xpath expr="//field[@name = 'name']" position="after">
+                <field name="licence_no"/>
+            </xpath>
         </field>
     </record>
 
@@ -59,7 +57,7 @@
                         <field name="is_driver" string="Is Driver" readonly="1"/>
                     </group>
                 </xpath>
-                <xpath expr="//page[1]/group/group[2]/field[@name='resource_calendar_id']" position="after">
+                <xpath expr="//field[@name='resource_calendar_id']" position="after">
                     <field name="licence_no" attrs="{'required':[('is_driver','=',True)]}"/>
                 </xpath>
                 <xpath expr="//page[@name='hr_settings']" position="after">
@@ -76,7 +74,7 @@
         <field name="name">transport.participant.tree</field>
         <field name="model">transport.participant</field>
         <field name="arch" type="xml">
-            <tree create="false" string="Transport Participants Information" colors="blue:state=='running';red:state in ('over')" >
+            <tree create="false" string="Transport Participants Information" >
                 <field name="stu_pid_id"/>
                 <field name="name"/>
                 <field name="transport_id"/>
@@ -95,7 +93,7 @@
         <field name="name">transport.participant.form</field>
         <field name="model">transport.participant</field>
         <field name="arch" type="xml">
-            <form create="false" string="Transport Participants Information" colors="blue:state=='running';red:state in ('over')" version="7.0">
+            <form create="false" string="Transport Participants Information">
                 <header>
                     <button name="set_over" string="Over" states="running" type='object' groups="school.group_school_administration,school_transport.group_transportation_manager"/>
                     <field name="state" widget="statusbar"/>
@@ -196,7 +194,7 @@
         <field name="name">transport.tree</field>
         <field name="model">student.transport</field>
         <field name="arch" type="xml">
-            <tree string="Transport Information" colors="grey:state=='draft';blue:state in ('open');red:state in ('close')" >
+            <tree string="Transport Information">
                 <field name="name"/>
                 <field name="start_date"/>
                 <field name="end_date"/>
@@ -433,10 +431,10 @@
     <!-- Inherited View of Account Invoice -->
     <record id="account_invoice_inherited" model="ir.ui.view">
         <field name="name">Account Invoice Iherits</field>
-        <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='other_info']/group/group[1]/field[@name='journal_id']" position="before">
+            <xpath expr="//field[@name='journal_id']" position="before">
                 <field name="transport_student_id" invisible="1"/>
             </xpath>
         </field>
@@ -446,7 +444,6 @@
     <record id="action_transport_vehicle" model="ir.actions.act_window">
         <field name="name">Transport Vehicle Information</field>
         <field name="res_model">transport.vehicle</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_transport_vehicle_search"/>
 
@@ -457,7 +454,6 @@
         <field name="name">Transport Registration</field>
         <field name="res_model">transport.registration</field>
         <field name="context">{'search_default_draft_state':1}</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="transport_registration_tree"/>
         <field name="view_mode">tree,form</field>
     </record>
@@ -467,7 +463,6 @@
         <field name="name">Transport Participant</field>
         <field name="res_model">transport.participant</field>
         <field name="context">{'search_default_state_running':1}</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_transport_participant_search"/>
 
@@ -477,7 +472,6 @@
     <record id="action_student_transport_form" model="ir.actions.act_window">
         <field name="name">Transport Information</field>
         <field name="res_model">student.transport</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_student_transport_search"/>
 
@@ -489,7 +483,6 @@
         <field name="res_model">hr.employee</field>
         <field name="domain">[('is_driver','=',True)]</field>
         <field name="context">{'default_is_driver':True}</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
@@ -497,7 +490,6 @@
     <record id="action_transport_point" model="ir.actions.act_window">
         <field name="name">Point Information</field>
         <field name="res_model">transport.point</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_transport_point_search"/>
 
@@ -507,7 +499,6 @@
     <record id="hr.open_view_employee_tree" model="ir.actions.act_window">
         <field name="name">Employees Structure</field>
         <field name="res_model">hr.employee</field>
-        <field name="view_type">tree</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="hr.view_employee_tree"/>
         <field name="domain">[('parent_id','=',False),('user_id','=',uid)]</field>
