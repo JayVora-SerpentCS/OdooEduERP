@@ -1,16 +1,15 @@
 # See LICENSE file for full copyright and licensing details.
 
 # import time
-import re
 import calendar
+import re
 from datetime import datetime
-from odoo import models, fields, api
-from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.exceptions import except_orm
-from odoo.exceptions import ValidationError
-from dateutil.relativedelta import relativedelta
 
+from dateutil.relativedelta import relativedelta
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError, except_orm
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools.translate import _
 
 EM = (r"[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$")
 
@@ -104,6 +103,7 @@ class AcademicYear(models.Model):
 
     @api.constrains('current')
     def check_current_year(self):
+        '''Constraint on active current year'''
         check_year = self.search([('current', '=', True)])
         if len(check_year.ids) >= 2:
             raise ValidationError(_('''Error! You cannot set two current \
@@ -232,11 +232,6 @@ class SchoolStandard(models.Model):
                         ('medium_id', '=', rec.medium_id.id),
                         ('state', '=', 'done')])
 
-    @api.onchange('standard_id', 'division_id')
-    def onchange_combine(self):
-        self.name = str(self.standard_id.name
-                        ) + '-' + str(self.division_id.name)
-
     @api.depends('subject_ids')
     def _compute_subject(self):
         '''Method to compute subjects.'''
@@ -283,26 +278,26 @@ class SchoolStandard(models.Model):
                                      store=True)
     class_room_id = fields.Many2one('class.room', 'Room Number')
 
+    @api.onchange('standard_id', 'division_id')
+    def onchange_combine(self):
+        '''Onchange to assign name respective of it's standard and division'''
+        self.name = str(self.standard_id.name
+                        ) + '-' + str(self.division_id.name)
+
     @api.constrains('standard_id', 'division_id')
     def check_standard_unique(self):
         """Method to check unique standard."""
-        standard_search = self.env['school.standard'
-                                   ].search([('standard_id', '=',
-                                              self.standard_id.id),
-                                             ('division_id', '=',
-                                              self.division_id.id),
-                                             ('school_id', '=',
-                                              self.school_id.id),
-                                             ('id', 'not in', self.ids)])
+        standard_search = self.env['school.standard'].search([
+                                ('standard_id', '=', self.standard_id.id),
+                                ('division_id', '=', self.division_id.id),
+                                ('school_id', '=', self.school_id.id),
+                                ('id', 'not in', self.ids)])
         if standard_search:
-            raise ValidationError(_('''Division and class should be unique!'''
-                                    ))
-
-<<<<<<< HEAD
-
-=======
->>>>>>> [13.0][MIG]Migrated module school
+            raise ValidationError(_(
+                    '''Division and class should be unique!'''))
+  
     def unlink(self):
+        """Method to check unique standard."""
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
                 raise ValidationError(_('''You cannot delete this standard
@@ -350,7 +345,7 @@ class SchoolSchool(models.Model):
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
-    required_age = fields.Integer("Student Admission Age Required", default=5)
+    required_age = fields.Integer("Student Admission Age Required", default=6)
 
     @api.model
     def create(self, vals):
@@ -466,9 +461,8 @@ class DocumentType(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('seq_no', _('New')) == _('New'):
-            vals['seq_no'] = self.env['ir.sequence'
-                                      ].next_by_code('document.type'
-                                                     ) or _('New')
+            vals['seq_no'] = self.env['ir.sequence'].next_by_code(
+                                            'document.type') or _('New')
         return super(DocumentType, self).create(vals)
 
 
@@ -552,6 +546,8 @@ class StudentPreviousSchool(models.Model):
 
     @api.constrains('admission_date', 'exit_date')
     def check_date(self):
+        ''' Defining a student previous school information '''
+        
         curr_dt = datetime.now()
         new_dt = datetime.strftime(curr_dt,
                                    DEFAULT_SERVER_DATE_FORMAT)
@@ -664,13 +660,9 @@ class StudentNews(models.Model):
         """Check news date."""
         new_date = datetime.now()
         if self.date < new_date:
-            raise ValidationError(_('''Configure expiry date greater than \
-current date!'''))
+            raise ValidationError(_('''
+                    Configure expiry date greater than current date!'''))
 
-<<<<<<< HEAD
-
-=======
->>>>>>> [13.0][MIG]Migrated module school
     def news_update(self):
         '''Method to send email to student for news update'''
         emp_obj = self.env['hr.employee']
@@ -773,14 +765,10 @@ class ClassRoom(models.Model):
 class Report(models.Model):
     _inherit = "ir.actions.report"
 
-<<<<<<< HEAD
-
-=======
->>>>>>> [13.0][MIG]Migrated module school
     def render_template(self, template, values=None):
         student_id = self.env['student.student'].\
             browse(self._context.get('student_id', False))
         if student_id and student_id.state == 'draft':
-            raise ValidationError(_('''You cannot print report for
-                student in unconfirm state!'''))
+            raise ValidationError(_('''
+                You cannot print report forstudent in unconfirm state!'''))
         return super(Report, self).render_template(template, values)

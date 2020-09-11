@@ -2,7 +2,7 @@
 
 {
     'name': 'School',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
@@ -22,8 +22,8 @@
              'data/student_sequence.xml',
              'wizard/assign_roll_no_wizard.xml',
              'wizard/move_standards_view.xml',
-             'views/report_view.xml',
-             'views/identity_card.xml',
+             'report/report_view.xml',
+             'report/identity_card.xml',
              'views/template_view.xml'],
     'demo': ['demo/school_demo.xml'],
     'installable': True,

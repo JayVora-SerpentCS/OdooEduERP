@@ -431,7 +431,7 @@
                         <field name="date_start" placeholder="Start Date" />
                          <field name="date_stop" placeholder="Stop Date" />
                         <field name="sequence" />
-                        <field name="current"/>
+                        <field name="current" widget="boolean_toggle"/>
                         <field name="grade_id" placeholder="Grade System" 
                             options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" invisible="1"/>
                     </group>
@@ -998,66 +998,7 @@
             </field>
         </field>
     </record>
-    <report 
-        id="account.action_report_print_overdue"
-        model="res.partner"
-        report_type="qweb-pdf"
-        string="Due Payments"
-        name="account.report_overdue"
-        file="account.report_overdue"
-        groups="school.group_school_administration"
-        />
-    <report 
-        id="account.action_report_partnerledger"
-        model="account.report_partnerledger"
-        string="Partner Ledger"
-        report_type="qweb-pdf"
-        name="account.report_partnerledger"
-        file="account.report_partnerledger"
-        groups="school.group_school_administration"
-        />
-    <act_window
-        id="account.act_account_partner_ledger_payable"
-        name="Partner Ledger: Payable"
-        res_model="account.move.line"
-        context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
-        binding_model="res.partner"
-        groups="school.group_school_administration"/>
-    <act_window
-        id="account.act_account_partner_ledger_payable_no_partner"
-        name="Unknown Partner Ledger"
-        res_model="account.move.line"
-        context="{'search_default_unreconciled':1, 'search_default_payable':1}"
-        domain="[('partner_id', '=', False)]"
-        binding_model="res.partner"
-        groups="school.group_school_administration"/>
-    <act_window
-        id="account.act_account_partner_ledger_receivable"
-        name="Partner Ledger: Receivable"
-        res_model="account.move.line"
-        context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
-        binding_model="res.partner"
-        groups="school.group_school_administration"/>
-    <act_window
-        id="account.act_account_partner_ledger_receivable_no_partner"
-        name="Unknown Partner Ledger"
-        res_model="account.move.line"
-        context="{'search_default_unreconciled':1, 'search_default_receivable':1}"
-        domain="[('partner_id', '=', False)]"
-        binding_model="res.partner"
-        groups="school.group_school_administration"/>
-    <act_window
-        id="account.action_move_select"
-        name="Journal Entries"
-        context="{'search_default_dummy_account_id': [active_id]}"
-        res_model="account.move"
-        groups="school.group_school_administration"
-        />
-    <act_window
-        id="account.action_move_line_select_by_partner"
-        name="Journal Items"
-        context="{'search_default_partner_id': [active_id]}"
-        res_model="account.move.line"
-        binding_model="res.partner"
-        groups="school.group_school_administration"/>
+
+    <!-- removed the inherited reports and act_windows of account which has been deprecated since V12-->
+
 </odoo>

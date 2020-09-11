@@ -1,13 +1,14 @@
 # See LICENSE file for full copyright and licensing details.
 
-import time
 import base64
+import time
 from datetime import date
-from odoo import models, fields, api, _
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError, except_orm
 from odoo.modules import get_module_resource
-from odoo.exceptions import except_orm
-from odoo.exceptions import ValidationError
-from .import school
+
+from . import school
 
 # from lxml import etree
 # added import statement in try-except because when server runs on
@@ -34,10 +35,8 @@ class StudentStudent(models.Model):
         login_user = self.env['res.users'].browse(self._uid)
         name = self._context.get('student_id')
         if name and teacher_group and parent_grp:
-            parent_login_stud = self.env['school.parent'
-                                         ].search([('partner_id', '=',
-                                                    login_user.partner_id.id)
-                                                   ])
+            parent_login_stud = self.env['school.parent'].search([
+                            ('partner_id', '=', login_user.partner_id.id)])
             childrens = parent_login_stud.student_id
             args.append(('id', 'in', childrens.ids))
         return super(StudentStudent, self)._search(
@@ -49,7 +48,7 @@ class StudentStudent(models.Model):
         '''Method to calculate student age'''
         current_dt = date.today()
         for rec in self:
-            if rec.date_of_birth:
+            if rec.date_of_birth and rec.date_of_birth < current_dt:
                 start = rec.date_of_birth
                 age_calc = ((current_dt - start).days / 365)
                 # Age should be greater than 0
@@ -57,66 +56,6 @@ class StudentStudent(models.Model):
                     rec.age = age_calc
             else:
                 rec.age = 0
-
-    @api.constrains('date_of_birth')
-    def check_age(self):
-        '''Method to check age should be greater than 5'''
-        current_dt = date.today()
-        if self.date_of_birth:
-            start = self.date_of_birth
-            age_calc = ((current_dt - start).days / 365)
-            # Check if age less than required age
-            if age_calc < self.school_id.required_age:
-                raise ValidationError(_('''Age of student should be greater \
-than %s years!''' % (self.school_id.required_age)))
-
-    @api.model
-    def create(self, vals):
-        '''Method to create user when student is created'''
-        if vals.get('pid', _('New')) == _('New'):
-            vals['pid'] = self.env['ir.sequence'
-                                   ].next_by_code('student.student'
-                                                  ) or _('New')
-        if vals.get('pid', False):
-            vals['login'] = vals['pid']
-            vals['password'] = vals['pid']
-        else:
-            raise except_orm(_('Error!'),
-                             _('''PID not valid
-                                 so record will not be saved.'''))
-        if vals.get('company_id', False):
-            company_vals = {'company_ids': [(4, vals.get('company_id'))]}
-            vals.update(company_vals)
-        if vals.get('email'):
-            school.emailvalidation(vals.get('email'))
-        res = super(StudentStudent, self).create(vals)
-        teacher = self.env['school.teacher']
-        for data in res.parent_id:
-            teacher_rec = teacher.search([('stu_parent_id',
-                                           '=', data.id)])
-            for record in teacher_rec:
-                record.write({'student_id': [(4, res.id, None)]})
-        # Assign group to student based on condition
-        emp_grp = self.env.ref('base.group_user')
-        if res.state == 'draft':
-            admission_group = self.env.ref('school.group_is_admission')
-            new_grp_list = [admission_group.id, emp_grp.id]
-            res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
-        elif res.state == 'done':
-            done_student = self.env.ref('school.group_school_student')
-            group_list = [done_student.id, emp_grp.id]
-            res.user_id.write({'groups_id': [(6, 0, group_list)]})
-        return res
-
-    def write(self, vals):
-        teacher = self.env['school.teacher']
-        if vals.get('parent_id'):
-            for parent in vals.get('parent_id')[0][2]:
-                teacher_rec = teacher.search([('stu_parent_id',
-                                               '=', parent)])
-                for data in teacher_rec:
-                    data.write({'student_id': [(4, self.id)]})
-        return super(StudentStudent, self).write(vals)
 
     @api.model
     def _default_image(self):
@@ -127,7 +66,9 @@ than %s years!''' % (self.school_id.required_age)))
 
     @api.depends('state')
     def _compute_teacher_user(self):
+        '''Compute teacher boolean field if user form teacher group'''
         for rec in self:
+            rec.teachr_user_grp = False
             if rec.state == 'done':
                 teacher = self.env.user.has_group("school.group_school_teacher"
                                                   )
@@ -243,6 +184,67 @@ defined!Please contact to Administator!'''
                                      compute="_compute_teacher_user",
                                      )
     active = fields.Boolean(default=True)
+
+    @api.model
+    def create(self, vals):
+        '''Method to create user when student is created'''
+        if vals.get('pid', _('New')) == _('New'):
+            vals['pid'] = self.env['ir.sequence'
+                                   ].next_by_code('student.student'
+                                                  ) or _('New')
+        if vals.get('pid', False):
+            vals['login'] = vals['pid']
+            vals['password'] = vals['pid']
+        else:
+            raise except_orm(_('Error!'),
+                             _('''PID not valid
+                                 so record will not be saved.'''))
+        if vals.get('company_id', False):
+            company_vals = {'company_ids': [(4, vals.get('company_id'))]}
+            vals.update(company_vals)
+        if vals.get('email'):
+            school.emailvalidation(vals.get('email'))
+        res = super(StudentStudent, self).create(vals)
+        teacher = self.env['school.teacher']
+        for data in res.parent_id:
+            teacher_rec = teacher.search([('stu_parent_id',
+                                           '=', data.id)])
+            for record in teacher_rec:
+                record.write({'student_id': [(4, res.id, None)]})
+        # Assign group to student based on condition
+        emp_grp = self.env.ref('base.group_user')
+        if res.state == 'draft':
+            admission_group = self.env.ref('school.group_is_admission')
+            new_grp_list = [admission_group.id, emp_grp.id]
+            res.user_id.write({'groups_id': [(6, 0, new_grp_list)]})
+        elif res.state == 'done':
+            done_student = self.env.ref('school.group_school_student')
+            group_list = [done_student.id, emp_grp.id]
+            res.user_id.write({'groups_id': [(6, 0, group_list)]})
+        return res
+
+    def write(self, vals):
+        '''Inherited method write to assign 
+        student to their respective teacher'''
+        teacher = self.env['school.teacher']
+        if vals.get('parent_id'):
+            for parent in vals.get('parent_id')[0][2]:
+                teacher_rec = teacher.search([('stu_parent_id', '=', parent)])
+                for data in teacher_rec:
+                    data.write({'student_id': [(4, self.id)]})
+        return super(StudentStudent, self).write(vals)
+
+    @api.constrains('date_of_birth')
+    def check_age(self):
+        '''Method to check age should be greater than 6'''
+        current_dt = date.today()
+        if self.date_of_birth:
+            start = self.date_of_birth
+            age_calc = ((current_dt - start).days / 365)
+            # Check if age less than required age
+            if age_calc < self.school_id.required_age:
+                raise ValidationError(_('''Age of student should be greater \
+than %s years!''' % (self.school_id.required_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''

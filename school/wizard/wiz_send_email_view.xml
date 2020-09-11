@@ -20,15 +20,15 @@
     </record>
 
     <!-- Action Of Form View Of Send Mail -->
-
-    <act_window id="act_send_email"
-        name="Send Email"
-        res_model="send.email"
-        binding_model="student.student"
-        view_mode="form"
-        target="new"
-        binding_views="form"
-        groups="school.group_school_administration,school.group_school_teacher"
-        />
+    <record id="act_send_email" model="ir.actions.act_window">
+        <field name="name">Send Email</field>
+        <field name="res_model">send.email</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_student_student"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[(4, ref('school.group_school_administration')),
+                                       (4, ref('school.group_school_teacher'))]"/>
+    </record>
 
 </odoo>

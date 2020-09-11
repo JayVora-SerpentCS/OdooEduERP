@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class SchoolTeacher(models.Model):
@@ -37,12 +37,14 @@ class SchoolTeacher(models.Model):
 
     @api.onchange('is_parent')
     def _onchange_isparent(self):
+        """Onchange method for is parent"""
         if self.is_parent:
             self.stu_parent_id = False
             self.student_id = [(6, 0, [])]
 
     @api.onchange('stu_parent_id')
     def _onchangestudent_parent(self):
+        """Onchange method for student parent records"""
         stud_list = []
         if self.stu_parent_id and self.stu_parent_id.student_id:
             for student in self.stu_parent_id.student_id:
@@ -51,6 +53,7 @@ class SchoolTeacher(models.Model):
 
     @api.model
     def create(self, vals):
+        """Inherited create method to assign value to users for delegation"""
         teacher_id = super(SchoolTeacher, self).create(vals)
         user_obj = self.env['res.users']
         user_vals = {'name': teacher_id.name,
@@ -66,6 +69,7 @@ class SchoolTeacher(models.Model):
         return teacher_id
 
     def parent_crt(self, manager_id):
+        """Method to create parent record based on parent field"""
         stu_parent = []
         if manager_id.stu_parent_id:
             stu_parent = manager_id.stu_parent_id
@@ -91,6 +95,7 @@ class SchoolTeacher(models.Model):
         user_rec.write({'groups_id': [(6, 0, group_ids)]})
 
     def write(self, vals):
+        """Inherited write method to assign groups based on parent field"""
         if vals.get('is_parent'):
             self.parent_crt(self)
         if vals.get('student_id'):

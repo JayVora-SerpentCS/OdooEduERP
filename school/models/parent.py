@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class ParentRelation(models.Model):
@@ -17,19 +17,6 @@ class SchoolParent(models.Model):
 
     _name = 'school.parent'
     _description = 'Parent Information'
-
-    @api.onchange('student_id')
-    def onchange_student_id(self):
-        """Onchange Method for Student."""
-        self.standard_id = [(6, 0, [])]
-        self.stand_id = [(6, 0, [])]
-        standard_ids = [student.standard_id.id
-                        for student in self.student_id]
-        if standard_ids:
-            stand_ids = [student.standard_id.standard_id.id
-                         for student in self.student_id]
-            self.standard_id = [(6, 0, standard_ids)]
-            self.stand_id = [(6, 0, stand_ids)]
 
     partner_id = fields.Many2one('res.partner', 'User ID', ondelete="cascade",
                                  delegate=True, required=True)
@@ -48,8 +35,23 @@ class SchoolParent(models.Model):
     teacher_id = fields.Many2one('school.teacher', 'Teacher',
                                  related="standard_id.user_id", store=True)
 
+    @api.onchange('student_id')
+    def onchange_student_id(self):
+        """Onchange Method for Student."""
+        self.standard_id = [(6, 0, [])]
+        self.stand_id = [(6, 0, [])]
+        standard_ids = [student.standard_id.id
+                        for student in self.student_id]
+        if standard_ids:
+            stand_ids = [student.standard_id.standard_id.id
+                         for student in self.student_id]
+            self.standard_id = [(6, 0, standard_ids)]
+            self.stand_id = [(6, 0, stand_ids)]
+
     @api.model
     def create(self, vals):
+        """Inherited create method to assign values in
+        the users record to maintain the delegation"""
         parent_id = super(SchoolParent, self).create(vals)
         parent_grp_id = self.env.ref('school.group_school_parent')
         emp_grp = self.env.ref('base.group_user')

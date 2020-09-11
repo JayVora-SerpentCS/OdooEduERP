@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import fields, models
 
 
 class AssignRollNo(models.TransientModel):
@@ -17,11 +17,10 @@ class AssignRollNo(models.TransientModel):
         student_obj = self.env['student.student']
         # Search Student
         for rec in self:
-            student_ids = student_obj.search([('standard_id', '=',
-                                               rec.standard_id.id),
-                                              ('medium_id', '=',
-                                               rec.medium_id.id)],
-                                             order="name")
+            student_ids = student_obj.search([
+                            ('standard_id', '=', rec.standard_id.id),
+                            ('medium_id', '=', rec.medium_id.id)],
+                            order="name")
             # Assign roll no according to name.
             number = 1
             for student in student_ids:
