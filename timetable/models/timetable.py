@@ -46,18 +46,18 @@ class TimeTable(models.Model):
                                rec.end_time == rec_check.end_time and
                                rec.teacher_id.id == rec.teacher_id.id)]
                 if len(records) > 1:
-                    raise ValidationError(_('''You cannot set lecture at same \
-time %s  at same day %s for teacher \
-%s..!''') % (rec.start_time,
+                    raise ValidationError(_('''
+    You cannot set lecture at same time %s  at same day %s for teacher %s..!
+    ''') % (rec.start_time,
                                                          rec.week_day,
                                                          rec.teacher_id.name))
                 # Checks if time is greater than 24 hours than raise error
                 if rec.start_time > 24:
-                    raise ValidationError(_('''Start Time should be less than \
-24 hours!'''))
+                    raise ValidationError(_('''
+                        Start Time should be less than 24 hours!'''))
                 if rec.end_time > 24:
-                    raise ValidationError(_('''End Time should be less than \
-24 hours!'''))
+                    raise ValidationError(_('''
+                End Time should be less than 24 hours!'''))
             return True
 
 
@@ -73,8 +73,9 @@ class TimeTableLine(models.Model):
         '''Check if lecture is not related to teacher than raise error.'''
         if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
                 self.table_id.timetable_type == 'regular'):
-            raise ValidationError(_('''The subject %s is not assigned to \
-teacher %s.''') % (self.subject_id.name, self.teacher_id.name))
+            raise ValidationError(_('''
+                The subject %s is not assigned to teacher %s.'''
+                ) % (self.subject_id.name, self.teacher_id.name))
 
     teacher_id = fields.Many2one('school.teacher', 'Faculty Name',
                                  help="Select Teacher")
@@ -107,8 +108,8 @@ teacher %s.''') % (self.subject_id.name, self.teacher_id.name))
                             self.teacher_id == record.teacher_id and
                             self.week_day == record.week_day and
                             self.start_time == record.start_time):
-                        raise ValidationError(_('''There is a lecture of \
-Lecturer at same time!'''))
+                        raise ValidationError(_('''
+                            There is a lecture of Lecturer at same time!'''))
                     if (data.timetable_type == 'regular' and
                             self.table_id.timetable_type == 'regular' and
                             self.class_room_id == record.class_room_id and

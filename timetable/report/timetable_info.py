@@ -8,6 +8,7 @@ class ReportTimetableInfo(models.AbstractModel):
     _description = "Timetable details"
 
     def _get_timetable(self, timetable_id):
+        """Method to combain values for timetable"""
         timetable_detail = []
         self._cr.execute('''select t.start_time,t.end_time,s.name,week_day,
                         st.employee_id, hr.name as
@@ -39,6 +40,7 @@ class ReportTimetableInfo(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        """Inherited method to get report data"""
         timetable_report = self.env['ir.actions.report']._get_report_from_name(
             'timetable.timetable')
         docs = self.env['time.table'].browse(docids)
