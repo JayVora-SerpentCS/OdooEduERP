@@ -2,7 +2,7 @@
 
 {
     'name': 'Assignment Management',
-    'version': "13.0.1.0.0",
+    'version': "14.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'license': "AGPL-3",

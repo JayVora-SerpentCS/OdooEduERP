@@ -10,13 +10,6 @@ class SchoolTeacherAssignment(models.Model):
     _name = 'school.teacher.assignment'
     _description = 'Teacher Assignment Information'
 
-    @api.constrains('assign_date', 'due_date')
-    def check_date(self):
-        '''Method to check constraint of due date and assign date'''
-        if self.due_date < self.assign_date:
-            raise ValidationError(_('Due date of homework should \
-be greater than assign date'))
-
     name = fields.Char('Assignment Name',
                        help="Name of Assignment")
     subject_id = fields.Many2one('subject.subject', 'Subject', required=True,
@@ -48,7 +41,15 @@ be greater than assign date'))
 
     @api.onchange('standard_id')
     def onchange_subject_standard(self):
+        '''Onchange method to assign assignment based on standard'''
         self.subject_standard_assignment = self.standard_id.standard_id.id
+
+    @api.constrains('assign_date', 'due_date')
+    def check_date(self):
+        '''Method to check constraint of due date and assign date'''
+        if self.due_date < self.assign_date:
+            raise ValidationError(_('''
+                Due date of homework should be greater than assign date'''))
 
     def active_assignment(self):
         ''' This method change state as active state
@@ -59,9 +60,9 @@ be greater than assign date'))
         student_obj = self.env['student.student']
         ir_attachment_obj = self.env['ir.attachment']
         for rec in self:
-            students = student_obj.search([('standard_id', '=',
-                                            rec.standard_id.id),
-                                           ('state', '=', 'done')])
+            students = student_obj.search([
+                            ('standard_id', '=', rec.standard_id.id),
+                            ('state', '=', 'done')])
             if not rec.attached_homework:
                 raise ValidationError(_('''Please attach the homework!'''))
             for std in students:
@@ -94,10 +95,11 @@ be greater than assign date'))
         self.state = 'done'
 
     def unlink(self):
+        '''Inherited unlink method to give warning on record deletion'''
         for rec in self:
             if rec.state != 'draft':
-                raise ValidationError(_('''You can delete record in unconfirm \
-state only!'''))
+                raise ValidationError(_('''
+                    You can delete record in unconfirm state only!'''))
         return super(SchoolTeacherAssignment, self).unlink()
 
 
@@ -106,12 +108,6 @@ class SchoolStudentAssignment(models.Model):
 
     _name = 'school.student.assignment'
     _description = 'Student Assignment Information'
-
-    @api.constrains('assign_date', 'due_date')
-    def check_date(self):
-        if self.due_date < self.assign_date:
-            raise ValidationError(_('Due date of homework should be greater \
-                                   than Assign date!'))
 
     name = fields.Char('Assignment Name',
                        help="Assignment Name")
@@ -129,8 +125,8 @@ class SchoolStudentAssignment(models.Model):
     due_date = fields.Date('Due Date', required=True,
                            help="End date of assignment")
     state = fields.Selection([('draft', 'Draft'), ('active', 'Active'),
-                              ('reject', 'Reject'),
-                              ('done', 'Done')], 'Status',
+                              ('reject', 'Reject'), ('done', 'Done')],
+                             'Status',
                              default="draft",
                              help="States of assignment",
                              )
@@ -152,6 +148,14 @@ class SchoolStudentAssignment(models.Model):
     file_name = fields.Char("File Name")
     active = fields.Boolean('Active', default=True)
 
+    @api.constrains('assign_date', 'due_date')
+    def check_date(self):
+        '''Method to check constraint of due date
+        and assign date for homework'''
+        if self.due_date < self.assign_date:
+            raise ValidationError(_('''
+                Due date of homework should be greater than Assign date!'''))
+
     @api.constrains('submit_assign', 'file_name')
     def check_file_format(self):
         if self.file_name:
@@ -164,8 +168,8 @@ class SchoolStudentAssignment(models.Model):
             if (file_format in self.attachfile_format or
                     self.attachfile_format in file_format):
                     return True
-            raise ValidationError(_('''Kindly attach file with \
-format: %s!''') % self.attachfile_format)
+            raise ValidationError(_('''
+            Kindly attach file with format: %s!''') % self.attachfile_format)
 
     @api.onchange('student_id')
     def onchange_student_standard(self):
@@ -184,7 +188,7 @@ format: %s!''') % self.attachfile_format)
             @return : True
         '''
         if self.submission_type == 'softcopy' and not self.submit_assign:
-            raise ValidationError(_('''You have not attached the homework! \
+            raise ValidationError(_('''You have not attached the homework! 
 Please attach the homework!'''))
         self.state = 'done'
 
@@ -195,10 +199,11 @@ Please attach the homework!'''))
         return True
 
     def unlink(self):
+        '''Inherited unlink method to give warning on record deletion'''
         for rec in self:
             if rec.state != 'draft':
-                raise ValidationError(_('''You can delete record in unconfirm \
-state only!'''))
+                raise ValidationError(_('''
+                        You can delete record in unconfirm state only!'''))
         return super(SchoolStudentAssignment, self).unlink()
 
 

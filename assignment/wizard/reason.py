@@ -12,6 +12,7 @@ class RejectReason(models.TransientModel):
     reasons = fields.Text('Reject Reason')
 
     def save_reason(self):
+        """Method to write reason in assignment model from wizard"""
         student_assignment = self.env['school.student.assignment']
         for rec in self:
             student = student_assignment.browse(rec._context.get('active_id'))

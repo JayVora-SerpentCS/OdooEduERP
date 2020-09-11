@@ -14,7 +14,8 @@
                     <field name="subject_id" />
                     <field name="assign_date" />
                     <field name="due_date"/>
-                    <field name="state" select="1"/>
+                    <field name="state" select="1" widget="badge" decoration-info="state in ('draft')" 
+                                                                  decoration-success="state in ('active','done')"/>
                 </tree>
             </field>
         </record>
@@ -172,7 +173,9 @@
                     <field name="standard_id"/>
                     <field name="assign_date"/>
                     <field name="due_date"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge" decoration-info="state in ('draft')"
+                                                       decoration-success="state in ('active','done')"
+                                                       decoration-danger="state in ('reject')"/>
                 </tree>
             </field>
         </record>
