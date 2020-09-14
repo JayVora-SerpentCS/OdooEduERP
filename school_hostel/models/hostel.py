@@ -162,9 +162,7 @@ class HostelStudent(models.Model):
     def check_room_avaliable(self):
         '''Check Room Availability'''
         if self.room_id.availability <= 0:
-            raise ValidationError(_('''There is no availability in the
-                raise ValidationError(_('''There is no availability in the\
-room!'''))
+            raise ValidationError(_('''There is no availability in the room!'''))
 
     def unlink(self):
         for rec in self:
