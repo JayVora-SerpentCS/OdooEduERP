@@ -6,7 +6,7 @@
                <t t-call="web.external_layout">
                  <div class="page">
                      <div class="oe_structure"/>
-                     <br/><br/>
+                     <br/><br/><br/><br/>
                      <table width="100%">
                          <center>
                              <h1>Attendances By Month</h1>

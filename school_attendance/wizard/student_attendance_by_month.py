@@ -19,11 +19,11 @@ class StudentAttendanceByMonth(models.TransientModel):
     def default_get(self, fields):
         """Overriding DefaultGet."""
         res = super(StudentAttendanceByMonth, self).default_get(fields)
-        students = self.env['student.student'
-                            ].browse(self._context.get('active_id'))
+        students = self.env['student.student'].browse(
+                                            self._context.get('active_id'))
         if students.state == 'draft':
-            raise ValidationError(_('''You can not print report for student in \
-unconfirm state!'''))
+            raise ValidationError(_('''
+                You can not print report for student in unconfirm state!'''))
         return res
 
     def print_report(self):
@@ -35,20 +35,19 @@ unconfirm state!'''))
         @param context : standard Dictionary
         @return : printed report
         '''
-        stud_search = self.env['student.student'
-                               ].search([('id', '=', self.env.context.get('active_id')),
-                                         ('state', '=', 'done')])
+        stud_search = self.env['student.student'].search([
+                            ('id', '=', self.env.context.get('active_id')),
+                            ('state', '=', 'done')])
         daily_attend = self.env['daily.attendance']
         for rec in self:
-            attend_stud = daily_attend.search([('standard_id', '=',
-                                                stud_search.standard_id.id),
-                                               ('date', '>=',
-                                                rec.month.date_start),
-                                               ('date', '<=',
-                                                rec.month.date_stop)])
+            attend_stud = daily_attend.search([
+                            ('standard_id', '=', stud_search.standard_id.id),
+                            ('date', '>=', rec.month.date_start),
+                            ('date', '<=', rec.month.date_stop)])
             if not attend_stud:
-                raise ValidationError(_('''There is no data of attendance for \
-student in selected month or year!'''))
+                raise ValidationError(_('''
+        There is no data of attendance for student in selected month or year!
+        '''))
         data = self.read([])[0]
         if data.get('year'):
             data['year'] = self.year.name

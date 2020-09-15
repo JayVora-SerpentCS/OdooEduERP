@@ -28,10 +28,10 @@
 
         <record id="action_student_attendance_by_month" model="ir.actions.act_window">
             <field name="name">Student Attendances By Month</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">student.attendance.by.month</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="view_id" ref="view_student_attendance_by_month_form"/>
             <field name="context">{'student_id': active_id}</field>
             <field name="binding_model_id" ref="school.model_student_student"/>
             <field name="binding_type">report</field>

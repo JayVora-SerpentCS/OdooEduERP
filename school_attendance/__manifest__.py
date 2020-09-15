@@ -2,7 +2,7 @@
 
 {
     'name': 'Attendance Management',
-    'version': "13.0.1.0.0",
+    'version': "14.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'images': ['static/description/SchoolAttendance.png'],
@@ -14,10 +14,10 @@
     'data': ['security/attendance_security.xml',
              'security/ir.model.access.csv',
              'views/school_attendance_view.xml',
-             'views/month_attendance.xml',
-             'views/report_view.xml',
              'wizard/attendance_sheet_wizard_view.xml',
-             'wizard/student_attendance_by_month_view.xml'],
+             'wizard/student_attendance_by_month_view.xml',
+             'report/month_attendance.xml',
+             'report/report_view.xml'],
     'demo': ['demo/school_attendance_demo.xml'],
     'installable': True,
     'application': True

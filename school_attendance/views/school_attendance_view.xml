@@ -197,7 +197,7 @@
                     <field name="teacher_id"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge" decoration-info="state in ('draft','toapprove')" decoration-danger="state in ('reject')" decoration-success="state in ('approve')"/>
                 </tree>
              </field>
         </record>
@@ -300,8 +300,10 @@
                     <field name="user_id" />
                     <field name="standard_id" />
                     <field name="student_ids">
-                        <field name="roll_no" />
-                        <field name="stud_id" />
+                        <form>
+                            <field name="roll_no" />
+                            <field name="stud_id" />
+                        </form>
                     </field>
                 </tree>
             </field>
