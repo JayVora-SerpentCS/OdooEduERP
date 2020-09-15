@@ -3,6 +3,7 @@
 from datetime import date, datetime
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class StudentStudent(models.Model):
@@ -16,10 +17,10 @@ class StudentStudent(models.Model):
         '''Override method to make exam results of student active false
         when student is alumni'''
         for rec in self:
-            addexam_result = self.env['additional.exam.result'].\
-                search([('student_id', '=', rec.id)])
-            regular_examresult = self.env['exam.result'].\
-                search([('student_id', '=', rec.id)])
+            addexam_result = self.env['additional.exam.result'].search([
+                                                ('student_id', '=', rec.id)])
+            regular_examresult = self.env['exam.result'].search([
+                                                ('student_id', '=', rec.id)])
             if addexam_result:
                 addexam_result.write({'active': False})
             if regular_examresult:
@@ -32,7 +33,7 @@ class StudentStudent(models.Model):
         '''Override method to get exam of student selected.'''
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
-            exam_data = exam_obj.browse(self._context['exam'])
+            exam_data = exam_obj.browse(self._context.get('exam'))
             std_ids = [std_id.id for std_id in exam_data.standard_id]
             args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self)._search(
@@ -43,27 +44,28 @@ class StudentStudent(models.Model):
 class ExtendedTimeTable(models.Model):
     _inherit = 'time.table'
 
+    timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
+                                      string='Time Table Type', required=True,
+                                      ondelete={'exam': 'set default'},
+                                      inivisible=False)
+    exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
+                                              'TimeTable Lines')
+    exam_id = fields.Many2one('exam.exam', 'Exam')
+
     def unlink(self):
+        '''Inherited unlink method to check the state at record deletion.'''
         exam = self.env['exam.exam']
         schedule_line = self.env['exam.schedule.line']
         for rec in self:
             exam_search = exam.search([('state', '=', 'running')])
             for data in exam_search:
-                schedule_line_search = schedule_line.search([('exam_id', '=',
-                                                              data.id),
-                                                             ('timetable_id',
-                                                              '=', rec.id)])
+                schedule_line_search = schedule_line.search([
+                                            ('exam_id', '=', data.id),
+                                            ('timetable_id', '=', rec.id)])
                 if schedule_line_search:
-                    raise ValidationError(_('''You cannot delete schedule of
-                    exam which is in running!'''))
+                    raise ValidationError(_('''
+                You cannot delete schedule of exam which is in running!'''))
         return super(ExtendedTimeTable, self).unlink()
-
-    timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
-                                      string='Time Table Type', required=True,
-                                      inivisible=False)
-    exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
-                                              'TimeTable Lines')
-    exam_id = fields.Many2one('exam.exam', 'Exam')
 
     @api.constrains('exam_timetable_line_ids')
     def _check_exam(self):
@@ -81,9 +83,8 @@ class ExtendedTimeTable(models.Model):
                                rec.teacher_id.id == rec.teacher_id.id and
                                rec.exm_date == rec.exm_date)]
                 if len(records) > 1:
-                    raise ValidationError(_('''You cannot set exam at same
-                                            time %s  at same day %s for
-                                            teacher %s!''') %
+                    raise ValidationError(_('''
+    You cannot set exam at same time %s  at same day %s for teacher %s!''') %
                                            (rec.start_time, rec.day_of_week,
                                             rec.teacher_id.name))
 
@@ -107,14 +108,17 @@ class ExtendedTimeTableLine(models.Model):
         '''Method to check constraint of start date and end date'''
         for line in self:
             if line.exm_date:
-                dt = datetime.strptime(line.exm_date, "%Y-%m-%d")
+                dt = datetime.strptime(line.exm_date,
+                                       DEFAULT_SERVER_DATE_FORMAT)
                 if line.week_day != dt.strftime("%A").lower():
                     return False
-                elif dt.__str__() < datetime.strptime(date.today().__str__(),
-                                                      "%Y-%m-%d").__str__():
-                    raise ValidationError(_('''Invalid Date Error !\
-                        Either you have selected wrong day\
-for the date or you have selected invalid date!'''))
+                elif dt.__str__() < datetime.strptime(
+                                        date.today().__str__(),
+                                        DEFAULT_SERVER_DATE_FORMAT).__str__():
+                    raise ValidationError(_('''
+                        Invalid Date Error !
+                        Either you have selected wrong day for the date  
+                        or you have selected invalid date!'''))
 
     @api.constrains('teacher_id')
     def check_supervisior_exam(self):
@@ -129,14 +133,14 @@ for the date or you have selected invalid date!'''))
         '''Method to check constraint of start time and end time.'''
         for rec in self:
             if rec.start_time >= rec.end_time:
-                raise ValidationError(_('''Start time should be less than end \
-time!'''))
+                raise ValidationError(_('''
+                        Start time should be less than end time!'''))
 
     @api.constrains('teacher_id', 'class_room_id')
     def check_teacher_room(self):
         """Method to Check room."""
-        timetable_rec = self.env['time.table'].search([('id', '!=',
-                                                        self.table_id.id)])
+        timetable_rec = self.env['time.table'].search([
+                                        ('id', '!=', self.table_id.id)])
         if timetable_rec:
             for data in timetable_rec:
                 for record in data.timetable_ids:
@@ -155,20 +159,22 @@ time!'''))
                 if (record.timetable_type == 'exam' and
                         self.exm_date == rec.exm_date and
                         self.start_time == rec.start_time):
-                    raise ValidationError(_('''There is already Exam at
-                        same Date and Time!'''))
+                    raise ValidationError(_('''
+                            There is already Exam at same Date and Time!'''))
                 if (record.timetable_type == 'exam' and
                         self.table_id.timetable_type == 'exam' and
                         self.subject_id == rec.subject_id):
-                        raise ValidationError(_('''%s Subject Exam Already
-                        Taken''') % (self.subject_id.name))
+                        raise ValidationError(_('''
+                            %s Subject Exam Already Taken
+                            ''') % (self.subject_id.name))
                 if (record.timetable_type == 'exam' and
                         self.table_id.timetable_type == 'exam' and
                         self.exm_date == rec.exm_date and
                         self.class_room_id == rec.class_room_id and
                         self.start_time == rec.start_time):
-                    raise ValidationError(_('''%s is occupied by '%s' for %s
-                    class!''') % (self.class_room_id.name, record.name,
+                    raise ValidationError(_('''
+                        %s is occupied by '%s' for %s class!
+                    ''') % (self.class_room_id.name, record.name,
                                   record.standard_id.standard_id.name))
 
 
@@ -183,15 +189,15 @@ class ExamExam(models.Model):
         '''Method to check constraint of exam start date and end date.'''
         for rec in self:
             if rec.end_date < rec.start_date:
-                raise ValidationError(_('''Exam end date should be
-                                  greater than start date!'''))
+                raise ValidationError(_('''
+                    Exam end date should be greater than start date!'''))
             for line in rec.exam_schedule_ids:
                 if line.timetable_id:
                     for tt in line.timetable_id.exam_timetable_line_ids:
                         if not rec.start_date <= tt.exm_date <= rec.end_date:
-                            raise ValidationError(_('Invalid Exam Schedule\
-                            \n\nExam Dates must be in between Start\
-                            date and End date !'))
+                            raise ValidationError(_('''Invalid Exam Schedule!
+                \n\nExam Dates must be in between Start date and End date !
+                '''))
 
     @api.constrains('active')
     def check_active(self):
@@ -201,8 +207,9 @@ class ExamExam(models.Model):
         if not self.active:
             for result in result_obj.search([('s_exam_ids', '=', self.id)]):
                 if result.state != 'done':
-                    raise ValidationError(_('Kindly,mark as done %s\
-                    examination results!') % (self.name))
+                    raise ValidationError(_('''
+                        Kindly,mark as done %s examination results!
+                    ''') % (self.name))
 
     active = fields.Boolean('Active', default="True")
     name = fields.Char("Exam Name", required=True,
@@ -305,19 +312,21 @@ class ExamScheduleLine(models.Model):
     _name = 'exam.schedule.line'
     _description = "Exam Schedule Line Details"
 
+    standard_id = fields.Many2one('school.standard', 'Standard',
+                                  help="Select Standard")
+    timetable_id = fields.Many2one('time.table', 'Exam Schedule')
+    exam_id = fields.Many2one('exam.exam', 'Exam')
+    standard_ids = fields.Many2many('standard.standard',
+                                    string='Participant Standards')
+
     @api.onchange('standard_ids')
     def onchange_standard(self):
         '''Method to get standard according to the standard selected'''
         standard_ids = []
         for rec in self:
             standard_ids = [std.id for std in rec.standard_ids]
-        return {'domain': {'standard_id': [('standard_id', 'in',
-                                            standard_ids)]}}
-
-    standard_id = fields.Many2one('school.standard', 'Standard',
-                                  help="Select Standard")
-    timetable_id = fields.Many2one('time.table', 'Exam Schedule')
-    exam_id = fields.Many2one('exam.exam', 'Exam')
+        return {'domain': {'standard_id': [
+                            ('standard_id', 'in', standard_ids)]}}
 
 
 class AdditionalExam(models.Model):
@@ -327,6 +336,7 @@ class AdditionalExam(models.Model):
     _description = 'additional Exam Information'
 
     def _compute_color_name(self):
+        '''Compute method to assign color name'''
         for rec in self:
             rec.color_name = rec.subject_id.id
 
@@ -355,19 +365,21 @@ class AdditionalExam(models.Model):
     def check_marks(self):
         """Method to check marks."""
         if self.minimum_marks > self.maximum_marks:
-            raise ValidationError(_('''Configure Maximum marks greater than \
-minimum marks!'''))
+            raise ValidationError(_('''
+                    Configure Maximum marks greater than minimum marks!'''))
 
     @api.model
     def create(self, vals):
+        '''Inherited create method assign create date of the record'''
         curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
+        new_dt = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
         vals.update({'create_date': new_dt})
         return super(AdditionalExam, self).create(vals)
 
     def write(self, vals):
+        '''Inherited write methodto update the write date of the record'''
         curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
+        new_dt = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
         vals.update({'write_date': new_dt})
         return super(AdditionalExam, self).write(vals)
 
@@ -432,41 +444,6 @@ class ExamResult(models.Model):
             if flag:
                 rec.result = 'Fail'
 
-    @api.model
-    def create(self, vals):
-        if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id'
-                                                                  ))
-            vals.update({'roll_no_id': student.roll_no,
-                         'standard_id': student.standard_id.id
-                         })
-        return super(ExamResult, self).create(vals)
-
-    def write(self, vals):
-        if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id'
-                                                                  ))
-            vals.update({'roll_no_id': student.roll_no,
-                         'standard_id': student.standard_id.id
-                         })
-        return super(ExamResult, self).write(vals)
-
-    def unlink(self):
-        for rec in self:
-            if rec.state != 'draft':
-                raise ValidationError(_('''You can delete record in unconfirm
-                state only!'''))
-        return super(ExamResult, self).unlink()
-
-    @api.onchange('student_id')
-    def onchange_student(self):
-        '''Method to get standard and roll no of student selected'''
-        self.standard_id = False
-        self.roll_no_id = False
-        if self.student_id:
-            self.standard_id = self.student_id.standard_id.id
-            self.roll_no_id = self.student_id.roll_no
-
     s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True,
                                  help="Select Exam")
     student_id = fields.Many2one("student.student", "Student Name",
@@ -502,15 +479,51 @@ class ExamResult(models.Model):
     grade_system = fields.Many2one('grade.master', "Grade System",
                                    help="Grade System selected")
     message_ids = fields.One2many('mail.message', 'res_id', 'Messages',
-                                  domain=lambda self: [('model', '=',
-                                                        self._name)],
+                                  domain=lambda self: [
+                                   ('model', '=', self._name)],
                                   auto_join=True)
     message_follower_ids = fields.One2many('mail.followers', 'res_id',
                                            'Followers',
-                                           domain=lambda self: [('res_model',
-                                                                 '=',
-                                                                 self._name
-                                                                 )])
+                                           domain=lambda self: [
+                                            ('res_model', '=',self._name)])
+
+    @api.model
+    def create(self, vals):
+        '''Inherited the create method to assign the roll no and std'''
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(
+                                            vals.get('student_id'))
+            vals.update({'roll_no_id': student.roll_no,
+                         'standard_id': student.standard_id.id
+                         })
+        return super(ExamResult, self).create(vals)
+
+    def write(self, vals):
+        '''Inherited the write method to update the roll no and std'''
+        if vals.get('student_id'):
+            student = self.env['student.student'].browse(
+                                            vals.get('student_id'))
+            vals.update({'roll_no_id': student.roll_no,
+                         'standard_id': student.standard_id.id
+                         })
+        return super(ExamResult, self).write(vals)
+
+    def unlink(self):
+        '''Inherited the unlink method to check the state at the deletion.'''
+        for rec in self:
+            if rec.state != 'draft':
+                raise ValidationError(_('''
+                    You can delete record in unconfirm state only!'''))
+        return super(ExamResult, self).unlink()
+
+    @api.onchange('student_id')
+    def onchange_student(self):
+        '''Method to get standard and roll no of student selected'''
+        self.standard_id = False
+        self.roll_no_id = False
+        if self.student_id:
+            self.standard_id = self.student_id.standard_id.id
+            self.roll_no_id = self.student_id.roll_no
 
     def result_confirm(self):
         '''Method to confirm result'''
@@ -518,15 +531,18 @@ class ExamResult(models.Model):
             for line in rec.result_ids:
                 if line.maximum_marks == 0:
                     # Check subject marks not greater than maximum marks
-                    raise ValidationError(_('Kindly add maximum\
-                            marks of subject "%s".') % (line.subject_id.name))
+                    raise ValidationError(_('''
+                        Kindly add maximum marks of subject "%s".
+                    ''') % (line.subject_id.name))
                 elif line.minimum_marks == 0:
-                    raise ValidationError(_('Kindly add minimum\
-                        marks of subject "%s".') % (line.subject_id.name))
+                    raise ValidationError(_('''
+                        Kindly add minimum marks of subject "%s".
+                    ''') % (line.subject_id.name))
                 elif ((line.maximum_marks == 0 or line.minimum_marks == 0) and
                       line.obtain_marks):
-                    raise ValidationError(_('Kindly add marks\
-                        details of subject "%s"!') % (line.subject_id.name))
+                    raise ValidationError(_('''
+                        Kindly add marks details of subject "%s"!
+                    ''') % (line.subject_id.name))
             vals = {'grade': rec.grade,
                     'percentage': rec.percentage,
                     'state': 'confirm'
@@ -553,13 +569,10 @@ class ExamResult(models.Model):
                     'standard_id': rec.standard_id.id,
                     'percentage': rec.percentage,
                     'result': rec.result}
-            history = history_obj.search([('student_id', '=',
-                                           rec.student_id.id),
-                                          ('academice_year_id', '=',
-                                           rec.student_id.year.id),
-                                          ('standard_id', '=',
-                                           rec.standard_id.id)
-                                          ])
+            history = history_obj.search([
+                        ('student_id', '=', rec.student_id.id),
+                        ('academice_year_id', '=', rec.student_id.year.id),
+                        ('standard_id', '=', rec.standard_id.id)])
             if history:
                 history_obj.write(vals)
             elif not history:
@@ -586,20 +599,6 @@ class ExamSubject(models.Model):
     _description = 'Exam Subject Information'
     _rec_name = 'subject_id'
 
-    @api.constrains('obtain_marks', 'minimum_marks', 'maximum_marks',
-                    'marks_reeval')
-    def _validate_marks(self):
-        '''Method to validate marks'''
-        if self.obtain_marks > self.maximum_marks:
-            raise ValidationError(_('''The obtained marks
-            should not extend maximum marks!'''))
-        if self.minimum_marks > self.maximum_marks:
-            raise ValidationError(_('''The minimum marks
-            should not extend maximum marks!'''))
-        if(self.marks_reeval > self.maximum_marks):
-            raise ValidationError(_('''The revaluation marks
-            should not extend maximum marks!'''))
-
     @api.depends('exam_id', 'obtain_marks', 'marks_reeval')
     def _compute_grade(self):
         '''Method to compute grade after re-evaluation'''
@@ -608,7 +607,6 @@ class ExamSubject(models.Model):
             if (rec.exam_id and rec.exam_id.student_id and grade_lines):
                 for grade_id in grade_lines:
                     b_id = rec.obtain_marks <= grade_id.to_mark
-#                    r_id = rec.marks_reeval <= grade_id.to_mark
                     if rec.obtain_marks > 0:
                         if (rec.obtain_marks >= grade_id.from_mark and b_id):
                             rec.grade_line_id = grade_id
@@ -634,6 +632,20 @@ class ExamSubject(models.Model):
     grade_line_id = fields.Many2one('grade.line', "Grade",
                                     compute='_compute_grade')
 
+    @api.constrains('obtain_marks', 'minimum_marks', 'maximum_marks',
+                    'marks_reeval')
+    def _validate_marks(self):
+        '''Method to validate marks'''
+        if self.obtain_marks > self.maximum_marks:
+            raise ValidationError(_('''
+                The obtained marks should not extend maximum marks!'''))
+        if self.minimum_marks > self.maximum_marks:
+            raise ValidationError(_('''
+                The minimum marks should not extend maximum marks!'''))
+        if(self.marks_reeval > self.maximum_marks):
+            raise ValidationError(_('''
+                The revaluation marks should not extend maximum marks!'''))
+
 
 class AdditionalExamResult(models.Model):
     """Defining model for Additional Exam Result."""
@@ -652,6 +664,21 @@ class AdditionalExamResult(models.Model):
                     rec.result = 'Pass'
                 else:
                     rec.result = 'Fail'
+
+    a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
+                                required=True,
+                                help="Select Additional Exam")
+    student_id = fields.Many2one('student.student', 'Student Name',
+                                 required=True,
+                                 help="Select Student")
+    roll_no_id = fields.Integer("Roll No",
+                                readonly=True)
+    standard_id = fields.Many2one('school.standard',
+                                  "Standard", readonly=True)
+    obtain_marks = fields.Float('Obtain Marks', help="Marks obtain in exam")
+    result = fields.Char(compute='_compute_student_result', string='Result',
+                         help="Result Obtained", store=True)
+    active = fields.Boolean('Active', default=True)
 
     @api.model
     def create(self, vals):
@@ -678,21 +705,7 @@ class AdditionalExamResult(models.Model):
 
     @api.constrains('obtain_marks')
     def _validate_obtain_marks(self):
+        '''Constraint to check obtain marks respective maximum marks'''
         if self.obtain_marks > self.a_exam_id.subject_id.maximum_marks:
-            raise ValidationError(_('''The obtained marks should not extend \
-maximum marks!'''))
-
-    a_exam_id = fields.Many2one('additional.exam', 'Additional Examination',
-                                required=True,
-                                help="Select Additional Exam")
-    student_id = fields.Many2one('student.student', 'Student Name',
-                                 required=True,
-                                 help="Select Student")
-    roll_no_id = fields.Integer("Roll No",
-                                readonly=True)
-    standard_id = fields.Many2one('school.standard',
-                                  "Standard", readonly=True)
-    obtain_marks = fields.Float('Obtain Marks', help="Marks obtain in exam")
-    result = fields.Char(compute='_compute_student_result', string='Result',
-                         help="Result Obtained", store=True)
-    active = fields.Boolean('Active', default=True)
+            raise ValidationError(_('''
+                The obtained marks should not extend maximum marks!'''))

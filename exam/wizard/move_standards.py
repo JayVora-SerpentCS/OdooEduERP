@@ -28,12 +28,12 @@ class MoveStandards(models.TransientModel):
                 if stud_year_ids:
                     # search the student result
                     result_data = result_obj.\
-                        search([('standard_id', '=', stud.standard_id.id),
-                                ('standard_id.division_id',
-                                 '=', stud.standard_id.division_id.id),
-                                ('standard_id.medium_id',
-                                 '=', stud.medium_id.id),
-                                ('student_id', '=', stud.id)])
+                        search([
+                            ('standard_id', '=', stud.standard_id.id),
+                            ('standard_id.division_id', '=',
+                             stud.standard_id.division_id.id),
+                            ('standard_id.medium_id', '=', stud.medium_id.id),
+                            ('student_id', '=', stud.id)])
                     std_seq = stud.standard_id.standard_id.sequence
                     for results in result_data:
                         if results.result == "Pass":
@@ -43,13 +43,12 @@ class MoveStandards(models.TransientModel):
                                             )
                                 # find the school standard record
                                 next_stand = school_stand_obj.\
-                                    search([('standard_id', '=', next_class),
-                                            ('division_id', '=', division),
-                                            ('school_id', '=',
-                                             stud.school_id.id),
-                                            ('medium_id', '=',
-                                             stud.medium_id.id)],
-                                           limit=1)
+                                    search([
+                                        ('standard_id', '=', next_class),
+                                        ('division_id', '=', division),
+                                        ('school_id', '=', stud.school_id.id),
+                                        ('medium_id', '=', stud.medium_id.id)],
+                                       limit=1)
                                 # standard will change if student pass the exam
                                 stud.write({'year': academic_year.id,
                                             'standard_id': next_stand.id

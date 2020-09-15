@@ -10,6 +10,7 @@ class ReportResultInfo(models.AbstractModel):
 
     @api.model
     def get_grade(self, result_id, student):
+        '''Method to get the grade info of student'''
         list_fail = []
         value = {}
         for stu_res in student.year.grade_id.grade_ids:
@@ -19,6 +20,7 @@ class ReportResultInfo(models.AbstractModel):
 
     @api.model
     def get_lines(self, result_id, student):
+        '''Method to get the grade info of student'''
         list_result = []
         for sub_id in result_id:
             for sub in sub_id.result_ids:
@@ -34,6 +36,7 @@ class ReportResultInfo(models.AbstractModel):
 
     @api.model
     def get_exam_data(self, result_id, student):
+        '''Method to get the exam info of student'''
         list_exam = []
         value = {}
         final_total = 0
@@ -55,6 +58,7 @@ class ReportResultInfo(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        '''Inherited method to get report values'''
         docs = self.env['student.student'].browse(docids)
         student_model = self.env['ir.actions.report']._get_report_from_name(
             'exam.result_information_report')

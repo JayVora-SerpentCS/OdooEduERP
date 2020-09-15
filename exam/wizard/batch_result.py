@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, fields
+from odoo import models, fields, api
 
 
 class BatchExamResult(models.TransientModel):
@@ -16,6 +16,7 @@ class BatchExamResult(models.TransientModel):
                            help="Select Academic Year")
 
     def print_batch_report(self):
+        '''Method to print batch report'''
         data = self.read()[0]
         return self.env.ref('exam.batch_result_qweb').report_action([],
                                                                     data=data)

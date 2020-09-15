@@ -4,7 +4,6 @@
     <data noupdate="0">
         <!-- Exam Demo Data -->
         <record id="exam_exam_finalexam0" model="exam.exam">
-            <!-- <field eval="30" name="weightage"/> -->
             <field name="exam_code" eval="time.strftime('%Y-%m-03')"/>
             <field name="name">Final Exam</field>
             <field name="state">finished</field>
@@ -210,7 +209,6 @@
         <record id="batchwise_exam_result_2" model="exam.batchwise.result">
             <field name="year" ref="school.demo_academic_year_2"/>
             <field name="standard_id" ref="school.demo_school_standard_2"/>
-            <!-- <field name="grade">B</field> -->
         </record>
         <record id="batchwise_exam_result_3" model="exam.batchwise.result">
             <field name="year" ref="school.demo_academic_year_3"/>

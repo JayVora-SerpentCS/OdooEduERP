@@ -20,6 +20,7 @@ class SubjectResultWiz(models.TransientModel):
         return res
 
     def result_report(self):
+        '''Method to get the result report'''
         data = self.read()[0]
-        return self.env.ref('exam.add_exam_result_id_qweb').\
-            report_action([], data=data)
+        return self.env.ref('exam.add_exam_result_id_qweb').report_action(
+                                                                [], data=data)

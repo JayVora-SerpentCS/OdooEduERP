@@ -9,10 +9,10 @@ class BatchExamReport(models.AbstractModel):
 
     def pass_student(self, year, standard_id):
         '''Method to determine students who pass the exam'''
-        exam = self.env['exam.exam'].search([('standard_id', '=',
-                                              standard_id.id),
-                                             ('academic_year', '=', year.id),
-                                             ('state', '=', 'finished')])
+        exam = self.env['exam.exam'].search([
+                                ('standard_id', '=', standard_id.id),
+                                ('academic_year', '=', year.id),
+                                ('state', '=', 'finished')])
         result_obj = self.env['exam.result']
         for rec in exam:
             exam_result = result_obj.search([('s_exam_ids', '=', rec.id),
@@ -35,8 +35,7 @@ class BatchExamReport(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        '''Now in v12 the method name have changed from get_report_values
-        to _get_report_values.'''
+        '''Inherited method to get report values.'''
         batch_result = self.env['ir.actions.report']._get_report_from_name(
             'exam.exam_result_batch')
         batch_model = self.env[batch_result.model
