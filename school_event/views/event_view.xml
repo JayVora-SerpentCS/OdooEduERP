@@ -165,7 +165,7 @@
                         <field attrs="{'readonly':[('state','not in','draft')]}" name="supervisor_id" options="{&quot;no_create&quot;: True}" placeholder="Select Supervisor Name" />
                         <field attrs="{'readonly':[('state','not in','draft')]}" name="maximum_participants" />
                         <field attrs="{'readonly':[('state','not in','draft')]}" name="parameter_id" widget="selection" />
-                        <field attrs="{'readonly':[('state','not in','draft')]}" name="is_holiday" />
+                        <field attrs="{'readonly':[('state','not in','draft')]}" name="is_holiday" widget="boolean_toggle"/>
                         <field name="participants" readonly="1" />
                     </group>
                     <notebook colspan="4">

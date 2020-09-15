@@ -17,9 +17,15 @@
         <field name="dpi">80</field>
     </record>
 
-    <report file="school_event.participants" id="report_school_event_qweb"
-        model="school.event" name="school_event.participants"
-        report_type="qweb-pdf" string="Event Detail"
-        paperformat="school_event.paperformat_report_participants"/>
+    <record id="report_school_event_qweb" model="ir.actions.report">
+        <field name="name">Event Detail</field>
+        <field name="model">school.event</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_event.participants</field>
+        <field name="report_file">school_event.participants</field>
+        <field name="binding_model_id" ref="school_event.model_school_event"/>
+        <field name="paperformat_id" ref="school_event.paperformat_report_participants"/>
+        <field name="binding_type">report</field>
+    </record>
 
 </odoo>

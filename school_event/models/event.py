@@ -2,6 +2,7 @@
 
 import time
 from odoo import models, fields, api, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -109,10 +110,11 @@ class SchoolEvent(models.Model):
     color = fields.Integer('Color Index', default=0)
 
     def unlink(self):
+        """Inherited unlink method to check state at the record deletion."""
         for rec in self:
             if rec.state not in ['draft', 'close']:
-                raise ValidationError(_('''You can delete record in unconfirm
-                state only or close state only !'''))
+                raise ValidationError(_('''
+    You can delete record in unconfirm state only or close state only !'''))
         return super(SchoolEvent, self).unlink()
 
     @api.constrains('start_date', 'end_date')
@@ -120,24 +122,27 @@ class SchoolEvent(models.Model):
         """Raise constraint when start date is greater than end date."""
         sedt = self.start_date > self.end_date
         if (self.start_date and self.end_date and sedt):
-            raise ValidationError(_('Event start-date must be lower\
-                              then Event end-date!'))
+            raise ValidationError(_('''
+                Event start-date must be lower then Event end-date!'''))
 
     @api.constrains('start_date', 'end_date', 'start_reg_date',
                     'last_reg_date')
     def _check_all_dates(self):
+        """Constraint to check start-end dates of event"""
 
         dt = self.start_reg_date and self.last_reg_date
         if (self.start_date and self.end_date and dt):
 
             if self.start_reg_date > self.last_reg_date:
-                raise ValidationError(_('Event Registration StartDate must be\
-                                  lower than Event Registration end-date.!'))
+                raise ValidationError(_('''
+Event Registration StartDate must be lower than Event Registration end-date.!
+'''))
             elif self.last_reg_date >= self.start_date:
-                raise ValidationError(_('Event Registration last-date must be\
-                                    lower than Event start-date!.'))
+                raise ValidationError(_('''
+        Event Registration last-date must be lower than Event start-date!.'''))
 
     def event_open(self):
+        """Method to open event."""
         for rec in self:
             if len(rec.part_ids) >= 1:
                 rec.state = 'open'
@@ -158,6 +163,7 @@ class SchoolEvent(models.Model):
 
     @api.model
     def create(self, vals):
+        """Inherited create method to create record for calendar event"""
         res = super(SchoolEvent, self).create(vals)
         event_vals = {'name': vals.get('name'),
                       'start_date': vals.get('start_date'),
@@ -191,8 +197,8 @@ class SchoolEventRegistration(models.Model):
     student_standard_id = fields.Many2one('school.standard', 'Student Std')
     reg_date = fields.Date('Registration Date', readonly=True,
                            help="Registration date of event",
-                           default=lambda *a:
-                           time.strftime("%Y-%m-%d %H:%M:%S"))
+                           default=lambda *a: time.strftime(
+                                            DEFAULT_SERVER_DATETIME_FORMAT))
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('cancel', 'Cancel')], 'State', readonly=True,
@@ -202,6 +208,7 @@ class SchoolEventRegistration(models.Model):
 
     @api.onchange('part_name_id')
     def onchange_student_standard(self):
+        """Onchange method for participant"""
         self.student_standard_id = self.part_name_id.standard_id.id
 
     def regi_cancel(self):
@@ -219,29 +226,31 @@ class SchoolEventRegistration(models.Model):
 
     @api.constrains('name')
     def check_event_state(self):
+        """Onchange method for participant"""
         for rec in self:
             if rec.name.state in ['open', 'close']:
-                raise ValidationError(_('''You cannot do registration in
-                                        event which is running or closed!
-                                        '''))
+                raise ValidationError(_('''
+        You cannot do registration in event which is running or closed!'''))
 
     def unlink(self):
+        """Inherited unlink method to check the state at the record deletion"""
         for rec in self:
             if rec.state not in ['draft', 'cancel']:
-                raise UserError(_('''You can delete record in unconfirm state
-                only!'''))
+                raise UserError(_('''
+                        You can delete record in unconfirm state only!'''))
         return super(SchoolEventRegistration, self).unlink()
 
     @api.constrains('part_name_id')
     def check_student_registration(self):
+        """Inherited unlink method to check the state at the record deletion"""
         student_event = self.search([('part_name_id', '=',
                                       self.part_name_id.id),
                                      ('id', 'not in', self.ids),
                                      ('state', '=', 'confirm'),
                                      ('name', '=', self.name.id)])
         if student_event:
-            raise ValidationError(_('''Student is already
-                                    registered in this event!'''))
+            raise ValidationError(_('''
+                    Student is already registered in this event!'''))
 
     def regi_confirm(self):
         """Method to confirm registration."""
@@ -256,11 +265,11 @@ class SchoolEventRegistration(models.Model):
 
             # check last registration date is over or not
             if rec.reg_date < rec.name.start_reg_date:
-                raise UserError(_('''Error ! Registration is not started
-                                   for this Event!'''))
+                raise UserError(_('''Error !
+                Registration is not started for this Event!'''))
             if rec.reg_date > rec.name.last_reg_date:
-                raise UserError(_('''Error ! Last Registration date is over
-                                   for this Event!'''))
+                raise UserError(_('''Error !
+                Last Registration date is over for this Event!'''))
             # make entry in participant
             vals = {'stu_pid': str(rec.part_name_id.pid),
                     'win_parameter_id': rec.name.parameter_id.id,
@@ -287,12 +296,12 @@ class StudentStudent(models.Model):
         registration of student when set to alumni.
         """
         for rec in self:
-            event_regi = self.env['school.event.registration'].\
-                search([('part_name_id', '=', rec.id)])
+            event_regi = self.env['school.event.registration'].search([
+                                            ('part_name_id', '=', rec.id)])
             if event_regi:
                 event_regi.write({'state': 'cancel'})
-            event_participant = self.env['school.event.participant'].\
-                search([('name', '=', rec.id)])
+            event_participant = self.env['school.event.participant'].search([
+                                            ('name', '=', rec.id)])
             if event_participant:
                 event_participant.unlink()
         return super(StudentStudent, self).set_alumni()
