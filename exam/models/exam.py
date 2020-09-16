@@ -362,14 +362,12 @@ minimum marks!'''))
 
     @api.model
     def create(self, vals):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
+        new_dt = fields.datetime.today().date()
         vals.update({'create_date': new_dt})
         return super(AdditionalExam, self).create(vals)
 
     def write(self, vals):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
+        new_dt = fields.datetime.today().date()
         vals.update({'write_date': new_dt})
         return super(AdditionalExam, self).write(vals)
 
