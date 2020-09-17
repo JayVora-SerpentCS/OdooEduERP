@@ -9,3 +9,6 @@ access_school_standard_assignment_teacher,school.teacher.school.standard.assignm
 access_school_student_assignment_parent,school.student.assignment,assignment.model_school_student_assignment,school.group_school_parent,1,0,0,0
 access_file_format_admin_access,school.teacher.assignment,assignment.model_file_format,school.group_school_administration,1,1,1,1
 access_file_format_teacher_access,school.teacher.assignment,assignment.model_file_format,school.group_school_teacher,1,1,1,0
+,,,,,,,
+access_reject_reason,reject.reason,assignment.model_reject_reason,school.group_school_administration,1,1,1,1
+access_terminate_reason,terminate.reason,assignment.model_terminate_reason,school.group_school_administration,1,1,1,1

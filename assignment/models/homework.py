@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -27,17 +27,24 @@ class SchoolTeacherAssignment(models.Model):
     state = fields.Selection([('draft', 'Draft'),
                               ('active', 'Active'),
                               ('done', 'Done')],
-                             'Status', default='draft')
+                             'Status', default='draft',
+                             help='State of teacher assignment')
     student_assign_ids = fields.One2many('school.student.assignment',
                                          'teacher_assignment_id',
-                                         string="Student Assignments")
+                                         string="Student Assignments",
+                                         help='Enter student assignments')
     type_submission = fields.Selection([('hardcopy', 'Hardcopy(Paperwork)'),
                                         ('softcopy', 'Softcopy')],
                                        default="hardcopy",
-                                       string="Submission Type")
-    file_format = fields.Many2one('file.format', 'File Format')
-    attach_files = fields.Char("File Name")
-    subject_standard_assignment = fields.Many2one("standard.standard")
+                                       string="Submission Type",
+                                       help='Select Assignment type')
+    file_format = fields.Many2one('file.format', 'File Format',
+                                  help='File format')
+    attach_files = fields.Char("File Name", help='Enter file name')
+    subject_standard_assignment = fields.Many2one("standard.standard",
+                                                  help='''Standard of the 
+                                                  assignment in which it 
+                                                  assigned''')
 
     @api.onchange('standard_id')
     def onchange_subject_standard(self):
@@ -60,12 +67,12 @@ class SchoolTeacherAssignment(models.Model):
         student_obj = self.env['student.student']
         ir_attachment_obj = self.env['ir.attachment']
         for rec in self:
-            students = student_obj.search([
+            student_recs = student_obj.search([
                             ('standard_id', '=', rec.standard_id.id),
                             ('state', '=', 'done')])
             if not rec.attached_homework:
                 raise ValidationError(_('''Please attach the homework!'''))
-            for std in students:
+            for std in student_recs:
                 ass_dict = {'name': rec.name,
                             'subject_id': rec.subject_id.id,
                             'standard_id': rec.standard_id.id,
@@ -80,12 +87,12 @@ class SchoolTeacherAssignment(models.Model):
                             'student_standard': std.standard_id.standard_id.id,
                             'submission_type': self.type_submission,
                             'attachfile_format': self.file_format.name}
-                assignment_id = assignment_obj.create(ass_dict)
+                assignment_rec = assignment_obj.create(ass_dict)
                 attach = {'name': 'test',
                           'datas': rec.attached_homework,
                           'description': 'Assignment attachment',
                           'res_model': 'school.student.assignment',
-                          'res_id': assignment_id.id}
+                          'res_id': assignment_rec.id}
                 ir_attachment_obj.create(attach)
             rec.write({'state': 'active'})
         return True
@@ -128,8 +135,7 @@ class SchoolStudentAssignment(models.Model):
                               ('reject', 'Reject'), ('done', 'Done')],
                              'Status',
                              default="draft",
-                             help="States of assignment",
-                             )
+                             help="States of assignment")
     student_id = fields.Many2one('student.student', 'Student', required=True,
                                  help="Name of Student")
     stud_roll_no = fields.Integer(string="Roll no",
@@ -137,16 +143,23 @@ class SchoolStudentAssignment(models.Model):
     attached_homework = fields.Binary('Attached Home work',
                                       help="Homework Attached by student")
     teacher_assignment_id = fields.Many2one('school.teacher.assignment',
-                                            string="Teachers")
-    student_standard = fields.Many2one('standard.standard', 'Student Standard')
+                                            string="Teachers",
+                                            help='Teacher assigments')
+    student_standard = fields.Many2one('standard.standard', 'Student Standard',
+                                       help='Select student standard')
     submission_type = fields.Selection([('hardcopy', 'Hardcopy(Paperwork)'),
                                         ('softcopy', 'Softcopy')],
                                        default="hardcopy",
-                                       string="Submission Type")
-    attachfile_format = fields.Char("Submission Fileformat")
-    submit_assign = fields.Binary("Submit Assignment")
-    file_name = fields.Char("File Name")
-    active = fields.Boolean('Active', default=True)
+                                       string="Submission Type",
+                                       help='Select assignment type')
+    attachfile_format = fields.Char("Submission Fileformat",
+                                    help='Enter assignment fileformat')
+    submit_assign = fields.Binary("Submit Assignment",
+                                  help='Attach assignment here')
+    file_name = fields.Char("File Name",
+                            help='Enter file name')
+    active = fields.Boolean('Active', default=True,
+                            help='Activate/Deactivate assignment')
 
     @api.constrains('assign_date', 'due_date')
     def check_date(self):
@@ -163,8 +176,8 @@ class SchoolStudentAssignment(models.Model):
             if len(file_format) == 2:
                 file_format = file_format[1]
             else:
-                raise ValidationError(_('''Kindly attach file with
-                format: %s!''') % self.attachfile_format)
+                raise ValidationError(_('''Kindly attach file with format: %s!
+                ''') % self.attachfile_format)
             if (file_format in self.attachfile_format or
                     self.attachfile_format in file_format):
                     return True
@@ -213,7 +226,7 @@ class FileFormat(models.Model):
     _name = "file.format"
     _description = "File Format Details"
 
-    name = fields.Char("Name")
+    name = fields.Char("Name", help='Enter file format that can be attached')
 
 
 class StudentAssign(models.Model):
@@ -223,8 +236,8 @@ class StudentAssign(models.Model):
         '''Override method to make student assignment active false when
         student is alumni'''
         for rec in self:
-            student_assign = self.env['school.student.assignment'].\
-                search([('student_id', '=', rec.id)])
+            student_assign = self.env['school.student.assignment'].search([
+                                                ('student_id', '=', rec.id)])
             if student_assign:
                 student_assign.write({'active': False})
         return super(StudentAssign, self).set_alumni()
