@@ -546,18 +546,14 @@ class StudentPreviousSchool(models.Model):
 
     @api.constrains('admission_date', 'exit_date')
     def check_date(self):
-        new_dt = fields.datetime.today().date()
-        if self.admission_date:
-            if self.admission_date >= new_dt:
-                raise ValidationError(_('''Your admission date should be 
-less than current date in previous school details!'''))
-        if self.exit_date:
-            if self.exit_date >= new_dt:
-                raise ValidationError(_('''Your school exit date should be 
-                less than current date in previous school details!'''))
-        if self.admission_date and self.exit_date:
-            if self.admission_date > self.exit_date:
-                raise ValidationError(_(''' Admission date should be less than
+        new_dt = fields.Date.today()
+        if (self.admission_date and self.admission_date >= new_dt) or (
+            self.exit_date and self.exit_date >= new_dt):
+            raise ValidationError(_('''Your admission date and exit date
+should be less than current date in previous school details!'''))
+        if (self.admission_date and self.exit_date) and (
+            self.admission_date > self.exit_date):
+            raise ValidationError(_(''' Admission date should be less than
 exit date in previous school!'''))
 
 
@@ -660,7 +656,7 @@ class StudentNews(models.Model):
     @api.constrains("date")
     def checknews_dates(self):
         """Check news date."""
-        new_date = fields.datetime.today().date()
+        new_date = fields.Date.today()
         if self.date < new_date:
             raise ValidationError(_('''Configure expiry date greater than \
 current date!'''))
