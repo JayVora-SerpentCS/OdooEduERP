@@ -34,9 +34,9 @@ class SendMail(models.TransientModel):
         body = ''
         email_template_obj = self.env['mail.template']
         # search the model student.student
-        template_id = email_template_obj.search([('model', '=',
-                                                  'student.student')],
-                                                limit=1)
+        template_id = email_template_obj.search([
+                                        ('model', '=', 'student.student')],
+                                        limit=1)
         if template_id:
             for i in self:
                 body += '\n' + i.note

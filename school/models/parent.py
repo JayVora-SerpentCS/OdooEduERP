@@ -9,7 +9,8 @@ class ParentRelation(models.Model):
     _name = "parent.relation"
     _description = "Parent-child relation information"
 
-    name = fields.Char("Relation name", required=True)
+    name = fields.Char("Relation name", required=True,
+                       help='Parent relation with student')
 
 
 class SchoolParent(models.Model):
@@ -19,21 +20,29 @@ class SchoolParent(models.Model):
     _description = 'Parent Information'
 
     partner_id = fields.Many2one('res.partner', 'User ID', ondelete="cascade",
-                                 delegate=True, required=True)
-    relation_id = fields.Many2one('parent.relation', "Relation with Child")
+                                 delegate=True, required=True,
+                                 help='Partner which is user over here')
+    relation_id = fields.Many2one('parent.relation', 'Relation with Child',
+                                  help='Parent relation with child')
     student_id = fields.Many2many('student.student', 'students_parents_rel',
                                   'students_parent_id', 'student_id',
-                                  'Children')
+                                  'Children',
+                                  help='Student of the following parent')
     standard_id = fields.Many2many('school.standard',
                                    'school_standard_parent_rel',
                                    'class_parent_id', 'class_id',
-                                   'Academic Class')
+                                   'Academic Class',
+                                   help='''Class of the student 
+                                   of following parent''')
     stand_id = fields.Many2many('standard.standard',
                                 'standard_standard_parent_rel',
                                 'standard_parent_id', 'standard_id',
-                                'Academic Standard')
+                                'Academic Standard',
+                                help='''Standard of the student 
+                                of following parent''')
     teacher_id = fields.Many2one('school.teacher', 'Teacher',
-                                 related="standard_id.user_id", store=True)
+                                 related="standard_id.user_id", store=True,
+                                 help='Teacher of a student')
 
     @api.onchange('student_id')
     def onchange_student_id(self):
@@ -52,20 +61,20 @@ class SchoolParent(models.Model):
     def create(self, vals):
         """Inherited create method to assign values in
         the users record to maintain the delegation"""
-        parent_id = super(SchoolParent, self).create(vals)
+        parent_rec = super(SchoolParent, self).create(vals)
         parent_grp_id = self.env.ref('school.group_school_parent')
         emp_grp = self.env.ref('base.group_user')
         parent_group_ids = [emp_grp.id, parent_grp_id.id]
         if vals.get('parent_create_mng'):
             return parent_id
-        user_vals = {'name': parent_id.name,
-                     'login': parent_id.email,
-                     'email': parent_id.email,
-                     'partner_id': parent_id.partner_id.id,
+        user_vals = {'name': parent_rec.name,
+                     'login': parent_rec.email,
+                     'email': parent_rec.email,
+                     'partner_id': parent_rec.partner_id.id,
                      'groups_id': [(6, 0, parent_group_ids)]
                      }
         self.env['res.users'].create(user_vals)
-        return parent_id
+        return parent_rec
 
     @api.onchange('state_id')
     def onchange_state(self):

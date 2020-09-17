@@ -1,11 +1,9 @@
 # See LICENSE file for full copyright and licensing details.
 
 import base64
-import time
-from datetime import date
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError, except_orm
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules import get_module_resource
 
 from . import school
@@ -32,12 +30,12 @@ class StudentStudent(models.Model):
         '''Method to get student of parent having group teacher'''
         teacher_group = self.env.user.has_group('school.group_school_teacher')
         parent_grp = self.env.user.has_group('school.group_school_parent')
-        login_user = self.env['res.users'].browse(self._uid)
+        login_user_rec = self.env.user
         name = self._context.get('student_id')
         if name and teacher_group and parent_grp:
-            parent_login_stud = self.env['school.parent'].search([
-                            ('partner_id', '=', login_user.partner_id.id)])
-            childrens = parent_login_stud.student_id
+            parent_login_stud_rec = self.env['school.parent'].search([
+                            ('partner_id', '=', login_user_rec.partner_id.id)])
+            childrens = parent_login_stud_rec.student_id
             args.append(('id', 'in', childrens.ids))
         return super(StudentStudent, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
@@ -46,7 +44,7 @@ class StudentStudent(models.Model):
     @api.depends('date_of_birth')
     def _compute_student_age(self):
         '''Method to calculate student age'''
-        current_dt = date.today()
+        current_dt = fields.Date.today()
         for rec in self:
             if rec.date_of_birth and rec.date_of_birth < current_dt:
                 start = rec.date_of_birth
@@ -78,10 +76,9 @@ class StudentStudent(models.Model):
     @api.model
     def check_current_year(self):
         '''Method to get default value of logged in Student'''
-        res = self.env['academic.year'].search([('current', '=',
-                                                 True)])
+        res = self.env['academic.year'].search([('current', '=', True)])
         if not res:
-            raise ValidationError(_('''There is no current Academic Year \
+            raise ValidationError(_('''There is no current Academic Year
 defined!Please contact to Administator!'''
                                     ))
         return res.id
@@ -89,101 +86,135 @@ defined!Please contact to Administator!'''
     family_con_ids = fields.One2many('student.family.contact',
                                      'family_contact_id',
                                      'Family Contact Detail',
-                                     states={'done': [('readonly', True)]})
+                                     states={'done': [('readonly', True)]},
+                                     help='Select the student family contact')
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              required=True, delegate=True)
+                              required=True, delegate=True,
+                              help='Select related user of the student')
     student_name = fields.Char('Student Name', related='user_id.name',
-                               store=True, readonly=True)
+                               store=True, readonly=True,
+                               help='Student Name')
     pid = fields.Char('Student ID', required=True,
                       default=lambda self: _('New'),
                       help='Personal IDentification Number')
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
-    student_code = fields.Char('Student Code')
-    contact_phone = fields.Char('Phone no.')
-    contact_mobile = fields.Char('Mobile no')
-    roll_no = fields.Integer('Roll No.', readonly=True)
-    photo = fields.Binary('Photo', default=_default_image)
+    student_code = fields.Char('Student Code', help='Enter student code')
+    contact_phone = fields.Char('Phone no.', help='Enter student phone no.')
+    contact_mobile = fields.Char('Mobile no', help='Enter student mobile no.')
+    roll_no = fields.Integer('Roll No.', readonly=True,
+                             help='Enter student roll no.')
+    photo = fields.Binary('Photo', default=_default_image,
+                          help='Attach student photo')
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
-                           default=check_current_year)
-    cast_id = fields.Many2one('student.cast', 'Religion/Caste')
-    relation = fields.Many2one('student.relation.master', 'Relation')
+                           default=check_current_year,
+                           help='Select academic year')
+    cast_id = fields.Many2one('student.cast', 'Religion/Caste',
+                              help='Select student cast')
+    relation = fields.Many2one('student.relation.master', 'Relation',
+                               help='Select student relation')
 
-    admission_date = fields.Date('Admission Date', default=date.today())
+    admission_date = fields.Date('Admission Date', default=fields.Date.today(),
+                                 help='Enter student admission date')
     middle = fields.Char('Middle Name', required=True,
-                         states={'done': [('readonly', True)]})
+                         states={'done': [('readonly', True)]},
+                         help='Enter student middle name')
     last = fields.Char('Surname', required=True,
-                       states={'done': [('readonly', True)]})
+                       states={'done': [('readonly', True)]},
+                       help='Enter student last name')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')],
-                              'Gender', states={'done': [('readonly', True)]})
+                              'Gender', states={'done': [('readonly', True)]},
+                              help='Select student gender')
     date_of_birth = fields.Date('BirthDate', required=True,
-                                states={'done': [('readonly', True)]})
-    mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue")
+                                states={'done': [('readonly', True)]},
+                                help='Enter student date of birth')
+    mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue",
+                                    help='Select student mother tongue')
     age = fields.Integer(compute='_compute_student_age', string='Age',
-                         readonly=True)
+                         readonly=True, help='Enter student age')
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
                                         ('married', 'Married')],
                                        'Marital Status',
-                                       states={'done': [('readonly', True)]})
+                                       states={'done': [('readonly', True)]},
+                                       help='Select student maritual status')
     reference_ids = fields.One2many('student.reference', 'reference_id',
                                     'References',
-                                    states={'done': [('readonly', True)]})
+                                    states={'done': [('readonly', True)]},
+                                    help='Enter student references')
     previous_school_ids = fields.One2many('student.previous.school',
                                           'previous_school_id',
                                           'Previous School Detail',
-                                          states={'done': [('readonly',
-                                                            True)]})
-    doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]})
-    designation = fields.Char('Designation')
-    doctor_phone = fields.Char('Contact No.')
-    blood_group = fields.Char('Blood Group')
+                                          states={'done': [(
+                                                   'readonly', True)]},
+                                          help='Enter student school details')
+    doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]},
+                         help='Enter doctor name for student medical details')
+    designation = fields.Char('Designation', help='Enter doctor designation')
+    doctor_phone = fields.Char('Contact No.', help='Enter doctor phone')
+    blood_group = fields.Char('Blood Group', help='Enter student blood group')
     height = fields.Float('Height', help="Hieght in C.M")
     weight = fields.Float('Weight', help="Weight in K.G")
-    eye = fields.Boolean('Eyes')
-    ear = fields.Boolean('Ears')
-    nose_throat = fields.Boolean('Nose & Throat')
-    respiratory = fields.Boolean('Respiratory')
-    cardiovascular = fields.Boolean('Cardiovascular')
-    neurological = fields.Boolean('Neurological')
-    muskoskeletal = fields.Boolean('Musculoskeletal')
-    dermatological = fields.Boolean('Dermatological')
-    blood_pressure = fields.Boolean('Blood Pressure')
-    remark = fields.Text('Remark', states={'done': [('readonly', True)]})
+    eye = fields.Boolean('Eyes', help='Eye for medical info')
+    ear = fields.Boolean('Ears', help='Eye for medical info')
+    nose_throat = fields.Boolean('Nose & Throat',
+                                 help='Nose & Throat for medical info')
+    respiratory = fields.Boolean('Respiratory', help='Respiratory for medical info')
+    cardiovascular = fields.Boolean('Cardiovascular', help='Cardiovascular for medical info')
+    neurological = fields.Boolean('Neurological', help='Neurological for medical info')
+    muskoskeletal = fields.Boolean('Musculoskeletal', help='Musculoskeletal for medical info')
+    dermatological = fields.Boolean('Dermatological', help='Dermatological for medical info')
+    blood_pressure = fields.Boolean('Blood Pressure', help='Blood pressure for medical info')
+    remark = fields.Text('Remark', states={'done': [('readonly', True)]},
+                         help='Remark can be entered if any')
     school_id = fields.Many2one('school.school', 'School',
-                                states={'done': [('readonly', True)]})
+                                states={'done': [('readonly', True)]},
+                                help='Select school')
     state = fields.Selection([('draft', 'Draft'),
                               ('done', 'Done'),
                               ('terminate', 'Terminate'),
                               ('cancel', 'Cancel'),
                               ('alumni', 'Alumni')],
-                             'Status', readonly=True, default="draft")
-    history_ids = fields.One2many('student.history', 'student_id', 'History')
+                             'Status', readonly=True, default="draft",
+                             help='State of the student registration form')
+    history_ids = fields.One2many('student.history', 'student_id', 'History',
+                                  help='Enter student history')
     certificate_ids = fields.One2many('student.certificate', 'student_id',
-                                      'Certificate')
+                                      'Certificate',
+                                      help='Enter student certificates')
     student_discipline_line = fields.One2many('student.descipline',
-                                              'student_id', 'Descipline')
-    document = fields.One2many('student.document', 'doc_id', 'Documents')
+                                              'student_id', 'Descipline',
+                                              help='''Enter student 
+                                              descipline info''')
+    document = fields.One2many('student.document', 'doc_id', 'Documents',
+                               help='Attach student documents')
     description = fields.One2many('student.description', 'des_id',
-                                  'Description')
+                                  'Description', help='Description')
     award_list = fields.One2many('student.award', 'award_list_id',
-                                 'Award List')
+                                 'Award List', help='Student award list')
     stu_name = fields.Char('First Name', related='user_id.name',
-                           readonly=True)
+                           readonly=True, help='Enter student first name')
     Acadamic_year = fields.Char('Year', related='year.name',
                                 help='Academic Year', readonly=True)
-    division_id = fields.Many2one('standard.division', 'Division')
-    medium_id = fields.Many2one('standard.medium', 'Medium')
-    standard_id = fields.Many2one('school.standard', 'Class')
+    division_id = fields.Many2one('standard.division', 'Division',
+                                  help='Select student standard division')
+    medium_id = fields.Many2one('standard.medium', 'Medium',
+                                help='Select student standard medium')
+    standard_id = fields.Many2one('school.standard', 'Class',
+                                  help='Select student standard')
     parent_id = fields.Many2many('school.parent', 'students_parents_rel',
                                  'student_id',
                                  'students_parent_id', 'Parent(s)',
-                                 states={'done': [('readonly', True)]})
-    terminate_reason = fields.Text('Reason')
-    active = fields.Boolean(default=True)
+                                 states={'done': [('readonly', True)]},
+                                 help='Enter student parents')
+    terminate_reason = fields.Text('Reason',
+                                   help='Enter student terminate reason')
+    active = fields.Boolean(default=True,
+                            help='Activate/Deactivate student record')
     teachr_user_grp = fields.Boolean("Teacher Group",
                                      compute="_compute_teacher_user",
-                                     )
-    active = fields.Boolean(default=True)
+                                     help='Activate/Deactivate teacher group')
+    active = fields.Boolean(default=True,
+                            help='Activate/Deactivate student record')
 
     @api.model
     def create(self, vals):
@@ -196,9 +227,8 @@ defined!Please contact to Administator!'''
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
         else:
-            raise except_orm(_('Error!'),
-                             _('''PID not valid
-                                 so record will not be saved.'''))
+            raise UserError(_('''Error! 
+PID not valid so record will not be saved.'''))
         if vals.get('company_id', False):
             company_vals = {'company_ids': [(4, vals.get('company_id'))]}
             vals.update(company_vals)
@@ -207,8 +237,7 @@ defined!Please contact to Administator!'''
         res = super(StudentStudent, self).create(vals)
         teacher = self.env['school.teacher']
         for data in res.parent_id:
-            teacher_rec = teacher.search([('stu_parent_id',
-                                           '=', data.id)])
+            teacher_rec = teacher.search([('stu_parent_id', '=', data.id)])
             for record in teacher_rec:
                 record.write({'student_id': [(4, res.id, None)]})
         # Assign group to student based on condition
@@ -237,14 +266,15 @@ defined!Please contact to Administator!'''
     @api.constrains('date_of_birth')
     def check_age(self):
         '''Method to check age should be greater than 6'''
-        current_dt = date.today()
+        current_dt = fields.Date.today()
         if self.date_of_birth:
             start = self.date_of_birth
             age_calc = ((current_dt - start).days / 365)
             # Check if age less than required age
             if age_calc < self.school_id.required_age:
-                raise ValidationError(_('''Age of student should be greater \
-than %s years!''' % (self.school_id.required_age)))
+                raise ValidationError(_('''
+Age of student should be greater than %s years!''' % (
+                                            self.school_id.required_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''
@@ -256,8 +286,7 @@ than %s years!''' % (self.school_id.required_age)))
         for rec in self:
             rec.state = 'alumni'
             rec.standard_id._compute_total_student()
-            user = student_user.search([('id', '=',
-                                         rec.user_id.id)])
+            user = student_user.search([('id', '=', rec.user_id.id)])
             rec.active = False
             if user:
                 user.active = False
@@ -293,9 +322,8 @@ than %s years!''' % (self.school_id.required_age)))
             domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
-                raise except_orm(_('Warning'),
-                                 _('''The standard is not defined in
-                                     school'''))
+                raise UserError(_('''Warning!
+The standard is not defined in school'''))
             # Assign group to student
             rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
                                                      student_group.id])]})
@@ -315,7 +343,7 @@ than %s years!''' % (self.school_id.required_age)))
                             str(rec.year.code) + str('/') +
                             str(stu_code))
             rec.write({'state': 'done',
-                       'admission_date': time.strftime('%Y-%m-%d'),
+                       'admission_date': fields.Date.today(),
                        'student_code': student_code,
                        'reg_code': registation_code})
         return True

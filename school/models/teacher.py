@@ -11,29 +11,38 @@ class SchoolTeacher(models.Model):
 
     employee_id = fields.Many2one('hr.employee', 'Employee ID',
                                   ondelete="cascade",
-                                  delegate=True, required=True)
+                                  delegate=True, required=True,
+                                  help='Enter related employee')
     standard_id = fields.Many2one('school.standard',
                                   "Responsibility of Academic Class",
                                   help="Standard for which the teacher\
                                   responsible for.")
     stand_id = fields.Many2one('standard.standard', "Course",
-                               related="standard_id.standard_id", store=True)
+                               related="standard_id.standard_id", store=True,
+                               help='''Select standard which are 
+                               assigned to teacher''')
     subject_id = fields.Many2many('subject.subject', 'subject_teacher_rel',
                                   'teacher_id', 'subject_id',
-                                  'Course-Subjects')
+                                  'Course-Subjects',
+                                  help='Select subject of teacher')
     school_id = fields.Many2one('school.school', "Campus",
-                                related="standard_id.school_id", store=True)
+                                related="standard_id.school_id", store=True,
+                                help='Select school')
     category_ids = fields.Many2many('hr.employee.category',
                                     'teacher_category_rel', 'emp_id',
-                                    'categ_id', 'Tags')
-    department_id = fields.Many2one('hr.department', 'Department')
-    is_parent = fields.Boolean('Is Parent')
-    stu_parent_id = fields.Many2one('school.parent', 'Related Parent')
+                                    'categ_id', 'Tags',
+                                    help='Select employee category')
+    department_id = fields.Many2one('hr.department', 'Department',
+                                    help='Select department')
+    is_parent = fields.Boolean('Is Parent',
+                               help='Select this if it parent')
+    stu_parent_id = fields.Many2one('school.parent', 'Related Parent',
+                                    help='Enter student parent')
     student_id = fields.Many2many('student.student',
                                   'students_teachers_parent_rel',
                                   'teacher_id', 'student_id',
-                                  'Children')
-    phone_numbers = fields.Char("Phone Number")
+                                  'Children', help='Select student')
+    phone_numbers = fields.Char("Phone Number", help='Student PH no')
 
     @api.onchange('is_parent')
     def _onchange_isparent(self):
@@ -62,8 +71,8 @@ class SchoolTeacher(models.Model):
                      }
         ctx_vals = {'teacher_create': True,
                     'school_id': teacher_id.school_id.company_id.id}
-        user_id = user_obj.with_context(ctx_vals).create(user_vals)
-        teacher_id.employee_id.write({'user_id': user_id.id})
+        user_rec = user_obj.with_context(ctx_vals).create(user_vals)
+        teacher_id.employee_id.write({'user_id': user_rec.id})
         if vals.get('is_parent'):
             self.parent_crt(teacher_id)
         return teacher_id

@@ -3,12 +3,11 @@
 # import time
 import calendar
 import re
-from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError, except_orm
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 
 EM = (r"[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$")
@@ -41,18 +40,18 @@ class AcademicYear(models.Model):
     date_stop = fields.Date('End Date', required=True,
                             help='Ending of academic year')
     month_ids = fields.One2many('academic.month', 'year_id', 'Months',
-                                help="related Academic months")
-    grade_id = fields.Many2one('grade.master', "Grade")
+                                help="Related Academic months")
+    grade_id = fields.Many2one('grade.master', "Grade", help='Grade')
     current = fields.Boolean('Current', help="Set Active Current Year")
-    description = fields.Text('Description')
+    description = fields.Text('Description', help='Description')
 
     @api.model
     def next_year(self, sequence):
         '''This method assign sequence to years'''
-        year_id = self.search([('sequence', '>', sequence)], order='id',
+        year_rec = self.search([('sequence', '>', sequence)], order='id',
                               limit=1)
-        if year_id:
-            return year_id.id
+        if year_rec:
+            return year_rec.id
         return False
 
     def name_get(self):
@@ -64,19 +63,19 @@ class AcademicYear(models.Model):
         interval = 1
         month_obj = self.env['academic.month']
         for data in self:
-            ds = data.date_start
-            while ds < data.date_stop:
-                de = ds + relativedelta(months=interval, days=-1)
-                if de > data.date_stop:
-                    de = data.date_stop
+            start_date = data.date_start
+            while start_date < data.date_stop:
+                end_date = start_date + relativedelta(months=interval, days=-1)
+                if end_date > data.date_stop:
+                    end_date = data.date_stop
                 month_obj.create({
-                    'name': ds.strftime('%B'),
-                    'code': ds.strftime('%m/%Y'),
-                    'date_start': ds.strftime('%Y-%m-%d'),
-                    'date_stop': de.strftime('%Y-%m-%d'),
+                    'name': start_date.strftime('%B'),
+                    'code': start_date.strftime('%m/%Y'),
+                    'date_start': start_date,
+                    'date_stop': end_date,
                     'year_id': data.id,
                 })
-                ds = ds + relativedelta(months=interval)
+                start_date = start_date + relativedelta(months=interval)
         return True
 
     @api.constrains('date_start', 'date_stop')
@@ -92,7 +91,7 @@ class AcademicYear(models.Model):
                                       is invalid.'''))
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise ValidationError(_('''The start date of the academic year'
+            raise ValidationError(_('''The start date of the academic year
                                       should be less than end date.'''))
         for old_ac in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
@@ -104,10 +103,10 @@ class AcademicYear(models.Model):
     @api.constrains('current')
     def check_current_year(self):
         '''Constraint on active current year'''
-        check_year = self.search([('current', '=', True)])
-        if len(check_year.ids) >= 2:
-            raise ValidationError(_('''Error! You cannot set two current \
-year active!'''))
+        current_year_rec = self.search([('current', '=', True)])
+        if len(current_year_rec.ids) >= 2:
+            raise ValidationError(_('''
+Error! You cannot set two current year active!'''))
 
 
 class AcademicMonth(models.Model):
@@ -125,7 +124,7 @@ class AcademicMonth(models.Model):
                             help='Ending of academic month')
     year_id = fields.Many2one('academic.year', 'Academic Year', required=True,
                               help="Related academic year ")
-    description = fields.Text('Description')
+    description = fields.Text('Description', help='Description')
 
     _sql_constraints = [
         ('month_unique', 'unique(date_start, date_stop, year_id)',
@@ -171,10 +170,13 @@ class StandardMedium(models.Model):
     _description = "Standard Medium"
     _order = "sequence"
 
-    sequence = fields.Integer('Sequence', required=True)
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    description = fields.Text('Description')
+    sequence = fields.Integer('Sequence', required=True,
+                              help='Sequence of the record')
+    name = fields.Char('Name', required=True,
+                       help='Medium of the standard')
+    code = fields.Char('Code', required=True,
+                       help='Medium code')
+    description = fields.Text('Description', help='Description')
 
 
 class StandardDivision(models.Model):
@@ -184,10 +186,13 @@ class StandardDivision(models.Model):
     _description = "Standard Division"
     _order = "sequence"
 
-    sequence = fields.Integer('Sequence', required=True)
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    description = fields.Text('Description')
+    sequence = fields.Integer('Sequence', required=True,
+                              help='Sequence of the record')
+    name = fields.Char('Name', required=True,
+                       help='Division of the standard')
+    code = fields.Char('Code', required=True,
+                       help='Standard code')
+    description = fields.Text('Description', help='Description')
 
 
 class StandardStandard(models.Model):
@@ -197,18 +202,21 @@ class StandardStandard(models.Model):
     _description = 'Standard Information'
     _order = "sequence"
 
-    sequence = fields.Integer('Sequence', required=True)
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    description = fields.Text('Description')
+    sequence = fields.Integer('Sequence', required=True,
+                              help='Sequence of the record')
+    name = fields.Char('Name', required=True,
+                       help='Standard name')
+    code = fields.Char('Code', required=True,
+                       help='Code of standard')
+    description = fields.Text('Description', help='Description')
 
     @api.model
     def next_standard(self, sequence):
         '''This method check sequence of standard'''
-        stand_ids = self.search([('sequence', '>', sequence)], order='id',
+        stand_rec = self.search([('sequence', '>', sequence)], order='id',
                                 limit=1)
-        if stand_ids:
-            return stand_ids.id
+        if stand_rec:
+            return stand_rec.id
         return False
 
 
@@ -240,43 +248,56 @@ class SchoolStandard(models.Model):
 
     @api.depends('student_ids')
     def _compute_total_student(self):
+        '''Method to compute total student.'''
         for rec in self:
             rec.total_students = len(rec.student_ids)
 
     @api.depends("capacity", "total_students")
     def _compute_remain_seats(self):
+        '''Method to compute remaining seats.'''
         for rec in self:
             rec.remaining_seats = rec.capacity - rec.total_students
 
-    school_id = fields.Many2one('school.school', 'School', required=True)
+    school_id = fields.Many2one('school.school', 'School', required=True,
+                                help='School of the following standard')
     standard_id = fields.Many2one('standard.standard', 'Standard',
-                                  required=True)
+                                  required=True, help='Standard')
     division_id = fields.Many2one('standard.division', 'Division',
-                                  required=True)
-    medium_id = fields.Many2one('standard.medium', 'Medium', required=True)
+                                  required=True, help='Standard division')
+    medium_id = fields.Many2one('standard.medium', 'Medium', required=True,
+                                help='Medium of the standard')
     subject_ids = fields.Many2many('subject.subject', 'subject_standards_rel',
-                                   'subject_id', 'standard_id', 'Subject')
-    user_id = fields.Many2one('school.teacher', 'Class Teacher')
+                                   'subject_id', 'standard_id', 'Subject',
+                                   help='Subjects of the standard')
+    user_id = fields.Many2one('school.teacher', 'Class Teacher',
+                              help='Teacher of the standard')
     student_ids = fields.One2many('student.student', 'standard_id',
                                   'Student In Class',
-                                  compute='_compute_student', store=True
+                                  compute='_compute_student', store=True,
+                                  help='Students which are in this standard'
                                   )
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', help='Index of color')
     cmp_id = fields.Many2one('res.company', 'Company Name',
-                             related='school_id.company_id', store=True)
+                             related='school_id.company_id', store=True,
+                             help='Company_id of the school')
     syllabus_ids = fields.One2many('subject.syllabus', 'standard_id',
-                                   'Syllabus')
+                                   'Syllabus',
+                                   help='Syllabus of the following standard')
     total_no_subjects = fields.Integer('Total No of Subject',
-                                       compute="_compute_subject")
-    name = fields.Char('Name')
-    capacity = fields.Integer("Total Seats")
+                                       compute="_compute_subject",
+                                       help='Total subjects in the standard')
+    name = fields.Char('Name', help='Standard name')
+    capacity = fields.Integer("Total Seats", help='Standard capacity')
     total_students = fields.Integer("Total Students",
                                     compute="_compute_total_student",
-                                    store=True)
+                                    store=True,
+                                    help='Total students of the standard')
     remaining_seats = fields.Integer("Available Seats",
                                      compute="_compute_remain_seats",
-                                     store=True)
-    class_room_id = fields.Many2one('class.room', 'Room Number')
+                                     store=True,
+                                     help='Remaining seats of the standard')
+    class_room_id = fields.Many2one('class.room', 'Room Number',
+                                    help='Class room of the standard')
 
     @api.onchange('standard_id', 'division_id')
     def onchange_combine(self):
@@ -309,8 +330,8 @@ class SchoolStandard(models.Model):
     def check_seats(self):
         """Method to check seats."""
         if self.capacity <= 0:
-            raise ValidationError(_('''Total seats should be greater than
-                0!'''))
+            raise ValidationError(_('''Total seats should be greater than 0!
+            '''))
 
     def name_get(self):
         '''Method to display standard and division'''
@@ -331,24 +352,26 @@ class SchoolSchool(models.Model):
         languages = self.env['res.lang'].search([])
         return [(language.code, language.name) for language in languages]
 
-    company_id = fields.Many2one('res.company', 'Company',
-                                 ondelete="cascade",
-                                 required=True,
-                                 delegate=True)
+    company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
+                                 required=True, delegate=True,
+                                 help='Company_id of the school')
     com_name = fields.Char('School Name', related='company_id.name',
-                           store=True)
-    code = fields.Char('Code', required=True)
+                           store=True, help='School name')
+    code = fields.Char('Code', required=True, help='School code')
     standards = fields.One2many('school.standard', 'school_id',
-                                'Standards')
+                                'Standards', help='School standard')
     lang = fields.Selection(_lang_get, 'Language',
                             help='''If the selected language is loaded in the
                                 system, all documents related to this partner
                                 will be printed in this language.
                                 If not, it will be English.''')
-    required_age = fields.Integer("Student Admission Age Required", default=6)
+    required_age = fields.Integer("Student Admission Age Required", default=6,
+                                  help='''Minimum required age for 
+                                  student admission''')
 
     @api.model
     def create(self, vals):
+        '''Inherited create method to assign company_id to school'''
         res = super(SchoolSchool, self).create(vals)
         main_company = self.env.ref('base.main_company')
         res.company_id.parent_id = main_company.id
@@ -360,22 +383,31 @@ class SubjectSubject(models.Model):
     _name = "subject.subject"
     _description = "Subjects"
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
-    maximum_marks = fields.Integer("Maximum marks")
-    minimum_marks = fields.Integer("Minimum marks")
-    weightage = fields.Integer("WeightAge")
+    name = fields.Char('Name', required=True, help='Subject name')
+    code = fields.Char('Code', required=True, help='Subject code')
+    maximum_marks = fields.Integer("Maximum marks",
+                                   help='Maximum marks of the subject can get')
+    minimum_marks = fields.Integer("Minimum marks", help='''Required minimum
+                                                     marks of the subject''')
+    weightage = fields.Integer("WeightAge", help='Weightage of the subject')
     teacher_ids = fields.Many2many('school.teacher', 'subject_teacher_rel',
-                                   'subject_id', 'teacher_id', 'Teachers')
-    standard_ids = fields.Many2many('standard.standard',
-                                    string='Standards')
-    standard_id = fields.Many2one('standard.standard', 'Class')
+                                   'subject_id', 'teacher_id', 'Teachers',
+                                   help='Teachers of the following subject')
+    standard_ids = fields.Many2many('standard.standard', string='Standards',
+                                    help='''Standards in which the 
+                                    following subject taught''')
+    standard_id = fields.Many2one('standard.standard', 'Class',
+                                  help='''Class in which the following
+                                  subject taught''')
     is_practical = fields.Boolean('Is Practical',
                                   help='Check this if subject is practical.')
-    elective_id = fields.Many2one('subject.elective')
+    elective_id = fields.Many2one('subject.elective',
+                                  help='''Elective subject respective
+                                  the following subject''')
     student_ids = fields.Many2many('student.student',
                                    'elective_subject_student_rel',
-                                   'subject_id', 'student_id', 'Students')
+                                   'subject_id', 'student_id', 'Students',
+                                   help='Students who choose this subject')
 
 
 class SubjectSyllabus(models.Model):
@@ -384,8 +416,9 @@ class SubjectSyllabus(models.Model):
     _description = "Syllabus"
     _rec_name = "subject_id"
 
-    standard_id = fields.Many2one('school.standard', 'Standard')
-    subject_id = fields.Many2one('subject.subject', 'Subject')
+    standard_id = fields.Many2one('school.standard', 'Standard',
+                                  help='Standard which had this subject')
+    subject_id = fields.Many2one('subject.subject', 'Subject', help='Subject')
     syllabus_doc = fields.Binary("Syllabus Doc",
                                  help="Attach syllabus related to Subject")
 
@@ -395,9 +428,10 @@ class SubjectElective(models.Model):
     _name = 'subject.elective'
     _description = "Elective Subject"
 
-    name = fields.Char("Name")
+    name = fields.Char("Name", help='Elective subject name')
     subject_ids = fields.One2many('subject.subject', 'elective_id',
-                                  'Elective Subjects')
+                                  'Elective Subjects', help='''Subjects of the
+                                  respective elective subject''')
 
 
 class MotherTongue(models.Model):
@@ -406,7 +440,7 @@ class MotherTongue(models.Model):
     _name = 'mother.toungue'
     _description = "Mother Toungue"
 
-    name = fields.Char("Mother Tongue")
+    name = fields.Char("Mother Tongue", help='Language name')
 
 
 class StudentAward(models.Model):
@@ -415,9 +449,10 @@ class StudentAward(models.Model):
     _name = 'student.award'
     _description = "Student Awards"
 
-    award_list_id = fields.Many2one('student.student', 'Student')
-    name = fields.Char('Award Name')
-    description = fields.Char('Description')
+    award_list_id = fields.Many2one('student.student', 'Student',
+                                    help='Students who about to get the award')
+    name = fields.Char('Award Name', help='Award name')
+    description = fields.Char('Description', help='Description')
 
 
 class AttendanceType(models.Model):
@@ -426,8 +461,8 @@ class AttendanceType(models.Model):
     _name = "attendance.type"
     _description = "School Type"
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
+    name = fields.Char('Name', required=True, help='Attendance type name')
+    code = fields.Char('Code', required=True, help='Attendance type code')
 
 
 class StudentDocument(models.Model):
@@ -436,15 +471,19 @@ class StudentDocument(models.Model):
     _description = "Student Document"
     _rec_name = "doc_type"
 
-    doc_id = fields.Many2one('student.student', 'Student')
-    file_no = fields.Char('File No', readonly="1", default=lambda obj:
-                          obj.env['ir.sequence'].
-                          next_by_code('student.document'))
-    submited_date = fields.Date('Submitted Date')
-    doc_type = fields.Many2one('document.type', 'Document Type', required=True)
-    file_name = fields.Char('File Name',)
-    return_date = fields.Date('Return Date')
-    new_datas = fields.Binary('Attachments')
+    doc_id = fields.Many2one('student.student', 'Student',
+                             help='Student of the following doc')
+    file_no = fields.Char('File No', readonly="1",
+                          default=lambda obj: obj.env[
+                            'ir.sequence'].next_by_code('student.document'),
+                          help='File no of the document')
+    submited_date = fields.Date('Submitted Date',
+                                help='Document submitted date')
+    doc_type = fields.Many2one('document.type', 'Document Type', required=True,
+                               help='Document type')
+    file_name = fields.Char('File Name', help='File name')
+    return_date = fields.Date('Return Date', help='Document return date')
+    new_datas = fields.Binary('Attachments', hep='Attachments of the document')
 
 
 class DocumentType(models.Model):
@@ -455,8 +494,10 @@ class DocumentType(models.Model):
     _order = "seq_no"
 
     seq_no = fields.Char('Sequence', readonly=True,
-                         default=lambda self: _('New'))
-    doc_type = fields.Char('Document Type', required=True)
+                         default=lambda self: _('New'),
+                         help='Sequence of the document')
+    doc_type = fields.Char('Document Type', required=True,
+                           help='Document type')
 
     @api.model
     def create(self, vals):
@@ -471,9 +512,10 @@ class StudentDescription(models.Model):
     _name = 'student.description'
     _description = "Student Description"
 
-    des_id = fields.Many2one('student.student', 'Student Ref.')
-    name = fields.Char('Name')
-    description = fields.Char('Description')
+    des_id = fields.Many2one('student.student', 'Student Ref.',
+                             help='Student record from students')
+    name = fields.Char('Name', help='Description name')
+    description = fields.Char('Description', help='Student description')
 
 
 class StudentDescipline(models.Model):
@@ -482,12 +524,16 @@ class StudentDescipline(models.Model):
     _name = 'student.descipline'
     _description = "Student Discipline"
 
-    student_id = fields.Many2one('student.student', 'Student')
-    teacher_id = fields.Many2one('school.teacher', 'Teacher')
-    date = fields.Date('Date')
-    class_id = fields.Many2one('standard.standard', 'Class')
-    note = fields.Text('Note')
-    action_taken = fields.Text('Action Taken')
+    student_id = fields.Many2one('student.student', 'Student',
+                                 help='Student')
+    teacher_id = fields.Many2one('school.teacher', 'Teacher',
+                                 help='Teacher who examine the student')
+    date = fields.Date('Date', help='Date')
+    class_id = fields.Many2one('standard.standard', 'Class',
+                               help='Class of student')
+    note = fields.Text('Note', help='Discipline Note')
+    action_taken = fields.Text('Action Taken',
+                               help='Action taken against discipline')
 
 
 class StudentHistory(models.Model):
@@ -496,12 +542,16 @@ class StudentHistory(models.Model):
     _name = "student.history"
     _description = "Student History"
 
-    student_id = fields.Many2one('student.student', 'Student')
+    student_id = fields.Many2one('student.student', 'Student',
+                                 help='Related Student')
     academice_year_id = fields.Many2one('academic.year', 'Academic Year',
-                                        )
-    standard_id = fields.Many2one('school.standard', 'Standard')
-    percentage = fields.Float("Percentage", readonly=True)
-    result = fields.Char('Result', readonly=True)
+                                        help='Academice Year')
+    standard_id = fields.Many2one('school.standard', 'Standard',
+                                  help='Standard of the following student')
+    percentage = fields.Float("Percentage", readonly=True,
+                              help='Percentage of the student')
+    result = fields.Char('Result', readonly=True,
+                         help='Result of the student')
 
 
 class StudentCertificate(models.Model):
@@ -510,9 +560,11 @@ class StudentCertificate(models.Model):
     _name = "student.certificate"
     _description = "Student Certificate"
 
-    student_id = fields.Many2one('student.student', 'Student')
-    description = fields.Char('Description')
-    certi = fields.Binary('Certificate', required=True)
+    student_id = fields.Many2one('student.student', 'Student',
+                                 help='Related student')
+    description = fields.Char('Description', help='Description')
+    certi = fields.Binary('Certificate', required=True,
+                          help='Student certificate')
 
 
 class StudentReference(models.Model):
@@ -521,14 +573,19 @@ class StudentReference(models.Model):
     _name = "student.reference"
     _description = "Student Reference"
 
-    reference_id = fields.Many2one('student.student', 'Student')
-    name = fields.Char('First Name', required=True)
-    middle = fields.Char('Middle Name', required=True)
-    last = fields.Char('Surname', required=True)
-    designation = fields.Char('Designation', required=True)
-    phone = fields.Char('Phone', required=True)
+    reference_id = fields.Many2one('student.student', 'Student',
+                                   help='Student reference')
+    name = fields.Char('First Name', required=True,
+                        help='Student name')
+    middle = fields.Char('Middle Name', required=True,
+                          help='Student middle name')
+    last = fields.Char('Surname', required=True,
+                        help='Student last name')
+    designation = fields.Char('Designation', required=True,
+                               help='Student designation')
+    phone = fields.Char('Phone', required=True,  help='Student phone')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')],
-                              'Gender')
+                              'Gender',  help='Student gender')
 
 
 class StudentPreviousSchool(models.Model):
@@ -536,27 +593,32 @@ class StudentPreviousSchool(models.Model):
     _name = "student.previous.school"
     _description = "Student Previous School"
 
-    previous_school_id = fields.Many2one('student.student', 'Student')
-    name = fields.Char('Name', required=True)
-    registration_no = fields.Char('Registration No.', required=True)
-    admission_date = fields.Date('Admission Date')
-    exit_date = fields.Date('Exit Date')
-    course_id = fields.Many2one('standard.standard', 'Course', required=True)
-    add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects')
+    previous_school_id = fields.Many2one('student.student', 'Student',
+                                         help='Related student')
+    name = fields.Char('Name', required=True,
+                       help='Student previous school name')
+    registration_no = fields.Char('Registration No.', required=True,
+                                  help='Student registration number')
+    admission_date = fields.Date('Admission Date',
+                                 help='Student admission date')
+    exit_date = fields.Date('Exit Date',
+                            help='Student previous school exit date')
+    course_id = fields.Many2one('standard.standard', 'Course', required=True,
+                                help='Student gender')
+    add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
+                              help='Student gender')
 
     @api.constrains('admission_date', 'exit_date')
     def check_date(self):
-        ''' Defining a student previous school information '''
-        
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt,
-                                   DEFAULT_SERVER_DATE_FORMAT)
-        if self.admission_date >= new_dt or self.exit_date >= new_dt:
+        new_dt = fields.Date.today()
+        if (self.admission_date and self.admission_date >= new_dt) or (
+            self.exit_date and self.exit_date >= new_dt):
             raise ValidationError(_('''Your admission date and exit date
-            should be less than current date in previous school details!'''))
-        if self.admission_date > self.exit_date:
+should be less than current date in previous school details!'''))
+        if (self.admission_date and self.exit_date) and (
+            self.admission_date > self.exit_date):
             raise ValidationError(_(''' Admission date should be less than
-            exit date in previous school!'''))
+exit date in previous school!'''))
 
 
 class AcademicSubject(models.Model):
@@ -565,10 +627,12 @@ class AcademicSubject(models.Model):
     _description = "Student Previous School"
 
     add_sub_id = fields.Many2one('student.previous.school', 'Add Subjects',
-                                 invisible=True)
-    name = fields.Char('Name', required=True)
-    maximum_marks = fields.Integer("Maximum marks")
-    minimum_marks = fields.Integer("Minimum marks")
+                                 invisible=True,
+                                 help='Select student previous school')
+    name = fields.Char('Name', required=True,
+                       help='Enter previous school name')
+    maximum_marks = fields.Integer("Maximum marks", help='Enter maximum mark')
+    minimum_marks = fields.Integer("Minimum marks", help='Enter minimum marks')
 
 
 class StudentFamilyContact(models.Model):
@@ -584,20 +648,25 @@ class StudentFamilyContact(models.Model):
             else:
                 rec.relative_name = rec.name
 
-    family_contact_id = fields.Many2one('student.student', 'Student Ref.')
+    family_contact_id = fields.Many2one('student.student', 'Student Ref.',
+                                        help='Enter related student')
     rel_name = fields.Selection([('exist', 'Link to Existing Student'),
                                  ('new', 'Create New Relative Name')],
                                 'Related Student', help="Select Name",
                                 required=True)
-    user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade")
+    user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
+                              help='Enter related user of the student')
     stu_name = fields.Many2one('student.student', 'Existing Student',
                                help="Select Student From Existing List")
-    name = fields.Char('Relative Name')
+    name = fields.Char('Relative Name', help='Enter relative name')
     relation = fields.Many2one('student.relation.master', 'Relation',
-                               required=True)
-    phone = fields.Char('Phone', required=True)
-    email = fields.Char('E-Mail')
-    relative_name = fields.Char(compute='_compute_get_name', string='Name')
+                               required=True,
+                               help='Select student relation with member')
+    phone = fields.Char('Phone', required=True,
+                        help='Enter family member contact')
+    email = fields.Char('E-Mail', help='Enter student email')
+    relative_name = fields.Char(compute='_compute_get_name', string='Name',
+                                help='Enter student family member name')
 
 
 class StudentRelationMaster(models.Model):
@@ -606,7 +675,7 @@ class StudentRelationMaster(models.Model):
     _description = "Student Relation Master"
 
     name = fields.Char('Name', required=True, help="Enter Relation name")
-    seq_no = fields.Integer('Sequence')
+    seq_no = fields.Integer('Sequence', help='Relation sequence')
 
 
 class GradeMaster(models.Model):
@@ -615,8 +684,9 @@ class GradeMaster(models.Model):
     _name = 'grade.master'
     _description = "Grade Master"
 
-    name = fields.Char('Grade', required=True)
-    grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Lines')
+    name = fields.Char('Grade', required=True, help='Grade name')
+    grade_ids = fields.One2many('grade.line', 'grade_id', 'Grade Lines',
+                                help='Grade which are consider in this.')
 
 
 class GradeLine(models.Model):
@@ -632,10 +702,11 @@ class GradeLine(models.Model):
                              help='The grade will ends to this marks.')
     grade = fields.Char('Grade', required=True, help="Grade")
     sequence = fields.Integer('Sequence', help="Sequence order of the grade.")
-    fail = fields.Boolean('Fail', help='If fail field is set to True,\
-                                  it will allow you to set the grade as fail.')
-    grade_id = fields.Many2one("grade.master", 'Grade Ref.')
-    name = fields.Char('Name')
+    fail = fields.Boolean('Fail', help='''If fail field is set to True,
+                                it will allow you to set the grade as fail.''')
+    grade_id = fields.Many2one("grade.master", 'Grade Ref.',
+                               help='Related grade')
+    name = fields.Char('Name', help='Grade name')
 
 
 class StudentNews(models.Model):
@@ -653,12 +724,12 @@ class StudentNews(models.Model):
     user_ids = fields.Many2many('res.users', 'user_news_rel', 'id', 'user_ids',
                                 'User News',
                                 help='Name to whom this news is related.')
-    color = fields.Integer('Color Index', default=0)
+    color = fields.Integer('Color Index', default=0, help='Color index')
 
     @api.constrains("date")
     def checknews_dates(self):
         """Check news date."""
-        new_date = datetime.now()
+        new_date = fields.datetime.today()
         if self.date < new_date:
             raise ValidationError(_('''
                     Configure expiry date greater than current date!'''))
@@ -667,13 +738,12 @@ class StudentNews(models.Model):
         '''Method to send email to student for news update'''
         emp_obj = self.env['hr.employee']
         obj_mail_server = self.env['ir.mail_server']
-        user = self.env['res.users'].browse(self._context.get('uid'))
+        user = self.env.user
         # Check if out going mail configured
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
-            raise except_orm(_('Mail Error'),
-                             _('''No mail outgoing mail server \
-specified!'''))
+            raise UserError(_('''Mail Error!
+No mail outgoing mail server specified!'''))
         mail_server_record = mail_server_ids[0]
         email_list = []
         # Check email is defined in student
@@ -682,7 +752,7 @@ specified!'''))
                 email_list = [news_user.email for news_user in news.user_ids
                               if news_user.email]
                 if not email_list:
-                    raise except_orm(_('User Email Configuration!'),
+                    raise UserError(_('User Email Configuration!'),
                                      _("Email not found in users !"))
             # Check email is defined in user created from employee
             else:
@@ -692,7 +762,7 @@ specified!'''))
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise except_orm(_('Email Configuration!'),
+                    raise UserError(_('Email Configuration!'),
                                      _("Email not defined!"))
             news_date = news.date
             # Add company name while sending email
@@ -701,12 +771,13 @@ specified!'''))
                     This is a news update from <b>%s</b> posted at %s<br/>
                     <br/> %s <br/><br/>
                     Thank you.""" % (company,
-                                     news_date.strftime('%d-%m-%Y %H:%M:%S'),
+                                     news_date.strftime(
+                                            DEFAULT_SERVER_DATETIME_FORMAT),
                                      news.description or '')
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
-                raise except_orm(_('Email Configuration '),
+                raise UserError(_('Email Configuration '),
                                  _("Kindly,Configure Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             # Configure email
@@ -732,15 +803,16 @@ class StudentReminder(models.Model):
     @api.model
     def check_user(self):
         '''Method to get default value of logged in Student'''
-        return self.env['student.student'].search([('user_id', '=',
-                                                    self._uid)]).id
+        return self.env['student.student'].search([
+                                        ('user_id', '=', self._uid)]).id
 
     stu_id = fields.Many2one('student.student', 'Student Name', required=True,
-                             default=check_user)
-    name = fields.Char('Title')
-    date = fields.Date('Date')
-    description = fields.Text('Description')
-    color = fields.Integer('Color Index', default=0)
+                             default=check_user, help='Relative student')
+    name = fields.Char('Title', help='Reminder name')
+    date = fields.Date('Date', help='Reminder date')
+    description = fields.Text('Description',
+                              help='Description of the reminder')
+    color = fields.Integer('Color Index', default=0, help='Color index')
 
 
 class StudentCast(models.Model):
@@ -749,7 +821,7 @@ class StudentCast(models.Model):
     _name = "student.cast"
     _description = "Student Cast"
 
-    name = fields.Char("Name", required=True)
+    name = fields.Char("Name", required=True, help='Student cast')
 
 
 class ClassRoom(models.Model):
@@ -758,17 +830,17 @@ class ClassRoom(models.Model):
     _name = "class.room"
     _description = "Class Room"
 
-    name = fields.Char("Name")
-    number = fields.Char("Room Number")
+    name = fields.Char("Name", help='Class room name')
+    number = fields.Char("Room Number", help='Class room number')
 
 
 class Report(models.Model):
     _inherit = "ir.actions.report"
 
     def render_template(self, template, values=None):
-        student_id = self.env['student.student'].\
+        student_rec = self.env['student.student'].\
             browse(self._context.get('student_id', False))
-        if student_id and student_id.state == 'draft':
+        if student_rec and student_rec.state == 'draft':
             raise ValidationError(_('''
                 You cannot print report forstudent in unconfirm state!'''))
         return super(Report, self).render_template(template, values)
