@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -19,19 +19,24 @@ class TimeTable(models.Model):
                             ]
         return True
 
-    name = fields.Char('Description')
+    name = fields.Char('Description', help='Enter description of timetable')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True,
                                   help="Select Standard")
     year_id = fields.Many2one('academic.year', 'Year', required=True,
-                              help="select academic year")
-    timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable')
+                              help="Select academic year")
+    timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable',
+                                    help='Enter the timetable pattern')
     timetable_type = fields.Selection([('regular', 'Regular')],
                                       'Time Table Type', default="regular",
-                                      inivisible=True)
+                                      inivisible=True,
+                                      help='Select time table type')
     user_ids = fields.Many2many('res.users', string="Users",
-                                compute="_compute_user", store=True)
-    class_room_id = fields.Many2one('class.room', 'Room Number')
+                                compute="_compute_user", store=True,
+                                help='Teachers following this timetable')
+    class_room_id = fields.Many2one('class.room', 'Room Number',
+                                    help='''Class room in which tome table
+                                    would be followed''')
 
     @api.constrains('timetable_ids')
     def _check_lecture(self):
@@ -48,9 +53,7 @@ class TimeTable(models.Model):
                 if len(records) > 1:
                     raise ValidationError(_('''
     You cannot set lecture at same time %s  at same day %s for teacher %s..!
-    ''') % (rec.start_time,
-                                                         rec.week_day,
-                                                         rec.teacher_id.name))
+    ''') % (rec.start_time, rec.week_day, rec.teacher_id.name))
                 # Checks if time is greater than 24 hours than raise error
                 if rec.start_time > 24:
                     raise ValidationError(_('''
@@ -92,14 +95,17 @@ class TimeTableLine(models.Model):
                                  ('thursday', 'Thursday'),
                                  ('friday', 'Friday'),
                                  ('saturday', 'Saturday'),
-                                 ('sunday', 'Sunday')], "Week day",)
-    class_room_id = fields.Many2one('class.room', 'Room Number')
+                                 ('sunday', 'Sunday')], "Week day",
+                                help='Select weekday for timetable')
+    class_room_id = fields.Many2one('class.room', 'Room Number',
+                                    help='''Class room in which time
+                                    table would be followed''')
 
     @api.constrains('teacher_id', 'class_room_id')
     def check_teacher_room(self):
         """Check available room for teacher."""
-        timetable_rec = self.env['time.table'].search([('id', '!=',
-                                                        self.table_id.id)])
+        timetable_rec = self.env['time.table'].search([
+                                            ('id', '!=', self.table_id.id)])
         if timetable_rec:
             for data in timetable_rec:
                 for record in data.timetable_ids:

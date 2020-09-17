@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import api, models
 
 
 class ReportTimetableInfo(models.AbstractModel):
@@ -28,12 +28,13 @@ class ReportTimetableInfo(models.AbstractModel):
         time_data = self._cr.dictfetchall()
         for time_detail in time_data:
             for data in res:
-                if ((time_detail['start_time'] == data['start_time']) and
-                        (time_detail['end_time'] == data['end_time'])):
-                    if (data['name'] == 'Recess'):
-                        time_detail[data['week_day']] = data['name']
+                if ((time_detail.get('start_time') == data.get('start_time')) 
+                    and (time_detail.get('end_time') == data.get('end_time'))):
+                    if (data.get('name') == 'Recess'):
+                        time_detail[data['week_day']] = data.get('name')
                     else:
-                        td = data['name'] + '\n(' + data['teacher'] + ')'
+                        td = data.get('name') + '\n(' + data.get(
+                                                            'teacher') + ')'
                         time_detail[data['week_day']] = td
             timetable_detail.append(time_detail)
         return timetable_detail
