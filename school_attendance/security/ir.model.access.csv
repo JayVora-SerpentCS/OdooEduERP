@@ -21,6 +21,6 @@ access_student_leave_req_teacher,studentleave.request,model_studentleave_request
 access_student_leave_req_stud,studentleave.request,model_studentleave_request,school.group_school_student,1,1,1,0
 access_student_leave_req_parent,studentleave.request,model_studentleave_request,school.group_school_parent,1,1,1,0
 access_resource_resource_parent,resource.resource.parent,resource.model_resource_resource,school.group_school_parent,1,1,1,0
-,,,,,,,
+
 access_student_attendance_by_month,student.attendance.by.month,model_student_attendance_by_month,school.group_school_administration,1,1,1,1
 access_monthly_attendance_sheet,monthly.attendance.sheet,model_monthly_attendance_sheet,school.group_school_administration,1,1,1,1

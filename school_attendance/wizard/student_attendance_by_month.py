@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -10,18 +10,19 @@ class StudentAttendanceByMonth(models.TransientModel):
     _name = 'student.attendance.by.month'
     _description = 'Student Monthly Attendance Report'
 
-    month = fields.Many2one('academic.month')
-    year = fields.Many2one('academic.year')
+    month = fields.Many2one('academic.month', help='Select academic month')
+    year = fields.Many2one('academic.year', help='Select academic year')
     attendance_type = fields.Selection([('daily', 'FullDay'),
-                                        ('lecture', 'Lecture Wise')], 'Type')
+                                        ('lecture', 'Lecture Wise')], 'Type',
+                                       help='Select attendance type')
 
     @api.model
     def default_get(self, fields):
         """Overriding DefaultGet."""
         res = super(StudentAttendanceByMonth, self).default_get(fields)
-        students = self.env['student.student'].browse(
+        students_rec = self.env['student.student'].browse(
                                             self._context.get('active_id'))
-        if students.state == 'draft':
+        if students_rec.state == 'draft':
             raise ValidationError(_('''
                 You can not print report for student in unconfirm state!'''))
         return res
@@ -35,15 +36,15 @@ class StudentAttendanceByMonth(models.TransientModel):
         @param context : standard Dictionary
         @return : printed report
         '''
-        stud_search = self.env['student.student'].search([
+        stud_search_rec = self.env['student.student'].search([
                             ('id', '=', self.env.context.get('active_id')),
                             ('state', '=', 'done')])
         daily_attend = self.env['daily.attendance']
         for rec in self:
             attend_stud = daily_attend.search([
-                            ('standard_id', '=', stud_search.standard_id.id),
-                            ('date', '>=', rec.month.date_start),
-                            ('date', '<=', rec.month.date_stop)])
+                        ('standard_id', '=', stud_search_rec.standard_id.id),
+                        ('date', '>=', rec.month.date_start),
+                        ('date', '<=', rec.month.date_stop)])
             if not attend_stud:
                 raise ValidationError(_('''
         There is no data of attendance for student in selected month or year!

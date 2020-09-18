@@ -1,15 +1,14 @@
 # See LICENSE file for full copyright and licensing details.
 
-import time
-from datetime import datetime, date
-from dateutil.relativedelta import relativedelta as rd
-
-from odoo import models, fields, api, _
-from odoo.exceptions import Warning as UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.exceptions import ValidationError
-from lxml import etree
 import json
+import time
+from datetime import datetime
+
+from dateutil.relativedelta import relativedelta as rd
+from lxml import etree
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class AttendanceSheet(models.Model):
@@ -18,20 +17,22 @@ class AttendanceSheet(models.Model):
     _description = 'Attendance Sheet'
     _name = 'attendance.sheet'
 
-    name = fields.Char('Description', readonly=True)
+    name = fields.Char('Description', readonly=True, help='Enter Description')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True,
                                   help="Select Standard")
     month_id = fields.Many2one('academic.month', 'Month', required=True,
                                help="Select Academic Month")
-    year_id = fields.Many2one('academic.year', 'Year', required=True)
+    year_id = fields.Many2one('academic.year', 'Year', required=True,
+                              help='Select academic year')
     attendance_ids = fields.One2many('attendance.sheet.line', 'standard_id',
                                      'Attendance',
-                                     help="Academic Year")
+                                     help="Enter attendance  sheet")
     user_id = fields.Many2one('school.teacher', 'Faculty',
                               help="Select Teacher")
     attendance_type = fields.Selection([('daily', 'FullDay'),
-                                        ('lecture', 'Lecture Wise')], 'Type')
+                                        ('lecture', 'Lecture Wise')], 'Type',
+                                       help='Select attendance type')
 
     @api.onchange('standard_id')
     def onchange_class_info(self):
@@ -124,31 +125,37 @@ class StudentleaveRequest(models.Model):
             if not rec.start_date or not rec.end_date:
                 rec.days = 0
 
-    name = fields.Char('Type of Leave', required=True)
-    student_id = fields.Many2one('student.student', 'Student', required=True)
-    roll_no = fields.Char('Roll Number')
+    name = fields.Char('Type of Leave', required=True,
+                       help='Leave request name')
+    student_id = fields.Many2one('student.student', 'Student', required=True,
+                                 help='Enter Student name')
+    roll_no = fields.Char('Roll Number', help='Enter Student name')
     standard_id = fields.Many2one('school.standard', 'Class',
-                                  required=True)
-    attachments = fields.Binary('Attachment')
+                                  required=True, help='Select standard')
+    attachments = fields.Binary('Attachment', help='Attachments')
     state = fields.Selection([('draft', 'Draft'),
                               ('toapprove', 'To Approve'),
                               ('reject', 'Reject'),
                               ('approve', 'Approved')], 'Status',
-                             default='draft',
-                             track_visibility='onchange',)
-    start_date = fields.Date('Start Date')
-    end_date = fields.Date('End Date')
-    teacher_id = fields.Many2one('school.teacher', 'Class Teacher')
-    days = fields.Integer('Days', compute="_compute_days", store=True)
-    reason = fields.Text('Reason for Leave')
+                             default='draft', tracking=True,
+                             help='State of the leave request')
+    start_date = fields.Date('Start Date', help='Enter start date')
+    end_date = fields.Date('End Date', help='Enter end date')
+    teacher_id = fields.Many2one('school.teacher', 'Class Teacher',
+                                 help='Select teacher')
+    days = fields.Integer('Days', compute="_compute_days", store=True,
+                          help='Days of the week')
+    reason = fields.Text('Reason for Leave', help='Reason for the leave')
     message_ids = fields.One2many('mail.message', 'res_id', 'Messages',
                                   domain=lambda self: [
                                             ('model', '=', self._name)],
-                                  auto_join=True)
+                                  auto_join=True,
+                                  help='Message that about to send')
     message_follower_ids = fields.One2many('mail.followers', 'res_id',
                                            'Followers',
                                            domain=lambda self: [
-                                            ('res_model', '=', self._name)])
+                                            ('res_model', '=', self._name)],
+                                           help='Add message followers')
 
     @api.onchange('student_id')
     def onchange_student(self):
@@ -163,11 +170,11 @@ class StudentleaveRequest(models.Model):
         '''Inherited create method to  assign
         student details in leave request'''
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id')
-                                                         )
-            vals.update({'roll_no': student.roll_no,
-                         'standard_id': student.standard_id.id,
-                         'teacher_id': student.standard_id.user_id.id
+            student_rec = self.env['student.student'].browse(
+                                                    vals.get('student_id'))
+            vals.update({'roll_no': student_rec.roll_no,
+                         'standard_id': student_rec.standard_id.id,
+                         'teacher_id': student_rec.standard_id.user_id.id
                          })
         return super(StudentleaveRequest, self).create(vals)
 
@@ -175,11 +182,11 @@ class StudentleaveRequest(models.Model):
         '''Inherited write method to  assign
         student details in leave request'''
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id')
-                                                         )
-            vals.update({'roll_no': student.roll_no,
-                         'standard_id': student.standard_id.id,
-                         'teacher_id': student.standard_id.user_id.id
+            student_rec = self.env['student.student'].browse(
+                                                    vals.get('student_id'))
+            vals.update({'roll_no': student_rec.roll_no,
+                         'standard_id': student_rec.standard_id.id,
+                         'teacher_id': student_rec.standard_id.user_id.id
                          })
         return super(StudentleaveRequest, self).write(vals)
 
@@ -200,7 +207,7 @@ class StudentleaveRequest(models.Model):
         if self.start_date > self.end_date:
             raise ValidationError(_('''Start date should be less than end date!
             '''))
-        if self.start_date < date.today():
+        if self.start_date < fields.Date.today():
             raise ValidationError(_(
         "Your leave request start date should be greater than current date!"))
 
@@ -305,8 +312,10 @@ class AttendanceSheetLine(models.Model):
 
     roll_no = fields.Integer('Roll Number', required=True,
                              help='Roll Number of Student')
-    standard_id = fields.Many2one('attendance.sheet', 'Standard')
-    name = fields.Char('Student Name', required=True, readonly=True)
+    standard_id = fields.Many2one('attendance.sheet', 'Standard',
+                                  help='Attendance for particular standard')
+    name = fields.Char('Student Name', required=True, readonly=True,
+                       help='Enter student name')
     one = fields.Boolean('1')
     two = fields.Boolean('2')
     three = fields.Boolean('3')
@@ -339,7 +348,8 @@ class AttendanceSheetLine(models.Model):
     two_0 = fields.Boolean('30')
     three_1 = fields.Boolean('31')
     percentage = fields.Float(compute="_compute_percentage", method=True,
-                              string='Attendance (%)', store=False)
+                              string='Attendance (%)', store=False,
+                              help='Percentage')
 
 
 class DailyAttendance(models.Model):
@@ -378,20 +388,21 @@ class DailyAttendance(models.Model):
                 rec.total_absent = count_fail
 
     date = fields.Date("Date", help="Current Date",
-                       default=lambda *a: time.strftime(
-                                            DEFAULT_SERVER_DATE_FORMAT))
+                       default=fields.Date.context_today)
     standard_id = fields.Many2one('school.standard', 'Academic Class',
                                   required=True, help="Select Standard",
                                   states={'validate': [('readonly', True)]})
     student_ids = fields.One2many('daily.attendance.line', 'standard_id',
                                   'Students',
                                   states={'validate': [('readonly', True)],
-                                          'draft': [('readonly', False)]})
+                                          'draft': [('readonly', False)]},
+                                  help='Enter students for attendance')
     user_id = fields.Many2one('school.teacher', 'Faculty',
                               help="Select Teacher", ondelete='restrict',
                               states={'validate': [('readonly', True)]})
     state = fields.Selection([('draft', 'Draft'), ('validate', 'Validate')],
-                             'State', readonly=True, default='draft')
+                             'State', readonly=True, default='draft',
+                             help='State of the attendance')
     total_student = fields.Integer(compute="_compute_total",
                                    store=True,
                                    help="Total Students in class",
@@ -480,7 +491,7 @@ class DailyAttendance(models.Model):
     @api.constrains('date')
     def validate_date(self):
         '''Constraint to check selected attendance date'''
-        if self.date > date.today():
+        if self.date > fields.Date.today():
             raise ValidationError(_(
                     "Date should be less than or equal to current date!"))
 
@@ -493,14 +504,14 @@ class DailyAttendance(models.Model):
         for rec in self:
             if not rec.date:
                 raise UserError(_('Please enter todays date.'))
-            year_search_ids = academic_year_obj.search([
+            year_search_rec = academic_year_obj.search([
                                         ('code', '=', rec.date.year)])
-            month_search_ids = academic_month_obj.search([
+            month_search_rec = academic_month_obj.search([
                                         ('code', '=', rec.date.month)])
             sheet_ids = att_sheet_obj.search(
                 [('standard_id', '=', rec.standard_id.id),
-                 ('month_id', '=', month_search_ids.id),
-                 ('year_id', '=', year_search_ids.id)])
+                 ('month_id', '=', month_search_rec.id),
+                 ('year_id', '=', year_search_rec.id)])
             if sheet_ids:
                 for data in sheet_ids:
                     for attendance_id in data.attendance_ids:
@@ -802,8 +813,8 @@ class DailyAttendance(models.Model):
                                 search_id.write(val)
                 else:
                     for student_id in line.student_ids:
-                        search_id = sheet_line_obj.\
-                            search([('roll_no', '=', student_id.roll_no),
+                        search_id = sheet_line_obj.search([
+                                    ('roll_no', '=', student_id.roll_no),
                                     ('standard_id', '=',
                                      attendance_sheet_id.id)])
 
@@ -1009,11 +1020,14 @@ class DailyAttendanceLine(models.Model):
     _rec_name = 'roll_no'
 
     roll_no = fields.Integer('Roll No.', help='Roll Number')
-    standard_id = fields.Many2one('daily.attendance', 'Standard')
-    stud_id = fields.Many2one('student.student', 'Name')
+    standard_id = fields.Many2one('daily.attendance', 'Standard',
+                                  help='Enter standard for attendance')
+    stud_id = fields.Many2one('student.student', 'Name',
+                              help='Select student')
     is_present = fields.Boolean('Present', help="Check if student is present")
     is_absent = fields.Boolean('Absent', help="Check if student is absent")
-    present_absentcheck = fields.Boolean('Present/Absent Boolean')
+    present_absentcheck = fields.Boolean('Present/Absent Boolean',
+                                         help='Check for present/absent')
 
     @api.onchange('is_present')
     def onchange_attendance(self):

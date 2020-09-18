@@ -1,9 +1,8 @@
 # See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
-from odoo import models, api
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+
+from odoo import api, models
 
 
 class BatchExamReport(models.AbstractModel):
@@ -16,14 +15,8 @@ class BatchExamReport(models.AbstractModel):
         '''Method to get header of report'''
         attend_month = self.env['student.attendance.by.month'].browse(
                                                         data['form']['id'])
-        strtdate_str = attend_month.month.date_start.strftime(
-                                                DEFAULT_SERVER_DATE_FORMAT)
-        enddate_str = attend_month.month.date_stop.strftime(
-                                                DEFAULT_SERVER_DATE_FORMAT)
-        start_dt = datetime.strptime(strtdate_str,
-                                     DEFAULT_SERVER_DATE_FORMAT)
-        end_dt = datetime.strptime(enddate_str,
-                                   DEFAULT_SERVER_DATE_FORMAT)
+        start_dt = attend_month.month.date_start
+        end_dt = attend_month.month.date_stop
         data_dict = {}
         day_list = []
         week_day_list = []
@@ -48,11 +41,8 @@ class BatchExamReport(models.AbstractModel):
         '''Method to get attendance data as per selected student'''
         attend_month = self.env['student.attendance.by.month'].browse(
                                                     form.get('id'))
-        st_date = attend_month.month.date_start.strftime(
-                                                DEFAULT_SERVER_DATE_FORMAT)
         attend_obj = self.env['daily.attendance']
-        start_date = datetime.strptime(st_date,
-                                       DEFAULT_SERVER_DATE_FORMAT)
+        start_date = attend_month.month.date_start
         if day - start_date.day >= 0:
             attend_date = start_date + rd(days=+day - start_date.day)
         else:
