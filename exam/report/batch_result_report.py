@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import api, models
 
 
 class BatchExamReport(models.AbstractModel):
@@ -9,29 +9,31 @@ class BatchExamReport(models.AbstractModel):
 
     def pass_student(self, year, standard_id):
         '''Method to determine students who pass the exam'''
-        exam = self.env['exam.exam'].search([
+        exam_rec = self.env['exam.exam'].search([
                                 ('standard_id', '=', standard_id.id),
                                 ('academic_year', '=', year.id),
                                 ('state', '=', 'finished')])
         result_obj = self.env['exam.result']
-        for rec in exam:
-            exam_result = result_obj.search([('s_exam_ids', '=', rec.id),
-                                             ('state', '!=', 'draft')])
-            exam_result_pass = result_obj.search([('s_exam_ids', '=', rec.id),
+        for rec in exam_rec:
+            exam_result_rec = result_obj.search([('s_exam_ids', '=', rec.id),
+                                                 ('state', '!=', 'draft')])
+            exam_result_pass_rec = result_obj.search([
+                                                  ('s_exam_ids', '=', rec.id),
                                                   ('result', '=', 'Pass'),
                                                   ('state', '!=', 'draft')])
-            exam_result_fail = result_obj.search([('s_exam_ids', '=', rec.id),
+            exam_result_fail_rec = result_obj.search([
+                                                  ('s_exam_ids', '=', rec.id),
                                                   ('result', '=', 'Fail'),
                                                   ('state', '!=', 'draft')])
             std_pass = ''
-            if len(exam_result_pass.ids) > 0:
+            if len(exam_result_pass_rec.ids) > 0:
                 # Calculate percentage of students who pass the exams
-                std_pass = ((100 * len(exam_result_pass.ids)) /
-                            len(exam_result.ids))
-            return [{'student_appear': len(exam_result.ids) or 0.0,
-                     'studnets': len(exam_result_pass.ids) or 0.0,
+                std_pass = ((100 * len(exam_result_pass_rec.ids)) /
+                            len(exam_result_rec.ids))
+            return [{'student_appear': len(exam_result_rec.ids) or 0.0,
+                     'studnets': len(exam_result_pass_rec.ids) or 0.0,
                      'pass_std': std_pass or 0.0,
-                     'fail_student': len(exam_result_fail.ids) or 0.0}]
+                     'fail_student': len(exam_result_fail_rec.ids) or 0.0}]
 
     @api.model
     def _get_report_values(self, docids, data=None):

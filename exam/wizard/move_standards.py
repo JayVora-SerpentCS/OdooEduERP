@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import api, models
 
 
 class MoveStandards(models.TransientModel):
@@ -18,17 +18,15 @@ class MoveStandards(models.TransientModel):
             # search the done state students
             for stud in student_obj.search([('state', '=', 'done')]):
                 # check the student history for same academic year
-                stud_year_ids = stud_history_obj.\
-                    search([('academice_year_id', '=',
-                             rec.academic_year_id.id),
-                            ('student_id', '=', stud.id)])
+                stud_year_ids = stud_history_obj.search([
+                        ('academice_year_id', '=', rec.academic_year_id.id),
+                        ('student_id', '=', stud.id)])
                 year_id = academic_obj.next_year(stud.year.sequence)
                 academic_year = academic_obj.search([('id', '=', year_id)],
                                                     limit=1)
                 if stud_year_ids:
                     # search the student result
-                    result_data = result_obj.\
-                        search([
+                    result_data = result_obj.search([
                             ('standard_id', '=', stud.standard_id.id),
                             ('standard_id.division_id', '=',
                              stud.standard_id.division_id.id),
@@ -42,8 +40,7 @@ class MoveStandards(models.TransientModel):
                                 division = (stud.standard_id.division_id.id
                                             )
                                 # find the school standard record
-                                next_stand = school_stand_obj.\
-                                    search([
+                                next_stand = school_stand_obj.search([
                                         ('standard_id', '=', next_class),
                                         ('division_id', '=', division),
                                         ('school_id', '=', stud.school_id.id),

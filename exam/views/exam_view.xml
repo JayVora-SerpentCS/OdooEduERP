@@ -225,8 +225,8 @@
                     <group col="4" string="Examination Dates" colspan="4">
                         <field name="exam_date" placeholder="Exam Date"/>
                         <newline/>
-                        <field name="create_date" placeholder="Created Date" readonly="1"/>
-                        <field name="write_date" placeholder="Last Updated Date" readonly="1"/>
+                        <field name="create_date" widget='date' string='Created Date' placeholder="Created Date" readonly="1"/>
+                        <field name="write_date" widget='date' string='Updated Date' placeholder="Last Updated Date" readonly="1"/>
                     </group>
                 </sheet>
             </form>

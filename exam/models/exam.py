@@ -1,9 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class StudentStudent(models.Model):
@@ -11,20 +9,23 @@ class StudentStudent(models.Model):
     _description = 'Student Information'
 
     exam_results_ids = fields.One2many('exam.result', 'student_id',
-                                       'Exam History', readonly=True)
+                                       'Exam History', readonly=True,
+                                       help='Student exam history')
 
     def set_alumni(self):
         '''Override method to make exam results of student active false
         when student is alumni'''
+        addexam_result_obj = self.env['additional.exam.result']
+        regular_examresult_obj = self.env['exam.result']
         for rec in self:
-            addexam_result = self.env['additional.exam.result'].search([
+            addexam_result_rec = addexam_result_obj.search([
                                                 ('student_id', '=', rec.id)])
-            regular_examresult = self.env['exam.result'].search([
+            regular_examresult_rec = regular_examresult_obj.search([
                                                 ('student_id', '=', rec.id)])
-            if addexam_result:
-                addexam_result.write({'active': False})
-            if regular_examresult:
-                regular_examresult.write({'active': False})
+            if addexam_result_rec:
+                addexam_result_rec.write({'active': False})
+            if regular_examresult_rec:
+                regular_examresult_rec.write({'active': False})
         return super(StudentStudent, self).set_alumni()
 
     @api.model
@@ -33,8 +34,8 @@ class StudentStudent(models.Model):
         '''Override method to get exam of student selected.'''
         if self._context.get('exam'):
             exam_obj = self.env['exam.exam']
-            exam_data = exam_obj.browse(self._context.get('exam'))
-            std_ids = [std_id.id for std_id in exam_data.standard_id]
+            exam_rec = exam_obj.browse(self._context.get('exam'))
+            std_ids = [std_id.id for std_id in exam_rec.standard_id]
             args.append(('standard_id', 'in', std_ids))
         return super(StudentStudent, self)._search(
             args=args, offset=offset, limit=limit, order=order, count=count,
@@ -47,22 +48,25 @@ class ExtendedTimeTable(models.Model):
     timetable_type = fields.Selection(selection_add=[('exam', 'Exam')],
                                       string='Time Table Type', required=True,
                                       ondelete={'exam': 'set default'},
-                                      inivisible=False)
+                                      inivisible=False,
+                                      help='Select timetable type')
     exam_timetable_line_ids = fields.One2many('time.table.line', 'table_id',
-                                              'TimeTable Lines')
-    exam_id = fields.Many2one('exam.exam', 'Exam')
+                                              'TimeTable Lines',
+                                              help='Timetable')
+    exam_id = fields.Many2one('exam.exam', 'Exam',
+                              help='Select exam for a respective timetable')
 
     def unlink(self):
         '''Inherited unlink method to check the state at record deletion.'''
-        exam = self.env['exam.exam']
-        schedule_line = self.env['exam.schedule.line']
+        exam_obj = self.env['exam.exam']
+        schedule_line_obj = self.env['exam.schedule.line']
         for rec in self:
-            exam_search = exam.search([('state', '=', 'running')])
-            for data in exam_search:
-                schedule_line_search = schedule_line.search([
+            exam_search_rec = exam_obj.search([('state', '=', 'running')])
+            for data in exam_search_rec:
+                schedule_line_search_rec = schedule_line_obj.search([
                                             ('exam_id', '=', data.id),
                                             ('timetable_id', '=', rec.id)])
-                if schedule_line_search:
+                if schedule_line_search_rec:
                     raise ValidationError(_('''
                 You cannot delete schedule of exam which is in running!'''))
         return super(ExtendedTimeTable, self).unlink()
@@ -92,9 +96,10 @@ class ExtendedTimeTable(models.Model):
 class ExtendedTimeTableLine(models.Model):
     _inherit = 'time.table.line'
 
-    exm_date = fields.Date('Exam Date')
-    day_of_week = fields.Char('Week Day')
-    class_room_id = fields.Many2one('class.room', 'Classroom')
+    exm_date = fields.Date('Exam Date', help='Enter exam date')
+    day_of_week = fields.Char('Week Day', help='Enter week day')
+    class_room_id = fields.Many2one('class.room', 'Classroom',
+                                    help='Enter class room')
 
     @api.onchange('exm_date')
     def onchange_date_day(self):
@@ -102,23 +107,20 @@ class ExtendedTimeTableLine(models.Model):
         for rec in self:
             rec.day_of_week = False
             if rec.exm_date:
-                rec.day_of_week = rec.exm_date.strftime("%A").title()
+                rec.day_of_week = rec.exm_date.strftime("%A")
 
-    def _check_date(self):
+    @api.constrains('exm_date')
+    def check_date(self):
         '''Method to check constraint of start date and end date'''
         for line in self:
             if line.exm_date:
-                dt = datetime.strptime(line.exm_date,
-                                       DEFAULT_SERVER_DATE_FORMAT)
-                if line.week_day != dt.strftime("%A").lower():
+                exam_date = line.exm_date
+                if line.day_of_week != exam_date.strftime("%A"):
                     return False
-                elif dt.__str__() < datetime.strptime(
-                                        date.today().__str__(),
-                                        DEFAULT_SERVER_DATE_FORMAT).__str__():
-                    raise ValidationError(_('''
-                        Invalid Date Error !
-                        Either you have selected wrong day for the date  
-                        or you have selected invalid date!'''))
+                elif exam_date < fields.Date.today():
+                    raise ValidationError(_('''Invalid Date Error !
+Either you have selected wrong day for the date 
+or you have selected invalid date!'''))
 
     @api.constrains('teacher_id')
     def check_supervisior_exam(self):
@@ -211,31 +213,35 @@ class ExamExam(models.Model):
                         Kindly,mark as done %s examination results!
                     ''') % (self.name))
 
-    active = fields.Boolean('Active', default="True")
+    active = fields.Boolean('Active', default="True",
+                            help='Activate/Deactivate record')
     name = fields.Char("Exam Name", required=True,
                        help="Name of Exam")
     exam_code = fields.Char('Exam Code', required=True, readonly=True,
                             help="Code of exam",
-                            default=lambda obj:
-                            obj.env['ir.sequence'].next_by_code('exam.exam'))
+                            default=lambda obj: obj.env[
+                                    'ir.sequence'].next_by_code('exam.exam'))
     standard_id = fields.Many2many('standard.standard',
                                    'standard_standard_exam_rel', 'standard_id',
                                    'event_id', 'Participant Standards',
                                    help="Select Standard")
     start_date = fields.Date("Exam Start Date",
                              help="Exam will start from this date")
-    end_date = fields.Date("Exam End date", help="Exam will end at this date")
+    end_date = fields.Date("Exam End date",
+                           help="Exam will end at this date")
     state = fields.Selection([('draft', 'Draft'),
                               ('running', 'Running'),
                               ('finished', 'Finished'),
                               ('cancelled', 'Cancelled')], 'State',
-                             readonly=True, default='draft')
+                             readonly=True, default='draft',
+                             help='State of the exam')
     grade_system = fields.Many2one('grade.master', "Grade System",
                                    help="Select Grade System")
     academic_year = fields.Many2one('academic.year', 'Academic Year',
                                     help="Select Academic Year")
     exam_schedule_ids = fields.One2many('exam.schedule.line', 'exam_id',
-                                        'Exam Schedule')
+                                        'Exam Schedule',
+                                        help='Enter exam schedule')
 
     def set_to_draft(self):
         '''Method to set state to draft'''
@@ -271,15 +277,14 @@ class ExamExam(models.Model):
                           ('state', '=', 'done'),
                           ('school_id', '=',
                            exam_schedule.standard_id.school_id.id)]
-                students = student_obj.search(domain)
-                for student in students:
-                    domain = [('standard_id', '=',
-                               student.standard_id.id),
+                students_rec = student_obj.search(domain)
+                for student in students_rec:
+                    domain = [('standard_id', '=', student.standard_id.id),
                               ('student_id', '=', student.id),
                               ('s_exam_ids', '=', rec.id)]
-                    result_exists = result_obj.search(domain)
-                    if result_exists:
-                        [result_list.append(res.id) for res in result_exists]
+                    exam_result_rec = result_obj.search(domain)
+                    if exam_result_rec:
+                        [result_list.append(res.id) for res in exam_result_rec]
                     else:
                         rs_dict = {'s_exam_ids': rec.id,
                                    'student_id': student.id,
@@ -297,8 +302,8 @@ class ExamExam(models.Model):
                                         'maximum_marks': max_mrks}
                             exam_line.append((0, 0, sub_vals))
                         rs_dict.update({'result_ids': exam_line})
-                        result = result_obj.create(rs_dict)
-                        result_list.append(result.id)
+                        result_rec = result_obj.create(rs_dict)
+                        result_list.append(result_rec.id)
         return {'name': _('Result Info'),
                 'view_mode': 'tree,form',
                 'res_model': 'exam.result',
@@ -314,10 +319,12 @@ class ExamScheduleLine(models.Model):
 
     standard_id = fields.Many2one('school.standard', 'Standard',
                                   help="Select Standard")
-    timetable_id = fields.Many2one('time.table', 'Exam Schedule')
-    exam_id = fields.Many2one('exam.exam', 'Exam')
+    timetable_id = fields.Many2one('time.table', 'Exam Schedule',
+                                   help='Enter exam time table')
+    exam_id = fields.Many2one('exam.exam', 'Exam', help='Enter exam')
     standard_ids = fields.Many2many('standard.standard',
-                                    string='Participant Standards')
+                                    string='Participant Standards',
+                                    help='Enter standards for the exams')
 
     @api.onchange('standard_ids')
     def onchange_standard(self):
@@ -345,21 +352,22 @@ class AdditionalExam(models.Model):
     addtional_exam_code = fields.Char('Exam Code', required=True,
                                       help="Exam Code",
                                       readonly=True,
-                                      default=lambda obj:
-                                      obj.env['ir.sequence'].
-                                      next_by_code('additional.exam'))
-    standard_id = fields.Many2one("school.standard", "Standard")
-    subject_id = fields.Many2one("subject.subject", "Subject Name")
-    exam_date = fields.Date("Exam Date")
+                                      default=lambda obj: obj.env[
+                                      'ir.sequence'].next_by_code(
+                                      'additional.exam'))
+    standard_id = fields.Many2one("school.standard", "Standard",
+                                  help='Select standard for exam')
+    subject_id = fields.Many2one("subject.subject", "Subject Name",
+                                 help='Select subject for exam')
+    exam_date = fields.Date("Exam Date", help='Select exam date')
     maximum_marks = fields.Integer("Maximum Mark",
                                    help="Minimum Marks of exam")
     minimum_marks = fields.Integer("Minimum Mark",
                                    help="Maximum Marks of Exam")
-    weightage = fields.Char("WEIGHTAGE")
-    create_date = fields.Date("Created Date", help="Exam Created Date")
-    write_date = fields.Date("Updated date", help="Exam Updated Date")
+    weightage = fields.Char("WEIGHTAGE", help='Enter weightage of exam')
     color_name = fields.Integer("Color index of creator",
-                                compute='_compute_color_name', store=False)
+                                compute='_compute_color_name', store=False,
+                                help='Select color')
 
     @api.constrains('maximum_marks', 'minimum_marks')
     def check_marks(self):
@@ -367,21 +375,6 @@ class AdditionalExam(models.Model):
         if self.minimum_marks > self.maximum_marks:
             raise ValidationError(_('''
                     Configure Maximum marks greater than minimum marks!'''))
-
-    @api.model
-    def create(self, vals):
-        '''Inherited create method assign create date of the record'''
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
-        vals.update({'create_date': new_dt})
-        return super(AdditionalExam, self).create(vals)
-
-    def write(self, vals):
-        '''Inherited write methodto update the write date of the record'''
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, DEFAULT_SERVER_DATE_FORMAT)
-        vals.update({'write_date': new_dt})
-        return super(AdditionalExam, self).write(vals)
 
 
 class ExamResult(models.Model):
@@ -447,15 +440,15 @@ class ExamResult(models.Model):
     s_exam_ids = fields.Many2one("exam.exam", "Examination", required=True,
                                  help="Select Exam")
     student_id = fields.Many2one("student.student", "Student Name",
-                                 required=True,
-                                 help="Select Student")
-    roll_no_id = fields.Integer(string="Roll No",
-                                readonly=True)
+                                 required=True, help="Select Student")
+    roll_no_id = fields.Integer(string="Roll No", readonly=True,
+                                help='Enter student roll no.')
     pid = fields.Char(related='student_id.pid', string="Student ID",
-                      readonly=True)
+                      readonly=True, help='Student Personal ID No.')
     standard_id = fields.Many2one("school.standard", "Standard",
                                   help="Select Standard")
-    result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects")
+    result_ids = fields.One2many("exam.subject", "exam_id", "Exam Subjects",
+                                 help='Select exam subjects')
     total = fields.Float(compute='_compute_total', string='Obtain Total',
                          store=True, help="Total of marks")
     percentage = fields.Float("Percentage", compute="_compute_per",
@@ -473,38 +466,40 @@ class ExamResult(models.Model):
                               ('done', 'Done')],
                              'State', readonly=True,
                              track_visibility='onchange',
-                             default='draft')
-    color = fields.Integer('Color')
-    active = fields.Boolean('Active', default=True)
+                             default='draft', help='State of the exam')
+    color = fields.Integer('Color', help='Color')
+    active = fields.Boolean('Active', default=True,
+                            help='Activate/Deactivate record')
     grade_system = fields.Many2one('grade.master', "Grade System",
                                    help="Grade System selected")
     message_ids = fields.One2many('mail.message', 'res_id', 'Messages',
                                   domain=lambda self: [
                                    ('model', '=', self._name)],
-                                  auto_join=True)
+                                  auto_join=True, help='Messages can entered')
     message_follower_ids = fields.One2many('mail.followers', 'res_id',
                                            'Followers',
                                            domain=lambda self: [
-                                            ('res_model', '=',self._name)])
+                                            ('res_model', '=',self._name)],
+                                           help='Select message followers')
 
     @api.model
     def create(self, vals):
         '''Inherited the create method to assign the roll no and std'''
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(
+            student_rec = self.env['student.student'].browse(
                                             vals.get('student_id'))
-            vals.update({'roll_no_id': student.roll_no,
-                         'standard_id': student.standard_id.id
+            vals.update({'roll_no_id': student_rec.roll_no,
+                         'standard_id': student_rec.standard_id.id
                          })
         return super(ExamResult, self).create(vals)
 
     def write(self, vals):
         '''Inherited the write method to update the roll no and std'''
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(
+            student_rec = self.env['student.student'].browse(
                                             vals.get('student_id'))
-            vals.update({'roll_no_id': student.roll_no,
-                         'standard_id': student.standard_id.id
+            vals.update({'roll_no_id': student_rec.roll_no,
+                         'standard_id': student_rec.standard_id.id
                          })
         return super(ExamResult, self).write(vals)
 
@@ -569,11 +564,11 @@ class ExamResult(models.Model):
                     'standard_id': rec.standard_id.id,
                     'percentage': rec.percentage,
                     'result': rec.result}
-            history = history_obj.search([
+            history_rec = history_obj.search([
                         ('student_id', '=', rec.student_id.id),
                         ('academice_year_id', '=', rec.student_id.year.id),
                         ('standard_id', '=', rec.standard_id.id)])
-            if history:
+            if history_rec:
                 history_obj.write(vals)
             elif not history:
                 history_obj.create(vals)
@@ -587,9 +582,11 @@ class ExamGradeLine(models.Model):
     _description = 'Exam Subject Information'
     _rec_name = 'standard_id'
 
-    standard_id = fields.Many2one('standard.standard', 'Standard')
-    exam_id = fields.Many2one('exam.result', 'Result')
-    grade = fields.Char('Grade')
+    standard_id = fields.Many2one('standard.standard', 'Standard',
+                                  help='Select student standard')
+    exam_id = fields.Many2one('exam.result', 'Result',
+                              help='Select exam')
+    grade = fields.Char('Grade', help='Enter grade')
 
 
 class ExamSubject(models.Model):
@@ -615,14 +612,18 @@ class ExamSubject(models.Model):
                         if (rec.marks_reeval >= grade_id.from_mark and r_id):
                             rec.grade_line_id = grade_id
 
-    exam_id = fields.Many2one('exam.result', 'Result')
+    exam_id = fields.Many2one('exam.result', 'Result',
+                              help='Select exam')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('re-evaluation', 'Re-Evaluation'),
                               ('re-evaluation_confirm',
                                'Re-Evaluation Confirm')],
-                             related='exam_id.state', string="State")
-    subject_id = fields.Many2one("subject.subject", "Subject Name")
-    obtain_marks = fields.Float("Obtain Marks", group_operator="avg")
+                             related='exam_id.state', string="State",
+                             help='State of the exam subject')
+    subject_id = fields.Many2one("subject.subject", "Subject Name",
+                                 help='Select subject')
+    obtain_marks = fields.Float("Obtain Marks", group_operator="avg",
+                                help='Enter obtained marks')
     minimum_marks = fields.Float("Minimum Marks",
                                  help="Minimum Marks of subject")
     maximum_marks = fields.Float("Maximum Marks",
@@ -630,7 +631,8 @@ class ExamSubject(models.Model):
     marks_reeval = fields.Float("Marks After Re-evaluation",
                                 help="Marks Obtain after Re-evaluation")
     grade_line_id = fields.Many2one('grade.line', "Grade",
-                                    compute='_compute_grade')
+                                    compute='_compute_grade',
+                                    help='Grade')
 
     @api.constrains('obtain_marks', 'minimum_marks', 'maximum_marks',
                     'marks_reeval')
@@ -671,29 +673,32 @@ class AdditionalExamResult(models.Model):
     student_id = fields.Many2one('student.student', 'Student Name',
                                  required=True,
                                  help="Select Student")
-    roll_no_id = fields.Integer("Roll No",
-                                readonly=True)
-    standard_id = fields.Many2one('school.standard',
-                                  "Standard", readonly=True)
+    roll_no_id = fields.Integer("Roll No", readonly=True,
+                                help='Student rol no.')
+    standard_id = fields.Many2one('school.standard', "Standard", readonly=True,
+                                  help='School Standard')
     obtain_marks = fields.Float('Obtain Marks', help="Marks obtain in exam")
     result = fields.Char(compute='_compute_student_result', string='Result',
                          help="Result Obtained", store=True)
-    active = fields.Boolean('Active', default=True)
+    active = fields.Boolean('Active', default=True,
+                            help='Activate/Deactivate record')
 
     @api.model
     def create(self, vals):
         '''Override create method to get roll no and standard'''
-        student = self.env['student.student'].browse(vals.get('student_id'))
-        vals.update({'roll_no_id': student.roll_no,
-                     'standard_id': student.standard_id.id
+        student_rec = self.env['student.student'].browse(
+                                                    vals.get('student_id'))
+        vals.update({'roll_no_id': student_rec.roll_no,
+                     'standard_id': student_rec.standard_id.id
                      })
         return super(AdditionalExamResult, self).create(vals)
 
     def write(self, vals):
         '''Override write method to get roll no and standard'''
-        student = self.env['student.student'].browse(vals.get('student_id'))
-        vals.update({'roll_no_id': student.roll_no,
-                     'standard_id': student.standard_id.id
+        student_rec = self.env['student.student'].browse(
+                                                    vals.get('student_id'))
+        vals.update({'roll_no_id': student_rec.roll_no,
+                     'standard_id': student_rec.standard_id.id
                      })
         return super(AdditionalExamResult, self).write(vals)
 

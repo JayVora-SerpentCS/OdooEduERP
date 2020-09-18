@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, _
+from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 
@@ -62,12 +62,13 @@ class ReportResultInfo(models.AbstractModel):
         docs = self.env['student.student'].browse(docids)
         student_model = self.env['ir.actions.report']._get_report_from_name(
             'exam.result_information_report')
+        exam_result_obj = self.env['exam.result']
         for rec in docs:
-            student_search = self.env['exam.result'].search([('student_id',
-                                                              '=', rec.id)])
+            student_search = exam_result_obj.search([
+                                                ('student_id','=', rec.id)])
             if not student_search or rec.state == 'draft':
                 raise ValidationError(_('''You cannot print report for student
-                in unconfirm state or when data is not found !'''))
+in unconfirm state or when data is not found !'''))
             return {'doc_ids': docids,
                     'doc_model': student_model.model,
                     'data': data,
