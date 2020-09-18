@@ -465,7 +465,7 @@ class ExamResult(models.Model):
                                'Re-Evaluation Confirm'),
                               ('done', 'Done')],
                              'State', readonly=True,
-                             track_visibility='onchange',
+                             tracking=True,
                              default='draft', help='State of the exam')
     color = fields.Integer('Color', help='Color')
     active = fields.Boolean('Active', default=True,
