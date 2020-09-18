@@ -9,14 +9,14 @@ class TerminateReasonEvent(models.TransientModel):
     def save_terminate(self):
         """Override method to delete event participant and cancel
         event registration of student when he is terminated. """
-        student_obj = self.env['student.student'
+        student_rec = self.env['student.student'
                                ].browse(self._context.get('active_id'))
-        event_regi = self.env['school.event.registration'
-                              ].search([('part_name_id', '=', student_obj.id)])
-        if event_regi:
-            event_regi.write({'state': 'cancel'})
+        event_regi_rec = self.env['school.event.registration'
+                              ].search([('part_name_id', '=', student_rec.id)])
+        if event_regi_rec:
+            event_regi_rec.write({'state': 'cancel'})
         event_participant = self.env['school.event.participant'
-                                     ].search([('name', '=', student_obj.id)])
+                                     ].search([('name', '=', student_rec.id)])
         if event_participant:
             event_participant.unlink()
         return super(TerminateReasonEvent, self).save_terminate()

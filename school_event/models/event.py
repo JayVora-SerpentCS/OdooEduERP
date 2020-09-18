@@ -1,8 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-import time
-from odoo import models, fields, api, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -12,7 +10,8 @@ class SchoolStandard(models.Model):
     _rec_name = 'event_ids'
 
     event_ids = fields.Many2many('school.event', 'school_standard_event_rel',
-                                 'event_id', 'standard_id', 'Events')
+                                 'event_id', 'standard_id', 'Events',
+                                 help='Select events for the standard')
 
 
 class SchoolEventParameter(models.Model):
@@ -21,7 +20,8 @@ class SchoolEventParameter(models.Model):
     _name = 'school.event.parameter'
     _description = 'Event Parameter'
 
-    name = fields.Char('Parameter Name', required=True)
+    name = fields.Char('Parameter Name', required=True,
+                       help='Add event parameter')
 
 
 class SchoolEventParticipant(models.Model):
@@ -39,11 +39,13 @@ class SchoolEventParticipant(models.Model):
     event_id = fields.Many2one('school.event', 'Event', readonly=True,
                                help="Name of event")
     stu_pid = fields.Char('Personal Identification Number', required=True,
-                          readonly=True)
+                          readonly=True,
+                          help='Enter student Personal Identification No.')
     win_parameter_id = fields.Many2one('school.event.parameter', 'Parameter',
-                                       readonly=True)
-    rank = fields.Integer('Rank', help="The sequence field is used to Give\
-                               Rank to the Participant")
+                                       readonly=True,
+                                       help='Select parameter for event')
+    rank = fields.Integer('Rank', help='''The sequence field is used to Give
+                               Rank to the Participant''')
 
     @api.constrains('rank')
     def check_rank(self):
@@ -87,7 +89,8 @@ class SchoolEvent(models.Model):
                                           help='Maximum Participant\
                                                 of the Event')
     participants = fields.Integer(compute='_compute_participants',
-                                  string='Participants', readonly=True)
+                                  string='Participants', readonly=True,
+                                  help='Total participants of the envent')
     part_standard_ids = fields.Many2many('school.standard',
                                          'school_standard_event_rel',
                                          'standard_id', 'event_id',
@@ -97,17 +100,20 @@ class SchoolEvent(models.Model):
                                          )
     state = fields.Selection([('draft', 'Draft'), ('open', 'Running'),
                               ('close', 'Close')],
-                             string='State', readonly=True, default='draft')
+                             string='State', readonly=True, default='draft',
+                             help='Current state of the event')
     part_ids = fields.Many2many('school.event.participant',
                                 'event_participants_rel', 'participant_id',
                                 'event_id', 'Participants', readonly=True,
-                                order_by='score')
+                                order_by='score',
+                                help='Enter the participants of the evnt')
     code = fields.Many2one('school.school', 'Organizer School',
                            help='Event Organized School')
     is_holiday = fields.Boolean('Is Holiday(s)',
                                 help='Checked if the event is organized\
                                       on holiday.')
-    color = fields.Integer('Color Index', default=0)
+    color = fields.Integer('Color Index', default=0,
+                           help='Choose color index')
 
     def unlink(self):
         """Inherited unlink method to check state at the record deletion."""
@@ -194,15 +200,16 @@ class SchoolEventRegistration(models.Model):
     part_name_id = fields.Many2one('student.student', 'Participant Name',
                                    required=True,
                                    help="Select Participant")
-    student_standard_id = fields.Many2one('school.standard', 'Student Std')
+    student_standard_id = fields.Many2one('school.standard', 'Student Std',
+                                          help='Enter standard')
     reg_date = fields.Date('Registration Date', readonly=True,
                            help="Registration date of event",
-                           default=lambda *a: time.strftime(
-                                            DEFAULT_SERVER_DATETIME_FORMAT))
+                           default=fields.Date.context_today)
     state = fields.Selection([('draft', 'Draft'),
                               ('confirm', 'Confirm'),
                               ('cancel', 'Cancel')], 'State', readonly=True,
-                             default='draft')
+                             default='draft',
+                             help='State of the registration form')
     is_holiday = fields.Boolean('Is Holiday(s)', help='Checked if the event is\
                                                     organized on holiday.')
 
@@ -266,10 +273,10 @@ class SchoolEventRegistration(models.Model):
             # check last registration date is over or not
             if rec.reg_date < rec.name.start_reg_date:
                 raise UserError(_('''Error !
-                Registration is not started for this Event!'''))
+Registration is not started for this Event!'''))
             if rec.reg_date > rec.name.last_reg_date:
                 raise UserError(_('''Error !
-                Last Registration date is over for this Event!'''))
+Last Registration date is over for this Event!'''))
             # make entry in participant
             vals = {'stu_pid': str(rec.part_name_id.pid),
                     'win_parameter_id': rec.name.parameter_id.id,
