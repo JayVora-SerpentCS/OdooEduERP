@@ -178,7 +178,7 @@ class StudentleaveRequest(models.Model):
                               ('reject', 'Reject'),
                               ('approve', 'Approved')], 'Status',
                              default='draft',
-                             track_visibility='onchange',)
+                             tracking=True)
     start_date = fields.Date('Start Date')
     end_date = fields.Date('End Date')
     teacher_id = fields.Many2one('school.teacher', 'Class Teacher')

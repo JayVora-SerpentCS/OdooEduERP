@@ -362,14 +362,12 @@ minimum marks!'''))
 
     @api.model
     def create(self, vals):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
+        new_dt = fields.datetime.today()
         vals.update({'create_date': new_dt})
         return super(AdditionalExam, self).create(vals)
 
     def write(self, vals):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt, '%m/%d/%Y')
+        new_dt = fields.datetime.today()
         vals.update({'write_date': new_dt})
         return super(AdditionalExam, self).write(vals)
 
@@ -497,7 +495,7 @@ class ExamResult(models.Model):
                                'Re-Evaluation Confirm'),
                               ('done', 'Done')],
                              'State', readonly=True,
-                             track_visibility='onchange',
+                             tracking=True,
                              default='draft')
     color = fields.Integer('Color')
     active = fields.Boolean('Active', default=True)

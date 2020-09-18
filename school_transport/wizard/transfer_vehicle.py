@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import except_orm
+from odoo.exceptions import UserError
 
 
 class TransferVehicle(models.TransientModel):
@@ -43,13 +43,13 @@ class TransferVehicle(models.TransientModel):
             vehi_new_data = rec.new_vehicle_id
             # check for transfer in same vehicle
             if vehi_data.id == vehi_new_data.id:
-                raise except_orm(_('Error !'),
+                raise UserError(_('Error !'),
                                  _('Sorry you can not transfer in\
                                    same vehicle.'))
             # First Check Is there vacancy or not
             person = int(vehi_data.participant) + 1
             if vehi_data.capacity < person:
-                raise except_orm(_('Error !'),
+                raise UserError(_('Error !'),
                                  _('There is No More vacancy on this\
                                    vehicle.'))
             # remove entry of participant in old vehicle.

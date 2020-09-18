@@ -5,8 +5,7 @@ import base64
 from datetime import date
 from odoo import models, fields, api, _
 from odoo.modules import get_module_resource
-from odoo.exceptions import except_orm
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from .import school
 
 # from lxml import etree
@@ -81,7 +80,7 @@ than %s years!''' % (self.school_id.required_age)))
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
         else:
-            raise except_orm(_('Error!'),
+            raise UserError(_('Error!'),
                              _('''PID not valid
                                  so record will not be saved.'''))
         if vals.get('company_id', False):
@@ -291,7 +290,7 @@ defined!Please contact to Administator!'''
             domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
-                raise except_orm(_('Warning'),
+                raise UserError(_('Warning'),
                                  _('''The standard is not defined in
                                      school'''))
             # Assign group to student

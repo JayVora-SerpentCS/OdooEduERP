@@ -3,12 +3,10 @@
 # import time
 import re
 import calendar
-from datetime import datetime
 from odoo import models, fields, api
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.exceptions import except_orm
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from dateutil.relativedelta import relativedelta
 
 
@@ -548,15 +546,15 @@ class StudentPreviousSchool(models.Model):
 
     @api.constrains('admission_date', 'exit_date')
     def check_date(self):
-        curr_dt = datetime.now()
-        new_dt = datetime.strftime(curr_dt,
-                                   DEFAULT_SERVER_DATE_FORMAT)
-        if self.admission_date >= new_dt or self.exit_date >= new_dt:
+        new_dt = fields.Date.today()
+        if (self.admission_date and self.admission_date >= new_dt) or (
+            self.exit_date and self.exit_date >= new_dt):
             raise ValidationError(_('''Your admission date and exit date
-            should be less than current date in previous school details!'''))
-        if self.admission_date > self.exit_date:
+should be less than current date in previous school details!'''))
+        if (self.admission_date and self.exit_date) and (
+            self.admission_date > self.exit_date):
             raise ValidationError(_(''' Admission date should be less than
-            exit date in previous school!'''))
+exit date in previous school!'''))
 
 
 class AcademicSubject(models.Model):
@@ -658,7 +656,7 @@ class StudentNews(models.Model):
     @api.constrains("date")
     def checknews_dates(self):
         """Check news date."""
-        new_date = datetime.now()
+        new_date = fields.Date.today()
         if self.date < new_date:
             raise ValidationError(_('''Configure expiry date greater than \
 current date!'''))
@@ -671,7 +669,7 @@ current date!'''))
         # Check if out going mail configured
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
-            raise except_orm(_('Mail Error'),
+            raise UserError(_('Mail Error'),
                              _('''No mail outgoing mail server \
 specified!'''))
         mail_server_record = mail_server_ids[0]
@@ -682,7 +680,7 @@ specified!'''))
                 email_list = [news_user.email for news_user in news.user_ids
                               if news_user.email]
                 if not email_list:
-                    raise except_orm(_('User Email Configuration!'),
+                    raise UserError(_('User Email Configuration!'),
                                      _("Email not found in users !"))
             # Check email is defined in user created from employee
             else:
@@ -692,7 +690,7 @@ specified!'''))
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise except_orm(_('Email Configuration!'),
+                    raise UserError(_('Email Configuration!'),
                                      _("Email not defined!"))
             news_date = news.date
             # Add company name while sending email
@@ -706,7 +704,7 @@ specified!'''))
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
-                raise except_orm(_('Email Configuration '),
+                raise UserError(_('Email Configuration '),
                                  _("Kindly,Configure Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             # Configure email
