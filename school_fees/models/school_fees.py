@@ -1,9 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-import time
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, Warning as UserError
-from datetime import datetime
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class StudentFeesRegister(models.Model):
@@ -23,26 +21,30 @@ class StudentFeesRegister(models.Model):
     name = fields.Char('Name', required=True, help="Enter Name")
     date = fields.Date('Date', required=True,
                        help="Date of register",
-                       default=lambda * a: time.strftime('%Y-%m-%d'))
+                       default=fields.Date.context_today)
     number = fields.Char('Number', readonly=True,
-                         default=lambda self: _('New'))
+                         default=lambda self: _('New'),
+                         help='Sequence number of fee registration form')
     line_ids = fields.One2many('student.payslip', 'register_id',
-                               'PaySlips')
+                               'PaySlips', help='Student payslips')
     total_amount = fields.Float("Total",
                                 compute="_compute_total_amount",
-                                )
+                                help='Fee total amounts')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm')],
-                             'State', readonly=True, default='draft')
+                             'State', readonly=True, default='draft',
+                             help='State of student fee registration form')
     journal_id = fields.Many2one('account.journal', 'Journal',
                                  help="Select Journal",
                                  required=False)
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
-                                 default=lambda obj_c: obj_c.env['res.users'].
-                                 browse([obj_c._uid])[0].company_id)
+                                 default=lambda self: self.env.user.company_id,
+                                 help='Select related company')
     fees_structure = fields.Many2one('student.fees.structure',
-                                     'Fees Structure')
-    standard_id = fields.Many2one('standard.standard', 'Class')
+                                     'Fees Structure',
+                                     help='Fee structure')
+    standard_id = fields.Many2one('standard.standard', 'Class',
+                                  help='Enter student standard')
 
     def fees_register_draft(self):
         '''Changes the state to draft'''
@@ -58,21 +60,23 @@ class StudentFeesRegister(models.Model):
                 raise ValidationError(_('Kindly, Select Account Journal!'))
             if not rec.fees_structure:
                 raise ValidationError(_('Kindly, Select Fees Structure!'))
-            school_std = school_std_obj.search([('standard_id', '=',
-                                                 rec.standard_id.id)])
-            student_ids = stud_obj.search([('standard_id', 'in',
-                                            school_std.ids),
-                                           ('state', '=', 'done')])
-            for stu in student_ids:
-                old_slips = slip_obj.search([('student_id', '=', stu.id),
-                                             ('date', '=', rec.date)])
+            school_std_rec = school_std_obj.search([
+                                ('standard_id', '=', rec.standard_id.id)])
+            students_rec = stud_obj.search([
+                                   ('standard_id', 'in', school_std_rec.ids),
+                                   ('state', '=', 'done')])
+            for stu in students_rec:
+                old_slips_rec = slip_obj.search([
+                                            ('student_id', '=', stu.id),
+                                            ('date', '=', rec.date)])
                 # Check if payslip exist of student
-                if old_slips:
-                    raise UserError(_('There is already a Payslip exist for\
-student: %s for same date.!') % stu.name)
+                if old_slips_rec:
+                    raise ValidationError(_('''
+There is already a Payslip exist for student: %s for same date.!'''
+                    ) % stu.name)
                 else:
-                    rec.number = self.env['ir.sequence'].\
-                        next_by_code('student.fees.register') or _('New')
+                    rec.number = self.env['ir.sequence'].next_by_code(
+                                        'student.fees.register') or _('New')
                     res = {'student_id': stu.id,
                            'register_id': rec.id,
                            'name': rec.name,
@@ -82,8 +86,8 @@ student: %s for same date.!') % stu.name)
                            rec.company_id.currency_id.id or False,
                            'journal_id': rec.journal_id.id,
                            'fees_structure_id': rec.fees_structure.id or False}
-                    slip_id = slip_obj.create(res)
-                    slip_id.onchange_student()
+                    slip_rec = slip_obj.create(res)
+                    slip_rec.onchange_student()
             # Calculate the amount
             amount = 0
             for data in rec.line_ids:
@@ -98,29 +102,34 @@ class StudentPayslipLine(models.Model):
     _name = 'student.payslip.line'
     _description = 'Student PaySlip Line'
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
+    name = fields.Char('Name', required=True, help='Payslip')
+    code = fields.Char('Code', required=True, help='Payslip code')
     type = fields.Selection([('month', 'Monthly'),
                              ('year', 'Yearly'),
                              ('range', 'Range')],
-                            'Duration', required=True)
-    amount = fields.Float('Amount', digits=(16, 2))
+                            'Duration', required=True,
+                            help='Select payslip type')
+    amount = fields.Float('Amount', digits=(16, 2),
+                          help='Fee amount')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline_id',
-                               'Calculations')
-    slip_id = fields.Many2one('student.payslip', 'Pay Slip')
-    description = fields.Text('Description')
+                               'Calculations', help='Payslip line')
+    slip_id = fields.Many2one('student.payslip', 'Pay Slip',
+                              help='Select student payslip')
+    description = fields.Text('Description', help='Description')
     company_id = fields.Many2one('res.company', 'Company',
                                  change_default=True,
-                                 default=lambda obj_c: obj_c.env['res.users'].
-                                 browse([obj_c._uid])[0].company_id)
-    currency_id = fields.Many2one('res.currency',
-                                  'Currency')
+                                 default=lambda self: self.env.user.company_id,
+                                 help='Related company')
+    currency_id = fields.Many2one('res.currency', 'Currency',
+                                  help='Select currency')
     currency_symbol = fields.Char(related="currency_id.symbol",
-                                  string='Symbol')
-    account_id = fields.Many2one('account.account', "Account")
+                                  string='Symbol', help='Currency Symbol')
+    account_id = fields.Many2one('account.account', "Account",
+                                 help='Related account')
 
     @api.onchange('company_id')
     def set_currency_onchange(self):
+        '''Onchange method to assign currency on change company'''
         for rec in self:
             rec.currency_id = rec.company_id.currency_id.id
 
@@ -131,24 +140,28 @@ class StudentFeesStructureLine(models.Model):
     _description = 'Student Fees Structure Line'
     _order = 'sequence'
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
+    name = fields.Char('Name', required=True, help='Enter fee structure name')
+    code = fields.Char('Code', required=True, help='Fee structure code')
     type = fields.Selection([('month', 'Monthly'),
                              ('year', 'Yearly'),
                              ('range', 'Range')],
-                            'Duration', required=True)
-    amount = fields.Float('Amount', digits=(16, 2))
-    sequence = fields.Integer('Sequence')
+                            'Duration', required=True,
+                            help='Fee structure type')
+    amount = fields.Float('Amount', digits=(16, 2), help='Fee amount')
+    sequence = fields.Integer('Sequence',
+                              help='Sequence of fee structure form')
     line_ids = fields.One2many('student.payslip.line.line', 'slipline1_id',
-                               'Calculations')
+                               'Calculations', help='Student payslip line')
     account_id = fields.Many2one('account.account', string="Account")
     company_id = fields.Many2one('res.company', 'Company',
                                  change_default=True,
-                                 default=lambda obj_c: obj_c.env['res.users'].
-                                 browse([obj_c._uid])[0].company_id)
-    currency_id = fields.Many2one('res.currency', 'Currency')
+                                 default=lambda self: self.env.user.company_id,
+                                 help='Related company')
+    currency_id = fields.Many2one('res.currency', 'Currency',
+                                  help='Select currency')
     currency_symbol = fields.Char(related="currency_id.symbol",
-                                  string='Symbol')
+                                  string='Symbol',
+                                  help='Select currency symbol')
 
     @api.onchange('company_id')
     def set_currency_company(self):
@@ -162,15 +175,15 @@ class StudentFeesStructure(models.Model):
     _name = 'student.fees.structure'
     _description = 'Student Fees Structure'
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
+    name = fields.Char('Name', required=True, help='Fee structure name')
+    code = fields.Char('Code', required=True, help='Fee structure code')
     line_ids = fields.Many2many('student.fees.structure.line',
                                 'fees_structure_payslip_rel',
-                                'fees_id', 'slip_id', 'Fees Structure')
+                                'fees_id', 'slip_id', 'Fees Structure',
+                                help='Fee structure line')
 
     _sql_constraints = [('code_uniq', 'unique(code)',
-                         '''The code of the Fees Structure must
-                         be unique !''')]
+        '''The code of the Fees Structure must be unique !''')]
 
 
 class StudentPayslip(models.Model):
@@ -179,31 +192,41 @@ class StudentPayslip(models.Model):
 
     fees_structure_id = fields.Many2one('student.fees.structure',
                                         'Fees Structure',
-                                        states={'paid': [('readonly', True)]})
-    standard_id = fields.Many2one('school.standard', 'Class')
-    division_id = fields.Many2one('standard.division', 'Division')
-    medium_id = fields.Many2one('standard.medium', 'Medium')
-    register_id = fields.Many2one('student.fees.register', 'Register')
-    name = fields.Char('Description')
+                                        states={'paid': [('readonly', True)]},
+                                        help='Select fee structure')
+    standard_id = fields.Many2one('school.standard', 'Class',
+                                  help='Select school standard')
+    division_id = fields.Many2one('standard.division', 'Division',
+                                  help='Select standard division')
+    medium_id = fields.Many2one('standard.medium', 'Medium',
+                                help='Select standard medium')
+    register_id = fields.Many2one('student.fees.register', 'Register',
+                                  help='Select student fee register')
+    name = fields.Char('Description', help='Payslip name')
     number = fields.Char('Number', readonly=True,
-                         default=lambda self: _('/'))
-    student_id = fields.Many2one('student.student', 'Student', required=True)
+                         default=lambda self: _('/'),
+                         help='Payslip number')
+    student_id = fields.Many2one('student.student', 'Student', required=True,
+                                 help='Select student')
     date = fields.Date('Date', readonly=True,
                        help="Current Date of payslip",
-                       default=lambda * a: time.strftime('%Y-%m-%d'))
+                       default=fields.Date.context_today)
     line_ids = fields.One2many('student.payslip.line', 'slip_id',
-                               'PaySlip Line')
+                               'PaySlip Line', help='Payslips')
     total = fields.Monetary("Total", readonly=True,
                             help="Total Amount")
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('pending', 'Pending'), ('paid', 'Paid')],
-                             'State', readonly=True, default='draft')
-    journal_id = fields.Many2one('account.journal', 'Journal', required=False)
+                             'State', readonly=True, default='draft',
+                             help='State of the student payslip')
+    journal_id = fields.Many2one('account.journal', 'Journal', required=False,
+                                 help='Select journal for account')
     paid_amount = fields.Monetary('Paid Amount', help="Amount Paid")
     due_amount = fields.Monetary('Due Amount', help="Amount Remaining")
-    currency_id = fields.Many2one('res.currency', 'Currency')
+    currency_id = fields.Many2one('res.currency', 'Currency',
+                                  help='Selelct currency')
     currency_symbol = fields.Char(related='currency_id.symbol',
-                                  string='Symbol')
+                                  string='Symbol', help='Currency symbol')
     move_id = fields.Many2one('account.move', 'Journal Entry', readonly=True,
                               ondelete='restrict',
                               help='Link to the automatically'
@@ -216,11 +239,12 @@ class StudentPayslip(models.Model):
                              ('out_refund', 'Customer Refund'),
                              ('in_refund', 'Supplier Refund'),
                              ], 'Type', required=True,
-                            change_default=True, default='out_invoice')
+                            change_default=True, default='out_invoice',
+                            help='Payslip type')
     company_id = fields.Many2one('res.company', 'Company', required=True,
                                  change_default=True, readonly=True,
-                                 default=lambda obj_c: obj_c.env['res.users'].
-                                 browse([obj_c._uid])[0].company_id)
+                                 default=lambda self: self.env.user.company_id,
+                                 help='Related company')
 
     _sql_constraints = [('code_uniq', 'unique(student_id,date,state)',
                          'The code of the Fees Structure must be unique !')]
@@ -237,10 +261,11 @@ class StudentPayslip(models.Model):
             self.medium_id = self.student_id.medium_id
 
     def unlink(self):
+        '''Inherited unlink method to check state at the record deletion'''
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_("You can delete record in unconfirm\
-                state only!"))
+                raise ValidationError(_('''
+            You can delete record in unconfirm state only!'''))
         return super(StudentPayslip, self).unlink()
 
     @api.onchange('journal_id')
@@ -254,24 +279,27 @@ class StudentPayslip(models.Model):
 
     @api.model
     def create(self, vals):
+        '''Inherited create method to assign values from student model'''
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id')
-                                                         )
-            vals.update({'standard_id': student.standard_id.id,
-                         'division_id': student.standard_id.division_id.id,
-                         'medium_id': student.medium_id.id})
+            student_rec = self.env['student.student'].browse(
+                                                    vals.get('student_id'))
+            vals.update({'standard_id': student_rec.standard_id.id,
+                         'division_id': student_rec.standard_id.division_id.id,
+                         'medium_id': student_rec.medium_id.id})
         return super(StudentPayslip, self).create(vals)
 
     def write(self, vals):
+        '''Inherited write method to update values from student model'''
         if vals.get('student_id'):
-            student = self.env['student.student'].browse(vals.get('student_id')
-                                                         )
-            vals.update({'standard_id': student.standard_id.id,
-                         'division_id': student.standard_id.division_id.id,
-                         'medium_id': student.medium_id.id})
+            student_rec = self.env['student.student'].browse(
+                                                    vals.get('student_id'))
+            vals.update({'standard_id': student_rec.standard_id.id,
+                         'division_id': student_rec.standard_id.division_id.id,
+                         'medium_id': student_rec.medium_id.id})
         return super(StudentPayslip, self).write(vals)
 
     def copy(self, default=None):
+        '''Inherited copy method to assign default value at copying record'''
         if default is None:
             default = {}
         default.update({'state': 'draft',
@@ -322,16 +350,16 @@ class StudentPayslip(models.Model):
         '''View number of invoice of student'''
         invoice_obj = self.env['account.move']
         for rec in self:
-            invoices = invoice_obj.search([('student_payslip_id', '=',
-                                            rec.id)])
+            invoices_rec = invoice_obj.search([
+                                        ('student_payslip_id', '=', rec.id)])
             action = rec.env.ref(
                 'account.action_move_out_invoice_type').read()[0]
-            if len(invoices) > 1:
-                action['domain'] = [('id', 'in', invoices.ids)]
-            elif len(invoices) == 1:
+            if len(invoices_rec) > 1:
+                action['domain'] = [('id', 'in', invoices_rec.ids)]
+            elif len(invoices_rec) == 1:
                 action['views'] = [(rec.env.ref('account.view_move_form').id,
                                     'form')]
-                action['res_id'] = invoices.ids[0]
+                action['res_id'] = invoices_rec.ids[0]
             else:
                 action = {'type': 'ir.actions.act_window_close'}
         return action
@@ -342,23 +370,16 @@ class StudentPayslip(models.Model):
         move_line_obj = self.env['account.move.line']
         for fees in self:
             if not fees.journal_id.sequence_id:
-                raise UserError(_('Please define sequence on'
-                                  'the journal related to this'
-                                  'invoice.'))
-            if fees.journal_id.centralisation:
-                raise UserError(_('You cannot create an invoice on a'
-                                  'centralized'
-                                  'journal. UnCheck the centralized'
-                                  'counterpart'
-                                  'box in the related journal from the'
-                                  'configuration menu.'))
+                raise ValidationError(_('''
+            Please define sequence on the journal related to this invoice.'''))
+#           field 'centralisation' from account.journal 
+#                                                is deprecated field since v9 
             if fees.move_id:
                 continue
             ctx = self._context.copy()
             ctx.update({'lang': fees.student_id.lang})
             if not fees.payment_date:
-                self.write([fees.id], {'payment_date': time.strftime
-                                       ('%Y-%m-%d')})
+                self.write([fees.id], {'payment_date': fields.Date.today()})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = fees.currency_id and fees.currency_id.id\
@@ -375,23 +396,21 @@ class StudentPayslip(models.Model):
                 comapny_ac_id = cmp_id.property_account_payable.id
             move = {'ref': fees.name,
                     'journal_id': fees.journal_id.id,
-                    'date': fees.payment_date or time.strftime('%Y-%m-%d')}
+                    'date': fees.payment_date or fields.Date.today()}
             ctx.update({'company_id': fees.company_id.id})
             move_id = move_obj.create(move)
             context_multi_currency = self._context.copy()
-            context_multi_currency.update({'date': time.strftime('%Y-%m-%d')})
+            context_multi_currency.update({'date': fields.Date.today()})
             debit = 0.0
             credit = 0.0
             if fees.type in ('in_invoice', 'out_refund'):
-                credit = cur_obj.compute(self._cr, self._uid,
-                                         fees.currency_id.id, company_currency,
-                                         fees.total,
-                                         context=context_multi_currency)
+#           compute method from res.currency is deprecated 
+#                                        since v12 and replaced with _convert
+                credit = cur_obj._convert(fees.total, company_currency,
+                                         fees.company_id, self.date)
             elif fees.type in ('out_invoice', 'in_refund'):
-                debit = cur_obj.compute(self._cr, self._uid,
-                                        fees.currency_id.id, company_currency,
-                                        fees.total,
-                                        context=context_multi_currency)
+                debit = cur_obj._convert(fees.total, company_currency,
+                                         fees.company_id, self.date)
             if debit < 0:
                 credit = -debit
                 debit = 0.0
@@ -401,7 +420,7 @@ class StudentPayslip(models.Model):
             sign = debit - credit < 0 and -1 or 1
             cr_id = diff_currency_p and current_currency or False
             am_cr = diff_currency_p and sign * fees.total or 0.0
-            date = fees.payment_date or time.strftime('%Y-%m-%d')
+            date = fees.payment_date or fields.Date.today()
             move_line = {'name': fees.name or '/',
                          'move_id': move_id,
                          'debit': debit,
@@ -426,15 +445,14 @@ class StudentPayslip(models.Model):
                          'date': date}
             move_line_obj.create(move_line)
             fees.write({'move_id': move_id})
-            move_obj.post([move_id])
+            move_obj.action_post([move_id])
 
     def student_pay_fees(self):
         '''Generate invoice of student fee'''
         for rec in self:
             if rec.number == '/':
-                rec.number = self.env['ir.sequence'
-                                      ].next_by_code('student.payslip'
-                                                     ) or _('New')
+                rec.number = self.env['ir.sequence'].next_by_code(
+                                            'student.payslip') or _('New')
             rec.state = 'pending'
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
@@ -442,18 +460,16 @@ class StudentPayslip(models.Model):
                     'journal_id': rec.journal_id.id,
                     'name': rec.number,
                     'student_payslip_id': rec.id,
-                    'type': 'out_invoice'}
+                    'move_type': 'out_invoice'}
             invoice_line = []
             for line in rec.line_ids:
                 acc_id = ''
                 if line.account_id.id:
                     acc_id = line.account_id.id
                 else:
-                    # check type of invoice
-                    if rec.type in ('out_invoice', 'in_refund'):
-                        acc_id = rec.journal_id.default_credit_account_id.id
-                    else:
-                        acc_id = rec.journal_id.default_debit_account_id.id
+#     replaced / deprecated fields of v13: 
+#     default_debit_account_id, default_credit_account_id from account.journal
+                    acc_id = rec.journal_id.default_account_id.id
                 invoice_line_vals = {'name': line.name,
                                      'account_id': acc_id,
                                      'quantity': 1.000,
@@ -474,63 +490,65 @@ class StudentPayslip(models.Model):
                     'context': {}}
 
 
-<<<<<<< HEAD
-class StudentPayslipLine(models.Model):
-    '''Function Line'''
-=======
 class StudentPayslipLineLine(models.Model):
     '''Function Line.'''
 
->>>>>>> [MIG][13.0]Migrated module school fees
     _name = 'student.payslip.line.line'
     _description = 'Function Line'
     _order = 'sequence'
 
-    slipline_id = fields.Many2one('student.payslip.line', 'Slip Line Ref')
-    slipline1_id = fields.Many2one('student.fees.structure.line', 'Slip Line')
-    sequence = fields.Integer('Sequence')
-    from_month = fields.Many2one('academic.month', 'From Month')
-    to_month = fields.Many2one('academic.month', 'To Month')
+    slipline_id = fields.Many2one('student.payslip.line', 'Slip Line Ref',
+                                  help='Student payslip line')
+    slipline1_id = fields.Many2one('student.fees.structure.line', 'Slip Line',
+                                   help='Student payslip line')
+    sequence = fields.Integer('Sequence', help='Sequence of payslip')
+    from_month = fields.Many2one('academic.month', 'From Month',
+                                 help='Academic starting month')
+    to_month = fields.Many2one('academic.month', 'To Month',
+                               help='Academic end month')
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
     student_payslip_id = fields.Many2one('student.payslip',
-                                         string="Student Payslip")
+                                         string="Student Payslip",
+                                         help='Select student payslip')
 
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    def post(self):
+    def action_post(self):
         '''Method to change state to paid when state in invoice is paid'''
-        res = super(AccountPayment, self).post()
-        curr_date = datetime.now()
+        res = super(AccountPayment, self).action_post()
+        curr_date = fields.Date.today()
         vals = {}
         for rec in self:
-            for invoice in rec.invoice_ids:
-                vals.update({'due_amount': invoice.amount_residual})
-                if invoice.student_payslip_id and \
-                        invoice.invoice_payment_state == 'paid':
-                    # Calculate paid amount and changes state to paid
-                    fees_payment = (invoice.student_payslip_id.paid_amount +
-                                    rec.amount)
-                    vals.update({'state': 'paid',
-                                 'payment_date': curr_date,
-                                 'move_id': invoice.id or False,
-                                 'paid_amount': fees_payment,
-                                 'due_amount': invoice.amount_residual})
-                if invoice.student_payslip_id and \
-                        invoice.invoice_payment_state == 'not_paid':
-                    # Calculate paid amount and due amount and changes state
-                    # to pending
-                    fees_payment = (invoice.student_payslip_id.paid_amount +
-                                    rec.amount)
-                    vals.update({'state': 'pending',
-                                 'due_amount': invoice.amount_residual,
-                                 'paid_amount': fees_payment})
-                invoice.student_payslip_id.write(vals)
+            invoice = rec.move_id
+#        'invoice_ids' deprecated field instead of this 
+#                             used delegation with account_move
+            vals.update({'due_amount': invoice.amount_residual})
+            if invoice.student_payslip_id and \
+                    invoice.payment_state == 'paid':
+                # Calculate paid amount and changes state to paid
+                fees_payment = (invoice.student_payslip_id.paid_amount +
+                                rec.amount)
+                vals.update({'state': 'paid',
+                             'payment_date': curr_date,
+                             'move_id': invoice.id or False,
+                             'paid_amount': fees_payment,
+                             'due_amount': invoice.amount_residual})
+            if invoice.student_payslip_id and \
+                    invoice.payment_state == 'not_paid':
+                # Calculate paid amount and due amount and changes state
+                # to pending
+                fees_payment = (invoice.student_payslip_id.paid_amount +
+                                rec.amount)
+                vals.update({'state': 'pending',
+                             'due_amount': invoice.amount_residual,
+                             'paid_amount': fees_payment})
+            invoice.student_payslip_id.write(vals)
         return res
 
 
@@ -540,11 +558,12 @@ class StudentFees(models.Model):
     def set_alumni(self):
         '''Override method to raise warning when fees payment of student is
         remaining when student set to alumni state'''
+        student_payslip_obj = self.env['student.payslip']
         for rec in self:
-            student_fees = self.env['student.payslip'].\
-                search([('student_id', '=', rec.id),
+            student_fees_rec = student_payslip_obj.search([
+                        ('student_id', '=', rec.id),
                         ('state', 'in', ['confirm', 'pending'])])
-            if student_fees:
-                raise ValidationError(_('''You cannot alumni student because
-                payment of fees of student is remaining!'''))
+            if student_fees_rec:
+                raise ValidationError(_('''
+You cannot alumni student because payment of fees of student is remaining!'''))
             return super(StudentFees, self).set_alumni()

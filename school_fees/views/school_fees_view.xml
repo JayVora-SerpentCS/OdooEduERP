@@ -243,7 +243,7 @@
                 <field name="student_id"/>
                 <field name="date"/>
                 <field name="register_id"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state in ('draft','pending')" decoration-success="state in ('confirm','paid')"/>
             </tree>
         </field>
     </record>
@@ -341,7 +341,7 @@
                 <field name="name"/>
                 <field name="number"/>
                 <field name="date"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state in ('draft')" decoration-success="state in ('confirm')"/>
             </tree>
         </field>
     </record>

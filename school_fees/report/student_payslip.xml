@@ -90,7 +90,7 @@
                             </tbody>
                         </table>
                         <div class="row">
-                            <div class="col-xs-4 pull-right">
+                            <div class="col-4 pull-right">
                                 <table class="table table-condensed">
                                     <tr>
                                         <td><strong>Total Fees</strong></td>
@@ -115,7 +115,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-xs-4 pull-right">
+                        <div class="col-4 pull-right">
                             <br/><br/><br/><br/><br/><br/><br/>
                             <b>Principal,</b>
                             <br/><br/><br/>

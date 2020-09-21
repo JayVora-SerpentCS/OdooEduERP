@@ -2,7 +2,7 @@
 
 {
     'name': 'Fees Management',
-    'version': "13.0.1.0.0",
+    'version': "14.0.1.0.0",
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
@@ -14,10 +14,10 @@
     'data': ['security/ir.model.access.csv',
              'security/security_fees.xml',
              'views/school_fees_view.xml',
-             'views/school_fees_sequence.xml',
-             'views/student_payslip.xml',
-             'views/student_fees_register.xml',
-             'views/report_view.xml'],
+             'data/school_fees_sequence.xml',
+             'report/student_payslip.xml',
+             'report/student_fees_register.xml',
+             'report/report_view.xml'],
     'demo': ['demo/school_fees_demo.xml'],
     'installable': True,
     'application': True

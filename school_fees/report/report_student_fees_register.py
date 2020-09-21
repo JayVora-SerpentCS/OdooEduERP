@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
+from odoo import api, models
 
 
 class ReportStudentFeesRegister(models.AbstractModel):
@@ -8,18 +8,20 @@ class ReportStudentFeesRegister(models.AbstractModel):
     _description = "School Fees Register Report"
 
     def get_month(self, indate):
+        '''Method to get month'''
         out_date = indate.strftime('%B') + '-' + indate.strftime('%Y')
         return out_date
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        students = self.env['student.fees.register'].search([('id', 'in',
-                                                              docids)])
-        fees_report = self.env['ir.actions.report'].\
-            _get_report_from_name('school_fees.student_fees_register')
+        '''Inherited method to get report data'''
+        students_rec = self.env['student.fees.register'].search([
+                                                ('id', 'in', docids)])
+        fees_report = self.env['ir.actions.report']._get_report_from_name(
+                                        'school_fees.student_fees_register')
         return {'doc_ids': docids,
                 'doc_model': fees_report.model,
-                'docs': students,
+                'docs': students_rec,
                 'data': data,
                 'get_month': self.get_month,
                 }
