@@ -18,18 +18,18 @@ class MoveStandards(models.TransientModel):
         school_stand_obj = self.env['school.standard']
         standard_obj = self.env["standard.standard"]
         student_obj = self.env['student.student']
-        for stud in student_obj.search([('state', '=', 'done')]):
+        done_rec = student_obj.search([('state', '=', 'done')])
+        for stud in done_rec:
             year_id = academic_obj.next_year(stud.year.sequence)
             academic_year = academic_obj.search([('id', '=', year_id)],
                                                 limit=1)
             standard_seq = stud.standard_id.standard_id.sequence
             next_class_id = standard_obj.next_standard(standard_seq)
-
             # Assign the academic year
             if next_class_id:
                 division = (stud.standard_id.division_id.id or False)
-                next_stand = school_stand_obj.\
-                    search([('standard_id', '=', next_class_id),
+                next_stand = school_stand_obj.search([
+                            ('standard_id', '=', next_class_id),
                             ('division_id', '=', division),
                             ('school_id', '=', stud.school_id.id),
                             ('medium_id', '=', stud.medium_id.id)])
@@ -38,4 +38,3 @@ class MoveStandards(models.TransientModel):
                                 'standard_id': next_stand.id}
                     # Move student to next standard
                     stud.write(std_vals)
-        return True

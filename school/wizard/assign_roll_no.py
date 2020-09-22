@@ -26,5 +26,3 @@ class AssignRollNo(models.TransientModel):
             for student in student_ids:
                 number += 1
                 student.write({'roll_no': number})
-
-        return True

@@ -17,8 +17,6 @@ class MailTemplate(models.Model):
             ret['subject'] = self._context['subject']
             ret['email_to'] = self._context['email_to']
             return ret
-        else:
-            return ret
 
 
 class SendMail(models.TransientModel):

@@ -20,8 +20,6 @@ def emailvalidation(email):
         if not email_regex.match(email):
             raise ValidationError(_('''This seems not to be valid email.
             Please enter email in correct format!'''))
-        else:
-            return True
 
 
 class AcademicYear(models.Model):
@@ -51,8 +49,7 @@ class AcademicYear(models.Model):
         year_rec = self.search([('sequence', '>', sequence)], order='id',
                               limit=1)
         if year_rec:
-            return year_rec.id
-        return False
+            return year_rec.id or False
 
     def name_get(self):
         '''Method to display name and code'''
@@ -76,7 +73,6 @@ class AcademicYear(models.Model):
                     'year_id': data.id,
                 })
                 start_date = start_date + relativedelta(months=interval)
-        return True
 
     @api.constrains('date_start', 'date_stop')
     def _check_academic_year(self):
@@ -103,10 +99,10 @@ class AcademicYear(models.Model):
     @api.constrains('current')
     def check_current_year(self):
         '''Constraint on active current year'''
-        current_year_rec = self.search([('current', '=', True)])
-        if len(current_year_rec.ids) >= 2:
+        current_year_rec = self.search_count([('current', '=', True)])
+        if current_year_rec >= 2:
             raise ValidationError(_('''
-Error! You cannot set two current year active!'''))
+                    Error! You cannot set two current year active!'''))
 
 
 class AcademicMonth(models.Model):
@@ -154,7 +150,8 @@ class AcademicMonth(models.Model):
     @api.constrains('date_start', 'date_stop')
     def check_months(self):
         """Check start date should be less than stop date."""
-        for old_month in self.search([('id', 'not in', self.ids)]):
+        exist_month_rec = self.search([('id', 'not in', self.ids)])
+        for old_month in exist_month_rec:
             if old_month.date_start <= \
                     self.date_start <= old_month.date_stop \
                     or old_month.date_start <= \
@@ -215,9 +212,7 @@ class StandardStandard(models.Model):
         '''This method check sequence of standard'''
         stand_rec = self.search([('sequence', '>', sequence)], order='id',
                                 limit=1)
-        if stand_rec:
-            return stand_rec.id
-        return False
+        return stand_rec.id or False
 
 
 class SchoolStandard(models.Model):
@@ -643,10 +638,10 @@ class StudentFamilyContact(models.Model):
     @api.depends('relation', 'stu_name')
     def _compute_get_name(self):
         for rec in self:
+            relative_name = rec.name
             if rec.stu_name:
                 rec.relative_name = rec.stu_name.name
-            else:
-                rec.relative_name = rec.name
+            rec.relative_name = relative_name
 
     family_contact_id = fields.Many2one('student.student', 'Student Ref.',
                                         help='Enter related student')

@@ -49,7 +49,7 @@ class SchoolTeacher(models.Model):
         """Onchange method for is parent"""
         if self.is_parent:
             self.stu_parent_id = False
-            self.student_id = [(6, 0, [])]
+            self.student_id = False
 
     @api.onchange('stu_parent_id')
     def _onchangestudent_parent(self):
@@ -87,7 +87,6 @@ class SchoolTeacher(models.Model):
             students = [stu.id for stu in manager_id.student_id]
             parent_vals = {'name': manager_id.name,
                            'email': emp_user.work_email,
-                           'parent_create_mng': 'parent',
                            'user_ids': [(6, 0, [emp_user.user_id.id])],
                            'partner_id': emp_user.user_id.partner_id.id,
                            'student_id': [(6, 0, students)]}
@@ -124,19 +123,15 @@ class SchoolTeacher(models.Model):
     @api.onchange('address_id')
     def onchange_address_id(self):
         """Onchange method for address."""
-        self.work_phone = False
-        self.mobile_phone = False
-        if self.address_id:
-            self.work_phone = self.address_id.phone,
-            self.mobile_phone = self.address_id.mobile
+        self.work_phone = self.address_id.phone or False,
+        self.mobile_phone = self.address_id.mobile or False
 
     @api.onchange('department_id')
     def onchange_department_id(self):
         """Onchange method for deepartment."""
-        if self.department_id:
-            self.parent_id = (self.department_id and
-                              self.department_id.manager_id and
-                              self.department_id.manager_id.id) or False
+        self.parent_id = (self.department_id and
+                          self.department_id.manager_id and
+                          self.department_id.manager_id.id) or False
 
     @api.onchange('user_id')
     def onchange_user(self):
@@ -149,17 +144,14 @@ class SchoolTeacher(models.Model):
     @api.onchange('school_id')
     def onchange_school(self):
         """Onchange method for school."""
-        self.address_id = False
-        self.mobile_phone = False
-        self.work_location = False
-        self.work_email = False
-        self.work_phone = False
-        if self.school_id:
-            self.address_id = self.school_id.company_id.partner_id.id
-            self.mobile_phone = self.school_id.company_id.partner_id.mobile
-            self.work_location = self.school_id.company_id.partner_id.city
-            self.work_email = self.school_id.company_id.partner_id.email
-            phone = self.school_id.company_id.partner_id.phone
-            self.work_phone = phone
-            self.phone_numbers = phone
-            phone = self.school_id.company_id.partner_id.phone
+        self.address_id = self.school_id.company_id.partner_id.id or \
+                                                                    False
+        self.mobile_phone = self.school_id.company_id.partner_id.mobile or \
+                                                                        False
+        self.work_location = self.school_id.company_id.partner_id.city or \
+                                                                        False
+        self.work_email = self.school_id.company_id.partner_id.email or False
+        phone = self.school_id.company_id.partner_id.phone or False
+        self.work_phone = phone or False
+        self.phone_numbers = phone or False
+        phone = self.school_id.company_id.partner_id.phone or False

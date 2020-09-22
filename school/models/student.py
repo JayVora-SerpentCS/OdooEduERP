@@ -46,14 +46,13 @@ class StudentStudent(models.Model):
         '''Method to calculate student age'''
         current_dt = fields.Date.today()
         for rec in self:
+            rec.age = 0
             if rec.date_of_birth and rec.date_of_birth < current_dt:
                 start = rec.date_of_birth
                 age_calc = ((current_dt - start).days / 365)
                 # Age should be greater than 0
                 if age_calc > 0.0:
                     rec.age = age_calc
-            else:
-                rec.age = 0
 
     @api.model
     def _default_image(self):
@@ -65,13 +64,11 @@ class StudentStudent(models.Model):
     @api.depends('state')
     def _compute_teacher_user(self):
         '''Compute teacher boolean field if user form teacher group'''
+        teacher = self.env.user.has_group("school.group_school_teacher")
         for rec in self:
             rec.teachr_user_grp = False
-            if rec.state == 'done':
-                teacher = self.env.user.has_group("school.group_school_teacher"
-                                                  )
-                if teacher:
-                    rec.teachr_user_grp = True
+            if teacher and rec.state == 'done':
+                rec.teachr_user_grp = True
 
     @api.model
     def check_current_year(self):
@@ -158,12 +155,18 @@ defined!Please contact to Administator!'''
     ear = fields.Boolean('Ears', help='Eye for medical info')
     nose_throat = fields.Boolean('Nose & Throat',
                                  help='Nose & Throat for medical info')
-    respiratory = fields.Boolean('Respiratory', help='Respiratory for medical info')
-    cardiovascular = fields.Boolean('Cardiovascular', help='Cardiovascular for medical info')
-    neurological = fields.Boolean('Neurological', help='Neurological for medical info')
-    muskoskeletal = fields.Boolean('Musculoskeletal', help='Musculoskeletal for medical info')
-    dermatological = fields.Boolean('Dermatological', help='Dermatological for medical info')
-    blood_pressure = fields.Boolean('Blood Pressure', help='Blood pressure for medical info')
+    respiratory = fields.Boolean('Respiratory',
+                                 help='Respiratory for medical info')
+    cardiovascular = fields.Boolean('Cardiovascular',
+                                    help='Cardiovascular for medical info')
+    neurological = fields.Boolean('Neurological',
+                                  help='Neurological for medical info')
+    muskoskeletal = fields.Boolean('Musculoskeletal',
+                                   help='Musculoskeletal for medical info')
+    dermatological = fields.Boolean('Dermatological',
+                                    help='Dermatological for medical info')
+    blood_pressure = fields.Boolean('Blood Pressure',
+                                    help='Blood pressure for medical info')
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
                          help='Remark can be entered if any')
     school_id = fields.Many2one('school.school', 'School',
@@ -228,7 +231,7 @@ defined!Please contact to Administator!'''
             vals['password'] = vals['pid']
         else:
             raise UserError(_('''Error! 
-PID not valid so record will not be saved.'''))
+            PID not valid so record will not be saved.'''))
         if vals.get('company_id', False):
             company_vals = {'company_ids': [(4, vals.get('company_id'))]}
             vals.update(company_vals)
@@ -273,7 +276,7 @@ PID not valid so record will not be saved.'''))
             # Check if age less than required age
             if age_calc < self.school_id.required_age:
                 raise ValidationError(_('''
-Age of student should be greater than %s years!''' % (
+                    Age of student should be greater than %s years!''' % (
                                             self.school_id.required_age)))
 
     def set_to_draft(self):

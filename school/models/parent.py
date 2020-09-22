@@ -47,8 +47,6 @@ class SchoolParent(models.Model):
     @api.onchange('student_id')
     def onchange_student_id(self):
         """Onchange Method for Student."""
-        self.standard_id = [(6, 0, [])]
-        self.stand_id = [(6, 0, [])]
         standard_ids = [student.standard_id.id
                         for student in self.student_id]
         if standard_ids:
@@ -79,6 +77,5 @@ class SchoolParent(models.Model):
     @api.onchange('state_id')
     def onchange_state(self):
         """Onchange Method for State."""
-        self.country_id = False
         if self.state_id:
-            self.country_id = self.state_id.country_id.id
+            self.country_id = self.state_id.country_id.id or False
