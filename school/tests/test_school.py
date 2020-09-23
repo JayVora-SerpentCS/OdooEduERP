@@ -1,7 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-import time
 
 
 class TestSchool(common.TransactionCase):
@@ -40,8 +39,8 @@ class TestSchool(common.TransactionCase):
             create({'sequence': 7,
                     'code': '2012',
                     'name': '2012 Year',
-                    'date_start': time.strftime('01-01-2012'),
-                    'date_stop': time.strftime('12-31-2012')
+                    'date_start': '2012-01-01',
+                    'date_stop': '2012-12-31'
                     })
         self.academic_year._check_academic_year()
         self.academic_month_obj = self.env['academic.month']
@@ -49,8 +48,8 @@ class TestSchool(common.TransactionCase):
         self.academic_month = self.academic_month_obj.\
             create({'name': 'May',
                     'code': 'may',
-                    'date_start': time.strftime('05-01-2012'),
-                    'date_stop': time.strftime('05-31-2012'),
+                    'date_start': '2012-05-01',
+                    'date_stop': '2012-05-31',
                     'year_id': self.academic_year.id
                     })
         self.academic_month._check_duration()

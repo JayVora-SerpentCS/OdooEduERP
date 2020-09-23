@@ -144,7 +144,16 @@
                                         <field name="course_id" widget="selection"/>
                                         <newline />
                                         <separator string="Subjects Details"/>
-                                        <field name="add_sub" nolabel="1" colspan="4" />
+                                        <field name="add_sub" nolabel="1" colspan="4">
+                                            <form>
+                                                <group col='4' colspan="4">
+                                                    <field name="name"/>
+                                                    <field name="add_sub_id" />
+                                                    <field name="maximum_marks" />
+                                                    <field name="minimum_marks" />
+                                                </group>
+                                            </form>
+                                        </field>
                                     </group>
                                 </form>
                             </field>
@@ -547,7 +556,16 @@
                                         <field name="course_id" placeholder="Course" widget="selection"/>
                                         <newline />
                                         <separator string="Subjects Details" />
-                                        <field name="add_sub" nolabel="1" colspan="4"/>
+                                        <field name="add_sub" nolabel="1" colspan="4">
+                                            <form>
+                                                <group col='4' colspan="4">
+                                                    <field name="name"/>
+                                                    <field name="add_sub_id" />
+                                                    <field name="maximum_marks" />
+                                                    <field name="minimum_marks" />
+                                                </group>
+                                            </form>
+                                        </field>
                                     </group>
                                 </form>
                             </field>
