@@ -1,17 +1,19 @@
 # See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
-from dateutil.relativedelta import relativedelta as rd
 from datetime import datetime
+
+from dateutil.relativedelta import relativedelta as rd
+from lxml import etree
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    is_hostel_rector = fields.Boolean('Hostel Rector')
+    is_hostel_rector = fields.Boolean('Hostel Rector',help='''Activate if the
+                                       following person is hostel rector''')
 
 
 class HostelType(models.Model):
@@ -24,11 +26,14 @@ class HostelType(models.Model):
                              ('common', 'Common')], 'HOSTEL Type',
                             help="Type of Hostel",
                             required=True, default='common')
-    other_info = fields.Text('Other Information')
-    rector = fields.Many2one('res.partner', 'Rector')
-    room_ids = fields.One2many('hostel.room', 'name', 'Room')
+    other_info = fields.Text('Other Information',
+                             help='Enter more information')
+    rector = fields.Many2one('res.partner', 'Rector',
+                             help='Select hostel rector')
+    room_ids = fields.One2many('hostel.room', 'name', 'Room',
+                               help='Enter hostel rooms')
     student_ids = fields.One2many('hostel.student', 'hostel_info_id',
-                                  string='Students')
+                                  string='Students', help='Enter students')
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
@@ -36,11 +41,12 @@ class HostelType(models.Model):
         '''Override method to get hostel of student selected'''
         if self._context.get('student_id'):
             stud_obj = self.env['student.student']
-            stud = stud_obj.browse(self._context['student_id'])
+            stud_rec = stud_obj.browse(self._context['student_id'])
             datas = []
-            if stud.gender:
-                self._cr.execute("""select id from hostel_type where type=%s or
-                type='common' """, (stud.gender,))
+            if stud_rec.gender:
+                self._cr.execute("""
+        select id from hostel_type where type=%s or type='common' """, (
+                                                    stud_rec.gender,))
                 data = self._cr.fetchall()
                 for d in data:
                     datas.append(d[0])
@@ -56,9 +62,61 @@ class HostelRoom(models.Model):
     _description = 'Hostel Room Information'
     _rec_name = 'room_no'
 
+    @api.depends('student_per_room', 'student_ids')
+    def _compute_check_availability(self):
+        '''Method to check room availability'''
+        room_availability = 0
+        for rec in self:
+            room_availability = rec.student_per_room - len(rec.student_ids.ids)
+            rec.availability = room_availability
+
+    name = fields.Many2one('hostel.type', 'HOSTEL',
+                           help="Name of hostel")
+    floor_no = fields.Integer('Floor No.', default=1,
+                              help="Floor Number")
+    room_no = fields.Char('Room No.', required=True)
+    student_per_room = fields.Integer('Student Per Room', required=True,
+                                      help="Students allocated per room")
+    availability = fields.Float(compute='_compute_check_availability',
+                                store=True, string = 'Availability',
+                                help='Room availability in hostel')
+    telephone = fields.Boolean('Telephone access', help='Enter telephone')
+    rent_amount = fields.Float('Rent Amount Per Month',
+                               help='Enter rent amount per month')
+    ac = fields.Boolean('Air Conditioning', help='''Activate/deactivate as per
+                        the AC availability in the room''')
+    private_bathroom = fields.Boolean('Private Bathroom', 
+                                      help='''Activate/deactivate as per the
+                                      availability of private bathroom in the
+                                      room''')
+    guest_sofa = fields.Boolean('Guest sofa-bed',
+                                help='''Activate/deactivate as per the
+                                availability of guest sofa-bed in the room''')
+    tv = fields.Boolean('Television', help='''Activate/deactivate as per the
+                                            availability of TV in the room''')
+    internet = fields.Boolean('Internet Access', help='''Activate/deactivate
+                               as per the availability of Internet-connectivity
+                               in the room''')
+    refrigerator = fields.Boolean('Refrigerator', help='''Activate/deactivate
+                                   as per the availability of Refrigerator
+                                   in the room''')
+    microwave = fields.Boolean('Microwave', help='''Activate/deactivate as per
+                                the availability of Microwave in the room''')
+    student_ids = fields.One2many('hostel.student', 'room_id',
+                                  string="Students", help='Enter students')
+
+    _sql_constraints = [('room_no_unique', 'unique(room_no)',
+                         'Room number must be unique!'),
+                        ('floor_per_hostel', 'check(floor_no < 10)',
+                         'Error ! Floor per HOSTEL should be less than 10.'),
+                        ('student_per_room_greater',
+                         'check(student_per_room < 10)',
+                         'Error ! Student per room should be less than 10.')]
+
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False,
                         submenu=False):
+        '''Inherited this method to make edit button invisible in list view'''
         res = super(HostelRoom, self).fields_view_get(view_id=view_id,
                                                       view_type=view_type,
                                                       toolbar=toolbar,
@@ -78,48 +136,12 @@ class HostelRoom(models.Model):
                 res['arch'] = etree.tostring(doc)
         return res
 
-    @api.depends('student_per_room', 'student_ids')
-    def _compute_check_availability(self):
-        '''Method to check room availability'''
-        room_availability = 0
-        for rec in self:
-            room_availability = rec.student_per_room - len(rec.student_ids.ids)
-            rec.availability = room_availability
-
-    name = fields.Many2one('hostel.type', 'HOSTEL',
-                           help="Name of hostel")
-    floor_no = fields.Integer('Floor No.', default=1,
-                              help="Floor Number")
-    room_no = fields.Char('Room No.', required=True)
-    student_per_room = fields.Integer('Student Per Room', required=True,
-                                      help="Students allocated per room")
-    availability = fields.Float(compute='_compute_check_availability',
-                                store=True, string="Availability")
-    telephone = fields.Boolean('Telephone access')
-    rent_amount = fields.Float('Rent Amount Per Month')
-    ac = fields.Boolean('Air Conditioning')
-    private_bathroom = fields.Boolean('Private Bathroom')
-    guest_sofa = fields.Boolean('Guest sofa-bed')
-    tv = fields.Boolean('Television')
-    internet = fields.Boolean('Internet Access')
-    refrigerator = fields.Boolean('Refrigerator')
-    microwave = fields.Boolean('Microwave')
-    student_ids = fields.One2many('hostel.student', 'room_id',
-                                  string="Students")
-
-    _sql_constraints = [('room_no_unique', 'unique(room_no)',
-                         'Room number must be unique!'),
-                        ('floor_per_hostel', 'check(floor_no < 10)',
-                         'Error ! Floor per HOSTEL should be less than 10.'),
-                        ('student_per_room_greater',
-                         'check(student_per_room < 10)',
-                         'Error ! Student per room should be less than 10.')]
-
     @api.constrains('rent_amount')
     def _check_rent_amount(self):
+        '''Constraint on negative rent amount'''
         if self.rent_amount < 0:
-            raise ValidationError(_('''Rent Amount Per Month should not
-            be a negative value!'''))
+            raise ValidationError(_('''
+                    Rent Amount Per Month should not be a negative value!'''))
 
 
 class HostelStudent(models.Model):
@@ -133,18 +155,12 @@ class HostelStudent(models.Model):
         for rec in self:
             rec.remaining_amount = rec.room_rent - (rec.paid_amount or 0.0)
 
-    @api.constrains('duration')
-    def check_duration(self):
-        '''Method to check duration should be greater than zero'''
-        if self.duration <= 0:
-            raise ValidationError(_('Duration should be greater than 0!'))
-
     def _compute_invoices(self):
         '''Method to compute number of invoice of student'''
         inv_obj = self.env['account.move']
         for rec in self:
-            rec.compute_inv = inv_obj.search_count([('hostel_student_id', '=',
-                                                     rec.id)])
+            rec.compute_inv = inv_obj.search_count([
+                                    ('hostel_student_id', '=', rec.id)])
 
     @api.depends('duration')
     def _compute_rent(self):
@@ -153,38 +169,22 @@ class HostelStudent(models.Model):
             amt = rec.room_id.rent_amount or 0.0
             rec.room_rent = rec.duration * amt
 
-    @api.onchange('hostel_info_id')
-    def onchange_hostel(self):
-        '''Method to make room false when hostel changes'''
-        self.room_id = False
-
-    @api.constrains('room_id')
-    def check_room_avaliable(self):
-        '''Check Room Availability'''
-        if self.room_id.availability <= 0:
-            raise ValidationError(_('''There is no availability in the room!'''))
-
-    def unlink(self):
-        for rec in self:
-            if rec.status in ['reservation', 'pending', 'paid']:
-                raise ValidationError(_('''You can delete record in
-                unconfirmed state!'''))
-        return super(HostelStudent, self).unlink()
-
     @api.depends('status')
     def _get_hostel_user(self):
         user_group = self.env.ref('school_hostel.group_hostel_user')
-        user_obj = self.env['res.users']
-        grps = [group.id for group in user_obj.browse(self._uid).groups_id]
+        grps = [group.id for group in self.env.user.groups_id]
         if user_group.id in grps:
             self.hostel_user = True
 
-    hostel_id = fields.Char('HOSTEL ID', readonly=True,
+    hostel_id = fields.Char('HOSTEL ID', readonly=True, help='Enter Hostel ID',
                             default=lambda self: _('New'))
     compute_inv = fields.Integer('Number of invoice',
-                                 compute="_compute_invoices")
-    student_id = fields.Many2one('student.student', 'Student')
-    school_id = fields.Many2one('school.school', 'School')
+                                 compute="_compute_invoices",
+                                 help='No of invoice of related student')
+    student_id = fields.Many2one('student.student', 'Student',
+                                 help='Select student')
+    school_id = fields.Many2one('school.school', 'School',
+                                help='Select school')
     room_rent = fields.Float('Total Room Rent', compute="_compute_rent",
                              required=True,
                              help="Rent of room")
@@ -193,12 +193,12 @@ class HostelStudent(models.Model):
                                      default=fields.Datetime.now)
     discharge_date = fields.Datetime('Discharge Date',
                                      help="Date on which student discharge")
-    paid_amount = fields.Float('Paid Amount',
-                               help="Amount Paid")
-    hostel_info_id = fields.Many2one('hostel.type', "Hostel")
-    room_id = fields.Many2one('hostel.room', "Room")
-    duration = fields.Integer('Duration')
-    rent_pay = fields.Float('Rent')
+    paid_amount = fields.Float('Paid Amount', help="Amount Paid")
+    hostel_info_id = fields.Many2one('hostel.type', "Hostel",
+                                     help='Select hostel type')
+    room_id = fields.Many2one('hostel.room', "Room", help='Select hostel room')
+    duration = fields.Integer('Duration', help='Enter duration of living')
+    rent_pay = fields.Float('Rent', help='Enter rent pay of the hostel')
     acutal_discharge_date = fields.Datetime('Actual Discharge Date',
                                             help='''Date on which student
                                             discharge''')
@@ -211,15 +211,45 @@ class HostelStudent(models.Model):
                                ('discharge', 'Discharge'),
                                ('cancel', 'Cancel')],
                               string='Status', copy=False,
-                              default='draft')
-    hostel_types = fields.Char('Type')
-    stud_gender = fields.Char('Gender')
-    active = fields.Boolean('Active', default=True)
+                              default='draft',
+                              help='State of the student hostel')
+    hostel_types = fields.Char('Type', help='Enter hostel type')
+    stud_gender = fields.Char('Gender', help='Student gender')
+    active = fields.Boolean('Active', default=True,
+                            help='Activate/Deactivate hostel record')
 
     _sql_constraints = [('admission_date_greater',
                          'check(discharge_date >= admission_date)',
                          'Error ! Discharge Date cannot be set'
                          'before Admission Date!')]
+
+    @api.constrains('duration')
+    def check_duration(self):
+        '''Method to check duration should be greater than zero'''
+        if self.duration <= 0:
+            raise ValidationError(_('Duration should be greater than 0!'))
+
+    @api.constrains('room_id')
+    def check_room_avaliable(self):
+        '''Check Room Availability'''
+        if self.room_id.availability <= 0:
+            raise ValidationError(_('''
+                    There is no availability in the room!'''))
+
+    @api.onchange('hostel_info_id')
+    def onchange_hostel_types(self):
+        '''Onchange method for hostel type'''
+        self.hostel_types = self.hostel_info_id.type
+
+    @api.onchange('student_id')
+    def onchange_student_gender(self):
+        '''Method to get gender of student'''
+        self.stud_gender = self.student_id.gender
+
+    @api.onchange('hostel_info_id')
+    def onchange_hostel(self):
+        '''Method to make room false when hostel changes'''
+        self.room_id = False
 
     def cancel_state(self):
         '''Method to change state to cancel'''
@@ -228,22 +258,13 @@ class HostelStudent(models.Model):
             # increase room availability
             rec.room_id.availability += 1
 
-    @api.onchange('hostel_info_id')
-    def onchange_hostel_types(self):
-        self.hostel_types = self.hostel_info_id.type
-
-    @api.onchange('student_id')
-    def onchange_student_gender(self):
-        '''Method to get gender of student'''
-        self.stud_gender = self.student_id.gender
-
     def reservation_state(self):
         '''Method to change state to reservation'''
+        sequence_obj = self.env['ir.sequence']
         for rec in self:
             if rec.hostel_id == 'New':
-                rec.hostel_id = self.env['ir.sequence'
-                                         ].next_by_code('hostel.student'
-                                                        ) or _('New')
+                rec.hostel_id = sequence_obj.next_by_code(
+                                            'hostel.student') or _('New')
             rec.status = 'reservation'
 
     @api.onchange('admission_date', 'duration')
@@ -276,8 +297,18 @@ class HostelStudent(models.Model):
             vals.update({'discharge_date': discharge_date})
         return super(HostelStudent, self).write(vals)
 
+    def unlink(self):
+        '''Inherited unlink method to make check state at record deletion'''
+        status_list = ['reservation', 'pending', 'paid']
+        for rec in self:
+            if rec.status in status_list:
+                raise ValidationError(_('''
+                    You can delete record in unconfirmed state!'''))
+        return super(HostelStudent, self).unlink()
+
     @api.constrains('student_id')
     def check_student_registration(self):
+        '''Constraint to check student record duplication in hostel'''
         if self.search([('student_id', '=', self.student_id.id),
                         ('status', 'not in', ['cancel', 'discharge']),
                         ('id', 'not in', self.ids)]):
@@ -290,30 +321,31 @@ class HostelStudent(models.Model):
             rec.status = 'discharge'
             rec.room_id.availability += 1
             # set discharge date equal to current date
-            rec.acutal_discharge_date = datetime.now()
+            rec.acutal_discharge_date = fields.datetime.today()
 
     def student_expire(self):
         ''' Schedular to discharge student from hostel'''
-        current_date = datetime.now().strftime('%m-%d-%Y')
-        for student in self.env['hostel.student'].\
-                search([('discharge_date', '<', current_date),
-                        ('status', '!=', 'draft')]):
+        current_date = fields.datetime.today()
+        discharge_student_hostel_rec = self.env['hostel.student'].search([
+                                    ('discharge_date', '<', current_date),
+                                    ('status', '!=', 'draft')])
+        for student in discharge_student_hostel_rec:
             student.discharge_state()
-        return True
 
     def invoice_view(self):
         '''Method to view number of invoice of student'''
         invoice_obj = self.env['account.move']
         for rec in self:
-            invoices = invoice_obj.search([('hostel_student_id', '=', rec.id)])
+            invoices_rec = invoice_obj.search([
+                                    ('hostel_student_id', '=', rec.id)])
             action = rec.env.ref(
                 'account.action_move_out_invoice_type').read()[0]
-            if len(invoices) > 1:
-                action['domain'] = [('id', 'in', invoices.ids)]
-            elif len(invoices) == 1:
+            if len(invoices_rec) > 1:
+                action['domain'] = [('id', 'in', invoices_rec.ids)]
+            elif len(invoices_rec) == 1:
                 action['views'] = [(rec.env.ref('account.view_move_form').id,
                                     'form')]
-                action['res_id'] = invoices.ids[0]
+                action['res_id'] = invoices_rec.ids[0]
             else:
                 action = {'type': 'ir.actions.act_window_close'}
         return action
@@ -325,17 +357,18 @@ class HostelStudent(models.Model):
             rec.write({'status': 'pending'})
             partner = rec.student_id and rec.student_id.partner_id
             vals = {'partner_id': partner.id,
-                    'type': 'out_invoice',
+                    'move_type': 'out_invoice',
                     'hostel_student_id': rec.id,
                     'hostel_ref': rec.hostel_id}
             account_inv_id = invoice_obj.create(vals)
-            acc_id = account_inv_id.journal_id.default_credit_account_id.id
+            acc_id = account_inv_id.journal_id.default_account_id.id
             account_view_id = rec.env.ref('account.view_move_form')
-            line_vals = {'name': rec.hostel_info_id.name,
-                         'account_id': acc_id,
-                         'quantity': rec.duration,
-                         'price_unit': rec.room_id.rent_amount}
-            account_inv_id.write({'invoice_line_ids': [(0, 0, line_vals)]})
+            for move_line in account_inv_id:
+                line_vals = {'name': rec.hostel_info_id.name,
+                             'account_id': acc_id,
+                             'quantity': rec.duration,
+                             'price_unit': rec.room_id.rent_amount}
+                account_inv_id.write({'invoice_line_ids': [(0, 0, line_vals)]})
             return {'name': _("Pay Hostel Fees"),
                     'view_mode': 'form',
                     'res_model': 'account.move',
@@ -348,8 +381,8 @@ class HostelStudent(models.Model):
 
     def print_fee_receipt(self):
         '''Method to print fee reciept'''
-        return self.env.ref('school_hostel.report_hostel_fee_reciept_qweb').\
-            report_action(self)
+        return self.env.ref(
+            'school_hostel.report_hostel_fee_reciept_qweb').report_action(self)
 
 
 class AccountMove(models.Model):
@@ -357,7 +390,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     hostel_student_id = fields.Many2one('hostel.student',
-                                        string="Hostel Student")
+                                        string="Hostel Student",
+                                        help='Select hostel student')
     hostel_ref = fields.Char('Hostel Fees Reference',
                              help="Hostel Fee Reference")
 
@@ -365,26 +399,26 @@ class AccountMove(models.Model):
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    def post(self):
-        res = super(AccountPayment, self).post()
+    def action_post(self):
+        res = super(AccountPayment, self).action_post()
         for rec in self:
-            for inv in rec.invoice_ids:
-                vals = {}
-                if inv.hostel_student_id and\
-                        inv.invoice_payment_state == 'paid':
-                    fees_payment = (inv.hostel_student_id.paid_amount +
-                                    rec.amount)
-                    vals.update({'status': 'paid',
-                                 'paid_amount': fees_payment})
-                    inv.hostel_student_id.write(vals)
-                elif inv.hostel_student_id and\
-                        inv.invoice_payment_state == 'not_paid':
-                    fees_payment = (inv.hostel_student_id.paid_amount +
-                                    rec.amount)
-                    vals.update({'status': 'pending',
-                                 'paid_amount': fees_payment,
-                                 'remaining_amount': inv.amount_residual})
+            inv = rec.move_id
+            vals = {}
+            if inv.hostel_student_id and\
+                    inv.payment_state == 'paid':
+                fees_payment = (inv.hostel_student_id.paid_amount +
+                                rec.amount)
+                vals.update({'status': 'paid',
+                             'paid_amount': fees_payment})
                 inv.hostel_student_id.write(vals)
+            elif inv.hostel_student_id and\
+                    inv.payment_state == 'not_paid':
+                fees_payment = (inv.hostel_student_id.paid_amount +
+                                rec.amount)
+                vals.update({'status': 'pending',
+                             'paid_amount': fees_payment,
+                             'remaining_amount': inv.amount_residual})
+            inv.hostel_student_id.write(vals)
         return res
 
 
@@ -396,11 +430,12 @@ class Student(models.Model):
 
         student is set to alumni.
         """
+        student_hostel_obj = self.env['hostel.student']
         for rec in self:
-            student_hostel = self.env['hostel.student'].\
-                search([('student_id', '=', rec.id),
+            student_hostel_rec = student_hostel_obj.search([
+                        ('student_id', '=', rec.id),
                         ('status', 'in', ['reservation', 'pending', 'paid'])])
-            if student_hostel:
-                student_hostel.active = False
-                student_hostel.room_id._compute_check_availability()
+            if student_hostel_rec:
+                student_hostel_rec.active = False
+                student_hostel_rec.room_id._compute_check_availability()
         return super(Student, self).set_alumni()

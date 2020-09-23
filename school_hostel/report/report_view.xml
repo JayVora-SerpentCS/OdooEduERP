@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+         <record id="report_hostel_fee_reciept_qweb" model="ir.actions.report">
+             <field name="name">Fee Reciept</field>
+             <field name="model">hostel.student</field>
+             <field name="report_type">qweb-pdf</field>
+             <field name="report_name">school_hostel.hostel_fee_reciept1</field>
+             <field name="report_file">school_hostel.hostel_fee_reciept1</field>
+             <field name="binding_model_id" ref="school_hostel.model_hostel_student"/>
+             <field name="binding_type">report</field>
+         </record>
+
+    </data>
+</odoo>

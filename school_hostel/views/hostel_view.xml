@@ -229,7 +229,7 @@
                 <field name="room_rent" />
                 <field name="paid_amount" />
                 <field name="remaining_amount" />
-                <field name="status" />
+                <field name="status" widget="badge" decoration-info="status in ('draft', 'reservation', 'pending')" decoration-danger="status in ('discharge', 'cancel')" decoration-success="status in ('paid')"/>
             </tree>
         </field>
     </record>

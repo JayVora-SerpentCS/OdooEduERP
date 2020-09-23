@@ -37,7 +37,7 @@ class TestHostel(common.TransactionCase):
                     })
         self.hostel_room._compute_check_availability()
 #        Create Hostel Student
-        current_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        current_date = fields.datetime.today()
         self.hostel_student = self.hostel_student_obj.\
             create({'student_id': self.student.id,
                     'hostel_info_id': self.hostel_type.id,
