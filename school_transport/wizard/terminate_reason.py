@@ -1,24 +1,25 @@
 # See LICENSE file for full copyright and licensing details.
 
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class TerminateReasonTransport(models.TransientModel):
     _inherit = 'terminate.reason'
 
-    transport_info = fields.Text('Transport Info')
+    transport_info = fields.Text('Transport Info',
+                                 help='Enter transport information')
 
     @api.model
     def default_get(self, fields):
         res = super(TerminateReasonTransport, self).default_get(fields)
-        student_obj = self.env['student.student'].\
-            browse(self._context.get('active_id'))
-        student_transport = self.env['transport.registration'].\
-            search([('part_name', '=', student_obj.id),
+        student_rec = self.env['student.student'].browse(
+                                            self._context.get('active_id'))
+        student_transport_rec = self.env['transport.registration'].search([
+                    ('part_name', '=', student_rec.id),
                     ('state', 'in', ['confirm', 'pending', 'paid'])])
         transport_msg = ''
-        for rec in student_transport:
+        for rec in student_transport_rec:
             transport_msg += '\nStudent is registered for the root' + ' '\
                 + rec.name.name + ' ' + 'the vehicle number is' + ' ' +\
                 rec.vehicle_id.vehicle + ' and point number is ' +\

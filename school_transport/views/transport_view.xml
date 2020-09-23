@@ -83,7 +83,8 @@
                 <field name="months"/>
                 <field name="tr_reg_date"/>
                 <field name="tr_end_date"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-danger="state == 'over'"
+                                                   decoration-success="state == 'running'"/>
             </tree>
         </field>
     </record>
@@ -200,7 +201,9 @@
                 <field name="end_date"/>
                 <field name="contact_per_id"/>
                  <field name="trans_vehicle_ids"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                                                   decoration-danger="state == 'close'"
+                                                   decoration-success="state == 'open'"/>
             </tree>
         </field>
     </record>
@@ -254,7 +257,7 @@
                                     <field name="name"/>
                                     <field name="transport_id"/>
                                     <field name="vehicle_id"/>
-                                    <field name="point_id"/>
+                                    <field name="point_id" widget='selecion'/>
                                     <field name="months"/>
                                     <field name="tr_reg_date"/>
                                     <field name="tr_end_date"/>
@@ -323,7 +326,7 @@
                         <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
                         <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{'no_create': True, 'no_open': True}" />
                         <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="point_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
+                        <field name="point_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}" widgte="selection"/>
                         <field name="m_amount"/>
                         <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
                         <field name="transport_fees"/>
@@ -350,7 +353,9 @@
                 <field name="name"/>
                 <field name="for_month"/>
                 <field name="reg_end_date"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state in ('draft', 'pending')"
+                                                   decoration-danger="state in ('cancel')"
+                                                   decoration-success="state in ('confirm', 'paid')"/>
             </tree>
         </field>
     </record>

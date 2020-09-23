@@ -31,13 +31,14 @@
 
         <!-- Action Of Transfer Vehicle -->
 
-        <act_window id="act_transfer_vehicle"
-            name="Transfer Vehicle"
-            res_model="transfer.vehicle" 
-            binding_model="student.student"
-            view_mode="form" 
-            target="new" 
-            binding_views="form"
-            groups="school_transport.group_transportation_manager"/>
+    <record id="act_transfer_vehicle" model="ir.actions.act_window">
+        <field name="name">Transfer Vehicle</field>
+        <field name="res_model">transfer.vehicle</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_transfer_vehicle"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[(4, ref('school_transport.group_transportation_manager'))]"/>
+    </record>
 
 </odoo>

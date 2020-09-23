@@ -1,9 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
-from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import common
 
 
 class TestTransport(common.TransactionCase):
@@ -21,14 +19,14 @@ class TestTransport(common.TransactionCase):
         self.contect_person = self.env.ref('hr.employee_al')
         self.student = self.env.ref('school.demo_student_student_5')
         self.new_vehicle = self.env.ref('school_transport.transport_vehicle_1')
-        currdt = datetime.now()
-        tr_start_dt = datetime.strftime(currdt, DEFAULT_SERVER_DATE_FORMAT)
-        tr_end_dt = currdt + rd(years=+1)
-        tr_end_date = datetime.strftime(tr_end_dt, DEFAULT_SERVER_DATE_FORMAT)
-        new_dt = currdt + rd(days=+2)
-        rg_start_date = datetime.strftime(new_dt, DEFAULT_SERVER_DATE_FORMAT)
+        currdt = fields.datetime.today()
+        tr_start_dt = currdt
+        tr_end_dt = currdt + rd(years=1)
+        tr_end_date = tr_end_dt
+        new_dt = currdt + rd(days=2)
+        rg_start_date = new_dt
         rg_end_dt = new_dt + rd(months=+2)
-        rg_end_date = datetime.strftime(rg_end_dt, DEFAULT_SERVER_DATE_FORMAT)
+        rg_end_date = rg_end_dt
 #       Create Driver
         self.driver = self.transport_driver_obj.\
             create({'name': 'Driver test',

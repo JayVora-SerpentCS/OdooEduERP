@@ -34,3 +34,6 @@ access_transport_user_point,transport.point,model_transport_point,group_transpor
 access_transport_user_student_student,student.student,school.model_student_student,group_transportation_user,1,0,0,0
 access_accountinvoicetransportuser,account.invoice.transuser,account.model_account_move,group_transportation_user,1,0,0,0
 access_invoice_transportmanager,account.invoice.transmanager,account.model_account_move,group_transportation_manager,1,1,1,0
+
+access_transfer_vehicle,transfer.vehicle,model_transfer_vehicle,school.group_school_administration,1,1,1,1
+access_transport_manager_transfer_vehicle_,transport.manager.transfer.vehicle,model_transfer_vehicle,group_transportation_manager,1,1,1,1
