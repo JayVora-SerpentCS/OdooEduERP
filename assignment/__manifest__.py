@@ -11,10 +11,10 @@
     'complexity': 'easy',
     'images': ['static/description/Assignment_Management.png'],
     'depends': ['school'],
-    'data': ['security/assignment_security.xml',
+    'data': ['security/assignment_security.xml'
+             'security/ir.model.access.csv',
              'wizard/reason_wiz_view.xml',
              'views/homework_view.xml',
-             'security/ir.model.access.csv'
              ],
     'demo': ['demo/assignment_demo.xml'],
     'installable': True,

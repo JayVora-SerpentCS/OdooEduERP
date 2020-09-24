@@ -1,8 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
-from datetime import datetime
 from dateutil.relativedelta import relativedelta as rd
+from odoo.tests import common
 
 
 class TestAssignment(common.TransactionCase):
@@ -19,11 +18,11 @@ class TestAssignment(common.TransactionCase):
         self.student = self.env.ref('school.demo_student_student_5')
         self.standard_id = self.env.ref('school.demo_school_standard_2')
         self.standard_std2 = self.env.ref('school.demo_standard_standard_2')
-        current_date = datetime.now()
+        current_date = fields.datetime.today()
         assign_date = current_date + rd(days=3)
-        assign = datetime.strftime(assign_date, '%m/%d/%Y')
+        assign = assign_date
         due_date = current_date + rd(days=4)
-        end_date = datetime.strftime(due_date, '%m/%d/%Y')
+        end_date = due_date
         # Create File format
         self.file_format = self.file_formatobj.\
             create({'name': 'pdf'})

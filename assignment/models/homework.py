@@ -235,8 +235,9 @@ class StudentAssign(models.Model):
     def set_alumni(self):
         '''Override method to make student assignment active false when
         student is alumni'''
+        student_assign_obj = self.env['school.student.assignment']
         for rec in self:
-            student_assign = self.env['school.student.assignment'].search([
+            student_assign = student_assign_obj.search([
                                                 ('student_id', '=', rec.id)])
             if student_assign:
                 student_assign.write({'active': False})
