@@ -94,7 +94,6 @@ There is already a Payslip exist for student: %s for same date.!'''
                 amount += data.total
             rec.write({'total_amount': amount,
                        'state': 'confirm'})
-        return True
 
 
 class StudentPayslipLine(models.Model):
@@ -449,9 +448,10 @@ class StudentPayslip(models.Model):
 
     def student_pay_fees(self):
         '''Generate invoice of student fee'''
+        sequence_obj = self.env['ir.sequence']
         for rec in self:
             if rec.number == '/':
-                rec.number = self.env['ir.sequence'].next_by_code(
+                rec.number = sequence_obj.next_by_code(
                                             'student.payslip') or _('New')
             rec.state = 'pending'
             partner = rec.student_id and rec.student_id.partner_id
