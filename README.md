@@ -2,7 +2,7 @@
 
 # EduERPv14
 Education ERP v14
-Serpent Consulting Services Pvt Ltd, the Official Odoo Silver partner has here contributed the Education ERP.
+Serpent Consulting Services Pvt Ltd, the Official Odoo GOLD partner has here contributed the Education ERP.
 
 Help us do better by donating to us and motivating us : http://www.serpentcs.com/page/donate-to-serpentcs
 Thanks.
