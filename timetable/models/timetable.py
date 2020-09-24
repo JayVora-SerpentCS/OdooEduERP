@@ -17,7 +17,6 @@ class TimeTable(models.Model):
             rec.user_ids = [teacher.teacher_id.employee_id.user_id.id
                             for teacher in rec.timetable_ids
                             ]
-        return True
 
     name = fields.Char('Description', help='Enter description of timetable')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
@@ -55,13 +54,9 @@ class TimeTable(models.Model):
     You cannot set lecture at same time %s  at same day %s for teacher %s..!
     ''') % (rec.start_time, rec.week_day, rec.teacher_id.name))
                 # Checks if time is greater than 24 hours than raise error
-                if rec.start_time > 24:
+                if rec.start_time > 24 or rec.end_time > 24:
                     raise ValidationError(_('''
-                        Start Time should be less than 24 hours!'''))
-                if rec.end_time > 24:
-                    raise ValidationError(_('''
-                End Time should be less than 24 hours!'''))
-            return True
+                        Start and End Time should be less than 24 hours!'''))
 
 
 class TimeTableLine(models.Model):
@@ -106,21 +101,20 @@ class TimeTableLine(models.Model):
         """Check available room for teacher."""
         timetable_rec = self.env['time.table'].search([
                                             ('id', '!=', self.table_id.id)])
-        if timetable_rec:
-            for data in timetable_rec:
-                for record in data.timetable_ids:
-                    if (data.timetable_type == 'regular' and
-                            self.table_id.timetable_type == 'regular' and
-                            self.teacher_id == record.teacher_id and
-                            self.week_day == record.week_day and
-                            self.start_time == record.start_time):
-                        raise ValidationError(_('''
-                            There is a lecture of Lecturer at same time!'''))
-                    if (data.timetable_type == 'regular' and
-                            self.table_id.timetable_type == 'regular' and
-                            self.class_room_id == record.class_room_id and
-                            self.start_time == record.start_time):
-                        raise ValidationError(_("The room is occupied."))
+        for data in timetable_rec:
+            for record in data.timetable_ids:
+                if (data.timetable_type == 'regular' and
+                        self.table_id.timetable_type == 'regular' and
+                        self.teacher_id == record.teacher_id and
+                        self.week_day == record.week_day and
+                        self.start_time == record.start_time):
+                    raise ValidationError(_('''
+                        There is a lecture of Lecturer at same time!'''))
+                if (data.timetable_type == 'regular' and
+                        self.table_id.timetable_type == 'regular' and
+                        self.class_room_id == record.class_room_id and
+                        self.start_time == record.start_time):
+                    raise ValidationError(_("The room is occupied."))
 
 
 class SubjectSubject(models.Model):
