@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<odoo>
+        <!-- Form View Of Time Table Information -->
+        <record id="view_time_table_form" model="ir.ui.view">
+            <field name="name">time.table.form</field>
+            <field name="model">time.table</field>
+            <field name="arch" type="xml">
+                <form string="TimeTable">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" placeholder="Enter Description"/>
+                            <field name="standard_id" placeholder="Select Standard" widget="selection"/>
+                            <field name="year_id" placeholder="Select Year" widget="selection"/>
+                            <field name="class_room_id" options="{&quot;no_create&quot;: True}" invisible="1"/>
+                            <field name="user_ids" invisible="1"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="TimeTable">
+                                <field name="timetable_ids" nolabel="1" colspan="4">
+                                    <tree string="TimeTable" editable="top">
+                                        <field name="week_day"/>
+                                        <field name="subject_id" required="1" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="start_time"/>
+                                        <field name="end_time"/>
+                                        <field name="teacher_id" options='{"no_open": True, "no_create": True}' required="1"/>
+                                        <field name="class_room_id" options='{"no_open": True, "no_create": True}'/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Tree View Of Time Table Information -->
+        <record id="view_time_table_tree" model="ir.ui.view">
+            <field name="name">time.table.tree</field>
+            <field name="model">time.table</field>
+            <field name="arch" type="xml">
+                <tree string="TimeTable">
+                    <field name="name"/>
+                    <field name="standard_id"/>
+                    <field name="year_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Search View Time Table Information -->
+        <record id="timetable_search" model="ir.ui.view">
+            <field name="name">time.table.search</field>
+            <field name="model">time.table</field>
+            <field name="arch" type="xml">
+                <search string="TimeTable">
+                    <field name="name"/>
+                    <field name="standard_id"/>
+                    <field name="year_id"/>
+                    <newline/>
+                    <group expand="1" string="Group By">
+                        <filter name="class" string="Academic Class" help="By class"
+                                context="{'group_by':'standard_id'}"/>
+                        <filter name="year" string="Year" help="By year" context="{'group_by':'year_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- Actions Of Form & Tree Views Of Time Table Information -->
+        <record id="action_timetable_regular" model="ir.actions.act_window">
+            <field name="name">Regular Timetable</field>
+            <field name="res_model">time.table</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('timetable_type','=','regular')]</field>
+            <field name="context">{'default_timetable_type':'regular'}</field>
+        </record>
+        <!-- Menu items of Timetable -->
+        <menuitem id="menu_timetable_1" name="TimeTable" parent="school.menu_ems" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent" sequence="6"/>
+        <menuitem id="menu_timetable_regular" name="Regular Timetable" parent="menu_timetable_1" action="action_timetable_regular" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent" sequence="61"/>
+</odoo>

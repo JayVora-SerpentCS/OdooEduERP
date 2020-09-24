@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <record id="report_time_table_qweb" model="ir.actions.report">
+            <field name="name">Timetable</field>
+            <field name="print_report_name">'Timetable(%s)'%object.standard_id.name</field>
+            <field name="model">time.table</field>
+            <field name="binding_model_id" ref="model_time_table"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">timetable.timetable</field>
+            <field name="report_file">timetable.timetable</field>
+            <field name="binding_type">report</field>
+        </record>
+
+</odoo>

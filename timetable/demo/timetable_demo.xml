@@ -1,0 +1,326 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+        <record id="demo_subject_subject_9" model="subject.subject">
+            <field name="name">Economic</field>
+            <field name="code">ECO</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6, 0,[ref('school.demo_school_teacher_1')])]"/>
+        </record>
+        <record id="demo_subject_subject_10" model="subject.subject">
+            <field name="name">Account</field>
+            <field name="code">ACC</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6, 0,[ref('school.demo_school_teacher_2'),ref('school.demo_school_teacher_3')])]"/>
+        </record>
+        <record id="demo_subject_subject_11" model="subject.subject">
+            <field name="name">Sanskrit</field>
+            <field name="code">SAN</field>
+            <field name="maximum_marks">100</field>
+            <field name="minimum_marks">35</field>
+            <field name="teacher_ids" eval="[(6,0,[ref('school.demo_school_teacher_1')])]"/>
+        </record>
+        <record id="school.demo_school_teacher_1" model="school.teacher">
+            <field eval="[(6,0,[ref('school.demo_subject_subject_1'),ref('school.demo_subject_subject_2'),ref('school.demo_subject_subject_3'),ref('school.demo_subject_subject_4'),ref('school.demo_subject_subject_5'),ref('demo_subject_subject_9'),ref('demo_subject_subject_11')])]" name="subject_id"/>
+        </record>
+        <record id="school.demo_school_teacher_2" model="school.teacher">
+            <field eval="[(6,0,[ref('school.demo_subject_subject_2'),ref('school.demo_subject_subject_3'),ref('school.demo_subject_subject_4'),ref('school.demo_subject_subject_5'),ref('school.demo_subject_subject_6'),ref('demo_subject_subject_10'),ref('demo_subject_subject_11')])]" name="subject_id"/>
+        </record>
+        <record id="school.demo_school_teacher_3" model="school.teacher">
+            <field eval="[(6,0,[ref('school.demo_subject_subject_1'),ref('school.demo_subject_subject_2'),ref('school.demo_subject_subject_6'),ref('demo_subject_subject_10'),ref('demo_subject_subject_11')])]" name="subject_id"/>
+        </record>
+
+        <record id="time_table_firsts0" model="time.table">
+            <!-- <field name="division_id" ref="school.demo_standard_division_2"/> -->
+            <field name="name">First</field>
+            <field name="standard_id" ref="school.demo_standard_standard_2"/>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_1"/>
+            <field name="class_id" ref="school.demo_school_standard_2"/> -->
+            <field name="year_id" ref="school.demo_academic_year_1"/>
+        </record>
+        <record id="time_table_line_0" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="9.0" name="start_time"/>
+            <field name="week_day">monday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="10.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+        </record>
+        <record id="time_table_line_1" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="10.0" name="start_time"/>
+            <field name="week_day">monday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="11.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+        </record>
+        <record id="time_table_line_2" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="11.0" name="start_time"/>
+            <field name="week_day">monday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="12.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_6"/>
+        </record>
+        <record id="time_table_line_3" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="13.0" name="start_time"/>
+            <field name="week_day">monday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="14.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_4" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="14.0" name="start_time"/>
+            <field name="week_day">monday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="15.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_1"/>
+        </record>
+        <record id="time_table_line_5" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="15.0" name="start_time"/>
+            <field name="week_day">monday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="16.0" name="end_time"/>
+            <field name="subject_id" ref="demo_subject_subject_10"/>
+        </record>
+        <record id="time_table_line_6" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="9.0" name="start_time"/>
+            <field name="week_day">tuesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="10.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+        </record>
+        <record id="time_table_line_7" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="10.0" name="start_time"/>
+            <field name="week_day">tuesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="11.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+        </record>
+        <record id="time_table_line_8" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="11.0" name="start_time"/>
+            <field name="week_day">tuesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="12.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_1"/>
+        </record>
+        <record id="time_table_line_9" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="13.0" name="start_time"/>
+            <field name="week_day">tuesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="14.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_2"/>
+        </record>
+        <record id="time_table_line_10" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="14.0" name="start_time"/>
+            <field name="week_day">tuesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="15.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_11" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="15.0" name="start_time"/>
+            <field name="week_day">tuesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="16.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_2"/>
+        </record>
+        <record id="time_table_line_12" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="9.0" name="start_time"/>
+            <field name="week_day">wednesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="10.0" name="end_time"/>
+            <field name="subject_id" ref="demo_subject_subject_9"/>
+        </record>
+        <record id="time_table_line_13" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="10.0" name="start_time"/>
+            <field name="week_day">wednesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="11.0" name="end_time"/>
+            <field name="subject_id" ref="demo_subject_subject_10"/>
+        </record>
+        <record id="time_table_line_14" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="11.0" name="start_time"/>
+            <field name="week_day">wednesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="12.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_1"/>
+        </record>
+        <record id="time_table_line_15" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="13.0" name="start_time"/>
+            <field name="week_day">wednesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="14.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_6"/>
+        </record>
+        <record id="time_table_line_16" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="14.0" name="start_time"/>
+            <field name="week_day">wednesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="15.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_2"/>
+        </record>
+        <record id="time_table_line_17" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="15.0" name="start_time"/>
+            <field name="week_day">wednesday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="16.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+        </record>
+        <record id="time_table_line_18" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="9.0" name="start_time"/>
+            <field name="week_day">thursday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="10.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+        </record>
+        <record id="time_table_line_19" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="10.0" name="start_time"/>
+            <field name="week_day">thursday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="11.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_20" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="11.0" name="start_time"/>
+            <field name="week_day">thursday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="12.0" name="end_time"/>
+            <field name="subject_id" ref="demo_subject_subject_11"/>
+        </record>
+        <record id="time_table_line_21" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="13.0" name="start_time"/>
+            <field name="week_day">thursday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="14.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_22" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="14.0" name="start_time"/>
+            <field name="week_day">thursday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="15.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+        </record>
+        <record id="time_table_line_23" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="15.0" name="start_time"/>
+            <field name="week_day">thursday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="16.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_24" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="9.0" name="start_time"/>
+            <field name="week_day">friday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="10.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_25" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="10.0" name="start_time"/>
+            <field name="week_day">friday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="11.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_6"/>
+        </record>
+        <record id="time_table_line_26" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="11.0" name="start_time"/>
+            <field name="week_day">friday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="12.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+        </record>
+        <record id="time_table_line_27" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="13.0" name="start_time"/>
+            <field name="week_day">friday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="14.0" name="end_time"/>
+            <field name="subject_id" ref="demo_subject_subject_9"/>
+        </record>
+        <record id="time_table_line_28" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="14.0" name="start_time"/>
+            <field name="week_day">friday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="15.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+        </record>
+        <record id="time_table_line_29" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="15.0" name="start_time"/>
+            <field name="week_day">friday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="16.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_2"/>
+        </record>
+        <record id="time_table_line_30" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="9.0" name="start_time"/>
+            <field name="week_day">saturday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="10.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+        </record>
+        <record id="time_table_line_31" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="10.0" name="start_time"/>
+            <field name="week_day">saturday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="11.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+        <record id="time_table_line_32" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_3"/>
+            <field eval="11.0" name="start_time"/>
+            <field name="week_day">saturday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="12.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_2"/>
+        </record>
+        <record id="time_table_line_33" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_1"/>
+            <field eval="13.0" name="start_time"/>
+            <field name="week_day">saturday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="14.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+        </record>
+        <record id="time_table_line_34" model="time.table.line">
+            <field name="teacher_id" ref="school.demo_school_teacher_2"/>
+            <field eval="14.0" name="start_time"/>
+            <field name="week_day">saturday</field>
+            <field name="table_id" ref="time_table_firsts0"/>
+            <field eval="15.0" name="end_time"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+        </record>
+    </data>
+</odoo>
