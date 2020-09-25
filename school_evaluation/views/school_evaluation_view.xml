@@ -171,7 +171,7 @@
                                     <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
                                     <field name="point_id" options="{&quot;no_create&quot;: True}"/>
                                     <field name="rating"/>
-                                </tree> 
+                                </tree>
                             </field>
                             <group colspan="4">
                                 <field name="total"/>

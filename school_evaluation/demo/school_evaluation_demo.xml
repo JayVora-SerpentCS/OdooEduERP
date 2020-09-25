@@ -83,7 +83,7 @@
             <field name="rating">2</field>
             <field name="feedback">Average</field>
             <field name="template_id" ref="school_evaluation_template_1"/>
-            <field name="res_id" ref="school_evaluation.school_evaluation_template_1"/>            
+            <field name="res_id" ref="school_evaluation.school_evaluation_template_1"/>
             <field name="res_model_id" ref="school_evaluation.model_school_evaluation_template"/>
 
         </record>
@@ -119,7 +119,7 @@
             <field name="rating">2</field>
             <field name="feedback">Average</field>
             <field name="template_id" ref="school_evaluation_template_2"/>
-            <field name="res_id" ref="school_evaluation.school_evaluation_template_2"/>            
+            <field name="res_id" ref="school_evaluation.school_evaluation_template_2"/>
             <field name="res_model_id" ref="school_evaluation.model_school_evaluation_template"/>
 
         </record>
@@ -156,7 +156,7 @@
             <field name="rating">2</field>
             <field name="feedback">Average</field>
             <field name="template_id" ref="school_student_evaluation_template"/>
-            <field name="res_id" ref="school_evaluation.school_student_evaluation_template"/>            
+            <field name="res_id" ref="school_evaluation.school_student_evaluation_template"/>
             <field name="res_model_id" ref="school_evaluation.model_school_evaluation_template"/>
 
         </record>
@@ -193,7 +193,7 @@
             <field name="rating">2</field>
             <field name="feedback">Average</field>
             <field name="template_id" ref="school_student_evaluation_template_2"/>
-            <field name="res_id" ref="school_evaluation.school_student_evaluation_template_2"/> 
+            <field name="res_id" ref="school_evaluation.school_student_evaluation_template_2"/>
             <field name="res_model_id" ref="school_evaluation.model_school_evaluation_template"/>
         </record>
         <record id="teacher_rating_evaluation_13" model="rating.rating">
@@ -229,7 +229,7 @@
             <field name="rating">2</field>
             <field name="feedback">Average</field>
             <field name="template_id" ref="school_evaluation_template_teacher"/>
-            <field name="res_id" ref="school_evaluation.school_evaluation_template_teacher"/> 
+            <field name="res_id" ref="school_evaluation.school_evaluation_template_teacher"/>
             <field name="res_model_id" ref="school_evaluation.model_school_evaluation_template"/>
         </record>
         <record id="teacher_rating_evaluation_14" model="rating.rating">
@@ -265,7 +265,7 @@
             <field name="rating">2</field>
             <field name="feedback">Average</field>
             <field name="template_id" ref="school_evaluation_template_teacher_question"/>
-            <field name="res_id" ref="school_evaluation.school_evaluation_template_teacher_question"/> 
+            <field name="res_id" ref="school_evaluation.school_evaluation_template_teacher_question"/>
             <field name="res_model_id" ref="school_evaluation.model_school_evaluation_template"/>
         </record>
         <record id="teacher_rating_evaluation_15" model="rating.rating">
