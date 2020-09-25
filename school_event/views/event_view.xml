@@ -112,7 +112,7 @@
             </form>
         </field>
     </record>
-    
+
     <!-- Tree View Of Event parameter -->
 
     <record id="parameter_event_tree_view" model="ir.ui.view">
@@ -257,7 +257,7 @@
         </field>
     </record>
 
-    
+
     <!-- Kanban View Of Event Information -->
 
     <record id="student_event_kanban_view" model="ir.ui.view">
@@ -338,7 +338,7 @@
                             <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                 <div class="oe_kanban_left" style="padding-left:10px;">
                                     <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration" aria-label="edit" title="edit"/>
-                                    
+
                                     <a role="button" string="Change Color" icon="color-picker" type="color" name="color"/>
                                 </div>
                                 <br class="oe_kanban_clear" />
@@ -443,7 +443,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    
+
     <!-- Action Of Form & Tree Views Of Event Participants -->
 
     <record id="action_school_event_Participant_tree" model="ir.actions.act_window">
@@ -453,12 +453,12 @@
     </record>
 
     <!-- Action Of Form & Tree Views Of Event Registration -->
-  
+
     <record id="action_school_event_registration_form" model="ir.actions.act_window">
         <field name="name">Event Registration</field>
         <field name="res_model">school.event.registration</field>
         <field name="view_mode">tree,form,search</field>
-        <field name="context">{'search_default_confirm':True}</field> 
+        <field name="context">{'search_default_confirm':True}</field>
     </record>
 
     <!-- Menu Items for Event -->
@@ -471,7 +471,7 @@
 
     <menuitem action="action_school_event_Participant_tree" id="menu_event_Participation" name="Event Participation" parent="menu_event_form_1" sequence="43" />
 
-    
+
     <!-- MenuItem Of Event In Configurations -->
 
     <menuitem id="menu_event_parameter" name="Event" parent="school.menu_configuration" />
