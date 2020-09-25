@@ -209,7 +209,7 @@
             <field name="res_model">attendance.sheet</field>
             <field name="view_mode">form,tree</field>
         </record>
-        
+
         <!-- Action of Student Leave REquest -->
         <record id="action_student_leave_form" model="ir.actions.act_window">
             <field name="name">Student Leave Request Action</field>
