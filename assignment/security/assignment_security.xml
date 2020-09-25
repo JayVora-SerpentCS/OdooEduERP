@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- Record rule login user can see only his assignment -->
         <record id="rule_assignment" model="ir.rule">
             <field name="name">Record Rule of student assignment</field>

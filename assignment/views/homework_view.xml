@@ -14,7 +14,7 @@
                     <field name="subject_id" />
                     <field name="assign_date" />
                     <field name="due_date"/>
-                    <field name="state" select="1" widget="badge" decoration-info="state in ('draft')" 
+                    <field name="state" select="1" widget="badge" decoration-info="state in ('draft')"
                                                                   decoration-success="state in ('active','done')"/>
                 </tree>
             </field>
@@ -113,9 +113,9 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information">
                     <header>
-                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active" 
+                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active"
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
-                        <button name="done_assignment" class="oe_stat_button fa fa-check" states="active" string="Done" 
+                        <button name="done_assignment" class="oe_stat_button fa fa-check" states="active" string="Done"
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
                         <button name="%(assignment.student_homework_reject)d" string="Reject" type="action" states="active"
                                 groups="school.group_school_teacher,school.group_school_administration"/>

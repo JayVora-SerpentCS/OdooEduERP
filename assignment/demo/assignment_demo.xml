@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <record id="school_teacher_assignment_secondpractice0" model="school.teacher.assignment">
             <!-- <field name="division_id" ref="school.demo_standard_division_1"/> -->
