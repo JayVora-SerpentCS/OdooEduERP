@@ -145,7 +145,7 @@
             <field name="months">3</field>
             <field name="amount">3600</field>
         </record>
-        
+
         <!-- transport vehicle -->
         <record id="transport_vehicle_1" model="transport.vehicle">
             <field name="vehicle"> GRN 1623</field>
@@ -214,10 +214,10 @@
              <field name="reg_date" eval="(DateTime.today().strftime('%Y-%m-%d %H:%M'))"/>
             <!-- <field name="reg_state">draft</field> -->
             <field name="point_id" ref="transport_point_4"/>
-            <field name="for_month">2</field> 
+            <field name="for_month">2</field>
             <field name="vehicle_id" ref="transport_vehicle_3"/>
         </record>
-        
+
         <!--student.student-->
         <record id="school.demo_student_student_8" model="student.student">
             <field name="transport_ids" eval="[(6, 0,[ref('transport_participant_1')])]" />

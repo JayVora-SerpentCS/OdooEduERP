@@ -7,7 +7,7 @@
             <t t-foreach="docs" t-as="vehicle">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        
+
                         <div class="oe_structure"/>
                         <div class="text-center" style="margin-top:25px;">
                             <h1>Vehicle Information</h1>
