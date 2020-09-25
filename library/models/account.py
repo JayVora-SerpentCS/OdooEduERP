@@ -1,38 +1,47 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = "res.partner"
 
-    use_parent_address = fields.Boolean('Use Parent Address')
+    use_parent_address = fields.Boolean(
+        "Use Parent Address",
+        help="""Avtivate/Deactivate as per use
+        of parent address""",
+    )
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = "account.move"
 
-    book_issue = fields.Many2one('library.book.issue', 'Book issue')
-    book_issue_reference = fields.Char('Book Issue Ref')
+    book_issue = fields.Many2one(
+        "library.book.issue", "Book issue", help="Select book issue"
+    )
+    book_issue_reference = fields.Char(
+        "Book Issue Ref", help="Enter book issue reference"
+    )
 
 
 class AccountMoveLine(models.Model):
 
-    _inherit = 'account.move.line'
+    _inherit = "account.move.line"
 
-    production_lot_id = fields.Many2one('stock.production.lot',
-                                        'Production Lot')
-    customer_ref = fields.Char('Customer reference')
+    production_lot_id = fields.Many2one(
+        "stock.production.lot", "Production Lot", help="Select Production lot"
+    )
+    customer_ref = fields.Char("Customer reference", help="Customer reference")
 
 
 class AccountPayment(models.Model):
     _inherit = "account.payment"
 
-    def post(self):
-        '''Override method to change state when invoice is paid'''
-        res = super(AccountPayment, self).post()
+    def action_post(self):
+        """Override method to change state when invoice is paid"""
+        res = super(AccountPayment, self).action_post()
         for rec in self:
-            for invoice in rec.invoice_ids:
-                if invoice.book_issue and invoice.invoice_payment_state == 'paid':
-                    invoice.book_issue.write({'state': 'paid'})
+            invoice = rec.move_id
+            if invoice.book_issue and invoice.payment_state == "paid":
+                invoice.book_issue.write({"state": "paid"})
         return res

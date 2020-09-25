@@ -1,6 +1,6 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import fields, models
 
 
 class BookName(models.TransientModel):
@@ -9,9 +9,13 @@ class BookName(models.TransientModel):
     _name = "book.name"
     _description = "Book Name"
 
-    name = fields.Many2one('product.product', 'Book Name', required=True)
-    card_id = fields.Many2one("library.card", "Card No", required=True)
+    name = fields.Many2one(
+        "product.product", "Book Name", required=True, help="Book name"
+    )
+    card_id = fields.Many2one(
+        "library.card", "Card No", required=True, help="Library card"
+    )
 
     def create_new_books(self):
         for rec in self:
-            rec.create({'name': rec.name.id, 'card_id': rec.card_id.id})
+            rec.create({"name": rec.name.id, "card_id": rec.card_id.id})

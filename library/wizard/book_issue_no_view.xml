@@ -9,8 +9,9 @@
         <field name="model">book.name</field>
         <field name="arch" type="xml">
             <form string="Book Name">
-               <group>
+               <group col="4">
                     <field name="name" domain="[('categ_id.book_categ','=',True)]" options="{'no_create': True}"/>
+                    <field name="card_id"/>
                </group>
                <footer>
                    <group col="2">

@@ -24,13 +24,14 @@
 
         <!-- Action Of Form View Of Card Number Wizard -->
 
-         <act_window id="card_number_ok"
-            name="Card Number"
-            res_model="card.number"
-            binding_model="library.book.issue"
-            view_mode="form"
-            target="new"
-            binding_views="form"
-            groups="library.group_librarian"/>
+        <record id="card_number_ok" model="ir.actions.act_window">
+            <field name="name">Card Number</field>
+            <field name="res_model">card.number</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="library.model_library_book_issue"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('library.group_librarian'))]"/>
+        </record>
 
 </odoo>

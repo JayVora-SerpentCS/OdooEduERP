@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
-from odoo.exceptions import Warning as UserError
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 
 class CardNumber(models.TransientModel):
@@ -10,19 +10,24 @@ class CardNumber(models.TransientModel):
     _name = "card.number"
     _description = "Card Number"
 
-    card_id = fields.Many2one("library.card", "Card No", required=True)
+    card_id = fields.Many2one(
+        "library.card", "Card No", required=True, help="Library card"
+    )
 
     def card_number_ok(self):
-        lib_book_obj = self.env['library.book.issue']
+        lib_book_obj = self.env["library.book.issue"]
         for rec in self:
-            search_card_ids = lib_book_obj.search([('card_id', '=',
-                                                    rec.card_id.id)])
-            if not search_card_ids:
-                raise UserError(_('Invalid Card Number!'))
+            search_card_rec = lib_book_obj.search(
+                [("card_id", "=", rec.card_id.id)]
+            )
+            if not search_card_rec:
+                raise UserError(_("Invalid Card Number!"))
             else:
-                return {'type': 'ir.actions.act_window',
-                        'res_model': 'book.name',
-                        'src_model': 'library.book.issue',
-                        'target': 'new',
-                        'view_mode': 'form',
-                        'context': {'default_card_id': rec.card_id.id}}
+                return {
+                    "type": "ir.actions.act_window",
+                    "res_model": "book.name",
+                    "src_model": "library.book.issue",
+                    "target": "new",
+                    "view_mode": "form",
+                    "context": {"default_card_id": rec.card_id.id},
+                }

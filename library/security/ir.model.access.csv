@@ -48,3 +48,6 @@ access_library_book_request_teacher,library.book.request,model_library_book_requ
 access_library_card_teacher,library.card,model_library_card,school.group_school_teacher,1,0,0,0
 access_library_book_issue_teacher,library.book.issue,model_library_book_issue,school.group_school_teacher,1,0,0,0
 access_library_product_teacher,product.product,product.model_product_product,school.group_school_teacher,1,0,0,0
+
+access_book_name_manager,book.name,model_book_name,library.group_librarian,1,1,1,1
+access_card_number_manager,card.number,model_card_number,library.group_librarian,1,1,1,1

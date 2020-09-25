@@ -66,7 +66,7 @@
                     <group>
                         <field name="name" />
                         <field name="code" />
-                        <field name="active" />
+                        <field name="active" widget="boolean_toggle"/>
                     </group>
                 </sheet>
             </form>
@@ -194,7 +194,7 @@
                 <field name="barcode" />
                 <field name="catalog_num" />
                 <field name="date_retour" />
-                <field name="availability" />
+                <field name="availability" widget="badge" decoration-danger="availability == 'available'" decoration-success="availability == 'notavailable'" />
             </tree>
         </field>
     </record>
@@ -305,9 +305,9 @@
         <field name="model">account.move</field>
         <field name="priority" eval="1" />
         <field name="arch" type="xml">
-            <tree string="Invoice" decoration-muted="state == 'draft'">
+            <tree string="Invoice">
                 <field name="name" />
-                <field name="type" />
+                <field name="move_type" />
                 <field name="invoice_date" />
                 <field name="invoice_date_due" />
                 <field name="partner_id" />
@@ -346,10 +346,10 @@
                 </header>
                 <sheet>
                     <separator string="Card Details" colspan="4" col="4" />
-                    <group col="2" colspan="4">
+                    <group col="4" colspan="4">
                         <field name="code" placeholder="Code" readonly="1" />
-                        <field name="user" required="1" attrs="{'readonly':[('state','=','running')]}" />
                         <field name="book_limit" attrs="{'readonly':[('state','=','running')]}" />
+                        <field name="user" required="1" attrs="{'readonly':[('state','=','running')]}" />
                         <field name="gt_name" invisible="True" />
                     </group>
                     <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
@@ -469,14 +469,14 @@
         <field name="name">library.book.issue.tree</field>
         <field name="model">library.book.issue</field>
         <field name="arch" type="xml">
-            <tree string="Books Issue" decoration-info="state in '[issue,reissue]'" decoration-danger="(lost_penalty &gt; 0.1) or (penalty &gt; 0.1)">
+            <tree string="Books Issue" >
                 <field name="issue_code" />
                 <field name="name" />
                 <field name="user" />
                 <field name="gt_name" />
                 <field name="date_issue" />
                 <field name="date_return" />
-                <field name="state" />
+                <field name="state" widget="badge" decoration-info="state in ('draft', 'returned', 'pending')" decoration-danger="state in ('cancel', 'lost','fine')" decoration-success="state in ('issued', 'reissued','paid','subscribe')"/>
                 <field name="actual_return_date" />
                 <field name="penalty" />
                 <field name="lost_penalty" />
@@ -584,7 +584,7 @@
                     <group>
                         <group>
                             <field name="ebook_name" attrs="{'invisible':[('type','!=','ebook')], 'required':                                  [('type','=','ebook')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', True)]" widget="selection" />
-                            <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':                                  [('type','=','existing')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', False),('availability','=','available')]" widget="selection" />
+                            <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':                                  [('type','=','existing')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', False)]" widget="selection" />
                             <field name="bk_nm" invisible="1" />
                             <field name="type" attrs="{'readonly':[('state','!=','draft')]}" invisible="0" required="1" />
                         </group>
@@ -607,7 +607,7 @@
                 <field name="type" />
                 <field name="bk_nm" />
                 <field name="ebook_name" />
-                <field name="state" />
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-danger="state == 'cancel'" decoration-success="state == 'confirm'"/>
             </tree>
         </field>
     </record>
@@ -784,7 +784,7 @@
                             <field name="phone" placeholder="e.g. +32.81.81.37.00" />
                             <field name="mobile" />
                             <field name="email" widget="email" />
-                            <field name="title" domain="[('domain', '=', 'contact')]" groups="base.group_no_one" options="{&quot;no_open&quot;: True}" attrs="{'invisible': [('is_company','=', True)]}" />
+                            <field name="title" groups="base.group_no_one" options="{&quot;no_open&quot;: True}" attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -818,7 +818,7 @@
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)" />
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <div class="o_kanban_image">
-                                                    <img alt="" t-if="record.image_128.raw_value" t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)" />
+                                                    <img t-if="record.image_128.raw_value" alt="Image" t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)" />
                                                     <t t-if="!record.image_128.raw_value">
                                                         <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src="_s + &quot;/base/static/img/truck.png&quot;" />
                                                         <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src="_s + &quot;/base/static/img/money.png&quot;" />
@@ -998,5 +998,4 @@
             </field>
         </field>
     </record>
-    <report id="product.report_product_label" string="Products Labels" model="product.product" report_type="qweb-pdf" name="product.report_productlabel" file="product.report_productlabel" groups="library.group_librarian" />
 </odoo>

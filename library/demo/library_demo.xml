@@ -71,7 +71,7 @@
             <field name="card_id" ref="demo_library_card_1"/>
             <field name="type">existing</field>
             <field name="name" ref="library.product_product_b1"/>
-            
+
         </record>
 
         <record id="demo_library_book_request_2" model="library.book.request">
