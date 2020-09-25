@@ -91,7 +91,7 @@
             <field name="domain_force">[('exam_schedule_ids.standard_id.student_ids.parent_id.partner_id','=',user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
-        
+
         <!-- Record Rule Teacher can see all regular exams -->
         <record id="teacher_rule_exam_regular_schedule_record" model="ir.rule">
             <field name="name">Teacher Regular Exam Schedule Record</field>
@@ -118,7 +118,7 @@
             <field name="domain_force">[]</field>
             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
         </record>
-        
+
         <!-- Record Rule of teacher for exam schedule line -->
         <record id="teacher_rule_schedule_line" model="ir.rule">
             <field name="name">Teacher Exam Schedule Line Record Rule</field>

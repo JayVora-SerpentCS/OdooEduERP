@@ -31,17 +31,7 @@
         <field name="target">new</field>
     </record>
 
-    <!-- Act Window For Action Of Subject Result-->
-<!--     <act_window id="action_subject_result_wiz" -->
-<!--         name="Subject Result" -->
-<!--         res_model="subject.result.wiz"  -->
-<!--         binding_model="exam.result" -->
-<!--         view_mode="form"  -->
-<!--         target="new"  -->
-<!--         binding_views="form,list" -->
-<!--         groups="school.group_school_administration"/> -->
-    
-    <record id="action_subject_result_wiz" model="ir.actions.act_window">
+    <record id="action_subject_result_wiz_act_window" model="ir.actions.act_window">
         <field name="name">Subject Result</field>
         <field name="res_model">subject.result.wiz</field>
         <field name="view_mode">form</field>

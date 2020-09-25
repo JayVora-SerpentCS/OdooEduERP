@@ -12,7 +12,7 @@
              </group>
              <footer>
                  <button name="print_batch_report" string="Batch Report" type="object"/>
-                 <button special="cancel" string="Cancel"/> 
+                 <button special="cancel" string="Cancel"/>
              </footer>
          </form>
      </field>

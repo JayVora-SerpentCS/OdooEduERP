@@ -84,8 +84,8 @@
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" states="finished">
                             <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
                         </button>
-                        <button name="generate_result" string="Generate result" type="object" class="oe_stat_button fa fa-graduation-cap" 
-                            attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}" 
+                        <button name="generate_result" string="Generate result" type="object" class="oe_stat_button fa fa-graduation-cap"
+                            attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}"
                             groups="school.group_school_teacher,school.group_school_administration"/>
                     </div>
                     <separator string="Exam Detail"/>
@@ -117,7 +117,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            
+
                         </notebook>
                     </group>
                     <group col="6" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
@@ -300,7 +300,7 @@
                                 attrs="{'readonly' : [('state','!=','draft')]}"/>
                     </group>
                     <group col="4" string="Student Details" colspan="4">
-                        <field name="student_id" placeholder="Select Student"  
+                        <field name="student_id" placeholder="Select Student"
                             context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True}"
                             domain="[('state','!=','draft')]"
                             readonly="1"/>
@@ -399,14 +399,14 @@
                                                                         <field name="student_id"/>
                                                                     </a>
                                                                 </div>
-                                                                <div>Standard : 
+                                                                <div>Standard :
                                                                     <field name="standard_id"/>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="oe_kanban_title3">
-                                                                <div>Result : 
+                                                                <div>Result :
                                                                     <field name="result"/>
                                                                 </div>
                                                                 <div>Total :
