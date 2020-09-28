@@ -128,7 +128,7 @@ class SchoolEvaluation(models.Model):
             for eval_temp in eval_temps_rec:
                 eval_list.append((0, 0, {"stu_eval_id": eval_temp.id}))
             if rec.eval_line:
-                rec.write({"eval_line": []})
+                rec.write({"eval_line": [(5, 0, 0)]})
             rec.write({"eval_line": eval_list})
         return True
 
@@ -280,10 +280,11 @@ class StudentExtend(models.Model):
     def set_alumni(self):
         """Override method to set active false student evaluation when
         student is set to alumni"""
+        student_eval_obj = self.env["school.evaluation"]
         for rec in self:
-            student_eval_rec = self.env["school.evaluation"].search(
+            student_eval_rec = student_eval_obj.search(
                 [("type", "=", "student"), ("student_id", "=", rec.id)]
             )
             if student_eval_rec:
-                student_eval_rec.write({"active": False})
+                student_eval_rec.active = False
         return super(StudentExtend, self).set_alumni()

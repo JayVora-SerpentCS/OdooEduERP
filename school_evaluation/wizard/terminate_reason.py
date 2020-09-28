@@ -15,5 +15,5 @@ class TerminateReasonEvaluation(models.TransientModel):
             [("type", "=", "student"), ("student_id", "=", student_rec.id)]
         )
         if student_eval_rec:
-            student_eval_rec.write({"active": False})
+            student_eval_rec.active = False
         return super(TerminateReasonEvaluation, self).save_terminate()

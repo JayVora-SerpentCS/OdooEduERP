@@ -10,7 +10,7 @@
     "complexity": "easy",
     "summary": "A Module For Evaluation Management In School",
     "images": ["static/description/Evaluation1.jpg"],
-    "depends": ["hr", "school", "rating"],
+    "depends": ["school", "rating"],
     "data": [
         "security/evaluation_security.xml",
         "security/ir.model.access.csv",
