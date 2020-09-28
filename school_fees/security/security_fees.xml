@@ -14,7 +14,7 @@
 
         <!-- Record Rule Parents can see own child Fee recipt -->
         <record id="fee_receipt_rule_parent" model="ir.rule">
-            <field name="name">Parent Fees Record Rule</field>
+            <field name="name">Parents Fees Record Rule</field>
             <field name="model_id" ref="model_student_payslip"/>
             <field name="global" eval="True"/>
             <field name="domain_force">[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
@@ -32,7 +32,7 @@
 
          <!-- Record Rule Student can see own Fee Register -->
         <record id="fees_register_rule_student" model="ir.rule">
-            <field name="name">Student Fees Register Rule</field>
+            <field name="name">Students Fees Register Rule</field>
             <field name="model_id" ref="model_student_fees_register"/>
             <field name="global" eval="True"/>
             <field name="domain_force">[('line_ids.student_id.user_id','=',user.id)]</field>

@@ -35,7 +35,7 @@
             <field name="amount">20.00</field>
         </record>
         <record id="demo_school_fees_6" model="student.payslip.line">
-            <field name="name">Sport Fees</field>
+            <field name="name">Sports Fees</field>
             <field name="code">06</field>
             <field name="type">month</field>
             <field name="amount">1000.00</field>

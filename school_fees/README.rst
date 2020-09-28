@@ -6,7 +6,7 @@ Installation
 
 To install this module, you need to:
 
-install 'school', 'account_voucher' module
+install 'school' module
 
 Configuration
 

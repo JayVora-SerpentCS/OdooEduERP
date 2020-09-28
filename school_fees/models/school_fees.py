@@ -15,8 +15,7 @@ class StudentFeesRegister(models.Model):
         """Method to compute total amount"""
         for rec in self:
             total_amt = 0.0
-            for line in rec.line_ids:
-                total_amt += line.total
+            total_amt = sum(line.total for line in rec.line_ids)
             rec.total_amount = total_amt
 
     name = fields.Char("Name", required=True, help="Enter Name")
@@ -273,6 +272,7 @@ class StudentPayslip(models.Model):
         "Number",
         readonly=True,
         default=lambda self: _("/"),
+        copy=False,
         help="Payslip number",
     )
     student_id = fields.Many2one(
@@ -285,7 +285,11 @@ class StudentPayslip(models.Model):
         default=fields.Date.context_today,
     )
     line_ids = fields.One2many(
-        "student.payslip.line", "slip_id", "PaySlip Line", help="Payslips"
+        "student.payslip.line",
+        "slip_id",
+        "PaySlip Line",
+        copy=False,
+        help="Payslips",
     )
     total = fields.Monetary("Total", readonly=True, help="Total Amount")
     state = fields.Selection(
@@ -319,6 +323,7 @@ class StudentPayslip(models.Model):
         "Journal Entry",
         readonly=True,
         ondelete="restrict",
+        copy=False,
         help="Link to the automatically" "generated Journal Items.",
     )
     payment_date = fields.Date(
@@ -361,13 +366,12 @@ class StudentPayslip(models.Model):
     @api.onchange("student_id")
     def onchange_student(self):
         """Method to get standard , division , medium of student selected"""
-        self.standard_id = False
-        self.division_id = False
-        self.medium_id = False
         if self.student_id:
-            self.standard_id = self.student_id.standard_id.id
-            self.division_id = self.student_id.standard_id.division_id.id
-            self.medium_id = self.student_id.medium_id
+            self.standard_id = self.student_id.standard_id.id or False
+            self.division_id = (
+                self.student_id.standard_id.division_id.id or False
+            )
+            self.medium_id = self.student_id.medium_id or False
 
     def unlink(self):
         """Inherited unlink method to check state at the record deletion"""
@@ -385,58 +389,39 @@ class StudentPayslip(models.Model):
     def onchange_journal_id(self):
         """Method to get currency from journal"""
         for rec in self:
+            journal = rec.journal_id
             currency_id = (
-                rec.journal_id
-                and rec.journal_id.currency_id
-                and rec.journal_id.currency_id.id
-                or rec.journal_id.company_id.currency_id.id
+                journal
+                and journal.currency_id
+                and journal.currency_id.id
+                or journal.company_id.currency_id.id
             )
             rec.currency_id = currency_id
+
+    def _update_student_vals(self, vals):
+        student_rec = self.env["student.student"].browse(
+            vals.get("student_id")
+        )
+        vals.update(
+            {
+                "standard_id": student_rec.standard_id.id,
+                "division_id": student_rec.standard_id.division_id.id,
+                "medium_id": student_rec.medium_id.id,
+            }
+        )
 
     @api.model
     def create(self, vals):
         """Inherited create method to assign values from student model"""
         if vals.get("student_id"):
-            student_rec = self.env["student.student"].browse(
-                vals.get("student_id")
-            )
-            vals.update(
-                {
-                    "standard_id": student_rec.standard_id.id,
-                    "division_id": student_rec.standard_id.division_id.id,
-                    "medium_id": student_rec.medium_id.id,
-                }
-            )
+            self._update_student_vals(vals)
         return super(StudentPayslip, self).create(vals)
 
     def write(self, vals):
         """Inherited write method to update values from student model"""
         if vals.get("student_id"):
-            student_rec = self.env["student.student"].browse(
-                vals.get("student_id")
-            )
-            vals.update(
-                {
-                    "standard_id": student_rec.standard_id.id,
-                    "division_id": student_rec.standard_id.division_id.id,
-                    "medium_id": student_rec.medium_id.id,
-                }
-            )
+            self._update_student_vals(vals)
         return super(StudentPayslip, self).write(vals)
-
-    def copy(self, default=None):
-        """Inherited copy method to assign default value at copying record"""
-        if default is None:
-            default = {}
-        default.update(
-            {
-                "state": "draft",
-                "number": False,
-                "move_id": False,
-                "line_ids": [],
-            }
-        )
-        return super(StudentPayslip, self).copy(default)
 
     def payslip_draft(self):
         """Change state to draft"""
@@ -469,8 +454,7 @@ class StudentPayslip(models.Model):
             rec.write({"line_ids": lines})
             # Compute amount
             amount = 0
-            for data in rec.line_ids:
-                amount += data.amount
+            amount = sum(data.amount for data in rec.line_ids)
             rec.register_id.write({"total_amount": rec.total})
             rec.write(
                 {
