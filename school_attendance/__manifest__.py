@@ -10,7 +10,7 @@
     "license": "AGPL-3",
     "summary": "A Module For Attendance Management In School",
     "complexity": "easy",
-    "depends": ["school", "hr"],
+    "depends": ["school"],
     "data": [
         "security/attendance_security.xml",
         "security/ir.model.access.csv",
