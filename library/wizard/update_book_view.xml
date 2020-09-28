@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+        <!-- Form View Of Update Book Wizard -->
+
+        <record id="view_update_books_form" model="ir.ui.view">
+            <field name="name">update.books.form</field>
+            <field name="model">update.books</field>
+            <field name="arch" type="xml">
+                <form string="Books">
+                    <group>
+                        <field name="name" widget="selection" domain="[('categ_id.book_categ','=',True)]"/>
+                    </group>
+                    <footer>
+                    <group col="2">
+                        <button type='object' class="fa fa-check" name='action_update_books' string='Books'/>
+                        <button special='cancel' class="fa fa-ban" string='Cancel'/>
+                   </group>
+                   </footer>
+               </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Update Book Wizard -->
+
+        <record id="action_update_books" model="ir.actions.act_window">
+            <field name="name">Update Books</field>
+            <field name="res_model">update.books</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="library.model_library_book_issue"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('library.group_librarian'))]"/>
+        </record>
+
+</odoo>
