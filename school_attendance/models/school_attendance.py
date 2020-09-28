@@ -215,37 +215,31 @@ class StudentleaveRequest(models.Model):
             self.roll_no = self.student_id.roll_no
             self.teacher_id = self.student_id.standard_id.user_id.id or False
 
+    def _update_student_vals(self, vals):
+        student_rec = self.env["student.student"].browse(
+            vals.get("student_id")
+        )
+        vals.update(
+            {
+                "roll_no": student_rec.roll_no,
+                "standard_id": student_rec.standard_id.id,
+                "teacher_id": student_rec.standard_id.user_id.id,
+            }
+        )
+
     @api.model
     def create(self, vals):
         """Inherited create method to  assign
         student details in leave request"""
         if vals.get("student_id"):
-            student_rec = self.env["student.student"].browse(
-                vals.get("student_id")
-            )
-            vals.update(
-                {
-                    "roll_no": student_rec.roll_no,
-                    "standard_id": student_rec.standard_id.id,
-                    "teacher_id": student_rec.standard_id.user_id.id,
-                }
-            )
+            self._update_student_vals(vals)
         return super(StudentleaveRequest, self).create(vals)
 
     def write(self, vals):
         """Inherited write method to  assign
         student details in leave request"""
         if vals.get("student_id"):
-            student_rec = self.env["student.student"].browse(
-                vals.get("student_id")
-            )
-            vals.update(
-                {
-                    "roll_no": student_rec.roll_no,
-                    "standard_id": student_rec.standard_id.id,
-                    "teacher_id": student_rec.standard_id.user_id.id,
-                }
-            )
+            self._update_student_vals(vals)
         return super(StudentleaveRequest, self).write(vals)
 
     @api.constrains("student_id", "start_date", "end_date")
