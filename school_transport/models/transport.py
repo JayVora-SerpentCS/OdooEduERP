@@ -338,9 +338,8 @@ class StudentTransports(models.Model):
 
     @api.constrains("start_date", "end_date")
     def check_dates(self):
-        """Constraint to check start-end date"""
+        """Constraint ot check start/end date and duration"""
         for rec in self:
-            """Constraint ot check start/end date and duration"""
             delta = rec.end_date - rec.start_date
             if rec.start_date > rec.end_date:
                 raise ValidationError(
@@ -393,7 +392,7 @@ class StudentStudent(models.Model):
             if trans_regi_rec:
                 trans_regi_rec.write({"state": "cancel"})
             if trans_student_rec:
-                trans_student_rec.write({"active": False})
+                trans_student_rec.active = False
         return super(StudentStudent, self).set_alumni()
 
 

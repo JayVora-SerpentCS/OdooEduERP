@@ -9,7 +9,7 @@
     "category": "School Management",
     "complexity": "easy",
     "summary": "A Module For Transport & Vehicle Management In School",
-    "depends": ["school", "account"],
+    "depends": ["school"],
     "images": ["static/description/SchoolTransport.png"],
     "data": [
         "security/transport_security.xml",
