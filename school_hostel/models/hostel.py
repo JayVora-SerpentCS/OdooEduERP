@@ -7,6 +7,7 @@ from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -49,37 +50,19 @@ class HostelType(models.Model):
     )
 
     @api.model
-    def _search(
-        self,
-        args,
-        offset=0,
-        limit=None,
-        order=None,
-        count=False,
-        access_rights_uid=None,
+    def _name_search(
+        self, name, args=None, operator="ilike", limit=100, name_get_uid=None
     ):
-        """Override method to get hostel of student selected"""
+        args = args or []
+        domain = []
         if self._context.get("student_id"):
             stud_obj = self.env["student.student"]
             stud_rec = stud_obj.browse(self._context["student_id"])
-            datas = []
-            if stud_rec.gender:
-                self._cr.execute(
-                    """
-        select id from hostel_type where type=%s or type='common' """,
-                    (stud_rec.gender,),
-                )
-                data = self._cr.fetchall()
-                for d in data:
-                    datas.append(d[0])
-            args.append(("id", "in", datas))
-        return super(HostelType, self)._search(
-            args=args,
-            offset=offset,
+            domain = [("type", "in", ["common", stud_rec.gender])]
+        return self._search(
+            expression.AND([domain, args]),
             limit=limit,
-            order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
+            access_rights_uid=name_get_uid,
         )
 
 
@@ -279,9 +262,7 @@ class HostelStudent(models.Model):
     duration = fields.Integer("Duration", help="Enter duration of living")
     rent_pay = fields.Float("Rent", help="Enter rent pay of the hostel")
     acutal_discharge_date = fields.Datetime(
-        "Actual Discharge Date",
-        help="""Date on which student
-                                            discharge""",
+        "Actual Discharge Date", help="""Date on which student discharge"""
     )
     remaining_amount = fields.Float(
         compute="_compute_remaining_fee_amt", string="Remaining Amount"
