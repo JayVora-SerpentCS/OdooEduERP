@@ -129,33 +129,28 @@ class LibraryCard(models.Model):
         self.standard_id = student_rec.standard_id.id
         self.roll_no = student_rec.roll_no
 
+    def _update_student_info(self, vals):
+        student_rec = self.env["student.student"].browse(
+            vals.get("student_id")
+        )
+        vals.update(
+            {
+                "standard_id": student_rec.standard_id.id,
+                "roll_no": student_rec.roll_no,
+            }
+        )
+
     @api.model
     def create(self, vals):
         """Inherited this method to assign student values at record creation"""
         if vals.get("student_id"):
-            student_rec = self.env["student.student"].browse(
-                vals.get("student_id")
-            )
-            vals.update(
-                {
-                    "standard_id": student_rec.standard_id.id,
-                    "roll_no": student_rec.roll_no,
-                }
-            )
+            self._update_student_info(vals)
         return super(LibraryCard, self).create(vals)
 
     def write(self, vals):
         """Inherited this method to update student values at record updation"""
         if vals.get("student_id"):
-            student_rec = self.env["student.student"].browse(
-                vals.get("student_id")
-            )
-            vals.update(
-                {
-                    "standard_id": student_rec.standard_id.id,
-                    "roll_no": student_rec.roll_no,
-                }
-            )
+            self._update_student_info(vals)
         return super(LibraryCard, self).write(vals)
 
     @api.constrains("student_id", "teacher_id")

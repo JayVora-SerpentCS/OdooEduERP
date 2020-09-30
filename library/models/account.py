@@ -43,5 +43,5 @@ class AccountPayment(models.Model):
         for rec in self:
             invoice = rec.move_id
             if invoice.book_issue and invoice.payment_state == "paid":
-                invoice.book_issue.write({"state": "paid"})
+                invoice.book_issue.state = "paid"
         return res
