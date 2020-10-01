@@ -99,36 +99,7 @@
                         </t>
                         <br />
                         <div class="row" align="left" style="font-family: 'Helvetica';font-size: 18px;">
-                            <b>2. Root Point with monthly amount.</b>
-                        </div>
-                        <br />
-                        <table width="100%" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Point Name</b>
-                                    </td>
-                                    <td align="center" width="50%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Amount</b>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="transport.trans_point_ids" t-as="trans_point_ids">
-                                    <tr>
-                                        <td width="50%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="trans_point_ids.name"></span>
-                                        </td>
-                                        <td align="center" width="50%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="trans_point_ids.amount"></span>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                        </table>
-                        <br />
-                        <div class="row" align="left" style="font-family: 'Helvetica';font-size: 18px;">
-                            <b>3. Participated Student information.</b>
+                            <b>2. Participated Student information.</b>
                         </div>
                         <br />
                         <table width="100%" class="table table-striped">
@@ -142,9 +113,6 @@
                                     </td>
                                     <td align="center" width="10%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <b>Division</b>
-                                    </td>
-                                    <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Point</b>
                                     </td>
                                     <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
                                         <b>Vehicle No</b>
@@ -165,9 +133,6 @@
                                         </td>
                                         <td align="center" width="10%" style="font-family: 'Helvetica';font-size: 16px;">
                                             <span t-field="trans_participants_ids.name.standard_id.division_id.name"></span>
-                                        </td>
-                                        <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="trans_participants_ids.point_id.name"></span>
                                         </td>
                                         <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
                                             <span t-field="trans_participants_ids.vehicle_id.vehicle"></span>

@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Transport Management",
+    "name": "Transport Management for Education ERP",
     "version": "14.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
@@ -9,7 +9,7 @@
     "category": "School Management",
     "complexity": "easy",
     "summary": "A Module For Transport & Vehicle Management In School",
-    "depends": ["school"],
+    "depends": ["school", "fleet"],
     "images": ["static/description/SchoolTransport.png"],
     "data": [
         "security/transport_security.xml",
@@ -17,7 +17,6 @@
         "data/transport_schedular.xml",
         "views/transport_view.xml",
         "report/report_view.xml",
-        "report/vehicle.xml",
         "report/participants.xml",
         "wizard/transfer_vehicle.xml",
         "wizard/terminate_reason_view.xml",

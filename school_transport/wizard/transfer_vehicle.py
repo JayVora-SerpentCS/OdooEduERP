@@ -14,10 +14,10 @@ class TransferVehicle(models.TransientModel):
     )
     root_id = fields.Many2one("student.transport", "Root", required=True)
     old_vehicle_id = fields.Many2one(
-        "transport.vehicle", "Old Vehicle No", required=True
+        "fleet.vehicle", "Old Vehicle No", required=True
     )
     new_vehicle_id = fields.Many2one(
-        "transport.vehicle", "New Vehicle No", required=True
+        "fleet.vehicle", "New Vehicle No", required=True
     )
 
     @api.model

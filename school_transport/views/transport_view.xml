@@ -19,53 +19,22 @@
         </field>
     </record>
 
-    <!-- Tree View Of Driver Information -->
-    <record id="view_bus_driver_tree" model="ir.ui.view">
-        <field name="name">bus.driver.tree</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_tree"/>
+    <!-- Inherited Form View of fleet.vehicle -->
+    <record id="fleet_vehicle_inhrited_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.inherited.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name = 'name']" position="after">
-                <field name="licence_no"/>
+            <xpath expr="//button[@name='return_action_to_open']" position='after'>
+                <button name="action_show_participant"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    context="{'xml_id':'action_school_transport_participant_form'}"
+                    help="show the participants of this vehicle">
+                    <field name="participant_count" widget="statinfo" string="Participants"/>
+                </button>
             </xpath>
-        </field>
-    </record>
-
-    <!-- Search View Driver Information -->
-    <record id="view_bus_driver_search" model="ir.ui.view">
-        <field name="name">bus.driver.search</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//filter[4]" position="after">
-                    <filter domain="[('job_id','=','Driver')]" name="job_id" string="Driver"/>
-                </xpath>
-            </data>
-        </field>
-    </record>
-
-    <!-- Form View Of Driver Information -->
-    <record id="view_bus_driver_form" model="ir.ui.view">
-        <field name="name">bus.driver.form</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_form"/>
-        <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name='category_ids']" position="after">
-                    <group>
-                        <field name="is_driver" string="Is Driver" readonly="1"/>
-                    </group>
-                </xpath>
-                <xpath expr="//field[@name='resource_calendar_id']" position="after">
-                    <field name="licence_no" attrs="{'required':[('is_driver','=',True)]}"/>
-                </xpath>
-                <xpath expr="//page[@name='hr_settings']" position="after">
-                    <page name="vehicle_details" string="Vehicles Details" attrs="{'invisible':[('is_driver','=',False)]}">
-                        <field name="transport_vehicle" readonly="1"/>
-                    </page>
-                </xpath>
-            </data>
         </field>
     </record>
 
@@ -79,7 +48,6 @@
                 <field name="name"/>
                 <field name="transport_id"/>
                 <field name="vehicle_id"/>
-                <field name="point_id"/>
                 <field name="months"/>
                 <field name="tr_reg_date"/>
                 <field name="tr_end_date"/>
@@ -109,7 +77,6 @@
                 <group col="4" colspan="4">
                     <field name="transport_id" readonly="1"/>
                     <field name="vehicle_id" readonly="1"/>
-                    <field name="point_id" readonly="1"/>
                     <field name="months" readonly="1"/>
                     <field name="tr_reg_date" readonly="1"/>
                     <field name="tr_end_date" readonly="1"/>
@@ -129,7 +96,6 @@
             <search>
               <field name="name"/>
               <field name="transport_id"/>
-               <field name="point_id"/>
               <group string="Filter">
                     <filter string="Running" name="state_running" domain="[('state','=','running')]"/>
                     <filter string="Over" name="state_over" domain="[('state','=','over')]"/>
@@ -138,57 +104,11 @@
                <group expand="1" string="Group By">
                    <filter string="Name"  name="name_name" context="{'group_by':'name'}"/>
                    <filter string="Root"  name="root" context="{'group_by':'transport_id'}"/>
-                   <filter string="Root Point" name="root_point" context="{'group_by':'point_id'}"/>
                    <filter string="State" name="state" context="{'group_by':'state'}"/>
                </group>
             </search>
         </field>
     </record>
-
-    <!-- Tree View Of Transport Point -->
-    <record id="view_transport_point_tree_1" model="ir.ui.view">
-        <field name="name">transport.point.tree</field>
-        <field name="model">transport.point</field>
-        <field name="arch" type="xml">
-            <tree string="Transport Point Information">
-                <field name="name"/>
-                <field name="amount"/>
-            </tree>
-        </field>
-   </record>
-
-   <!-- Form View Of Transport Point -->
-   <record id="transport_point_form1" model="ir.ui.view">
-        <field name="name">transport.point.form</field>
-        <field name="model">transport.point</field>
-        <field name="arch" type="xml">
-            <form string="Transport Point">
-                <sheet>
-                   <group col="4">
-                    <field name="name" placeholder="Point Name"/>
-                    <field name="amount" required='1'/>
-                   </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Search View Of Transport Point -->
-    <record id="view_transport_point_search" model="ir.ui.view">
-        <field name="name">transport.point.search</field>
-        <field name="model">transport.point</field>
-        <field name="arch" type="xml">
-            <search string="Search">
-                <group col="10" colspan="4">
-                    <field name="name"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter icon="terp-stock_symbol-selection" name="amount" string="Amount" help="By Ammount" context="{'group_by':'amount'}"/>
-                </group>
-            </search>
-        </field>
-   </record>
 
    <!-- Tree View Of Transport Information -->
    <record id="view_student_transport_tree" model="ir.ui.view">
@@ -233,10 +153,6 @@
                             <separator string="Transport Vehicle Details" colspan="4"/>
                             <field name="trans_vehicle_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                     </page>
-                    <page string="Root Points" >
-                         <separator string="Transport Point Details" colspan="4"/>
-                         <field name="trans_point_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}"/>
-                    </page>
                     <page string="Participants" >
                         <separator string="Participants Details" colspan="4"/>
                         <field name="trans_participants_ids" nolabel='1' readonly="1">
@@ -244,7 +160,6 @@
                                 <field name="stu_pid_id"/>
                                 <field name="name"/>
                                 <field name="vehicle_id"/>
-                                <field name="point_id"/>
                                 <field name="months"/>
                                 <field name="tr_reg_date"/>
                                 <field name="tr_end_date"/>
@@ -257,7 +172,6 @@
                                     <field name="name"/>
                                     <field name="transport_id"/>
                                     <field name="vehicle_id"/>
-                                    <field name="point_id" widget='selecion'/>
                                     <field name="months"/>
                                     <field name="tr_reg_date"/>
                                     <field name="tr_end_date"/>
@@ -326,7 +240,6 @@
                         <field name="part_name" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
                         <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{'no_create': True, 'no_open': True}" />
                         <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="point_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}" widgte="selection"/>
                         <field name="m_amount"/>
                         <field name="for_month" attrs="{'readonly':[('state','not in','draft')]}"/>
                         <field name="transport_fees"/>
@@ -376,63 +289,6 @@
         </field>
     </record>
 
-   <!-- Tree View Of Transport vehicle Information -->
-   <record id="view_transport_vehicle_tree" model="ir.ui.view">
-        <field name="name">transport.vehicle.tree</field>
-        <field name="model">transport.vehicle</field>
-        <field name="arch" type="xml">
-            <tree string="Transport vehicle Information">
-                <field name="vehicle"/>
-                <field name="driver_id"/>
-                <field name="capacity"/>
-                <field name="participant"/>
-            </tree>
-        </field>
-    </record>
-
-   <!-- Form View Of Transport vehicle Information -->
-   <record id="view_transport_vehicle_form" model="ir.ui.view">
-        <field name="name">transport.vehicle.form</field>
-        <field name="model">transport.vehicle</field>
-        <field name="arch" type="xml">
-            <form string="Transport vehicle Information">
-                <sheet>
-                <group col="4" colspan="4">
-                    <field name="vehicle"/>
-                    <field name="driver_id" domain="[('is_driver','=',True)]" context="{'default_is_driver':True}" options="{&quot;no_create&quot;: True}"/>
-                    <field name="capacity"/>
-                    <field name="participant"/>
-                </group>
-                <notebook colspan="4">
-                    <page string="Participant" >
-                        <separator string="Vehicle Participant Details" colspan="4"/>
-                        <field name="vehi_participants_ids" nolabel='1' domain="[('state','=','running')]"/>
-                    </page>
-                </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Search View Of Transport vehicle Information -->
-    <record id="view_transport_vehicle_search" model="ir.ui.view">
-        <field name="name">transport.vehicle.search</field>
-        <field name="model">transport.vehicle</field>
-        <field name="arch" type="xml">
-            <search string="Search">
-                <group string="Filter" col="10" colspan="4">
-                    <field name="vehicle"/>
-                    <separator orientation="vertical"/>
-                    <field name="driver_id"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Group By" colspan="12" col="10">
-                    <filter name="driver" icon="terp-stock_symbol-selection" string="Driver Name" help="By Driver Name" context="{'group_by':'driver_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
     <!-- Inherited View of Account Invoice -->
     <record id="account_invoice_inherited" model="ir.ui.view">
         <field name="name">Account Invoice Iherits</field>
@@ -443,15 +299,6 @@
                 <field name="transport_student_id" invisible="1"/>
             </xpath>
         </field>
-    </record>
-
-    <!-- Actions Of Form & Tree Views Of Transport vehicle Information -->
-    <record id="action_transport_vehicle" model="ir.actions.act_window">
-        <field name="name">Transport Vehicle Information</field>
-        <field name="res_model">transport.vehicle</field>
-        <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="view_transport_vehicle_search"/>
-
     </record>
 
     <!-- Actions Of Form & Tree Views Of Transport Registration -->
@@ -482,35 +329,6 @@
 
     </record>
 
-    <!-- Actions Of Form & Tree Views Of Driver Information -->
-    <record id="action_bus_driver_form_1" model="ir.actions.act_window">
-        <field name="name">Driver Information</field>
-        <field name="res_model">hr.employee</field>
-        <field name="domain">[('is_driver','=',True)]</field>
-        <field name="context">{'default_is_driver':True}</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <!-- Actions Of Form & Tree Views Of Transport point Information -->
-    <record id="action_transport_point" model="ir.actions.act_window">
-        <field name="name">Point Information</field>
-        <field name="res_model">transport.point</field>
-        <field name="view_mode">tree,form</field>
-        <field name="search_view_id" ref="view_transport_point_search"/>
-
-    </record>
-
-    <!-- Actions Of Form & Tree Views Of Vehicle Driver Information -->
-    <record id="hr.open_view_employee_tree" model="ir.actions.act_window">
-        <field name="name">Employees Structure</field>
-        <field name="res_model">hr.employee</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="hr.view_employee_tree"/>
-        <field name="domain">[('parent_id','=',False),('user_id','=',uid)]</field>
-        <field name="context">{"search_default_job_id":1}</field>
-        <field name="search_view_id" ref="view_bus_driver_search"/>
-    </record>
-
     <!-- Overrite the EMS Menu and Added the Transport manager and user groups -->
     <menuitem id="school.menu_ems" name="EMS" sequence="1"
         groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,group_transportation_manager,group_transportation_user" />
@@ -523,13 +341,4 @@
               parent="menu_transport" action="action_student_transport_registration_form" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"/>
     <menuitem id="menu_transport_sub_participant" name="Transport Participant" parent="menu_transport" sequence="93"
               action="action_school_transport_participant_form" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"/>
-    <menuitem id="menu_tansport_info" name="Transport Details" parent="school.menu_configuration" groups="group_transportation_manager"/>
-    <menuitem id="menu_driver_info" name="Driver Information" parent="menu_tansport_info"
-              action="action_bus_driver_form_1" groups="group_transportation_manager"/>
-    <menuitem id="menu_vehicle_info" name="Vehicle Information" parent="menu_tansport_info"
-              action="action_transport_vehicle" groups="group_transportation_manager"
-              sequence="2"/>
-    <menuitem id="menu_point_info" name="Point Information" parent="menu_tansport_info"
-              action="action_transport_point" groups="group_transportation_manager"
-              sequence="3"/>
 </odoo>

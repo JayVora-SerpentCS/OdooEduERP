@@ -11,18 +11,56 @@ class StudentTransport(models.Model):
     _description = "Transport Information"
 
 
-class HrEmployee(models.Model):
-    _inherit = "hr.employee"
-    _description = "Driver Information"
+class FleetVehicle(models.Model):
+    _inherit = "fleet.vehicle"
+
+    @api.depends("vehi_participants_ids")
+    def _compute_participants(self):
+        """Method to get number participant."""
+        for rec in self:
+            rec.participant_count = len(rec.vehi_participants_ids)
+
+    participant_count = fields.Integer(
+        compute="_compute_participants",
+        string="Total Participants",
+        readonly=True,
+        help="Students registered in root",
+    )
+    vehi_participants_ids = fields.Many2many(
+        "transport.participant",
+        "vehicle_participant_student_rel",
+        "vehicle_id",
+        "student_id",
+        " vehicle Participants",
+        help="Select vehicle participants",
+    )
+
+    def action_show_participant(self):
+        """ This opens the xml view specified in
+        xml_id for the current vehicle """
+        self.ensure_one()
+        xml_id = self.env.context.get("xml_id")
+        if xml_id:
+
+            res = self.env["ir.actions.act_window"]._for_xml_id(
+                "school_transport.%s" % xml_id
+            )
+            res.update(
+                context=dict(
+                    self.env.context,
+                    default_vehicle_id=self.id,
+                    group_by=False,
+                ),
+                domain=[("vehicle_id", "=", self.id)],
+            )
+            return res
+        return False
+
+
+class ResPartner(models.Model):
+    _inherit = "res.partner"
 
     licence_no = fields.Char("License No", help="Enter License No.")
-    is_driver = fields.Boolean("IS driver", help="Check if employee is driver")
-    transport_vehicle = fields.One2many(
-        "transport.vehicle",
-        "driver_id",
-        "Vehicles",
-        help="Select transport vehicle",
-    )
 
     @api.constrains("licence_no")
     def check_licence_number(self):
@@ -38,118 +76,6 @@ class HrEmployee(models.Model):
                         Please enter different licence number!"""
                 )
             )
-
-
-class TransportPoint(models.Model):
-    """for points on root."""
-
-    _name = "transport.point"
-    _description = "Transport Point Information"
-
-    name = fields.Char(
-        "Point Name", required=True, help="Transport point name"
-    )
-    amount = fields.Float("Amount", default=0.0, help="Enter amount here")
-
-    @api.constrains("amount")
-    def _check_point_amount(self):
-        """Constraint for negative amount"""
-        if self.amount < 0:
-            raise ValidationError(_("""Amount cannot be negative value!"""))
-
-    @api.model
-    def _search(
-        self,
-        args,
-        offset=0,
-        limit=None,
-        order=None,
-        count=False,
-        access_rights_uid=None,
-    ):
-        """Inherited method to assign domain for transport participant"""
-        if self._context.get("name"):
-            transport_obj = self.env["student.transport"]
-            point_ids = [
-                point_id.id
-                for point_id in transport_obj.browse(
-                    self._context.get("name")
-                ).trans_point_ids
-            ]
-            args.append(("id", "in", point_ids))
-        return super(TransportPoint, self)._search(
-            args=args,
-            offset=offset,
-            limit=limit,
-            order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
-        )
-
-
-class TransportVehicle(models.Model):
-    """for vehicle detail."""
-
-    _name = "transport.vehicle"
-    _rec_name = "vehicle"
-    _description = "Transport vehicle Information"
-
-    @api.depends("vehi_participants_ids")
-    def _compute_participants(self):
-        """Method to get number participant."""
-        for rec in self:
-            rec.participant = len(rec.vehi_participants_ids)
-
-    driver_id = fields.Many2one(
-        "hr.employee", "Driver Name", required=True, help="Enter Drive Name"
-    )
-    vehicle = fields.Char(
-        "Vehicle No", required=True, help="Enter Vehicle No."
-    )
-    capacity = fields.Integer("Capacity", help="Enter capacity of vehicle")
-    participant = fields.Integer(
-        compute="_compute_participants",
-        string="Total Participants",
-        readonly=True,
-        help="Students registered in root",
-    )
-    vehi_participants_ids = fields.Many2many(
-        "transport.participant",
-        "vehicle_participant_student_rel",
-        "vehicle_id",
-        "student_id",
-        " vehicle Participants",
-        help="Select vehicle participants",
-    )
-
-    @api.model
-    def _search(
-        self,
-        args,
-        offset=0,
-        limit=None,
-        order=None,
-        count=False,
-        access_rights_uid=None,
-    ):
-        """Override method to get vehicles of selected transport root."""
-        if self._context.get("name"):
-            transport_obj = self.env["student.transport"]
-            vehicle_ids = [
-                std_id.id
-                for std_id in transport_obj.browse(
-                    self._context.get("name")
-                ).trans_vehicle_ids
-            ]
-            args.append(("id", "in", vehicle_ids))
-        return super(TransportVehicle, self)._search(
-            args=args,
-            offset=offset,
-            limit=limit,
-            order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
-        )
 
 
 class TransportParticipant(models.Model):
@@ -189,10 +115,7 @@ class TransportParticipant(models.Model):
         "Registration For Months", help="Registration for months"
     )
     vehicle_id = fields.Many2one(
-        "transport.vehicle", "Vehicle No", help="Enter vehicle no."
-    )
-    point_id = fields.Many2one(
-        "transport.point", "Point Name", help="Name of point"
+        "fleet.vehicle", "Vehicle No", help="Enter vehicle no."
     )
     state = fields.Selection(
         [("running", "Running"), ("over", "Over")],
@@ -271,7 +194,7 @@ class StudentTransports(models.Model):
         "Start Date", required=True, help="Enter start date"
     )
     contact_per_id = fields.Many2one(
-        "hr.employee", "Contact Person", help="Contact Person"
+        "res.partner", "Contact Person", help="Contact Person"
     )
     end_date = fields.Date("End Date", required=True, help="Enter end date")
     total_participantes = fields.Integer(
@@ -291,20 +214,12 @@ class StudentTransports(models.Model):
         help="Enter participant",
     )
     trans_vehicle_ids = fields.Many2many(
-        "transport.vehicle",
+        "fleet.vehicle",
         "transport_vehicle_rel",
         "vehicle_id",
         "transport_id",
         "vehicles",
         help="Select transport vehicles",
-    )
-    trans_point_ids = fields.Many2many(
-        "transport.point",
-        "transport_point_rel",
-        "point_id",
-        "root_id",
-        " Points",
-        help="Select transport points",
     )
     state = fields.Selection(
         [("draft", "Draft"), ("open", "Open"), ("close", "Close")],
@@ -455,16 +370,10 @@ class TransportRegistration(models.Model):
                              registration form""",
     )
     vehicle_id = fields.Many2one(
-        "transport.vehicle",
+        "fleet.vehicle",
         "Vehicle No",
         required=True,
         help="Enter transport vehicle",
-    )
-    point_id = fields.Many2one(
-        "transport.point",
-        "Point",
-        required=True,
-        help="Select transport point",
     )
     m_amount = fields.Float(
         "Monthly Amount", readonly=True, help="Enter monthly amount"
@@ -571,13 +480,6 @@ class TransportRegistration(models.Model):
                 [("transport_student_id", "=", rec.id)]
             )
 
-    @api.onchange("point_id")
-    def onchange_point_id(self):
-        """Method to get amount of point selected."""
-        self.m_amount = False
-        if self.point_id:
-            self.m_amount = self.point_id.amount or 0.0
-
     @api.onchange("for_month")
     def onchange_for_month(self):
         """Method to compute registration end date."""
@@ -595,6 +497,7 @@ class TransportRegistration(models.Model):
         prt_obj = self.env["student.student"]
         stu_prt_obj = self.env["transport.participant"]
         vehi_obj = self.env["transport.vehicle"]
+        vehi_obj = self.env["fleet.vehicle"]
         for rec in self:
             # registration months must one or more then one
             if rec.for_month <= 0:
@@ -611,7 +514,6 @@ class TransportRegistration(models.Model):
 
             rec.write({"state": "confirm", "remain_amt": rec.transport_fees})
             # calculate amount and Registration End date
-            amount = rec.point_id.amount * rec.for_month
             tr_start_date = rec.reg_date
             ed_date = rec.name.end_date
             tr_end_date = tr_start_date + relativedelta(months=rec.for_month)
@@ -626,13 +528,12 @@ end date is Early!"""
             # make entry in Transport
             dict_prt = {
                 "stu_pid_id": str(rec.part_name.pid),
-                "amount": amount,
+                "amount": rec.m_amount,
                 "transport_id": rec.name.id,
                 "tr_end_date": tr_end_date,
                 "name": rec.part_name.id,
                 "months": rec.for_month,
                 "tr_reg_date": rec.reg_date,
-                "point_id": rec.point_id.id,
                 "state": "running",
                 "vehicle_id": rec.vehicle_id.id,
             }
