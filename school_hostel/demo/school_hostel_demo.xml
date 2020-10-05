@@ -80,5 +80,39 @@
             <field name="room_id" ref="demo_school_hostel_room_4"/>
             <field name="paid_amount">0</field>
         </record>
+
+        <!--  School Hostel Amenities-->
+        <record id="demo_amenity_telephone" model="hostel.amenities">
+            <field name="name">Telephone access</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_ac" model="hostel.amenities">
+            <field name="name">Air Conditioning</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_private_bathroom" model="hostel.amenities">
+            <field name="name">Private Bathroom</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_guest_sofa" model="hostel.amenities">
+            <field name="name">Guest sofa-bed</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_tv" model="hostel.amenities">
+            <field name="name">Television</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_internet" model="hostel.amenities">
+            <field name="name">Internet Access</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_refrigerator" model="hostel.amenities">
+            <field name="name">Refrigerator</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_microwave" model="hostel.amenities">
+            <field name="name">Microwave</field>
+            <field name="active" eval="True"/>
+        </record>
     </data>
 </odoo>

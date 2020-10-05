@@ -7,7 +7,6 @@ from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -50,19 +49,37 @@ class HostelType(models.Model):
     )
 
     @api.model
-    def _name_search(
-        self, name, args=None, operator="ilike", limit=100, name_get_uid=None
+    def _search(
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
     ):
-        args = args or []
-        domain = []
+        """Override method to get hostel of student selected"""
         if self._context.get("student_id"):
             stud_obj = self.env["student.student"]
-            stud_rec = stud_obj.browse(self._context["student_id"])
-            domain = [("type", "in", ["common", stud_rec.gender])]
-        return self._search(
-            expression.AND([domain, args]),
+            stud = stud_obj.browse(self._context["student_id"])
+            datas = []
+            if stud.gender:
+                self._cr.execute(
+                    """select id from hostel_type where type=%s or
+                type='common' """,
+                    (stud.gender,),
+                )
+                data = self._cr.fetchall()
+                for d in data:
+                    datas.append(d[0])
+            args.append(("id", "in", datas))
+        return super(HostelType, self)._search(
+            args=args,
+            offset=offset,
             limit=limit,
-            access_rights_uid=name_get_uid,
+            order=order,
+            count=count,
+            access_rights_uid=access_rights_uid,
         )
 
 
@@ -75,10 +92,8 @@ class HostelRoom(models.Model):
     @api.depends("student_per_room", "student_ids")
     def _compute_check_availability(self):
         """Method to check room availability"""
-        room_availability = 0
         for rec in self:
-            room_availability = rec.student_per_room - len(rec.student_ids.ids)
-            rec.availability = room_availability
+            rec.availability = rec.student_per_room - len(rec.student_ids.ids)
 
     name = fields.Many2one("hostel.type", "HOSTEL", help="Name of hostel")
     floor_no = fields.Integer("Floor No.", default=1, help="Floor Number")
@@ -92,47 +107,17 @@ class HostelRoom(models.Model):
         string="Availability",
         help="Room availability in hostel",
     )
-    telephone = fields.Boolean("Telephone access", help="Enter telephone")
     rent_amount = fields.Float(
         "Rent Amount Per Month", help="Enter rent amount per month"
     )
-    ac = fields.Boolean(
-        "Air Conditioning",
-        help="""Activate/deactivate as per
-        the AC availability in the room""",
-    )
-    private_bathroom = fields.Boolean(
-        "Private Bathroom",
-        help="""Activate/deactivate as per the
-        availability of private bathroom in the
-        room""",
-    )
-    guest_sofa = fields.Boolean(
-        "Guest sofa-bed",
-        help="""Activate/deactivate as per the
-        availability of guest sofa-bed in the room""",
-    )
-    tv = fields.Boolean(
-        "Television",
-        help="""Activate/deactivate as per the
-        availability of TV in the room""",
-    )
-    internet = fields.Boolean(
-        "Internet Access",
-        help="""Activate/deactivate
-       as per the availability of Internet-connectivity
-       in the room""",
-    )
-    refrigerator = fields.Boolean(
-        "Refrigerator",
-        help="""Activate/deactivate
-        as per the availability of Refrigerator
-        in the room""",
-    )
-    microwave = fields.Boolean(
-        "Microwave",
-        help="""Activate/deactivate as per
-        the availability of Microwave in the room""",
+    hostel_amenities_ids = fields.Many2many(
+        "hostel.amenities",
+        "hostel_room_amenities_rel",
+        "account_id",
+        "tax_id",
+        string="Hostel Amenities",
+        domain="[('active', '=', True)]",
+        help="Select hostel roon amenities",
     )
     student_ids = fields.One2many(
         "hostel.student", "room_id", string="Students", help="Enter students"
@@ -213,8 +198,7 @@ class HostelStudent(models.Model):
     def _compute_rent(self):
         """Method to compute hostel room rent"""
         for rec in self:
-            amt = rec.room_id.rent_amount or 0.0
-            rec.room_rent = rec.duration * amt
+            rec.room_rent = rec.duration * rec.room_id.rent_amount
 
     @api.depends("status")
     def _get_hostel_user(self):
@@ -484,6 +468,17 @@ class HostelStudent(models.Model):
         return self.env.ref(
             "school_hostel.report_hostel_fee_reciept_qweb"
         ).report_action(self)
+
+
+class HostelAmenities(models.Model):
+    _name = "hostel.amenities"
+
+    name = fields.Char("Name", help="Provided Hostel Amenity")
+    active = fields.Boolean(
+        "Active",
+        help="""Activate/Deactivate whether the
+                            amenity should be given or not""",
+    )
 
 
 class AccountMove(models.Model):

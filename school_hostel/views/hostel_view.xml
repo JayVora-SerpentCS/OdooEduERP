@@ -46,14 +46,7 @@
                                         <field name="room_no"/>
                                         <field name="student_per_room"/>
                                         <field name="availability"/>
-                                        <field name="telephone"/>
-                                        <field name="ac"/>
-                                        <field name="private_bathroom"/>
-                                        <field name="guest_sofa"/>
-                                        <field name="tv"/>
-                                        <field name="internet"/>
-                                        <field name="refrigerator"/>
-                                        <field name="microwave"/>
+                                        <field name="hostel_amenities_ids" widget="many2many_tags"/>
                                     </group>
                                 </form>
                             </field>
@@ -118,15 +111,8 @@
                         <field name="availability"/>
                     </group>
                     <separator string="Room Facilities"/>
-                    <group col="4">
-                        <field name="telephone"/>
-                        <field name="ac"/>
-                        <field name="private_bathroom"/>
-                        <field name="guest_sofa"/>
-                        <field name="tv"/>
-                        <field name="internet"/>
-                        <field name="refrigerator"/>
-                        <field name="microwave"/>
+                    <group>
+                        <field name="hostel_amenities_ids" widget="many2many_tags"/>
                     </group>
                     <notebook>
                         <page string="Students">
@@ -255,6 +241,41 @@
         </field>
     </record>
 
+    <!-- Form View Of HOSTEL Amenities -->
+    <record id="view_hostel_amenities_form" model="ir.ui.view">
+        <field name="name">view.hostel.amenities.form</field>
+        <field name="model">hostel.amenities</field>
+        <field name="arch" type="xml">
+            <form name="hostel_information" string="Hostel Information">
+                <sheet>
+                    <group col="4">
+                        <field name="name" />
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View Of HOSTEL Amenities -->
+    <record id="view_hostel_amenities_tree" model="ir.ui.view">
+        <field name="name">view.hostel.amenities.tree</field>
+        <field name="model">hostel.amenities</field>
+        <field name="arch" type="xml">
+            <tree string="Hostel Amenities" >
+                <field name="name" />
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions Of Form & Tree Views Of HOSTEL Amenities -->
+    <record id="action_hostel_amenities" model="ir.actions.act_window">
+        <field name="name">Hostel Amenities</field>
+        <field name="res_model">hostel.amenities</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
     <!-- Actions Of Form & Tree Views Of HOSTEL Student Button -->
     <record id="action_hostel_student_button" model="ir.actions.act_window">
         <field name="name">Hostel Student</field>
@@ -307,6 +328,11 @@
     <!-- MenuItem Of HOSTEL Student -->
     <menuitem id="hostel_student_menu" name="Hostel Student" parent="hostel_main_menu"
               action="action_hostel_student" sequence="123"
+              groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
+
+    <!-- MenuItem Of HOSTEL amenities -->
+    <menuitem id="hostel_amenities_menu" name="Hostel Amenities" parent="hostel_main_menu"
+              action="action_hostel_amenities" sequence="124"
               groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"/>
 
     <record id="menu_hostel_rector_action" model="ir.actions.act_window">
