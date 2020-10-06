@@ -12,9 +12,7 @@ class LibraryRack(models.Model):
     _name = "library.rack"
     _description = "Library Rack"
 
-    name = fields.Char(
-        "Name", required=True, help="it will be show the position of book"
-    )
+    name = fields.Char("Name", required=True, help="Rack Name")
     code = fields.Char("Code", help="Enter code here")
     active = fields.Boolean(
         "Active", default="True", help="To active/deactive record"
@@ -620,6 +618,7 @@ not available now. Please try after sometime!"""
         and generate invoice of fine.
         """
         invoice_obj = self.env["account.move"]
+        #       check whether address has been defined or not for student and teacher
         for record in self:
             if record.user == "Student":
                 usr = record.student_id.partner_id.id
@@ -639,6 +638,7 @@ not available now. Please try after sometime!"""
                         Error ! Teacher must have a Home address."""
                         )
                     )
+            #           prepare and create value of account.move
             vals_invoice = {
                 "move_type": "out_invoice",
                 "partner_id": usr,
@@ -646,6 +646,7 @@ not available now. Please try after sometime!"""
                 "book_issue_reference": record.issue_code or "",
             }
             new_invoice_rec = invoice_obj.create(vals_invoice)
+            #           prepare move line value as lost books penalty
             acc_id = new_invoice_rec.journal_id.default_account_id.id
             invoice_line_ids = []
             if record.lost_penalty:
@@ -657,6 +658,7 @@ not available now. Please try after sometime!"""
                     "account_id": acc_id,
                 }
                 invoice_line_ids.append((0, 0, invoice_line2))
+            #           prepare move line value as late books return penalty
             if record.penalty:
                 pen = record.penalty
                 invoice_line1 = {
@@ -666,6 +668,8 @@ not available now. Please try after sometime!"""
                     "account_id": acc_id,
                 }
                 invoice_line_ids.append((0, 0, invoice_line1))
+            #           update move lines for created move and
+            #           redirect it to particular invoice
             new_invoice_rec.write({"invoice_line_ids": invoice_line_ids})
         self.state = "fine"
         view_id = self.env.ref("account.view_move_form")
