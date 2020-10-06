@@ -3,7 +3,6 @@
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta as rd
-from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -127,8 +126,8 @@ class HostelRoom(models.Model):
         ("room_no_unique", "unique(room_no)", "Room number must be unique!"),
         (
             "floor_per_hostel",
-            "check(floor_no < 10)",
-            "Error ! Floor per HOSTEL should be less than 10.",
+            "check(floor_no < 99)",
+            "Error ! Floor per HOSTEL should be less than 99.",
         ),
         (
             "student_per_room_greater",
@@ -136,32 +135,6 @@ class HostelRoom(models.Model):
             "Error ! Student per room should be less than 10.",
         ),
     ]
-
-    @api.model
-    def fields_view_get(
-        self, view_id=None, view_type="form", toolbar=False, submenu=False
-    ):
-        """Inherited this method to make edit button invisible in list view"""
-        res = super(HostelRoom, self).fields_view_get(
-            view_id=view_id,
-            view_type=view_type,
-            toolbar=toolbar,
-            submenu=submenu,
-        )
-        user_group = self.env.user.has_group("school_hostel.group_hostel_user")
-        doc = etree.XML(res["arch"])
-        if user_group:
-            if view_type == "tree":
-                nodes = doc.xpath("//tree[@name='hostel_room']")
-                for node in nodes:
-                    node.set("edit", "false")
-                res["arch"] = etree.tostring(doc)
-            if view_type == "form":
-                nodes = doc.xpath("//form[@name='hostel_room']")
-                for node in nodes:
-                    node.set("edit", "false")
-                res["arch"] = etree.tostring(doc)
-        return res
 
     @api.constrains("rent_amount")
     def _check_rent_amount(self):
