@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Attendance Management",
+    "name": "Attendance Management for Education ERP",
     "version": "14.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
@@ -10,11 +10,12 @@
     "license": "AGPL-3",
     "summary": "A Module For Attendance Management In School",
     "complexity": "easy",
-    "depends": ["school"],
+    "depends": ["school", "hr_attendance"],
     "data": [
         "security/attendance_security.xml",
         "security/ir.model.access.csv",
         "views/school_attendance_view.xml",
+        "views/hr_employee_view.xml",
         "wizard/attendance_sheet_wizard_view.xml",
         "wizard/student_attendance_by_month_view.xml",
         "report/month_attendance.xml",
