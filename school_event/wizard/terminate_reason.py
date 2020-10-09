@@ -12,7 +12,7 @@ class TerminateReasonEvent(models.TransientModel):
         student_rec = self.env["student.student"].browse(
             self._context.get("active_id")
         )
-        event_regi_rec = self.env["school.event.registration"].search(
+        event_regi_rec = self.env["event.registration"].search(
             [("part_name_id", "=", student_rec.id)]
         )
         if event_regi_rec:

@@ -12,7 +12,7 @@ class TestEvent(common.TransactionCase):
         super(TestEvent, self).setUp()
         self.event_parameter_obj = self.env["school.event.parameter"]
         self.school_event_obj = self.env["school.event"]
-        self.school_event_reg_obj = self.env["school.event.registration"]
+        self.school_event_reg_obj = self.env["event.registration"]
         self.school_id = self.env.ref("school.demo_school_1")
         self.teacher = self.env.ref("school.demo_school_teacher_1")
         self.part_name = self.env.ref("school.demo_student_student_5")
