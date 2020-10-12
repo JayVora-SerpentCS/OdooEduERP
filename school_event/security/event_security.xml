@@ -2,7 +2,7 @@
 <odoo>
         <record id="student_rule_event_regi_record" model="ir.rule">
             <field name="name">Personal Event REgistation Record</field>
-            <field name="model_id" ref="model_school_event_registration" />
+            <field name="model_id" ref="event.model_event_registration" />
             <field eval="1" name="global" />
             <field name="domain_force">[('part_name_id.user_id','=',user.id)]</field>
             <field eval="[(4, ref('school.group_school_student'))]" name="groups" />
@@ -12,7 +12,7 @@
 
         <record id="parents_rule_event_registration" model="ir.rule">
             <field name="name">Parents Registration record rule</field>
-            <field name="model_id" ref="model_school_event_registration" />
+            <field name="model_id" ref="event.model_event_registration" />
             <field eval="True" name="global" />
             <field name="domain_force">[('part_name_id.parent_id.partner_id','=',user.partner_id.id)]</field>
             <field eval="[(4, ref('school.group_school_parent'))]" name="groups" />
@@ -22,7 +22,7 @@
 
          <record id="student_rule_event_record" model="ir.rule">
             <field name="name">Personal Event Record</field>
-            <field name="model_id" ref="model_school_event" />
+            <field name="model_id" ref="event.model_event_event" />
             <field eval="1" name="global" />
             <field name="domain_force">[('part_standard_ids.student_ids.user_id.id','=',user.id)]</field>
             <field eval="[(4, ref('school.group_school_student'))]" name="groups" />
@@ -32,7 +32,7 @@
 
         <record id="parent_rule_event_record" model="ir.rule">
             <field name="name">Parent can see own child event rcord</field>
-            <field name="model_id" ref="model_school_event" />
+            <field name="model_id" ref="event.model_event_event" />
             <field eval="1" name="global" />
             <field name="domain_force">[('part_standard_ids.student_ids.parent_id.partner_id','=',user.partner_id.id)]</field>
             <field eval="[(4, ref('school.group_school_parent'))]" name="groups" />
@@ -42,7 +42,7 @@
 
          <record id="teacher_evnet_rule_event_record" model="ir.rule">
             <field name="name">Teacher can see all events</field>
-            <field name="model_id" ref="model_school_event" />
+            <field name="model_id" ref="event.model_event_event" />
             <field eval="1" name="global" />
             <field name="domain_force">[]</field>
             <field eval="[(4, ref('school.group_school_teacher'))]" name="groups" />
@@ -52,7 +52,7 @@
 
          <record id="teacher_event_rule_event_registration" model="ir.rule">
             <field name="name">Teacher Event Registration record rule</field>
-            <field name="model_id" ref="model_school_event_registration" />
+            <field name="model_id" ref="event.model_event_registration" />
             <field eval="True" name="global" />
             <field name="domain_force">[]</field>
             <field eval="[(4, ref('school.group_school_teacher'))]" name="groups" />
@@ -70,7 +70,7 @@
 
         <record id="teacher_school_regi_rules" model="ir.rule">
             <field name="name">Teacher Event Registration Record Rule</field>
-            <field name="model_id" ref="model_school_event_registration" />
+            <field name="model_id" ref="event.model_event_registration" />
             <field eval="True" name="global" />
             <field name="domain_force">[('part_name_id.cmp_id','=',user.company_id.id)]</field>
             <field eval="[(4, ref('school.group_school_teacher'))]" name="groups" />

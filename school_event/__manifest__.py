@@ -15,8 +15,6 @@
         "security/event_security.xml",
         "security/ir.model.access.csv",
         "views/event_view.xml",
-        "report/participants.xml",
-        "report/report_view.xml",
     ],
     "demo": ["demo/event_demo.xml"],
     "installable": True,
