@@ -46,7 +46,7 @@ class ProductProduct(models.Model):
         """Overide method to get default category books"""
         res = super(ProductProduct, self).default_get(fields)
         category = self.env["product.category"].search(
-            [("name", "=", "Books")]
+            [("name", "=", "Books")], limit=1
         )
         res.update({"categ_id": category.id})
         return res
