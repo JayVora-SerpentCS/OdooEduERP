@@ -38,13 +38,13 @@
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
 
-<!--         <record id="parents_rule_event_registration_test" model="ir.rule"> -->
-<!--             <field name="name">Parents Attendance Absentie Record Rule Test</field> -->
-<!--             <field name="model_id" ref="model_studentleave_request"/> -->
-<!--             <field name="global" eval="True"/> -->
-<!--             <field name="domain_force">[(1 ,'=', 1)]</field> -->
-<!--             <field name="groups" eval="[(4, ref('school.group_school_parent'),ref('school.group_school_teacher'))]"/> -->
-<!--         </record> -->
+        <record id="parents_rule_event_registration_test" model="ir.rule">
+            <field name="name">Parents Attendance Absentie Record Rule Test</field>
+            <field name="model_id" ref="model_studentleave_request"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1 ,'=', 1)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'),ref('school.group_school_teacher'))]"/>
+        </record>
 
         <!-- Record Rule teacher can see only related students of his ow standard -->
         <record id="teacher_rule_students" model="ir.rule">

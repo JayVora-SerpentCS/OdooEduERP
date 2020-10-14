@@ -17,7 +17,6 @@ class TestAttendance(common.TransactionCase):
         self.academic_year = self.env.ref("school.demo_academic_year_2")
         self.month = self.env.ref("school.demo_academic_month_current_6")
         self.stud_id = self.env.ref("school.demo_student_student_5")
-        self.daily_attendance_line_obj = self.env["daily.attendance.line"]
         self.monthly_attendance_obj = self.env["monthly.attendance.sheet"]
         self.sheet_line = self.env["attendance.sheet.line"]
         self.attendance_sheet_obj = self.env["attendance.sheet"]
@@ -43,9 +42,6 @@ class TestAttendance(common.TransactionCase):
         self.daily_attendance.onchange_standard_id()
         self.daily_attendance.attendance_draft()
         self.daily_attendance.attendance_validate()
-        self.daily_attendance_line = self.daily_attendance_line_obj.search(
-            [("standard_id", "=", self.daily_attendance.id)]
-        )
         for rec in self.daily_attendance_line:
             rec.onchange_attendance()
             rec.onchange_absent()

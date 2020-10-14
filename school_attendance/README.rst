@@ -5,6 +5,9 @@ School Attendance
 
 This module was written to extend the functionality of attendance management to support school assignment management and allow you to take attendance of students & Teachers through assignment management functionality.
 
+To install the OCA module refer the below:
+https://github.com/OCA/web/tree/13.0/web_widget_x2many_2d_matrix
+
 =============
 Installation
 =============

@@ -19,81 +19,13 @@
                         <field name="month_id" widget="selection" colspan="2" readonly="1"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Attendances">
-                            <field name="attendance_ids" nolabel="1" colspan="4">
-                                <tree string="Monthly Attendance" editable="bottom" create="false" delete="false">
-                                    <field name="roll_no" />
-                                    <field name="name" />
-                                    <field name="one" />
-                                    <field name="two" />
-                                    <field name="three" />
-                                    <field name="four" />
-                                    <field name="five" />
-                                    <field name="six" />
-                                    <field name="seven" />
-                                    <field name="eight" />
-                                    <field name="nine" />
-                                    <field name="ten" />
-                                    <field name="one_1" />
-                                    <field name="one_2" />
-                                    <field name="one_3" />
-                                    <field name="one_4" />
-                                    <field name="one_5" />
-                                    <field name="one_6" />
-                                    <field name="one_7" />
-                                    <field name="one_8" />
-                                    <field name="one_9" />
-                                    <field name="one_0" />
-                                    <field name="two_1" />
-                                    <field name="two_2" />
-                                    <field name="two_3" />
-                                    <field name="two_4" />
-                                    <field name="two_5" />
-                                    <field name="two_6" />
-                                    <field name="two_7" />
-                                    <field name="two_8" />
-                                    <field name="two_9" />
-                                    <field name="two_0" />
-                                    <field name="three_1" />
-                                    <field name="percentage" widget="progressbar" />
-                                </tree>
-                                <form string="Monthly Attendance">
-                                    <group col="6" colspan="4">
-                                        <field name="roll_no" />
-                                        <field name="name" />
-                                        <field name="one" />
-                                        <field name="two" />
-                                        <field name="three" />
-                                        <field name="four" />
-                                        <field name="five" />
-                                        <field name="six" />
-                                        <field name="seven" />
-                                        <field name="eight" />
-                                        <field name="nine" />
-                                        <field name="ten" />
-                                        <field name="one_1" />
-                                        <field name="one_2" />
-                                        <field name="one_3" />
-                                        <field name="one_4" />
-                                        <field name="one_5" />
-                                        <field name="one_6" />
-                                        <field name="one_7" />
-                                        <field name="one_8" />
-                                        <field name="one_9" />
-                                        <field name="one_0" />
-                                        <field name="two_1" />
-                                        <field name="two_2" />
-                                        <field name="two_3" />
-                                        <field name="two_4" />
-                                        <field name="two_5" />
-                                        <field name="two_6" />
-                                        <field name="two_7" />
-                                        <field name="two_8" />
-                                        <field name="two_9" />
-                                        <field name="two_0" />
-                                        <field name="three_1" />
-                                    </group>
-                                </form>
+                        <page string="Monthly Attendances">
+                            <field name="attendance_sheet_line_ids">
+                            <tree string="Monthly Attendance" editable="bottom" create="false" delete="false">
+                                <field name="daily_attendance_id" />
+                                <field name="student_id" />
+                                <field name="is_present_absent" />
+                            </tree>
                             </field>
                         </page>
                     </notebook>
@@ -130,6 +62,7 @@
                 </search>
             </field>
         </record>
+
         <!-- Form View of student Leave Request -->
         <record id="student_leave_req_form" model="ir.ui.view">
             <field name="name">studentleave.request.form</field>
@@ -241,31 +174,14 @@
                             <field name="date" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
                         </group>
                         <notebook colspan="4">
-                            <page string="Students">
-                                <field name="student_ids" nolabel="1" colspan="4">
-                                    <tree string="Student Information" editable="top" create="false" delete="false">
-                                        <field name="roll_no" required="1" readonly="1"/>
-                                        <field name="stud_id" required="1" options="{&quot;no_create&quot;: True}" domain="[('state','=','done')]" readonly="1"/>
-                                        <field name="is_present"/>
-                                        <field name="is_absent"/>
-                                        <field name='present_absentcheck' invisible='1'/>
-                                    </tree>
-                                    <form string="Student Information">
-                                        <group col="4">
-                                            <field name="stud_id"  domain="[('state','=','done')]">
-                                                <field name="roll_no" />
-                                                <field name="is_present" attrs="{'readonly':[('is_present','=',True)]}" />
-                                                <field name="is_absent" attrs="{'readonly':[('is_absent','=',True)]}" />
-                                                <field name='present_absentcheck' invisible='1'/>
-                                            </field>
-                                        </group>
-                                    </form>
-                                </field>
-                                <group col="2" string="Classroom Indicator">
-                                    <field name="total_student" />
-                                    <field name="total_presence" />
-                                    <field name="total_absent" />
-                                </group>
+                            <page string="Student Attendance">
+                                <button
+                                    name="open_student_attendance_sheet"
+                                    type="object"
+                                    string="Fill Student Attendance"
+                                    class="oe_link"
+                                    icon="fa-edit"
+                                />
                             </page>
                         </notebook>
                     </sheet>
@@ -298,13 +214,7 @@
                     <field name="date" />
                     <field name="state" />
                     <field name="user_id" />
-                    <field name="standard_id" />
-                    <field name="student_ids">
-                        <form>
-                            <field name="roll_no" />
-                            <field name="stud_id" />
-                        </form>
-                    </field>
+                    <field name="standard_id"/>
                 </tree>
             </field>
         </record>
@@ -318,7 +228,6 @@
         </record>
 
         <!-- Menu Item Of Daily Attendance Sheets -->
-
         <menuitem id="menu_daily_attendances" name="Daily Attendance Sheets" parent="menu_attendance"
                   action="action_daily_attendance_form" groups="school.group_school_administration,school.group_school_teacher" sequence="51"/>
         <!-- Menu of Student Leave Request -->

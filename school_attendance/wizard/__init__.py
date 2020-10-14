@@ -2,3 +2,4 @@
 
 from . import attendance_sheet_wizard
 from . import student_attendance_by_month
+from . import attendance_sheet_wiz

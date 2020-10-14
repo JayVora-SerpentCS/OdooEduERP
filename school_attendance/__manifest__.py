@@ -10,12 +10,13 @@
     "license": "AGPL-3",
     "summary": "A Module For Attendance Management In School",
     "complexity": "easy",
-    "depends": ["school", "hr_attendance"],
+    "depends": ["school", "web_widget_x2many_2d_matrix"],
+    #    Here the module web_widget_x2many_2d_matrix is a OCA module
+    #    To install : Refer the link provided in README file.
     "data": [
         "security/attendance_security.xml",
         "security/ir.model.access.csv",
         "views/school_attendance_view.xml",
-        "views/hr_employee_view.xml",
         "wizard/attendance_sheet_wizard_view.xml",
         "wizard/student_attendance_by_month_view.xml",
         "report/month_attendance.xml",

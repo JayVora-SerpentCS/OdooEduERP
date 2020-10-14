@@ -54,7 +54,7 @@ class BatchExamReport(models.AbstractModel):
         for sheet in sheets:
             for line in sheet.student_ids:
                 if line.stud_id.id == student.id:
-                    if line.is_present:
+                    if line.is_present_absent == "present":
                         flag = "P"
         return flag
 
