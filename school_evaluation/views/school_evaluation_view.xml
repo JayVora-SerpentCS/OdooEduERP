@@ -108,7 +108,7 @@
                     <newline />
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="eval_line" nolabel='1'  context="{'type':type}"
+                            <field name="eval_line_ids" nolabel='1'  context="{'type':type}"
                                 attrs="{'readonly':[('state','!=','start')]}">
                                 <tree string="Evaluation Line" editable='top'>
                                     <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>
@@ -165,7 +165,7 @@
                     <newline/>
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="eval_line" nolabel='1' context="{'type':type}"
+                            <field name="eval_line_ids" nolabel='1' context="{'type':type}"
                                 attrs="{'readonly':[('state','!=','start')]}">
                                 <tree string="Evaluation Line" editable='top'>
                                     <field name="stu_eval_id" domain="[('type','=',context.get('type'))]" options="{&quot;no_create&quot;: True}"/>

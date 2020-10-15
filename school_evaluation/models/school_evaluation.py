@@ -14,14 +14,14 @@ class SchoolEvaluation(models.Model):
     _description = "School Evaluation details"
     _rec_name = "type"
 
-    @api.depends("eval_line")
+    @api.depends("eval_line_ids")
     def _compute_total_points(self):
         """Method to compute evaluation points"""
         for rec in self:
-            if rec.eval_line:
+            if rec.eval_line_ids:
                 rec.total = sum(
                     line.point_id.rating
-                    for line in rec.eval_line
+                    for line in rec.eval_line_ids
                     if line.point_id.rating
                 )
 
@@ -43,7 +43,7 @@ class SchoolEvaluation(models.Model):
         help="Evaluation Date",
         default=fields.Date.context_today,
     )
-    eval_line = fields.One2many(
+    eval_line_ids = fields.One2many(
         "school.evaluation.line",
         "eval_id",
         "Questionnaire",
@@ -127,15 +127,15 @@ class SchoolEvaluation(models.Model):
             eval_temps_rec = eval_temp_obj.search([("type", "=", rec.type)])
             for eval_temp in eval_temps_rec:
                 eval_list.append((0, 0, {"stu_eval_id": eval_temp.id}))
-            if rec.eval_line:
-                rec.write({"eval_line": [(5, 0, 0)]})
-            rec.write({"eval_line": eval_list})
+            if rec.eval_line_ids:
+                rec.write({"eval_line_ids": [(5, 0, 0)]})
+            rec.write({"eval_line_ids": eval_list})
         return True
 
     def set_start(self):
         """change state to start"""
         for rec in self:
-            if not rec.eval_line:
+            if not rec.eval_line_ids:
                 raise ValidationError(
                     _(
                         'Please Get the Questions First!\
@@ -149,7 +149,7 @@ class SchoolEvaluation(models.Model):
         for rec in self:
             if [
                 line.id
-                for line in rec.eval_line
+                for line in rec.eval_line_ids
                 if (not line.point_id or not line.rating)
             ]:
                 raise ValidationError(
