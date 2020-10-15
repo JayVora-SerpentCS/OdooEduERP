@@ -642,7 +642,7 @@ not available now. Please try after sometime!"""
             vals_invoice = {
                 "move_type": "out_invoice",
                 "partner_id": usr,
-                "book_issue": record.id,
+                "book_issue_id": record.id,
                 "book_issue_reference": record.issue_code or "",
             }
             new_invoice_rec = invoice_obj.create(vals_invoice)
@@ -710,7 +710,7 @@ not available now. Please try after sometime!"""
             vals_invoice = {
                 "move_type": "out_invoice",
                 "partner_id": usr,
-                "book_issue": record.id,
+                "book_issue_id": record.id,
                 "book_issue_reference": record.issue_code or "",
             }
             new_invoice_rec = invoice_obj.create(vals_invoice)
@@ -744,7 +744,7 @@ not available now. Please try after sometime!"""
         """this method is use for the view invoice of penalty"""
         invoice_obj = self.env["account.move"]
         for rec in self:
-            invoices_rec = invoice_obj.search([("book_issue", "=", rec.id)])
+            invoices_rec = invoice_obj.search([("book_issue_id", "=", rec.id)])
             action = self.env.ref(
                 "account.action_move_out_invoice_type"
             ).read()[0]
@@ -763,7 +763,9 @@ not available now. Please try after sometime!"""
         """Method to compute invoices"""
         inv_obj = self.env["account.move"]
         for rec in self:
-            count_invoice = inv_obj.search_count([("book_issue", "=", rec.id)])
+            count_invoice = inv_obj.search_count(
+                [("book_issue_id", "=", rec.id)]
+            )
             rec.compute_inv = count_invoice
 
 

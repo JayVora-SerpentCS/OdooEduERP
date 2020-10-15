@@ -16,7 +16,7 @@ class ResPartner(models.Model):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    book_issue = fields.Many2one(
+    book_issue_id = fields.Many2one(
         "library.book.issue", "Book issue", help="Select book issue"
     )
     book_issue_reference = fields.Char(
@@ -42,6 +42,6 @@ class AccountPayment(models.Model):
         res = super(AccountPayment, self).action_post()
         for rec in self:
             invoice = rec.move_id
-            if invoice.book_issue and invoice.payment_state == "paid":
-                invoice.book_issue.state = "paid"
+            if invoice.book_issue_id and invoice.payment_state == "paid":
+                invoice.book_issue_id.state = "paid"
         return res
