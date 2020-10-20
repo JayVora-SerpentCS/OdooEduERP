@@ -401,7 +401,6 @@ class TransportRegistration(models.Model):
         """Inherited create method to call onchange methods"""
         ret_val = super(TransportRegistration, self).create(vals)
         if ret_val:
-            ret_val.onchange_point_id()
             ret_val.onchange_for_month()
         return ret_val
 
