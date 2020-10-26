@@ -23,7 +23,8 @@ class TerminateReasonLibrary(models.TransientModel):
             [
                 ("state", "in", ["issue", "reissue"]),
                 ("student_id", "=", student_obj.id),
-            ]
+            ],
+            limit=1,
         )
         card_info = ""
         if library_card_rec:
@@ -33,20 +34,19 @@ class TerminateReasonLibrary(models.TransientModel):
                 + library_card_rec.code
                 or ""
             )
-        if book_issue_rec:
-            for data in book_issue_rec:
-                card_info += (
-                    "\nStudent has issued the book "
-                    + " "
-                    + data.name.name
-                    + " "
-                    + "issue number is"
-                    + " "
-                    + data.issue_code
-                    + " "
-                    + "and library card number is"
-                    + " "
-                    + data.card_id.code
-                )
+        for data in book_issue_rec:
+            card_info += (
+                "\nStudent has issued the book "
+                + " "
+                + data.name.name
+                + " "
+                + "issue number is"
+                + " "
+                + data.issue_code
+                + " "
+                + "and library card number is"
+                + " "
+                + data.card_id.code
+            )
         res.update({"info": card_info})
         return res

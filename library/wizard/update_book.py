@@ -17,14 +17,14 @@ class UpdateBooks(models.TransientModel):
     def action_update_books(self):
         lib_book_obj = self.env["library.book.issue"]
         for rec in self:
+            if rec.name.availability == "notavailable":
+                raise ValidationError(
+                    _(
+                        """This Book is not available! \
+Please try after sometime !"""
+                    )
+                )
             if self._context.get("active_ids"):
                 for active_id in self._context.get("active_ids"):
                     book_rec = lib_book_obj.browse(active_id)
                     book_rec.name = rec.name.id
-                    if rec.name.availability == "notavailable":
-                        raise ValidationError(
-                            _(
-                                """This Book is not available! \
-Please try after sometime !"""
-                            )
-                        )
