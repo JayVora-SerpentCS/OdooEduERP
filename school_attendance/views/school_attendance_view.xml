@@ -178,7 +178,7 @@
                                 <button
                                     name="open_student_attendance_sheet"
                                     type="object"
-                                    string="Fill Student Attendance"
+                                    string="Fill Students Attendance"
                                     class="oe_link"
                                     icon="fa-edit"
                                 />

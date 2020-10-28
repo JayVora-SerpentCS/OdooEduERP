@@ -35,7 +35,6 @@ class AttendanceSheet(models.Model):
         "attendance.sheet.line.matrix", "daily_attendance_id"
     )
 
-
 class StudentleaveRequest(models.Model):
     """Defining Model Student Leave Request."""
 
@@ -250,6 +249,8 @@ class DailyAttendance(models.Model):
     ]
 
     def _open_student_attendance_sheet(self, view_xmlid):
+        """Method to open the wizard to fill
+        the attendance of the students"""
         wiz = self.env["attendance.sheet.wiz"].create({})
         view_id = self.env.ref("school_attendance.%s" % view_xmlid).id
         return {
