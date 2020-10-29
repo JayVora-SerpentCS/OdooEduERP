@@ -7,7 +7,7 @@ class AttendanceSheetWiz(models.TransientModel):
 
     attendance_line_ids = fields.Many2many(
         "attendance.sheet.line.matrix",
-        default=lambda self: self._default_attendance_line_ids()
+        default=lambda self: self._default_attendance_line_ids(),
     )
 
     def _default_attendance_line_ids(self):
@@ -18,21 +18,14 @@ class AttendanceSheetWiz(models.TransientModel):
             context_params.get("id")
         )
         students = self.env["student.student"].search(
-                    [
-                        ("standard_id", "=", daily_attendance_rec.standard_id.id),
-                        ("state", "=", "done"),
-                    ]
-                )
+            [
+                ("standard_id", "=", daily_attendance_rec.standard_id.id),
+                ("state", "=", "done"),
+            ]
+        )
         recs = self.env["daily.attendance"].search([])
         return [
-            (
-                0,
-                0,
-                {
-                    "daily_attendance_id": rec.id,
-                    "student_id": student.id,
-                },
-            )
-                for rec in recs
+            (0, 0, {"daily_attendance_id": rec.id, "student_id": student.id})
+            for rec in recs
             for student in students
         ]

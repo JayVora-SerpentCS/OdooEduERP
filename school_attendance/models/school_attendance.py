@@ -35,6 +35,7 @@ class AttendanceSheet(models.Model):
         "attendance.sheet.line.matrix", "daily_attendance_id"
     )
 
+
 class StudentleaveRequest(models.Model):
     """Defining Model Student Leave Request."""
 
@@ -290,44 +291,35 @@ class DailyAttendance(models.Model):
 
     def attendance_validate(self):
         """Method to validate attendance."""
-        acadmic_year_obj = self.env["academic.year"]
         acadmic_month_obj = self.env["academic.month"]
         attendance_sheet_obj = self.env["attendance.sheet"]
 
         for line in self:
-            year_ids = acadmic_year_obj.search(
-                [
-                    ("date_start", "<=", line.date),
-                    ("date_stop", ">=", line.date),
-                ]
-            )
             month_ids = acadmic_month_obj.search(
                 [
                     ("date_start", "<=", line.date),
                     ("date_stop", ">=", line.date),
-                    ("year_id", "in", year_ids.ids),
+                    ("year_id.date_start", "<=", line.date),
+                    ("year_id.date_stop", ">=", line.date),
+                ],
+                limit=1,
+            )
+            att_sheet_ids = attendance_sheet_obj.search(
+                [
+                    ("month_id", "in", month_ids.ids),
+                    ("year_id", "=", month_ids.year_id.id),
                 ]
             )
-            if month_ids:
-                month_data = month_ids
-                att_sheet_ids = attendance_sheet_obj.search(
-                    [
-                        ("month_id", "in", month_ids.ids),
-                        ("year_id", "in", year_ids.ids),
-                    ]
-                )
-                attendance_sheet_id = (
-                    att_sheet_ids and att_sheet_ids[0] or False
-                )
-                if not attendance_sheet_id:
-                    sheet = {
-                        "name": (month_data.name + "-" + str(line.date.year)),
-                        "standard_id": line.standard_id.id,
-                        "user_id": line.user_id.id,
-                        "month_id": month_data.id,
-                        "year_id": year_ids and year_ids.id or False,
-                    }
-                    attendance_sheet_id = attendance_sheet_obj.create(sheet)
+            attendance_sheet_id = att_sheet_ids and att_sheet_ids[0] or False
+            if not attendance_sheet_id:
+                sheet = {
+                    "name": (month_ids.name + "-" + str(line.date.year)),
+                    "standard_id": line.standard_id.id,
+                    "user_id": line.user_id.id,
+                    "month_id": month_ids.id,
+                    "year_id": month_ids.year_id.id or False,
+                }
+                attendance_sheet_id = attendance_sheet_obj.create(sheet)
         self.state = "validate"
 
 
@@ -335,10 +327,8 @@ class AttendanceSheetLineMatrix(models.Model):
     _name = "attendance.sheet.line.matrix"
     _description = "Attendance Sheet Line"
 
-    #    name = fields.Char()
     daily_attendance_id = fields.Many2one("daily.attendance")
     student_id = fields.Many2one("student.student")
-    #    value = fields.Integer()
     is_present_absent = fields.Selection(
         [("present", "Present"), ("absent", "Absent")],
         required=True,
