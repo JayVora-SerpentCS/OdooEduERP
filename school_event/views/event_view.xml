@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Inherited form view event.event -->
+    <record id="school_event_event_view_form_inherit_sms" model="ir.ui.view">
+        <field name="name">school.event.event.view.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="event_type" />
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='organizer_id']" position="after">
+                <field name="employee_id" />
+            </xpath>
+            <xpath expr="//field[@name='organizer_id']" position="after">
+                <field name="employee_id" />
+            </xpath>
+            <xpath expr="//page[@name='event_notes']" position="after">
+                <field name="part_standard_ids" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited form view event.registration -->
+    <record id="school_event_registration_view_form_inherit" model="ir.ui.view">
+        <field name="name">school.event.registration.view.form</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="part_name_id" />
+                <field name="student_standard_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Event Registration action -->
+    <record id="act_school_event_registration_from_event" model="ir.actions.act_window">
+        <field name="res_model">event.registration</field>
+        <field name="name">Attendees</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+    </record>
+
+    <menuitem id="menu_event_form_1" name="Events" parent="school.menu_ems" sequence="4" />
+
+    <menuitem action="event.action_event_view" id="menu_school_event" name="Event Informations" parent="menu_event_form_1" sequence="41" />
+
+    <menuitem action="act_school_event_registration_from_event" id="menu_school_event_registration" name="Event Registration" parent="menu_event_form_1" sequence="41" />
+</odoo>
