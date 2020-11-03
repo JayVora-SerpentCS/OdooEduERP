@@ -19,7 +19,7 @@ class TerminateReasonExam(models.TransientModel):
             [("student_id", "=", student_rec.id)]
         )
         if addexam_result_rec:
-            addexam_result_rec.write({"active": False})
+            addexam_result_rec.active = False
         if regular_examresult_rec:
-            regular_examresult_rec.write({"active": False})
+            regular_examresult_rec.active = False
         return super(TerminateReasonExam, self).save_terminate()

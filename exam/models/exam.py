@@ -562,12 +562,11 @@ class ExamResult(models.Model):
         """Method to compute result"""
         for rec in self:
             flag = False
-            if rec.result_ids:
-                for grade in rec.result_ids:
-                    if not grade.grade_line_id.fail:
-                        rec.result = "Pass"
-                    else:
-                        flag = True
+            for grade in rec.result_ids:
+                if not grade.grade_line_id.fail:
+                    rec.result = "Pass"
+                else:
+                    flag = True
             if flag:
                 rec.result = "Fail"
 
@@ -914,31 +913,31 @@ class AdditionalExamResult(models.Model):
         "Active", default=True, help="Activate/Deactivate record"
     )
 
-    @api.model
-    def create(self, vals):
-        """Override create method to get roll no and standard"""
+    def _update_student_vals(self, vals):
+        """This is the common method to update student
+        record at creation and updation of the exam record"""
         student_rec = self.env["student.student"].browse(
             vals.get("student_id")
         )
         vals.update(
             {
-                "roll_no_id": student_rec.roll_no,
+                "roll_no": student_rec.roll_no,
                 "standard_id": student_rec.standard_id.id,
+                "teacher_id": student_rec.standard_id.user_id.id,
             }
         )
+
+    @api.model
+    def create(self, vals):
+        """Override create method to get roll no and standard"""
+        if vals.get("student_id"):
+            self._update_student_vals(vals)
         return super(AdditionalExamResult, self).create(vals)
 
     def write(self, vals):
         """Override write method to get roll no and standard"""
-        student_rec = self.env["student.student"].browse(
-            vals.get("student_id")
-        )
-        vals.update(
-            {
-                "roll_no_id": student_rec.roll_no,
-                "standard_id": student_rec.standard_id.id,
-            }
-        )
+        if vals.get("student_id"):
+            self._update_student_vals(vals)
         return super(AdditionalExamResult, self).write(vals)
 
     @api.onchange("student_id")

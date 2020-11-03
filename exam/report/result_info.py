@@ -47,10 +47,12 @@ class ReportResultInfo(models.AbstractModel):
         obtain_marks = 0.0
         maximum_marks = 0.0
         for res in result_id:
-            obtain_marks = float(sum(
-                        res_data.obtain_marks for res_data in res.result_ids))
-            maximum_marks = float(sum(
-                        res_data.obtain_marks for res_data in res.result_ids))
+            obtain_marks = float(
+                sum(res_data.obtain_marks for res_data in res.result_ids)
+            )
+            maximum_marks = float(
+                sum(res_data.obtain_marks for res_data in res.result_ids)
+            )
             per += obtain_marks * 100 / maximum_marks
             final_total = final_total + res.total
             value.update(
