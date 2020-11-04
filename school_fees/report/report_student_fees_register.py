@@ -9,8 +9,7 @@ class ReportStudentFeesRegister(models.AbstractModel):
 
     def get_month(self, indate):
         """Method to get month"""
-        out_date = indate.strftime("%B") + "-" + indate.strftime("%Y")
-        return out_date
+        return indate.strftime("%B") + "-" + indate.strftime("%Y")
 
     @api.model
     def _get_report_values(self, docids, data=None):
