@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- Form View Of Subject Result -->
+    <record id="view_subject_result_form11" model="ir.ui.view">
+        <field name="name">subject.result.form</field>
+        <field name="model">subject.result.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Result Report">
+                <field name="result_ids">
+                    <form string="Subjects">
+                        <field name="subject_id"/>
+                        <field name="maximum_marks"/>
+                        <field name="minimum_marks"/>
+                        <field name="obtain_marks"/>
+                    </form>
+                </field>
+                <footer>
+                    <button class="btn btn-sm btn-default fa fa-book" name='result_report' type='object' string='Result'/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <!-- Action Of Form View Of Subject Result-->
+    <record id="action_subject_result_wiz" model="ir.actions.act_window">
+        <field name="name">Subject Results</field>
+        <field name="res_model">subject.result.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_subject_result_wiz_act_window" model="ir.actions.act_window">
+        <field name="name">Subject Result</field>
+        <field name="res_model">subject.result.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_exam_result"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="groups_id" eval="[(4, ref('school.group_school_administration'))]"/>
+    </record>
+
+</odoo>
