@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Fees Management",
+    "name": "Fees Management for Education ERP",
     "version": "14.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
