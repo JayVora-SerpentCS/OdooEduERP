@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_school_evaluation_admin,school.evaluation,model_school_evaluation,school.group_school_administration,1,1,1,1
+access_school_evaluation_line_admin,school.evaluation.line,model_school_evaluation_line,school.group_school_administration,1,1,1,1
+access_school_evaluation_template_admin,school.evaluation.template,model_school_evaluation_template,school.group_school_administration,1,1,1,1
+access_rating_rating_admin,rating.rating,model_rating_rating,school.group_school_administration,1,1,1,1
+access_school_evaluation_teacher,school.evaluation,model_school_evaluation,school.group_school_teacher,1,1,1,0
+access_school_evaluation_line_teacher,school.evaluation.line,model_school_evaluation_line,school.group_school_teacher,1,1,1,1
+access_school_evaluation_template_teacher,school.evaluation.template,model_school_evaluation_template,school.group_school_teacher,1,0,0,0
+access_rating_rating_teacher,rating.rating,model_rating_rating,school.group_school_teacher,1,1,0,0
+access_school_evaluation_stu,school.evaluation,model_school_evaluation,school.group_school_student,1,0,0,0
+access_school_evaluation_line_stu,school.evaluation.line,model_school_evaluation_line,school.group_school_student,1,0,0,0
+access_school_evaluation_template_stu,school.evaluation.template,model_school_evaluation_template,school.group_school_student,1,0,0,0
+access_rating_rating_stu,rating.rating,model_rating_rating,school.group_school_student,1,0,0,0
+access_school_evaluation_parent,school.evaluation,model_school_evaluation,school.group_school_parent,1,0,0,0
+access_school_evaluation_line_parent,school.evaluation.line,model_school_evaluation_line,school.group_school_parent,1,0,0,0
+access_school_evaluation_template_parent,school.evaluation.template,model_school_evaluation_template,school.group_school_parent,1,0,0,0
+access_rating_rating_parent,rating.rating,model_rating_rating,school.group_school_parent,1,0,0,0

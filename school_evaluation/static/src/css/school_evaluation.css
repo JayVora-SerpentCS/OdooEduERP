@@ -1,0 +1,12 @@
+.o_list_number {
+    text-align: left ! important;
+    white-space: nowrap
+}
+
+[data-field="complete_assign"]{
+	width:10px;
+}
+/* .o_list_button{ */
+/*     margin-left: 65px; */
+/*     position: absolute; */
+/* } */
