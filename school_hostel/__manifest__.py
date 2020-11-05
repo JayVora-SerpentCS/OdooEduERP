@@ -23,5 +23,4 @@
     ],
     "demo": ["demo/school_hostel_demo.xml"],
     "installable": True,
-    "auto_install": False,
 }
