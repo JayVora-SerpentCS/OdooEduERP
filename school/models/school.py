@@ -656,7 +656,7 @@ class StudentNews(models.Model):
     @api.constrains("date")
     def checknews_dates(self):
         """Check news date."""
-        new_date = fields.Date.today()
+        new_date = fields.Datetime.today()
         if self.date < new_date:
             raise ValidationError(_('''Configure expiry date greater than \
 current date!'''))
