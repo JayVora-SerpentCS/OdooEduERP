@@ -127,6 +127,7 @@ than %s years!''' % (self.school_id.required_age)))
     @api.depends('state')
     def _compute_teacher_user(self):
         for rec in self:
+            rec.teachr_user_grp = False
             if rec.state == 'done':
                 teacher = self.env.user.has_group("school.group_school_teacher"
                                                   )
