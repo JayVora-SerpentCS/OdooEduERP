@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+        <!--  School HOSTEL -->
+        <record id="demo_school_hostel_1" model="hostel.type">
+            <field name="name">International HOSTEL</field>
+            <field name="type">male</field>
+        </record>
+        <record id="demo_school_hostel_2" model="hostel.type">
+            <field name="name">ABPS HOSTEL</field>
+            <field name="type">common</field>
+        </record>
+        <record id="demo_school_hostel_3" model="hostel.type">
+            <field name="name">ABC HOSTEL</field>
+            <field name="type">female</field>
+        </record>
+        <record id="demo_school_hostel_4" model="hostel.type">
+            <field name="name">XYZ HOSTEL</field>
+            <field name="type">common</field>
+        </record>
+        <!--  School HOSTEL Rooms -->
+        <record id="demo_school_hostel_room_1" model="hostel.room">
+            <field name="name" ref="demo_school_hostel_1"/>
+            <field name="room_no">Room No : 101</field>
+            <field name="floor_no">1</field>
+            <field name="rent_amount">1000</field>
+            <field name="student_per_room">3</field>
+        </record>
+        <record id="demo_school_hostel_room_2" model="hostel.room">
+            <field name="name" ref="demo_school_hostel_2"/>
+            <field name="room_no">Room No : 302</field>
+            <field name="floor_no">3</field>
+            <field name="rent_amount">2000</field>
+            <field name="student_per_room">4</field>
+        </record>
+        <record id="demo_school_hostel_room_3" model="hostel.room">
+            <field name="name" ref="demo_school_hostel_2"/>
+            <field name="room_no">Room No : 201</field>
+            <field name="floor_no">2</field>
+            <field name="rent_amount">1000</field>
+            <field name="student_per_room">2</field>
+        </record>
+        <record id="demo_school_hostel_room_4" model="hostel.room">
+            <field name="name" ref="demo_school_hostel_3"/>
+            <field name="room_no">Room No : 102</field>
+            <field name="floor_no">1</field>
+            <field name="rent_amount">2000</field>
+            <field name="student_per_room">4</field>
+        </record>
+        <record id="demo_school_hostel_room_5" model="hostel.room">
+            <field name="name" ref="demo_school_hostel_1"/>
+            <field name="room_no">Room No : 202</field>
+            <field name="floor_no">2</field>
+            <field name="rent_amount">1000</field>
+            <field name="student_per_room">3</field>
+        </record>
+        <!--HOSTEL Student -->
+        <record id="demo_school_hostel_Student_1" model="hostel.student">
+            <field name="student_id" ref="school.demo_student_student_4"/>
+            <field name="admission_date" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/>
+            <field name="duration">6</field>
+            <field name="hostel_info_id" ref="demo_school_hostel_1"/>
+            <field name="room_id" ref="demo_school_hostel_room_1"/>
+            <field name="paid_amount">0</field>
+        </record>
+        <record id="demo_school_hostel_Student_2" model="hostel.student">
+            <field name="student_id" ref="school.demo_student_student_5"/>
+            <field name="admission_date" eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"/>
+            <field name="duration">6</field>
+            <field name="hostel_info_id" ref="demo_school_hostel_2"/>
+            <field name="room_id" ref="demo_school_hostel_room_3"/>
+            <field name="paid_amount">0</field>
+        </record>
+        <record id="demo_school_hostel_Student_3" model="hostel.student">
+            <field name="student_id" ref="school.demo_student_student_6"/>
+            <field name="admission_date" eval="(DateTime.today()).strftime('%Y-06-01 %H:%M')"/>
+            <field name="duration">6</field>
+            <field name="hostel_info_id" ref="demo_school_hostel_3"/>
+            <field name="room_id" ref="demo_school_hostel_room_4"/>
+            <field name="paid_amount">0</field>
+        </record>
+
+        <!--  School Hostel Amenities-->
+        <record id="demo_amenity_telephone" model="hostel.amenities">
+            <field name="name">Telephone access</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_ac" model="hostel.amenities">
+            <field name="name">Air Conditioning</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_private_bathroom" model="hostel.amenities">
+            <field name="name">Private Bathroom</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_guest_sofa" model="hostel.amenities">
+            <field name="name">Guest sofa-bed</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_tv" model="hostel.amenities">
+            <field name="name">Television</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_internet" model="hostel.amenities">
+            <field name="name">Internet Access</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_refrigerator" model="hostel.amenities">
+            <field name="name">Refrigerator</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="demo_amenity_microwave" model="hostel.amenities">
+            <field name="name">Microwave</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>
