@@ -40,14 +40,14 @@ class TestTransport(common.TransactionCase):
         #        Do One Registration of The Participant
         self.transport_registration = self.transport_registration_obj.create(
             {
-                "part_name": self.student.id,
+                "student_id": self.student.id,
                 "name": self.transport_root.id,
                 "vehicle_id": self.transport_vehicle.id,
-                "for_month": 2,
+                "registration_month": 2,
             }
         )
         self.transport_registration.onchange_point_id()
-        self.transport_registration.onchange_for_month()
+        self.transport_registration.onchange_registration_month()
         self.transport_registration.trans_regi_confirm()
         self.transport_registration.trans_regi_cancel()
         #        Do one entry of the transport.participant

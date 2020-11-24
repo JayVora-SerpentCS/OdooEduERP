@@ -19,7 +19,7 @@ class TerminateReasonTransport(models.TransientModel):
         )
         student_transport_rec = self.env["transport.registration"].search(
             [
-                ("part_name", "=", student_rec.id),
+                ("student_id", "=", student_rec.id),
                 ("state", "in", ["confirm", "pending", "paid"]),
             ]
         )

@@ -243,7 +243,7 @@ class StudentTransports(models.Model):
 
         is over.
         """
-        current_date = fields.datetime.today()
+        current_date = fields.Date.today()
         trans_parti_obj = self.env["transport.participant"]
         trans_parti_rec = trans_parti_obj.search(
             [("tr_end_date", "<", current_date)]
@@ -297,15 +297,17 @@ class StudentStudent(models.Model):
 
         when student is set to alumni state.
         """
+        trans_student_obj = self.env["transport.participant"]
+        trans_regi_obj = self.env["transport.registration"]
         for rec in self:
-            trans_student_rec = self.env["transport.participant"].search(
+            trans_student_rec = trans_student_obj.search(
                 [("name", "=", rec.id)]
             )
-            trans_regi_rec = self.env["transport.registration"].search(
-                [("part_name", "=", rec.id)]
+            trans_regi_rec = trans_regi_obj.search(
+                [("student_id", "=", rec.id)]
             )
             if trans_regi_rec:
-                trans_regi_rec.write({"state": "cancel"})
+                trans_regi_rec.state = "cancel"
             if trans_student_rec:
                 trans_student_rec.active = False
         return super(StudentStudent, self).set_alumni()
@@ -328,10 +330,10 @@ class TransportRegistration(models.Model):
         if transport_user_group.id in grps:
             self.transport_user = True
 
-    @api.depends("m_amount", "for_month")
+    @api.depends("monthly_amount", "registration_month")
     def _compute_transport_fees(self):
         """Method to compute transport fees"""
-        self.transport_fees = self.m_amount * self.for_month
+        self.transport_fees = self.monthly_amount * self.registration_month
 
     name = fields.Many2one(
         "student.transport",
@@ -340,7 +342,7 @@ class TransportRegistration(models.Model):
         required=True,
         help="Enter transport root name",
     )
-    part_name = fields.Many2one(
+    student_id = fields.Many2one(
         "student.student", "Student Name", required=True, help="Student Name"
     )
     reg_date = fields.Date(
@@ -354,7 +356,7 @@ class TransportRegistration(models.Model):
         readonly=True,
         help="Start Date of registration",
     )
-    for_month = fields.Integer("Registration For Months")
+    registration_month = fields.Integer("Registration For Months")
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -375,7 +377,7 @@ class TransportRegistration(models.Model):
         required=True,
         help="Enter transport vehicle",
     )
-    m_amount = fields.Float(
+    monthly_amount = fields.Float(
         "Monthly Amount", readonly=True, help="Enter monthly amount"
     )
     paid_amount = fields.Float("Paid Amount", help="Amount Paid")
@@ -401,7 +403,7 @@ class TransportRegistration(models.Model):
         """Inherited create method to call onchange methods"""
         ret_val = super(TransportRegistration, self).create(vals)
         if ret_val:
-            ret_val.onchange_for_month()
+            ret_val.onchange_registration_month()
         return ret_val
 
     def unlink(self):
@@ -421,7 +423,7 @@ class TransportRegistration(models.Model):
         invoice_obj = self.env["account.move"]
         for rec in self:
             rec.state = "pending"
-            partner = rec.part_name and rec.part_name.partner_id
+            partner = rec.student_id and rec.student_id.partner_id
             vals = {
                 "partner_id": partner.id,
                 "move_type": "out_invoice",
@@ -434,10 +436,10 @@ class TransportRegistration(models.Model):
             line_vals = {
                 "name": "Transport Fees",
                 "account_id": acct_journal_id,
-                "quantity": rec.for_month,
-                "price_unit": rec.m_amount,
+                "quantity": rec.registration_month,
+                "price_unit": rec.monthly_amount,
             }
-            invoice.write({"invoice_line_ids": [(0, 0, line_vals)]})
+            invoice.invoice_line_ids = [(0, 0, line_vals)]
             return {
                 "name": _("Pay Transport Fees"),
                 "view_mode": "form",
@@ -479,11 +481,12 @@ class TransportRegistration(models.Model):
                 [("transport_student_id", "=", rec.id)]
             )
 
-    @api.onchange("for_month")
-    def onchange_for_month(self):
+    @api.onchange("registration_month")
+    def onchange_registration_month(self):
         """Method to compute registration end date."""
         tr_start_date = fields.Date.today()
-        tr_end_date = tr_start_date + relativedelta(months=self.for_month)
+        tr_end_date = tr_start_date + relativedelta(
+                                            months=self.registration_month)
         self.reg_end_date = tr_end_date
 
     def trans_regi_cancel(self):
@@ -499,7 +502,7 @@ class TransportRegistration(models.Model):
         vehi_obj = self.env["fleet.vehicle"]
         for rec in self:
             # registration months must one or more then one
-            if rec.for_month <= 0:
+            if rec.registration_month <= 0:
                 raise UserError(
                     _(
                         """Error!
@@ -515,7 +518,8 @@ class TransportRegistration(models.Model):
             # calculate amount and Registration End date
             tr_start_date = rec.reg_date
             ed_date = rec.name.end_date
-            tr_end_date = tr_start_date + relativedelta(months=rec.for_month)
+            tr_end_date = tr_start_date + relativedelta(
+                                            months=rec.registration_month)
             if tr_end_date > ed_date:
                 raise UserError(
                     _(
@@ -526,12 +530,12 @@ end date is Early!"""
                 )
             # make entry in Transport
             dict_prt = {
-                "stu_pid_id": str(rec.part_name.pid),
-                "amount": rec.m_amount,
+                "stu_pid_id": str(rec.student_id.pid),
+                "amount": rec.monthly_amount,
                 "transport_id": rec.name.id,
                 "tr_end_date": tr_end_date,
-                "name": rec.part_name.id,
-                "months": rec.for_month,
+                "name": rec.student_id.id,
+                "months": rec.registration_month,
                 "tr_reg_date": rec.reg_date,
                 "state": "running",
                 "vehicle_id": rec.vehicle_id.id,
@@ -544,7 +548,7 @@ end date is Early!"""
             flag = True
             for prt in vehi_participants_list:
                 data = stu_prt_obj.browse(prt)
-                if data.name.id == rec.part_name.id:
+                if data.name.id == rec.student_id.id:
                     flag = False
             if flag:
                 vehi_participants_list.append(temp.id)
@@ -554,11 +558,11 @@ end date is Early!"""
             )
             # make entry in student.
             transport_list = []
-            for root in rec.part_name.transport_ids:
+            for root in rec.student_id.transport_ids:
                 transport_list.append(root.id)
             transport_list.append(temp.id)
-            part_name_rec = prt_obj.browse(rec.part_name.id)
-            part_name_rec.sudo().write(
+            student_rec = prt_obj.browse(rec.student_id.id)
+            student_rec.sudo().write(
                 {"transport_ids": [(6, 0, transport_list)]}
             )
             # make entry in transport.
