@@ -11,11 +11,11 @@
     "complexity": "easy",
     "depends": ["school", "stock", "delivery", "purchase"],
     "data": [
-        "security/library_security.xml",
-        "security/ir.model.access.csv",
         "data/library_sequence.xml",
         "data/library_category_data.xml",
         "data/library_card_schedular.xml",
+        "security/library_security.xml",
+        "security/ir.model.access.csv",
         "report/report_view.xml",
         "views/library_view.xml",
         "wizard/update_book_view.xml",

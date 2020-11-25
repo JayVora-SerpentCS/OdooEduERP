@@ -350,7 +350,7 @@
                         <field name="code" placeholder="Code" readonly="1" />
                         <field name="book_limit" attrs="{'readonly':[('state','=','running')]}" />
                         <field name="user" required="1" attrs="{'readonly':[('state','=','running')]}" />
-                        <field name="gt_name" invisible="True" />
+                        <field name="card_name" invisible="True" />
                     </group>
                     <group col="4" colspan="4" attrs="{'invisible':[('user','!=','student')]}">
                         <separator colspan="4" col="4" />
@@ -381,7 +381,7 @@
                 <field name="code" />
                 <field name="user" />
                 <field name="book_limit" />
-                <field name="gt_name" />
+                <field name="card_name" />
             </tree>
         </field>
     </record>
@@ -393,7 +393,7 @@
             <search string="Card Details">
                 <field name="code" />
                 <field name="user" />
-                <field name="gt_name" />
+                <field name="card_name" />
             </search>
         </field>
     </record>
@@ -434,7 +434,7 @@
                         <field name="name" domain="[('availability','=','available'),('categ_id.book_categ', '=', True),('is_ebook','=',False)]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" />
                         <field name="card_id" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('state', '=', 'running')]" />
                         <field name="user" readonly="1" />
-                        <field name="gt_name" invisible="True" />
+                        <field name="card_name" invisible="True" />
                     </group>
                     <group col="4" colspan="4" attrs="{'invisible':[('user','!=','Student')]}">
                         <separator string="Student Details" colspan="4" col="4" />
@@ -473,7 +473,7 @@
                 <field name="issue_code" />
                 <field name="name" />
                 <field name="user" />
-                <field name="gt_name" />
+                <field name="card_name" />
                 <field name="date_issue" />
                 <field name="date_return" />
                 <field name="state" widget="badge" decoration-info="state in ('draft', 'returned', 'pending')" decoration-danger="state in ('cancel', 'lost','fine')" decoration-success="state in ('issued', 'reissued','paid','subscribe')"/>
@@ -493,7 +493,7 @@
                 <field name="user" />
                 <field name="name" />
                 <field name="card_id" />
-                <field name="gt_name" />
+                <field name="card_name" />
                 <field name="standard_id" attrs="{'invisible':[('user','!=','Student')]}" />
                 <field name="roll_no" attrs="{'invisible':[('user','!=','Student')]}" />
                 <field name="date_issue" />
@@ -538,7 +538,7 @@
                 <filter name="lost" string="Lost" domain="[('state','=','lost')]" />
                 <field name="name" />
                 <field name="user" />
-                <field name="gt_name" />
+                <field name="card_name" />
                 <newline />
                 <group expand="0" string="Group By" colspan="12" col="10">
                     <filter name="state" string="State" help="By State" context="{'group_by':'state'}" />
@@ -585,7 +585,7 @@
                         <group>
                             <field name="ebook_name" attrs="{'invisible':[('type','!=','ebook')], 'required':                                  [('type','=','ebook')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', True)]" widget="selection" />
                             <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':                                  [('type','=','existing')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', False)]" widget="selection" />
-                            <field name="bk_nm" invisible="1" />
+                            <field name="book_name" invisible="1" />
                             <field name="type" attrs="{'readonly':[('state','!=','draft')]}" invisible="0" required="1" />
                         </group>
                         <group>
@@ -605,7 +605,7 @@
                 <field name="req_id" />
                 <field name="card_id" />
                 <field name="type" />
-                <field name="bk_nm" />
+                <field name="book_name" />
                 <field name="ebook_name" />
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-danger="state == 'cancel'" decoration-success="state == 'confirm'"/>
             </tree>

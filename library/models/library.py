@@ -26,7 +26,7 @@ class LibraryAuthor(models.Model):
     _description = "Author"
 
     name = fields.Char("Name", required=True, help="Enter library author")
-    born_date = fields.Date("Date of Birth", help="Enter date of birth")
+    birth_date = fields.Date("Date of Birth", help="Enter date of birth")
     death_date = fields.Date("Date of Death", help="Enter date of death")
     biography = fields.Text("Biography", help="Enter biography")
     note = fields.Text("Notes", help="Enter notes")
@@ -62,7 +62,7 @@ class LibraryCard(models.Model):
             if rec.student_id:
                 user = rec.student_id.name
             user = rec.teacher_id.name
-            rec.gt_name = user
+            rec.card_name = user
 
     @api.depends("start_date", "duration")
     def _compute_end_date(self):
@@ -87,8 +87,8 @@ class LibraryCard(models.Model):
     standard_id = fields.Many2one(
         "school.standard", "Standard", help="Select standard"
     )
-    gt_name = fields.Char(
-        compute="_compute_name", string="Name", help="Card name"
+    card_name = fields.Char(
+        compute="_compute_name", string="Card Name", help="Card name"
     )
     user = fields.Selection(
         [("student", "Student"), ("teacher", "Teacher")],
@@ -211,11 +211,12 @@ class LibraryCard(models.Model):
     def librarycard_expire(self):
         """Schedular to change in librarycard state when end date is over"""
         current_date = fields.Datetime.today()
-        lib_card = self.env["library.card"]
-        lib_card_search = lib_card.search([("end_date", "<", current_date)])
-        if lib_card_search:
-            for rec in lib_card_search:
-                rec.state = "expire"
+        library_card_obj = self.env["library.card"]
+        library_card_rec = library_card_obj.search(
+            [("end_date", "<", current_date)]
+        )
+        for rec in library_card_rec:
+            rec.state = "expire"
 
 
 class LibraryBookIssue(models.Model):
@@ -233,8 +234,7 @@ class LibraryBookIssue(models.Model):
         for rec in self:
             diff = rd(days=rec.day_to_return_book or 0.0)
             if rec.date_issue and diff:
-                ret_date = rec.date_issue + diff
-                rec.date_return = ret_date
+                rec.date_return = rec.date_issue + diff
 
     @api.depends("actual_return_date", "day_to_return_book")
     def _compute_penalty(self):
@@ -286,7 +286,7 @@ class LibraryBookIssue(models.Model):
     teacher_id = fields.Many2one(
         "school.teacher", "Teacher Name", help="Select teacher"
     )
-    gt_name = fields.Char("Name", help="Enter name")
+    card_name = fields.Char("Card Name", help="Card name")
     standard_id = fields.Many2one(
         "school.standard", "Standard", help="Select standard"
     )
@@ -430,11 +430,11 @@ class LibraryBookIssue(models.Model):
                 self.student_id = self.card_id.student_id.id or False
                 self.standard_id = self.card_id.standard_id.id or False
                 self.roll_no = int(self.card_id.roll_no) or False
-                self.gt_name = self.card_id.gt_name or ""
+                self.card_name = self.card_id.card_name or ""
 
             else:
                 self.teacher_id = self.card_id.teacher_id.id
-                self.gt_name = self.card_id.gt_name
+                self.card_name = self.card_id.card_name
 
     @api.constrains("card_id", "name")
     def check_book_issue(self):
@@ -455,59 +455,50 @@ class LibraryBookIssue(models.Model):
                 )
             )
 
+    def _update_student_vals(self, vals):
+        """This is the common method to update student
+        record at creation and edition of the exam record"""
+        # fetch the record of user type student
+        card_rec = self.env["library.card"].browse(vals.get("card_id"))
+        vals.update(
+            {
+                "student_id": card_rec.student_id.id,
+                "card_id": card_rec.id,
+                "user": str(card_rec.user.title()),
+                "standard_id": card_rec.standard_id.id,
+                "roll_no": int(card_rec.roll_no),
+                "card_name": card_rec.card_name,
+            }
+        )
+
+    def _update_teacher_vals(self, vals):
+        """This is the common method to update teacher
+        record at creation and edition of the exam record"""
+        # fetch the record of user type teacher
+        card_rec = self.env["library.card"].browse(vals.get("card_id"))
+        vals.update(
+            {
+                "teacher_id": card_rec.teacher_id.id,
+                "card_name": card_rec.card_name,
+                "user": str(card_rec.user.title()),
+            }
+        )
+
     @api.model
     def create(self, vals):
         """Override create method"""
         if vals.get("card_id"):
-            # fetch the record of user type student
-            card_rec = self.env["library.card"].browse(vals.get("card_id"))
-            vals.update(
-                {
-                    "student_id": card_rec.student_id.id,
-                    "card_id": card_rec.id,
-                    "user": str(card_rec.user.title()),
-                    "standard_id": card_rec.standard_id.id,
-                    "roll_no": int(card_rec.roll_no),
-                    "gt_name": card_rec.gt_name,
-                }
-            )
+            self._update_student_vals(vals)
         if vals.get("card_id") and vals.get("user") == "Teacher":
-            # fetch the record of user type teacher
-            card_rec = self.env["library.card"].browse(vals.get("card_id"))
-            vals.update(
-                {
-                    "teacher_id": card_rec.teacher_id.id,
-                    "gt_name": card_rec.gt_name,
-                    "user": str(card_rec.user.title()),
-                }
-            )
+            self._update_teacher_vals(vals)
         return super(LibraryBookIssue, self).create(vals)
 
     def write(self, vals):
         """Override write method"""
-        # update the details of user type student
         if vals.get("card_id"):
-            card_rec = self.env["library.card"].browse(vals.get("card_id"))
-            vals.update(
-                {
-                    "student_id": card_rec.student_id.id,
-                    "card_id": card_rec.id,
-                    "user": str(card_rec.user.title()),
-                    "standard_id": card_rec.standard_id.id,
-                    "roll_no": int(card_rec.roll_no),
-                    "gt_name": card_rec.gt_name,
-                }
-            )
+            self._update_student_vals(vals)
         if vals.get("card_id") and vals.get("user") == "Teacher":
-            # upate the details of user type Teacher
-            card_rec = self.env["library.card"].browse(vals.get("card_id"))
-            vals.update(
-                {
-                    "teacher_id": card_rec.teacher_id.id,
-                    "gt_name": card_rec.gt_name,
-                    "user": str(card_rec.user.title()),
-                }
-            )
+            self._update_teacher_vals(vals)
         return super(LibraryBookIssue, self).write(vals)
 
     def draft_book(self):
@@ -784,7 +775,7 @@ class LibraryBookRequest(models.Model):
                 if rec.type == "existing":
                     book = rec.name.name
                 book = rec.new_book
-                rec.bk_nm = book
+                rec.book_name = book
 
     req_id = fields.Char(
         "Request ID", readonly=True, default="New", help="Enter Request ID"
@@ -799,7 +790,7 @@ class LibraryBookRequest(models.Model):
     )
     name = fields.Many2one("product.product", "Book Name", help="Select book")
     new_book = fields.Char("New Book Name", help="Enter new book name")
-    bk_nm = fields.Char(
+    book_name = fields.Char(
         "Name", compute="_compute_bname", store=True, help="Enter book name"
     )
     state = fields.Selection(

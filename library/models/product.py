@@ -94,8 +94,10 @@ class ProductProduct(models.Model):
         """ This method get the product code"""
         res = {}
         parent_id = self._context.get("parent_id", None)
-        for p in self:
-            res[p.id] = self._get_partner_code_name(p, parent_id)["code"]
+        for product in self:
+            res[product.id] = self._get_partner_code_name(product, parent_id)[
+                "code"
+            ]
         return res
 
     @api.model
