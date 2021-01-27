@@ -18,8 +18,8 @@ def emailvalidation(email):
     if email:
         email_regex = re.compile(EM)
         if not email_regex.match(email):
-            raise ValidationError(_('''This seems not to be valid email.
-            Please enter email in correct format!'''))
+            raise ValidationError(_("This seems not to be valid email.\
+            Please enter email in correct format!"))
 
 
 class AcademicYear(models.Model):
@@ -83,26 +83,26 @@ class AcademicYear(models.Model):
         new_stop_date = self.date_stop
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
-            raise ValidationError(_('''Error! The duration of the academic year
-                                      is invalid.'''))
+            raise ValidationError(_(
+                        "The duration of the academic year is invalid."))
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
-            raise ValidationError(_('''The start date of the academic year
-                                      should be less than end date.'''))
+            raise ValidationError(_(
+        "The start date of the academic year should be less than end date."))
         for old_ac in self.search([('id', 'not in', self.ids)]):
             # Check start date should be less than stop date
             if (old_ac.date_start <= self.date_start <= old_ac.date_stop or
                     old_ac.date_start <= self.date_stop <= old_ac.date_stop):
-                raise ValidationError(_('''Error! You cannot define overlapping
-                                          academic years.'''))
+                raise ValidationError(_(
+                    "Error! You cannot define overlapping academic years."))
 
     @api.constrains('current')
     def check_current_year(self):
         '''Constraint on active current year'''
         current_year_rec = self.search_count([('current', '=', True)])
         if current_year_rec >= 2:
-            raise ValidationError(_('''
-                    Error! You cannot set two current year active!'''))
+            raise ValidationError(_(
+                            "Error! You cannot set two current year active!"))
 
 
 class AcademicMonth(models.Model):
@@ -127,14 +127,6 @@ class AcademicMonth(models.Model):
          'Academic Month should be unique!'),
     ]
 
-    @api.constrains('date_start', 'date_stop')
-    def _check_duration(self):
-        '''Method to check duration of date'''
-        if (self.date_stop and self.date_start and
-                self.date_stop < self.date_start):
-            raise ValidationError(_(''' End of Period date should be greater
-                                    than Start of Peroid Date!'''))
-
     @api.constrains('year_id', 'date_start', 'date_stop')
     def _check_year_limit(self):
         '''Method to check year limit'''
@@ -143,12 +135,17 @@ class AcademicMonth(models.Model):
                     self.year_id.date_stop < self.date_start or
                     self.year_id.date_start > self.date_start or
                     self.year_id.date_start > self.date_stop):
-                raise ValidationError(_('''Invalid Months ! Some months overlap
-                                    or the date period is not in the scope
-                                    of the academic year!'''))
+                raise ValidationError(_(
+        "Some of the months periods overlap or is not in the academic year!"))
 
     @api.constrains('date_start', 'date_stop')
     def check_months(self):
+        '''Method to check duration of date'''
+        if (self.date_stop and self.date_start and
+                self.date_stop < self.date_start):
+            raise ValidationError(_(
+        "End of Period date should be greater than Start of Periods Date!"))
+
         """Check start date should be less than stop date."""
         exist_month_rec = self.search([('id', 'not in', self.ids)])
         for old_month in exist_month_rec:
@@ -156,8 +153,8 @@ class AcademicMonth(models.Model):
                     self.date_start <= old_month.date_stop \
                     or old_month.date_start <= \
                     self.date_stop <= old_month.date_stop:
-                raise ValidationError(_('''Error! You cannot define
-                    overlapping months!'''))
+                raise ValidationError(_(
+                            "Error! You cannot define overlapping months!"))
 
 
 class StandardMedium(models.Model):
@@ -309,24 +306,21 @@ class SchoolStandard(models.Model):
                                 ('school_id', '=', self.school_id.id),
                                 ('id', 'not in', self.ids)])
         if standard_search:
-            raise ValidationError(_(
-                    '''Division and class should be unique!'''))
+            raise ValidationError(_("Division and class should be unique!"))
   
     def unlink(self):
         """Method to check unique standard."""
         for rec in self:
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
-                raise ValidationError(_('''You cannot delete this standard
-                because it has reference with student or subject or
-                syllabus!'''))
+                raise ValidationError(_(
+    "You cannot delete as it has reference with student, subject or syllabus!"))
         return super(SchoolStandard, self).unlink()
 
     @api.constrains('capacity')
     def check_seats(self):
         """Method to check seats."""
         if self.capacity <= 0:
-            raise ValidationError(_('''Total seats should be greater than 0!
-            '''))
+            raise ValidationError(_("Total seats should be greater than 0!"))
 
     def name_get(self):
         '''Method to display standard and division'''
@@ -608,12 +602,12 @@ class StudentPreviousSchool(models.Model):
         new_dt = fields.Date.today()
         if (self.admission_date and self.admission_date >= new_dt) or (
             self.exit_date and self.exit_date >= new_dt):
-            raise ValidationError(_('''Your admission date and exit date
-should be less than current date in previous school details!'''))
+            raise ValidationError(_(
+        "Your admission date and exit date should be less than current date!"))
         if (self.admission_date and self.exit_date) and (
             self.admission_date > self.exit_date):
-            raise ValidationError(_(''' Admission date should be less than
-exit date in previous school!'''))
+            raise ValidationError(_(
+        "Admission date should be less than exit date in previous school!"))
 
 
 class AcademicSubject(models.Model):
@@ -703,6 +697,23 @@ class GradeLine(models.Model):
                                help='Related grade')
     name = fields.Char('Name', help='Grade name')
 
+    @api.constrains('from_mark', 'to_mark')
+    def check_marks(self):
+        '''Method to check overlapping of Marks'''
+        for rec in self:
+            if (rec.to_mark < rec.from_mark):
+                raise ValidationError(_(
+            "To Marks should be greater than From Marks!"))
+            lines = self.search([('grade_id', '=', rec.grade_id.id),
+                                 ('id', '!=', rec.id)])
+            for line in lines:
+                print ("line.from_mark::",line.from_mark, line.to_mark)
+                print ("rec.from_mark:::",rec.from_mark, rec.to_mark)
+                if (line.from_mark <= rec.from_mark <= line.to_mark or
+                    line.from_mark <= rec.to_mark <= line.to_mark):
+                    raise ValidationError(_(
+                                "Error! You cannot define overlapping Marks!"))
+
 
 class StudentNews(models.Model):
     """Defining studen news."""
@@ -726,8 +737,8 @@ class StudentNews(models.Model):
         """Check news date."""
         new_date = fields.datetime.today()
         if self.date < new_date:
-            raise ValidationError(_('''
-                    Configure expiry date greater than current date!'''))
+            raise ValidationError(_(
+                        "Configure expiry date greater than current date!"))
 
     def news_update(self):
         '''Method to send email to student for news update'''
@@ -737,8 +748,8 @@ class StudentNews(models.Model):
         # Check if out going mail configured
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
-            raise UserError(_('''Mail Error!
-No mail outgoing mail server specified!'''))
+            raise UserError(_('User Email Configuration!'),
+                            _("Outgoing mail server not specified!"))
         mail_server_record = mail_server_ids[0]
         email_list = []
         # Check email is defined in student
@@ -836,6 +847,6 @@ class Report(models.Model):
         student_rec = self.env['student.student'].\
             browse(self._context.get('student_id', False))
         if student_rec and student_rec.state == 'draft':
-            raise ValidationError(_('''
-                You cannot print report forstudent in unconfirm state!'''))
+            raise ValidationError(_(
+                    "You cannot print report forstudent in unconfirm state!"))
         return super(Report, self).render_template(template, values)

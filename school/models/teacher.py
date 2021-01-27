@@ -70,7 +70,8 @@ class SchoolTeacher(models.Model):
                      'email': teacher_id.work_email,
                      }
         ctx_vals = {'teacher_create': True,
-                    'school_id': teacher_id.school_id.company_id.id}
+                    'school_id': teacher_id.school_id.company_id.id,
+                    'no_reset_password': True}
         user_rec = user_obj.with_context(ctx_vals).create(user_vals)
         teacher_id.employee_id.write({'user_id': user_rec.id})
         if vals.get('is_parent'):

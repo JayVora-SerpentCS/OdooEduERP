@@ -612,7 +612,6 @@
             <field name="name">Maria</field>
             <field name="middle">Samuel</field>
             <field name="last">Snell</field>
-            <!-- <field name="state">done</field> -->
             <field name="student_code">0672/2018/001</field>
             <field name="year" ref="demo_academic_year_3"/>
             <field name="pid">New</field>
@@ -626,12 +625,12 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
         <record id="demo_student_student_5" model="student.student">
             <field name="name">John</field>
             <field name="middle">William</field>
             <field name="last">Smith</field>
             <field name="student_code">0671/2016/002</field>
-            <!-- <field name="state">done</field> -->
             <field name="year" ref="demo_academic_year_1"/>
             <field name="pid">New</field>
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-03-24 %H:%M')"/>
@@ -644,11 +643,11 @@
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_5')]]"/>
         <record id="demo_student_student_6" model="student.student">
             <field name="name">Alexander</field>
             <field name="middle">Robert</field>
             <field name="last">Martin</field>
-            <!-- <field name="state">done</field> -->
             <field name="student_code">0671/2017/003</field>
             <field name="year" ref="demo_academic_year_2"/>
             <field name="pid">New</field>
@@ -662,12 +661,12 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_3"/>
         </record>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_6')]]"/>
         <record id="demo_student_student_7" model="student.student">
             <field name="name">Sarah</field>
             <field name="middle">Isaac</field>
             <field name="last">Elmer</field>
             <field name="student_code">0673/2017/004</field>
-            <!-- <field name="state">done</field> -->
             <field name="year" ref="demo_academic_year_2"/>
             <field name="pid">New</field>
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=13)).strftime('%Y-06-02 %H:%M')"/>
@@ -680,12 +679,12 @@
             <field name="division_id" ref="demo_standard_division_1"/>
             <field name="medium_id" ref="demo_standard_medium_1"/>
         </record>
+        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_7')]]"/>
         <record id="demo_student_student_8" model="student.student">
             <field name="name">Lucy</field>
             <field name="middle">William</field>
             <field name="last">Brown</field>
             <field name="student_code">0674/2017/005</field>
-            <!-- <field name="state">done</field> -->
             <field name="year" ref="demo_academic_year_3"/>
             <field name="pid">New</field>
             <field name="date_of_birth" eval="(DateTime.today() - relativedelta(years=15)).strftime('%Y-06-06 %H:%M')"/>
@@ -698,11 +697,6 @@
             <field name="division_id" ref="demo_standard_division_2"/>
             <field name="medium_id" ref="demo_standard_medium_2"/>
         </record>
-
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_4')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_5')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_6')]]"/>
-        <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_7')]]"/>
         <function model="student.student" name="admission_done" eval="[[ref('demo_student_student_8')]]"/>
 
         <record id="demo_student_student_1" model="student.student">
