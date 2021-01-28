@@ -1,23 +1,17 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_attendance_sheet1,attendance.sheet,model_attendance_sheet,school.group_school_administration,1,1,1,1
-access_attendance_sheet_line1,attendance.sheet.line,model_attendance_sheet_line,school.group_school_administration,1,1,1,1
 access_daily_attendance1,daily.attendance,model_daily_attendance,school.group_school_administration,1,1,1,1
 access_hr_employee_admin,hr.employee.admin,hr.model_hr_employee,school.group_school_administration,1,1,1,1
-access_hr_attendance_admin,hr.attendance.admin,hr_attendance.model_hr_attendance,school.group_school_administration,1,1,1,1
 access_attendance_sheet_wiz_admin,attendance.sheet.wiz.admin,model_attendance_sheet_wiz,school.group_school_administration,1,1,1,1
 access_attendance_sheet_line_matrix_admin,attendance.sheet.line.matrix.admin,model_attendance_sheet_line_matrix,school.group_school_administration,1,1,1,1
 
 access_attendance_sheet2,attendance.sheet,model_attendance_sheet,school.group_school_parent,1,0,0,0
-access_attendance_sheet_line2,attendance.sheet.line,model_attendance_sheet_line,school.group_school_parent,1,0,0,0
 access_daily_attendance2,daily.attendance,model_daily_attendance,school.group_school_parent,1,0,0,0
 access_attendance_sheet3,attendance.sheet,model_attendance_sheet,school.group_school_student,1,0,0,0
-access_attendance_sheet_line3,attendance.sheet.line,model_attendance_sheet_line,school.group_school_student,1,0,0,0
 access_daily_attendance3,daily.attendance,model_daily_attendance,school.group_school_student,1,0,0,0
 access_attendance_sheet4,attendance.sheet,model_attendance_sheet,school.group_school_teacher,1,1,1,0
-access_attendance_sheet_line4,attendance.sheet.line,model_attendance_sheet_line,school.group_school_teacher,1,1,1,0
 access_daily_attendance4,daily.attendance,model_daily_attendance,school.group_school_teacher,1,1,1,0
 access_hr_employee_teacher,hr.employee.teacher,hr.model_hr_employee,school.group_school_teacher,1,1,1,0
-access_hr_attendance_teacher,hr.attendance.teacher,hr_attendance.model_hr_attendance,school.group_school_teacher,1,1,1,0
 access_standard_teacher,school.standard,school.model_school_standard,school.group_school_teacher,1,1,1,0
 access_attendance_sheet_wiz_teacher,attendance.sheet.wiz.teacher,model_attendance_sheet_wiz,school.group_school_teacher,1,1,1,0
 access_attendance_sheet_line_matrix_teacher,attendance.sheet.line.matrix.teacher,model_attendance_sheet_line_matrix,school.group_school_teacher,1,1,1,0
@@ -25,7 +19,6 @@ access_attendance_sheet_line_matrix_teacher,attendance.sheet.line.matrix.teacher
 access_student_leave_req_admin,studentleave.request,model_studentleave_request,school.group_school_administration,1,1,1,1
 access_student_leave_req_teacher,studentleave.request,model_studentleave_request,school.group_school_teacher,1,1,0,0
 access_student_leave_req_stud,studentleave.request,model_studentleave_request,school.group_school_student,1,1,1,0
-access_hr_attendance_student,hr.attendance.student,hr_attendance.model_hr_attendance,school.group_school_student,1,1,1,0
 access_hr_employee_student,hr.employee.student,hr.model_hr_employee,school.group_school_student,1,1,1,0
 access_student_leave_req_parent,studentleave.request,model_studentleave_request,school.group_school_parent,1,1,1,0
 access_resource_resource_parent,resource.resource.parent,resource.model_resource_resource,school.group_school_parent,1,1,1,0
