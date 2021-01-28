@@ -704,11 +704,8 @@ class GradeLine(models.Model):
             if (rec.to_mark < rec.from_mark):
                 raise ValidationError(_(
             "To Marks should be greater than From Marks!"))
-            lines = self.search([('grade_id', '=', rec.grade_id.id),
-                                 ('id', '!=', rec.id)])
-            for line in lines:
-                print ("line.from_mark::",line.from_mark, line.to_mark)
-                print ("rec.from_mark:::",rec.from_mark, rec.to_mark)
+            for line in self.search([('grade_id', '=', rec.grade_id.id),
+                                 ('id', '!=', rec.id)]):
                 if (line.from_mark <= rec.from_mark <= line.to_mark or
                     line.from_mark <= rec.to_mark <= line.to_mark):
                     raise ValidationError(_(
