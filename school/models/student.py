@@ -75,9 +75,9 @@ class StudentStudent(models.Model):
         '''Method to get default value of logged in Student'''
         res = self.env['academic.year'].search([('current', '=', True)])
         if not res:
-            raise ValidationError(_('''There is no current Academic Year
-defined!Please contact to Administator!'''
-                                    ))
+            raise ValidationError(_(
+                                "There is no current Academic Year defined!\
+            Please contact Administator!"))
         return res.id
 
     family_con_ids = fields.One2many('student.family.contact',
@@ -230,8 +230,8 @@ defined!Please contact to Administator!'''
             vals['login'] = vals['pid']
             vals['password'] = vals['pid']
         else:
-            raise UserError(_('''Error! 
-            PID not valid so record will not be saved.'''))
+            raise UserError(_(
+                      "Error! PID not valid so record will not be saved."))
         if vals.get('company_id', False):
             company_vals = {'company_ids': [(4, vals.get('company_id'))]}
             vals.update(company_vals)
@@ -275,9 +275,9 @@ defined!Please contact to Administator!'''
             age_calc = ((current_dt - start).days / 365)
             # Check if age less than required age
             if age_calc < self.school_id.required_age:
-                raise ValidationError(_('''
-                    Age of student should be greater than %s years!''' % (
-                                            self.school_id.required_age)))
+                raise ValidationError(_(
+                "Age of student should be greater than %s years!"% (\
+                                                self.school_id.required_age)))
 
     def set_to_draft(self):
         '''Method to change state to draft'''
@@ -318,15 +318,15 @@ defined!Please contact to Administator!'''
         emp_group = self.env.ref('base.group_user')
         for rec in self:
             if not rec.standard_id:
-                raise ValidationError(_('''Please select class!'''))
+                raise ValidationError(_("Please select class!"))
             if rec.standard_id.remaining_seats <= 0:
                 raise ValidationError(_('Seats of class %s are full'
                                         ) % rec.standard_id.standard_id.name)
             domain = [('school_id', '=', rec.school_id.id)]
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
-                raise UserError(_('''Warning!
-The standard is not defined in school'''))
+                raise UserError(_(
+                          "Warning! The standard is not defined in school!"))
             # Assign group to student
             rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
                                                      student_group.id])]})
