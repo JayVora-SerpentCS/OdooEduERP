@@ -63,8 +63,6 @@ class SchoolParent(models.Model):
         parent_grp_id = self.env.ref('school.group_school_parent')
         emp_grp = self.env.ref('base.group_user')
         parent_group_ids = [emp_grp.id, parent_grp_id.id]
-        if vals.get('parent_create_mng'):
-            return parent_id
         user_vals = {'name': parent_rec.name,
                      'login': parent_rec.email,
                      'email': parent_rec.email,
