@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+        <!-- Form View Of Monthly Attendance Sheet -->
+
+        <record id="view_monthly_attendance_sheet" model="ir.ui.view">
+            <field name="name">monthly.attendance.sheet.form</field>
+            <field name="model">monthly.attendance.sheet</field>
+            <field name="arch" type="xml">
+                <form string="Monthly Attendance Sheet">
+                    <sheet>
+                        <separator string="Standard Information" col="2" colspan="2"/>
+                        <group col="2" colspan="2">
+                            <field name="standard_id"  widget="selection" />
+                        </group>
+                        <separator string="Academic Year Information" colspan="4" />
+                        <group col="4" colspan="2">
+                            <field name="year_id" widget="selection" />
+                            <field name="month_id" domain="[('year_id','=',year_id)]" widget="selection"/>
+                        </group>
+                        <separator string="" colspan="4" />
+                    </sheet>
+                    <footer>
+                        <group colspan="1">
+                            <button class="oe_highlight" string="Open Attendance Sheet" name="monthly_attendance_sheet_open_window" type="object" />
+                            <button class="oe_link" special="cancel" string="Cancel" />
+                        </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Monthly Attendance Sheet -->
+
+        <record id="action_monthly_attendance_sheet" model="ir.actions.act_window">
+            <field name="name">Monthly Attendance Sheet</field>
+            <field name="res_model">monthly.attendance.sheet</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_monthly_attendance_sheet" />
+            <field name="target">new</field>
+            <field name="help">
+                Display the Monthly Attendance Sheet.
+            </field>
+        </record>
+
+        <!-- Student Attendance By month wiz view -->
+        <record id="student_attendance_sheet_wiz" model="ir.ui.view">
+        <field name="name">student.attendance.sheet.wiz.form.view</field>
+        <field name="model">attendance.sheet.wiz</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <field
+                    name="attendance_line_ids"
+                    widget="x2many_2d_matrix"
+                    field_x_axis="daily_attendance_id"
+                    field_y_axis="student_id"
+                    field_value="is_present_absent"
+                >
+                    <tree>
+                        <field name="daily_attendance_id" />
+                        <field name="student_id" />
+                        <field name="is_present_absent" />
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
+        <!-- Menu Item Of Monthly Attendance Sheet -->
+
+        <menuitem id="menu_monthly_attendance_sheet_sub_form" parent="school_attendance.menu_attendance"
+                  action="action_monthly_attendance_sheet" groups="school.group_school_administration,school.group_school_teacher" sequence="53"/>
+
+</odoo>

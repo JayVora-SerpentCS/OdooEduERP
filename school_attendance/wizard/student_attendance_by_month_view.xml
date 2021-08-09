@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+        <!-- Form View Of Student Attendance By Month -->
+
+        <record id="view_student_attendance_by_month_form" model="ir.ui.view">
+            <field name="name">Monthly Attendances Report</field>
+            <field name="model">student.attendance.by.month</field>
+            <field name="arch" type="xml">
+                <form string="Student Monthly Attendance Report">
+                    <separator string="Student Monthly Attendance Report" colspan="4" />
+                    <group col="4" colspan="2">
+                        <field name="year" width="200" required="1" widget="selection"/>
+                        <field name="month" width="200" domain="[('year_id','=',year)]" required="1" widget="selection"/>
+                    </group>
+                    <footer>
+                    <group colspan="4">
+                        <button name="print_report" class="fa fa-check" string="Print" type="object" colspan="1" />
+                        <button class="fa fa-ban" special="cancel" string="Cancel" colspan="1" />
+                    </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Student Attendance By Month -->
+
+        <record id="action_student_attendance_by_month" model="ir.actions.act_window">
+            <field name="name">Student Attendances By Month</field>
+            <field name="res_model">student.attendance.by.month</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_student_attendance_by_month_form"/>
+            <field name="context">{'student_id': active_id}</field>
+            <field name="binding_model_id" ref="school.model_student_student"/>
+            <field name="binding_type">report</field>
+        </record>
+
+</odoo>
