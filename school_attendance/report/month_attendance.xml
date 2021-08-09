@@ -1,0 +1,60 @@
+
+<odoo>
+    <template id="attendance_month">
+        <t t-call="web.html_container">
+           <t t-foreach="docs" t-as="o">
+               <t t-call="web.external_layout">
+                 <div class="page">
+                     <div class="oe_structure"/>
+                     <br/><br/><br/><br/>
+                     <table width="100%">
+                         <center>
+                             <h1>Attendances By Month</h1>
+                         </center>
+                      </table>
+                      <br/><br/>
+                      <table class="table table-bordered" width="100%">
+                          <thead>
+                              <t t-foreach="get_header_data(data)" t-as="t">
+                                  <tr>
+                                      <th width="20%"><span t-esc="data['form']['year']"/></th>
+                                      <t t-foreach="t.get('week_day')" t-as="week_day">
+                                          <th style="background-color:goldenrod;color:white;">
+                                              <span t-esc="week_day"/>
+                                          </th>
+                                      </t>
+                                  </tr>
+                                  <tr>
+                                      <th width="20%"><span t-esc="data['form']['month']"/></th>
+                                      <t t-foreach="t.get('day_list')" t-as="day">
+                                          <th style="background-color:goldenrod;color:white;">
+                                              <span t-esc="day"/>
+                                          </th>
+                                      </t>
+                                  </tr>
+                              </t>
+                          </thead>
+                          <tbody>
+                              <tr t-foreach="get_student(data['form'])" t-as="student">
+                                  <td style="text-align:left" width="20%">
+                                        <strong><span t-field="student.sudo().name"/></strong>
+                                  </td>
+                                  <t t-foreach="get_header_data(data)" t-as="t">
+                                      <td t-foreach="t.get('day_list')" t-as="day">
+                                          <span style="color:green" t-if="daily_attendance(data['form'], day, student) == 'P'">
+                                               <strong><t t-esc="daily_attendance(data['form'], day, student)"/></strong>
+                                          </span>
+                                          <span style="color:red" t-if="daily_attendance(data['form'], day, student) == 'A'">
+                                               <strong><t t-esc="daily_attendance(data['form'], day, student)"/></strong>
+                                          </span>
+                                      </td>
+                                  </t>
+                              </tr>
+                          </tbody>
+                       </table>
+                   </div>
+                </t>
+             </t>
+          </t>
+    </template>
+</odoo>
