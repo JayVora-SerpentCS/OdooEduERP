@@ -305,15 +305,6 @@ class ExamScheduleLine(models.Model):
     _name = 'exam.schedule.line'
     _description = "Exam Schedule Line Details"
 
-    @api.onchange('standard_ids')
-    def onchange_standard(self):
-        '''Method to get standard according to the standard selected'''
-        standard_ids = []
-        for rec in self:
-            standard_ids = [std.id for std in rec.standard_ids]
-        return {'domain': {'standard_id': [('standard_id', 'in',
-                                            standard_ids)]}}
-
     standard_id = fields.Many2one('school.standard', 'Standard',
                                   help="Select Standard")
     timetable_id = fields.Many2one('time.table', 'Exam Schedule')
