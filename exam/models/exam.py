@@ -441,16 +441,6 @@ class ExamScheduleLine(models.Model):
         help="Enter standards for the exams",
     )
 
-    @api.onchange("standard_ids")
-    def onchange_standard(self):
-        """Method to get standard according to the standard selected"""
-        standard_ids = []
-        for rec in self:
-            standard_ids = [std.id for std in rec.standard_ids]
-        return {
-            "domain": {"standard_id": [("standard_id", "in", standard_ids)]}
-        }
-
 
 class AdditionalExam(models.Model):
     """Defining model for additional exam."""

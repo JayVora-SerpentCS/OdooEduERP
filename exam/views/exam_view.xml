@@ -109,7 +109,8 @@
                                         context="{'default_standard_ids':standard_id,'academic_year':academic_year}">
                                     <tree name="exam_schedule" string="Exam Schedule" editable="top">
                                         <field name="standard_ids" invisible="1"/>
-                                        <field name="standard_id" required="1" options="{&quot;no_create&quot;: True}" string="Class"/>
+                                        <field name="standard_id" domain="[('standard_id', 'in', standard_ids)]"
+                                                required="1" options="{&quot;no_create&quot;: True}" string="Class"/>
                                         <field name="timetable_id" required="1" domain="[('timetable_type','=','exam'),
                                                                                          ('year_id','=',context.get('academic_year')),
                                                                                          ('standard_id','=',standard_id)]"
