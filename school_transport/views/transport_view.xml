@@ -120,7 +120,7 @@
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="contact_per_id"/>
-                 <field name="trans_vehicle_ids"/>
+                <field name="trans_vehicle_ids"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'"
                                                    decoration-danger="state == 'close'"
                                                    decoration-success="state == 'open'"/>
