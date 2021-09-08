@@ -27,7 +27,6 @@ class SchoolTeacher(models.Model):
                                   'Course-Subjects',
                                   help='Select subject of teacher')
     school_id = fields.Many2one('school.school', "Campus",
-                                related="standard_id.school_id", store=True,
                                 help='Select school')
     category_ids = fields.Many2many('hr.employee.category',
                                     'teacher_category_rel', 'emp_id',
@@ -44,6 +43,12 @@ class SchoolTeacher(models.Model):
                                   'teacher_id', 'student_id',
                                   'Children', help='Select student')
     phone_numbers = fields.Char("Phone Number", help='Student PH no')
+
+    @api.onchange('standard_id')
+    def _onchange_standard_id(self):
+        for rec in self:
+            if rec.standard_id:
+                rec.school_id = rec.standard_id.school_id.id
 
     @api.onchange('is_parent')
     def _onchange_isparent(self):
@@ -109,8 +114,8 @@ class SchoolTeacher(models.Model):
 
     def write(self, vals):
         """Inherited write method to assign groups based on parent field"""
-        if vals.get('is_parent'):
-            self.parent_crt(self)
+        # if vals.get('is_parent'):
+        #     self.parent_crt(self)
         if vals.get('student_id'):
             self.stu_parent_id.write({'student_id': vals.get('student_id')})
         if not vals.get('is_parent'):

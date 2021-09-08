@@ -88,7 +88,7 @@ class TestExam(common.TransactionCase):
                 "s_exam_ids": self.exam_exam.id,
                 "student_id": self.student_student.id,
                 "standard_id": self.school_standard.id,
-                "roll_no_id": 2,
+                "roll_no": 2,
                 "grade_system": self.grade_system.id,
                 "total": 80,
                 "percentage": 40,

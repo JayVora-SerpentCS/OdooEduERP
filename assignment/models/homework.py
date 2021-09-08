@@ -51,11 +51,8 @@ class SchoolTeacherAssignment(models.Model):
         "file.format", "File Format", help="File format"
     )
     attach_files = fields.Char("File Name", help="Enter file name")
-    subject_standard_assignment = fields.Many2one(
-        "standard.standard",
-        help="""Standard of the
-                                                  assignment in which it
-                                                  assigned""",
+    subject_standard_assignment = fields.Many2one("standard.standard",
+        help="""Standard of the assignment in which it assigned""",
     )
 
     @api.onchange("standard_id")

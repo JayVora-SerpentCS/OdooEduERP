@@ -515,14 +515,10 @@ card is over!"""
             "library.book.issue"
         ) or _("New")
         for rec in self:
-            if (
-                rec.name
-                and rec.name.availability == "notavailable"
-                and not rec.name.is_ebook
-            ):
+            if (rec.name and rec.name.availability == "notavailable" and
+                not rec.name.is_ebook):
                 raise UserError(
-                    _(
-                        """The book you have selected is \
+                    _("""The book you have selected is \
 not available now. Please try after sometime!"""
                     )
                 )
@@ -531,18 +527,19 @@ not available now. Please try after sometime!"""
                 book_fines = rec.search(
                     [("card_id", "=", rec.card_id.id), ("state", "=", "fine")]
                 )
+                print ("book_fines::::::::",book_fines)
                 for book in book_fines:
                     issue_str += str(book.issue_code) + ", "
                     # check if fine on book is paid until then user
                     # cannot issue new book
-                raise UserError(
-                    _(
-                        "You can not request for a book until"
-                        " the fine is not paid for book issues"
-                        " %s!"
+                    raise UserError(
+                        _(
+                            "You can not request for a book until"
+                            " the fine is not paid for book issues"
+                            " %s!"
+                        )
+                        % issue_str
                     )
-                    % issue_str
-                )
             if rec.card_id:
                 card_rec = rec.search_count(
                     [

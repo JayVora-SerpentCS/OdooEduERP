@@ -498,20 +498,18 @@ class TransportRegistration(models.Model):
         trans_obj = self.env["student.transport"]
         prt_obj = self.env["student.student"]
         stu_prt_obj = self.env["transport.participant"]
-        vehi_obj = self.env["transport.vehicle"]
         vehi_obj = self.env["fleet.vehicle"]
         for rec in self:
             # registration months must one or more then one
             if rec.registration_month <= 0:
                 raise UserError(
-                    _(
-                        """Error!
-                    Registration months must be 1 or more then one month!"""
+                    _("""Error!
+Registration months must be 1 or more then one month!"""
                     )
                 )
             # First Check Is there vacancy or not
-            person = int(rec.vehicle_id.participant) + 1
-            if rec.vehicle_id.capacity < person:
+            person = int(rec.vehicle_id.participant_count) + 1
+            if rec.vehicle_id.seats < person:
                 raise UserError(_("There is No More vacancy on this vehicle!"))
 
             rec.write({"state": "confirm", "remain_amt": rec.transport_fees})
@@ -522,10 +520,8 @@ class TransportRegistration(models.Model):
                                             months=rec.registration_month)
             if tr_end_date > ed_date:
                 raise UserError(
-                    _(
-                        """
-For this much Months Registration is not Possible because Root
-end date is Early!"""
+                    _("""For this much Months Registration is not Possible
+because Root end date is Early!"""
                     )
                 )
             # make entry in Transport

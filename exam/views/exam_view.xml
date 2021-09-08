@@ -109,7 +109,8 @@
                                         context="{'default_standard_ids':standard_id,'academic_year':academic_year}">
                                     <tree name="exam_schedule" string="Exam Schedule" editable="top">
                                         <field name="standard_ids" invisible="1"/>
-                                        <field name="standard_id" required="1" options="{&quot;no_create&quot;: True}" string="Class"/>
+                                        <field name="standard_id" domain="[('standard_id', 'in', standard_ids)]"
+                                                required="1" options="{&quot;no_create&quot;: True}" string="Class"/>
                                         <field name="timetable_id" required="1" domain="[('timetable_type','=','exam'),
                                                                                          ('year_id','=',context.get('academic_year')),
                                                                                          ('standard_id','=',standard_id)]"
@@ -304,7 +305,7 @@
                             context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True}"
                             domain="[('state','!=','draft')]"
                             readonly="1"/>
-                        <field name="roll_no_id" readonly="1"/>
+                        <field name="roll_no" readonly="1"/>
                         <field name="standard_id" placeholder="Select Standard" widget="selection"
                                                 readonly="1" string="Class"/>
                         <field name="grade_system" required="1" widget="selection"
@@ -360,7 +361,7 @@
             <kanban default_group_by="standard_id" create="false">
                 <field name="color"/>
                 <field name="student_id"/>
-                <field name="roll_no_id"/>
+                <field name="roll_no"/>
                 <field name="pid"/>
                 <field name="standard_id"/>
                 <field name="total"/>
@@ -476,7 +477,7 @@
         <field name="arch" type="xml">
             <tree string="Results">
                 <field name="student_id" select="1"/>
-                <field name="roll_no_id" select="1"/>
+                <field name="roll_no" select="1"/>
                 <field name="a_exam_id"/>
                 <field name="standard_id"/>
                 <field name="obtain_marks"/>
@@ -497,7 +498,7 @@
                     </group>
                     <group col="4" string="Student Information" colspan="4">
                         <field name="student_id" domain="[('state','=','done')]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="roll_no_id"/>
+                        <field name="roll_no"/>
                         <field name="standard_id" string="Class"/>
                     </group>
                     <group col="4" string="Result Information" colspan="4">

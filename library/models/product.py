@@ -118,13 +118,13 @@ class ProductProduct(models.Model):
             rec.books_available = rec.qty_available - issue_rec_no
         return True
 
-    @api.depends("books_available")
+    @api.depends("books_available", 'day_to_return_book')
     def _compute_books_availablity(self):
         """Method to compute availability of book"""
         for rec in self:
-            if rec.books_available >= 1:
-                rec.availability = "available"
             rec.availability = "notavailable"
+            if rec.books_available >= 1:
+                rec.availability = "available"       
 
     isbn = fields.Char(
         "ISBN Code",

@@ -117,7 +117,7 @@
                 <sheet>
                     <separator string="School Configuration" />
                     <group col="4" colspan="4">
-                        <field name="name" string="School Name" placeholder="School Name" />
+                        <field name="name" string="Name" placeholder="School Name" />
                         <field name="code" placeholder="Code" />
                     </group>
                     <group>
