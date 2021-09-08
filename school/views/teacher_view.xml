@@ -69,7 +69,7 @@
                             <field name="standard_id" widget="selection"/>
                             <!-- <field name="standard_ids" required="1" widget="many2many_tags"/> -->
                             <field name="subject_id" required="1" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field name="school_id" widget="selection" required="1"/>
+                            <field name="school_id" widget="selection"/>
                         </group>
                         <group>
                             <field name="is_parent" widget="boolean_toggle"/>
