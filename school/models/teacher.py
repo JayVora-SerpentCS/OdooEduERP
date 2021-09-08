@@ -114,8 +114,8 @@ class SchoolTeacher(models.Model):
 
     def write(self, vals):
         """Inherited write method to assign groups based on parent field"""
-        if vals.get('is_parent'):
-            self.parent_crt(self)
+        # if vals.get('is_parent'):
+        #     self.parent_crt(self)
         if vals.get('student_id'):
             self.stu_parent_id.write({'student_id': vals.get('student_id')})
         if not vals.get('is_parent'):

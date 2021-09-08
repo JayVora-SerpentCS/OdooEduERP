@@ -17,9 +17,4 @@ class TerminateReasonEvent(models.TransientModel):
         )
         if event_regi_rec:
             event_regi_rec.write({"state": "cancel"})
-        event_participant = self.env["school.event.participant"].search(
-            [("name", "=", student_rec.id)]
-        )
-        if event_participant:
-            event_participant.unlink()
         return super(TerminateReasonEvent, self).save_terminate()

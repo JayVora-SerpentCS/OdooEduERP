@@ -159,12 +159,8 @@ class ExtendedTimeTableLine(models.Model):
                     return False
                 elif exam_date < fields.Date.today():
                     raise ValidationError(
-                        _(
-                            """Invalid Date Error !
-Either you have selected wrong day for the date
-or you have selected invalid date!"""
-                        )
-                    )
+                        _("""Invalid Date Error !
+Exam Date should be greater than today!"""))
 
     @api.constrains("teacher_id")
     def check_supervisior_exam(self):
@@ -184,6 +180,10 @@ or you have selected invalid date!"""
                         Start time should be less than end time!"""
                     )
                 )
+            # Checks if time is greater than 24 hours than raise error
+            if rec.start_time > 24 or rec.end_time > 24:
+                    raise ValidationError(_('''
+Start and End Time should be less than 24 hours!'''))
 
     @api.constrains("teacher_id", "class_room_id")
     def check_teacher_room(self):
@@ -396,7 +396,7 @@ class ExamExam(models.Model):
                             "s_exam_ids": rec.id,
                             "student_id": student.id,
                             "standard_id": student.standard_id.id,
-                            "roll_no_id": student.roll_no,
+                            "roll_no": student.roll_no,
                             "grade_system": rec.grade_system.id,
                         }
                         exam_line = []
@@ -503,7 +503,7 @@ class ExamResult(models.Model):
 
     _name = "exam.result"
     _inherit = ["mail.thread", "resource.mixin"]
-    _rec_name = "roll_no_id"
+    _rec_name = "roll_no"
     _description = "exam result Information"
 
     @api.depends(
@@ -566,7 +566,7 @@ class ExamResult(models.Model):
     student_id = fields.Many2one(
         "student.student", "Student Name", required=True, help="Select Student"
     )
-    roll_no_id = fields.Integer(
+    roll_no = fields.Integer(
         string="Roll No", readonly=True, help="Enter student roll no."
     )
     pid = fields.Char(
@@ -648,7 +648,7 @@ class ExamResult(models.Model):
             )
             vals.update(
                 {
-                    "roll_no_id": student_rec.roll_no,
+                    "roll_no": student_rec.roll_no,
                     "standard_id": student_rec.standard_id.id,
                 }
             )
@@ -662,7 +662,7 @@ class ExamResult(models.Model):
             )
             vals.update(
                 {
-                    "roll_no_id": student_rec.roll_no,
+                    "roll_no": student_rec.roll_no,
                     "standard_id": student_rec.standard_id.id,
                 }
             )
@@ -685,7 +685,7 @@ class ExamResult(models.Model):
         """Method to get standard and roll no of student selected"""
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id or False
-            self.roll_no_id = self.student_id.roll_no or False
+            self.roll_no = self.student_id.roll_no or False
 
     def result_confirm(self):
         """Method to confirm result"""
@@ -865,7 +865,7 @@ class AdditionalExamResult(models.Model):
 
     _name = "additional.exam.result"
     _description = "subject result Information"
-    _rec_name = "roll_no_id"
+    _rec_name = "roll_no"
 
     @api.depends("a_exam_id", "obtain_marks")
     def _compute_student_result(self):
@@ -886,7 +886,7 @@ class AdditionalExamResult(models.Model):
     student_id = fields.Many2one(
         "student.student", "Student Name", required=True, help="Select Student"
     )
-    roll_no_id = fields.Integer(
+    roll_no = fields.Integer(
         "Roll No", readonly=True, help="Student rol no."
     )
     standard_id = fields.Many2one(
@@ -913,7 +913,6 @@ class AdditionalExamResult(models.Model):
             {
                 "roll_no": student_rec.roll_no,
                 "standard_id": student_rec.standard_id.id,
-                "teacher_id": student_rec.standard_id.user_id.id,
             }
         )
 
@@ -934,7 +933,7 @@ class AdditionalExamResult(models.Model):
     def onchange_student(self):
         """ Method to get student roll no and standard by selecting student"""
         self.standard_id = self.student_id.standard_id.id
-        self.roll_no_id = self.student_id.roll_no
+        self.roll_no = self.student_id.roll_no
 
     @api.constrains("obtain_marks")
     def _validate_obtain_marks(self):
