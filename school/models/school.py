@@ -344,8 +344,6 @@ class SchoolSchool(models.Model):
     company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
                                  required=True, delegate=True,
                                  help='Company_id of the school')
-    name = fields.Char(related='partner_id.name', string='Name',
-                                required=True, store=True, readonly=False)
     com_name = fields.Char('School Name', related='company_id.name',
                            store=True, help='School name')
     code = fields.Char('Code', required=True, help='School code')
