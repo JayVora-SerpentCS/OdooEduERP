@@ -28,7 +28,7 @@ class TimeTable(models.Model):
                                     help='Enter the timetable pattern')
     timetable_type = fields.Selection([('regular', 'Regular')],
                                       'Time Table Type', default="regular",
-                                      inivisible=True,
+                                      invisible=True,
                                       help='Select time table type')
     user_ids = fields.Many2many('res.users', string="Users",
                                 compute="_compute_user", store=True,

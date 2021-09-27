@@ -68,7 +68,6 @@ class ExtendedTimeTable(models.Model):
         string="Time Table Type",
         required=True,
         ondelete={"exam": "set default"},
-        inivisible=False,
         help="Select timetable type",
     )
     exam_timetable_line_ids = fields.One2many(
@@ -803,12 +802,6 @@ class ExamSubject(models.Model):
 
     exam_id = fields.Many2one("exam.result", "Result", help="Select exam")
     state = fields.Selection(
-        [
-            ("draft", "Draft"),
-            ("confirm", "Confirm"),
-            ("re-evaluation", "Re-Evaluation"),
-            ("re-evaluation_confirm", "Re-Evaluation Confirm"),
-        ],
         related="exam_id.state",
         string="State",
         help="State of the exam subject",
