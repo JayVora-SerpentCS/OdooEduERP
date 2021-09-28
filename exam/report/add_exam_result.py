@@ -35,17 +35,11 @@ class ReportAddExamResult(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         """Inherited method to get report values"""
-        active_model = self._context.get("active_model")
-        report_result = self.env["ir.actions.report"]._get_report_from_name(
-            "exam.exam_result_report"
-        )
-        result_data = self.env[active_model].browse(
-            self._context.get("active_id")
-        )
+        result_data = self.env['exam.result'].browse(docids)
         return {
             "doc_ids": docids,
             "data": data,
-            "doc_model": report_result.model,
+            "doc_model": 'exam.result',
             "docs": result_data,
             "get_result_detail": self._get_result_detail,
             "time": time,
