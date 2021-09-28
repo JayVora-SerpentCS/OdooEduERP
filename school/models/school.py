@@ -344,8 +344,6 @@ class SchoolSchool(models.Model):
     company_id = fields.Many2one('res.company', 'Company', ondelete="cascade",
                                  required=True, delegate=True,
                                  help='Company_id of the school')
-    name = fields.Char(related='partner_id.name', string='Name',
-                                required=True, store=True, readonly=False)
     com_name = fields.Char('School Name', related='company_id.name',
                            store=True, help='School name')
     code = fields.Char('Code', required=True, help='School code')
@@ -474,7 +472,7 @@ class StudentDocument(models.Model):
                                help='Document type')
     file_name = fields.Char('File Name', help='File name')
     return_date = fields.Date('Return Date', help='Document return date')
-    new_datas = fields.Binary('Attachments', hep='Attachments of the document')
+    new_datas = fields.Binary('Attachments', help='Attachments of the document')
 
 
 class DocumentType(models.Model):
@@ -747,8 +745,8 @@ class StudentNews(models.Model):
         # Check if out going mail configured
         mail_server_ids = obj_mail_server.search([])
         if not mail_server_ids:
-            raise UserError(_('User Email Configuration!'),
-                            _("Outgoing mail server not specified!"))
+            raise UserError(_('User Email Configuration!,\n'
+                            "Outgoing mail server not specified!"))
         mail_server_record = mail_server_ids[0]
         email_list = []
         # Check email is defined in student
@@ -757,8 +755,8 @@ class StudentNews(models.Model):
                 email_list = [news_user.email for news_user in news.user_ids
                               if news_user.email]
                 if not email_list:
-                    raise UserError(_('User Email Configuration!'),
-                                     _("Email not found in users !"))
+                    raise UserError(_('User Email Configuration!,\n'
+                                     "Email not found in users !"))
             # Check email is defined in user created from employee
             else:
                 for employee in emp_obj.search([]):
@@ -767,8 +765,8 @@ class StudentNews(models.Model):
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise UserError(_('Email Configuration!'),
-                                     _("Email not defined!"))
+                    raise UserError(_('Email Configuration!,\n'
+                                     "Email not defined!"))
             news_date = news.date
             # Add company name while sending email
             company = user.company_id.name or ''
@@ -782,8 +780,8 @@ class StudentNews(models.Model):
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
-                raise UserError(_('Email Configuration '),
-                                 _("Kindly,Configure Outgoing Mail Server!"))
+                raise UserError(_('Email Configuration,\n'
+                                 "Kindly,Configure Outgoing Mail Server!"))
             notification = 'Notification for news update.'
             # Configure email
             message = obj_mail_server.build_email(email_from=smtp_user,

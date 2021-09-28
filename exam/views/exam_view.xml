@@ -81,9 +81,6 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" states="finished">
-                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
-                        </button>
                         <button name="generate_result" string="Generate result" type="object" class="oe_stat_button fa fa-graduation-cap"
                             attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}"
                             groups="school.group_school_teacher,school.group_school_administration"/>
