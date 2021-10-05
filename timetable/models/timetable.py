@@ -69,11 +69,12 @@ class TimeTableLine(models.Model):
     @api.constrains('teacher_id', 'subject_id')
     def check_teacher(self):
         '''Check if lecture is not related to teacher than raise error.'''
-        if (self.teacher_id.id not in self.subject_id.teacher_ids.ids and
-                self.table_id.timetable_type == 'regular'):
-            raise ValidationError(_('''
-The subject %s is not assigned to teacher %s.
-''') % (self.subject_id.name, self.teacher_id.name))
+        for rec in self:
+            if (rec.teacher_id.id not in rec.subject_id.teacher_ids.ids and
+                    rec.table_id.timetable_type == 'regular'):
+                raise ValidationError(_('''
+                    The subject %s is not assigned to teacher %s.
+                    ''') % (rec.subject_id.name, rec.teacher_id.name))
 
     teacher_id = fields.Many2one('school.teacher', 'Faculty Name',
                                  help="Select Teacher")
