@@ -12,11 +12,11 @@
             <xpath expr="//field[@name='user_id']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='organizer_id']" position="after">
-                <field name="employee_id" />
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='organizer_id']" position="after">
-                <field name="employee_id" />
+            <xpath expr="//field[@name='organizer_id']" position="attributes">
+                <field name="string">Supervisor</field>
             </xpath>
             <xpath expr="//page[@name='event_notes']" position="after">
                 <field name="part_standard_ids" />
