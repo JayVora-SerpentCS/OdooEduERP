@@ -18,6 +18,7 @@
         "security/ir.model.access.csv",
         'views/card_details.xml',
         "report/report_view.xml",
+        "report/qrcode_label.xml",
         "views/library_view.xml",
         "wizard/terminate_reason.xml",
     ],

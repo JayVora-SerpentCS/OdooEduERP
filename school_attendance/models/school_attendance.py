@@ -170,8 +170,8 @@ class StudentleaveRequest(models.Model):
         if self.start_date < fields.Date.today():
             raise ValidationError(
                 _(
-                    """Your leave request start date should \
-                    be greater than current date!"""
+                    """Your leave request start date should """
+                    """be greater than current date!"""
                 )
             )
 
