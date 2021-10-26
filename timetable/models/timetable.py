@@ -100,22 +100,23 @@ class TimeTableLine(models.Model):
     @api.constrains('teacher_id', 'class_room_id')
     def check_teacher_room(self):
         """Check available room for teacher."""
-        timetable_rec = self.env['time.table'].search([
-                                            ('id', '!=', self.table_id.id)])
-        for data in timetable_rec:
-            for record in data.timetable_ids:
-                if (data.timetable_type == 'regular' and
-                        self.table_id.timetable_type == 'regular' and
-                        self.teacher_id == record.teacher_id and
-                        self.week_day == record.week_day and
-                        self.start_time == record.start_time):
-                    raise ValidationError(_('''
-                        There is a lecture of Lecturer at same time!'''))
-                if (data.timetable_type == 'regular' and
-                        self.table_id.timetable_type == 'regular' and
-                        self.class_room_id == record.class_room_id and
-                        self.start_time == record.start_time):
-                    raise ValidationError(_("The room is occupied."))
+        for rec in self:
+            timetable_rec = self.env['time.table'].search([
+                                                ('id', '!=', rec.table_id.id)])
+            for data in timetable_rec:
+                for record in data.timetable_ids:
+                    if (data.timetable_type == 'regular' and
+                            rec.table_id.timetable_type == 'regular' and
+                            rec.teacher_id == record.teacher_id and
+                            rec.week_day == record.week_day and
+                            rec.start_time == record.start_time):
+                        raise ValidationError(_('''
+                            There is a lecture of Lecturer at same time!'''))
+                    if (data.timetable_type == 'regular' and
+                            rec.table_id.timetable_type == 'regular' and
+                            rec.class_room_id == record.class_room_id and
+                            rec.start_time == record.start_time):
+                        raise ValidationError(_("The room is occupied."))
 
 
 class SubjectSubject(models.Model):

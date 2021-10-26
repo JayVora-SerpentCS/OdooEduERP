@@ -187,18 +187,19 @@ Start and End Time should be less than 24 hours!'''))
     @api.constrains("teacher_id", "class_room_id")
     def check_teacher_room(self):
         """Method to Check room."""
-        timetable_rec = self.env["time.table"].search(
-            [("id", "!=", self.table_id.id)]
-        )
-        for data in timetable_rec:
-            for record in data.timetable_ids:
-                if (
-                    data.timetable_type == "exam"
-                    and self.table_id.timetable_type == "exam"
-                    and self.class_room_id == record.class_room_id
-                    and self.start_time == record.start_time
-                ):
-                    raise ValidationError(_("The room is occupied!"))
+        for rec in self:
+            timetable_rec = self.env["time.table"].search(
+                [("id", "!=", rec.table_id.id)]
+            )
+            for data in timetable_rec:
+                for record in data.timetable_ids:
+                    if (
+                        data.timetable_type == "exam"
+                        and rec.table_id.timetable_type == "exam"
+                        and rec.class_room_id == record.class_room_id
+                        and rec.start_time == record.start_time
+                    ):
+                        raise ValidationError(_("The room is occupied!"))
 
     @api.constrains("subject_id", "class_room_id")
     def check_exam_date(self):
@@ -488,7 +489,7 @@ class AdditionalExam(models.Model):
     @api.constrains("maximum_marks", "minimum_marks")
     def check_marks(self):
         """Method to check marks."""
-        if self.minimum_marks > self.maximum_marks:
+        if self.minimum_marks >= self.maximum_marks:
             raise ValidationError(
                 _(
                     """
@@ -830,27 +831,25 @@ class ExamSubject(models.Model):
     )
     def _validate_marks(self):
         """Method to validate marks"""
-        if self.obtain_marks > self.maximum_marks:
-            raise ValidationError(
-                _(
-                    """
-                The obtained marks should not extend maximum marks!"""
+        for rec in self:
+            if rec.obtain_marks > rec.maximum_marks:
+                raise ValidationError(
+                    _(
+                """The obtained marks should not extend maximum marks!"""
+                    )
                 )
-            )
-        if self.minimum_marks > self.maximum_marks:
-            raise ValidationError(
-                _(
-                    """
-                The minimum marks should not extend maximum marks!"""
+            if rec.minimum_marks > rec.maximum_marks:
+                raise ValidationError(
+                    _(
+                """The minimum marks should not extend maximum marks!"""
+                    )
                 )
-            )
-        if self.marks_reeval > self.maximum_marks:
-            raise ValidationError(
-                _(
-                    """
-                The revaluation marks should not extend maximum marks!"""
+            if rec.marks_reeval > rec.maximum_marks:
+                raise ValidationError(
+                    _(
+                """The revaluation marks should not extend maximum marks!"""
+                    )
                 )
-            )
 
 
 class AdditionalExamResult(models.Model):

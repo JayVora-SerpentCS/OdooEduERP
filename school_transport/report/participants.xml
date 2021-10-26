@@ -92,7 +92,7 @@
                                         <b>:</b>
                                     </td>
                                     <td width="75%" style="font-family: 'Helvetica';font-size: 16px;">
-                                        <span t-field="trans_vehicle_ids.vehicle"></span>
+                                        <span t-field="trans_vehicle_ids.license_plate"></span>
                                     </td>
                                 </tr>
                             </table>

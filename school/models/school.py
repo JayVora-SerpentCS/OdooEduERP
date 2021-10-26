@@ -398,6 +398,15 @@ class SubjectSubject(models.Model):
                                    'subject_id', 'student_id', 'Students',
                                    help='Students who choose this subject')
 
+    @api.constrains("maximum_marks", "minimum_marks")
+    def check_marks(self):
+        """Method to check marks."""
+        if self.minimum_marks >= self.maximum_marks:
+            raise ValidationError(
+                _(
+                """Configure Maximum marks greater than minimum marks!"""
+                )
+            )
 
 class SubjectSyllabus(models.Model):
     '''Defining a  syllabus'''

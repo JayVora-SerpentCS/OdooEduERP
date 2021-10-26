@@ -24,7 +24,7 @@ class EventEvent(models.Model):
         "Event Type",
         help=r"Event is either IntraSchool\or InterSchool",
     )
-    organizer_id = fields.Many2one("hr.employee", string="Supervisor")
+    # organizer_id = fields.Many2one("hr.employee", string="Supervisor")
     employee_id = fields.Many2one(
         "hr.employee", string="Contact Person", help="Contact Person for Eevnt"
     )
