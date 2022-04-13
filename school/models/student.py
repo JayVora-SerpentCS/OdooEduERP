@@ -23,6 +23,7 @@ class StudentStudent(models.Model):
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
@@ -100,7 +101,8 @@ class StudentStudent(models.Model):
     photo = fields.Binary('Photo', default=_default_image,
         help='Attach student photo')
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
-        default=check_current_year, help='Select academic year')
+        default=check_current_year, help='Select academic year',
+        tracking=True)
     cast_id = fields.Many2one('student.cast', 'Religion/Caste',
         help='Select student cast')
     relation = fields.Many2one('student.relation.master', 'Relation',
@@ -160,11 +162,11 @@ class StudentStudent(models.Model):
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
         help='Remark can be entered if any')
     school_id = fields.Many2one('school.school', 'School',
-        states={'done': [('readonly', True)]}, help='Select school')
+        states={'done': [('readonly', True)]}, help='Select school', tracking=True)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
         ('terminate', 'Terminate'), ('cancel', 'Cancel'),
         ('alumni', 'Alumni')], 'Status', readonly=True, default="draft",
-        help='State of the student registration form')
+        tracking=True, help='State of the student registration form')
     history_ids = fields.One2many('student.history', 'student_id', 'History',
         help='Enter student history')
     certificate_ids = fields.One2many('student.certificate', 'student_id',
@@ -179,28 +181,26 @@ class StudentStudent(models.Model):
     award_list = fields.One2many('student.award', 'award_list_id',
         'Award List', help='Student award list')
     stu_name = fields.Char('First Name', related='user_id.name',
-        readonly=True, help='Enter student first name')
+        readonly=True, help='Enter student first name', tracking=True)
     Acadamic_year = fields.Char('Year', related='year.name',
-        help='Academic Year', readonly=True)
+        help='Academic Year', readonly=True, tracking=True)
     division_id = fields.Many2one('standard.division', 'Division',
-        help='Select student standard division')
+        help='Select student standard division', tracking=True)
     medium_id = fields.Many2one('standard.medium', 'Medium',
-        help='Select student standard medium')
+        help='Select student standard medium', tracking=True)
     standard_id = fields.Many2one('school.standard', 'Class',
-        help='Select student standard')
+        help='Select student standard', tracking=True)
     parent_id = fields.Many2many('school.parent', 'students_parents_rel',
         'student_id', 'students_parent_id', 'Parent(s)',
         states={'done': [('readonly', True)]},
         help='Enter student parents')
     terminate_reason = fields.Text('Reason',
-        help='Enter student terminate reason')
+        help='Enter student terminate reason', tracking=True)
     active = fields.Boolean(default=True,
-        help='Activate/Deactivate student record')
+        help='Activate/Deactivate student record', tracking=True)
     teachr_user_grp = fields.Boolean("Teacher Group",
         compute="_compute_teacher_user",
         help='Activate/Deactivate teacher group')
-    active = fields.Boolean(default=True,
-        help='Activate/Deactivate student record')
 
     @api.model
     def create(self, vals):
