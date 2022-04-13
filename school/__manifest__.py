@@ -15,7 +15,6 @@
              'security/ir.model.access.csv',
              'data/student_sequence.xml',
              'wizard/terminate_reason_view.xml',
-             'wizard/wiz_send_email_view.xml',
              'views/student_view.xml',
              'views/school_view.xml',
              'views/teacher_view.xml',
