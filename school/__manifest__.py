@@ -2,7 +2,7 @@
 
 {
     'name': 'School',
-    'version': '14.0.1.0.0',
+    'version': '15.0.1.0.0',
     'author': 'Serpent Consulting Services Pvt. Ltd.',
     'website': 'http://www.serpentcs.com',
     'category': 'School Management',
@@ -24,8 +24,13 @@
              'wizard/move_standards_view.xml',
              'report/report_view.xml',
              'report/identity_card.xml',
-             'views/template_view.xml'],
+             ],
     'demo': ['demo/school_demo.xml'],
+    'assets': {
+        'web.assets_backend': [
+            '/school/static/src/scss/schoolcss.scss',
+        ],
+    },
     'installable': True,
     'application': True
 }

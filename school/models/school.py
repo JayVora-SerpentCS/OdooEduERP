@@ -12,14 +12,13 @@ from odoo.tools.translate import _
 
 EM = (r"[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$")
 
-
 def emailvalidation(email):
     """Check valid email."""
     if email:
         email_regex = re.compile(EM)
         if not email_regex.match(email):
-            raise ValidationError(_("This seems not to be valid email.\
-            Please enter email in correct format!"))
+            raise ValidationError(_("""This seems not to be valid email.
+Please enter email in correct format!"""))
 
 
 class AcademicYear(models.Model):
@@ -47,7 +46,7 @@ class AcademicYear(models.Model):
     def next_year(self, sequence):
         '''This method assign sequence to years'''
         year_rec = self.search([('sequence', '>', sequence)], order='id',
-                              limit=1)
+                            limit=1)
         if year_rec:
             return year_rec.id or False
 
@@ -59,18 +58,18 @@ class AcademicYear(models.Model):
         """Generate academic months."""
         interval = 1
         month_obj = self.env['academic.month']
-        for data in self:
-            start_date = data.date_start
-            while start_date < data.date_stop:
+        for rec in self:
+            start_date = rec.date_start
+            while start_date < rec.date_stop:
                 end_date = start_date + relativedelta(months=interval, days=-1)
-                if end_date > data.date_stop:
-                    end_date = data.date_stop
+                if end_date > rec.date_stop:
+                    end_date = rec.date_stop
                 month_obj.create({
                     'name': start_date.strftime('%B'),
                     'code': start_date.strftime('%m/%Y'),
                     'date_start': start_date,
                     'date_stop': end_date,
-                    'year_id': data.id,
+                    'year_id': rec.id,
                 })
                 start_date = start_date + relativedelta(months=interval)
 
@@ -84,7 +83,7 @@ class AcademicYear(models.Model):
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
             raise ValidationError(_(
-                        "The duration of the academic year is invalid."))
+                "The duration of the academic year is invalid."))
         if (self.date_stop and self.date_start and
                 self.date_stop < self.date_start):
             raise ValidationError(_(
@@ -112,12 +111,12 @@ class AcademicMonth(models.Model):
     _description = "Academic Month"
     _order = "date_start"
 
-    name = fields.Char('Name', required=True, help='Name of Academic month')
-    code = fields.Char('Code', required=True, help='Code of Academic month')
+    name = fields.Char('Name', required=True, help='Name')
+    code = fields.Char('Code', required=True, help='Code')
     date_start = fields.Date('Start of Period', required=True,
-                             help='Starting of academic month')
+                             help='Start date')
     date_stop = fields.Date('End of Period', required=True,
-                            help='Ending of academic month')
+                            help='End Date')
     year_id = fields.Many2one('academic.year', 'Academic Year', required=True,
                               help="Related academic year ")
     description = fields.Text('Description', help='Description')
@@ -145,7 +144,6 @@ class AcademicMonth(models.Model):
                 self.date_stop < self.date_start):
             raise ValidationError(_(
         "End of Period date should be greater than Start of Periods Date!"))
-
         """Check start date should be less than stop date."""
         exist_month_rec = self.search([('id', 'not in', self.ids)])
         for old_month in exist_month_rec:
@@ -209,7 +207,7 @@ class StandardStandard(models.Model):
         '''This method check sequence of standard'''
         stand_rec = self.search([('sequence', '>', sequence)], order='id',
                                 limit=1)
-        return stand_rec.id or False
+        return stand_rec and stand_rec.id or False
 
 
 class SchoolStandard(models.Model):
@@ -300,12 +298,11 @@ class SchoolStandard(models.Model):
     @api.constrains('standard_id', 'division_id')
     def check_standard_unique(self):
         """Method to check unique standard."""
-        standard_search = self.env['school.standard'].search([
+        if self.env['school.standard'].search([
                                 ('standard_id', '=', self.standard_id.id),
                                 ('division_id', '=', self.division_id.id),
                                 ('school_id', '=', self.school_id.id),
-                                ('id', 'not in', self.ids)])
-        if standard_search:
+                                ('id', 'not in', self.ids)]):
             raise ValidationError(_("Division and class should be unique!"))
   
     def unlink(self):
@@ -334,6 +331,13 @@ class SchoolSchool(models.Model):
     _name = 'school.school'
     _description = 'School Information'
     _rec_name = "com_name"
+
+    @api.constrains('code')
+    def _check_code(self):
+        for record in self:
+            if self.env["school.school"].search(
+                [('code', '=', record.code), ('id', '!=', record.id)]):
+                raise ValidationError("School Code must be Unique")
 
     @api.model
     def _lang_get(self):
@@ -403,10 +407,24 @@ class SubjectSubject(models.Model):
         """Method to check marks."""
         if self.minimum_marks >= self.maximum_marks:
             raise ValidationError(
-                _(
-                """Configure Maximum marks greater than minimum marks!"""
-                )
-            )
+                _("Configure Maximum marks greater than minimum marks!"))
+
+    @api.model
+    def _search(
+        self, args, offset=0, limit=None, order=None, count=False,
+        access_rights_uid=None, ):
+        """Override method to get exam of subject selection."""
+        if self._context.get("is_from_subject_report") and \
+            self._context.get("active_model") and \
+            self._context.get("active_id"):
+
+            teacher_rec = self.env[self._context.get("active_model")].browse(
+                self._context.get("active_id"))
+            sub_ids = [sub_id.id for sub_id in teacher_rec.subject_id]
+            args.append(("id", "in", sub_ids))
+        return super(SubjectSubject, self)._search(args=args, offset=offset,
+            limit=limit, order=order, count=count,
+            access_rights_uid=access_rights_uid, )
 
 class SubjectSyllabus(models.Model):
     '''Defining a  syllabus'''
@@ -415,10 +433,10 @@ class SubjectSyllabus(models.Model):
     _rec_name = "subject_id"
 
     standard_id = fields.Many2one('school.standard', 'Standard',
-                                  help='Standard which had this subject')
+                                help='Standard which had this subject')
     subject_id = fields.Many2one('subject.subject', 'Subject', help='Subject')
     syllabus_doc = fields.Binary("Syllabus Doc",
-                                 help="Attach syllabus related to Subject")
+                                help="Attach syllabus related to Subject")
 
 
 class SubjectElective(models.Model):
@@ -428,8 +446,8 @@ class SubjectElective(models.Model):
 
     name = fields.Char("Name", help='Elective subject name')
     subject_ids = fields.One2many('subject.subject', 'elective_id',
-                                  'Elective Subjects', help='''Subjects of the
-                                  respective elective subject''')
+        'Elective Subjects',
+        help="Subjects of the respective elective subject")
 
 
 class MotherTongue(models.Model):
@@ -448,7 +466,7 @@ class StudentAward(models.Model):
     _description = "Student Awards"
 
     award_list_id = fields.Many2one('student.student', 'Student',
-                                    help='Students who about to get the award')
+                                help='Students who about to get the award')
     name = fields.Char('Award Name', help='Award name')
     description = fields.Char('Description', help='Description')
 
@@ -470,15 +488,15 @@ class StudentDocument(models.Model):
     _rec_name = "doc_type"
 
     doc_id = fields.Many2one('student.student', 'Student',
-                             help='Student of the following doc')
+                            help='Student of the following doc')
     file_no = fields.Char('File No', readonly="1",
-                          default=lambda obj: obj.env[
-                            'ir.sequence'].next_by_code('student.document'),
-                          help='File no of the document')
+        default=lambda obj: obj.env['ir.sequence'
+            ].next_by_code('student.document'),
+            help='File no of the document')
     submited_date = fields.Date('Submitted Date',
                                 help='Document submitted date')
     doc_type = fields.Many2one('document.type', 'Document Type', required=True,
-                               help='Document type')
+            help='Document type')
     file_name = fields.Char('File Name', help='File name')
     return_date = fields.Date('Return Date', help='Document return date')
     new_datas = fields.Binary('Attachments', help='Attachments of the document')
@@ -492,16 +510,15 @@ class DocumentType(models.Model):
     _order = "seq_no"
 
     seq_no = fields.Char('Sequence', readonly=True,
-                         default=lambda self: _('New'),
-                         help='Sequence of the document')
+        default=lambda self: _('New'), help='Sequence of the document')
     doc_type = fields.Char('Document Type', required=True,
-                           help='Document type')
+        help='Document type')
 
     @api.model
     def create(self, vals):
         if vals.get('seq_no', _('New')) == _('New'):
             vals['seq_no'] = self.env['ir.sequence'].next_by_code(
-                                            'document.type') or _('New')
+                        'document.type') or _('New')
         return super(DocumentType, self).create(vals)
 
 
@@ -511,7 +528,7 @@ class StudentDescription(models.Model):
     _description = "Student Description"
 
     des_id = fields.Many2one('student.student', 'Student Ref.',
-                             help='Student record from students')
+                help='Student record from students')
     name = fields.Char('Name', help='Description name')
     description = fields.Char('Description', help='Student description')
 
@@ -523,15 +540,15 @@ class StudentDescipline(models.Model):
     _description = "Student Discipline"
 
     student_id = fields.Many2one('student.student', 'Student',
-                                 help='Student')
+                help='Student')
     teacher_id = fields.Many2one('school.teacher', 'Teacher',
-                                 help='Teacher who examine the student')
+                help='Teacher who examine the student')
     date = fields.Date('Date', help='Date')
     class_id = fields.Many2one('standard.standard', 'Class',
-                               help='Class of student')
+                help='Class of student')
     note = fields.Text('Note', help='Discipline Note')
     action_taken = fields.Text('Action Taken',
-                               help='Action taken against discipline')
+                help='Action taken against discipline')
 
 
 class StudentHistory(models.Model):
@@ -541,15 +558,15 @@ class StudentHistory(models.Model):
     _description = "Student History"
 
     student_id = fields.Many2one('student.student', 'Student',
-                                 help='Related Student')
+                help='Related Student')
     academice_year_id = fields.Many2one('academic.year', 'Academic Year',
-                                        help='Academice Year')
+                help='Academice Year')
     standard_id = fields.Many2one('school.standard', 'Standard',
-                                  help='Standard of the following student')
+                help='Standard of the following student')
     percentage = fields.Float("Percentage", readonly=True,
-                              help='Percentage of the student')
+                help='Percentage of the student')
     result = fields.Char('Result', readonly=True,
-                         help='Result of the student')
+                help='Result of the student')
 
 
 class StudentCertificate(models.Model):
@@ -559,10 +576,10 @@ class StudentCertificate(models.Model):
     _description = "Student Certificate"
 
     student_id = fields.Many2one('student.student', 'Student',
-                                 help='Related student')
+                help='Related student')
     description = fields.Char('Description', help='Description')
     certi = fields.Binary('Certificate', required=True,
-                          help='Student certificate')
+                help='Student certificate')
 
 
 class StudentReference(models.Model):
@@ -572,18 +589,18 @@ class StudentReference(models.Model):
     _description = "Student Reference"
 
     reference_id = fields.Many2one('student.student', 'Student',
-                                   help='Student reference')
+                help='Student reference')
     name = fields.Char('First Name', required=True,
-                        help='Student name')
+                help='Student name')
     middle = fields.Char('Middle Name', required=True,
-                          help='Student middle name')
+                help='Student middle name')
     last = fields.Char('Surname', required=True,
-                        help='Student last name')
+                help='Student last name')
     designation = fields.Char('Designation', required=True,
-                               help='Student designation')
+                help='Student designation')
     phone = fields.Char('Phone', required=True,  help='Student phone')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')],
-                              'Gender',  help='Student gender')
+                'Gender',  help='Student gender')
 
 
 class StudentPreviousSchool(models.Model):
@@ -594,17 +611,17 @@ class StudentPreviousSchool(models.Model):
     previous_school_id = fields.Many2one('student.student', 'Student',
                                          help='Related student')
     name = fields.Char('Name', required=True,
-                       help='Student previous school name')
+            help='Student previous school name')
     registration_no = fields.Char('Registration No.', required=True,
-                                  help='Student registration number')
+            help='Student registration number')
     admission_date = fields.Date('Admission Date',
-                                 help='Student admission date')
+            help='Student admission date')
     exit_date = fields.Date('Exit Date',
-                            help='Student previous school exit date')
+            help='Student previous school exit date')
     course_id = fields.Many2one('standard.standard', 'Course', required=True,
-                                help='Student gender')
+            help='Student gender')
     add_sub = fields.One2many('academic.subject', 'add_sub_id', 'Add Subjects',
-                              help='Student gender')
+            help='Student gender')
 
     @api.constrains('admission_date', 'exit_date')
     def check_date(self):
@@ -695,15 +712,15 @@ class GradeLine(models.Model):
     _rec_name = 'grade'
 
     from_mark = fields.Integer('From Marks', required=True,
-                               help='The grade will starts from this marks.')
+            help='The grade will starts from this marks.')
     to_mark = fields.Integer('To Marks', required=True,
-                             help='The grade will ends to this marks.')
+            help='The grade will ends to this marks.')
     grade = fields.Char('Grade', required=True, help="Grade")
     sequence = fields.Integer('Sequence', help="Sequence order of the grade.")
     fail = fields.Boolean('Fail', help='''If fail field is set to True,
-                                it will allow you to set the grade as fail.''')
+it will allow you to set the grade as fail.''')
     grade_id = fields.Many2one("grade.master", 'Grade Ref.',
-                               help='Related grade')
+            help='Related grade')
     name = fields.Char('Name', help='Grade name')
 
     @api.constrains('from_mark', 'to_mark')
@@ -714,11 +731,11 @@ class GradeLine(models.Model):
                 raise ValidationError(_(
             "To Marks should be greater than From Marks!"))
             for line in self.search([('grade_id', '=', rec.grade_id.id),
-                                 ('id', '!=', rec.id)]):
+                                    ('id', '!=', rec.id)]):
                 if (line.from_mark <= rec.from_mark <= line.to_mark or
                     line.from_mark <= rec.to_mark <= line.to_mark):
                     raise ValidationError(_(
-                                "Error! You cannot define overlapping Marks!"))
+                            "Error! You cannot define overlapping Marks!"))
 
 
 class StudentNews(models.Model):
@@ -734,8 +751,7 @@ class StudentNews(models.Model):
     description = fields.Text('Description', help="Description")
     date = fields.Datetime('Expiry Date', help='Expiry date of the news.')
     user_ids = fields.Many2many('res.users', 'user_news_rel', 'id', 'user_ids',
-                                'User News',
-                                help='Name to whom this news is related.')
+            'User News', help='Name to whom this news is related.')
     color = fields.Integer('Color Index', default=0, help='Color index')
 
     @api.constrains("date")
@@ -744,7 +760,7 @@ class StudentNews(models.Model):
         new_date = fields.datetime.today()
         if self.date < new_date:
             raise ValidationError(_(
-                        "Configure expiry date greater than current date!"))
+"Configure expiry date greater than current date!"))
 
     def news_update(self):
         '''Method to send email to student for news update'''
@@ -752,11 +768,10 @@ class StudentNews(models.Model):
         obj_mail_server = self.env['ir.mail_server']
         user = self.env.user
         # Check if out going mail configured
-        mail_server_ids = obj_mail_server.search([])
-        if not mail_server_ids:
-            raise UserError(_('User Email Configuration!,\n'
-                            "Outgoing mail server not specified!"))
-        mail_server_record = mail_server_ids[0]
+        mail_server_record = obj_mail_server.search([],limit=1)
+        if not mail_server_record:
+            raise UserError(_('''User Email Configuration!
+"Outgoing mail server not specified!'''))
         email_list = []
         # Check email is defined in student
         for news in self:
@@ -764,8 +779,8 @@ class StudentNews(models.Model):
                 email_list = [news_user.email for news_user in news.user_ids
                               if news_user.email]
                 if not email_list:
-                    raise UserError(_('User Email Configuration!,\n'
-                                     "Email not found in users !"))
+                    raise UserError(_('''User Email Configuration!,
+Email not found in users!'''))
             # Check email is defined in user created from employee
             else:
                 for employee in emp_obj.search([]):
@@ -774,32 +789,27 @@ class StudentNews(models.Model):
                     elif employee.user_id and employee.user_id.email:
                         email_list.append(employee.user_id.email)
                 if not email_list:
-                    raise UserError(_('Email Configuration!,\n'
-                                     "Email not defined!"))
-            news_date = news.date
+                    raise UserError(_('''Email Configuration!,
+Email not defined!'''))
+            news_date = news.create_date
             # Add company name while sending email
             company = user.company_id.name or ''
             body = """Hi,<br/><br/>
                     This is a news update from <b>%s</b> posted at %s<br/>
                     <br/> %s <br/><br/>
                     Thank you.""" % (company,
-                                     news_date.strftime(
-                                            DEFAULT_SERVER_DATETIME_FORMAT),
-                                     news.description or '')
+                news_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                news.description or '')
             smtp_user = mail_server_record.smtp_user or False
             # Check if mail of outgoing server configured
             if not smtp_user:
-                raise UserError(_('Email Configuration,\n'
-                                 "Kindly,Configure Outgoing Mail Server!"))
+                raise UserError(_('''Email Configuration,
+Kindly,Configure Outgoing Mail Server!'''))
             notification = 'Notification for news update.'
             # Configure email
             message = obj_mail_server.build_email(email_from=smtp_user,
-                                                  email_to=email_list,
-                                                  subject=notification,
-                                                  body=body,
-                                                  body_alternative=body,
-                                                  reply_to=smtp_user,
-                                                  subtype='html')
+                email_to=email_list, subject=notification, body=body,
+                body_alternative=body, reply_to=smtp_user, subtype='html')
             # Send Email configured above with help of send mail method
             obj_mail_server.send_email(message=message,
                                        mail_server_id=mail_server_ids[0].id)
@@ -819,13 +829,19 @@ class StudentReminder(models.Model):
                                         ('user_id', '=', self._uid)]).id
 
     stu_id = fields.Many2one('student.student', 'Student Name', required=True,
-                             default=check_user, help='Relative student')
+                            default=check_user, help='Relative student')
     name = fields.Char('Title', help='Reminder name')
     date = fields.Date('Date', help='Reminder date')
     description = fields.Text('Description',
-                              help='Description of the reminder')
+                            help='Description of the reminder')
     color = fields.Integer('Color Index', default=0, help='Color index')
 
+    @api.constrains("date")
+    def check_date(self):
+        """Method to check constraint of due date and assign date"""
+        if self.date < fields.Date.today():
+            raise ValidationError(_(
+                "Reminder date of must be greater or equal current date !"))
 
 class StudentCast(models.Model):
     """Defining student cast."""
@@ -850,8 +866,9 @@ class Report(models.Model):
     _inherit = "ir.actions.report"
 
     def render_template(self, template, values=None):
-        student_rec = self.env['student.student'].\
-            browse(self._context.get('student_id', False))
+        student_id = self._context.get('student_id')
+        if student_id:
+            student_rec = self.env['student.student'].browse(student_id)
         if student_rec and student_rec.state == 'draft':
             raise ValidationError(_(
                     "You cannot print report forstudent in unconfirm state!"))

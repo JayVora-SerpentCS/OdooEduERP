@@ -73,6 +73,8 @@
                             <field name="title" options="{&quot;no_open&quot;: True}"/>
                             <field name="lang"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                            <field name="standard_id" invisible="1"/>
+                            <field name="stand_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
