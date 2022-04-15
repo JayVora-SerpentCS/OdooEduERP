@@ -245,7 +245,7 @@
         </record>
 
         <!-- Menu items for Assignment-->
-        <menuitem id="menu_assignment" name="Assignment" parent="school.menu_ems" sequence="8"/>
+        <menuitem id="menu_assignment" name="Assignment" parent="school.menu_ems" sequence="7"/>
         <menuitem id="menu_student_assignment_sub_form" name="Student Assignment"
                 parent="menu_assignment" sequence="82"
                 action="action_school_student_assignment_form"

@@ -2,7 +2,7 @@
 
 {
     "name": "Assignment Management",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.,\
                Odoo Community Association (OCA)",
     "website": "http://www.serpentcs.com",

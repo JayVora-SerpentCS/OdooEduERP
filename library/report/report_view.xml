@@ -2,7 +2,7 @@
 
 <odoo>
 
-    <record id="product.report_product_label" model="ir.actions.report">
+    <record id="report_product_label_custome" model="ir.actions.report">
         <field name="name">QR Code Report</field>
         <field name="model">product.product</field>
         <field name="report_type">qweb-pdf</field>

@@ -6,22 +6,17 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    use_parent_address = fields.Boolean(
-        "Use Parent Address",
-        help="""Avtivate/Deactivate as per use
-        of parent address""",
-    )
+    use_parent_address = fields.Boolean("Use Parent Address",
+        help="Avtivate/Deactivate as per use of parent address")
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    book_issue_id = fields.Many2one(
-        "library.book.issue", "Book issue", help="Select book issue"
-    )
-    book_issue_reference = fields.Char(
-        "Book Issue Ref", help="Enter book issue reference"
-    )
+    book_issue_id = fields.Many2one("library.book.issue", "Book issue",
+        help="Select book issue")
+    book_issue_reference = fields.Char("Book Issue Ref",
+        help="Enter book issue reference")
 
 
 class AccountMoveLine(models.Model):
