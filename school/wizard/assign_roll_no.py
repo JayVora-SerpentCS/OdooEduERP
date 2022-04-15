@@ -17,12 +17,11 @@ class AssignRollNo(models.TransientModel):
         student_obj = self.env['student.student']
         # Search Student
         for rec in self:
-            student_ids = student_obj.search([
-                            ('standard_id', '=', rec.standard_id.id),
-                            ('medium_id', '=', rec.medium_id.id)],
-                            order="name")
             # Assign roll no according to name.
             number = 1
-            for student in student_ids:
-                number += 1
+            for student in student_obj.search([
+                        ('standard_id', '=', rec.standard_id.id),
+                        ('medium_id', '=', rec.medium_id.id)],
+                        order="name"):
                 student.write({'roll_no': number})
+                number += 1

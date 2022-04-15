@@ -23,6 +23,7 @@ class StudentStudent(models.Model):
     _name = 'student.student'
     _table = "student_student"
     _description = 'Student Information'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False,
@@ -76,76 +77,67 @@ class StudentStudent(models.Model):
         res = self.env['academic.year'].search([('current', '=', True)])
         if not res:
             raise ValidationError(_(
-                                "There is no current Academic Year defined!\
-            Please contact Administator!"))
+"There is no current Academic Year defined! Please contact Administator!"))
         return res.id
 
     family_con_ids = fields.One2many('student.family.contact',
-                                     'family_contact_id',
-                                     'Family Contact Detail',
-                                     states={'done': [('readonly', True)]},
-                                     help='Select the student family contact')
+        'family_contact_id', 'Family Contact Detail',
+        states={'done': [('readonly', True)]},
+        help='Select the student family contact')
     user_id = fields.Many2one('res.users', 'User ID', ondelete="cascade",
-                              required=True, delegate=True,
-                              help='Select related user of the student')
+        required=True, delegate=True,
+        help='Select related user of the student')
     student_name = fields.Char('Student Name', related='user_id.name',
-                               store=True, readonly=True,
-                               help='Student Name')
+        store=True, readonly=True, help='Student Name')
     pid = fields.Char('Student ID', required=True,
-                      default=lambda self: _('New'),
-                      help='Personal IDentification Number')
+        default=lambda self: _('New'), help='Personal IDentification Number')
     reg_code = fields.Char('Registration Code',
                            help='Student Registration Code')
     student_code = fields.Char('Student Code', help='Enter student code')
     contact_phone = fields.Char('Phone no.', help='Enter student phone no.')
     contact_mobile = fields.Char('Mobile no', help='Enter student mobile no.')
     roll_no = fields.Integer('Roll No.', readonly=True,
-                             help='Enter student roll no.')
+        help='Enter student roll no.')
     photo = fields.Binary('Photo', default=_default_image,
-                          help='Attach student photo')
+        help='Attach student photo')
     year = fields.Many2one('academic.year', 'Academic Year', readonly=True,
-                           default=check_current_year,
-                           help='Select academic year')
+        default=check_current_year, help='Select academic year',
+        tracking=True)
     cast_id = fields.Many2one('student.cast', 'Religion/Caste',
-                              help='Select student cast')
+        help='Select student cast')
     relation = fields.Many2one('student.relation.master', 'Relation',
-                               help='Select student relation')
+        help='Select student relation')
 
     admission_date = fields.Date('Admission Date', default=fields.Date.today(),
-                                 help='Enter student admission date')
+        help='Enter student admission date')
     middle = fields.Char('Middle Name', required=True,
-                         states={'done': [('readonly', True)]},
-                         help='Enter student middle name')
+        states={'done': [('readonly', True)]},
+        help='Enter student middle name')
     last = fields.Char('Surname', required=True,
-                       states={'done': [('readonly', True)]},
-                       help='Enter student last name')
+        states={'done': [('readonly', True)]}, help='Enter student last name')
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')],
-                              'Gender', states={'done': [('readonly', True)]},
-                              help='Select student gender')
+        'Gender', states={'done': [('readonly', True)]},
+        help='Select student gender')
     date_of_birth = fields.Date('BirthDate', required=True,
-                                states={'done': [('readonly', True)]},
-                                help='Enter student date of birth')
+        states={'done': [('readonly', True)]},
+        help='Enter student date of birth')
     mother_tongue = fields.Many2one('mother.toungue', "Mother Tongue",
-                                    help='Select student mother tongue')
+        help='Select student mother tongue')
     age = fields.Integer(compute='_compute_student_age', string='Age',
-                         readonly=True, help='Enter student age')
+        readonly=True, help='Enter student age')
     maritual_status = fields.Selection([('unmarried', 'Unmarried'),
-                                        ('married', 'Married')],
-                                       'Marital Status',
-                                       states={'done': [('readonly', True)]},
-                                       help='Select student maritual status')
+        ('married', 'Married')], 'Marital Status',
+        states={'done': [('readonly', True)]},
+        help='Select student maritual status')
     reference_ids = fields.One2many('student.reference', 'reference_id',
-                                    'References',
-                                    states={'done': [('readonly', True)]},
-                                    help='Enter student references')
+        'References', states={'done': [('readonly', True)]},
+        help='Enter student references')
     previous_school_ids = fields.One2many('student.previous.school',
-                                          'previous_school_id',
-                                          'Previous School Detail',
-                                          states={'done': [(
-                                                   'readonly', True)]},
-                                          help='Enter student school details')
+        'previous_school_id', 'Previous School Detail',
+        states={'done': [('readonly', True)]},
+        help='Enter student school details')
     doctor = fields.Char('Doctor Name', states={'done': [('readonly', True)]},
-                         help='Enter doctor name for student medical details')
+        help='Enter doctor name for student medical details')
     designation = fields.Char('Designation', help='Enter doctor designation')
     doctor_phone = fields.Char('Contact No.', help='Enter doctor phone')
     blood_group = fields.Char('Blood Group', help='Enter student blood group')
@@ -154,70 +146,61 @@ class StudentStudent(models.Model):
     eye = fields.Boolean('Eyes', help='Eye for medical info')
     ear = fields.Boolean('Ears', help='Eye for medical info')
     nose_throat = fields.Boolean('Nose & Throat',
-                                 help='Nose & Throat for medical info')
+        help='Nose & Throat for medical info')
     respiratory = fields.Boolean('Respiratory',
-                                 help='Respiratory for medical info')
+        help='Respiratory for medical info')
     cardiovascular = fields.Boolean('Cardiovascular',
-                                    help='Cardiovascular for medical info')
+        help='Cardiovascular for medical info')
     neurological = fields.Boolean('Neurological',
-                                  help='Neurological for medical info')
+        help='Neurological for medical info')
     muskoskeletal = fields.Boolean('Musculoskeletal',
-                                   help='Musculoskeletal for medical info')
+        help='Musculoskeletal for medical info')
     dermatological = fields.Boolean('Dermatological',
-                                    help='Dermatological for medical info')
+        help='Dermatological for medical info')
     blood_pressure = fields.Boolean('Blood Pressure',
-                                    help='Blood pressure for medical info')
+        help='Blood pressure for medical info')
     remark = fields.Text('Remark', states={'done': [('readonly', True)]},
-                         help='Remark can be entered if any')
+        help='Remark can be entered if any')
     school_id = fields.Many2one('school.school', 'School',
-                                states={'done': [('readonly', True)]},
-                                help='Select school')
-    state = fields.Selection([('draft', 'Draft'),
-                              ('done', 'Done'),
-                              ('terminate', 'Terminate'),
-                              ('cancel', 'Cancel'),
-                              ('alumni', 'Alumni')],
-                             'Status', readonly=True, default="draft",
-                             help='State of the student registration form')
+        states={'done': [('readonly', True)]}, help='Select school', tracking=True)
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done'),
+        ('terminate', 'Terminate'), ('cancel', 'Cancel'),
+        ('alumni', 'Alumni')], 'Status', readonly=True, default="draft",
+        tracking=True, help='State of the student registration form')
     history_ids = fields.One2many('student.history', 'student_id', 'History',
-                                  help='Enter student history')
+        help='Enter student history')
     certificate_ids = fields.One2many('student.certificate', 'student_id',
-                                      'Certificate',
-                                      help='Enter student certificates')
+        'Certificate', help='Enter student certificates')
     student_discipline_line = fields.One2many('student.descipline',
-                                              'student_id', 'Descipline',
-                                              help='''Enter student 
-                                              descipline info''')
+        'student_id', 'Descipline',
+        help='''Enter student descipline info''')
     document = fields.One2many('student.document', 'doc_id', 'Documents',
-                               help='Attach student documents')
+        help='Attach student documents')
     description = fields.One2many('student.description', 'des_id',
-                                  'Description', help='Description')
+        'Description', help='Description')
     award_list = fields.One2many('student.award', 'award_list_id',
-                                 'Award List', help='Student award list')
+        'Award List', help='Student award list')
     stu_name = fields.Char('First Name', related='user_id.name',
-                           readonly=True, help='Enter student first name')
+        readonly=True, help='Enter student first name', tracking=True)
     Acadamic_year = fields.Char('Year', related='year.name',
-                                help='Academic Year', readonly=True)
+        help='Academic Year', readonly=True, tracking=True)
     division_id = fields.Many2one('standard.division', 'Division',
-                                  help='Select student standard division')
+        help='Select student standard division', tracking=True)
     medium_id = fields.Many2one('standard.medium', 'Medium',
-                                help='Select student standard medium')
+        help='Select student standard medium', tracking=True)
     standard_id = fields.Many2one('school.standard', 'Class',
-                                  help='Select student standard')
+        help='Select student standard', tracking=True)
     parent_id = fields.Many2many('school.parent', 'students_parents_rel',
-                                 'student_id',
-                                 'students_parent_id', 'Parent(s)',
-                                 states={'done': [('readonly', True)]},
-                                 help='Enter student parents')
+        'student_id', 'students_parent_id', 'Parent(s)',
+        states={'done': [('readonly', True)]},
+        help='Enter student parents')
     terminate_reason = fields.Text('Reason',
-                                   help='Enter student terminate reason')
+        help='Enter student terminate reason', tracking=True)
     active = fields.Boolean(default=True,
-                            help='Activate/Deactivate student record')
+        help='Activate/Deactivate student record', tracking=True)
     teachr_user_grp = fields.Boolean("Teacher Group",
-                                     compute="_compute_teacher_user",
-                                     help='Activate/Deactivate teacher group')
-    active = fields.Boolean(default=True,
-                            help='Activate/Deactivate student record')
+        compute="_compute_teacher_user",
+        help='Activate/Deactivate teacher group')
 
     @api.model
     def create(self, vals):
@@ -231,7 +214,7 @@ class StudentStudent(models.Model):
             vals['password'] = vals['pid']
         else:
             raise UserError(_(
-                      "Error! PID not valid so record will not be saved."))
+                    "Error! PID not valid so record will not be saved."))
         if vals.get('company_id', False):
             company_vals = {'company_ids': [(4, vals.get('company_id'))]}
             vals.update(company_vals)
@@ -240,8 +223,7 @@ class StudentStudent(models.Model):
         res = super(StudentStudent, self).create(vals)
         teacher = self.env['school.teacher']
         for data in res.parent_id:
-            teacher_rec = teacher.search([('stu_parent_id', '=', data.id)])
-            for record in teacher_rec:
+            for record in teacher.search([('stu_parent_id', '=', data.id)]):
                 record.write({'student_id': [(4, res.id, None)]})
         # Assign group to student based on condition
         emp_grp = self.env.ref('base.group_user')
@@ -261,18 +243,16 @@ class StudentStudent(models.Model):
         teacher = self.env['school.teacher']
         if vals.get('parent_id'):
             for parent in vals.get('parent_id')[0][2]:
-                teacher_rec = teacher.search([('stu_parent_id', '=', parent)])
-                for data in teacher_rec:
+                for data in teacher.search([('stu_parent_id', '=', parent)]):
                     data.write({'student_id': [(4, self.id)]})
         return super(StudentStudent, self).write(vals)
 
     @api.constrains('date_of_birth')
     def check_age(self):
         '''Method to check age should be greater than 6'''
-        current_dt = fields.Date.today()
         if self.date_of_birth:
             start = self.date_of_birth
-            age_calc = ((current_dt - start).days / 365)
+            age_calc = ((fields.Date.today() - start).days / 365)
             # Check if age less than required age
             if age_calc < self.school_id.required_age:
                 raise ValidationError(_(
@@ -285,14 +265,11 @@ class StudentStudent(models.Model):
 
     def set_alumni(self):
         '''Method to change state to alumni'''
-        student_user = self.env['res.users']
         for rec in self:
             rec.state = 'alumni'
             rec.standard_id._compute_total_student()
-            user = student_user.search([('id', '=', rec.user_id.id)])
             rec.active = False
-            if user:
-                user.active = False
+            rec.user_id.active = False
 
     def set_done(self):
         '''Method to change state to done'''
@@ -326,10 +303,10 @@ class StudentStudent(models.Model):
             # Checks the standard if not defined raise error
             if not school_standard_obj.search(domain):
                 raise UserError(_(
-                          "Warning! The standard is not defined in school!"))
+                        "Warning! The standard is not defined in school!"))
             # Assign group to student
-            rec.user_id.write({'groups_id': [(6, 0, [emp_group.id,
-                                                     student_group.id])]})
+            rec.user_id.write({'groups_id': [(6, 0,
+                                [emp_group.id, student_group.id])]})
             # Assign roll no to student
             number = 1
             for rec_std in rec.search(domain):

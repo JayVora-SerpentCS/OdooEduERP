@@ -174,4 +174,3 @@ access_parent_relation_teacher_grp,parent.relation,school.model_parent_relation,
 access_assign_roll_no,assign.roll.no,model_assign_roll_no,group_school_administration,1,1,1,1
 access_move_standards,move.standards,model_move_standards,group_school_administration,1,1,1,1
 access_terminate_reason,terminate.reason,model_terminate_reason,group_school_administration,1,1,1,1
-access_send_mail,send.mail,model_send_email,group_school_administration,1,1,1,1

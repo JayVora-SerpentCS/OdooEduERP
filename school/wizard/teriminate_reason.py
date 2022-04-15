@@ -13,19 +13,14 @@ class TerminateReason(models.TransientModel):
 
     def save_terminate(self):
         '''Method to terminate student and change state to terminate.'''
-        self.env['student.student'].browse(
-                self._context.get('active_id')).write({
-                                'state': 'terminate',
-                                'terminate_reason': self.reason,
-                                'active': False})
-        student_rec = self.env['student.student'].browse(
-                                    self._context.get('active_id'))
+        student_rec = self.env['student.student'
+                ].browse(self._context.get('active_id'))
+        student_rec.write({'state': 'terminate',
+                        'terminate_reason': self.reason,
+                        'active': False})
         student_rec.standard_id._compute_total_student()
-        user = self.env['res.users'].search([
-                            ('id', '=', student_rec.user_id.id)])
-        student_reminder = self.env['student.reminder'].search([
-                                    ('stu_id', '=', student_rec.id)])
-        for rec in student_reminder:
+        for rec in self.env['student.reminder'].search([
+                            ('stu_id', '=', student_rec.id)]):
             rec.active = False
-        if user:
-            user.active = False
+        if student_rec.user_id:
+            student_rec.user_id.active = False
