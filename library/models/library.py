@@ -134,8 +134,8 @@ class LibraryCard(models.Model):
 
     def running_state(self):
         """Change state to running"""
-        self.code = self.env["ir.sequence"
-                        ].next_by_code("library.card") or _("New"])
+        self.code = self.env["ir.sequence"].next_by_code("library.card"
+                ) or _("New")
         self.state = "running"
 
     def draft_state(self):
