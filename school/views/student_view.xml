@@ -323,6 +323,9 @@
                 <filter name="alumni" string="Alumni" domain="[('state','=', 'alumni')]" help="Admission In Confirm State"/>
                 <filter name="terminate" string="Terminated" domain="[('state','=', 'terminate')]" help="Admission In Pending State"/>
                 <filter name="done" string="Done" domain="[('state','=', 'done')]" help="Admission In Done State"/>
+                <filter name="english" string="English Medium" domain="[('medium_id.name','ilike', 'English')]" help="Admission In English Medium"/>
+                <filter name="french" string="French Medium" domain="[('medium_id.name','ilike', 'French')]" help="Admission In French Medium"/>
+                <filter name="urdu" string="Urdu Medium" domain="[('medium_id.name','ilike', 'Urdu')]" help="Admission In Urdu Medium"/>
             </search>
         </field>
     </record>
@@ -395,26 +398,18 @@
                                                             </b>
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>Gender : </td>
+                                                        <td style="padding-left:10px;">
+                                                            <b>
+                                                                <field name="gender" />
+                                                            </b>
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <center>
-                                                    <b>
-                                                        <field name="gender" />
-                                                    </b>
-                                                </center>
-                                            </td>
-                                        </tr>
                                     </table>
-                                </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                    <div class="oe_kanban_left">
-                                        <a role="button" string="Edit" title="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
-                                        <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
-                                    </div>
-                                    <br class="oe_kanban_clear" />
                                 </div>
                             </div>
                         </div>

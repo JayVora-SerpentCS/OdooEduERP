@@ -326,4 +326,25 @@ class StudentStudent(models.Model):
                        'admission_date': fields.Date.today(),
                        'student_code': student_code,
                        'reg_code': registation_code})
+            template = self.env['mail.template'].sudo().search([
+                ('name', 'ilike', 'Admission Confirmation')], limit=1)
+            if template:
+                for user in rec.parent_id:
+                    subject = _("About Admission Confirmation")
+                    if user.email:
+                        body = """
+                        <div>
+                            <p>Dear """ + str(user.display_name) + """,
+                            <br/><br/>
+                            Admission of """+str(rec.display_name)+""" has been confirmed in """+str(rec.school_id.name)+""".
+                            <br></br>
+                            Thank You.
+                        </div>
+                        """
+                        template.send_mail(rec.id, email_values={
+                            'email_from': self.env.user.email or '',
+                            'email_to': user.email,
+                            'subject': subject,
+                            'body_html': body,
+                            }, force_send=True)
         return True

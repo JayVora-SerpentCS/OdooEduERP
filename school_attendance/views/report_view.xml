@@ -1,0 +1,28 @@
+<odoo>
+    <record id="monthly_attendance_report" model="report.paperformat">
+        <field name="name">Mothly Attendance Report</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">25</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="attendace_month_report" model="ir.actions.report">
+        <field name="name">Student Attendances by Month</field>
+        <field name="model">student.student</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_attendance.attendance_month</field>
+        <field name="report_file">school_attendance.attendance_month</field>
+        <field name="paperformat_id" ref="school_attendance.monthly_attendance_report"/>
+        <field name="groups_id"
+               eval="[(4, ref('school.group_school_administration')), (4, ref('school.group_school_student')), (4, ref('school.group_school_teacher'))]"/>
+    </record>
+</odoo>

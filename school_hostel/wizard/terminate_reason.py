@@ -19,11 +19,8 @@ class TerminateReasonHostel(models.TransientModel):
         student = self._context.get("active_id")
         student_rec = self.env["student.student"].browse(student)
         student_hostel_rec = self.env["hostel.student"].search(
-            [
-                ("student_id", "=", student_rec.id),
-                ("status", "in", ["reservation", "pending", "paid"]),
-            ]
-        )
+            [("student_id", "=", student_rec.id),
+            ("status", "in", ["reservation", "pending", "paid"])])
         hostel_msg = ""
         if student_hostel_rec:
             hostel_msg += (
@@ -45,11 +42,8 @@ class TerminateReasonHostel(models.TransientModel):
         student = self._context.get("active_id")
         student_rec = self.env["student.student"].browse(student)
         student_hostel_rec = self.env["hostel.student"].search(
-            [
-                ("student_id", "=", student_rec.id),
-                ("status", "in", ["reservation", "pending", "paid"]),
-            ]
-        )
+            [("student_id", "=", student_rec.id),
+            ("status", "in", ["reservation", "pending", "paid"])])
         if student_hostel_rec:
             student_hostel_rec.active = False
             student_hostel_rec.room_id._compute_check_availability()

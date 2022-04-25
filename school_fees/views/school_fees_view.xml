@@ -411,9 +411,8 @@
             <data>
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="%(action_stu_fees_form)d" type="action" class="oe_inline oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_student">
-                        <img src="/school_fees/static/description/icon.png" alt="logo"
-                            style="height:25px;width:50px;float:left;"/>
-                        <lable style="">Fees Receipt</lable>
+                        <img src="/school/static/description/payment.png" alt="Logo" style="margin-left:20px;"/>
+                            <lable style="margin-left:20px;">Fees Receipt</lable>
                     </button>
                 </xpath>
             </data>
@@ -421,7 +420,7 @@
     </record>
 
     <!-- memu Items for Fees -->
-    <menuitem id="menu_fees" name="Fees" parent="school.menu_ems" groups="school.group_school_administration,school.group_school_student,school.group_school_parent" sequence="11"/>
+    <menuitem id="menu_fees" name="Fees" parent="school.admission_register" groups="school.group_school_administration,school.group_school_student,school.group_school_parent" sequence="11"/>
     <menuitem id="menu_student_payslip" name="Fees Receipts" parent="menu_fees" action="action_student_payslip_form"
               groups="school.group_school_administration,school.group_school_student,school.group_school_parent" sequence="111"/>
     <menuitem id="menu_student_fees_register" name="Fees Registers" parent="menu_fees" action="action_student_fees_register_form"

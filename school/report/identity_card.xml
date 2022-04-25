@@ -7,46 +7,35 @@
                 <t t-call="web.external_layout">
                     <div class="page" style="height: 2px;">
                         <div class="oe_structure"/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
                         <t t-foreach="o" t-as="student">
-                        <br/><br/><br/>
-                        <table width="25%" height="50px" style="border: 3px solid black;">
-                            <tr>
-                                <td width="100%" align="center" height="30">
-                                    <strong>
+                        <table width="40%" height="280px" style="border: 3px solid black;" align="center">
+                            <tr style="margin-top:5px">
+                                <td colspan="2" align="center">
+                                    <h1><strong>
                                         <span t-field="student.school_id.name" />
-                                    </strong>
+                                    </strong></h1>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center">
-                                    <img t-if="student.photo" t-att-src="'data:image/png;base64,%s' % to_text(student.photo)"
-                                         style="height:120px;width=120px" />
+                                <td align="top" colspan="1">
+                                    <img t-if="student.photo"
+                                        t-att-src="'data:image/png;base64,%s' % to_text(student.photo)"/>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td height="10px"></td>
-                            </tr>
-                            <tr>
-                                <td align="center" height="30px">
-                                    <strong>
-                                        <span t-field="student.name" />
-                                    </strong>
-                                    <strong>
-                                        <span t-field="student.middle" />
-                                    </strong>
-                                    <strong>
-                                        <span t-field="student.last" />
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td height="130">
+                                <td align="left">
                                     <table width="100%">
+                                        <tr>
+                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                <strong>Name</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="student.name" />
+                                                <span t-field="student.middle" />
+                                                <span t-field="student.last" />
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td style="font-family: 'Helvetica';padding-left:20px;">
                                                 <strong>Roll No.</strong>

@@ -19,7 +19,9 @@
                 <field name="string">Supervisor</field>
             </xpath>
             <xpath expr="//page[@name='event_notes']" position="after">
-                <field name="part_standard_ids" />
+                <page string="Participants">
+                    <field name="part_standard_ids" />
+                </page>
             </xpath>
         </field>
     </record>
@@ -47,7 +49,7 @@
         <field name="view_mode">kanban,tree,form,calendar,graph</field>
     </record>
 
-    <menuitem id="menu_event_form_1" name="Events" parent="school.menu_ems" sequence="4" />
+    <menuitem id="menu_event_form_1" name="Events" parent="school.school_schedule" sequence="2" />
 
     <menuitem action="event.action_event_view" id="menu_school_event" name="Event Informations" parent="menu_event_form_1" sequence="41" />
 

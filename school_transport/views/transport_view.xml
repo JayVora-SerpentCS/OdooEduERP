@@ -334,11 +334,31 @@
         groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,group_transportation_manager,group_transportation_user" />
 
     <!--Menu Items for Transport  -->
-    <menuitem id="menu_transport" name="Transport" parent="school.menu_ems" sequence="9" groups="group_transportation_manager,group_transportation_user"/>
+    <menuitem id="menu_transport" name="Transport" parent="school.school_facilities" sequence="3" groups="group_transportation_manager,group_transportation_user"/>
     <menuitem id="menu_transport_sub_form" name="Transport Information" parent="menu_transport" sequence="91"
               action="action_student_transport_form" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"/>
     <menuitem id="menu_transport_registration_sub_form" name="Transport Registration" sequence="92"
               parent="menu_transport" action="action_student_transport_registration_form" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"/>
     <menuitem id="menu_transport_sub_participant" name="Transport Participant" parent="menu_transport" sequence="93"
               action="action_school_transport_participant_form" groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"/>
+    <!-- <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="13" groups="group_school_administration" /> -->
+    <menuitem name="Fleet" parent="school.menu_ems" id="fleet_vehicles" sequence="9" groups="fleet.fleet_group_user"/>
+        <menuitem action="fleet.fleet_vehicle_action" parent="fleet_vehicles" name="Fleet"
+        id="fleet_vehicle_menu" groups="fleet.fleet_group_user" sequence="0"/>
+        <menuitem action="fleet.fleet_vehicle_log_contract_action" parent="fleet_vehicles"
+            id="fleet_vehicle_log_contract_menu" groups="fleet.fleet_group_user" sequence="2"/>
+        <menuitem action="fleet.fleet_vehicle_log_services_action" parent="fleet_vehicles"
+            id="fleet_vehicle_log_services_menu" groups="fleet.fleet_group_user" sequence="3"/>
+        <menuitem action="fleet.fleet_vehicle_odometer_action" parent="fleet_vehicles"
+            id="fleet_vehicle_odometer_menu" groups="fleet.fleet_group_user" sequence="10"/>
+    <menuitem id="menu_fleet_configuration" name="Fleet Configuration" parent="school.menu_configuration"/>
+        <menuitem id="fleet_config_settings_menu" name="Settings"
+            parent="menu_fleet_configuration" sequence="0" action="fleet.fleet_config_settings_action"
+            groups="base.group_system"/>
+        <menuitem action="fleet.fleet_vehicle_model_brand_action" parent="menu_fleet_configuration" id="fleet_vehicle_model_brand_menu" sequence="2"/>
+        <menuitem action="fleet.fleet_vehicle_model_action" parent="menu_fleet_configuration" id="fleet_vehicle_model_menu" sequence="2"/>
+        <menuitem action="fleet.fleet_vehicle_model_category_action" parent="menu_fleet_configuration" id="fleet_vehicle_model_category_menu" sequence="2"/>
+        <menuitem action="fleet.fleet_vehicle_service_types_action" parent="menu_fleet_configuration" id="fleet_vehicle_service_types_menu" sequence="3" groups="base.group_no_one"/>
+        <menuitem action="fleet.fleet_vehicle_state_action" parent="menu_fleet_configuration" id="fleet_vehicle_state_menu" groups="base.group_no_one"/>
+        <menuitem id="fleet_vehicle_tag_menu" parent="menu_fleet_configuration" action="fleet.fleet_vehicle_tag_action" sequence="89" groups="base.group_no_one"/>
 </odoo>

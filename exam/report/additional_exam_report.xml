@@ -66,7 +66,7 @@
                                     <b>:-</b>
                                 </td>
                                 <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
-                                    <span t-field="result.student_id.division_id.name"></span>
+                                    <span t-field="result.standard_id.division_id"></span>
                                 </td>
                             </tr>
                         </table>

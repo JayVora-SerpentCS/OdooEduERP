@@ -44,30 +44,6 @@
             </field>
         </record>
 
-        <!-- Student Attendance By month wiz view -->
-        <record id="student_attendance_sheet_wiz" model="ir.ui.view">
-        <field name="name">student.attendance.sheet.wiz.form.view</field>
-        <field name="model">attendance.sheet.wiz</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form>
-                <field
-                    name="attendance_line_ids"
-                    widget="x2many_2d_matrix"
-                    field_x_axis="daily_attendance_id"
-                    field_y_axis="student_id"
-                    field_value="is_present_absent"
-                >
-                    <tree>
-                        <field name="daily_attendance_id" />
-                        <field name="student_id" />
-                        <field name="is_present_absent" />
-                    </tree>
-                </field>
-            </form>
-        </field>
-    </record>
-
         <!-- Menu Item Of Monthly Attendance Sheet -->
 
         <menuitem id="menu_monthly_attendance_sheet_sub_form" parent="school_attendance.menu_attendance"

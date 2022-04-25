@@ -29,14 +29,13 @@ class MonthlyAttendanceSheet(models.TransientModel):
             "start_date": self.month_id.date_start,
             "end_date": self.month_id.date_stop,
         }
-        models_data = self.env["ir.model.data"]
         # Get opportunity views
-        dummy, form_view = models_data.get_object_reference(
-            "school_attendance", "view_attendance_sheet_form"
-        )
-        dummy, tree_view = models_data.get_object_reference(
-            "school_attendance", "view_attendance_sheet_tree"
-        )
+        form_view = self.env.ref(
+            "school_attendance.view_attendance_sheet_form"
+        ).id
+        tree_view = self.env.ref(
+            "school_attendance.view_attendance_sheet_tree"
+        ).id
         return {
             "view_type": "form",
             "view_mode": "tree, form",

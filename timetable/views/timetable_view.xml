@@ -73,6 +73,6 @@
             <field name="context">{'default_timetable_type':'regular'}</field>
         </record>
         <!-- Menu items of Timetable -->
-        <menuitem id="menu_timetable_1" name="TimeTable" parent="school.menu_ems" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent" sequence="6"/>
+        <menuitem id="menu_timetable_1" name="TimeTable" parent="school.school_schedule" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent" sequence="1"/>
         <menuitem id="menu_timetable_regular" name="Regular Timetable" parent="menu_timetable_1" action="action_timetable_regular" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent" sequence="61"/>
 </odoo>

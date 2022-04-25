@@ -11,18 +11,17 @@
                         <br/>
                         <t t-foreach="o" t-as="result">
                             <table width="100%">
-                                <center>
-                                    <h2 t-field="o.s_exam_ids.name"></h2>
-                                </center>
                                 <tr>
-                                    <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Student Name</b>
+                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Teacher Name</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span>:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="result.name"></span>
                                     </td>
-                                    <td width="1%">
-                                        <span>:</span>
+                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Standard</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span>:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="result.standard_id.display_name"></span>
                                     </td>
-                                    <td width="80%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <span t-field="result.sudo().student_id.name"></span>
+                                </tr>
+                                <tr>
+                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Examination</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span>:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-esc="exam_name"></span>
                                     </td>
                                 </tr>
                             </table>
@@ -30,6 +29,10 @@
                             <table width="100%">
                                 <thead>
                                     <tr>
+                                        <td align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>Student Name</b>
+                                        </td>
                                         <td align="center"
                                             style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
                                             <b>Subject Name</b>
@@ -53,8 +56,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="get_result_detail(result.result_ids,result)" t-as="sub_res_info">
+                                    <t t-foreach="get_result_detail" t-as="sub_res_info">
                                         <tr>
+                                            <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                <span t-esc="sub_res_info.get('student_name')"></span>
+                                            </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
                                                 <span t-esc="sub_res_info.get('subject')"></span>

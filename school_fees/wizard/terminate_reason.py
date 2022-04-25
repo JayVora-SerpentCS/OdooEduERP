@@ -13,18 +13,10 @@ class TerminateReasonFees(models.TransientModel):
         remaining when student is terminated"""
         student = self._context.get("active_id")
         student_rec = self.env["student.student"].browse(student)
-        student_fees_rec = self.env["student.payslip"].search(
-            [
+        if self.env["student.payslip"].search([
                 ("student_id", "=", student_rec.id),
-                ("state", "in", ["confirm", "pending"]),
-            ]
-        )
-        if student_fees_rec:
-            raise ValidationError(
-                _(
-                    """
-You cannot terminate student because payment of fees of student is remaining!
-"""
-                )
-            )
+                ("state", "in", ["confirm", "pending"])]):
+            raise ValidationError(_(
+"You can't terminate student because payment of fees of student is remaining!"
+                ))
         return super(TerminateReasonFees, self).save_terminate()

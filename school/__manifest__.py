@@ -14,6 +14,7 @@
     'data': ['security/school_security.xml',
              'security/ir.model.access.csv',
              'data/student_sequence.xml',
+             'data/mail_template.xml',
              'wizard/terminate_reason_view.xml',
              'views/student_view.xml',
              'views/school_view.xml',
@@ -23,6 +24,7 @@
              'wizard/move_standards_view.xml',
              'report/report_view.xml',
              'report/identity_card.xml',
+             "report/teacher_identity_card.xml",
              ],
     'demo': ['demo/school_demo.xml'],
     'assets': {
