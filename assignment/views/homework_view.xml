@@ -227,9 +227,8 @@
                 <data>
                     <xpath expr="//div[@name='buttons']" position="inside">
                         <button name="%(action_school_student_assignment_form_btn)d" type="action" class="oe_stat_button" attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}" groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
-                             <img src="/assignment/static/description/Assign.png" alt="Logo"
-                                 style="height:25px;width:50px;float:left;"/>
-                                <lable style = "">Assignment</lable>
+                            <img src="/school/static/description/homework.png" alt="Logo" style="margin-left:20px;"/>
+                            <lable style="margin-left:20px;">Assignment</lable>
                         </button>
                     </xpath>
                 </data>
@@ -245,7 +244,7 @@
         </record>
 
         <!-- Menu items for Assignment-->
-        <menuitem id="menu_assignment" name="Assignment" parent="school.menu_ems" sequence="8"/>
+        <menuitem id="menu_assignment" name="Assignment" parent="school.menu_ems" sequence="7"/>
         <menuitem id="menu_student_assignment_sub_form" name="Student Assignment"
                 parent="menu_assignment" sequence="82"
                 action="action_school_student_assignment_form"

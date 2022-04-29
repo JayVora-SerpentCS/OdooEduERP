@@ -93,6 +93,7 @@
                 <field name="name" />
                 <field name="code" />
                 <field name="active" />
+                <filter name="archived" string="Archived" domain="[('active','=',False)]" />
             </search>
         </field>
     </record>
@@ -104,7 +105,8 @@
         <field name="view_mode">tree,form</field>
     </record>
     <!-- Menu Items Of Library -->
-    <menuitem id="menu_library" name="Library" parent="school.menu_ems" sequence="7" groups="library.group_librarian,group_userian" />
+
+    <menuitem id="menu_library" name="Library" parent="school.school_facilities" sequence="1" groups="library.group_librarian,group_userian" />
     <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" groups="library.group_librarian,group_userian" />
     <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config" action="action_library_rack" groups="school.group_school_administration,library.group_librarian,library.group_userian" />
     <!-- Form View Of Product Book -->
@@ -141,6 +143,7 @@
                             <field name="barcode" placeholder="Barcode e.g.5941246894325" />
                             <field name="categ_id" placeholder="Select or Create Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('book_categ','=',True)]" />
                             <field name="author" placeholder="Name of Author" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" />
+                            <field name="type" invisible="1"/>
                         </group>
                     </group>
                     <notebook>

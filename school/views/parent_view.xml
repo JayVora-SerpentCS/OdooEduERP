@@ -15,6 +15,39 @@
             </field>
         </record>
 
+        <record id="school_parent_kanban_view" model="ir.ui.view">
+            <field name="name">Parent KANBAN</field>
+            <field name="model">school.parent</field>
+            <field name="arch" type="xml">
+                <kanban nocreate="1" create="false">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+                            <field name="avatar_128" widget="image" class="o_kanban_image_fill_left" options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title oe_partner_heading">
+                                            <field name="name" />
+                                        </strong>
+                                        <div class="o_kanban_tags_section oe_kanban_partner_categories" />
+                                        <ul>
+                                            <li t-if="record.relation_id.raw_value"><field name="relation_id" /></li>
+                                            <li t-if="record.phone.raw_value"><field name="phone" /></li>
+                                            <li t-if="record.email.raw_value"><field name="email" /></li>
+                                            <li t-if="record.student_id.raw_value"><field name="student_id" /></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <!-- tree View Of Parent's Profiles -->
         <record id="view_school_parent_tree" model="ir.ui.view">
             <field name="name">school.parent.tree</field>
@@ -40,7 +73,7 @@
                 <form string="Parents">
                 <sheet>
                     <field name="type" invisible="1"/>
-                    <!-- <field name="image" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/> -->
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
@@ -95,7 +128,7 @@
         <record id="action_school_parent_form" model="ir.actions.act_window">
             <field name="name">Parent Profile</field>
             <field name="res_model">school.parent</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <menuitem id="menu_res_partner_form" name="Parents" parent="menu_students_parents"

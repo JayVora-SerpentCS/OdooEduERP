@@ -30,9 +30,8 @@
                     <button name="%(action_student_eval_form_actions)d" type="action" class="oe_stat_button"
                         attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}"
                         groups="school.group_school_administration,school.group_school_teacher,school.group_school_student">
-                         <img src="/school_evaluation/static/description/e.png" alt="Logo"
-                             style="height:25px;width:50px;float:left;"/>
-                            <lable>Evaluation</lable>
+                        <img src="/school/static/description/evaluation.png" alt="Logo" style="margin-left:20px;"/>
+                            <lable style="margin-left:20px;">Evaluation</lable>
                     </button>
                 </xpath>
             </data>

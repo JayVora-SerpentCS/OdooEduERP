@@ -6,6 +6,12 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <div class="oe_structure" /><br/><br/>
+                        <t t-if="o.timetable_type == 'exam'">
+                            <strong style="text-align: center;"><h4>Exam Timetable</h4></strong><br/>
+                        </t>
+                         <t t-if="o.timetable_type == 'regular'">
+                            <strong style="text-align: center;"><h4>Regular Timetable</h4></strong><br/>
+                        </t>
                         <h4 t-field="o.sudo().standard_id.school_id.name"></h4>
                         <div class="row" align="center">
                             <table width="100%" style="border: 2px solid black;">

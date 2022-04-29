@@ -2,7 +2,7 @@
 
 {
     "name": "Library Management for Education ERP",
-    "version": "14.0.1.0.0",
+    "version": "15.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website": "http://www.serpentcs.com",

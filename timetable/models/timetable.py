@@ -15,34 +15,30 @@ class TimeTable(models.Model):
         '''Method to compute user.'''
         for rec in self:
             rec.user_ids = [teacher.teacher_id.employee_id.user_id.id
-                            for teacher in rec.timetable_ids
-                            ]
+                            for teacher in rec.timetable_ids]
 
     name = fields.Char('Description', help='Enter description of timetable')
     standard_id = fields.Many2one('school.standard', 'Academic Class',
-                                  required=True,
-                                  help="Select Standard")
+        required=True, help="Select Standard")
     year_id = fields.Many2one('academic.year', 'Year', required=True,
-                              help="Select academic year")
+        help="Select academic year")
     timetable_ids = fields.One2many('time.table.line', 'table_id', 'TimeTable',
-                                    help='Enter the timetable pattern')
+        help='Enter the timetable pattern')
     timetable_type = fields.Selection([('regular', 'Regular')],
-                                      'Time Table Type', default="regular",
-                                      invisible=True,
-                                      help='Select time table type')
+        'Time Table Type', default="regular", invisible=True,
+        help='Select time table type')
     user_ids = fields.Many2many('res.users', string="Users",
-                                compute="_compute_user", store=True,
-                                help='Teachers following this timetable')
+        compute="_compute_user", store=True,
+        help='Teachers following this timetable')
     class_room_id = fields.Many2one('class.room', 'Room Number',
-                                    help='''Class room in which tome table
-                                    would be followed''')
+        help='Class room in which tome table would be followed')
 
     @api.constrains('timetable_ids')
     def _check_lecture(self):
         '''Method to check same lecture is not assigned on same day.'''
         if self.timetable_type == 'regular':
-            domain = [('table_id', 'in', self.ids)]
-            line_ids = self.env['time.table.line'].search(domain)
+            line_ids = self.env['time.table.line'].search([
+                                    ('table_id', 'in', self.ids)])
             for rec in line_ids:
                 records = [rec_check.id for rec_check in line_ids
                            if (rec.week_day == rec_check.week_day and
@@ -72,46 +68,60 @@ class TimeTableLine(models.Model):
         for rec in self:
             if (rec.teacher_id.id not in rec.subject_id.teacher_ids.ids and
                     rec.table_id.timetable_type == 'regular'):
-                raise ValidationError(_('''
-                    The subject %s is not assigned to teacher %s.
-                    ''') % (rec.subject_id.name, rec.teacher_id.name))
+                raise ValidationError(_(
+'The subject %s is not assigned to teacher %s.') % (rec.subject_id.name,
+                                                    rec.teacher_id.name))
 
     teacher_id = fields.Many2one('school.teacher', 'Faculty Name',
-                                 help="Select Teacher")
+            help="Select Teacher")
     subject_id = fields.Many2one('subject.subject', 'Subject Name',
-                                 help="Select Subject")
+            help="Select Subject")
     table_id = fields.Many2one('time.table', 'TimeTable')
     start_time = fields.Float('Start Time', required=True,
-                              help="Time according to timeformat of 24 hours")
+            help="Time according to timeformat of 24 hours")
     end_time = fields.Float('End Time', required=True,
-                            help="Time according to timeformat of 24 hours")
+            help="Time according to timeformat of 24 hours")
     week_day = fields.Selection([('monday', 'Monday'),
-                                 ('tuesday', 'Tuesday'),
-                                 ('wednesday', 'Wednesday'),
-                                 ('thursday', 'Thursday'),
-                                 ('friday', 'Friday'),
-                                 ('saturday', 'Saturday'),
-                                 ('sunday', 'Sunday')], "Week day",
-                                help='Select weekday for timetable')
+        ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'),
+        ('thursday', 'Thursday'), ('friday', 'Friday'),
+        ('saturday', 'Saturday'), ('sunday', 'Sunday')],
+            "Week day", help='Select weekday for timetable')
     class_room_id = fields.Many2one('class.room', 'Room Number',
-                                    help='''Class room in which time
-                                    table would be followed''')
+        help='Class room in which time table would be followed')
+
+    @api.constrains('start_time', 'end_time')
+    def check_time_overlap(self):
+        for rec in self:
+            if self.search(['&','&', ('id', '!=', rec.id),
+                    ('table_id', '=', rec.table_id.id),
+                    ('week_day', '=', rec.week_day),
+                    '|', '|', '|',
+                    '&', ('start_time', '<=', rec.start_time),
+                            ('end_time', '>', rec.start_time),
+                    '&', ('start_time', '<', rec.end_time),
+                            ('end_time', '>', rec.end_time),
+                    '&', ('start_time', '<', rec.start_time),
+                            ('end_time', '>', rec.end_time),
+                    '&', ('start_time', '>', rec.start_time),
+                            ('end_time', '<', rec.end_time)]):
+                raise ValidationError(_('''Time should not overlap!'''))
+
+
 
     @api.constrains('teacher_id', 'class_room_id')
     def check_teacher_room(self):
         """Check available room for teacher."""
         for rec in self:
-            timetable_rec = self.env['time.table'].search([
-                                                ('id', '!=', rec.table_id.id)])
-            for data in timetable_rec:
+            for data in self.env['time.table'].search([
+                                        ('id', '!=', rec.table_id.id)]):
                 for record in data.timetable_ids:
                     if (data.timetable_type == 'regular' and
                             rec.table_id.timetable_type == 'regular' and
                             rec.teacher_id == record.teacher_id and
                             rec.week_day == record.week_day and
                             rec.start_time == record.start_time):
-                        raise ValidationError(_('''
-                            There is a lecture of Lecturer at same time!'''))
+                        raise ValidationError(_(
+                            'There is a lecture of Lecturer at same time!'))
                     if (data.timetable_type == 'regular' and
                             rec.table_id.timetable_type == 'regular' and
                             rec.class_room_id == record.class_room_id and

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-
-    <record id="add_exam_result_id_qweb" model="ir.actions.report">
-        <field name="name">Exam Result</field>
-        <field name="model">exam.result</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="binding_model_id" ref="exam.model_exam_result"/>
-        <field name="report_name">exam.exam_result_report</field>
-        <field name="report_file">exam.exam_result_report</field>
-    </record>
-
     <record id="additional_exam_result_id_qweb" model="ir.actions.report">
         <field name="name">Additional Exam Result</field>
         <field name="model">additional.exam.result</field>
@@ -40,6 +30,15 @@
         <field name="binding_model_id" ref="exam.model_exam_batchwise_result"/>
         <field name="report_name">exam.exam_result_batch</field>
         <field name="report_file">exam.exam_result_batch</field>
+    </record>
+
+    <record id="add_exam_result_id_qweb" model="ir.actions.report">
+        <field name="name">Exam Result</field>
+        <field name="model">school.teacher</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="report_name">exam.exam_result_report</field>
+        <field name="report_file">exam.exam_result_report</field>
     </record>
 
 </odoo>

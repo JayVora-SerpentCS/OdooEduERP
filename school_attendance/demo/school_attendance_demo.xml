@@ -12,5 +12,14 @@
             <field name="state">draft</field>
         </record>
 
+        <!-- Daily Attendance Line Information-->
+
+        <record id="demo_daily_attendance_line_1" model="daily.attendance.line">
+            <field name="roll_no">3</field>
+            <field name="is_present" eval="True"/>
+            <field name="standard_id" ref="school_attendance.demo_daily_attendance_1"/>
+            <field name="stud_id" ref="school.demo_student_student_7"/>
+        </record>
+
     </data>
 </odoo>

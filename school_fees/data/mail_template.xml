@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="fees_reminder_email" model="mail.template">
+            <field name="name">Fees Reminder</field>
+            <field name="model_id" ref="model_student_payslip"/>
+            <field name="subject"></field>
+            <field name="email_from"></field>
+            <field name="email_to"></field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+                <div>${object.body_html}</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -42,4 +42,4 @@ access_exam_schedule_line_all,access_exam_schedule_line,model_exam_schedule_line
 access_exam_schedule_stud,exam.schedule.line,model_exam_schedule_line,school.group_school_student,1,0,0,0
 
 access_exam_batchwise_result,exam.batchwise.result,model_exam_batchwise_result,school.group_school_administration,1,1,1,1
-access_subject_result_wiz,subject.result.wiz,model_subject_result_wiz,school.group_school_administration,1,1,1,1
+access_subject_result_wiz,access_subject_result_wiz,exam.model_subject_result_wiz,base.group_user,1,1,1,1
