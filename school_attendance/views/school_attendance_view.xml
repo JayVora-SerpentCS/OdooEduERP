@@ -232,7 +232,7 @@
 
     <!-- Menu Item Of Attendance -->
 
-    <menuitem id="menu_attendance" name="Attendance" parent="school.menu_ems" sequence="5"
+    <menuitem id="menu_attendance" name="Attendance" parent="school.admission_register" sequence="5"
               groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
 
     <!-- Form View Of Daily Attendance Information -->
@@ -406,6 +406,6 @@
     <menuitem id="menu_student_leave_req" name="Student Leave Request" parent="menu_attendance"
               action="action_student_leave_form"
               groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
-              sequence="52"/>
+              sequence="53"/>
 
 </odoo>

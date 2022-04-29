@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="monthly_attendance_report" model="ir.actions.report">
+        <field name="name">Monthly Attendance report</field>
+        <field name="model">monthly.attendance.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_attendance.monthly_attendance_report_tmpl</field>
+    </record>
+    <template id="monthly_attendance_report_tmpl">
+        <t t-call="web.html_container">
+            <div class="page" style="font-size:8px;">
+                <t t-foreach="docs" t-as="o">
+                    <t t-foreach="get_data(o)" t-as="data">
+                        <div class="row" style="background-color:#DCDCDC; vertical-align: center;">
+                            <center><h1><b><span t-esc="data.get('school_name')"/></b></h1></center>
+                        </div>
+                        <div class="row">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <b>Name of the Teacher: </b>
+                                        <span t-esc="data.get('user')"/>
+                                    </td>
+                                    <td>
+                                        key P=Present, A=Absent
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                       <b>Month: </b>
+                                        <span t-esc="data.get('month')"/>
+                                    </td>
+                                    <td>
+                                        <b>Batch: </b>
+                                        <span t-esc="data.get('batch')"/>
+                                    </td>
+                                    <td>
+                                        <b><span t-esc="data.get('semester')"/></b>
+                                    </td>
+                                </tr>
+                            </table><br/>
+                        </div>
+                        
+                        <div class="row">
+                            <table width="100%" style="border:1px solid black;">
+                                <thead style="display: table-header-group; !important">
+                                <tr style="page-break-inside: avoid; !important">
+                                    <td style="font-size:11px;border:1px solid black;text-align:center;">
+                                        <b>Sn.</b>
+                                    </td>
+                                    <td width="20%" style="font-size:11px;border:1px solid black;text-align:center;">
+                                        <b>Name</b>
+                                    </td>
+                                    <t t-foreach="get_dates(o)" t-as="date">
+                                        <td style="font-size:11px;border:1px solid black;text-align:center;">
+                                            <b><t t-esc="date"/></b>
+                                        </td>
+                                    </t>
+                                    <td style="font-size:11px;border:1px solid black;text-align:center;">
+                                        <b>P</b>
+                                    </td>
+                                    <td style="font-size:11px;border:1px solid black;text-align:center;">
+                                        <b>A</b>
+                                    </td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <t t-set="count" t-value="1" />
+                                <t t-foreach="data.get('result_data')" t-as="line">
+                                    <t t-set="present" t-value="0" />
+                                    <t t-set="absent" t-value="0" />
+                                    <t t-set="present_no" t-value="0"/>
+                                    <tr style="page-break-inside: avoid; !important">
+                                        <td style="text-align:center;border:1px solid black;text-align:center;">
+                                            <t t-if="line.get('divisions') or data.get('elective')">
+                                                <t t-esc="count"/>
+                                            </t>
+                                            <t t-if="not line.get('divisions') and not data.get('elective')">
+                                                <t t-esc="line.get('student_code')"/>
+                                            </t>
+                                        </td>
+                                        <td width="20%" style="padding-left:2px;font-size:12px;border:1px solid black;">
+                                            <t t-esc="line.get('name')"/>
+                                        </td>
+                                        <t t-set="total_absent" t-value="0"/>
+                                        <t t-foreach="get_dates(o)" t-as="date">
+                                            <td style="font-size:10px;border:1px solid black;text-align:center;">
+                                                <t t-if="line.get('att').get(date)">
+                                                    <t t-if="line.get('att').get(date) not in ['A', False]">
+                                                        <t t-set="present_no" t-value="present + int(line.get('att').get(date))" />
+                                                        <t t-set="present" t-value="present + int(line.get('att').get(date))" />
+                                                    </t>
+                                                    <t t-if="line.get('att').get(date) == 'A'">
+                                                        <t t-set="absent" t-value="absent + 1" />
+                                                        <div style="background-color:#D3D3D3;" width="100%">
+                                                            <t t-esc="line.get('att').get(date)"/>
+                                                        </div>
+                                                    </t>
+                                                    <t t-if="line.get('att').get(date) != 'A'">
+                                                        <t t-esc="present_no" />
+                                                    </t>
+                                                </t>
+                                            </td>
+                                        </t>
+                                        <td style="font-size:11px;border:1px solid black;text-align:center;">
+                                            <b><t t-esc="present"/></b>
+                                        </td>
+                                        <td style="font-size:11px;border:1px solid black;text-align:center;">
+                                        <!-- <t t-if="get_total_class(o) == 0">
+                                            <b><t t-esc="get_total_class(o)['total'] - present"/></b>
+                                        </t> -->
+                                        <b><t t-esc="absent"/></b>
+                                    </td>
+                                </tr>
+                                <t t-set="count" t-value="count + 1" />
+                                </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" style="text-align:right;">
+                            <br/><br/>
+                            <br/><br/>
+                            <br/><br/>
+                            Signature Date
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+</odoo>

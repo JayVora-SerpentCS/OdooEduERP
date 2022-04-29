@@ -17,7 +17,10 @@
              'views/month_attendance.xml',
              'views/report_view.xml',
              'wizard/attendance_sheet_wizard_view.xml',
-             'wizard/student_attendance_by_month_view.xml'],
+             'wizard/student_attendance_by_month_view.xml',
+             'wizard/monthly_attendance_wizard_view.xml',
+             'report/monthly_attendance_report_view.xml',
+             ],
     'demo': ['demo/school_attendance_demo.xml'],
     'installable': True,
     'application': True
