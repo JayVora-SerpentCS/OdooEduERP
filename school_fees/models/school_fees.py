@@ -110,6 +110,7 @@ class StudentPayslipLine(models.Model):
         string="Symbol", help="Currency Symbol")
     account_id = fields.Many2one("account.account", "Account",
         help="Related account")
+    product_id = fields.Many2one("product.product", "Product", required=True)
 
     @api.onchange("company_id")
     def set_currency_onchange(self):
@@ -130,6 +131,7 @@ class StudentFeesStructureLine(models.Model):
     type = fields.Selection([("month", "Monthly"), ("year", "Yearly"),
         ("range", "Range")], "Duration", required=True,
         help="Fee structure type")
+    product_id = fields.Many2one("product.product", "Product", required=True)
     amount = fields.Float("Amount", digits=(16, 2), help="Fee amount")
     sequence = fields.Integer("Sequence",
         help="Sequence of fee structure form")
@@ -148,6 +150,11 @@ class StudentFeesStructureLine(models.Model):
     def set_currency_company(self):
         for rec in self:
             rec.currency_id = rec.company_id.currency_id.id
+    
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            rec.amount = rec.product_id and rec.product_id.list_price or 0
 
 
 class StudentFeesStructure(models.Model):
@@ -285,6 +292,7 @@ class StudentPayslip(models.Model):
             lines = []
             for data in rec.fees_structure_id.line_ids or []:
                 line_vals = {"slip_id": rec.id,
+                            "product_id": data.product_id.id,
                             "name": data.name,
                             "code": data.code,
                             "type": data.type,
@@ -456,6 +464,7 @@ class StudentPayslip(models.Model):
                     acc_id = line.account_id.id
                 invoice_line_vals = {
                     "name": line.name,
+                    "product_id": line.product_id.id,
                     "account_id": acc_id,
                     "quantity": 1.000,
                     "price_unit": line.amount}
