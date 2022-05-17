@@ -355,9 +355,14 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = "account.payment.register"
 
     def action_create_payments(self):
+        """
+            Override method to write paid amount in hostel student
+        """
         res = super(AccountPaymentRegister, self).action_create_payments()
+        inv = False
         for rec in self:
-            inv = self.env['account.move'].browse(self._context.get('active_ids', []))
+            if self._context.get('active_model') == 'account.move':
+                inv = self.env['account.move'].browse(self._context.get('active_ids', []))
             vals = {}
             if inv.hostel_student_id and inv.payment_state == "paid":
                 fees_payment = inv.hostel_student_id.paid_amount + rec.amount
