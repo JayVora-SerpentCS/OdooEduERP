@@ -16,6 +16,7 @@
         "security/security_fees.xml",
         "data/school_fees_sequence.xml",
         "data/mail_template.xml",
+        "data/data.xml",
         "views/school_fees_view.xml",
         "report/student_payslip.xml",
         "report/student_fees_register.xml",

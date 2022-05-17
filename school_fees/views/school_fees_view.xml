@@ -130,8 +130,9 @@
                 </group>
                 <group col="4" string="Calculations">
                     <field name="type"/>
-                    <field name="amount"/>
+                    <field name="product_id"/>
                     <field name="account_id" required="1"/>
+                    <field name="amount" readonly="1" force_save="1"/>
                     <field name="company_id"/>
                     <field name="currency_id"/>
                     <field name="currency_symbol"/>
