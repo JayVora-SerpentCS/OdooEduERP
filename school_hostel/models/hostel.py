@@ -351,13 +351,18 @@ class AccountMove(models.Model):
         help="Hostel Fee Reference")
 
 
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
 
-    def action_post(self):
-        res = super(AccountPayment, self).action_post()
+    def action_create_payments(self):
+        """
+            Override method to write paid amount in hostel student
+        """
+        res = super(AccountPaymentRegister, self).action_create_payments()
+        inv = False
         for rec in self:
-            inv = rec.move_id
+            if self._context.get('active_model') == 'account.move':
+                inv = self.env['account.move'].browse(self._context.get('active_ids', []))
             vals = {}
             if inv.hostel_student_id and inv.payment_state == "paid":
                 fees_payment = inv.hostel_student_id.paid_amount + rec.amount
@@ -366,9 +371,9 @@ class AccountPayment(models.Model):
             elif inv.hostel_student_id and inv.payment_state == "not_paid":
                 fees_payment = inv.hostel_student_id.paid_amount + rec.amount
                 vals.update({
-                        "status": "pending",
-                        "paid_amount": fees_payment,
-                        "remaining_amount": inv.amount_residual})
+                    "status": "pending",
+                    "paid_amount": fees_payment,
+                    "remaining_amount": inv.amount_residual})
             inv.hostel_student_id.write(vals)
         return res
 
