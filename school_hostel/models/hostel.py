@@ -368,7 +368,7 @@ class AccountPaymentRegister(models.TransientModel):
                 fees_payment = inv.hostel_student_id.paid_amount + rec.amount
                 vals.update({"status": "paid", "paid_amount": fees_payment})
                 inv.hostel_student_id.write(vals)
-            elif inv.hostel_student_id and inv.payment_state == "not_paid":
+            elif inv.hostel_student_id and inv.payment_state == "partial":
                 fees_payment = inv.hostel_student_id.paid_amount + rec.amount
                 vals.update({
                     "status": "pending",
