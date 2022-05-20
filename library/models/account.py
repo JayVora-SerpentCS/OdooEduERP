@@ -28,14 +28,19 @@ class AccountMoveLine(models.Model):
     customer_ref = fields.Char("Customer reference", help="Customer reference")
 
 
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
 
-    def action_post(self):
-        """Override method to change state when invoice is paid"""
-        res = super(AccountPayment, self).action_post()
+    def action_create_payments(self):
+        """
+            Override method to write paid amount in hostel student
+        """
+        res = super(AccountPaymentRegister, self).action_create_payments()
+        invoice = False
         for rec in self:
-            invoice = rec.move_id
+            if self._context.get('active_model') == 'account.move':
+                invoice = self.env['account.move'].browse(self._context.get('active_ids', []))
+            invoice = {}
             if invoice.book_issue_id and invoice.payment_state == "paid":
                 invoice.book_issue_id.state = "paid"
         return res

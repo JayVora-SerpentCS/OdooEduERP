@@ -142,11 +142,12 @@
                 <sheet style="width: 90%%,height:90%%">
                 <separator string="Transport Information"/>
                 <group col="4">
-                <field name="name" placeholder="Root Name" attrs="{'readonly':[('state','=','close')]}"/>
-                <field name="contact_per_id" placeholder="Contact Person" attrs="{'readonly':[('state','=','close')]}" options="{&quot;no_create&quot;: True}"/>
-                <field name="start_date" placeholder="Start Date Of Journey" attrs="{'readonly':[('state','=','close')]}"/>
-                <field name="end_date" placeholder="End Date Of Journey" attrs="{'readonly':[('state','=','close')]}"/>
-                <field name="total_participantes" readonly="1"/>
+                    <field name="name" placeholder="Route Name" attrs="{'readonly':[('state','=','close')]}"/>
+                    <field name="contact_per_id" placeholder="Contact Person" attrs="{'readonly':[('state','=','close')]}" options="{&quot;no_create&quot;: True}"/>
+                    <field name="start_date" placeholder="Start Date" attrs="{'readonly':[('state','=','close')]}"/>
+                    <field name="end_date" placeholder="End Date" attrs="{'readonly':[('state','=','close')]}"/>
+                    <field name="total_participantes" readonly="1"/>
+                    <field name="amount" attrs="{'readonly':[('state','=','close')]}"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Vehicles" >
@@ -206,7 +207,7 @@
                             domain="[('start_date','&lt;=',(context_today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Events in current month"/>
                     <separator orientation="vertical"/>
-                    <filter name="root_name" icon="terp-stock_symbol-selection" string="Root Name" help="By Root Name" context="{'group_by':'name'}"/>
+                    <filter name="root_name" icon="terp-stock_symbol-selection" string="Route Name" help="By Route Name" context="{'group_by':'name'}"/>
                     <separator orientation="vertical"/>
                     <filter name="contact" icon="terp-personal" string="Contact Person" help="By Contact Person" context="{'group_by':'contact_per_id'}"/>
                     <separator orientation="vertical"/>
@@ -238,9 +239,9 @@
                        <field name="transport_user" invisible="1"/>
                        <separator string="Transport Registration" colspan="4"/>
                         <field name="student_id" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
-                        <field name="name" placeholder="Enter Transport Root Name" attrs="{'readonly':[('state','not in','draft')]}" options="{'no_create': True, 'no_open': True}" />
+                        <field name="name" placeholder="Enter Transport Route Name" attrs="{'readonly':[('state','not in','draft')]}" options="{'no_create': True, 'no_open': True}" />
                         <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="monthly_amount"/>
+                        <field name="monthly_amount" attrs="{'readonly':[('state','not in','draft')]}"/>
                         <field name="registration_month" attrs="{'readonly':[('state','not in','draft')]}"/>
                         <field name="transport_fees"/>
                         <field name="paid_amount" readonly="1"/>
