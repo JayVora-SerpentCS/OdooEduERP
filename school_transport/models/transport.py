@@ -128,8 +128,8 @@ class StudentTransports(models.Model):
         for rec in self:
             rec.total_participantes = len(rec.trans_participants_ids)
 
-    name = fields.Char("Transport Root Name", required=True,
-        help="Enter Transport Root Name")
+    name = fields.Char("Transport Route Name", required=True,
+        help="Enter Transport Route Name")
     start_date = fields.Date("Start Date", required=True,
         help="Enter start date")
     contact_per_id = fields.Many2one("res.partner", "Contact Person",
@@ -148,6 +148,7 @@ class StudentTransports(models.Model):
     state = fields.Selection([("draft", "Draft"), ("open", "Open"),
         ("close", "Close")], "State", readonly=True, default="draft",
         help="State of student transport")
+    amount = fields.Float("Transport Amount")
 
     def transport_open(self):
         """Method to change state open."""
@@ -234,11 +235,12 @@ class TransportRegistration(models.Model):
     @api.depends("monthly_amount", "registration_month")
     def _compute_transport_fees(self):
         """Method to compute transport fees"""
-        self.transport_fees = self.monthly_amount * self.registration_month
+        for rec in self:
+            rec.transport_fees = rec.monthly_amount * rec.registration_month
 
-    name = fields.Many2one("student.transport", "Transport Root Name",
+    name = fields.Many2one("student.transport", "Transport Route Name",
         domain=[("state", "=", "open")], required=True,
-        help="Enter transport root name")
+        help="Enter transport Route Name")
     student_id = fields.Many2one("student.student", "Student Name",
         required=True, help="Student Name")
     reg_date = fields.Date("Registration Date", readonly=True,
@@ -252,7 +254,7 @@ class TransportRegistration(models.Model):
         help="State of the transport registration form")
     vehicle_id = fields.Many2one("fleet.vehicle", "Vehicle No",
         required=True, help="Enter transport vehicle")
-    monthly_amount = fields.Float("Monthly Amount", readonly=True,
+    monthly_amount = fields.Float("Monthly Amount",
         help="Enter monthly amount")
     paid_amount = fields.Float("Paid Amount", help="Amount Paid")
     remain_amt = fields.Float("Due Amount", help="Amount Remaining")
@@ -264,6 +266,15 @@ class TransportRegistration(models.Model):
     transport_user = fields.Boolean(compute="_compute_get_user_groups",
         string="Transport user",
         help="Activate/Deactivate as following user is transport user or not")
+
+    @api.onchange("name")
+    def onchange_name(self):
+        """
+            This onchange will take amount from student.transport and set monthly amount
+        """
+        self.monthly_amount = 0.0
+        if self.name:
+            self.monthly_amount = self.name.amount
 
     @api.model
     def create(self, vals):
@@ -425,14 +436,18 @@ class AccountInvoice(models.Model):
         string="Transport Student", help="Transport records")
 
 
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
 
-    def action_post(self):
-        """Method to compute paid amount and due amount."""
-        res = super(AccountPayment, self).action_post()
+    def action_create_payments(self):
+        """
+            Override method to write paid amount in hostel student
+        """
+        res = super(AccountPaymentRegister, self).action_create_payments()
+        invoice = False
         for rec in self:
-            invoice = rec.move_id
+            if self._context.get('active_model') == 'account.move':
+                invoice = self.env['account.move'].browse(self._context.get('active_ids', []))
             vals = {}
             if (invoice.transport_student_id
                     and invoice.payment_state == "paid"):
@@ -445,8 +460,8 @@ class AccountPayment(models.Model):
                 fees_payment = (
                     invoice.transport_student_id.paid_amount + rec.amount)
                 vals.update({
-                        "state": "pending",
-                        "paid_amount": fees_payment,
-                        "remain_amt": invoice.amount_residual})
+                    "state": "pending",
+                    "paid_amount": fees_payment,
+                    "remain_amt": invoice.amount_residual})
             invoice.transport_student_id.write(vals)
         return res

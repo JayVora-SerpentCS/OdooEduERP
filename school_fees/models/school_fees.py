@@ -511,16 +511,20 @@ class AccountMove(models.Model):
         string="Student Payslip", help="Select student payslip")
 
 
-class AccountPayment(models.Model):
-    _inherit = "account.payment"
+class AccountPaymentRegister(models.TransientModel):
+    _inherit = "account.payment.register"
 
-    def action_post(self):
-        """Method to change state to paid when state in invoice is paid"""
-        res = super(AccountPayment, self).action_post()
+    def action_create_payments(self):
+        """
+            Override method to write paid amount in hostel student
+        """
+        res = super(AccountPaymentRegister, self).action_create_payments()
+        invoice = False
         curr_date = fields.Date.today()
-        vals = {}
         for rec in self:
-            invoice = rec.move_id
+            if self._context.get('active_model') == 'account.move':
+                invoice = self.env['account.move'].browse(self._context.get('active_ids', []))
+            vals = {}
             #        'invoice_ids' deprecated field instead of this
             #                             used delegation with account_move
             vals.update({"due_amount": invoice.amount_residual})
@@ -529,11 +533,11 @@ class AccountPayment(models.Model):
                 fees_payment = (invoice.student_payslip_id.paid_amount +
                                 rec.amount)
                 vals.update({
-                        "state": "paid",
-                        "payment_date": curr_date,
-                        "move_id": invoice.id or False,
-                        "paid_amount": fees_payment,
-                        "due_amount": invoice.amount_residual})
+                    "state": "paid",
+                    "payment_date": curr_date,
+                    "move_id": invoice.id or False,
+                    "paid_amount": fees_payment,
+                    "due_amount": invoice.amount_residual})
             if (invoice.student_payslip_id and
                     invoice.payment_state == "not_paid"):
                 # Calculate paid amount and due amount and changes state
@@ -541,9 +545,9 @@ class AccountPayment(models.Model):
                 fees_payment = (
                     invoice.student_payslip_id.paid_amount + rec.amount)
                 vals.update({
-                        "state": "pending",
-                        "due_amount": invoice.amount_residual,
-                        "paid_amount": fees_payment})
+                    "state": "pending",
+                    "due_amount": invoice.amount_residual,
+                    "paid_amount": fees_payment})
             invoice.student_payslip_id.write(vals)
         return res
 
