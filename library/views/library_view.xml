@@ -56,6 +56,36 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="author_search" />
     </record>
+
+    <!-- Tree View Of Library Shelf -->
+    <record id="shelf_tree" model="ir.ui.view">
+        <field name="name">Library Shelf Tree</field>
+        <field name="model">library.shelf</field>
+        <field name="arch" type="xml">
+            <tree string="Shelf" editable="bottom">
+                <field name="name" required="1"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Search View Of Library Shelf -->
+    <record id="shelf_search" model="ir.ui.view">
+        <field name="name">Library Shelf Search</field>
+        <field name="model">library.shelf</field>
+        <field name="arch" type="xml">
+            <search string="Shelf">
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+    <!-- Actions Of Form & Tree Views Of Library shelf -->
+    <record id="action_library_shelf" model="ir.actions.act_window">
+        <field name="name">Library Shelf</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">library.shelf</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
     <!-- Form View Of Library Rack -->
     <record id="rack_form" model="ir.ui.view">
         <field name="name">Library Rack</field>
@@ -67,6 +97,7 @@
                         <field name="name" />
                         <field name="code" />
                         <field name="active" widget="boolean_toggle"/>
+                        <field name="library_shelf_ids" widget="many2many_tags" />
                     </group>
                 </sheet>
             </form>
@@ -81,6 +112,7 @@
                 <field name="name" />
                 <field name="code" />
                 <field name="active" />
+                <field name="library_shelf_ids" widget="many2many_tags" />
             </tree>
         </field>
     </record>
@@ -109,6 +141,8 @@
     <menuitem id="menu_library" name="Library" parent="school.school_facilities" sequence="1" groups="library.group_librarian,group_userian" />
     <menuitem id="menu_library_config" name="Library" parent="school.menu_configuration" sequence="5" groups="library.group_librarian,group_userian" />
     <menuitem id="menu_library_rack" name="Library Rack" parent="menu_library_config" action="action_library_rack" groups="school.group_school_administration,library.group_librarian,library.group_userian" />
+    <menuitem id="menu_library_shelf" name="Library Shelf" parent="menu_library_config" action="action_library_shelf" groups="library.group_librarian,library.group_userian" />
+
     <!-- Form View Of Product Book -->
     <record id="view_product_book_form" model="ir.ui.view">
         <field name="name">product.book.form.view</field>
@@ -158,6 +192,7 @@
                                 <field name="weight" />
                                 <field name="rack" placeholder="Position of book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" />
                                 <field name="back" />
+                                <field name="library_shelf_id" context="{'library_shelf_domain':rack}" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
                                 <field name="num_edition" placeholder="No of Addition of Book" />
                                 <field name="catalog_num" placeholder="Enter Catalog No" />
                                 <field name="lang" placeholder="Language of Book" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" />
@@ -178,6 +213,22 @@
                         </page>
                         <page string="Descriptions">
                             <field name="description" colspan="4" nolabel="1" placeholder="Enter Description About Book" />
+                        </page>
+                        <page name="book_history" string="Book History">
+                            <field name="book_history_ids">
+                                <tree create="0" delete="0">
+                                    <field name="book_issue_code" />
+                                    <field name="start_date" />
+                                    <field name="end_date" />
+                                    <field name="card_id" />
+                                    <field name="student_id" />
+                                    <field name="isbn" />
+                                    <field name="barcode" />
+                                    <field name="book_issue_state" />
+                                    <field name="book_id" invisible="1" />
+                                    <field name="book_issue_id" invisible="1" />
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -348,6 +399,13 @@
                     <field name="state" widget="statusbar" readonly="1" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_book_issue"
+                            type="object" class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                            <field name="book_issue_count" widget="statinfo" string="Book Issue"/>
+                        </button>
+                    </div>
                     <separator string="Card Details" colspan="4" col="4" />
                     <group col="4" colspan="4">
                         <field name="code" placeholder="Code" readonly="1" />
@@ -457,6 +515,7 @@
                         <field name="date_return" readonly="1" />
                         <field name="actual_return_date" attrs="{'readonly':[('state','not in',('issue','reissue'))]}" required="1" />
                         <field name="penalty" attrs="{'invisible':[('state','!=','return')]}" />
+                        <field name="return_daley_days" />
                         <field name="lost_penalty" attrs="{'invisible':[('state','!=','lost')]}" />
                     </group>
                     <group col="4" colspan="4" string="E Book Details" attrs="{'invisible':[('state','in',['issue','ressiue','cancel','return','lost','fine','draft'])],'readonly':[('state','in',('done'))]}">
