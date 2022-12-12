@@ -8,6 +8,8 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     name = fields.Char("Name", required=True, help="Book Name")
+    book_history_ids = fields.One2many('book.history', 'book_id',
+                                       string="Book History")
 
 
 class ProductCategory(models.Model):
@@ -176,6 +178,7 @@ class ProductProduct(models.Model):
         help="Enter book return days")
     attchment_ids = fields.One2many("book.attachment", "product_id",
         "Book Attachments", help="Book attachments")
+    library_shelf_id = fields.Many2one('library.shelf', string="Library Shelf")
 
     _sql_constraints = [("unique_barcode_code", "unique(barcode,code)",
                  "Barcode and Code must be unique across all the products!")]

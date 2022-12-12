@@ -19,6 +19,8 @@ access_standard_division_manager,standard.division,school.model_standard_divisio
 access_account_move_manager,account.move,account.model_account_move,library.group_librarian,1,1,1,0
 access_delivery_carrier_manager,delivery.carrier,delivery.model_delivery_carrier,library.group_librarian,1,0,0,0
 access_book_editor_librariean,book.editor,library.model_book_editor,library.group_librarian,1,1,1,1
+access_library_shelf_manager,library.shelf,model_library_shelf,library.group_librarian,1,1,1,1
+access_book_history_librarian,access_book_history_librarian,model_book_history,library.group_librarian,1,1,1,1
 access_library_rack_user,library.rack,model_library_rack,library.group_userian,1,1,1,0
 access_library_author_user,library.author,model_library_author,library.group_userian,1,0,0,0
 access_library_editor_supplier_user,library.editor.supplier,model_library_editor_supplier,library.group_userian,1,0,0,0
@@ -41,10 +43,17 @@ access_stock_location_user,stock.location,stock.model_stock_location,library.gro
 access_uom_uom_user,uom.uom.userian,uom.model_uom_uom,library.group_userian,1,0,0,0
 access_account_tax_user,account.tax,account.model_account_tax,library.group_userian,1,0,0,0
 access_library_editor_user,book.editor,library.model_book_editor,library.group_userian,1,0,0,0
+access_book_history_userian,access_book_history_userian,model_book_history,library.group_userian,1,1,1,0
 access_library_book_request_student,library.book.request,model_library_book_request,school.group_school_student,1,1,1,0
 access_library_card_student,library.card,model_library_card,school.group_school_student,1,0,0,0
 access_library_book_issue_student,library.book.issue,model_library_book_issue,school.group_school_student,1,0,0,0
+access_book_history_school_student,access_book_history_school_student,model_book_history,school.group_school_student,1,1,1,0
 access_library_book_request_teacher,library.book.request,model_library_book_request,school.group_school_teacher,1,1,1,0
 access_library_card_teacher,library.card,model_library_card,school.group_school_teacher,1,0,0,0
 access_library_book_issue_teacher,library.book.issue,model_library_book_issue,school.group_school_teacher,1,0,0,0
 access_library_product_teacher,product.product,product.model_product_product,school.group_school_teacher,1,0,0,0
+access_book_history_school_teacher,access_book_history_school_teacher,model_book_history,school.group_school_teacher,1,1,1,1
+,,,,
+access_book_history_internal_user,access_book_history_internal_user,model_book_history,base.group_user,1,1,1,0
+,,,,
+access_library_shelf,access_library_shelf,model_library_shelf,base.group_user,1,1,1,1

@@ -6,6 +6,26 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError as UserError
 
 
+class LibraryBookShelf(models.Model):
+    """Defining Library Shelf."""
+
+    _name = "library.shelf"
+    _description = "Library Shelf"
+
+    name = fields.Char(string="Name")
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """
+            We override the _search because we need to show the shelf
+            according to the domain.
+        """
+        if 'library_shelf_domain' in self._context:
+            domain_id = self.env["library.rack"].browse(self._context.get('library_shelf_domain'))
+            shelf_ids = domain_id.library_shelf_ids
+            return shelf_ids.ids
+        return super(LibraryBookShelf, self)._search(args=args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
 class LibraryRack(models.Model):
     """Defining Library Rack."""
 
@@ -16,7 +36,15 @@ class LibraryRack(models.Model):
     code = fields.Char("Code", help="Enter code here")
     active = fields.Boolean("Active", default="True",
         help="To active/deactive record")
+    library_shelf_ids = fields.Many2many('library.shelf', 'library_rack_shelf_rel',
+                                  'shelf_id', 'rack_id', string="Shelf")
 
+    @api.constrains("library_shelf_ids")
+    def check_shelf(self):
+        """Constraint to assign library card more than once"""
+        if self.search([("id", "not in", self.ids),
+                ("library_shelf_ids", "in", self.library_shelf_ids.ids)]):
+            raise UserError(_("""Library shelf already assigned for another rank!"""))
 
 class LibraryAuthor(models.Model):
     """Defining Library Author."""
@@ -58,6 +86,17 @@ class LibraryCard(models.Model):
             if rec.start_date:
                 rec.end_date = rec.start_date + rd(months=rec.duration)
 
+    def compute_book_issue_count(self):
+        """Count the book issue based on card.
+
+        Returns:
+            number: return the number of book issued.
+        """
+        for rec in self:
+            rec.book_issue_count = self.env['library.book.issue'].search_count([
+                ("card_id", "=", self.id)
+            ])
+
     code = fields.Char("Card No", required=True, default=lambda self: _("New"),
         help="Enter card number")
     book_limit = fields.Integer("No Of Book Limit On Card", required=True,
@@ -82,6 +121,8 @@ class LibraryCard(models.Model):
         store=True, help="End date")
     active = fields.Boolean("Active", default=True,
         help="Activate/deactivate record")
+    book_issue_count = fields.Integer(compute="compute_book_issue_count",
+                                      string="Book Issue Count")
 
     @api.onchange("student_id")
     def on_change_student(self):
@@ -158,6 +199,18 @@ class LibraryCard(models.Model):
                 [("end_date", "<", current_date)]):
             rec.state = "expire"
 
+    #action view book issue
+    def action_view_book_issue(self):
+        """Method to redirect at book issue"""
+        return {
+            'name': _("Book Issue"),
+            'res_model': 'library.book.issue',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False,'delete': False},
+            'view_mode': 'tree',
+            'domain': [("card_id", "=", self.id)],
+        }
+
 
 class LibraryBookIssue(models.Model):
     """Book variant of product."""
@@ -185,7 +238,7 @@ class LibraryBookIssue(models.Model):
             if line.date_return:
                 start_day = line.actual_return_date
                 end_day = line.date_return
-                if start_day > end_day:
+                if start_day and end_day and start_day > end_day:
                     diff = rd(start_day.date(), end_day.date())
                     day = float(diff.days) or 0.0
                     if line.day_to_return_book:
@@ -207,6 +260,21 @@ class LibraryBookIssue(models.Model):
             rec.ebook_check = False
             if rec.name.is_ebook:
                 rec.ebook_check = True
+
+    @api.depends("actual_return_date", "date_return")
+    def calculate_return_daley_days(self):
+        self.return_daley_days = 0
+        for rec in self:
+            if rec.actual_return_date and  rec.date_return and\
+                rec.actual_return_date > rec.date_return:
+                rec.return_daley_days = (
+                    rec.actual_return_date.date() - rec.date_return.date()
+                    ).days
+            elif rec.date_return and not rec.actual_return_date and\
+                rec.date_return < fields.datetime.now():
+                rec.return_daley_days = (
+                    fields.datetime.now().date()- rec.date_return.date()
+                    ).days
 
     name = fields.Many2one("product.product", "Book Name", required=True,
         help="Enter book name")
@@ -258,6 +326,8 @@ class LibraryBookIssue(models.Model):
     ebook_download = fields.Binary("Download Book", help="Download Book")
     ebook_check = fields.Boolean("Check Ebook",
         compute="_compute_check_ebook", help="Activate for ebook")
+    return_daley_days = fields.Integer(compute="calculate_return_daley_days",
+                                string="Return Daley(In days)")
 
     @api.onchange("date_issue", "day_to_return_book")
     def onchange_day_to_return_book(self):
@@ -346,7 +416,11 @@ class LibraryBookIssue(models.Model):
             self._update_student_vals(vals)
         if vals.get("card_id") and vals.get("user") == "Teacher":
             self._update_teacher_vals(vals)
-        return super(LibraryBookIssue, self).create(vals)
+        res = super(LibraryBookIssue, self).create(vals)
+        self.env['book.history'].create({'book_issue_id': res.id,
+                             'book_id': res.name.id,
+            })
+        return res
 
     def write(self, vals):
         """Override write method"""
@@ -514,7 +588,7 @@ class LibraryBookIssue(models.Model):
                 invoice_line_ids.append((0, 0, {
                     "name": "Book Subscription Amount",
                     "price_unit": subcription_amount,
-                    "invoice_id": new_invoice_rec.id,
+                    "move_id": new_invoice_rec.id,
                     "account_id": acc_id,
                 }))
             new_invoice_rec.write({"invoice_line_ids": invoice_line_ids})
@@ -637,6 +711,7 @@ class LibraryBookRequest(models.Model):
                 "subscription_amt": self.ebook_name.subscrption_amt})
         issue_id = book_issue_obj.create(vals)
         if self.type == "ebook":
+            issue_vals = {}
             if not self.ebook_name.is_subscription:
                 issue_vals.update({
                     "state": "paid",
@@ -688,3 +763,27 @@ class StudentLibrary(models.Model):
             if student_card_rec:
                 student_card_rec.active = False
         return super(StudentLibrary, self).set_alumni()
+
+
+class BookHistory(models.Model):
+    _name = "book.history"
+    _description = "Book History"
+
+    book_issue_id = fields.Many2one('library.book.issue',
+                                    string="Book Issue")
+    book_issue_code = fields.Char(related="book_issue_id.issue_code",
+                                  string="Book Issue")
+    book_id = fields.Many2one('product.product',
+                              string="Book")
+    card_id = fields.Many2one(related="book_issue_id.card_id",
+                              string="Card")
+    student_id = fields.Many2one(related="book_issue_id.student_id",
+                              string="Employee")
+    start_date = fields.Datetime(related='book_issue_id.date_issue',
+                              string="Start Date")
+    end_date = fields.Datetime(related="book_issue_id.actual_return_date" ,
+                               string="End Date")
+    isbn = fields.Char(related="book_id.isbn", string="ISBN")
+    barcode = fields.Char(related="book_id.barcode", string="Barcode")
+    book_issue_state = fields.Selection(related="book_issue_id.state" ,
+                                        string="Book issue State")
