@@ -1,6 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import models, fields, _
+from odoo.exceptions import ValidationError
 
 
 class MoveStandards(models.TransientModel):

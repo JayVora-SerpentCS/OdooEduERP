@@ -422,7 +422,7 @@ class SubjectSubject(models.Model):
                 self._context.get("active_id"))
             sub_ids = [sub_id.id for sub_id in teacher_rec.subject_id]
             args.append(("id", "in", sub_ids))
-        return super(SubjectSubject, self)._search(args=args, offset=offset,
+        return super(SubjectSubject, self)._search(args, offset=offset,
             limit=limit, order=order, count=count,
             access_rights_uid=access_rights_uid, )
 

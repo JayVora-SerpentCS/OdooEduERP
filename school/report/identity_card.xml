@@ -8,18 +8,24 @@
                     <div class="page" style="height: 2px;">
                         <div class="oe_structure"/>
                         <t t-foreach="o" t-as="student">
+                        <style>
+                            .table-borderless td,
+                            .table-borderless th {
+                                border: 0;
+                            }
+                        </style>
                         <table width="40%" height="280px" style="border: 3px solid black;" align="center">
                             <tr style="margin-top:5px">
                                 <td colspan="2" align="center">
                                     <h1><strong>
-                                        <span t-field="student.school_id.name" />
+                                        <span t-field="student.sudo().school_id.name" />
                                     </strong></h1>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="table table-borderless" style="border: 0px;">
                                 <td align="top" colspan="1">
                                     <img t-if="student.photo"
-                                        t-att-src="'data:image/png;base64,%s' % to_text(student.photo)"/>
+                                        t-att-src="'data:image/png;base64,%s' % student.photo.decode('utf-8')"/>
                                 </td>
                                 <td align="left">
                                     <table width="100%">

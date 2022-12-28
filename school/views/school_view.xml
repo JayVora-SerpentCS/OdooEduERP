@@ -9,15 +9,32 @@
             <form string="Student Reminder">
                 <sheet>
                     <separator string="Reminder" />
-                    <group col="4" colspan="4">
-                        <field name="stu_id" widget="selection" placeholder="Student" domain="[('state','=','done')]"/>
-                        <field name="date" placeholder="Select Date" />
-                        <field name="name" placeholder="Reminder Title" required="1"/>
-                        <newline />
+                    <group>
+                        <group>
+                            <field name="stu_id" widget="selection" placeholder="Student" domain="[('state','=','done')]"/>
+                            <field name="date" placeholder="Select Date"/>
+                        </group>
+                        <group>
+                            <field name="name" placeholder="Reminder Title" required="1"/>
+                        </group>
+                    </group>
+                    <group>
                         <field name="description" colspan="4" placeholder="Description"/>
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+    <!-- tree View Of Student Reminder -->
+    <record id="view_student_reminder_tree_2" model="ir.ui.view">
+        <field name="name">student.reminder.tree</field>
+        <field name="model">student.reminder</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="stu_id"/>
+                <field name="date" />
+                <field name="name"/>
+            </tree>
         </field>
     </record>
     <!-- Kanban View Of Student Reminder -->
@@ -98,7 +115,6 @@
                                 <div class="oe_kanban_left" style="margin-left:10px;">
                                     <br />
                                     <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" title="edit"/>
-                                    <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                 </div>
                                 <br class="oe_kanban_clear" />
                             </div>
@@ -772,7 +788,7 @@
     <record id="action_student_reminder" model="ir.actions.act_window">
         <field name="name">Students Reminder</field>
         <field name="res_model">student.reminder</field>
-        <field name="view_mode">kanban,form</field>
+        <field name="view_mode">tree,form,kanban</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Reminder.
@@ -784,13 +800,6 @@
         </field>
     </record>
 
-    <!-- Action View Of Kanban View Of Student Reminder -->
-    <record id="action_view_student_reminder_kanban" model="ir.actions.act_window.view">
-        <field name="view_mode">kanban</field>
-        <field eval="0" name="sequence" />
-        <field name="view_id" ref="student_reminder_kanban_view" />
-        <field name="act_window_id" ref="action_student_reminder" />
-    </record>
     <!-- Action Of Form & Tree Views Of School Information -->
     <record id="action_school_school_form" model="ir.actions.act_window">
         <field name="name">Schools</field>

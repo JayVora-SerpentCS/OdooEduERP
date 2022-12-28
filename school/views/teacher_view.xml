@@ -148,10 +148,12 @@
                             <page string="Children" attrs="{'invisible': [('is_parent','=', False)]}">
                                  <field name="student_id" domain="[('state', '=', 'done')]"/>
                             </page>
-                            <page string="HR Settings" groups="hr.group_hr_user" invisible="1">
+                            <!-- TODO restricted groups="hr.group_hr_user" -->
+                            <page string="HR Settings" invisible="1">
                                 <group>
                                     <group string="Status" name="active_group">
-                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <!-- TODO restricted groups="base.group_multi_company -->
+                                        <field name="company_id"/>
                                         <field name="user_id" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>

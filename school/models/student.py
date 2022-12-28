@@ -39,7 +39,7 @@ class StudentStudent(models.Model):
             childrens = parent_login_stud_rec.student_id
             args.append(('id', 'in', childrens.ids))
         return super(StudentStudent, self)._search(
-            args=args, offset=offset, limit=limit, order=order, count=count,
+            args, offset=offset, limit=limit, order=order, count=count,
             access_rights_uid=access_rights_uid)
 
     @api.depends('date_of_birth')

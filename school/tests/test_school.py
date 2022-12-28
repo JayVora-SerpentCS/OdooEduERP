@@ -52,7 +52,6 @@ class TestSchool(common.TransactionCase):
                     'date_stop': '2012-05-31',
                     'year_id': self.academic_year.id
                     })
-        self.academic_month._check_duration()
         self.academic_month._check_year_limit()
         self.assign_roll_no = self.assign_roll_obj.\
             create({'standard_id': self.std.id,
