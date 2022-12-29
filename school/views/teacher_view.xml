@@ -148,10 +148,12 @@
                             <page string="Children" attrs="{'invisible': [('is_parent','=', False)]}">
                                  <field name="student_id" domain="[('state', '=', 'done')]"/>
                             </page>
-                            <page string="HR Settings" groups="hr.group_hr_user" invisible="1">
+                            <page string="HR Settings" invisible="1">
+                                <!-- groups="hr.group_hr_user" invisible="1"> -->
                                 <group>
                                     <group string="Status" name="active_group">
-                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="company_id"/>
+                                         <!-- groups="base.group_multi_company"/> -->
                                         <field name="user_id" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>
@@ -174,7 +176,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="teacher_profile_menu" name="Teachers" action="action_school_teacher_form" 
+        <menuitem id="teacher_profile_menu" name="Teachers" action="action_school_teacher_form"
                   parent="menu_students_parents" sequence="32"
                   groups="school.group_school_administration,school.group_school_teacher"/>
 

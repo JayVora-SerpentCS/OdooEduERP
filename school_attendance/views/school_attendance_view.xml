@@ -407,5 +407,11 @@
               action="action_student_leave_form"
               groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
               sequence="53"/>
+    <menuitem id="menu_student_leave_aattt" name="Student Leave att" parent="menu_attendance"
+              action="action_attendance_sheet_form"
+              groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
+              sequence="53"/>
+
+
 
 </odoo>
