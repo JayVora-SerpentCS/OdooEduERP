@@ -542,6 +542,7 @@
                 <field name="name" />
                 <field name="user" />
                 <field name="card_name" />
+                <field name="issue_code" />
                 <newline />
                 <group expand="0" string="Group By" colspan="12" col="10">
                     <filter name="state" string="State" help="By State" context="{'group_by':'state'}" />
@@ -574,11 +575,6 @@
                     <field name="state" widget="statusbar" align="right" readonly="1" />
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="library.group_librarian">
-                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}" groups="library.group_librarian" />
-                        </button>
-                    </div>
                     <group col="4" colspan="4">
                         <separator string="Book Request" colspan="4" col="4" />
                         <field name="req_id" readonly="1" />
@@ -586,13 +582,16 @@
                     </group>
                     <group>
                         <group>
-                            <field name="ebook_name" attrs="{'invisible':[('type','!=','ebook')], 'required':                                  [('type','=','ebook')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', True)]" widget="selection" />
+                            <field name="ebook_name"
+                                attrs="{'invisible':[('type','!=','ebook')], 'required':                                  [('type','=','ebook')], 'readonly':[('state','!=','draft')]}"
+                                domain="[('categ_id.book_categ', '!=', False),('is_ebook', '=', True)]" widget="selection" />
                             <field name="name" attrs="{'invisible':[('type','!=','existing')], 'required':                                  [('type','=','existing')], 'readonly':[('state','!=','draft')]}" domain="[('categ_id.book_categ', '=', True),('is_ebook', '=', False)]" widget="selection" />
                             <field name="book_name" invisible="1" />
                             <field name="type" attrs="{'readonly':[('state','!=','draft')]}" invisible="0" required="1" />
                         </group>
                         <group>
                             <field name="book_return_days" readonly="1" attrs="{'invisible':[('type','!=','existing')]}" />
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -608,7 +607,7 @@
                 <field name="req_id" />
                 <field name="card_id" />
                 <field name="type" />
-                <field name="book_name" />
+                <field name="name" />
                 <field name="ebook_name" />
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-danger="state == 'cancel'" decoration-success="state == 'confirm'"/>
             </tree>
@@ -959,7 +958,7 @@
         <field name="inherit_id" ref="product.product_supplierinfo_form_view" />
         <field name="model">product.supplierinfo</field>
         <field name="arch" type="xml">
-            <field name="name" domain="[('supplier','=',True)]" />
+            <field name="partner_id" domain="[('supplier','=',True)]" />
         </field>
     </record>
     <!-- Inherited Form View Of Account Invoice Line -->
@@ -970,7 +969,7 @@
         <field name="arch" type="xml">
             <field name="discount" position="after">
                 <field name="customer_ref" select="1" />
-                <field name="production_lot_id" select="1" />
+                <field name="lot_id" select="1" />
             </field>
         </field>
     </record>

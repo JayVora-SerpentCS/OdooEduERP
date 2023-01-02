@@ -1,129 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
     <template id="card_details">
-    <t t-call="web.html_container">
-    <t t-foreach="docs" t-as="o">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
                 <div class="page" style="height: 2px;">
                     <div class="oe_structure"/>
-                    <br/><br/>
-                    <table width="90%" height="40px" style="border: 3px solid black;">
-                            <tr>
-                                <td width="100%" align="center" height="15">
-                                    <strong>
-                                        <span t-field="o.sudo().standard_id.school_id.name" />
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <t t-if="o.student_id">
-                                        <img t-if="o.student_id.photo" t-att-src="'data:image/png;base64,%s' % to_text(o.student_id.photo)"
-                                             style="height:100px;width=100px" />
-                                    </t>
-                                    <t t-if="o.teacher_id">
-                                        <img t-if="o.teacher_id.employee_id.image_1920" t-att-src="'data:image/png;base64,%s' % to_text(o.teacher_id.employee_id.image_1920)"
-                                         style="height:100px;width=100px" />
-                                    </t>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td height="10px"></td>
-                            </tr>
-                            <tr>
-                                <td align="center" height="30px">
-                                    <t t-if="o.student_id">
-                                        <strong>
-                                                <span t-field="o.student_id.name" />
-                                        </strong>
-                                        <strong>
-                                                <span t-field="o.student_id.middle" />
-                                        </strong>
-                                        <strong>
-                                                <span t-field="o.student_id.last" />
-                                        </strong>
-                                    </t>
-                                    <t t-if="o.teacher_id">
-                                        <strong>
-                                                <span t-field="o.teacher_id.name" />
-                                        </strong>
-                                    </t>
-                                </td>
-                            </tr>
-
+                    <br/>
+                    <br/>
+                    <table>
                         <tr>
-                            <td height="120">
-                                <table width="100%">
+                            <td>
+                                <table>
                                     <tr>
-                                        <td style="font-family: 'Helvetica';padding-left:20px;">
-                                            <strong>Card No.</strong>
-                                        </td>
-                                         <td>
-                                            <strong>: </strong>
-                                        </td>
-                                        <td>
-                                            <span t-field="o.code"/>
+                                        <td align="center">
+                                            <t t-if="o.student_id">
+                                                <img t-if="o.student_id.photo" t-attf-src="data:image/png;base64,{{o.student_id.photo}}"
+                                                     style="height:100px;width=100px" />
+                                            </t>
+                                            <t t-else="">
+                                                <img t-if="o.teacher_id.image_1920" t-attf-src="data:image/png;base64,{{o.teacher_id.image_1920}}"
+                                                 style="height:100px;width=100px" />
+                                            </t>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="font-family: 'Helvetica';padding-left:20px;">
-                                            <strong>Start Date</strong>
+                                        <td height="10px"></td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" height="30px">
+                                            <t t-if="o.student_id">
+                                                <strong>
+                                                    <span t-field="o.student_id.name" />
+                                                </strong>
+                                                <strong>
+                                                    <span t-field="o.student_id.middle" />
+                                                </strong>
+                                                <strong>
+                                                    <span t-field="o.student_id.last" />
+                                                </strong>
+                                            </t>
+                                            <t t-else="o.teacher_id">
+                                                <strong>
+                                                    <span t-field="o.teacher_id.name" />
+                                                </strong>
+                                            </t>
                                         </td>
-                                         <td>
-                                            <strong>: </strong>
-                                        </td>
-                                        <td>
-                                            <span t-field="o.start_date"/>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="padding-left: 50px">
+                                <table>
+                                    <tr>
+                                        <td width="100%" align="center" height="15">
+                                            <strong>
+                                                <span t-field="o.sudo().standard_id.school_id.name" />
+                                            </strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="font-family: 'Helvetica';padding-left:20px;">
-                                            <strong>Date Due</strong>
-                                        </td>
-                                         <td>
-                                            <strong>: </strong>
-                                        </td>
-                                        <td>
-                                            <span t-field="o.end_date"/>
+                                        <td height="120">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                        <strong>Card No.</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>: </strong>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="o.code"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                        <strong>Start Date</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>: </strong>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="o.start_date"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                        <strong>Date Due</strong>
+                                                    </td>
+                                                    <td>
+                                                        <strong>: </strong>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="o.end_date"/>
+                                                    </td>
+                                                </tr>
+                                                <t t-if="o.student_id">
+                                                    <tr>
+                                                        <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                            <strong>Class</strong>
+                                                        </td>
+                                                        <td>
+                                                            <strong>: </strong>
+                                                        </td>
+                                                        <td>
+                                                            <span t-field="o.standard_id"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                            <strong>Roll No.</strong>
+                                                        </td>
+                                                        <td>
+                                                            <strong>: </strong>
+                                                        </td>
+                                                        <td>
+                                                            <span t-field="o.roll_no"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-if="o.teacher_id">
+                                                    <tr>
+                                                        <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                            <strong>Work Email</strong>
+                                                        </td>
+                                                        <td>
+                                                            <strong>: </strong>
+                                                        </td>
+                                                        <td>
+                                                            <span t-field="o.teacher_id.work_email"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </table>
                                         </td>
                                     </tr>
-                                    <t t-if="o.student_id">
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Class</strong>
-                                            </td>
-                                             <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="o.standard_id"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Roll No.</strong>
-                                            </td>
-                                             <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="o.roll_no"/>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                    <t t-if="o.teacher_id">
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Work Email</strong>
-                                            </td>
-                                             <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="o.teacher_id.work_email"/>
-                                            </td>
-                                        </tr>
-                                    </t>
                                 </table>
                             </td>
                         </tr>
@@ -133,150 +142,3 @@
         </t>
     </template>
 </odoo>
-
-
-                    
-                   
-
-
-
-
-
-
-
-
-
-
-
-
-
-     
-
-
-
-<!-- <odoo>
-    <template id="identity_card">
-        <t t-call="web.html_container">
-            <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
-                    <div class="page" style="height: 2px;">
-                        <div class="oe_structure"/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <t t-foreach="o" t-as="student">
-                        <br/><br/><br/>
-                        <table width="25%" height="50px" style="border: 3px solid black;">
-                            <tr>
-                                <td width="100%" align="center" height="30">
-                                    <strong>
-                                        <span t-field="student.school_id.name" />
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <img t-if="student.photo" t-att-src="'data:image/png;base64,%s' % to_text(student.photo)"
-                                         style="height:120px;width=120px" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td height="10px"></td>
-                            </tr>
-                            <tr>
-                                <td align="center" height="30px">
-                                    <strong>
-                                        <span t-field="student.name" />
-                                    </strong>
-                                    <strong>
-                                        <span t-field="student.middle" />
-                                    </strong>
-                                    <strong>
-                                        <span t-field="student.last" />
-                                    </strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td height="130">
-                                    <table width="100%">
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Roll No.</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="student.roll_no" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Standard</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="student.standard_id.standard_id.name"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Division</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="student.standard_id.division_id.name"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Medium</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="student.medium_id.name" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>BirthDate</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="student.date_of_birth" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
-                                                <strong>Blood Group</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="student.blood_group" />
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                      </t>
-                   </div>
-                </t>
-            </t>
-        </t>
-    </template>
-</odoo> -->
-
-

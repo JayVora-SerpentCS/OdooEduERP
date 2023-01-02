@@ -2,7 +2,7 @@
 
 {
     "name": "Library Management for Education ERP",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website": "http://www.serpentcs.com",
@@ -16,7 +16,7 @@
         "data/library_card_schedular.xml",
         "security/library_security.xml",
         "security/ir.model.access.csv",
-        'views/card_details.xml',
+        "views/card_details.xml",
         "report/report_view.xml",
         "report/qrcode_label.xml",
         "views/library_view.xml",
