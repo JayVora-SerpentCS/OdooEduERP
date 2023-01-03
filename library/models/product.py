@@ -76,7 +76,7 @@ class ProductProduct(models.Model):
     def _get_partner_code_name(self, product, parent_id):
         """ This method get the partner code name"""
         for supinfo in product.seller_ids:
-            if supinfo.name.id == parent_id:
+            if supinfo.partner_id.id == parent_id:
                 return {
                     "code": supinfo.product_code or product.default_code,
                     "name": supinfo.product_name or product.name,
