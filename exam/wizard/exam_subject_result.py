@@ -14,7 +14,7 @@ class SubjectResultWiz(models.TransientModel):
         "subject_id",
         "Exam Subjects",
         help="Select exam subjects",
-        required=True
+        required=True,
     )
     s_exam_id = fields.Many2one(
         "exam.exam", "Examination", required=True, help="Select Exam"
@@ -27,7 +27,7 @@ class SubjectResultWiz(models.TransientModel):
         exam_rec = self.env["school.teacher"].browse(
             self._context.get("active_id")
         )
-        subjectlist =exam_rec.subject_id.ids
+        subjectlist = exam_rec.subject_id.ids
         res.update({"result_ids": [(6, 0, subjectlist)]})
         return res
 

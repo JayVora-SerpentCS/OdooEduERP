@@ -2,7 +2,7 @@
 
 {
     "name": "Evaluation Management for Education ERP",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.almisnadtechnology.com",
     "category": "School Management",
@@ -17,10 +17,10 @@
         "views/school_evaluation_view.xml",
     ],
     "demo": ["demo/school_evaluation_demo.xml"],
-    'assets': {
-        'web.assets_backend': [
-            '/school_evaluation/static/src/css/school_evaluation.css',
-        ],
+    "assets": {
+        "web.assets_backend": [
+            "/school_evaluation/static/src/css/school_evaluation.css"
+        ]
     },
     "installable": True,
     "application": True,

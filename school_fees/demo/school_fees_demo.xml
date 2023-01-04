@@ -24,7 +24,7 @@
             <field name="list_price">3000.00</field>
             <field name="categ_id" ref="school_fees.product_categ_fees"/>
         </record>
-        
+
         <!--Fees Head Information-->
         <record id="demo_school_fees_1" model="student.payslip.line">
             <field name="name">Educational Fees</field>
