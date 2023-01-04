@@ -86,36 +86,30 @@ Due date of homework should be greater than assign date"""
             for std in student_obj.search(
                 [
                     ("standard_id", "=", rec.standard_id.id),
-                    ("state", "=", "done"),
-                ]
-            ):
-                assignment_rec = assignment_obj.create(
-                    {
-                        "name": rec.name,
-                        "subject_id": rec.subject_id.id,
-                        "standard_id": rec.standard_id.id,
-                        "assign_date": rec.assign_date,
-                        "due_date": rec.due_date,
-                        "state": "active",
-                        "attached_homework": rec.attached_homework,
-                        "teacher_id": rec.teacher_id.id,
-                        "teacher_assignment_id": rec.id,
-                        "student_id": std.id,
-                        "stud_roll_no": std.roll_no,
-                        "student_standard": std.standard_id.standard_id.id,
-                        "submission_type": self.type_submission,
-                        "attachfile_format": self.file_format.Name,
-                    }
-                )
-                ir_attachment_obj.create(
-                    {
-                        "name": "test",
-                        "datas": rec.attached_homework,
-                        "description": "Assignment attachment",
-                        "res_model": "school.student.assignment",
-                        "res_id": assignment_rec.id,
-                    }
-                )
+                    ("state", "=", "done")]):
+                assignment_rec = assignment_obj.create({
+                    "name": rec.name,
+                    "subject_id": rec.subject_id.id,
+                    "standard_id": rec.standard_id.id,
+                    "assign_date": rec.assign_date,
+                    "due_date": rec.due_date,
+                    "state": "active",
+                    "attached_homework": rec.attached_homework,
+                    "teacher_id": rec.teacher_id.id,
+                    "teacher_assignment_id": rec.id,
+                    "student_id": std.id,
+                    "stud_roll_no": std.roll_no,
+                    "student_standard": std.standard_id.standard_id.id,
+                    "submission_type": self.type_submission,
+                    "attachfile_format": self.file_format.name
+                    })
+                ir_attachment_obj.create({
+                    "name": "test",
+                    "datas": rec.attached_homework,
+                    "description": "Assignment attachment",
+                    "res_model": "school.student.assignment",
+                    "res_id": assignment_rec.id
+                    })
             rec.state = "active"
 
     def done_assignments(self):
@@ -143,35 +137,21 @@ class SchoolStudentAssignment(models.Model):
         "subject.subject", "Subject", required=True, help="Select Subject"
     )
     standard_id = fields.Many2one(
-        "school.standard", "Class", required=True, help="Select Standard"
-    )
-    rejection_reason = fields.Text("Reject Reason", help="Reject Reason")
-    teacher_id = fields.Many2one(
-        "school.teacher",
-        "Teacher",
-        required=True,
-        help="Teacher responsible to assign assignment",
-    )
-    assign_date = fields.Date(
-        "Assign Date", required=True, help="Starting date of assignment"
-    )
-    due_date = fields.Date(
-        "Due Date", required=True, help="End date of assignment"
-    )
-    state = fields.Selection(
-        [
-            ("draft", "Draft"),
-            ("active", "Active"),
-            ("reject", "Reject"),
-            ("done", "Done"),
-        ],
-        "Status",
-        default="draft",
-        help="States of assignment",
-    )
-    student_id = fields.Many2one(
-        "student.student", "Student", required=True, help="Name of Student"
-    )
+        "school.standard", "Class", required=True, help="Select Standard")
+    # rejection_reason = fields.Text("Reject Reason", help="Reject Reason")
+    assignment_reject_history_ids = fields.One2many(
+        "assignment.reject.history", "assignment_id", "Rejection History")
+    teacher_id = fields.Many2one("school.teacher", "Teacher", required=True,
+        help="Teacher responsible to assign assignment")
+    assign_date = fields.Date("Assign Date", required=True,
+        help="Starting date of assignment")
+    due_date = fields.Date("Due Date", required=True,
+        help="End date of assignment")
+    state = fields.Selection([("draft", "Draft"), ("active", "Active"),
+        ("reject", "Reject"), ("done", "Done")], "Status", default="draft",
+        help="States of assignment")
+    student_id = fields.Many2one("student.student", "Student", required=True,
+        help="Name of Student")
     stud_roll_no = fields.Integer(string="Roll no", help="Roll No of student")
     attached_homework = fields.Binary(
         "Attached Home work", help="Homework Attached by student"
@@ -206,9 +186,8 @@ class SchoolStudentAssignment(models.Model):
         """Method to check constraint of due date
         and assign date for homework"""
         if self.due_date < self.assign_date:
-            raise ValidationError(
-                _("Due date of homework should be greater than Assign date!")
-            )
+            raise ValidationError(_(
+                "Due date of homework should be greater than Assign date!"))
 
     @api.constrains("submit_assign", "file_name")
     def check_file_format(self):
@@ -217,19 +196,15 @@ class SchoolStudentAssignment(models.Model):
             if len(file_format) == 2:
                 file_format = file_format[1]
             else:
-                raise ValidationError(
-                    _("""Kindly attach file with format: %s!""")
-                    % self.attachfile_format
-                )
-            if (
-                file_format in self.attachfile_format
-                or self.attachfile_format in file_format
-            ):
+                raise ValidationError(_(
+                    "Kindly attach file with format: %s!"
+                    ) % self.attachfile_format)
+            if (file_format in self.attachfile_format or
+                    self.attachfile_format in file_format):
                 return True
-            raise ValidationError(
-                _("""Kindly attach file with format: %s!""")
-                % self.attachfile_format
-            )
+            raise ValidationError(_(
+                "Kindly attach file with format: %s!"
+                ) % self.attachfile_format)
 
     @api.onchange("student_id")
     def onchange_student_standard(self):
@@ -280,7 +255,7 @@ class FileFormat(models.Model):
     name = fields.Char("Name", help="Enter file format that can be attached")
 
 
-class StudentAssign(models.Model):
+class StudentStudent(models.Model):
     _inherit = "student.student"
 
     def set_alumni(self):
@@ -293,4 +268,12 @@ class StudentAssign(models.Model):
             )
             if student_assign:
                 student_assign.active = False
-        return super(StudentAssign, self).set_alumni()
+        return super(StudentStudent, self).set_alumni()
+
+
+class AssignmentRejctHistory(models.Model):
+    _name = "assignment.reject.history"
+
+    name = fields.Text("Reason")
+    user_id = fields.Many2one("res.users", string="User")
+    assignment_id = fields.Many2one("school.student.assignment")

@@ -12,3 +12,4 @@ access_file_format_teacher_access,school.teacher.assignment,assignment.model_fil
 
 access_reject_reason,reject.reason,assignment.model_reject_reason,school.group_school_administration,1,1,1,1
 access_terminate_reason,terminate.reason,assignment.model_terminate_reason,school.group_school_administration,1,1,1,1
+assignment.access_assignment_reject_history,access_assignment_reject_history,assignment.model_assignment_reject_history,base.group_user,1,1,1,1
