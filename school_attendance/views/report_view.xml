@@ -1,5 +1,5 @@
 <odoo>
-    <record id="monthly_attendance_report" model="report.paperformat">
+    <record id="monthly_attendance_report_paperformat" model="report.paperformat">
         <field name="name">Mothly Attendance Report</field>
         <field name="default" eval="True"/>
         <field name="format">A4</field>
@@ -21,7 +21,7 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">school_attendance.attendance_month</field>
         <field name="report_file">school_attendance.attendance_month</field>
-        <field name="paperformat_id" ref="school_attendance.monthly_attendance_report"/>
+        <field name="paperformat_id" ref="school_attendance.monthly_attendance_report_paperformat"/>
         <field name="groups_id"
                eval="[(4, ref('school.group_school_administration')), (4, ref('school.group_school_student')), (4, ref('school.group_school_teacher'))]"/>
     </record>
