@@ -42,7 +42,6 @@ class AccountPaymentRegister(models.TransientModel):
         """
         res = super(AccountPaymentRegister, self).action_create_payments()
         invoice = False
-        invoice = {}
         if self._context.get("active_model") == "account.move":
             invoice = self.env["account.move"].browse(
                 self._context.get("active_ids", [])

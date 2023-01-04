@@ -830,6 +830,7 @@ class LibraryBookRequest(models.Model):
         book_issue_obj = self.env["library.book.issue"]
         curr_dt = fields.Date.today()
         vals = {}
+
         issue_id = False
         if (
             self.card_id.start_date and curr_dt <= self.card_id.start_date

@@ -39,7 +39,7 @@
         <field name="view_id" ref="view_monthly_attendance_wizard_form" />
         <field name="target">new</field>
     </record>
-    
+
     <menuitem id="menu_monthly_attendances" name="Monthly Attendance Report"
         parent="school_attendance.menu_attendance" action="report_monthly"
         sequence="51" />

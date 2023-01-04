@@ -2,7 +2,7 @@
 
 {
     "name": "Exam Management for Education ERP",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
     "category": "School Management",
@@ -22,7 +22,7 @@
         "report/report_view.xml",
         "wizard/batch_result.xml",
         "wizard/exam_subject_result_view.xml",
-        "report/exam_result_report.xml"
+        "report/exam_result_report.xml",
     ],
     "demo": ["demo/exam_demo.xml"],
     "installable": True,

@@ -143,7 +143,6 @@ class ProductProduct(models.Model):
 
     isbn = fields.Char(
         "ISBN Code",
-        # unique=True,
         help="Shows International Standard Book Number",
     )
     catalog_num = fields.Char(
