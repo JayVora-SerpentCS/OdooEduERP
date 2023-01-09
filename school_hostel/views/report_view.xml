@@ -8,7 +8,7 @@
              model="hostel.student"
              report_type = "qweb-pdf"
              file="school_hostel.hostel_fee_reciept1"
-             name="school_hostel.hostel_fee_reciept1" 
+             name="school_hostel.hostel_fee_reciept1"
              menu="False" />
 
     </data>

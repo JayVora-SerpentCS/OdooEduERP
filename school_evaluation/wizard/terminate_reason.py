@@ -12,7 +12,8 @@ class TerminateReasonEvaluation(models.TransientModel):
         student = self._context.get("active_id")
         student_rec = self.env["student.student"].browse(student)
         student_eval_rec = self.env["school.evaluation"].search(
-            [("type", "=", "student"), ("student_id", "=", student_rec.id)])
+            [("type", "=", "student"), ("student_id", "=", student_rec.id)]
+        )
         if student_eval_rec:
             student_eval_rec.active = False
         return super(TerminateReasonEvaluation, self).save_terminate()
