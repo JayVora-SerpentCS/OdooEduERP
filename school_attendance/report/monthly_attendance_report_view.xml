@@ -38,6 +38,14 @@
                                         <b><span t-esc="data.get('semester')"/></b>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <t t-if="data.get('elective_subject')">
+                                            <b>Subject: </b>
+                                            <span t-esc="data.get('subject')"/>
+                                        </t>
+                                    </td>
+                                </tr>
                             </table><br/>
                         </div>
 

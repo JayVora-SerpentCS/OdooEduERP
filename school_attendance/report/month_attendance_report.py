@@ -8,6 +8,7 @@ from odoo import api, models
 
 class ReportMonthAttendace(models.AbstractModel):
     _name = "report.school_attendance.monthly_attendance_report_tmpl"
+    _description = "Monthly Attendance Report"
 
     def get_dates(self, rec):
         days_of_month = calendar.monthrange(
@@ -31,6 +32,7 @@ class ReportMonthAttendace(models.AbstractModel):
             "12": "December",
         }
         group_data = []
+        month = rec.month
         if int(rec.month) < 10:
             month = "0" + rec.month
         last_day_month = calendar.monthrange(
@@ -47,36 +49,61 @@ class ReportMonthAttendace(models.AbstractModel):
             + str(last_day_month)
             + " 23:00:00"
         )
-        self._cr.execute(
-            """
-            SELECT
-                id
-            FROM
-                daily_attendance
-            WHERE
-                state = 'validate' and
-                standard_id = %s and
-                date >= '%s' and
-                date <= '%s'
-            ORDER BY user_id,date
-            """,
-            (rec.course_id.id, start_date_str, end_date_str),
-        )
+        if rec.is_elective_subject:
+            self._cr.execute(
+                """select id
+                            from daily_attendance WHERE
+                            state = 'validate' and
+                            standard_id = %s and
+                            date >= %s and
+                            date <= %s and
+                            subject_id = %s  ORDER BY user_id,date
+                            """,
+                (
+                    rec.course_id.id,
+                    start_date_str,
+                    end_date_str,
+                    rec.subject_id.id,
+                ),
+            )
+        else:
+            self._cr.execute(
+                """
+                SELECT
+                    id
+                FROM
+                    daily_attendance
+                WHERE
+                    state = 'validate' and
+                    standard_id = %s and
+                    is_elective_subject = 'f' and
+                    -- user_id =  and
+                    date >= %s and
+                    date <= %s ORDER BY user_id,date
+                    """,
+                (
+                    rec.course_id.id,
+                    # user.id,
+                    start_date_str,
+                    end_date_str,
+                ),
+            )
         records = []
         for record in self._cr.fetchall():
             if record and record[0]:
                 records.append(record[0])
         for att in self.env["daily.attendance"].browse(records):
-            date = datetime.strptime(str(att.date), "%Y-%m-%d")
+            date = datetime.strptime(str(att.date), "%Y-%m-%d %H:%M:%S")
             day_date = date.strftime("%Y-%m-%d")
             if not group_data:
                 group_data.append(
                     {
                         "user": att.user_id,
-                        "school_name": att.user_id.school_id.name,
+                        "school_name": att.user_id.sudo().school_id.name,
                         "att_ids": [{"date": day_date, "att": [att]}],
                     }
                 )
+
             else:
                 flag = False
                 for gdata in group_data:
@@ -96,7 +123,7 @@ class ReportMonthAttendace(models.AbstractModel):
                     group_data.append(
                         {
                             "user": att.user_id,
-                            "school_name": att.user_id.school_id.name,
+                            "school_name": att.user_id.sudo().school_id.name,
                             "att_ids": [{"date": day_date, "att": [att]}],
                         }
                     )
@@ -123,7 +150,7 @@ class ReportMonthAttendace(models.AbstractModel):
                                 standard_id = %s
                             ORDER BY roll_no
                         """,
-                        (att.id),
+                        (att.id,),
                     )
                     lines = []
                     for line in self._cr.fetchall():
@@ -281,6 +308,8 @@ class ReportMonthAttendace(models.AbstractModel):
                     + rec.academic_year_id.code,
                     "batch": rec.course_id.name,
                     "result_data": result_data,
+                    "elective_subject": rec.is_elective_subject,
+                    "subject": rec.subject_id.name,
                 }
             )
         return res_data

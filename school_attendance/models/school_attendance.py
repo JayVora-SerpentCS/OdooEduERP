@@ -255,6 +255,7 @@ class AttendanceSheetLine(models.Model):
 
     def _compute_percentage(self):
         """Method to get attendance percent."""
+
         res = {}
         for attendance_sheet_data in self:
             percentage = 0.0
@@ -384,12 +385,12 @@ class DailyAttendance(models.Model):
 
     @api.constrains("date")
     def validate_date(self):
-        if self.date > date.today():
+        if self.date > datetime.today():
             raise ValidationError(
                 _("""Date should be less than or equal to current date!""")
             )
 
-    date = fields.Date(
+    date = fields.Datetime(
         "Date",
         help="Current Date",
         default=lambda *a: time.strftime("%Y-%m-%d"),
@@ -442,14 +443,14 @@ class DailyAttendance(models.Model):
         help="Absent Students",
     )
     is_generate = fields.Boolean("Generate?")
+    subject_id = fields.Many2one("subject.subject", "Subject", help="Subject")
+    is_elective_subject = fields.Boolean(
+        "Is Elective Subject", help="Check this if subject is elective."
+    )
 
-    _sql_constraints = [
-        (
-            "attend_unique",
-            "unique(standard_id,user_id,date)",
-            "Attendance should be unique!",
-        )
-    ]
+    @api.onchange("is_elective_subject")
+    def onchange_is_elective_subject(self):
+        self.subject_id = False
 
     def do_regenerate(self):
         self.is_generate = False
@@ -1113,7 +1114,7 @@ class DailyAttendanceLine(models.Model):
         for rec in self:
             if (
                 rec.standard_id.state == "validate"
-                and not rec.standard_id.is_generate
+                or not rec.standard_id.is_generate
             ):
                 raise ValidationError(
                     _(
@@ -1129,7 +1130,7 @@ class DailyAttendanceLine(models.Model):
         for rec in self:
             if (
                 rec.standard_id.state == "validate"
-                and not rec.standard_id.is_generate
+                or not rec.standard_id.is_generate
             ):
                 raise ValidationError(
                     _(

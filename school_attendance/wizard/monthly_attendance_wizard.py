@@ -8,7 +8,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 try:
     import xlsxwriter
@@ -61,6 +61,14 @@ class DailyAttendanceStudentRemark(models.TransientModel):
         "Subject",
         ondelete="restrict",
     )
+    subject_id = fields.Many2one("subject.subject", "Subject", help="Subject")
+    is_elective_subject = fields.Boolean(
+        "Is Elective Subject", help="Check this if subject is elective."
+    )
+
+    @api.onchange("is_elective_subject")
+    def onchange_is_elective_subject(self):
+        self.subject_id = False
 
     @api.onchange("month")
     def onchange_month(self):
@@ -121,24 +129,36 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 + str(last_day_month)
                 + " 23:00:00"
             )
-            self._cr.execute(
-                """
-                    SELECT
-                        id
-                    FROM
-                        daily_attendance
-                    WHERE
-                        state = 'validate'
-                    and
-                        standard_id = %s
-                    and
-                        date >= '%s'
-                    and
-                        date <= '%s'
-                    ORDER BY user_id,date
-                """,
-                (rec.course_id.id, start_date_str, end_date_str),
-            )
+
+            if rec.is_elective_subject:
+                self._cr.execute(
+                    """select id
+                                from daily_attendance WHERE
+                                state = 'validate' and
+                                standard_id = %s and
+                                date >= %s and
+                                date <= %s and
+                                subject_id = %s ORDER BY user_id,date
+                                """,
+                    (
+                        rec.course_id.id,
+                        start_date_str,
+                        end_date_str,
+                        rec.subject_id.id,
+                    ),
+                )
+            else:
+                self._cr.execute(
+                    """select id
+                                    from daily_attendance WHERE
+                                    state = 'validate' and
+                                    is_elective_subject = 'f' and
+                                    standard_id = %s and
+                                    date >= %s and
+                                    date <= %s  ORDER BY user_id,date
+                                    """,
+                    (rec.course_id.id, start_date_str, end_date_str),
+                )
             if not self._cr.fetchall():
                 raise ValidationError(_("Data Not Found"))
         if not self.user_id:
@@ -178,23 +198,14 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                     + " 23:00:00"
                 )
                 self._cr.execute(
-                    """
-                        SELECT
-                            id
-                        FROM
-                            daily_attendance
-                        WHERE
-                            state = 'validate'
-                        and
-                            standard_id = %s
-                        and
-                            user_id = %s
-                        and
-                            date >= '%s'
-                        and
-                            date <= '%s'
-                        ORDER BY user_id,date
-                    """,
+                    """select id
+                                    from daily_attendance WHERE
+                                    state = 'validate' and
+                                    standard_id = %s and
+                                    user_id = %s and
+                                    date >= %s and
+                                    date <= %s ORDER BY user_id,date
+                                    """,
                     (
                         subject.course_id.id,
                         user.id,
@@ -246,26 +257,38 @@ class DailyAttendanceStudentRemark(models.TransientModel):
             + str(last_day_month)
             + " 23:00:00"
         )
-        self._cr.execute(
-            """
-                SELECT
-                    id
-                FROM
-                    daily_attendance
-                WHERE
-                    state = 'validate'
-                and
-                    standard_id = %s
-                and
-                    user_id = %s
-                and
-                    date >= '%s'
-                and
-                    date <= '%s'
-                ORDER BY user_id,date
-            """,
-            (rec.course_id.id, user.id, start_date_str, end_date_str),
-        )
+        if rec.is_elective_subject:
+            self._cr.execute(
+                """select id
+                            from daily_attendance WHERE
+                            state = 'validate' and
+                            standard_id = %s and
+                            user_id = %s and
+                            date >= %s and
+                            date <= %s and
+                            subject_id = %s ORDER BY user_id,date
+                            """,
+                (
+                    rec.course_id.id,
+                    user.id,
+                    start_date_str,
+                    end_date_str,
+                    rec.subject_id.id,
+                ),
+            )
+        else:
+            self._cr.execute(
+                """select id
+                                from daily_attendance WHERE
+                                state = 'validate' and
+                                is_elective_subject = 'f' and
+                                standard_id = %s and
+                                user_id = %s and
+                                date >= %s and
+                                date <= %s ORDER BY user_id,date
+                                """,
+                (rec.course_id.id, user.id, start_date_str, end_date_str),
+            )
         records = []
         for record in self._cr.fetchall():
             if record and record[0]:
@@ -323,24 +346,35 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 + str(last_day_month)
                 + " 23:00:00"
             )
-            self._cr.execute(
-                """
-                    SELECT
-                        id
-                    from
-                        daily_attendance
-                    WHERE
-                        state = 'validate'
-                    and
-                        standard_id = %s
-                    and
-                        date >= '%s'
-                    and
-                        date <= '%s'
-                    ORDER BY user_id,date
-                """,
-                (rec.course_id.id, start_date_str, end_date_str),
-            )
+            if rec.is_elective_subject:
+                self._cr.execute(
+                    """select id
+                                from daily_attendance WHERE
+                                state = 'validate' and
+                                standard_id = %s and
+                                date >= %s and
+                                date <= %s and
+                                subject_id = %s ORDER BY user_id,date
+                                """,
+                    (
+                        rec.course_id.id,
+                        start_date_str,
+                        end_date_str,
+                        rec.subject_id.id,
+                    ),
+                )
+            else:
+                self._cr.execute(
+                    """select id
+                                    from daily_attendance WHERE
+                                    state = 'validate' and
+                                    is_elective_subject = 'f' and
+                                    standard_id = %s and
+                                    date >= %s and
+                                    date <= %s ORDER BY user_id,date
+                                    """,
+                    (rec.course_id.id, start_date_str, end_date_str),
+                )
             all_att_data = self._cr.fetchall()
             records = []
             if not all_att_data:
@@ -351,7 +385,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
             group_data = []
             for att in self.env["daily.attendance"].browse(records):
                 date = datetime.strptime(
-                    str(att.date), DEFAULT_SERVER_DATE_FORMAT
+                    str(att.date), DEFAULT_SERVER_DATETIME_FORMAT
                 )
                 day_date = date.strftime("%Y-%m-%d")
                 if not group_data:
@@ -394,16 +428,11 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                     for att in attdata.get("att"):
                         no_of_class = 1
                         self._cr.execute(
-                            """
-                                SELECT
-                                    id
-                                FROM
-                                    daily_attendance_line
-                                WHERE
-                                    standard_id = %s
-                                ORDER BY roll_no
+                            """select id
+                                from daily_attendance_line WHERE
+                                standard_id = %s ORDER BY roll_no
                             """,
-                            (att.id),
+                            (att.id,),
                         )
                         lines = []
                         for line in self._cr.fetchall():
@@ -626,16 +655,6 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 }
             )
             main_head_fmt.set_bg_color("#DCDCDC")
-            count_bg_fmt = workbook.add_format(
-                {
-                    "font_size": 10,
-                    "bold": 1,
-                    "align": "center",
-                    #'bg_color': '#eaecef',
-                    "bg_color": "#dce6f7",
-                    "border": True,
-                }
-            )
             # print the data of students
             for data in res_data:
                 count = 1
@@ -678,6 +697,15 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 sheet.merge_range(
                     1, 29, 1, 34, "Batch:" + str(rec.course_id.name), head_fmt
                 )
+                if rec.is_elective_subject:
+                    sheet.merge_range(
+                        2,
+                        0,
+                        2,
+                        8,
+                        "Subject:" + str(rec.subject_id.name),
+                        head_fmt_left,
+                    )
                 sheet.merge_range(
                     1, 20, 1, 28, "key P=Present, A=Absent", head_fmt
                 )
@@ -746,7 +774,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                             WHERE
                                 roll_no = %s
                         """,
-                        (line.get("roll_no")),
+                        (line.get("roll_no"),),
                     )
                     student = self._cr.fetchone()
                     if student:

@@ -16,7 +16,6 @@
         "security/ir.model.access.csv",
         "views/school_attendance_view.xml",
         "views/month_attendance.xml",
-        "report/report_view.xml",
         "wizard/attendance_sheet_wizard_view.xml",
         "wizard/student_attendance_by_month_view.xml",
         "wizard/monthly_attendance_wizard_view.xml",
