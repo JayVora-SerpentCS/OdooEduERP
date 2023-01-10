@@ -92,8 +92,8 @@ class StudentStudent(models.Model):
         if not res:
             raise ValidationError(
                 _(
-                    "There is no current Academic Year defined! Please contact"
-                    " Administator!"
+                    "There is no current Academic Year defined! Please "
+                    "contact Administator!"
                 )
             )
         return res.id
@@ -355,6 +355,7 @@ class StudentStudent(models.Model):
         compute="_compute_teacher_user",
         help="Activate/Deactivate teacher group",
     )
+    subject_id = fields.Many2one("subject.subject", "Subject", help="Subject")
 
     @api.model
     def create(self, vals):

@@ -55,7 +55,6 @@ class TestSchool(common.TransactionCase):
                 "year_id": self.academic_year.id,
             }
         )
-        self.academic_month._check_duration()
         self.academic_month._check_year_limit()
         self.assign_roll_no = self.assign_roll_obj.create(
             {"standard_id": self.std.id, "medium_id": self.standard_medium.id}

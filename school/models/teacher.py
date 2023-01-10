@@ -106,32 +106,31 @@ class SchoolTeacher(models.Model):
     # user is same for parent and Teacher, and system will not allow it.
     # now user shuld create Parent record first and then select it in
     # related parent in Teacher Profile. - Anu Patel (24/03/2021)
-    # def parent_crt(self, manager_id):
-    #     """Method to create parent record based on parent field"""
-    #     stu_parent = []
-    #     if manager_id.stu_parent_id:
-    #         stu_parent = manager_id.stu_parent_id
-    #     if not stu_parent:
-    #         emp_user = manager_id.employee_id
-    #         students = [stu.id for stu in manager_id.student_id]
-    #         parent_vals = {
-    #             'name': manager_id.name,
-    #             'email': emp_user.work_email,
-    #             'user_ids': [(6, 0, [emp_user.user_id.id])],
-    #             'partner_id': emp_user.user_id.partner_id.id,
-    #             'student_id': [(6, 0, students)]}
-    #         stu_parent = self.env['school.parent'].with_context().create(
-    #             parent_vals)
-    #         manager_id.write({'stu_parent_id': stu_parent.id})
-    #     user = stu_parent.user_ids
-    #     user_rec = user[0]
-    #     parent_grp_id = self.env.ref('school.group_school_parent')
-    #     groups = parent_grp_id
-    #     if user_rec.groups_id:
-    #         groups = user_rec.groups_id
-    #         groups += parent_grp_id
-    #     group_ids = [group.id for group in groups]
-    #     user_rec.write({'groups_id': [(6, 0, group_ids)]})
+    #    def parent_crt(self, manager_id):
+    #        """Method to create parent record based on parent field"""
+    #        stu_parent = []
+    #        if manager_id.stu_parent_id:
+    #            stu_parent = manager_id.stu_parent_id
+    #        if not stu_parent:
+    #            emp_user = manager_id.employee_id
+    #            students = [stu.id for stu in manager_id.student_id]
+    #            parent_vals = {'name': manager_id.name,
+    #                           'email': emp_user.work_email,
+    #                           'user_ids': [(6, 0, [emp_user.user_id.id])],
+    #                           'partner_id': emp_user.user_id.partner_id.id,
+    #                           'student_id': [(6, 0, students)]}
+    #            stu_parent = self.env['school.parent'].with_context(
+    #                  ).create(parent_vals)
+    #            manager_id.write({'stu_parent_id': stu_parent.id})
+    #        user = stu_parent.user_ids
+    #        user_rec = user[0]
+    #        parent_grp_id = self.env.ref('school.group_school_parent')
+    #        groups = parent_grp_id
+    #        if user_rec.groups_id:
+    #            groups = user_rec.groups_id
+    #            groups += parent_grp_id
+    #        group_ids = [group.id for group in groups]
+    #        user_rec.write({'groups_id': [(6, 0, group_ids)]})
 
     def write(self, vals):
         """Inherited write method to assign groups based on parent field"""

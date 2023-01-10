@@ -228,7 +228,7 @@
                             </field>
                         </page>
                         <page string="Subjects">
-                            <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                            <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_create&quot;: True, &quot;no_edit&quot;: True, &quot;no_open&quot;: True}"/>
                         </page>
                         <page string="Syllabus" attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}">
                             <group>
@@ -324,7 +324,6 @@
                                     <div class="oe_kanban_left">
                                         <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" />
                                         <a role="button" string="Delete" class="btn btn-sm btn-default fa fa-trash" type="delete" aria-label="delete"/>
-                                        <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear" />
                                 </div>
@@ -647,56 +646,7 @@
             </tree>
         </field>
     </record>
-    <!-- Form View Of Elective Subject Group -->
-    <record id="view_elective_group_form" model="ir.ui.view">
-        <field name="name">elective.subject.form</field>
-        <field name="model">subject.elective</field>
-        <field name="arch" type="xml">
-            <form string="Elective Subjects">
-                <sheet>
-                    <group col="4" colspan="4">
-                        <field name="name" colspan="4" required="1" />
-                        <separator String="Subjects" col="4" colspan="4" />
-                        <field name="subject_ids" nolabel="1" colspan="4">
-                            <form>
-                                <group col="4" colspan="4">
-                                    <field name="name" placeholder="Name" />
-                                    <field name="code" placeholder="Code" />
-                                    <field name="maximum_marks" placeholder="Maximum Marks"/>
-                                    <field name="minimum_marks" placeholder="Minimum Marks"/>
-                                    <field name="is_practical" />
-                                    <field name="elective_id" string="Elective Subject" invisible="1" />
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Standards">
-                                        <field name="standard_ids" nolabel="1" colspan="4"
-                                            options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
-                                            <tree string="Standards">
-                                                <field name="name" />
-                                                <field name="code" />
-                                            </tree>
-                                            <form string="Standards">
-                                                <group col="4" colspan="4">
-                                                    <field name="name" placeholder="Name"/>
-                                                    <field name="code" placeholder="Code"/>
-                                                </group>
-                                            </form>
-                                        </field>
-                                    </page>
-                                    <page string="Teachers">
-                                        <field name="teacher_ids" nolabel="1" colspan="4" />
-                                    </page>
-                                    <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">
-                                        <field name="student_ids" nolabel="1" />
-                                    </page>
-                                </notebook>
-                            </form>
-                        </field>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+
     <!-- Form View Of Subject's Information -->
     <record id="view_subject_subject_form" model="ir.ui.view">
         <field name="name">subject.subject.form</field>
@@ -710,10 +660,12 @@
                         <field name="maximum_marks" placeholder="Maximum Marks"/>
                         <field name="minimum_marks" placeholder="Minimum Marks"/>
                         <field name="is_practical" />
-                        <field name="elective_id" string="Elective Subject Group" readonly="1" />
+                        <field name="is_elective_subject"/>
+                        <field name="standard_id" options="{&quot;no_create&quot;: True}"
+                            attrs="{'invisible':[('is_elective_subject','!=',True)],'required':[('is_elective_subject','=',True)]}"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Standards">
+                        <page string="Standards" attrs="{'invisible':[('is_elective_subject','=',True)]}">
                             <field name="standard_ids" nolabel="1" colspan="4"
                                 options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                 <tree string="Standards">
@@ -732,8 +684,8 @@
                             <field name="teacher_ids" nolabel="1" colspan="4"
                                  options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                         </page>
-                        <page string="Students" attrs="{'invisible':[('elective_id','!=',True)]}">
-                            <field name="student_ids" nolabel="1" />
+                        <page string="Students" attrs="{'invisible':[('is_elective_subject','!=',True)]}">
+                            <field name="student_ids" />
                         </page>
                     </notebook>
                 </sheet>
@@ -811,12 +763,6 @@
         <field name="name">Classes</field>
         <field name="res_model">school.standard</field>
         <field name="view_mode">kanban,tree,form</field>
-    </record>
-    <!-- Action Of Form & Tree Views Of Elective Subject -->
-    <record id="action_elective_subject_form" model="ir.actions.act_window">
-        <field name="name">Elective Subject(s)</field>
-        <field name="res_model">subject.elective</field>
-        <field name="view_mode">tree,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Grade System -->
     <record id="action_grade_master_form" model="ir.actions.act_window">
@@ -990,7 +936,6 @@
     <!-- MenuItem For Configurations->Subject -->
     <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
     <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
-    <menuitem id="menu_subject_elective_form" name="Elective Subject(s)" parent="menu_subject_subject_form" action="action_elective_subject_form" />
     <!-- Menuitem of alumni and terminate -->
     <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="menu_admission_form_root" groups="school.group_school_administration,school.group_school_teacher" sequence="2"/>
     <menuitem

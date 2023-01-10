@@ -32,6 +32,7 @@
             <field name="arch" type="xml">
                 <kanban nocreate="1" create="false">
                     <field name="color"/>
+                    <field name="phone"/>
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
@@ -46,7 +47,7 @@
                                         <ul>
                                             <li t-if="record.school_id.raw_value"><field name="school_id" /></li>
                                             <li t-if="record.job_id.raw_value"><field name="job_id" /></li>
-                                            <li t-if="record.phone.raw_value"><field name="phone" /></li>
+                                            <li t-if="record.phone"><field name="phone" /></li>
                                             <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
                                         </ul>
                                     </div>

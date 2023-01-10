@@ -586,27 +586,6 @@
             <field eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_6')])]" name="subject_id"/>
         </record>
 
-
-        <!--  Subject elective -->
-        <record id="demo_elective_subject_1" model="subject.elective">
-            <field name="name">Elective Group 1</field>
-            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_8')])]"/>
-        </record>
-
-        <record id="demo_elective_subject_2" model="subject.elective">
-            <field name="name">Elective Group 2</field>
-            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_5')])]"/>
-        </record>
-
-        <record id="demo_elective_subject_3" model="subject.elective">
-            <field name="name">Elective Group 3</field>
-            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_6')])]"/>
-        </record>
-
-        <record id="demo_elective_subject_4" model="subject.elective">
-            <field name="name">Elective Group 4</field>
-            <field name="subject_ids" eval="[(6, 0, [ref('school.demo_subject_subject_7')])]"/>
-        </record>
         <!-- Student Informations -->
         <record id="demo_student_student_4" model="student.student">
             <field name="name">Maria</field>

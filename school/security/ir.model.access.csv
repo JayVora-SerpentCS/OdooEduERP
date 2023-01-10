@@ -12,7 +12,6 @@ access_hr_employee_admin,school.teacher,model_school_teacher,group_school_admini
 access_res_partner_admin,school.parent,model_school_parent,group_school_administration,1,1,1,1
 access_student_reference_admin,student.reference,model_student_reference,group_school_administration,1,1,1,1
 access_student_previous_school_admin,student.previous.school,model_student_previous_school,group_school_administration,1,1,1,1
-access_subject_elective_admin,subject.elective,model_subject_elective,group_school_administration,1,1,1,1
 access_mother_toungue_admin,mother.toungue,model_mother_toungue,group_school_administration,1,1,1,1
 access_student_award_admin,student.award,model_student_award,group_school_administration,1,1,1,1
 access_attendance_type_admin,attendance.type,model_attendance_type,group_school_administration,1,1,1,1
@@ -41,7 +40,6 @@ access_school_school_parent,school.school,model_school_school,group_school_paren
 access_standard_standard_parent,standard.standard,model_standard_standard,group_school_parent,1,0,0,0
 access_school_standard_parent,school.standard,model_school_standard,group_school_parent,1,0,0,0
 access_student_student_parent,student.student,model_student_student,group_school_parent,1,0,0,0
-access_subject_elective_parent,subject.elective,model_subject_elective,group_school_parent,1,0,0,0
 access_mother_toungue_parent,mother.toungue,model_mother_toungue,group_school_parent,1,0,0,0
 access_student_award_parent,student.award,model_student_award,group_school_parent,1,0,0,0
 access_attendance_type_parent,attendance.type,model_attendance_type,group_school_parent,1,0,0,0
@@ -69,7 +67,6 @@ access_standard_medium_student,standard.medium,school.model_standard_medium,grou
 access_subject_subject_student,subject.subject,school.model_subject_subject,group_school_student,1,0,0,0
 access_school_school_student,school.school,school.model_school_school,group_school_student,1,0,0,0
 access_hr_employee_student,school.teacher,model_school_teacher,group_school_student,1,0,0,0
-access_subject_elective_student,subject.elective,model_subject_elective,group_school_student,1,0,0,0
 access_mother_toungue_student,mother.toungue,school.model_mother_toungue,group_school_student,1,0,0,0
 access_attendance_type_student,attendance.type,model_attendance_type,group_school_student,1,0,0,0
 access_document_type_student,document.type,model_document_type,group_school_student,1,0,0,0
@@ -106,7 +103,6 @@ access_school_school_teacher,school.school,model_school_school,group_school_teac
 access_standard_standard_teacher,standard.standard,model_standard_standard,group_school_teacher,1,1,1,0
 access_school_standard_teacher,school.standard,model_school_standard,group_school_teacher,1,0,0,0
 access_student_student_teacher,student.student,model_student_student,group_school_teacher,1,1,0,0
-access_subject_elective_teacher,subject.elective,model_subject_elective,group_school_teacher,1,1,1,0
 access_hr_employee_teacher,school.teacher,model_school_teacher,group_school_teacher,1,1,0,0
 access_student_reference_teacher,student.reference,model_student_reference,group_school_teacher,1,1,1,0
 access_student_previous_school_teacher,student.previous.school,model_student_previous_school,group_school_teacher,1,1,1,0
@@ -136,7 +132,6 @@ access_standard_medium_student_is_admission,standard.medium,school.model_standar
 access_subject_subject_student_is_admission,subject.subject,school.model_subject_subject,group_is_admission,1,0,0,0
 access_school_school_student_is_admission,school.school,school.model_school_school,group_is_admission,1,0,0,0
 access_hr_employee_student_is_admissions,school.teacher,model_school_teacher,group_is_admission,1,0,0,0
-access_subject_elective_student_is_admissions,subject.elective,model_subject_elective,group_is_admission,1,0,0,0
 access_mother_toungue_student_is_admission,mother.toungue,school.model_mother_toungue,group_is_admission,1,0,0,0
 access_attendance_type_student_is_admission,attendance.type,model_attendance_type,group_is_admission,1,0,0,0
 access_document_type_student_is_admission,document.type,model_document_type,group_is_admission,1,0,0,0

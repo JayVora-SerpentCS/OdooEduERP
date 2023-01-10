@@ -107,8 +107,8 @@ class AcademicYear(models.Model):
         ):
             raise ValidationError(
                 _(
-                    "The start date of the academic year should be less than end"
-                    " date."
+                    "The start date of the academic year should be less than "
+                    "end date."
                 )
             )
         for old_ac in self.search([("id", "not in", self.ids)]):
@@ -172,8 +172,8 @@ class AcademicMonth(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        "Some of the months periods overlap or is not in the"
-                        " academic year!"
+                        "Some of the months periods overlap or is not in "
+                        "the academic year!"
                     )
                 )
 
@@ -190,7 +190,7 @@ class AcademicMonth(models.Model):
                     "End of Period date should be greater than Start of Periods Date!"
                 )
             )
-        """Check start date should be less than stop date."""
+        # Check start date should be less than stop date.
         exist_month_rec = self.search([("id", "not in", self.ids)])
         for old_month in exist_month_rec:
             if (
@@ -286,6 +286,32 @@ class SchoolStandard(models.Model):
         """Method to compute subjects."""
         for rec in self:
             rec.total_no_subjects = len(rec.subject_ids)
+
+    @api.onchange("standard_id")
+    def onchange_subject_related_standard(self):
+        for rec in self:
+            rec.subject_ids = False
+            subject_obj = self.env["subject.subject"]
+            elective_subject = subject_obj.search(
+                [
+                    ("standard_id", "=", rec.standard_id.id),
+                    ("is_elective_subject", "=", True),
+                ]
+            )
+            rec.subject_ids += elective_subject
+            if self.standard_id:
+                self._cr.execute(
+                    """
+                    SELECT subject_subject_id
+                    FROM
+                    standard_standard_subject_subject_rel
+                    WHERE
+                    standard_standard_id=%s
+                    """,
+                    (self.standard_id.id,),
+                )
+                subject_total = self._cr.fetchall()
+                rec.subject_ids |= subject_obj.browse(subject_total)
 
     @api.depends("student_ids")
     def _compute_total_student(self):
@@ -402,8 +428,8 @@ class SchoolStandard(models.Model):
             if rec.student_ids or rec.subject_ids or rec.syllabus_ids:
                 raise ValidationError(
                     _(
-                        "You cannot delete as it has reference"
-                        " with student, subject or syllabus!"
+                        "You cannot delete as it has reference with student, "
+                        "subject or syllabus!"
                     )
                 )
         return super(SchoolStandard, self).unlink()
@@ -486,10 +512,44 @@ class SchoolSchool(models.Model):
 
 
 class SubjectSubject(models.Model):
-    """Defining a subject"""
+    """Defining a subject """
 
     _name = "subject.subject"
     _description = "Subjects"
+
+    @api.depends("is_elective_subject", "standard_id")
+    def _compute_student_subject(self):
+        """Compute student of done state"""
+        self.student_ids = False
+        standard_list = []
+        standard_obj = self.env["school.standard"]
+        standard_id = standard_obj.search(
+            [("standard_id", "=", self.standard_id.id)]
+        )
+        for standard in standard_id:
+            if self.id:
+                self._cr.execute(
+                    """
+                    SELECT
+                        subject_id
+                    FROM
+                        subject_standards_rel
+                    WHERE
+                        subject_id=%s
+                    AND
+                        standard_id=%s
+                """,(
+                        standard.id, self.id,
+                    )
+                )
+                standard_total = self.env.cr.fetchone()
+                if standard_total:
+                    standard_list.append(
+                        int("".join(map(str, standard_total)))
+                    )
+        self.student_ids = [
+            (6, 0, standard_obj.browse(standard_list).mapped("student_ids.id"))
+        ]
 
     name = fields.Char("Name", required=True, help="Subject name")
     code = fields.Char("Code", required=True, help="Subject code")
@@ -497,9 +557,7 @@ class SubjectSubject(models.Model):
         "Maximum marks", help="Maximum marks of the subject can get"
     )
     minimum_marks = fields.Integer(
-        "Minimum marks",
-        help="""Required minimum
-                                                     marks of the subject""",
+        "Minimum marks", help="""Required minimum marks of the subject"""
     )
     weightage = fields.Integer("WeightAge", help="Weightage of the subject")
     teacher_ids = fields.Many2many(
@@ -525,19 +583,39 @@ class SubjectSubject(models.Model):
     is_practical = fields.Boolean(
         "Is Practical", help="Check this if subject is practical."
     )
-    elective_id = fields.Many2one(
-        "subject.elective",
-        help="""Elective subject respective
-                                  the following subject""",
+    # student_ids = fields.Many2many('student.student',
+    #                                'elective_subject_student_rel',
+    #                                'subject_id', 'student_id', 'Students',
+    #                                help='Students who choose this subject')
+    is_elective_subject = fields.Boolean(
+        "Is Elective Subject", help="Check this if subject is elective."
     )
-    student_ids = fields.Many2many(
+    student_ids = fields.One2many(
         "student.student",
-        "elective_subject_student_rel",
         "subject_id",
-        "student_id",
-        "Students",
-        help="Students who choose this subject",
+        "Student In Class",
+        compute="_compute_student_subject",
+        help="Students which are in this standard",
     )
+
+    @api.model_create_multi
+    def create(self, values):
+        result = super(SubjectSubject, self).create(values)
+        for standard in self.env["school.standard"].search([]):
+            standard.onchange_subject_related_standard()
+        return result
+
+    def write(self, values):
+        res = super(SubjectSubject, self).write(values)
+        if values.get("standard_id"):
+            for standard in self.env["school.standard"].search([]):
+                standard.onchange_subject_related_standard()
+        return res
+
+    @api.onchange("is_elective_subject")
+    def onchange_elective_subject(self):
+        """Onchange for remove the student and standard base on elective subject"""
+        self.student_ids = self.standard_id = self.standard_ids = False
 
     @api.constrains("maximum_marks", "minimum_marks")
     def check_marks(self):
@@ -557,18 +635,45 @@ class SubjectSubject(models.Model):
         count=False,
         access_rights_uid=None,
     ):
-        """Override method to get exam of subject selection."""
+        subjects = subject_list = []
+        # Override method to get exam of subject selection.
         if (
             self._context.get("is_from_subject_report")
             and self._context.get("active_model")
             and self._context.get("active_id")
         ):
-
             teacher_rec = self.env[self._context.get("active_model")].browse(
                 self._context.get("active_id")
             )
             sub_ids = [sub_id.id for sub_id in teacher_rec.subject_id]
             args.append(("id", "in", sub_ids))
+        if self._context.get("subject") and not self._context.get(
+            "for_subject"
+        ):
+            standard = self.env["school.standard"].browse(
+                self._context.get("standard")
+            )
+            subjects = (
+                self.sudo()
+                .with_context(for_subject=True)
+                .search(
+                    [
+                        ("is_elective_subject", "=", True),
+                        ("standard_id", "=", standard.standard_id.id),
+                    ]
+                )
+            )
+            subject_list += [rec.id for rec in subjects 
+                                if rec in standard.subject_ids]
+            args += [("id", "in", subject_list if subject_list else [])]
+            return super(SubjectSubject, self)._search(
+                args,
+                offset=offset,
+                limit=limit,
+                order=order,
+                count=count,
+                access_rights_uid=access_rights_uid,
+            )
         return super(SubjectSubject, self)._search(
             args,
             offset=offset,
@@ -592,21 +697,6 @@ class SubjectSyllabus(models.Model):
     subject_id = fields.Many2one("subject.subject", "Subject", help="Subject")
     syllabus_doc = fields.Binary(
         "Syllabus Doc", help="Attach syllabus related to Subject"
-    )
-
-
-class SubjectElective(models.Model):
-    """Defining Subject Elective"""
-
-    _name = "subject.elective"
-    _description = "Elective Subject"
-
-    name = fields.Char("Name", help="Elective subject name")
-    subject_ids = fields.One2many(
-        "subject.subject",
-        "elective_id",
-        "Elective Subjects",
-        help="Subjects of the respective elective subject",
     )
 
 
@@ -832,8 +922,8 @@ class StudentPreviousSchool(models.Model):
         ):
             raise ValidationError(
                 _(
-                    "Your admission date and exit date should be less than current"
-                    " date!"
+                    "Your admission date and exit date should be less than "
+                    "current date!"
                 )
             )
         if (self.admission_date and self.exit_date) and (
@@ -848,7 +938,7 @@ class StudentPreviousSchool(models.Model):
 
 
 class AcademicSubject(models.Model):
-    """Defining a student previous school information"""
+    """ Defining a student previous school information """
 
     _name = "academic.subject"
     _description = "Student Previous School"
@@ -1101,9 +1191,8 @@ Kindly,Configure Outgoing Mail Server!"""
                 subtype="html",
             )
             # Send Email configured above with help of send mail method
-            obj_mail_server.send_email(
-                message=message, mail_server_id=mail_server_record.id
-            )
+            obj_mail_server.send_email(message=message,
+                                       mail_server_id=mail_server_record.id)
         return True
 
 
