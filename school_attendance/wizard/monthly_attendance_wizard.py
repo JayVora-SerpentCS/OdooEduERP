@@ -130,35 +130,25 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 + " 23:00:00"
             )
 
+            elective_subject = f"and is_elective_subject = 'f'"
             if rec.is_elective_subject:
-                self._cr.execute(
-                    """select id
-                                from daily_attendance WHERE
-                                state = 'validate' and
-                                standard_id = %s and
-                                date >= %s and
-                                date <= %s and
-                                subject_id = %s ORDER BY user_id,date
-                                """,
-                    (
-                        rec.course_id.id,
-                        start_date_str,
-                        end_date_str,
-                        rec.subject_id.id,
-                    ),
-                )
-            else:
-                self._cr.execute(
-                    """select id
-                                    from daily_attendance WHERE
-                                    state = 'validate' and
-                                    is_elective_subject = 'f' and
-                                    standard_id = %s and
-                                    date >= %s and
-                                    date <= %s  ORDER BY user_id,date
-                                    """,
-                    (rec.course_id.id, start_date_str, end_date_str),
-                )
+                elective_subject = f"and subject_id = {rec.subject_id.id}"
+
+            self._cr.execute(
+                f"""
+                SELECT
+                    id
+                FROM
+                    daily_attendance
+                WHERE
+                    state = 'validate' and
+                    standard_id = %s and
+                    date >= %s and
+                    date <= %s 
+                    {elective_subject} ORDER BY user_id,date
+                    """,
+                (rec.course_id.id, start_date_str, end_date_str),
+            )
             if not self._cr.fetchall():
                 raise ValidationError(_("Data Not Found"))
         if not self.user_id:
@@ -257,38 +247,33 @@ class DailyAttendanceStudentRemark(models.TransientModel):
             + str(last_day_month)
             + " 23:00:00"
         )
+
+        elective_subject = f"and is_elective_subject = 'f'"
         if rec.is_elective_subject:
-            self._cr.execute(
-                """select id
-                            from daily_attendance WHERE
-                            state = 'validate' and
-                            standard_id = %s and
-                            user_id = %s and
-                            date >= %s and
-                            date <= %s and
-                            subject_id = %s ORDER BY user_id,date
-                            """,
+            elective_subject = f"and subject_id = {rec.subject_id.id}"
+
+        self._cr.execute(
+            f"""
+            SELECT
+                id
+            FROM
+                daily_attendance
+            WHERE
+                state = 'validate' and
+                standard_id = %s and
+                user_id = %s and
+                date >= %s and
+                date <= %s 
+                {elective_subject} ORDER BY user_id,date
+                """,
                 (
                     rec.course_id.id,
                     user.id,
                     start_date_str,
                     end_date_str,
-                    rec.subject_id.id,
                 ),
-            )
-        else:
-            self._cr.execute(
-                """select id
-                                from daily_attendance WHERE
-                                state = 'validate' and
-                                is_elective_subject = 'f' and
-                                standard_id = %s and
-                                user_id = %s and
-                                date >= %s and
-                                date <= %s ORDER BY user_id,date
-                                """,
-                (rec.course_id.id, user.id, start_date_str, end_date_str),
-            )
+        )
+
         records = []
         for record in self._cr.fetchall():
             if record and record[0]:
@@ -346,35 +331,30 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 + str(last_day_month)
                 + " 23:00:00"
             )
+
+            elective_subject = f"and is_elective_subject = 'f'"
             if rec.is_elective_subject:
-                self._cr.execute(
-                    """select id
-                                from daily_attendance WHERE
-                                state = 'validate' and
-                                standard_id = %s and
-                                date >= %s and
-                                date <= %s and
-                                subject_id = %s ORDER BY user_id,date
-                                """,
+                elective_subject = f"and subject_id = {rec.subject_id.id}"
+
+            self._cr.execute(
+                f"""
+                SELECT
+                    id
+                FROM
+                    daily_attendance
+                WHERE
+                    state = 'validate' and
+                    standard_id = %s and
+                    date >= %s and
+                    date <= %s 
+                    {elective_subject} ORDER BY user_id,date
+                    """,
                     (
                         rec.course_id.id,
                         start_date_str,
                         end_date_str,
-                        rec.subject_id.id,
                     ),
-                )
-            else:
-                self._cr.execute(
-                    """select id
-                                    from daily_attendance WHERE
-                                    state = 'validate' and
-                                    is_elective_subject = 'f' and
-                                    standard_id = %s and
-                                    date >= %s and
-                                    date <= %s ORDER BY user_id,date
-                                    """,
-                    (rec.course_id.id, start_date_str, end_date_str),
-                )
+            )
             all_att_data = self._cr.fetchall()
             records = []
             if not all_att_data:
