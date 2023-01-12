@@ -289,17 +289,17 @@ class SchoolStandard(models.Model):
 
     @api.onchange("standard_id")
     def onchange_subject_related_standard(self):
+        self.subject_ids = False
+        subject_obj = self.env["subject.subject"]
         for rec in self:
-            rec.subject_ids = False
-            subject_obj = self.env["subject.subject"]
             elective_subject = subject_obj.search(
                 [
                     ("standard_id", "=", rec.standard_id.id),
                     ("is_elective_subject", "=", True),
                 ]
             )
-            rec.subject_ids += elective_subject
-            if self.standard_id:
+            rec.subject_ids |= elective_subject
+            if rec.standard_id:
                 self._cr.execute(
                     """
                     SELECT subject_subject_id
@@ -308,10 +308,13 @@ class SchoolStandard(models.Model):
                     WHERE
                     standard_standard_id=%s
                     """,
-                    (self.standard_id.id,),
+                    (rec.standard_id.id,),
                 )
-                subject_total = self._cr.fetchall()
-                rec.subject_ids |= subject_obj.browse(subject_total)
+                records = []
+                for record in self._cr.fetchall():
+                    if record and record[0]:
+                        records.append(record[0])
+                rec.subject_ids |= subject_obj.browse(records)
 
     @api.depends("student_ids")
     def _compute_total_student(self):
@@ -517,11 +520,10 @@ class SubjectSubject(models.Model):
     _name = "subject.subject"
     _description = "Subjects"
 
-    @api.depends("is_elective_subject", "standard_id")
     def _compute_student_subject(self):
         """Compute student of done state"""
         self.student_ids = False
-        standard_list = []
+        subject_list = []
         standard_obj = self.env["school.standard"]
         standard_id = standard_obj.search(
             [("standard_id", "=", self.standard_id.id)]
@@ -542,13 +544,13 @@ class SubjectSubject(models.Model):
                         standard.id, self.id,
                     )
                 )
-                standard_total = self.env.cr.fetchone()
-                if standard_total:
-                    standard_list.append(
-                        int("".join(map(str, standard_total)))
+                subject_record = self.env.cr.fetchone()
+                if subject_record:
+                    subject_list.append(
+                        int("".join(map(str, subject_record)))
                     )
         self.student_ids = [
-            (6, 0, standard_obj.browse(standard_list).mapped("student_ids.id"))
+            (6, 0, standard_obj.browse(subject_list).mapped("student_ids.id"))
         ]
 
     name = fields.Char("Name", required=True, help="Subject name")
@@ -607,7 +609,7 @@ class SubjectSubject(models.Model):
 
     def write(self, values):
         res = super(SubjectSubject, self).write(values)
-        if values.get("standard_id"):
+        if values.get("standard_id") or values.get("standard_ids"):
             for standard in self.env["school.standard"].search([]):
                 standard.onchange_subject_related_standard()
         return res
