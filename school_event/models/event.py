@@ -27,7 +27,9 @@ class EventEvent(models.Model):
     )
     # organizer_id = fields.Many2one("hr.employee", string="Supervisor")
     employee_id = fields.Many2one(
-        "hr.employee", string="Contact Person", help="Contact Person for Eevnt"
+        "hr.employee",
+        string="Contact Person",
+        help="Contact person for event"
     )
     part_standard_ids = fields.Many2many(
         "school.standard",
@@ -62,7 +64,8 @@ class EventRegistration(models.Model):
             if rec.event_id.stage_id.pipe_end:
                 raise ValidationError(
                     _(
-                        "You can not set registration to Draft stage due to event is ended!"
+                        "You can not set registration to Draft stage due to "
+                        "event is ended!"
                     )
                 )
         return super(EventRegistration, self).action_set_draft()
