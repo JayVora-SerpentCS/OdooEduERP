@@ -65,7 +65,8 @@
                             </thead>
                             <tbody>
                                 <t t-set="counter" t-value="0"/>
-                                <t t-foreach="o.line_ids" t-as="l">
+                                <t t-set="total" t-value="0"/>
+                                <t t-foreach="payslip" t-as="l">
                                     <t t-set="counter" t-value="counter+1"/>
                                     <tr>
                                         <td>
@@ -78,6 +79,7 @@
                                         </td>
                                         <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
                                             <span t-esc="l.total"></span>
+                                            <t t-set="total" t-value="total + l.total"/>
                                         </td>
                                     </tr>
                                 </t>
@@ -90,7 +92,7 @@
                                     <b>Total Fees</b>
                                 </td>
                                 <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
-                                    <b t-esc="o.total_amount"></b>
+                                    <b t-esc="total"></b>
                                 </td>
                             </tr>
                         </table>

@@ -44,7 +44,13 @@ class StudentFeesRegister(models.Model):
         help="State of student fee registration form",
     )
     journal_id = fields.Many2one(
-        "account.journal", "Journal", help="Select Journal", required=False
+        "account.journal",
+        "Journal",
+        help="Select Journal",
+        required=False,
+        default=lambda self: self.env["account.journal"].search(
+            [("type", "=", "sale")], limit=1
+        ),
     )
     company_id = fields.Many2one(
         "res.company",
@@ -91,8 +97,8 @@ class StudentFeesRegister(models.Model):
                 ):
                     raise ValidationError(
                         _(
-                            """There is already a Payslip exist for student: %s for same date.!
-"""
+                            "There exists a Fees record for: %s for same "
+                            "date.!"
                         )
                         % stu.name
                     )
@@ -532,7 +538,8 @@ class StudentPayslip(models.Model):
             if not fees.journal_id.sequence_id:
                 raise ValidationError(
                     _(
-                        "Please define sequence on the journal related to this invoice."
+                        "Please define sequence on the journal related to "
+                        "this invoice."
                     )
                 )
             # field 'centralisation' from account.journal
@@ -771,7 +778,8 @@ class StudentFees(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        "You cannot alumni student because payment of fees of student is remaining!"
+                        "You cannot alumni student because payment of fees "
+                        "of student is remaining!"
                     )
                 )
             return super(StudentFees, self).set_alumni()
