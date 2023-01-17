@@ -310,10 +310,11 @@ class SchoolStandard(models.Model):
                     """,
                     (rec.standard_id.id,),
                 )
-                records = []
-                for record in self._cr.fetchall():
-                    if record and record[0]:
-                        records.append(record[0])
+                records = [
+                    record[0]
+                    for record in self._cr.fetchall()
+                    if record and record[0]
+                ]
                 rec.subject_ids |= subject_obj.browse(records)
 
     @api.depends("student_ids")
@@ -525,10 +526,9 @@ class SubjectSubject(models.Model):
         self.student_ids = False
         subject_list = []
         standard_obj = self.env["school.standard"]
-        standard_id = standard_obj.search(
+        for standard in standard_obj.search(
             [("standard_id", "=", self.standard_id.id)]
-        )
-        for standard in standard_id:
+        ):
             if self.id:
                 self._cr.execute(
                     """
@@ -662,9 +662,7 @@ class SubjectSubject(models.Model):
                     [
                         ("is_elective_subject", "=", True),
                         ("standard_id", "=", standard.standard_id.id),
-                    ]
-                )
-            )
+                    ]))
             subject_list += [rec.id for rec in subjects 
                                 if rec in standard.subject_ids]
             args += [("id", "in", subject_list if subject_list else [])]

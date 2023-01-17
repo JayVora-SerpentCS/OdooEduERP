@@ -10,6 +10,9 @@ class TerminateReason(models.TransientModel):
     _description = "Terminate Reason"
 
     reason = fields.Text("Reason")
+    leave_date = fields.Date(
+        "Leave Date", required=True, help="Enter student leave date"
+    )
 
     def save_terminate(self):
         """Method to terminate student and change state to terminate."""
@@ -21,6 +24,7 @@ class TerminateReason(models.TransientModel):
                 "state": "terminate",
                 "terminate_reason": self.reason,
                 "active": False,
+                "leave_date": self.leave_date,
             }
         )
         student_rec.standard_id._compute_total_student()

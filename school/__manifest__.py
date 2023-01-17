@@ -25,6 +25,7 @@
         "wizard/move_standards_view.xml",
         "report/report_view.xml",
         "report/identity_card.xml",
+        "report/leaving_certificate.xml",
         "report/teacher_identity_card.xml",
     ],
     "demo": ["demo/school_demo.xml"],
