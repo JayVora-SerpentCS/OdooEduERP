@@ -78,7 +78,7 @@ class HostelType(models.Model):
                     datas.append(d[0])
             args.append(("id", "in", datas))
         return super(HostelType, self)._search(
-            args=args,
+            args,
             offset=offset,
             limit=limit,
             order=order,
@@ -97,7 +97,11 @@ class HostelRoom(models.Model):
     def _compute_check_availability(self):
         """Method to check room availability"""
         for rec in self:
-            rec.availability = rec.student_per_room - len(rec.student_ids.ids)
+            rec.availability = rec.student_per_room - len(
+                rec.student_ids.filtered(
+                    lambda student: student.status != "discharge"
+                )
+            )
 
     name = fields.Many2one("hostel.type", "HOSTEL", help="Name of hostel")
     floor_no = fields.Integer("Floor No.", default=1, help="Floor Number")
@@ -258,12 +262,6 @@ class HostelStudent(models.Model):
         """Method to check duration should be greater than zero"""
         if self.duration <= 0:
             raise ValidationError(_("Duration should be greater than 0!"))
-
-    @api.constrains("room_id")
-    def check_room_avaliable(self):
-        """Check Room Availability"""
-        if self.room_id.availability <= 0:
-            raise ValidationError(_("There is no availability in the room!"))
 
     @api.onchange("hostel_info_id")
     def onchange_hostel_types(self):

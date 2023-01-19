@@ -176,8 +176,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="invoice_view" string="Invoice" icon="fa-pencil-square-o" widget="stateinfo" class="oe_stat_button" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager">
-                            <field name="compute_inv"/>
+                        <button name="invoice_view" icon="fa-pencil-square-o" widget="stateinfo" class="oe_stat_button" type="object" attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}" groups="school_hostel.group_hostel_manager">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="compute_inv"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Invoice
+                                </span>
+                            </div>
                         </button>
                      </div>
                     <separator string="Hostel Information"/>
@@ -185,7 +192,7 @@
                         <field name="student_id" attrs="{'readonly':[('status','not in','draft')]}" domain="[('state','=','done')]" required="1" options="{&quot;no_create&quot;: True}"/>
                         <field name="hostel_id" readonly="1"/>
                         <field name="hostel_info_id" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}" context="{'student_id':student_id}"/>
-                        <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                        <field name="room_id" domain="[('name','=',hostel_info_id),('availability','&gt;=',1)]" required="1" attrs="{'readonly':[('status','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
                         <field name="admission_date" required="1" attrs="{'readonly':[('status','not in','draft')]}" />
                         <field name="duration" required="1" attrs="{'readonly':[('status','not in','draft')]}"/>
                         <field name="discharge_date" readonly="1"/>
