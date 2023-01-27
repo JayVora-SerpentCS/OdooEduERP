@@ -78,7 +78,7 @@ Due date of homework should be greater than assign date"""))
                     "stud_roll_no": std.roll_no,
                     "student_standard": std.standard_id.standard_id.id,
                     "submission_type": self.type_submission,
-                    "attachfile_format": self.file_format.Name
+                    "attachfile_format": self.file_format.name
                     })
                 ir_attachment_obj.create({
                     "name": "test",
@@ -149,22 +149,24 @@ class SchoolStudentAssignment(models.Model):
         and assign date for homework"""
         if self.due_date < self.assign_date:
             raise ValidationError(_(
-"""Due date of homework should be greater than Assign date!"""))
+                "Due date of homework should be greater than Assign date!"))
 
     @api.constrains("submit_assign", "file_name")
     def check_file_format(self):
         if self.file_name:
-            file_format = self.file_name.split(".")
-            if len(file_format) == 2:
-                file_format = file_format[1]
+            file_format = self.file_name.split(".")[-1]
+            if len(file_format) >= 2:
+                file_format = file_format[-1]
             else:
                 raise ValidationError(_(
-"""Kindly attach file with format: %s!""")% self.attachfile_format)
+                    """Kindly attach file with format: %s!"""
+                    ) % self.attachfile_format)
             if (file_format in self.attachfile_format or
                     self.attachfile_format in file_format):
                 return True
             raise ValidationError(_(
-"""Kindly attach file with format: %s!""")% self.attachfile_format)
+                """Kindly attach file with format: %s!"""
+                ) % self.attachfile_format)
 
     @api.onchange("student_id")
     def onchange_student_standard(self):
