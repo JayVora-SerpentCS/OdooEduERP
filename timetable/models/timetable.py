@@ -151,7 +151,7 @@ class TimeTableLine(models.Model):
     @api.constrains("start_time", "end_time")
     def check_time_overlap(self):
         for rec in self:
-            if self.search(
+            if rec.week_day and self.search(
                 [
                     "&",
                     "&",

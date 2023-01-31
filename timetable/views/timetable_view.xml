@@ -20,7 +20,7 @@
                             <page string="TimeTable">
                                 <field name="timetable_ids" nolabel="1" colspan="4">
                                     <tree string="TimeTable" editable="top">
-                                        <field name="week_day"/>
+                                        <field name="week_day" required="1"/>
                                         <field name="subject_id" required="1" options='{"no_open": True, "no_create": True}'/>
                                         <field name="start_time"/>
                                         <field name="end_time"/>
