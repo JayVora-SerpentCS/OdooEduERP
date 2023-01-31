@@ -32,9 +32,7 @@ class TerminateReasonTransport(models.TransientModel):
                 + " "
                 + "the vehicle number is"
                 + " "
-                + rec.vehicle_id.vehicle
-                + " and point number is "
-                + rec.point_id.name
+                + rec.vehicle_id.license_plate
             )
         res.update({"transport_info": transport_msg})
         return res
