@@ -195,6 +195,7 @@ class ExtendedTimeTableLine(models.Model):
                         and rec.table_id.timetable_type == "exam"
                         and rec.class_room_id == record.class_room_id
                         and rec.start_time == record.start_time
+                        and rec.exm_date == record.exm_date
                     ):
                         raise ValidationError(_("The room is occupied!"))
 
@@ -280,9 +281,7 @@ class ExamExam(models.Model):
         "Active", default="True", help="Activate/Deactivate record"
     )
     name = fields.Char("Exam Name", required=True, help="Name of Exam")
-    exam_code = fields.Char(
-        "Exam Code", required=True, readonly=True, help="Code of exam"
-    )
+    exam_code = fields.Char("Exam Code", readonly=True, help="Code of exam")
     standard_id = fields.Many2many(
         "standard.standard",
         "standard_standard_exam_rel",
@@ -449,7 +448,7 @@ class AdditionalExam(models.Model):
         "Additional Exam Name", required=True, help="Name of Exam"
     )
     addtional_exam_code = fields.Char(
-        "Exam Code", required=True, help="Exam Code", readonly=True
+        "Exam Code", help="Exam Code", readonly=True
     )
     standard_id = fields.Many2one(
         "school.standard", "Standard", help="Select standard for exam"
@@ -597,7 +596,6 @@ class ExamResult(models.Model):
             ("confirm", "Confirm"),
             ("re-evaluation", "Re-Evaluation"),
             ("re-evaluation_confirm", "Re-Evaluation Confirm"),
-            ("done", "Done"),
         ],
         "State",
         readonly=True,
@@ -690,30 +688,6 @@ class ExamResult(models.Model):
                 line.marks_reeval = line.obtain_marks
             rec.state = "re-evaluation"
 
-    def set_done(self):
-        """Method to obtain history of student"""
-        history_obj = self.env["student.history"]
-        for rec in self:
-            vals = {
-                "student_id": rec.student_id.id,
-                "academice_year_id": rec.student_id.year.id,
-                "standard_id": rec.standard_id.id,
-                "percentage": rec.percentage,
-                "result": rec.result,
-            }
-            history_rec = history_obj.search(
-                [
-                    ("student_id", "=", rec.student_id.id),
-                    ("academice_year_id", "=", rec.student_id.year.id),
-                    ("standard_id", "=", rec.standard_id.id),
-                ]
-            )
-            if history_rec:
-                history_obj.write(vals)
-            elif not history_rec:
-                history_obj.create(vals)
-            rec.state = "done"
-
 
 class ExamGradeLine(models.Model):
     """Defining model for Exam Grade Line."""
@@ -745,13 +719,22 @@ class ExamSubject(models.Model):
             if rec.exam_id and rec.exam_id.student_id and grade_lines:
                 for grade_id in grade_lines:
                     b_id = rec.obtain_marks <= grade_id.to_mark
-                    if rec.obtain_marks > 0:
-                        if rec.obtain_marks >= grade_id.from_mark and b_id:
+                    if rec.state not in [
+                        "re-evaluation",
+                        "re-evaluation_confirm",
+                    ]:
+                        if (
+                            rec.obtain_marks >= 0
+                            and rec.obtain_marks >= grade_id.from_mark
+                            and b_id
+                        ):
                             rec.grade_line_id = grade_id
-                    if rec.marks_reeval and rec.obtain_marks >= 0.0:
-                        r_id = rec.marks_reeval <= grade_id.to_mark
-                        if rec.marks_reeval >= grade_id.from_mark and r_id:
-                            rec.grade_line_id = grade_id
+                    else:
+                        if (rec.marks_reeval and rec.obtain_marks >= 0.0) and (
+                            rec.marks_reeval >= grade_id.from_mark
+                            and rec.marks_reeval <= grade_id.to_mark
+                        ):
+                            rec.grade_line_id = grade_id.id
 
     exam_id = fields.Many2one("exam.result", "Result", help="Select exam")
     state = fields.Selection(
@@ -830,7 +813,11 @@ class AdditionalExamResult(models.Model):
     )
     roll_no = fields.Integer("Roll No", readonly=True, help="Student rol no.")
     standard_id = fields.Many2one(
-        "school.standard", "Standard", readonly=True, help="School Standard"
+        "school.standard",
+        "Standard",
+        related="a_exam_id.standard_id",
+        store=True,
+        help="School Standard",
     )
     obtain_marks = fields.Float("Obtain Marks", help="Marks obtain in exam")
     result = fields.Char(
@@ -842,6 +829,14 @@ class AdditionalExamResult(models.Model):
     active = fields.Boolean(
         "Active", default=True, help="Activate/Deactivate record"
     )
+
+    _sql_constraints = [
+        (
+            "additional_exam_result_unique",
+            "unique(a_exam_id,student_id)",
+            "Student is not repeated in same exam!",
+        )
+    ]
 
     def _update_student_vals(self, vals):
         """This is the common method to update student
@@ -872,7 +867,6 @@ class AdditionalExamResult(models.Model):
     @api.onchange("student_id")
     def onchange_student(self):
         """ Method to get student roll no and standard by selecting student"""
-        self.standard_id = self.student_id.standard_id.id
         self.roll_no = self.student_id.roll_no
 
     @api.constrains("obtain_marks")

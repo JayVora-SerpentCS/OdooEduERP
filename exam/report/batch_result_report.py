@@ -16,39 +16,38 @@ class BatchExamReport(models.AbstractModel):
                 ("state", "=", "finished"),
             ]
         )
+        exam_result_rec = exam_result_pass_rec = exam_result_fail_rec = []
         result_obj = self.env["exam.result"]
         for rec in exam_rec:
-            exam_result_rec = result_obj.search(
+            exam_result_rec += result_obj.search(
                 [("s_exam_ids", "=", rec.id), ("state", "!=", "draft")]
             )
-            exam_result_pass_rec = result_obj.search(
+            exam_result_pass_rec += result_obj.search(
                 [
                     ("s_exam_ids", "=", rec.id),
                     ("result", "=", "Pass"),
                     ("state", "!=", "draft"),
                 ]
             )
-            exam_result_fail_rec = result_obj.search(
+            exam_result_fail_rec += result_obj.search(
                 [
                     ("s_exam_ids", "=", rec.id),
                     ("result", "=", "Fail"),
                     ("state", "!=", "draft"),
                 ]
             )
-            std_pass = ""
-            if len(exam_result_pass_rec.ids) > 0:
-                # Calculate percentage of students who pass the exams
-                std_pass = (100 * len(exam_result_pass_rec.ids)) / len(
-                    exam_result_rec.ids
-                )
-            return [
-                {
-                    "student_appear": len(exam_result_rec.ids) or 0.0,
-                    "studnets": len(exam_result_pass_rec.ids) or 0.0,
-                    "pass_std": std_pass or 0.0,
-                    "fail_student": len(exam_result_fail_rec.ids) or 0.0,
-                }
-            ]
+        std_pass = ""
+        if len(exam_result_pass_rec) > 0:
+            # Calculate percentage of students who pass the exams
+            std_pass = (100 * len(exam_result_pass_rec)) / len(exam_result_rec)
+        return [
+            {
+                "student_appear": len(exam_result_rec) or 0.0,
+                "studnets": len(exam_result_pass_rec) or 0.0,
+                "pass_std": std_pass or 0.0,
+                "fail_student": len(exam_result_fail_rec) or 0.0,
+            }
+        ]
 
     @api.model
     def _get_report_values(self, docids, data=None):
