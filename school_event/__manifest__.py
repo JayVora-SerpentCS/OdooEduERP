@@ -8,7 +8,6 @@
     "images": ["static/description/SchoolEvent.png"],
     "category": "School Management",
     "license": "AGPL-3",
-    "complexity": "easy",
     "summary": "A Module For Event Management In School",
     "depends": ["school", "event"],
     "data": [
