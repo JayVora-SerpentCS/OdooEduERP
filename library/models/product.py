@@ -76,7 +76,7 @@ class ProductProduct(models.Model):
     def _get_partner_code_name(self, product, parent_id):
         """ This method get the partner code name"""
         for supinfo in product.seller_ids:
-            if supinfo.name.id == parent_id:
+            if supinfo.partner_id.id == parent_id:
                 return {
                     "code": supinfo.product_code or product.default_code,
                     "name": supinfo.product_name or product.name,
@@ -84,7 +84,7 @@ class ProductProduct(models.Model):
         res = {"code": product.default_code, "name": product.name}
         return res
 
-    def _product_code(self):
+    def _compute_product_code(self):
         """ This method get the product code"""
         res = {}
         parent_id = self._context.get("parent_id", None)
@@ -143,7 +143,6 @@ class ProductProduct(models.Model):
 
     isbn = fields.Char(
         "ISBN Code",
-        unique=True,
         help="Shows International Standard Book Number",
     )
     catalog_num = fields.Char(
@@ -155,7 +154,7 @@ class ProductProduct(models.Model):
     )
     author = fields.Many2one("library.author", "Author", help="Library author")
     code = fields.Char(
-        compute_="_product_code",
+        compute="_compute_product_code",
         string="Acronym",
         store=True,
         help="Book code",
@@ -236,6 +235,31 @@ class ProductProduct(models.Model):
         )
     ]
 
+    @api.constrains("isbn")
+    def check_duplicate_isbn(self):
+        """
+        This method will check duplicate isbn
+        Raises:
+            ValidationError:
+                The isbn field must be unique!
+        """
+        for rec in self:
+            self._cr.execute(
+                """
+                SELECT
+                    id
+                FROM
+                    product_product
+                WHERE
+                    id != %s
+                AND
+                    lower(isbn) = %s
+                """,
+                (rec.id, str(rec.isbn.lower().strip())),
+            )
+            if self._cr.fetchone():
+                raise ValidationError(_("The isbn field must be unique!"))
+
     @api.onchange("is_ebook", "attach_ebook")
     def onchange_availablilty(self):
         """Onchange method to define book availability"""
@@ -264,7 +288,9 @@ class ProductProduct(models.Model):
         """Method to request book"""
         book_req_obj = self.env["library.book.request"]
         for rec in self:
-            book_req = book_req_obj.search([("name", "=", rec.id)])
+            book_req = book_req_obj.search(
+                ["|", ("name", "=", rec.id), ("ebook_name", "=", rec.id)]
+            )
             if not book_req:
                 raise ValidationError(_("There is no Book requested"))
             action = self.env.ref("library.action_lib_book_req")

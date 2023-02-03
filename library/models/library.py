@@ -57,7 +57,7 @@ class LibraryCard(models.Model):
 
     @api.depends("student_id")
     def _compute_name(self):
-        """Compute name"""
+        """Compute name."""
         for rec in self:
             if rec.student_id:
                 user = rec.student_id.name
@@ -118,11 +118,13 @@ class LibraryCard(models.Model):
 
     @api.onchange("student_id")
     def on_change_student(self):
-        """  This method automatically fill up student roll number
-             and standard field  on student_id field
-        @student : Apply method on this Field name
-        @return : Dictionary having identifier of the record as key
-            and the value of student roll number and standard"""
+        """
+            This method automatically fill up student roll number.
+            and standard field on student_id field
+            @student : Apply method on this Field name
+            @return : Dictionary having identifier of the record as key
+            and the value of student roll number and standard...
+        """
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.roll_no = self.student_id.roll_no
@@ -507,13 +509,14 @@ class LibraryBookIssue(models.Model):
                     issue_str += str(book.issue_code) + ", "
                 # check if fine on book is paid until then user
                 # cannot issue new book
-                raise UserError(
-                    _(
-                        "You can not request for a book until the fine is not paid"
-                        " for book issues %s!"
+                if issue_str:
+                    raise UserError(
+                        _(
+                            "You can not request for a book until the fine is not paid"
+                            " for book issues %s!"
+                        )
+                        % issue_str
                     )
-                    % issue_str
-                )
             if rec.card_id:
                 card_rec = rec.search_count(
                     [
@@ -634,16 +637,25 @@ class LibraryBookIssue(models.Model):
             new_invoice_rec.write({"invoice_line_ids": invoice_line_ids})
         self.state = "fine"
         view_id = self.env.ref("account.view_move_form")
+        context = dict(self._context)
+        context.update(
+            {
+                "default_move_type": "out_invoice",
+                "default_book_issue_id": record.id,
+                "default_customer": record.id,
+            }
+        )
         return {
             "name": _("New Invoice"),
             "view_mode": "form",
             "view_id": view_id.ids,
             "res_model": "account.move",
             "type": "ir.actions.act_window",
-            "nodestroy": True,
-            "res_id": new_invoice_rec.id,
+            # "nodestroy": True,
+            # "res_id": new_invoice_rec.id,
+            "domain": [("book_issue_id", "=", record.id)],
             "target": "current",
-            "context": {"default_move_type": "out_invoice"},
+            "context": context,
         }
 
     def subscription_pay(self):
@@ -818,14 +830,15 @@ class LibraryBookRequest(models.Model):
         book_issue_obj = self.env["library.book.issue"]
         curr_dt = fields.Date.today()
         vals = {}
+
+        issue_id = False
         if (
-            curr_dt <= self.card_id.start_date
-            and curr_dt >= self.card_id.end_date
-        ):
+            self.card_id.start_date and curr_dt <= self.card_id.start_date
+        ) and (self.card_id.end_date and curr_dt >= self.card_id.end_date):
             raise UserError(_("The Membership of library card is over!"))
         if self.type == "existing":
             vals.update({"card_id": self.card_id.id, "name": self.name.id})
-        elif self.type == "ebook":
+        elif self.type == "ebook" and self.ebook_name:
             vals.update(
                 {
                     "name": self.ebook_name.id,

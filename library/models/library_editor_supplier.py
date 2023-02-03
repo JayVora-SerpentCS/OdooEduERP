@@ -17,8 +17,7 @@ class LibraryEditorSupplier(models.Model):
     delay = fields.Integer("Customer Lead Time", help="Customer lead time")
     min_qty = fields.Float("Minimal Quantity", help="Minimal quantity")
     junk = fields.Text(
-        compute_=lambda self: {idn: "" for idn in self.ids},
-        method=True,
+        compute=lambda self: {idn: "" for idn in self.ids},
         string="Ref",
         type="text",
     )
