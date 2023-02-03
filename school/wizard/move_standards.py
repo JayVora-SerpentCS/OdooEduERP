@@ -28,8 +28,8 @@ The Acedemic year from which you need to move the student to next Year.""",
         if not next_year_id:
             raise ValidationError(
                 _(
-                    "The next sequanced Acedemic year after the selected one is"
-                    " not configured!"
+                    "The next sequanced Acedemic year after the selected "
+                    "one is not configured!"
                 )
             )
         done_rec = student_obj.search(

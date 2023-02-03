@@ -12,14 +12,14 @@
                             <tr style="margin-top:5px">
                                 <td colspan="2" align="center">
                                     <h1><strong>
-                                        <span t-field="teacher.school_id.name" />
+                                        <span t-field="teacher.sudo().school_id.name" />
                                     </strong></h1>
                                 </td>
                             </tr>
                             <tr>
                                 <td align="top">
                                     <img t-if="teacher.avatar_128"
-                                        t-att-src="'data:image/png;base64,%s' % to_text(teacher.avatar_128)"/>
+                                        t-att-src="'data:image/png;base64,%s' % teacher.avatar_128.decode('utf-8')"/>
                                 </td>
                                 <td align="left">
                                     <table width="100%">
@@ -64,7 +64,7 @@
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="teacher.standard_id.name"/>
+                                                <span t-field="teacher.sudo().standard_id.name"/>
                                             </td>
                                         </tr>
                                         <tr>

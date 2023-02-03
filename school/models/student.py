@@ -92,8 +92,8 @@ class StudentStudent(models.Model):
         if not res:
             raise ValidationError(
                 _(
-                    "There is no current Academic Year defined! Please contact"
-                    " Administator!"
+                    "There is no current Academic Year defined! Please "
+                    "contact Administator!"
                 )
             )
         return res.id
@@ -158,6 +158,7 @@ class StudentStudent(models.Model):
         default=fields.Date.today(),
         help="Enter student admission date",
     )
+    leave_date = fields.Date("Leave Date", help="Enter student leave date")
     middle = fields.Char(
         "Middle Name",
         required=True,
@@ -355,6 +356,29 @@ class StudentStudent(models.Model):
         compute="_compute_teacher_user",
         help="Activate/Deactivate teacher group",
     )
+    subject_id = fields.Many2one("subject.subject", "Subject", help="Subject")
+
+    @api.model
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        reports = res["views"].get("list", {}).get("toolbar").get("print")
+        form_reports = res["views"].get("form", {}).get("toolbar").get("print")
+        index = 0
+        rem_index = ""
+        for report in reports:
+            if not self._context.get(
+                "is_student_alumni_terminate", False
+            ) and self.env.ref(
+                "school.report_student_student_leaving_certificate"
+            ).id == report.get(
+                "id"
+            ):
+                rem_index = index
+            index += 1
+        if rem_index:
+            reports.pop(int(rem_index))
+            form_reports.pop(int(rem_index))
+        return res
 
     @api.model
     def create(self, vals):
@@ -428,6 +452,7 @@ class StudentStudent(models.Model):
             rec.standard_id._compute_total_student()
             rec.active = False
             rec.user_id.active = False
+            rec.leave_date = fields.Date.today()
 
     def set_done(self):
         """Method to change state to done"""

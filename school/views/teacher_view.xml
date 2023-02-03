@@ -32,6 +32,7 @@
             <field name="arch" type="xml">
                 <kanban nocreate="1" create="false">
                     <field name="color"/>
+                    <field name="phone"/>
                     <templates>
                         <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
@@ -46,7 +47,7 @@
                                         <ul>
                                             <li t-if="record.school_id.raw_value"><field name="school_id" /></li>
                                             <li t-if="record.job_id.raw_value"><field name="job_id" /></li>
-                                            <li t-if="record.phone.raw_value"><field name="phone" /></li>
+                                            <li t-if="record.phone"><field name="phone" /></li>
                                             <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
                                         </ul>
                                     </div>
@@ -95,10 +96,10 @@
                         </div>
                         <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
                         <group>
-                            <field name="standard_id" widget="selection"/>
+                            <field name="standard_id"/>
                             <!-- <field name="standard_ids" required="1" widget="many2many_tags"/> -->
                             <field name="subject_id" required="1" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field name="school_id" required="1" widget="selection"/>
+                            <field name="school_id" required="1"/>
                         </group>
                         <group>
                             <field name="is_parent" widget="boolean_toggle"/>
@@ -148,12 +149,12 @@
                             <page string="Children" attrs="{'invisible': [('is_parent','=', False)]}">
                                  <field name="student_id" domain="[('state', '=', 'done')]"/>
                             </page>
+                            <!-- TODO restricted groups="hr.group_hr_user" -->
                             <page string="HR Settings" invisible="1">
-                                <!-- groups="hr.group_hr_user" invisible="1"> -->
                                 <group>
                                     <group string="Status" name="active_group">
+                                        <!-- TODO restricted groups="base.group_multi_company -->
                                         <field name="company_id"/>
-                                         <!-- groups="base.group_multi_company"/> -->
                                         <field name="user_id" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>
