@@ -31,9 +31,6 @@ class TestHostel(common.TransactionCase):
                 "room_no": "101",
                 "student_per_room": "3",
                 "rent_amount": 1000,
-                "telephone": True,
-                "ac": True,
-                "private_bathroom": True,
             }
         )
         self.hostel_room._compute_check_availability()
