@@ -2,9 +2,8 @@
 
 from lxml import etree
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.translate import _
 
 
 class SchoolEvaluation(models.Model):
@@ -53,7 +52,7 @@ class SchoolEvaluation(models.Model):
         "Total Points",
         compute="_compute_total_points",
         help="Total Points Obtained",
-        store="True",
+        store=True,
     )
     state = fields.Selection(
         [
@@ -239,6 +238,10 @@ class RatingRating(models.Model):
     _inherit = "rating.rating"
     _description = "Rating"
 
+    template_id = fields.Many2one(
+        "school.evaluation.template", "Stud", help="Ratings"
+    )
+
     @api.model
     def create(self, vals):
         """Set Document model name for rating."""
@@ -261,10 +264,6 @@ class RatingRating(models.Model):
                 rate.res_name = rate.rating
             else:
                 super(RatingRating, self)._compute_res_name()
-
-    template_id = fields.Many2one(
-        "school.evaluation.template", "Stud", help="Ratings"
-    )
 
 
 class StudentExtend(models.Model):
