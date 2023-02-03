@@ -13,10 +13,10 @@ class TestFees(common.TransactionCase):
         self.fees_register_obj = self.env["student.fees.register"]
         self.fees_structure_obj = self.env["student.fees.structure"]
         self.student_payslip_obj = self.env["student.payslip"]
-        self.student = self.env.ref("school.demo_student_student_5")
+        self.student = self.env.ref("school.demo_student_student_6")
         self.school = self.env.ref("school.demo_school_1")
         self.standard = self.env.ref("school.demo_school_standard_1")
-        self.acct_type = self.env.ref("account.data_account_type_revenue")
+        self.product = self.env.ref("school_fees.demo_product_fees_1")
         #       Create Payslip Line
         self.payslip_line = self.payslip_line_obj.create(
             {
@@ -24,6 +24,7 @@ class TestFees(common.TransactionCase):
                 "code": "10",
                 "type": "month",
                 "amount": 2000.00,
+                "product_id": self.product.id,
             }
         )
         #       Create Fees_structure_line
@@ -33,6 +34,7 @@ class TestFees(common.TransactionCase):
                 "code": "01",
                 "type": "month",
                 "amount": 4000.00,
+                "product_id": self.product.id,
             }
         )
         #        Create fees structure
