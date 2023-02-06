@@ -88,6 +88,7 @@
                 <form string="Faculty">
                     <sheet>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;avatar_128&quot;}"/>
+                        <field name="company_id"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
@@ -149,12 +150,10 @@
                             <page string="Children" attrs="{'invisible': [('is_parent','=', False)]}">
                                  <field name="student_id" domain="[('state', '=', 'done')]"/>
                             </page>
-                            <!-- TODO restricted groups="hr.group_hr_user" -->
-                            <page string="HR Settings" invisible="1">
+                            <page string="HR Settings" groups="hr.group_hr_user" invisible="1">
                                 <group>
                                     <group string="Status" name="active_group">
-                                        <!-- TODO restricted groups="base.group_multi_company -->
-                                        <field name="company_id"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="user_id" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>
