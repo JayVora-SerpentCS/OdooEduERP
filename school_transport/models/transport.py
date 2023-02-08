@@ -18,7 +18,11 @@ class FleetVehicle(models.Model):
     def _compute_participants(self):
         """Method to get number participant."""
         for rec in self:
-            rec.participant_count = len(rec.vehi_participants_ids)
+            rec.participant_count = len(
+                rec.vehi_participants_ids.filtered(
+                    lambda r: r.vehicle_id.id == rec.id and r.state != "over"
+                )
+            )
 
     participant_count = fields.Integer(
         compute="_compute_participants",
@@ -153,7 +157,7 @@ class TransportParticipant(models.Model):
                     )
                 )
         return super(TransportParticipant, self)._search(
-            args=args,
+            args,
             offset=offset,
             limit=limit,
             count=count,
@@ -200,7 +204,6 @@ class StudentTransports(models.Model):
     end_date = fields.Date("End Date", required=True, help="Enter end date")
     total_participantes = fields.Integer(
         compute="_compute_total_participants",
-        method=True,
         string="Total Participants",
         readonly=True,
         help="Total participant",
@@ -397,7 +400,8 @@ class TransportRegistration(models.Model):
     @api.onchange("name")
     def onchange_name(self):
         """
-            This onchange will take amount from student.transport and set monthly amount
+            This onchange will take amount from student.transport and
+            set monthly amount
         """
         self.monthly_amount = 0.0
         if self.name:
@@ -417,7 +421,8 @@ class TransportRegistration(models.Model):
             if rec.state in ["confirm", "pending", "paid"]:
                 raise ValidationError(
                     _(
-                        "You can delete record in unconfirm state and cancel state only!"
+                        "You can delete record in unconfirm state and cancel "
+                        "state only!"
                     )
                 )
         return super(TransportRegistration, self).unlink()
@@ -534,7 +539,8 @@ Registration months must be 1 or more then one month!"""
             if tr_end_date > ed_date:
                 raise UserError(
                     _(
-                        "For this much Months Registration is not Possible as Root end date is Early!"
+                        "For this much Months Registration is not Possible "
+                        "as Root end date is Early!"
                     )
                 )
             # make entry in Transport
@@ -555,13 +561,7 @@ Registration months must be 1 or more then one month!"""
             vehi_participants_list = []
             for prt in rec.vehicle_id.vehi_participants_ids:
                 vehi_participants_list.append(prt.id)
-            flag = True
-            for prt in vehi_participants_list:
-                data = stu_prt_obj.browse(prt)
-                if data.name.id == rec.student_id.id:
-                    flag = False
-            if flag:
-                vehi_participants_list.append(temp.id)
+            vehi_participants_list.append(temp.id)
             vehicle_rec = vehi_obj.browse(rec.vehicle_id.id)
             vehicle_rec.sudo().write(
                 {"vehi_participants_ids": [(6, 0, vehi_participants_list)]}

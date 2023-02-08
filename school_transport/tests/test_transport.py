@@ -46,7 +46,7 @@ class TestTransport(common.TransactionCase):
                 "registration_month": 2,
             }
         )
-        self.transport_registration.onchange_point_id()
+        self.transport_registration.onchange_name()
         self.transport_registration.onchange_registration_month()
         self.transport_registration.trans_regi_confirm()
         self.transport_registration.trans_regi_cancel()

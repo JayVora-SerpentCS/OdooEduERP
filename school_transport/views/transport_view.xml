@@ -231,8 +231,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="view_invoice" icon="fa-pencil-square-o" string="Invoice" type="object" widget="stateinfo" class="oe_stat_button" states="pending,paid" groups="school_transport.group_transportation_manager">
-                            <field name="count_inv"/>
+                        <button name="view_invoice" icon="fa-pencil-square-o" type="object" widget="stateinfo" class="oe_stat_button" states="pending,paid" groups="school_transport.group_transportation_manager">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="count_inv"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Invoice
+                                </span>
+                            </div>
                         </button>
                    </div>
                     <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
