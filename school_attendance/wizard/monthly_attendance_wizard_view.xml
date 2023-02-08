@@ -17,16 +17,17 @@
                         <group>
                             <field name="course_id" required="1"
                                 options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True, &quot;no_open&quot;: True}"/>
+                            <field name="is_elective_subject"/>
+                            <field name="subject_id" attrs="{'invisible':[('is_elective_subject','=', False)], 'required':[('is_elective_subject','!=', False)]}"
+                                options="{&quot;no_create&quot;: True}"/>
                         </group>
                     </group>
                 </sheet>
                 <footer>
-                    <group>
-                        <button class="oe_highlight" string="Generate .pdf" name="generate_attendance"
-                            type="object" />
-                        <button class="oe_highlight" string="Generate .xlsx" name="print_report"
-                            type="object" />
-                    </group>
+                    <button class="oe_highlight" string="Generate .pdf" name="generate_attendance"
+                        type="object" />
+                    <button class="oe_highlight" string="Generate .xlsx" name="print_report"
+                        type="object" />
                 </footer>
             </form>
         </field>

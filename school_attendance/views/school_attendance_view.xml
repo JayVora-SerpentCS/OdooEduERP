@@ -258,12 +258,16 @@
                         <field name="user_id" placeholder="Select" required="1"
                                options="{&quot;no_create&quot;: True}" attrs="{'readonly':[('is_generate','!=', False)]}"/>
                         <field name="standard_id" widget="selection" domain="[('user_id','=',user_id)]" attrs="{'readonly':[('is_generate','!=', False)]}"/>
+                        <field name="is_elective_subject" attrs="{'readonly':['|', ('is_generate','!=', False), ('state','not in','draft')]}"/>
+                        <field name="subject_id" context="{'subject' : True, 'standard': standard_id}"
+                               attrs="{'invisible':[('is_elective_subject','=', False)], 'required':[('is_elective_subject','!=', False)], 'readonly':['|', ('is_generate','!=', False), ('state','not in','draft')]}"
+                               options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"/>
                         <field name="date" attrs="{'readonly':[('state','not in','draft')]}" required="1"/>
                         <field name="is_generate" invisible="1" />
                     </group>
                     <div>
                         <button name="get_students" type="object"
-                            class="btn btn-info atted_button" attrs="{'invisible':[('is_generate','!=', False)]}">
+                            class="btn btn-info atted_button" attrs="{'invisible':['|', ('is_generate','!=', False),('state', '=', 'validate')]}">
                             <span class="o_following">Generate</span>
                         </button>
                     </div>
@@ -407,11 +411,4 @@
               action="action_student_leave_form"
               groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
               sequence="53"/>
-    <menuitem id="menu_student_leave_aattt" name="Student Leave att" parent="menu_attendance"
-              action="action_attendance_sheet_form"
-              groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
-              sequence="53"/>
-
-
-
 </odoo>
