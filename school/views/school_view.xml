@@ -98,7 +98,6 @@
                                 <div class="oe_kanban_left" style="margin-left:10px;">
                                     <br />
                                     <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" title="edit"/>
-                                    <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                 </div>
                                 <br class="oe_kanban_clear" />
                             </div>
@@ -228,7 +227,7 @@
                                             <field name="subject_id" required="1"/>
                                             <field name="syllabus_doc" required="1"/>
                                         </group>
-                                        
+
                                     </form>
                                 </field>
                             </group>
@@ -308,7 +307,6 @@
                                     <div class="oe_kanban_left">
                                         <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" />
                                         <a role="button" string="Delete" class="btn btn-sm btn-default fa fa-trash" type="delete" aria-label="delete"/>
-                                        <a role="button" string="Change Color" icon="color-picker" type="color" name="color" />
                                     </div>
                                     <br class="oe_kanban_clear" />
                                 </div>
@@ -432,12 +430,12 @@
                          <field name="date_stop" placeholder="End Date" />
                         <field name="sequence" />
                         <field name="current" widget="boolean_toggle"/>
-                        <field name="grade_id" placeholder="Grade System" 
+                        <field name="grade_id" placeholder="Grade System"
                             options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" invisible="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Months">
-                            <field name="month_ids" nolabel="1" colspan="4" 
+                            <field name="month_ids" nolabel="1" colspan="4"
                                     options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                 <tree string="Months">
                                     <field name="name" />
@@ -698,7 +696,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Standards">
-                            <field name="standard_ids" nolabel="1" colspan="4" 
+                            <field name="standard_ids" nolabel="1" colspan="4"
                                 options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
                                 <tree string="Standards">
                                     <field name="name" />
@@ -874,7 +872,7 @@
                                     options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                             </page>
                         </notebook>
-                    
+
                 </sheet>
             </form>
         </field>

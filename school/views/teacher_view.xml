@@ -46,7 +46,7 @@
                                         <ul>
                                             <li t-if="record.school_id.raw_value"><field name="school_id" /></li>
                                             <li t-if="record.job_id.raw_value"><field name="job_id" /></li>
-                                            <li t-if="record.phone.raw_value"><field name="phone" /></li>
+                                            <li t-if="record.phone"><field name="phone" /></li>
                                             <li t-if="record.work_email.raw_value"><field name="work_email" /></li>
                                         </ul>
                                     </div>
@@ -96,10 +96,10 @@
                         </div>
                         <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
                         <group>
-                            <field name="standard_id" widget="selection"/>
+                            <field name="standard_id"/>
                             <!-- <field name="standard_ids" required="1" widget="many2many_tags"/> -->
                             <field name="subject_id" required="1" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field name="school_id" required="1" widget="selection"/>
+                            <field name="school_id" required="1"/>
                         </group>
                         <group>
                             <field name="is_parent" widget="boolean_toggle"/>
@@ -175,7 +175,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
 
-        <menuitem id="teacher_profile_menu" name="Teachers" action="action_school_teacher_form" 
+        <menuitem id="teacher_profile_menu" name="Teachers" action="action_school_teacher_form"
                   parent="menu_students_parents" sequence="32"
                   groups="school.group_school_administration,school.group_school_teacher"/>
 

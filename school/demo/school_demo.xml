@@ -458,7 +458,7 @@
             <field name="code">B</field>
             <field name="sequence">2</field>
         </record>
-        
+
         <!-- Subject Information -->
         <record id="demo_subject_subject_1" model="subject.subject">
             <field name="name">Mathematics</field>
@@ -560,7 +560,7 @@
             <field name="subject_ids" eval="[(6,0,[ref('demo_subject_subject_1'),ref('demo_subject_subject_2'),ref('demo_subject_subject_3'),ref('demo_subject_subject_4'),ref('demo_subject_subject_7'),ref('demo_subject_subject_8')])]"/>
         </record>
 
-        
+
         <!-- School Teacher Information-->
         <record id="demo_school_teacher_1" model="school.teacher">
             <field name="name">Winely</field>
@@ -827,4 +827,3 @@
         </record>
     </data>
 </odoo>
-
