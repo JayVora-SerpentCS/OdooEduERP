@@ -18,14 +18,26 @@ class FleetVehicle(models.Model):
     def _compute_participants(self):
         """Method to get number participant."""
         for rec in self:
-            rec.participant_count = len(rec.vehi_participants_ids)
+            rec.participant_count = len(
+                rec.vehi_participants_ids.filtered(
+                    lambda r: r.vehicle_id.id == rec.id and r.state != "over"
+                )
+            )
 
-    participant_count = fields.Integer(compute="_compute_participants",
-        string="Total Participants", readonly=True,
-        help="Students registered in root")
-    vehi_participants_ids = fields.Many2many("transport.participant",
-        "vehicle_participant_student_rel", "vehicle_id", "student_id",
-        "Vehicle Participants", help="Select vehicle participants")
+    participant_count = fields.Integer(
+        compute="_compute_participants",
+        string="Total Participants",
+        readonly=True,
+        help="Students registered in root",
+    )
+    vehi_participants_ids = fields.Many2many(
+        "transport.participant",
+        "vehicle_participant_student_rel",
+        "vehicle_id",
+        "student_id",
+        "Vehicle Participants",
+        help="Select vehicle participants",
+    )
 
     def action_show_participant(self):
         """ This opens the xml view specified in
@@ -34,12 +46,16 @@ class FleetVehicle(models.Model):
         xml_id = self.env.context.get("xml_id")
         if xml_id:
             res = self.env["ir.actions.act_window"]._for_xml_id(
-                "school_transport.%s" % xml_id)
-            res.update(context=dict(
+                "school_transport.%s" % xml_id
+            )
+            res.update(
+                context=dict(
                     self.env.context,
                     default_vehicle_id=self.id,
-                    group_by=False),
-                domain=[("vehicle_id", "=", self.id)])
+                    group_by=False,
+                ),
+                domain=[("vehicle_id", "=", self.id)],
+            )
             return res
         return False
 
@@ -56,9 +72,12 @@ class ResPartner(models.Model):
             [("licence_no", "=", self.licence_no), ("id", "not in", self.ids)]
         )
         if driver_rec:
-            raise ValidationError(_(
-"""The licence number you have entered already exist.
-Please enter different licence number!"""))
+            raise ValidationError(
+                _(
+                    "The licence number you have entered already exist. "
+                    "Please enter different licence number!"
+                )
+            )
 
 
 class TransportParticipant(models.Model):
@@ -68,40 +87,82 @@ class TransportParticipant(models.Model):
     _rec_name = "stu_pid_id"
     _description = "Transport Participant Information"
 
-    name = fields.Many2one("student.student", "Participant Name",
-        readonly=True, required=True,
-        help="Select student as transport participant")
+    name = fields.Many2one(
+        "student.student",
+        "Participant Name",
+        readonly=True,
+        required=True,
+        help="Select student as transport participant",
+    )
     amount = fields.Float("Amount", readonly=True, help="Enter amount")
-    transport_id = fields.Many2one("student.transport","Transport Root",
-        readonly=True, required=True, help="Select student transport")
-    stu_pid_id = fields.Char("Personal Identification Number",
-        required=True, help="Enter student PI No.")
-    tr_reg_date = fields.Date("Transportation Registration Date",
-        help="Start date of registration")
-    tr_end_date = fields.Date("Registration End Date",
-        help="End date of registration")
-    months = fields.Integer("Registration For Months",
-        help="Registration for months")
-    vehicle_id = fields.Many2one("fleet.vehicle", "Vehicle No",
-        help="Enter vehicle no.")
-    state = fields.Selection([("running", "Running"), ("over", "Over")],
-        "State", readonly=True, help="State of the transport participant")
-    active = fields.Boolean("Active", default=True,
-        help="Marked transport participant as active/deactive")
+    transport_id = fields.Many2one(
+        "student.transport",
+        "Transport Root",
+        readonly=True,
+        required=True,
+        help="Select student transport",
+    )
+    stu_pid_id = fields.Char(
+        "Personal Identification Number",
+        required=True,
+        help="Enter student PI No.",
+    )
+    tr_reg_date = fields.Date(
+        "Transportation Registration Date", help="Start date of registration"
+    )
+    tr_end_date = fields.Date(
+        "Registration End Date", help="End date of registration"
+    )
+    months = fields.Integer(
+        "Registration For Months", help="Registration for months"
+    )
+    vehicle_id = fields.Many2one(
+        "fleet.vehicle", "Vehicle No", help="Enter vehicle no."
+    )
+    state = fields.Selection(
+        [("running", "Running"), ("over", "Over")],
+        "State",
+        readonly=True,
+        help="State of the transport participant",
+    )
+    active = fields.Boolean(
+        "Active",
+        default=True,
+        help="Marked transport participant as active/deactive",
+    )
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False,
-        access_rights_uid=None,):
+    def _search(
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
+    ):
         """Inherited method to get domain from student transportation"""
         if self._context.get("name"):
             student_obj = self.env["student.student"]
             student_rec = student_obj.browse(self._context.get("name"))
             for student_data in student_rec:
-                args.append(("id", "in", [transport_id.id
-                    for transport_id in student_data.transport_ids]))
-        return super(TransportParticipant, self)._search(args=args,
-            offset=offset, limit=limit, count=count,
-            access_rights_uid=access_rights_uid,)
+                args.append(
+                    (
+                        "id",
+                        "in",
+                        [
+                            transport_id.id
+                            for transport_id in student_data.transport_ids
+                        ],
+                    )
+                )
+        return super(TransportParticipant, self)._search(
+            args=args,
+            offset=offset,
+            limit=limit,
+            count=count,
+            access_rights_uid=access_rights_uid,
+        )
 
     def set_over(self):
         """Method to change state to over"""
@@ -111,8 +172,9 @@ class TransportParticipant(models.Model):
         """Inherited method to check state at record deletion"""
         for rec in self:
             if rec.state == "running":
-                raise ValidationError(_(
-"You cannot delete record in running state!."))
+                raise ValidationError(
+                    _("You cannot delete record in running state!.")
+                )
         return super(TransportParticipant, self).unlink()
 
 
@@ -128,26 +190,48 @@ class StudentTransports(models.Model):
         for rec in self:
             rec.total_participantes = len(rec.trans_participants_ids)
 
-    name = fields.Char("Transport Route Name", required=True,
-        help="Enter Transport Route Name")
-    start_date = fields.Date("Start Date", required=True,
-        help="Enter start date")
-    contact_per_id = fields.Many2one("res.partner", "Contact Person",
-        help="Contact Person")
-    end_date = fields.Date("End Date", required=True,
-        help="Enter end date")
+    name = fields.Char(
+        "Transport Route Name",
+        required=True,
+        help="Enter Transport Route Name",
+    )
+    start_date = fields.Date(
+        "Start Date", required=True, help="Enter start date"
+    )
+    contact_per_id = fields.Many2one(
+        "res.partner", "Contact Person", help="Contact Person"
+    )
+    end_date = fields.Date("End Date", required=True, help="Enter end date")
     total_participantes = fields.Integer(
-        compute="_compute_total_participants", method=True,
-        string="Total Participants", readonly=True, help="Total participant")
-    trans_participants_ids = fields.Many2many("transport.participant",
-        "transport_participant_rel", "participant_id", "transport_id",
-        "Participants", readonly=True, help="Enter participant")
-    trans_vehicle_ids = fields.Many2many("fleet.vehicle",
-        "transport_vehicle_rel", "vehicle_id", "transport_id",
-        "vehicles", help="Select transport vehicles",)
-    state = fields.Selection([("draft", "Draft"), ("open", "Open"),
-        ("close", "Close")], "State", readonly=True, default="draft",
-        help="State of student transport")
+        compute="_compute_total_participants",
+        string="Total Participants",
+        readonly=True,
+        help="Total participant",
+    )
+    trans_participants_ids = fields.Many2many(
+        "transport.participant",
+        "transport_participant_rel",
+        "participant_id",
+        "transport_id",
+        "Participants",
+        readonly=True,
+        help="Enter participant",
+    )
+    trans_vehicle_ids = fields.Many2many(
+        "fleet.vehicle",
+        "transport_vehicle_rel",
+        "vehicle_id",
+        "transport_id",
+        "vehicles",
+        help="Select transport vehicles",
+    )
+    state = fields.Selection(
+        [("draft", "Draft"), ("open", "Open"), ("close", "Close")],
+        "State",
+        readonly=True,
+        default="draft",
+        help="State of student transport",
+    )
     amount = fields.Float("Transport Amount")
 
     def transport_open(self):
@@ -167,7 +251,8 @@ class StudentTransports(models.Model):
         current_date = fields.Date.today()
         trans_parti_obj = self.env["transport.participant"]
         for partitcipants in trans_parti_obj.search(
-                [("tr_end_date", "<", current_date)]):
+            [("tr_end_date", "<", current_date)]
+        ):
             partitcipants.state = "over"
 
     @api.constrains("start_date", "end_date")
@@ -176,8 +261,9 @@ class StudentTransports(models.Model):
         for rec in self:
             delta = rec.end_date - rec.start_date
             if rec.start_date > rec.end_date:
-                raise ValidationError(_(
-                    "Start date should be less than end date!"))
+                raise ValidationError(
+                    _("Start date should be less than end date!")
+                )
             if delta.days < 30:
                 raise ValidationError(_("Enter duration of month!"))
 
@@ -185,8 +271,11 @@ class StudentTransports(models.Model):
         """Inherited method to check state at record deletion"""
         for rec in self:
             if rec.state == "open":
-                raise ValidationError(_(
-        "You can delete record in draft state or cancel state only!"))
+                raise ValidationError(
+                    _(
+                        "You can delete record in draft state or cancel state only!"
+                    )
+                )
         return super(StudentTransports, self).unlink()
 
 
@@ -194,8 +283,14 @@ class StudentStudent(models.Model):
     _inherit = "student.student"
     _description = "Student Information"
 
-    transport_ids = fields.Many2many("transport.participant", "std_transport",
-        "trans_id", "stud_id", "Transport", help="Student transportation")
+    transport_ids = fields.Many2many(
+        "transport.participant",
+        "std_transport",
+        "trans_id",
+        "stud_id",
+        "Transport",
+        help="Student transportation",
+    )
 
     def set_alumni(self):
         """Override method to make record of student transport active false.
@@ -206,9 +301,11 @@ class StudentStudent(models.Model):
         trans_regi_obj = self.env["transport.registration"]
         for rec in self:
             trans_student_rec = trans_student_obj.search(
-                [("name", "=", rec.id)])
+                [("name", "=", rec.id)]
+            )
             trans_regi_rec = trans_regi_obj.search(
-                [("student_id", "=", rec.id)])
+                [("student_id", "=", rec.id)]
+            )
             if trans_regi_rec:
                 trans_regi_rec.state = "cancel"
             if trans_student_rec:
@@ -226,7 +323,8 @@ class TransportRegistration(models.Model):
     def _compute_get_user_groups(self):
         """Method to compute transport user boolean field"""
         transport_user_group = self.env.ref(
-            "school_transport.group_transportation_user")
+            "school_transport.group_transportation_user"
+        )
         grps = [group.id for group in self.env.user.groups_id]
         self.transport_user = False
         if transport_user_group.id in grps:
@@ -238,39 +336,72 @@ class TransportRegistration(models.Model):
         for rec in self:
             rec.transport_fees = rec.monthly_amount * rec.registration_month
 
-    name = fields.Many2one("student.transport", "Transport Route Name",
-        domain=[("state", "=", "open")], required=True,
-        help="Enter transport Route Name")
-    student_id = fields.Many2one("student.student", "Student Name",
-        required=True, help="Student Name")
-    reg_date = fields.Date("Registration Date", readonly=True,
-        help="Start Date of registration", default=fields.Date.context_today)
-    reg_end_date = fields.Date("Registration End Date", readonly=True,
-        help="Start Date of registration")
+    name = fields.Many2one(
+        "student.transport",
+        "Transport Route Name",
+        domain=[("state", "=", "open")],
+        required=True,
+        help="Enter transport Route Name",
+    )
+    student_id = fields.Many2one(
+        "student.student", "Student Name", required=True, help="Student Name"
+    )
+    reg_date = fields.Date(
+        "Registration Date",
+        readonly=True,
+        help="Start Date of registration",
+        default=fields.Date.context_today,
+    )
+    reg_end_date = fields.Date(
+        "Registration End Date",
+        readonly=True,
+        help="Start Date of registration",
+    )
     registration_month = fields.Integer("Registration For Months")
-    state = fields.Selection([("draft", "Draft"), ("confirm", "Confirm"),
-        ("pending", "Pending"), ("paid", "Paid"), ("cancel", "Cancel")],
-        "State", readonly=True, default="draft",
-        help="State of the transport registration form")
-    vehicle_id = fields.Many2one("fleet.vehicle", "Vehicle No",
-        required=True, help="Enter transport vehicle")
-    monthly_amount = fields.Float("Monthly Amount",
-        help="Enter monthly amount")
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("confirm", "Confirm"),
+            ("pending", "Pending"),
+            ("paid", "Paid"),
+            ("cancel", "Cancel"),
+        ],
+        "State",
+        readonly=True,
+        default="draft",
+        help="State of the transport registration form",
+    )
+    vehicle_id = fields.Many2one(
+        "fleet.vehicle",
+        "Vehicle No",
+        required=True,
+        help="Enter transport vehicle",
+    )
+    monthly_amount = fields.Float(
+        "Monthly Amount", help="Enter monthly amount"
+    )
     paid_amount = fields.Float("Paid Amount", help="Amount Paid")
     remain_amt = fields.Float("Due Amount", help="Amount Remaining")
-    transport_fees = fields.Float(compute="_compute_transport_fees",
-        string="Transport Fees", help="Transport fees")
+    transport_fees = fields.Float(
+        compute="_compute_transport_fees",
+        string="Transport Fees",
+        help="Transport fees",
+    )
     amount = fields.Float("Final Amount", readonly=True, help="Final amount")
-    count_inv = fields.Integer("Invoice Count", compute="_compute_invoice",
-        help="Total invoice")
-    transport_user = fields.Boolean(compute="_compute_get_user_groups",
+    count_inv = fields.Integer(
+        "Invoice Count", compute="_compute_invoice", help="Total invoice"
+    )
+    transport_user = fields.Boolean(
+        compute="_compute_get_user_groups",
         string="Transport user",
-        help="Activate/Deactivate as following user is transport user or not")
+        help="Activate/Deactivate as following user is transport user or not",
+    )
 
     @api.onchange("name")
     def onchange_name(self):
         """
-            This onchange will take amount from student.transport and set monthly amount
+            This onchange will take amount from student.transport and set
+            monthly amount
         """
         self.monthly_amount = 0.0
         if self.name:
@@ -288,8 +419,12 @@ class TransportRegistration(models.Model):
         """Inherited method to check state at record deletion"""
         for rec in self:
             if rec.state in ["confirm", "pending", "paid"]:
-                raise ValidationError(_(
-        "You can delete record in unconfirm state and cancel state only!"))
+                raise ValidationError(
+                    _(
+                        "You can delete record in unconfirm state and cancel"
+                        "state only!"
+                    )
+                )
         return super(TransportRegistration, self).unlink()
 
     def transport_fees_pay(self):
@@ -298,18 +433,28 @@ class TransportRegistration(models.Model):
         for rec in self:
             rec.state = "pending"
             partner = rec.student_id and rec.student_id.partner_id
-            invoice = invoice_obj.create({
-                "partner_id": partner.id,
-                "move_type": "out_invoice",
-                "transport_student_id": rec.id})
+            invoice = invoice_obj.create(
+                {
+                    "partner_id": partner.id,
+                    "move_type": "out_invoice",
+                    "transport_student_id": rec.id,
+                }
+            )
             journal = invoice.journal_id
             acct_journal_id = journal.default_account_id.id
             account_view_id = self.env.ref("account.view_move_form")
-            invoice.invoice_line_ids = [(0, 0, {
-                "name": "Transport Fees",
-                "account_id": acct_journal_id,
-                "quantity": rec.registration_month,
-                "price_unit": rec.monthly_amount})]
+            invoice.invoice_line_ids = [
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Transport Fees",
+                        "account_id": acct_journal_id,
+                        "quantity": rec.registration_month,
+                        "price_unit": rec.monthly_amount,
+                    },
+                )
+            ]
             return {
                 "name": _("Pay Transport Fees"),
                 "view_mode": "form",
@@ -327,7 +472,8 @@ class TransportRegistration(models.Model):
         invoice_obj = self.env["account.move"]
         for rec in self:
             invoices = invoice_obj.search(
-                [("transport_student_id", "=", rec.id)])
+                [("transport_student_id", "=", rec.id)]
+            )
             action = rec.env.ref(
                 "account.action_move_out_invoice_type"
             ).read()[0]
@@ -335,7 +481,8 @@ class TransportRegistration(models.Model):
                 action["domain"] = [("id", "in", invoices.ids)]
             elif len(invoices) == 1:
                 action["views"] = [
-                    (rec.env.ref("account.view_move_form").id, "form")]
+                    (rec.env.ref("account.view_move_form").id, "form")
+                ]
                 action["res_id"] = invoices.ids[0]
             else:
                 action = {"type": "ir.actions.act_window_close"}
@@ -346,14 +493,16 @@ class TransportRegistration(models.Model):
         inv_obj = self.env["account.move"]
         for rec in self:
             rec.count_inv = inv_obj.search_count(
-                [("transport_student_id", "=", rec.id)])
+                [("transport_student_id", "=", rec.id)]
+            )
 
     @api.onchange("registration_month")
     def onchange_registration_month(self):
         """Method to compute registration end date."""
         tr_start_date = fields.Date.today()
         tr_end_date = tr_start_date + relativedelta(
-                                            months=self.registration_month)
+            months=self.registration_month
+        )
         self.reg_end_date = tr_end_date
 
     def trans_regi_cancel(self):
@@ -369,8 +518,12 @@ class TransportRegistration(models.Model):
         for rec in self:
             # registration months must one or more then one
             if rec.registration_month <= 0:
-                raise UserError(_("""Error!
-Registration months must be 1 or more then one month!"""))
+                raise UserError(
+                    _(
+                        """Error!
+Registration months must be 1 or more then one month!"""
+                    )
+                )
             # First Check Is there vacancy or not
             person = int(rec.vehicle_id.participant_count) + 1
             if rec.vehicle_id.seats < person:
@@ -381,44 +534,60 @@ Registration months must be 1 or more then one month!"""))
             tr_start_date = rec.reg_date
             ed_date = rec.name.end_date
             tr_end_date = tr_start_date + relativedelta(
-                                            months=rec.registration_month)
+                months=rec.registration_month
+            )
             if tr_end_date > ed_date:
-                raise UserError(_(
-"For this much Months Registration is not Possible as Root end date is Early!"
-                    ))
+                raise UserError(
+                    _(
+                        "For this much Months Registration is not Possible "
+                        "as Root end date is Early!"
+                    )
+                )
+            # Participant check is there running state or not
+            stu_transport_participant = stu_prt_obj.search(
+                [("name", "=", rec.student_id.id), ("state", "=", "running")],
+                limit=1,
+            )
+            if stu_transport_participant:
+                raise UserError(
+                    _(
+                        "The student is already participant and contract is "
+                        "running state!"
+                    )
+                )
+
             # make entry in Transport
-            temp = stu_prt_obj.sudo().create({
-                "stu_pid_id": str(rec.student_id.pid),
-                "amount": rec.monthly_amount,
-                "transport_id": rec.name.id,
-                "tr_end_date": tr_end_date,
-                "name": rec.student_id.id,
-                "months": rec.registration_month,
-                "tr_reg_date": rec.reg_date,
-                "state": "running",
-                "vehicle_id": rec.vehicle_id.id})
+            temp = stu_prt_obj.sudo().create(
+                {
+                    "stu_pid_id": str(rec.student_id.pid),
+                    "amount": rec.monthly_amount,
+                    "transport_id": rec.name.id,
+                    "tr_end_date": tr_end_date,
+                    "name": rec.student_id.id,
+                    "months": rec.registration_month,
+                    "tr_reg_date": rec.reg_date,
+                    "state": "running",
+                    "vehicle_id": rec.vehicle_id.id,
+                }
+            )
             # make entry in Transport vehicle.
             vehi_participants_list = []
             for prt in rec.vehicle_id.vehi_participants_ids:
                 vehi_participants_list.append(prt.id)
-            flag = True
-            for prt in vehi_participants_list:
-                data = stu_prt_obj.browse(prt)
-                if data.name.id == rec.student_id.id:
-                    flag = False
-            if flag:
-                vehi_participants_list.append(temp.id)
+            vehi_participants_list.append(temp.id)
             vehicle_rec = vehi_obj.browse(rec.vehicle_id.id)
             vehicle_rec.sudo().write(
-                {"vehi_participants_ids": [(6, 0, vehi_participants_list)]})
+                {"vehi_participants_ids": [(6, 0, vehi_participants_list)]}
+            )
             # make entry in student.
             transport_list = []
             for root in rec.student_id.transport_ids:
                 transport_list.append(root.id)
             transport_list.append(temp.id)
             student_rec = prt_obj.browse(rec.student_id.id)
-            student_rec.sudo().write({"transport_ids": [(6, 0, transport_list)
-                    ]})
+            student_rec.sudo().write(
+                {"transport_ids": [(6, 0, transport_list)]}
+            )
             # make entry in transport.
             trans_participants_list = []
             for prt in rec.name.trans_participants_ids:
@@ -426,14 +595,18 @@ Registration months must be 1 or more then one month!"""))
             trans_participants_list.append(temp.id)
             stu_tran_rec = trans_obj.browse(rec.name.id)
             stu_tran_rec.sudo().write(
-                {"trans_participants_ids": [(6, 0, trans_participants_list)]})
+                {"trans_participants_ids": [(6, 0, trans_participants_list)]}
+            )
 
 
 class AccountInvoice(models.Model):
     _inherit = "account.move"
 
-    transport_student_id = fields.Many2one("transport.registration",
-        string="Transport Student", help="Transport records")
+    transport_student_id = fields.Many2one(
+        "transport.registration",
+        string="Transport Student",
+        help="Transport records",
+    )
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -446,22 +619,38 @@ class AccountPaymentRegister(models.TransientModel):
         res = super(AccountPaymentRegister, self).action_create_payments()
         invoice = False
         for rec in self:
-            if self._context.get('active_model') == 'account.move':
-                invoice = self.env['account.move'].browse(self._context.get('active_ids', []))
+            if self._context.get("active_model") == "account.move":
+                invoice = self.env["account.move"].browse(
+                    self._context.get("active_ids", [])
+                )
             vals = {}
-            if (invoice.transport_student_id
-                    and invoice.payment_state == "paid"):
+            if (
+                invoice.transport_student_id
+                and invoice.payment_state == "paid"
+            ):
                 fees_payment = (
-                    invoice.transport_student_id.paid_amount + rec.amount)
-                vals.update({"state": "paid", "paid_amount": fees_payment,
-                            "remain_amt": 0.0})
-            elif (invoice.transport_student_id and
-                    invoice.payment_state == "not_paid"):
+                    invoice.transport_student_id.paid_amount + rec.amount
+                )
+                vals.update(
+                    {
+                        "state": "paid",
+                        "paid_amount": fees_payment,
+                        "remain_amt": 0.0,
+                    }
+                )
+            elif (
+                invoice.transport_student_id
+                and invoice.payment_state == "partial"
+            ):
                 fees_payment = (
-                    invoice.transport_student_id.paid_amount + rec.amount)
-                vals.update({
-                    "state": "pending",
-                    "paid_amount": fees_payment,
-                    "remain_amt": invoice.amount_residual})
+                    invoice.transport_student_id.paid_amount + rec.amount
+                )
+                vals.update(
+                    {
+                        "state": "pending",
+                        "paid_amount": fees_payment,
+                        "remain_amt": invoice.amount_residual,
+                    }
+                )
             invoice.transport_student_id.write(vals)
         return res

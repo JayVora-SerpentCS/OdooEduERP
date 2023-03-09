@@ -18,8 +18,11 @@ class TerminateReasonTransport(models.TransientModel):
             self._context.get("active_id")
         )
         student_transport_rec = self.env["transport.registration"].search(
-            [("student_id", "=", student_rec.id),
-            ("state", "in", ["confirm", "pending", "paid"])])
+            [
+                ("student_id", "=", student_rec.id),
+                ("state", "in", ["confirm", "pending", "paid"]),
+            ]
+        )
         transport_msg = ""
         for rec in student_transport_rec:
             transport_msg += (
@@ -29,9 +32,9 @@ class TerminateReasonTransport(models.TransientModel):
                 + " "
                 + "the vehicle number is"
                 + " "
-                + rec.vehicle_id.vehicle
-                + " and point number is "
-                + rec.point_id.name
+                + rec.vehicle_id.license_plate
+                # + " and point number is "
+                # + rec.point_id.name
             )
         res.update({"transport_info": transport_msg})
         return res

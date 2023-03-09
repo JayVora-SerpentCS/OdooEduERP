@@ -26,6 +26,15 @@
             <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
 
+        <!-- Record Rule Student can see transport details -->
+        <record id="student_transport_record_rule" model="ir.rule">
+            <field name="name">Student Transport Record Rule</field>
+            <field name="model_id" ref="model_transport_participant"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('name.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+
         <!-- Record Rule Student can see own Registration -->
         <record id="transport_registration_student" model="ir.rule">
             <field name="name">Student Registration Record Rule</field>
@@ -33,6 +42,15 @@
             <field name="global" eval="True"/>
             <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+
+        <!-- Record Rule Parent can see transport registration of own child-->
+        <record id="transport_registration_student_for_parent" model="ir.rule">
+            <field name="name">Parent can see student registration Record Rule</field>
+            <field name="model_id" ref="model_transport_registration"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
         </record>
 
         <!-- Record Rule for School admin in Transport Registration -->
