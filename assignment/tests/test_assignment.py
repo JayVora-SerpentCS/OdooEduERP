@@ -14,11 +14,8 @@ class TestAssignment(common.TransactionCase):
         self.file_formatobj = self.env["file.format"]
         self.teacher_id = self.env.ref("school.demo_school_teacher_1")
         self.subject_id = self.env.ref("school.demo_subject_subject_3")
-        self.standard_std = self.env.ref("school.demo_standard_standard_1")
         self.standard = self.env.ref("school.demo_school_standard_1")
         self.student = self.env.ref("school.demo_student_student_5")
-        self.standard_id = self.env.ref("school.demo_school_standard_2")
-        self.standard_std2 = self.env.ref("school.demo_standard_standard_2")
         current_date = fields.Datetime.today()
         assign_date = current_date + rd(days=3)
         assign = assign_date
@@ -26,7 +23,7 @@ class TestAssignment(common.TransactionCase):
         end_date = due_date
         # Create File format
         self.file_format = self.file_formatobj.create({"name": "pdf"})
-        #        Create Student Assignment
+        # Create Student Assignment
         self.student_assign = self.student_assignment_obj.create(
             {
                 "student_id": self.student.id,
