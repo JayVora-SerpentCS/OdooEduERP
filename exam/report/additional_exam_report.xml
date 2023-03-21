@@ -78,7 +78,7 @@
                                         <b>Subject Name</b>
                                     </td>
                                     <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Maximum marks</b>
+                                        <b>Maximum Marks</b>
                                     </td>
                                     <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
                                         <b>Minimum Marks</b>
@@ -94,10 +94,10 @@
                                         <span t-field="result.a_exam_id.subject_id.name"></span>
                                     </td>
                                     <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                        <span t-field="result.a_exam_id.subject_id.maximum_marks"></span>
+                                        <span t-field="result.a_exam_id.maximum_marks"></span>
                                     </td>
                                     <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                        <span t-field="result.a_exam_id.subject_id.minimum_marks"></span>
+                                        <span t-field="result.a_exam_id.minimum_marks"></span>
                                     </td>
                                     <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
                                         <span t-field="result.obtain_marks"></span>

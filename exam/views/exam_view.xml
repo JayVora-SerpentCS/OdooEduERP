@@ -152,8 +152,8 @@
             <field name="timetable_ids" position="after">
                 <field name="exam_timetable_line_ids" nolabel="1" attrs="{'invisible':[('timetable_type','!=','exam')]}">
                     <tree name="exam_timetable" string="Exam Timetable" editable="top">
-                        <field name="exm_date"/>
-                        <field name="day_of_week"/>
+                        <field name="exm_date" required="1"/>
+                        <field name="day_of_week" readonly="1" force_save="1"/>
                         <field name="subject_id" options='{"no_open": True, "no_create": True}'/>
                         <field name="start_time"/>
                         <field name="end_time"/>
@@ -288,8 +288,7 @@
                     <button name="result_confirm" class="oe_stat_button fa fa-check" string="Confirm" states="draft" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                     <button name="result_re_evaluation" class="oe_stat_button fa fa-retweet" string="Re-Evaluation" states="confirm,re-access,re-access_confirm" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
                     <button name="re_evaluation_confirm" class="oe_stat_button fa fa-refresh" string="Re-Evaluation Confirm" states="re-evaluation" type="object" groups="school.group_school_administration,school.group_school_teacher"/>
-                    <button name="set_done" string="Mark as Done" type="object" class="fa fa-check-circle-o" aria-hidden="true" states="confirm,re-evaluation_confirm,re-access_confirm"/>
-                    <field name="state" widget="statusbar"  statusbar_visible="draft,confirm,done" readonly="1" />
+                    <field name="state" widget="statusbar"  statusbar_visible="draft,confirm" readonly="1" />
                 </header>
                 <sheet>
                     <group col="2" string="Exam Details">
@@ -309,21 +308,21 @@
                     </group>
                     <field name="result_ids" nolabel="1" colspan="4">
                         <tree string="Subjects" editable="bottom" create="false" delete="false">
-                            <field name="subject_id" placeholder="Select Subject" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}" required="1"/>
-                            <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
-                            <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
-                            <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
+                            <field name="subject_id" placeholder="Select Subject" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}" required="1"/>
+                            <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
+                            <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
+                            <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
                             <field name="state" invisible="1"/>
                             <field name="grade_line_id" readonly="1"/>
-                            <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])],'readonly':[('state','in',['re-evaluation_confirm','done'])]}"/>
+                            <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])],'readonly':[('state','in',['re-evaluation_confirm'])]}"/>
                         </tree>
                         <form string="Subjects">
                             <group col="4">
-                                <field name="subject_id" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
-                                <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
-                                <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
-                                <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm','done'])]}"/>
-                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm','done'])],'readonly':[('state','in',['re-evaluation_confirm','done'])]}"/>
+                                <field name="subject_id" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="maximum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="minimum_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="obtain_marks" attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"/>
+                                <field name="marks_reeval" attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])],'readonly':[('state','in',['re-evaluation_confirm'])]}"/>
                                 <field name="state" invisible="1"/>
                                 <field name="grade_line_id" readonly="1"/>
                             </group>
@@ -426,7 +425,6 @@
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
                                         <a string="Edit" role="button" title="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
-                                        <a string="Change Color" role="button" icon="color-picker" type="color" name="color"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
                                 </div>
@@ -493,7 +491,7 @@
                         <field name="a_exam_id" options="{&quot;no_create&quot;: True}"/>
                     </group>
                     <group col="4" string="Student Information" colspan="4">
-                        <field name="student_id" domain="[('state','=','done')]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
+                        <field name="student_id" domain="[('state','=','done'), ('standard_id', '=', standard_id)]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
                         <field name="roll_no"/>
                         <field name="standard_id" string="Class"/>
                     </group>

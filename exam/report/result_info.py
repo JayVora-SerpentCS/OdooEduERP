@@ -24,6 +24,9 @@ class ReportResultInfo(models.AbstractModel):
         list_result = []
         for sub_id in result_id:
             for sub in sub_id.result_ids:
+                obtain_mark = sub.obtain_marks
+                if sub_id.state in ["re-evaluation", "re-evaluation_confirm"]:
+                    obtain_mark = sub.marks_reeval
                 list_result.append(
                     {
                         "standard_id": sub_id.standard_id.standard_id.name,
@@ -31,35 +34,11 @@ class ReportResultInfo(models.AbstractModel):
                         "code": sub.subject_id.code,
                         "maximum_marks": sub.maximum_marks,
                         "minimum_marks": sub.minimum_marks,
-                        "obtain_marks": sub.obtain_marks,
+                        "obtain_marks": obtain_mark,
                         "s_exam_ids": sub_id.s_exam_ids.name,
                     }
                 )
         return list_result
-
-    @api.model
-    def get_exam_data(self, result_id, student):
-        """Method to get the exam info of student"""
-        list_exam = []
-        value = {}
-        final_total = 0
-        per = 0.0
-        obtain_marks = 0.0
-        maximum_marks = 0.0
-        for res in result_id:
-            obtain_marks = float(
-                sum(res_data.obtain_marks for res_data in res.result_ids)
-            )
-            maximum_marks = float(
-                sum(res_data.obtain_marks for res_data in res.result_ids)
-            )
-            per += obtain_marks * 100 / maximum_marks
-            final_total = final_total + res.total
-            value.update(
-                {"result": res.result, "percentage": per, "total": final_total}
-            )
-        list_exam.append(value)
-        return list_exam
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -86,5 +65,4 @@ in unconfirm state or when data is not found !"""
                 "data": data,
                 "docs": docs,
                 "get_lines": self.get_lines,
-                "get_exam_data": self.get_exam_data,
             }

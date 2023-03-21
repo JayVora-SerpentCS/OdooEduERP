@@ -22,7 +22,7 @@
         "report/report_view.xml",
         "wizard/batch_result.xml",
         "wizard/exam_subject_result_view.xml",
-        "report/exam_result_report.xml"
+        "report/exam_result_report.xml",
     ],
     "demo": ["demo/exam_demo.xml"],
     "installable": True,
