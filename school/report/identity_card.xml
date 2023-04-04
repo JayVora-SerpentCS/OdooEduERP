@@ -12,7 +12,7 @@
                             <tr style="margin-top:5px">
                                 <td colspan="2" align="center">
                                     <h1><strong>
-                                        <span t-field="student.school_id.name" />
+                                        <span t-field="student.sudo().school_id.name" />
                                     </strong></h1>
                                 </td>
                             </tr>

@@ -18,7 +18,7 @@
            </form>
         </field>
     </record>
-    
+
     <!-- Action Of Form & Tree Views Of Move Classes -->
     <record id="action_move_standards_form" model="ir.actions.act_window">
         <field name="name">Move Classes</field>
