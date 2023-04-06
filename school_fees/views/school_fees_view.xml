@@ -425,7 +425,7 @@
     <menuitem id="menu_student_payslip" name="Fees Receipts" parent="menu_fees" action="action_student_payslip_form"
               groups="school.group_school_administration,school.group_school_student,school.group_school_parent" sequence="111"/>
     <menuitem id="menu_student_fees_register" name="Fees Registers" parent="menu_fees" action="action_student_fees_register_form"
-              groups="school.group_school_administration,school.group_school_student,-school.group_school_parent" sequence="112"/>
+              groups="school.group_school_administration,school.group_school_student" sequence="112"/>
     <menuitem id="menu_student_fees_structure_form" name="Fees" parent="school.menu_configuration"/>
     <menuitem id="menu_student_fees_structure_sub_form" name="Fees Structure" parent="menu_student_fees_structure_form"
               action="action_student_fees_structure_form"/>
