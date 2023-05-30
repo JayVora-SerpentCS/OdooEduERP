@@ -229,18 +229,20 @@ class LibraryBookIssue(models.Model):
             if rec.date_issue and diff:
                 rec.date_return = rec.date_issue + diff
 
-    @api.depends("actual_return_date", "day_to_return_book")
+    @api.depends("actual_return_date")
     def _compute_penalty(self):
         """ This method calculate a penalty on book .
         @return : Dictionary having identifier of the record as key
                   and penalty as value"""
         for line in self:
             if line.date_return:
-                start_day = line.actual_return_date
-                end_day = line.date_return
-                if start_day and end_day and start_day > end_day:
-                    diff = rd(start_day.date(), end_day.date())
+                start_day = line.date_return
+                end_day = line.actual_return_date
+                line.penalty = 0.0
+                if start_day and end_day and start_day < end_day:
+                    diff = rd(end_day.date(), start_day.date())
                     day = float(diff.days) or 0.0
+
                     if line.day_to_return_book:
                         line.penalty = day * line.name.fine_late_return or 0.0
 
@@ -296,7 +298,7 @@ class LibraryBookIssue(models.Model):
         string="Return Date", store=True,
         help="Book To Be Return On This Date")
     actual_return_date = fields.Datetime("Actual Return Date",
-        help="Actual Return Date of Book", default=fields.Datetime.now)
+        help="Actual Return Date of Book")
     penalty = fields.Float(compute="_compute_penalty", string="Penalty",
         store=True, help="It show the late book return penalty")
     lost_penalty = fields.Float(compute="_compute_lost_penalty",
@@ -455,9 +457,9 @@ class LibraryBookIssue(models.Model):
                     issue_str += str(book.issue_code) + ", "
                 # check if fine on book is paid until then user
                 # cannot issue new book
-                raise UserError(_(
-"""You can not request for a book until the fine is not paid for book issues
-%s!""")% issue_str)
+                    raise UserError(_(
+    """You can not request for a book until the fine is not paid for book issues
+    %s!""")% issue_str)
             if rec.card_id:
                 card_rec = rec.search_count([("card_id", "=", rec.card_id.id),
                     ("state", "in", ["issue", "reissue"])])
@@ -470,10 +472,18 @@ class LibraryBookIssue(models.Model):
 
     def reissue_book(self):
         """This method used for reissue a books."""
-        self.write({"state": "reissue", "date_issue": fields.Datetime.today()})
+        self.write({'actual_return_date': fields.datetime.now()})
+        self._compute_penalty()
+        if self.penalty > 0:
+            raise UserError(_(
+                    """Return date is expired, Please return your book!"""))
+        self.write({"state": "reissue", "date_issue": fields.Datetime.today(),
+                    'actual_return_date': False})
 
     def return_book(self):
         """This method used for return a books."""
+        self.actual_return_date = fields.datetime.now()
+        self._compute_penalty()
         self.state = "return"
 
     def lost_book(self):
@@ -521,6 +531,7 @@ class LibraryBookIssue(models.Model):
                 if not record.teacher_id.employee_id.address_home_id:
                     raise UserError(
                         _("Error ! Teacher must have a Home address."))
+
             # prepare and create value of account.move
             vals_invoice = {
                 "move_type": "out_invoice",

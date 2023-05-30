@@ -479,7 +479,7 @@
                     <button name="cancel_book" type="object" class="fa fa fa-ban" string="Cancel" attrs="{'invisible':['|',('ebook_check','=',True),('state','not in',['draft','issue','subscribe'])]}" groups="school.group_school_administration,library.group_librarian" />
                     <button name="draft_book" type="object" class="fa fa-file-code-o" string="Draft" states="cancel" groups="school.group_school_administration,library.group_librarian" />
                     <button name="lost_book" type="object" class="fa fa-snowflake-o" string="Book Lost" attrs="{'invisible':['|',('ebook_check','=',True),('state','not in',['issue','reissue'])]}" groups="school.group_school_administration,library.group_librarian" />
-                    <button name="user_fine" class="fa fa-circle" string="Fine" type="object" attrs="{'invisible':['&amp;','|',('state','not in',['return','lost']),('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}" groups="school.group_school_administration,library.group_librarian" />
+                    <button name="user_fine" class="fa fa-circle" string="Fine" type="object" attrs="{'invisible':['&amp;',('state','not in',['return','lost']),'|',('penalty','&lt;',1.0),('lost_penalty','&lt;',1.0)]}" groups="school.group_school_administration,library.group_librarian" />
                     <button name="subscription_pay" class="fa fa-circle" string="Subscription Payment" type="object" states="subscribe" groups="school.group_school_administration,library.group_librarian" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,issue,fine,cancel" align="right" readonly="1" />
                 </header>
@@ -513,10 +513,10 @@
                         <field name="day_to_return_book" readonly="1" />
                         <field name="date_issue" readonly="1" />
                         <field name="date_return" readonly="1" />
-                        <field name="actual_return_date" attrs="{'readonly':[('state','not in',('issue','reissue'))]}" required="1" />
-                        <field name="penalty" attrs="{'invisible':[('state','!=','return')]}" />
+                        <field name="actual_return_date" attrs="{'readonly':[('state','not in',['issue','reissue'])]}" />
+                        <field name="penalty" attrs="{'invisible':[('state','not in',['return', 'issue', 'reissue', 'fine', 'paid'])]}" />
                         <field name="return_daley_days" />
-                        <field name="lost_penalty" attrs="{'invisible':[('state','!=','lost')]}" />
+                        <field name="lost_penalty" attrs="{'invisible':[('state','not in',['lost', 'fine', 'paid'])]}" />
                     </group>
                     <group col="4" colspan="4" string="E Book Details" attrs="{'invisible':[('state','in',['issue','ressiue','cancel','return','lost','fine','draft'])],'readonly':[('state','in',('done'))]}">
                         <field name="subscription_amt" attrs="{'invisible':[('state','=','paid')],'readonly':[('state','in',['pending','subscribe'])]}" />
