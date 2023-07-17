@@ -14,21 +14,22 @@ class TestEvaluation(common.TransactionCase):
         self.evaluation_line_obj = self.env["school.evaluation.line"]
         self.teacher = self.env.ref("school.demo_school_teacher_1")
         self.student = self.env.ref("school.demo_student_student_5")
-        #        Create School Evaluation Template
-        self.evaluation_template = self.evaluation_template_obj.create(
+        # Create School Evaluation Template For Teacher
+        self.evaluation_template_faculty = self.evaluation_template_obj.create(
             {
                 "desc": "Communication with students and other activity",
                 "type": "faculty",
             }
         )
         #       Create Rating of above template
-        self.rating = self.rating_obj.create(
+        self.rating_faculty = self.rating_obj.create(
             {
-                "point": 5,
-                "rating": "Excellent",
-                "rating_id": self.evaluation_template.id,
+                "rating": 5,
+                "feedback": "Excellent",
+                "res_id": self.evaluation_template_faculty.id,
             }
         )
+        # self.rating_obj._find_parent_data()
         #        Create School Evaluation For The School Teachers
         current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.teacher_evalution = self.school_evaluation_obj.create(
@@ -41,10 +42,27 @@ class TestEvaluation(common.TransactionCase):
         self.teacher_evalution.get_record()
         self.teacher_evalution._compute_total_points()
         self.teacher_evalution.set_start()
+        self.teacher_evalution.eval_line_ids.write(
+            {"point_id": self.rating_faculty.id}
+        )
+        self.teacher_evalution.eval_line_ids.onchange_point()
         self.teacher_evalution.set_finish()
         self.teacher_evalution.set_cancel()
         self.teacher_evalution.set_draft()
-        #        Create School Evaluation For The School Student
+
+        # Create School Evaluation Template For Student
+        self.evaluation_template_student = self.evaluation_template_obj.create(
+            {"desc": "Communication of Information", "type": "student"}
+        )
+        # Create Rating of above template
+        self.rating_student = self.rating_obj.create(
+            {
+                "rating": 5,
+                "feedback": "Excellent",
+                "res_id": self.evaluation_template_student.id,
+            }
+        )
+        # Create School Evaluation For The School Student
         self.student_evalution = self.school_evaluation_obj.create(
             {
                 "type": "student",
@@ -55,19 +73,16 @@ class TestEvaluation(common.TransactionCase):
         self.student_evalution.get_record()
         self.student_evalution._compute_total_points()
         self.student_evalution.set_start()
+        self.student_evalution.eval_line_ids.write(
+            {"point_id": self.rating_student.id}
+        )
+        self.student_evalution.eval_line_ids.onchange_point()
         self.student_evalution.set_finish()
         self.student_evalution.set_cancel()
         self.student_evalution.set_draft()
-        #        Create Student Evaluation
-        self.evaluation_line = self.evaluation_line_obj.create(
-            {
-                "eval_id": self.student_evalution.id,
-                "stu_eval_id": self.evaluation_template.id,
-                "point_id": self.rating.id,
-            }
-        )
-        self.evaluation_line.onchange_point()
 
     def test_evaluation(self):
         self.assertEqual(self.student.state, "done")
-        self.assertEqual(self.rating.rating_id, self.evaluation_template)
+        self.assertEqual(
+            self.rating_student.res_id, self.evaluation_template_student.id
+        )

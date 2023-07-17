@@ -17,11 +17,12 @@
         "views/school_evaluation_view.xml",
     ],
     "demo": ["demo/school_evaluation_demo.xml"],
-    'assets': {
-        'web.assets_backend': [
-            '/school_evaluation/static/src/css/school_evaluation.css',
-        ],
+    "assets": {
+        "web.assets_backend": [
+            "/school_evaluation/static/src/css/school_evaluation.css"
+        ]
     },
+    "external_dependencies": {"python": ["lxml"]},
     "installable": True,
     "application": True,
 }
