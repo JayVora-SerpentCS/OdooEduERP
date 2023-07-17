@@ -21,6 +21,7 @@
         "report/report_view.xml",
         "wizard/terminate_reason_view.xml",
     ],
+    "external_dependencies": {"python": ["dateutil.relativedelta"]},
     "demo": ["demo/school_hostel_demo.xml"],
     "installable": True,
 }
