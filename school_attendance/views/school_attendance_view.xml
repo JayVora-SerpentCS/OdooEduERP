@@ -263,7 +263,7 @@
                     </group>
                     <div>
                         <button name="get_students" type="object"
-                            class="btn btn-info atted_button" attrs="{'invisible':[('is_generate','!=', False)]}">
+                            class="btn btn-info atted_button" attrs="{'invisible':['|',('is_generate','!=', False),('state', '=', 'validate')]}">
                             <span class="o_following">Generate</span>
                         </button>
                     </div>
