@@ -9,6 +9,10 @@
                         <div class="oe_structure" />
                         <br/>
                         <br/>
+                        <div class="row" align="center">
+                            <h1>Teacher Result Report</h1>
+                        </div>
+                        <br/>
                         <t t-foreach="o" t-as="result">
                             <table width="100%">
                                 <tr>
@@ -76,7 +80,7 @@
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('obt_marks')"></span>
+                                                <span t-esc="round(sub_res_info.get('obt_marks'), 2)"></span>
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">

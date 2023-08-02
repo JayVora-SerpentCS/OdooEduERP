@@ -230,17 +230,18 @@ class LibraryBookIssue(models.Model):
             if rec.date_issue and diff:
                 rec.date_return = rec.date_issue + diff
 
-    @api.depends("actual_return_date", "day_to_return_book")
+    @api.depends("actual_return_date")
     def _compute_penalty(self):
         """ This method calculate a penalty on book .
         @return : Dictionary having identifier of the record as key
                   and penalty as value"""
         for line in self:
             if line.date_return:
-                start_day = line.actual_return_date
-                end_day = line.date_return
-                if start_day > end_day:
-                    diff = rd(start_day.date(), end_day.date())
+                start_day = line.date_return
+                end_day = line.actual_return_date
+                line.penalty = 0.0
+                if start_day and end_day and start_day < end_day:
+                    diff = rd(end_day.date(), start_day.date())
                     day = float(diff.days) or 0.0
                     if line.day_to_return_book:
                         line.penalty = day * line.name.fine_late_return or 0.0
@@ -300,7 +301,6 @@ class LibraryBookIssue(models.Model):
     actual_return_date = fields.Datetime(
         "Actual Return Date",
         help="Actual Return Date of Book",
-        default=fields.Datetime.now,
     )
     penalty = fields.Float(
         compute="_compute_penalty",
@@ -537,16 +537,24 @@ class LibraryBookIssue(models.Model):
 
     def reissue_book(self):
         """This method used for reissue a books."""
-        self.write({"state": "reissue", "date_issue": fields.Datetime.today()})
+        self.write({'actual_return_date': fields.datetime.now()})
+        self._compute_penalty()
+        if self.penalty > 0:
+            raise UserError(_(
+                    """Return date is expired, Please return your book!"""))
+        self.write({"state": "reissue", "date_issue": fields.Datetime.today(),
+                    'actual_return_date': False})
 
     def return_book(self):
         """This method used for return a books."""
+        self.actual_return_date = fields.datetime.now()
         self.state = "return"
 
     def lost_book(self):
         """Method to create scrap records for lost books"""
         stock_scrap_obj = self.env["stock.scrap"]
         for rec in self:
+            rec.actual_return_date = fields.datetime.now()
             scrap_fields = list(stock_scrap_obj._fields)
             scrap_vals = stock_scrap_obj.default_get(scrap_fields)
             origin_str = "Book lost : "
@@ -563,9 +571,10 @@ class LibraryBookIssue(models.Model):
                     "origin": origin_str,
                 }
             )
-            stock_scrap_obj.with_context({"book_lost": True}).create(
+            scrap_id = stock_scrap_obj.with_context({"book_lost": True}).create(
                 scrap_vals
             )
+            scrap_id.action_validate()
             rec.state = "lost"
             rec.lost_penalty = self.name.fine_lost
         return True
@@ -636,27 +645,27 @@ class LibraryBookIssue(models.Model):
             # redirect it to particular invoice
             new_invoice_rec.write({"invoice_line_ids": invoice_line_ids})
         self.state = "fine"
-        view_id = self.env.ref("account.view_move_form")
-        context = dict(self._context)
-        context.update(
-            {
-                "default_move_type": "out_invoice",
-                "default_book_issue_id": record.id,
-                "default_customer": record.id,
-            }
-        )
-        return {
-            "name": _("New Invoice"),
-            "view_mode": "form",
-            "view_id": view_id.ids,
-            "res_model": "account.move",
-            "type": "ir.actions.act_window",
-            # "nodestroy": True,
-            # "res_id": new_invoice_rec.id,
-            "domain": [("book_issue_id", "=", record.id)],
-            "target": "current",
-            "context": context,
-        }
+        # view_id = self.env.ref("account.view_move_form")
+        # context = dict(self._context)
+        # context.update(
+        #     {
+        #         "default_move_type": "out_invoice",
+        #         "default_book_issue_id": record.id,
+        #         "default_customer": record.id,
+        #     }
+        # )
+        # return {
+        #     "name": _("New Invoice"),
+        #     "view_mode": "form",
+        #     "view_id": view_id.ids,
+        #     "res_model": "account.move",
+        #     "type": "ir.actions.act_window",
+        #     # "nodestroy": True,
+        #     # "res_id": new_invoice_rec.id,
+        #     "domain": [("book_issue_id", "=", record.id)],
+        #     "target": "current",
+        #     "context": context,
+        # }
 
     def subscription_pay(self):
         """Method to pay for subscription"""

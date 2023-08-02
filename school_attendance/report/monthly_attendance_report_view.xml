@@ -105,7 +105,7 @@
                                                         </div>
                                                     </t>
                                                     <t t-if="line.get('att').get(date) != 'A'">
-                                                        <t t-esc="present_no" />
+                                                        <b>P</b>
                                                     </t>
                                                 </t>
                                             </td>

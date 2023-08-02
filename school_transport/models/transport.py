@@ -59,6 +59,29 @@ class FleetVehicle(models.Model):
             return res
         return False
 
+    @api.model
+    def _search(
+        self,
+        args,
+        offset=0,
+        limit=None,
+        order=None,
+        count=False,
+        access_rights_uid=None,
+    ):
+        if self._context.get("name"):
+            student_obj = self.env["student.transport"]
+            student_rec = student_obj.browse(self._context.get("name"))
+            args += [('id', 'in', student_rec.sudo().trans_vehicle_ids.ids)]
+        return super(FleetVehicle, self)._search(
+            args,
+            offset=offset,
+            limit=limit,
+            order=order,
+            count=count,
+            access_rights_uid=access_rights_uid
+        )
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -404,6 +427,7 @@ class TransportRegistration(models.Model):
             set monthly amount
         """
         self.monthly_amount = 0.0
+        self.vehicle_id = False
         if self.name:
             self.monthly_amount = self.name.amount
 

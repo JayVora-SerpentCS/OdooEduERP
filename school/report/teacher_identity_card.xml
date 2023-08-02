@@ -42,7 +42,7 @@
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="teacher.gender"/>
+                                                <span t-field="teacher.sudo().gender"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -53,7 +53,7 @@
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="teacher.birthday" />
+                                                <span t-field="teacher.sudo().birthday" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -75,7 +75,7 @@
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="teacher.work_email" />
+                                                <span t-field="teacher.sudo().work_email" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -86,7 +86,7 @@
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="teacher.mobile_phone" />
+                                                <span t-field="teacher.sudo().mobile_phone" />
                                             </td>
                                         </tr>
                                     </table>

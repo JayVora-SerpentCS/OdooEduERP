@@ -36,7 +36,7 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='name']" position="before">
-                <field name="part_name_id" />
+                <field name="part_name_id" domain="[('state','=','done')]" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
                 <field name="student_standard_id" />
             </xpath>
         </field>

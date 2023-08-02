@@ -16,17 +16,24 @@ class BatchExamReport(models.AbstractModel):
                 ("state", "=", "finished"),
             ]
         )
-        exam_result_rec = exam_result_pass_rec = exam_result_fail_rec = []
+        exam_result_rec = []
+        exam_result_pass_rec = []
+        exam_result_fail_rec = []
         result_obj = self.env["exam.result"]
         for rec in exam_rec:
             exam_result_rec += result_obj.search(
-                [("s_exam_ids", "=", rec.id), ("state", "!=", "draft")]
+                [
+                    ("s_exam_ids", "=", rec.id),
+                    ("state", "!=", "draft"),
+                    ("standard_id", "=", standard_id.id),
+                ]
             )
             exam_result_pass_rec += result_obj.search(
                 [
                     ("s_exam_ids", "=", rec.id),
                     ("result", "=", "Pass"),
                     ("state", "!=", "draft"),
+                    ("standard_id", "=", standard_id.id),
                 ]
             )
             exam_result_fail_rec += result_obj.search(
@@ -34,6 +41,7 @@ class BatchExamReport(models.AbstractModel):
                     ("s_exam_ids", "=", rec.id),
                     ("result", "=", "Fail"),
                     ("state", "!=", "draft"),
+                    ("standard_id", "=", standard_id.id),
                 ]
             )
         std_pass = ""

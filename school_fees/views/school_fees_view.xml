@@ -124,18 +124,23 @@
         <field name="model">student.fees.structure.line</field>
         <field name="arch" type="xml">
             <form string="Student Payslip Line">
-                <group col="4">
+                <group>
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="sequence"/>
                 </group>
-                <group col="4" string="Calculations">
-                    <field name="type"/>
-                    <field name="product_id"/>
-                    <field name="account_id" required="1"/>
-                    <field name="amount" readonly="1" force_save="1"/>
-                    <field name="company_id"/>
-                    <field name="currency_id"/>
-                    <field name="currency_symbol"/>
+                <group string="Calculations">
+                    <group>
+                        <field name="type"/>
+                        <field name="account_id" required="1"/>
+                        <field name="company_id"/>
+                        <field name="currency_symbol"/>
+                    </group>
+                    <group>
+                        <field name="product_id"/>
+                        <field name="amount" readonly="1" force_save="1"/>
+                        <field name="currency_id"/>
+                    </group>
                 </group>
                 <notebook colspan="4">
                     <page string="Function">
@@ -145,8 +150,11 @@
                                 <field name="to_month"/>
                             </tree>
                             <form string="Function Arguments" >
+                                <label for="sequence"/>
                                 <field name="sequence"/>
+                                <label for="from_month"/>
                                 <field name="from_month"/>
+                                <label for="to_month"/>
                                 <field name="to_month"/>
                             </form>
                         </field>
@@ -285,18 +293,26 @@
                     <field name="state" widget="statusbar" readonly="1"/>
                 </header>
                 <sheet>
-                    <group string="Information" col="4" colspan="4">
-                        <field name="name" placeholder="Name" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        <field name="number" readonly="1"/>
-                        <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                        <!-- <field name="period_id" placeholder="Force Period"/> -->
-                        <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                    <group string="Information">
+                        <group>
+                            <field name="name" placeholder="Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="date" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="company_id" string = "School" placeholder="School Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                        </group>
+                        <group>
+                            <field name="number" readonly="1"/>
+                            <field name="journal_id" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <!-- <field name="period_id" placeholder="Force Period"/> -->
+                        </group>
                     </group>
-                    <group string="Fees Register for" col="4" colspan="4">
-                        <field name="fees_structure" placeholder="Fee structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="standard_id" placeholder="Select Class" attrs="{'readonly':[('state','not in','draft')]}"
-                            required="1" widget="selection"/>
+                    <group string="Fees Register for">
+                        <group>
+                            <field name="fees_structure" placeholder="Fee structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                        </group>
+                        <group>
+                            <field name="standard_id" placeholder="Select Class" attrs="{'readonly':[('state','not in','draft')]}"
+                                required="1" widget="selection"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Student Payslip">

@@ -72,7 +72,7 @@
             <field name="standard_id" ref="school.demo_standard_standard_1"/>
          </record>
 
-         <function model="student.fees.register" name="fees_register_confirm"
-            eval="[[ref('demo_student_fees_registration_1'), ref('demo_student_fees_registration_2')]]"/>
+         <!-- <function model="student.fees.register" name="fees_register_confirm"
+            eval="[[ref('demo_student_fees_registration_1'), ref('demo_student_fees_registration_2')]]"/> -->
     </data>
 </odoo>

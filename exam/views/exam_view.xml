@@ -211,19 +211,26 @@
         <field name="arch" type="xml">
             <form string="Additional Exam Information">
                 <sheet>
-                    <group col="4" string="Additional Exam Information" colspan="6">
-                        <field name="addtional_exam_code" />
-                        <field name="name"  placeholder="Exam Name"/>
-                        <field name="standard_id" placeholder="Select Class" widget="selection" string="Class"/>
-                        <field name="subject_id" placeholder="Select Subject" widget="selection" required="1"/>
-                        <field name="maximum_marks" required="1" />
-                        <field name="minimum_marks" required="1"/>
+                    <group string="Additional Exam Information">
+                        <group>
+                            <field name="addtional_exam_code" />
+                            <field name="standard_id" placeholder="Select Class" widget="selection" string="Class"/>
+                            <field name="minimum_marks" required="1"/>
+                        </group>
+                        <group>
+                            <field name="name"  placeholder="Exam Name"/>
+                            <field name="subject_id" placeholder="Select Subject" widget="selection" required="1"/>
+                            <field name="maximum_marks" required="1" />
+                        </group>
                     </group>
-                    <group col="4" string="Examination Dates" colspan="4">
-                        <field name="exam_date" placeholder="Exam Date"/>
-                        <newline/>
-                        <field name="create_date" widget='date' string='Created Date' placeholder="Created Date" readonly="1"/>
-                        <field name="write_date" widget='date' string='Updated Date' placeholder="Last Updated Date" readonly="1"/>
+                    <group string="Examination Dates">
+                        <group>
+                            <field name="exam_date" placeholder="Exam Date"/>
+                            <field name="write_date" widget='date' string='Updated Date' placeholder="Last Updated Date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="create_date" widget='date' string='Created Date' placeholder="Created Date" readonly="1"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -297,7 +304,7 @@
                     </group>
                     <group col="4" string="Student Details" colspan="4">
                         <field name="student_id" placeholder="Select Student"
-                            context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True}"
+                            context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"
                             domain="[('state','!=','draft')]"
                             readonly="1"/>
                         <field name="roll_no" readonly="1"/>
@@ -490,15 +497,23 @@
                     <group col="2" string="Result Information">
                         <field name="a_exam_id" options="{&quot;no_create&quot;: True}"/>
                     </group>
-                    <group col="4" string="Student Information" colspan="4">
-                        <field name="student_id" domain="[('state','=','done'), ('standard_id', '=', standard_id)]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="roll_no"/>
-                        <field name="standard_id" string="Class"/>
+                    <group string="Student Information">
+                        <group>
+                            <field name="student_id" domain="[('state','=','done'), ('standard_id', '=', standard_id)]" context="{'a_exam':a_exam_id}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="standard_id" string="Class"/>
+                        </group>
+                        <group>
+                            <field name="roll_no"/>
+                        </group>
                     </group>
-                    <group col="4" string="Result Information" colspan="4">
-                        <field name="obtain_marks"/>
-                        <field name="result"/>
-                        <field name='active' invisible='1'/>
+                    <group string="Result Information">
+                        <group>
+                            <field name="obtain_marks"/>
+                            <field name='active' invisible='1'/>
+                        </group>
+                        <group>
+                            <field name="result"/>
+                        </group>
                     </group>
                 </sheet>
             </form>

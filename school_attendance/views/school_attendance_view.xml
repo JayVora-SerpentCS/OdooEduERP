@@ -141,7 +141,7 @@
                             groups="school.group_school_administration,school.group_school_teacher"
                             attrs="{'invisible':[('state','in',['approve','reject','draft'])]}"/>
                     <button name="draft_state" type="object" string="Send to Draft"
-                            attrs="{'invisible':[('state','in',['draft','approve','reject','toapprove'])]}"/>
+                            attrs="{'invisible':[('state','not in',['reject','toapprove'])]}"/>
                     <button name="toapprove_state" string="To Approve" type="object"
                             attrs="{'invisible':[('state','in',['approve','toapprove','reject'])]}"/>
                     <button name="reject_state" type="object" string="Reject"

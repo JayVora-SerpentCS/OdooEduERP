@@ -242,17 +242,21 @@
                             </div>
                         </button>
                    </div>
-                    <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
-                       <field name="transport_user" invisible="1"/>
+                    <group attrs="{'readonly':[('state','!=','draft')]}">
                        <separator string="Transport Registration" colspan="4"/>
-                        <field name="student_id" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
-                        <field name="name" placeholder="Enter Transport Route Name" attrs="{'readonly':[('state','not in','draft')]}" options="{'no_create': True, 'no_open': True}" />
-                        <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="monthly_amount" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        <field name="registration_month" attrs="{'readonly':[('state','not in','draft')]}"/>
-                        <field name="transport_fees"/>
-                        <field name="paid_amount" readonly="1"/>
-                        <field name="remain_amt" readonly="1"/>
+                        <group>
+                            <field name="transport_user" invisible="1"/>
+                            <field name="student_id" placeholder="Enter Participant Name" attrs="{'readonly':[('state','not in','draft')]}" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}"/>
+                            <field name="vehicle_id" attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}" context="{'name':name}" options="{&quot;no_create&quot;: True}"/>
+                            <field name="registration_month" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="paid_amount" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="name" placeholder="Enter Transport Route Name" attrs="{'readonly':[('state','not in','draft')]}" options="{'no_create': True, 'no_open': True}" />
+                            <field name="monthly_amount" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="transport_fees"/>
+                            <field name="remain_amt" readonly="1"/>
+                        </group>
                     </group>
                     <separator string="Transport Duration"/>
                     <group col="4" colspan="4">

@@ -231,23 +231,20 @@
                             <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_create&quot;: True, &quot;no_edit&quot;: True, &quot;no_open&quot;: True}"/>
                         </page>
                         <page string="Syllabus" attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}">
-                            <group>
-                                <field name="syllabus_ids" nolabel="1" colspan="4" context="{'default_standard_id':standard_id}">
-                                    <tree editable="top" string="Syllabs">
-                                        <field name="standard_id" invisible="1"/>
-                                        <field name="subject_id" required="1"
-                                                        widget="selection"/>
+                            <field name="syllabus_ids" nolabel="1" context="{'default_standard_id':standard_id}">
+                                <tree editable="top" string="Syllabs">
+                                    <field name="standard_id" invisible="1"/>
+                                    <field name="subject_id" required="1" widget="selection"/>
+                                    <field name="syllabus_doc" required="1"/>
+                                </tree>
+                                <form string="Syllabus">
+                                    <group>
+                                        <field name="subject_id" required="1" options="{&quot;no_open&quot;: True}"/>
                                         <field name="syllabus_doc" required="1"/>
-                                    </tree>
-                                    <form string="Syllabus">
-                                        <group>
-                                            <field name="subject_id" required="1"/>
-                                            <field name="syllabus_doc" required="1"/>
-                                        </group>
+                                    </group>
 
-                                    </form>
-                                </field>
-                            </group>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -500,13 +497,13 @@
         <field name="arch" type="xml">
             <form string="Months">
                 <sheet>
-                    <group col="4" colspan="4">
-                        <field name="name" placeholder="Name" />
-                        <field name="code" placeholder="Code" />
-                        <field name="date_start" placeholder="Start Date" />
-                        <field name="date_stop" placeholder="Stop Date" />
-                        <field name="year_id" colspan="4" placeholder="Year" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
-                        <field name="description" colspan="4" placeholder="Description"/>
+                    <group>
+                        <field name="name" placeholder="Name"/>
+                        <field name="code" placeholder="Code"/>
+                        <field name="date_start" placeholder="Start Date"/>
+                        <field name="date_stop" placeholder="Stop Date"/>
+                        <field name="year_id" placeholder="Year" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                        <field name="description" placeholder="Description"/>
                     </group>
                 </sheet>
             </form>
@@ -533,12 +530,11 @@
         <field name="arch" type="xml">
             <form string="Medium">
                 <sheet>
-                    <group col="4" colspan="4">
+                    <group>
                         <field name="sequence" />
                         <field name="name" placeholder="Name" />
                         <field name="code" placeholder="Code" />
-                        <newline />
-                        <field name="description" colspan="4" placeholder="Description"/>
+                        <field name="description" placeholder="Description"/>
                     </group>
                 </sheet>
             </form>
@@ -623,12 +619,11 @@
         <field name="arch" type="xml">
             <form string="Divisions">
                 <sheet>
-                    <group col="4" colspan="4">
-                        <field name="sequence" />
-                        <field name="name" placeholder="Name" />
-                        <field name="code" placeholder="Code" />
-                        <newline />
-                        <field name="description" colspan="4" placeholder="Description"/>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name" placeholder="Name"/>
+                        <field name="code" placeholder="Code"/>
+                        <field name="description" placeholder="Description"/>
                     </group>
                 </sheet>
             </form>
@@ -712,13 +707,11 @@
         <field name="arch" type="xml">
             <form string="Standard Information">
                 <sheet>
-                    <group col="4" colspan="4">
+                    <group>
                         <field name="sequence"/>
-                        <newline />
                         <field name="name" placeholder="Name"/>
                         <field name="code" placeholder="Code"/>
-                        <newline />
-                        <field name="description" colspan="4" placeholder="Description"/>
+                        <field name="description" placeholder="Description"/>
                     </group>
                 </sheet>
             </form>
