@@ -47,5 +47,7 @@ class AccountPaymentRegister(models.TransientModel):
                 self._context.get("active_ids", [])
             )
         if invoice.book_issue_id and invoice.payment_state == "paid":
+            invoice.book_issue_id.penalty = 0.00
+            invoice.book_issue_id.lost_penalty = 0.00
             invoice.book_issue_id.state = "paid"
         return res

@@ -99,7 +99,8 @@ class HostelRoom(models.Model):
         for rec in self:
             rec.availability = rec.student_per_room - len(
                 rec.student_ids.filtered(
-                    lambda student: student.status != "discharge"
+                    lambda student: student.status
+                    not in ["discharge", "cancel"]
                 )
             )
 

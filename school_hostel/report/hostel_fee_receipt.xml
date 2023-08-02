@@ -17,6 +17,7 @@
                             <h1>HOSTEL Fee Receipt</h1>
                         </div>
                         <table width="100%" style="background: #e6e6e6;">
+                            <t t-set="account_move_id" t-value="hostel.env['account.move'].sudo().search([('partner_id','=',hostel.student_id.partner_id.id)])"/>
                             <tr>
                                 <td>
                                     <br />
@@ -131,7 +132,7 @@
                                                 <b>:</b>
                                             </td>
                                             <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                <span t-field="hostel.room_rent" />
+                                                <span t-field="hostel.room_rent" t-options='{"widget": "monetary","display_currency": account_move_id.currency_id}'/>
                                             </td>
                                             <td width="50%">
                                                 <span></span>
@@ -153,7 +154,7 @@
                                                 <b>:</b>
                                             </td>
                                             <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                <span t-field="hostel.paid_amount" />
+                                                <span t-field="hostel.paid_amount" t-options='{"widget": "monetary","display_currency": account_move_id.currency_id}'/>
                                             </td>
                                             <td align="left" width="19%" style="font-family: 'Helvetica';font-size: 18px;">
                                                 <b>Remaining Fee</b>
@@ -162,7 +163,7 @@
                                                 <b>:</b>
                                             </td>
                                             <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                <span t-field="hostel.remaining_amount" />
+                                                <span t-field="hostel.remaining_amount" t-options='{"widget": "monetary","display_currency": account_move_id.currency_id}'/>
                                             </td>
                                         </tr>
                                     </table>

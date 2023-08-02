@@ -255,7 +255,7 @@ class ProductProduct(models.Model):
                 AND
                     lower(isbn) = %s
                 """,
-                (rec.id, str(rec.isbn.lower().strip())),
+                (rec.id, str(rec.isbn.lower().strip()) if rec.isbn else ''),
             )
             if self._cr.fetchone():
                 raise ValidationError(_("The isbn field must be unique!"))

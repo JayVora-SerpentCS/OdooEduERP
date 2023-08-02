@@ -25,7 +25,7 @@
                             <tr class="table table-borderless" style="border: 0px;">
                                 <td align="top" colspan="1">
                                     <img t-if="student.photo"
-                                        t-att-src="'data:image/png;base64,%s' % student.photo.decode('utf-8')"/>
+                                        t-att-src="'data:image/png;base64,%s' % student.photo.decode('utf-8')" style="max-height: 300px; max-width: 200px;"/>
                                 </td>
                                 <td align="left">
                                     <table width="100%">

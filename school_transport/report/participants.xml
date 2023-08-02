@@ -129,13 +129,13 @@
                                             <span t-field="trans_participants_ids.name.name"></span>
                                         </td>
                                         <td align="center" width="15%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="trans_participants_ids.name.standard_id.standard_id.name"></span>
+                                            <span t-field="trans_participants_ids.name.sudo().standard_id.standard_id.name"></span>
                                         </td>
                                         <td align="center" width="10%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="trans_participants_ids.name.standard_id.division_id.name"></span>
+                                            <span t-field="trans_participants_ids.name.sudo().standard_id.division_id.name"></span>
                                         </td>
                                         <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
-                                            <span t-field="trans_participants_ids.vehicle_id.license_plate"></span>
+                                            <span t-field="trans_participants_ids.sudo().vehicle_id.license_plate"></span>
                                         </td>
                                         <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
                                             <span t-field="trans_participants_ids.tr_end_date"></span>

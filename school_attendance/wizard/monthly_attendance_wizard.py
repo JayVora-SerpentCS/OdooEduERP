@@ -739,7 +739,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                                 )
                             elif line.get("att").get(date) != "A":
                                 sheet.write(
-                                    row, col, present_no, tbl_data_fmt_p
+                                    row, col, 'P', tbl_data_fmt_p
                                 )
                         col += 1
                     sheet.write(row, col, present, tbl_data_fmt_p)

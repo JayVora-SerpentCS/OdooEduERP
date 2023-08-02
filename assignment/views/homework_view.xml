@@ -58,26 +58,38 @@
                         <field name="state" widget="statusbar" readonly="1"/>
                     </header>
                     <sheet>
-                    <separator string="Teacher Assignment" colspan="4"/>
-                    <group col="4" colspan="4">
+                    <separator string="Teacher Assignment"/>
+                    <group>
                         <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','!=','draft')]}"/>
                         <field name="teacher_id" placeholder="Teacher Name" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
                     </group>
-                    <group col="4" string="Subject and Dates">
-                        <field name="standard_id" select="1" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" required="1"/>
-                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',subject_standard_assignment)]" widget="selection"/>
-                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="subject_standard_assignment" invisible="1"/>
+                    <group string="Subject and Dates">
+                        <group>
+                            <field name="standard_id" select="1" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" required="1"/>
+                            <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',subject_standard_assignment)]" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="subject_standard_assignment" invisible="1"/>
+                        </group>
                     </group>
-                    <group string="Submission Format Information" col="4">
-                        <field name="type_submission" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="file_format" attrs="{'invisible':[('type_submission','=','hardcopy')],'readonly':[('state','!=','draft')]}"/>
+                    <group string="Submission Format Information">
+                        <group>
+                            <field name="type_submission" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="file_format" attrs="{'invisible':[('type_submission','=','hardcopy')],'readonly':[('state','!=','draft')]}"/>
+                        </group>
                     </group>
-                    <separator string="Attachments" colspan="4"/>
-                    <group col="2">
-                        <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','!=','draft')]}" filename="attach_files" />
-                        <field name="attach_files" invisible="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <separator string="Attachments"/>
+                    <group>
+                        <group>
+                            <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','!=','draft')]}" filename="attach_files" />
+                        </group>
+                        <group>
+                            <field name="attach_files" invisible="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Student Assignment Details">
@@ -125,20 +137,31 @@
                     </header>
                    <sheet>
                     <separator colspan="4"/>
-                    <group col="4" string="Assignment Information">
-                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('state','=','done')]"/>
-                        <field name="stud_roll_no" invisible="1"/>
-                        <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <newline />
-                        <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                    <group string="Assignment Information">
+                        <group>
+                            <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('state','=','done')]"/>
+                            <field name="stud_roll_no" invisible="1"/>
+                            <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','!=','draft')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                        </group>
+                        <group>
+                            <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
                     </group>
-                    <group col="4" string="Standard and Division">
-                        <field name="standard_id" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection"/>
-                        <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" domain="[('teacher_ids','in',teacher_id),('standard_ids','in',student_standard)]"/>
+                    <group string="Standard and Division">
+                        <group>
+                            <field name="standard_id" placeholder="Class" attrs="{'readonly':[('state','!=','draft')]}" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="subject_id"  placeholder="Subject" attrs="{'readonly':[('state','!=','draft')]}" widget="selection" domain="[('teacher_ids','in',teacher_id),'|',('standard_ids','in',student_standard),('standard_id','=',student_standard)]"/>
+                        </group>
                     </group>
-                    <group col="4" string="Dates">
-                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <group string="Dates">
+                        <group>
+                            <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
                     </group>
                         <group string="Upload / Download Attachments">
                             <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -150,7 +173,7 @@
                         <field name="file_name" invisible="1"/>
                     </group>
                     <group string="Rejection History" attrs="{'invisible':[('state','in',['draft','active','done'])]}">
-                        <field name="assignment_reject_history_ids" nolabel="1" readonly="1">
+                        <field name="assignment_reject_history_ids" colspan="2" nolabel="1" readonly="1">
                             <tree>
                                 <field name="name"/>
                                 <field name="user_id"/>

@@ -78,6 +78,10 @@
                         <table width="100%">
                             <thead style="background-color:#e6e6e6;">
                                 <tr>
+                                    <td align="center" width="20%"
+                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <b>Exam</b>
+                                    </td>
                                     <td align="center" width="15%"
                                         style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
                                         <b>Subject Code</b>
@@ -98,16 +102,16 @@
                                         style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
                                         <b>Obtain Mark</b>
                                     </td>
-                                    <td align="center" width="20%"
-                                        style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                        <b>Exam</b>
-                                    </td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <t t-foreach="get_lines(exam_results.sudo(),result)" t-as="result_ids">
                                     <table width="100%">
                                         <tr>
+                                            <td align="center" width="20%"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                <span t-esc="result_ids.get('s_exam_ids')"></span>
+                                            </td>
                                             <td align="center" width="15%"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
                                                 <span t-esc="result_ids.get('code')"></span>
@@ -118,19 +122,15 @@
                                             </td>
                                             <td align="center" width="15%"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="result_ids.get('maximum_marks')"></span>
+                                                <span t-esc="round(result_ids.get('maximum_marks'), 2)"></span>
                                             </td>
                                             <td align="center" width="15%"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="result_ids.get('minimum_marks')"></span>
+                                                <span t-esc="round(result_ids.get('minimum_marks'), 2)"></span>
                                             </td>
                                             <td align="center" width="15%"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="result_ids.get('obtain_marks')"></span>
-                                            </td>
-                                            <td align="center" width="20%"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="result_ids.get('s_exam_ids')"></span>
+                                                <span t-esc="round(result_ids.get('obtain_marks'), 2)"></span>
                                             </td>
                                         </tr>
                                     </table>
@@ -143,13 +143,13 @@
                                             <b>Total</b>
                                         </td>
                                         <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                            <span t-esc="exam_results.total"></span>
+                                            <span t-esc="round(exam_results.total, 2)"></span>
                                         </td>
                                         <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;background-color:#e6e6e6;">
                                             <b>Percentage</b>
                                         </td>
                                         <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
-                                            <span t-esc="exam_results.percentage"></span>%
+                                            <span t-esc="round(exam_results.percentage, 2)"></span>%
                                         </td>
                                         <td width="16.6%" align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;background-color:#e6e6e6;">
                                             <b>Result</b>

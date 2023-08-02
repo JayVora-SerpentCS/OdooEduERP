@@ -358,27 +358,28 @@ class StudentStudent(models.Model):
     )
     subject_id = fields.Many2one("subject.subject", "Subject", help="Subject")
 
-    @api.model
-    def get_views(self, views, options=None):
-        res = super().get_views(views, options)
-        reports = res["views"].get("list", {}).get("toolbar").get("print")
-        form_reports = res["views"].get("form", {}).get("toolbar").get("print")
-        index = 0
-        rem_index = ""
-        for report in reports:
-            if not self._context.get(
-                "is_student_alumni_terminate", False
-            ) and self.env.ref(
-                "school.report_student_student_leaving_certificate"
-            ).id == report.get(
-                "id"
-            ):
-                rem_index = index
-            index += 1
-        if rem_index:
-            reports.pop(int(rem_index))
-            form_reports.pop(int(rem_index))
-        return res
+    # @api.model
+    # def get_views(self, views, options=None):
+    #     res = super().get_views(views, options)
+    #     if res["views"].get("list", {}):
+    #         reports = res["views"].get("list", {}).get("toolbar").get("print")
+    #         form_reports = res["views"].get("form", {}).get("toolbar").get("print")
+    #         index = 0
+    #         rem_index = ""
+    #         for report in reports:
+    #             if not self._context.get(
+    #                 "is_student_alumni_terminate", False
+    #             ) and self.env.ref(
+    #                 "school.report_student_student_leaving_certificate"
+    #             ).id == report.get(
+    #                 "id"
+    #             ):
+    #                 rem_index = index
+    #             index += 1
+    #         if rem_index:
+    #             reports.pop(int(rem_index))
+    #             form_reports.pop(int(rem_index))
+    #     return res
 
     @api.model
     def create(self, vals):

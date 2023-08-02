@@ -12,8 +12,8 @@
                         <field name="academic_year_id" placeholder="Enter Academic Year" widget="selection"/>
                     </group>
                     <footer>
-                        <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
-                        <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
+                        <button class="oe_highlight fa fa-plus" name="move_start" string="Move" type="object"/>
+                        <button class="oe_highlights" special="cancel" string="Close"/>
                     </footer>
            </form>
         </field>

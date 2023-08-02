@@ -100,7 +100,7 @@
                                         <span t-field="result.a_exam_id.minimum_marks"></span>
                                     </td>
                                     <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                        <span t-field="result.obtain_marks"></span>
+                                        <span t-esc="round(result.obtain_marks, 2)"></span>
                                     </td>
                                 </tr>
                             </tbody>

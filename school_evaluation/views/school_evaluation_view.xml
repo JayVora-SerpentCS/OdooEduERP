@@ -313,9 +313,13 @@
                             <field name="feedback"/>
                         </tree>
                         <form>
-                            <field name="rating"/>
-                            <field name="feedback"/>
-                            <field name="res_id" invisible="1"/>
+                            <sheet>
+                                <group>
+                                    <field name="rating"/>
+                                    <field name="feedback"/>
+                                    <field name="res_id" invisible="1"/>
+                                </group>
+                            </sheet>
                         </form>
                     </field>
                 </sheet>

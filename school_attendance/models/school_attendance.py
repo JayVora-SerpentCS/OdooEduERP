@@ -164,6 +164,20 @@ class StudentleaveRequest(models.Model):
             vals.update(self._update_vals(vals.get("student_id")))
         return super(StudentleaveRequest, self).write(vals)
 
+    def unlink(self):
+        """Inherited unlink method to give warning on record deletion"""
+        for rec in self:
+            if rec.state in ["approve", "reject"]:
+                if rec.state == 'approve':
+                    raise ValidationError(
+                        _("""Approve leave can not be deleted!""")
+                    )
+                else:
+                    raise ValidationError(
+                        _("""Reject leave can not be deleted!""")
+                    )
+        return super(StudentleaveRequest, self).unlink()
+
     @api.onchange("student_id")
     def onchange_student(self):
         """Method to get standard and roll no of student selected"""
