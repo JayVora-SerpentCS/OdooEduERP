@@ -125,9 +125,9 @@
         <field name="arch" type="xml">
             <form string="Student Payslip Line">
                 <group>
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="sequence"/>
                 </group>
                 <group string="Calculations">
                     <group>
@@ -137,7 +137,8 @@
                         <field name="currency_symbol"/>
                     </group>
                     <group>
-                        <field name="product_id"/>
+                        <field name="product_id"
+                               context="{'form_view_ref': 'product.product_template_only_form_view'}"/>
                         <field name="amount" readonly="1" force_save="1"/>
                         <field name="currency_id"/>
                     </group>

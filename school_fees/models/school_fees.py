@@ -190,8 +190,9 @@ class StudentFeesStructureLine(models.Model):
     )
     product_id = fields.Many2one("product.product", "Product", required=True)
     amount = fields.Float("Amount", digits=(16, 2), help="Fee amount")
-    sequence = fields.Integer(
-        "Sequence", help="Sequence of fee structure form"
+    sequence = fields.Char(
+        "Sequence", help="Sequence of fee structure form",
+        readonly=True
     )
     line_ids = fields.One2many(
         "student.payslip.line.line",
@@ -215,6 +216,13 @@ class StudentFeesStructureLine(models.Model):
         string="Symbol",
         help="Select currency symbol",
     )
+
+    @api.model
+    def create(self, vals):
+        vals['sequence'] = self.env['ir.sequence'
+                               ].next_by_code('student.fees.structure.line')
+        res = super(StudentFeesStructureLine, self).create(vals)
+        return res
 
     @api.onchange("company_id")
     def set_currency_company(self):
