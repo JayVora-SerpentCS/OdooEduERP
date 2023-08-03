@@ -351,8 +351,8 @@
                                             <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
                                                 <h4>
                                                     <a type="open">
-                                                        <field name="name" />
-                                                        <field name="middle" />
+                                                        <field name="name" />&#x2063;
+                                                        <field name="middle" />&#x2063;
                                                         <field name="last" />
                                                         <field name="student_name" invisible="1" />
                                                         <field name="standard_id" invisible="1" />
