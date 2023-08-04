@@ -87,14 +87,20 @@
                     <notebook colspan="4"  attrs="{'invisible':[('type','!=','range')]}">
                         <page string="Function">
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Function Arguments" >
-                                    <field name="from_month" placeholder="Month (From)"/>
-                                    <field name="to_month" placeholder="Month (To)"/>
+                                <tree string="Function Arguments" editable="bottom">
+                                    <field name="academic_year_id"
+                                           options="{&quot;no_create&quot;: True}"/>
+                                    <field name="from_month"
+                                           options="{&quot;no_create&quot;: True}"
+                                           domain="[('year_id', '=', academic_year_id)]"/>
+                                    <field name="to_month"
+                                           options="{&quot;no_create&quot;: True}"
+                                           domain="[('year_id', '=', academic_year_id)]"/>
                                 </tree>
-                                <form string="Function Arguments" >
+                                <!-- <form string="Function Arguments" >
                                     <field name="from_month" placeholder="Month (From)"/>
                                     <field name="to_month" placeholder="Month (To)"/>
-                                </form>
+                                </form> -->
                             </field>
                         </page>
                     </notebook>
@@ -146,18 +152,24 @@
                 <notebook colspan="4">
                     <page string="Function">
                         <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('type','!=','range')]}">
-                            <tree string="Function Arguments" >
-                                <field name="from_month"/>
-                                <field name="to_month"/>
+                            <tree string="Function Arguments" editable="bottom">
+                                <field name="academic_year_id"
+                                       options="{&quot;no_create&quot;: True}"/>
+                                <field name="from_month"
+                                       options="{&quot;no_create&quot;: True}"
+                                       domain="[('year_id', '=', academic_year_id)]"/>
+                                <field name="to_month"
+                                       options="{&quot;no_create&quot;: True}"
+                                       domain="[('year_id', '=', academic_year_id)]"/>
                             </tree>
-                            <form string="Function Arguments" >
+                            <!-- <form string="Function Arguments" >
                                 <label for="sequence"/>
                                 <field name="sequence"/>
                                 <label for="from_month"/>
                                 <field name="from_month"/>
                                 <label for="to_month"/>
                                 <field name="to_month"/>
-                            </form>
+                            </form> -->
                         </field>
                     </page>
                 </notebook>

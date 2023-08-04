@@ -170,7 +170,7 @@ class HostelStudent(models.Model):
         """Method to compute number of invoice of student"""
         inv_obj = self.env["account.move"]
         for rec in self:
-            rec.compute_inv = inv_obj.search_count(
+            rec.compute_inv = inv_obj.sudo().search_count(
                 [("hostel_student_id", "=", rec.id)]
             )
 
@@ -370,19 +370,19 @@ class HostelStudent(models.Model):
         """Method to view number of invoice of student"""
         invoice_obj = self.env["account.move"]
         for rec in self:
-            invoices_rec = invoice_obj.search(
+            invoices_rec = invoice_obj.sudo().search(
                 [("hostel_student_id", "=", rec.id)]
             )
-            action = rec.env.ref(
+            action = rec.sudo().env.ref(
                 "account.action_move_out_invoice_type"
-            ).read()[0]
+            ).sudo().read()[0]
             if len(invoices_rec) > 1:
-                action["domain"] = [("id", "in", invoices_rec.ids)]
+                action["domain"] = [("id", "in", invoices_rec.sudo().ids)]
             elif len(invoices_rec) == 1:
                 action["views"] = [
-                    (rec.env.ref("account.view_move_form").id, "form")
+                    (rec.sudo().env.ref("account.view_move_form").id, "form")
                 ]
-                action["res_id"] = invoices_rec.ids[0]
+                action["res_id"] = invoices_rec.sudo().ids[0]
             else:
                 action = {"type": "ir.actions.act_window_close"}
         return action
@@ -399,11 +399,11 @@ class HostelStudent(models.Model):
                 "hostel_student_id": rec.id,
                 "hostel_ref": rec.hostel_id,
             }
-            account_inv_id = invoice_obj.create(vals)
-            acc_id = account_inv_id.journal_id.default_account_id.id
-            account_view_id = rec.env.ref("account.view_move_form")
+            account_inv_id = invoice_obj.sudo().create(vals)
+            acc_id = account_inv_id.sudo().journal_id.sudo().default_account_id.id
+            account_view_id = rec.sudo().env.ref("account.view_move_form")
             for _move_line in account_inv_id:
-                account_inv_id.write(
+                account_inv_id.sudo().write(
                     {
                         "invoice_line_ids": [
                             (
