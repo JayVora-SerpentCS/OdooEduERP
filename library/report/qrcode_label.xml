@@ -18,7 +18,7 @@
                                 <td style="border:1px solid black;" height="100px">
                                     <div class="col-md-2">
                                         <t t-set="name" t-value="o.name"/>
-                                        <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.name, 90, 90)" alt="Barcode" style="display: block;align:center;padding-top:15px;padding-bottom:15px;"/>
+                                        <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.name, 90, 100)"/>
                                     </div>
                                </td>
                             </tr>

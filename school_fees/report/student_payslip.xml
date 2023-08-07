@@ -77,8 +77,6 @@
                                         <td>
                                             <span><t t-esc="counter"></t></span>
                                         </td>
-                                        <td width="5%" align="center" style="font-family: 'Helvetica';font-size: 16px;">
-                                        </td>
                                         <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 16px;">
                                             <span t-field="l.name"></span>
                                         </td>

@@ -151,6 +151,7 @@
                         <field name="currency_id" placeholder="Select Or Create Currency" />
                         <field name="lang" placeholder="Language"/>
                         <field name="required_age" required="1"/>
+                        <field name="company_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Standards">

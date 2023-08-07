@@ -457,7 +457,7 @@ class SchoolSchool(models.Model):
 
     _name = "school.school"
     _description = "School Information"
-    _rec_name = "com_name"
+    _rec_name = "name"
 
     @api.constrains("code")
     def _check_code(self):
@@ -474,18 +474,15 @@ class SchoolSchool(models.Model):
         return [(language.code, language.name) for language in languages]
 
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
-        ondelete="cascade",
+        'res.company',
+        string='Company',
         required=True,
-        delegate=True,
-        help="Company_id of the school",
+        default=lambda self: self.env.company
     )
-    com_name = fields.Char(
-        "School Name",
-        related="company_id.name",
-        store=True,
-        help="School name",
+    name = fields.Char(
+        'School Name',
+        required=True,
+        help='School name'
     )
     code = fields.Char("Code", required=True, help="School code")
     standards = fields.One2many(
@@ -505,14 +502,32 @@ class SchoolSchool(models.Model):
         help="""Minimum required age for
                                   student admission""",
     )
+    street = fields.Char()
+    street2 = fields.Char()
+    zip = fields.Char()
+    city = fields.Char()
+    state_id = fields.Many2one(
+        "res.country.state",
+        string="State",
+        ondelete="restrict"
+    )
+    country_id = fields.Many2one(
+        "res.country",
+        string="Country",
+        ondelete="restrict"
+    )
+    currency_id = fields.Many2one(
+        related="company_id.currency_id",
+        readonly=True
+    )
 
-    @api.model
-    def create(self, vals):
-        """Inherited create method to assign company_id to school"""
-        res = super(SchoolSchool, self).create(vals)
-        main_company = self.env.ref("base.main_company")
-        res.company_id.parent_id = main_company.id
-        return res
+    # @api.model
+    # def create(self, vals):
+    #     """Inherited create method to assign company_id to school"""
+    #     res = super(SchoolSchool, self).create(vals)
+    #     main_company = self.env.ref("base.main_company")
+    #     res.company_id.parent_id = main_company.id
+    #     return res
 
 
 class SubjectSubject(models.Model):

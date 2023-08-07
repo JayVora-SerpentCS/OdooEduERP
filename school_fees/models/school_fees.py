@@ -190,8 +190,9 @@ class StudentFeesStructureLine(models.Model):
     )
     product_id = fields.Many2one("product.product", "Product", required=True)
     amount = fields.Float("Amount", digits=(16, 2), help="Fee amount")
-    sequence = fields.Integer(
-        "Sequence", help="Sequence of fee structure form"
+    sequence = fields.Char(
+        "Sequence", help="Sequence of fee structure form",
+        readonly=True
     )
     line_ids = fields.One2many(
         "student.payslip.line.line",
@@ -215,6 +216,13 @@ class StudentFeesStructureLine(models.Model):
         string="Symbol",
         help="Select currency symbol",
     )
+
+    @api.model
+    def create(self, vals):
+        vals['sequence'] = self.env['ir.sequence'
+                               ].next_by_code('student.fees.structure.line')
+        res = super(StudentFeesStructureLine, self).create(vals)
+        return res
 
     @api.onchange("company_id")
     def set_currency_company(self):
@@ -691,6 +699,9 @@ class StudentPayslipLineLine(models.Model):
         "student.fees.structure.line", "Slip Line", help="Student payslip line"
     )
     sequence = fields.Integer("Sequence", help="Sequence of payslip")
+    academic_year_id = fields.Many2one(
+        "academic.year", "Academic Year", help="Academic starting Year"
+    )
     from_month = fields.Many2one(
         "academic.month", "From Month", help="Academic starting month"
     )
@@ -698,6 +709,36 @@ class StudentPayslipLineLine(models.Model):
         "academic.month", "To Month", help="Academic end month"
     )
 
+    @api.constrains("academic_year_id","from_month","to_month")
+    def check_month(self):
+        """Constraint on month"""
+        for rec in self:
+            if rec.from_month.date_start and rec.to_month.date_stop and \
+                rec.to_month.date_stop < rec.from_month.date_start:
+                raise ValidationError(
+                    _(
+                        "To Month should be greater than From Month!"
+                    )
+                )
+            if rec.academic_year_id and rec.from_month.date_start \
+                and rec.to_month.date_stop:
+                line_ids = self.search(
+                    [('slipline1_id', '=', rec.slipline1_id.id),
+                     ('id', '!=', rec.id),
+                     ('academic_year_id', '=', rec.academic_year_id.id),
+                     ('from_month', '!=', False),
+                     ('to_month', '!=', False),
+                     ])
+                for old_month in line_ids:
+                    if (
+                    old_month.from_month.date_start <= rec.from_month.date_start <= old_month.to_month.date_stop
+                    or old_month.from_month.date_start
+                    <= rec.to_month.date_stop
+                    <= old_month.to_month.date_stop):
+                        raise ValidationError(
+                            _("Error! You cannot define overlapping months!")
+                        )
+            
 
 class AccountMove(models.Model):
     _inherit = "account.move"

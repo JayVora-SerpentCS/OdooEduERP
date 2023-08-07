@@ -462,6 +462,18 @@ class DailyAttendance(models.Model):
         "Is Elective Subject", help="Check this if subject is elective."
     )
 
+    @api.constrains('standard_id', 'user_id', 'date')
+    def _check_attendance(self):
+        for rec in self:
+            attendance = self.search(
+                [('standard_id', '=', rec.standard_id.id),
+                 ('id', '!=', rec.id),
+                 ('user_id', '=', rec.user_id.id)
+                 ])
+            if attendance and \
+                attendance.date.date() == rec.date.date():
+                raise ValidationError("Attendance should be unique!")
+
     @api.onchange("is_elective_subject")
     def onchange_is_elective_subject(self):
         self.subject_id = False

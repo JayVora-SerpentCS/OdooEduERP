@@ -87,14 +87,20 @@
                     <notebook colspan="4"  attrs="{'invisible':[('type','!=','range')]}">
                         <page string="Function">
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Function Arguments" >
-                                    <field name="from_month" placeholder="Month (From)"/>
-                                    <field name="to_month" placeholder="Month (To)"/>
+                                <tree string="Function Arguments" editable="bottom">
+                                    <field name="academic_year_id"
+                                           options="{&quot;no_create&quot;: True}"/>
+                                    <field name="from_month"
+                                           options="{&quot;no_create&quot;: True}"
+                                           domain="[('year_id', '=', academic_year_id)]"/>
+                                    <field name="to_month"
+                                           options="{&quot;no_create&quot;: True}"
+                                           domain="[('year_id', '=', academic_year_id)]"/>
                                 </tree>
-                                <form string="Function Arguments" >
+                                <!-- <form string="Function Arguments" >
                                     <field name="from_month" placeholder="Month (From)"/>
                                     <field name="to_month" placeholder="Month (To)"/>
-                                </form>
+                                </form> -->
                             </field>
                         </page>
                     </notebook>
@@ -125,9 +131,9 @@
         <field name="arch" type="xml">
             <form string="Student Payslip Line">
                 <group>
+                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="sequence"/>
                 </group>
                 <group string="Calculations">
                     <group>
@@ -137,7 +143,8 @@
                         <field name="currency_symbol"/>
                     </group>
                     <group>
-                        <field name="product_id"/>
+                        <field name="product_id"
+                               context="{'form_view_ref': 'product.product_template_only_form_view'}"/>
                         <field name="amount" readonly="1" force_save="1"/>
                         <field name="currency_id"/>
                     </group>
@@ -145,18 +152,24 @@
                 <notebook colspan="4">
                     <page string="Function">
                         <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('type','!=','range')]}">
-                            <tree string="Function Arguments" >
-                                <field name="from_month"/>
-                                <field name="to_month"/>
+                            <tree string="Function Arguments" editable="bottom">
+                                <field name="academic_year_id"
+                                       options="{&quot;no_create&quot;: True}"/>
+                                <field name="from_month"
+                                       options="{&quot;no_create&quot;: True}"
+                                       domain="[('year_id', '=', academic_year_id)]"/>
+                                <field name="to_month"
+                                       options="{&quot;no_create&quot;: True}"
+                                       domain="[('year_id', '=', academic_year_id)]"/>
                             </tree>
-                            <form string="Function Arguments" >
+                            <!-- <form string="Function Arguments" >
                                 <label for="sequence"/>
                                 <field name="sequence"/>
                                 <label for="from_month"/>
                                 <field name="from_month"/>
                                 <label for="to_month"/>
                                 <field name="to_month"/>
-                            </form>
+                            </form> -->
                         </field>
                     </page>
                 </notebook>
