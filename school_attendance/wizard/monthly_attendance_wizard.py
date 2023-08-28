@@ -32,7 +32,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
         ),
     )
     course_id = fields.Many2one(
-        "school.standard", "Semesters", ondelete="restrict"
+        "school.standard", "Class", ondelete="restrict"
     )
     user_id = fields.Many2one("school.teacher", "Teacher")
     month = fields.Selection(

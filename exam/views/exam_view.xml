@@ -84,15 +84,31 @@
                             attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}"
                             groups="school.group_school_teacher,school.group_school_administration"/>
                     </div>
-                    <separator string="Exam Detail"/>
-                    <group col="4" colspan="4" attrs="{'readonly': [('state','!=','draft')]}">
-                        <separator colspan="4" col="4" />
-                        <field name="exam_code"/>
-                        <field name="name" placeholder="Exam Name" attrs="{'readonly': [('state','!=','draft')]}"/>
-                        <field name="grade_system" required="1" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
-                        <field name="academic_year" placeholder="Select Academic Year.." widget="selection" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
-                        <field name="start_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="Start Date" required="1"/>
-                        <field name="end_date" attrs="{'readonly': [('state','!=','draft')]}" placeholder="End Date" required="1"/>
+                    <group attrs="{'readonly': [('state','!=','draft')]}">
+                        <separator string="Exam Detail" colspan="4"/>
+                        <group col="2">
+                            <field name="exam_code"/>
+                            <field name="grade_system"
+                                   required="1"
+                                   attrs="{'readonly': [('state','!=','draft')]}"
+                                   widget="selection"/>
+                            <field name="start_date"
+                                   attrs="{'readonly': [('state','!=','draft')]}"
+                                   placeholder="Start Date" required="1"/>
+                        </group>
+                        <group col="2">
+                            <field name="name"
+                                   placeholder="Exam Name"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="academic_year"
+                                   placeholder="Select Academic Year.."
+                                   widget="selection" required="1"
+                                   attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="end_date"
+                                   attrs="{'readonly': [('state','!=','draft')]}"
+                                   placeholder="End Date" required="1"/>
+                            
+                        </group>
                     </group>
                     <group col="4" colspan="4">
                         <notebook colspan="4" >
@@ -302,16 +318,21 @@
                         <field name="s_exam_ids" placeholder="Select Examination" widget="selection" domain="[('state','=','finished')]"
                                 attrs="{'readonly' : [('state','!=','draft')]}"/>
                     </group>
-                    <group col="4" string="Student Details" colspan="4">
-                        <field name="student_id" placeholder="Select Student"
+                    <group>
+                        <separator string="Student Details" colspan="4"/>
+                        <group col="2">
+                            <field name="student_id" placeholder="Select Student"
                             context="{'exam':s_exam_ids}" options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"
                             domain="[('state','!=','draft')]"
                             readonly="1"/>
-                        <field name="roll_no" readonly="1"/>
-                        <field name="standard_id" placeholder="Select Standard" widget="selection"
+                            <field name="standard_id" placeholder="Select Standard" widget="selection"
                                                 readonly="1" string="Class"/>
-                        <field name="grade_system" required="1" widget="selection"
+                        </group>
+                        <group col="2">
+                            <field name="roll_no" readonly="1"/>
+                            <field name="grade_system" required="1" widget="selection"
                                                 attrs="{'readonly' : [('state','!=','draft')]}"/>
+                        </group>
                     </group>
                     <field name="result_ids" nolabel="1" colspan="4">
                         <tree string="Subjects" editable="bottom" create="false" delete="false">

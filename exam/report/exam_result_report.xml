@@ -72,11 +72,11 @@
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('max_mark')"></span>
+                                                <span t-esc="round(sub_res_info.get('max_mark'), 2)"></span>
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('mini_marks')"></span>
+                                                <span t-esc="round(sub_res_info.get('mini_marks'), 2)"></span>
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
@@ -84,7 +84,7 @@
                                             </td>
                                             <td align="center"
                                                 style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('reval_marks')"></span>
+                                                <span t-esc="round(sub_res_info.get('reval_marks'), 2)"></span>
                                             </td>
                                         </tr>
                                     </t>
