@@ -458,15 +458,15 @@
                                     <field name="date_start" />
                                     <field name="date_stop" />
                                 </tree>
-                                <form string="Months">
-                                    <group col="4" colspan="4">
+                                <!-- <form string="Months">
+                                    <group colspan="2">
                                         <field name="name" placeholder="Name" />
                                         <field name="code" placeholder="Code" />
                                         <field name="date_start" placeholder="Start Date" />
                                         <field name="date_stop" placeholder="Stop Date" />
                                         <field name="description" colspan="4" placeholder="Description"/>
                                     </group>
-                                </form>
+                                </form> -->
                             </field>
                         </page>
                     </notebook>
@@ -810,9 +810,14 @@
                     <button string="Send Mail" class="btn btn-sm btn-default fa fa-envelope" type="object" name="news_update" colspan="2" />
                 </header>
                 <sheet>
-                    <group col="4" colspan="2" string="News / Updates">
-                        <field name="subject" placeholder="Subject"/>
-                        <field name="date" placeholder="Date" required="1"/>
+                    <group>
+                        <separator string="News / Updates" colspan="4"/>
+                        <group col="2">
+                            <field name="subject" placeholder="Subject"/>
+                        </group>
+                        <group col="2">
+                            <field name="date" placeholder="Date" required="1"/>
+                        </group>
                     </group>
                     <group>
                         <field name="description" colspan="4" placeholder="Description"/>

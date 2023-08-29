@@ -221,9 +221,9 @@
                                 <field name="dermatological" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 <field name="blood_pressure" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
-                            <separator string="Notes" colspan="4" />
-                            <group col="6" colspan="4">
-                                <field name="comment" placeholder="Notes About Medical.." nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            
+                            <group>
+                                <field name="comment" placeholder="Notes About Medical.." nolabel="0" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                         </page>
                         <page string="Certificates">
