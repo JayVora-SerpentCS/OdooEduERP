@@ -372,6 +372,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                     group_data.append(
                         {
                             "user": att.user_id,
+                            "school_name": att.user_id.sudo().school_id.name,
                             "att_ids": [{"date": day_date, "att": [att]}],
                         }
                     )
@@ -394,6 +395,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                         group_data.append(
                             {
                                 "user": att.user_id,
+                                "school_name": att.user_id.sudo().school_id.name,
                                 "att_ids": [{"date": day_date, "att": [att]}],
                             }
                         )
@@ -487,7 +489,6 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                                             {
                                                 "roll_no": student.stud_id.roll_no,
                                                 "student_code": student.stud_id.student_code,
-                                                "school_name": student.stud_id.school_id.name,
                                                 "divisions": gdata.get(
                                                     "divisions"
                                                 ),
@@ -533,7 +534,6 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                                             {
                                                 "roll_no": student.stud_id.roll_no,
                                                 "student_code": student.stud_id.student_code,
-                                                "school_name": student.stud_id.school_id.name,
                                                 "divisions": gdata.get(
                                                     "divisions"
                                                 ),
@@ -574,12 +574,12 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                 res_data.append(
                     {
                         "user": gdata.get("user").name,
+                        "school_name": gdata.get("school_name"),
                         "month": months.get(rec.month)
                         + "-"
                         + rec.academic_year_id.code,
                         "semester": rec.course_id.name,
                         "result_data": result_data,
-                        "school_name": result_data,
                     }
                 )
 
@@ -648,7 +648,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                     0,
                     0,
                     len(month_days) + 4,
-                    data.get("result_data")[0].get("school_name"),
+                    data.get("school_name"),
                     main_head_fmt,
                 )
                 sheet.set_column(0, 0, 3)

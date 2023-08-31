@@ -168,7 +168,7 @@
                         </group>
                     <group string="Submission Details" col="4">
                         <field name="submission_type" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="attachfile_format" attrs="{'invisible':[('submission_type','=','hardcopy')],'readonly':[('state','!=','draft')]}"/>
+                        <field name="attachfile_format" attrs="{'invisible':[('submission_type','=','hardcopy')],'readonly':[('state','!=','draft')],'required':[('submission_type','!=','hardcopy')]}"/>
                         <field name="submit_assign" filename="file_name" attrs="{'invisible':[('submission_type','=','hardcopy')],'readonly':[('state','!=','active')]}"/>
                         <field name="file_name" invisible="1"/>
                     </group>
