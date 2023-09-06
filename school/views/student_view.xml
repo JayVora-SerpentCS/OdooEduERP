@@ -149,7 +149,7 @@
                                             <form>
                                                 <group col='4' colspan="4">
                                                     <field name="name"/>
-                                                    <field name="add_sub_id" />
+                                                    <field name="add_sub_id" invisible="1"/>
                                                     <field name="maximum_marks" />
                                                     <field name="minimum_marks" />
                                                 </group>
