@@ -349,7 +349,7 @@
                         <field name="code" placeholder="Code" readonly="1" />
                         <field name="book_limit" attrs="{'readonly':[('state','=','running')]}" />
                         <field name="user" required="1" attrs="{'readonly':[('state','=','running')]}" />
-                        <field name="card_name" invisible="True" />
+                        <field name="card_name"/>
                     </group>
                     <group attrs="{'invisible':[('user','!=','student')]}">
                         <field name="student_id" widget="selection" domain="[('state','=','done')]" attrs="{'required':[('user','=','student')],'readonly':[('state','=','running')]}" />
@@ -579,7 +579,7 @@
             <form string="Book Request Form">
                 <header>
                     <button name="confirm_book_request" class="fa fa fa-undo" type="object" string="Confirm Request" groups="library.group_librarian" attrs="{'invisible':['|',('type','=','new'),('state','!=','draft')]}" states="draft" />
-                    <button name="cancle_book_request" class="fa fa-snowflake-o" string="Cancle Request" type="object" states="confirm" />
+                    <button name="cancle_book_request" class="fa fa-snowflake-o" string="Cancel Request" type="object" states="confirm" />
                     <field name="state" widget="statusbar" align="right" readonly="1" />
                 </header>
                 <sheet>
