@@ -116,6 +116,17 @@ class LibraryCard(models.Model):
         "Active", default=True, help="Activate/deactivate record"
     )
 
+
+    @api.constrains("duration")
+    def check_duration(self):
+        """Constraint to assign library card more than once"""
+        if self.duration and self.duration < 0:
+            raise UserError(
+                    _(
+                        "Duration(months) should not be negative value!"
+                    )
+                )
+
     @api.onchange("student_id")
     def on_change_student(self):
         """
@@ -812,6 +823,7 @@ class LibraryBookRequest(models.Model):
                 ("name", "=", self.name.id),
                 ("id", "not in", self.ids),
                 ("type", "=", "existing"),
+                ("state", "!=", "cancel"),
             ]
         ):
             raise UserError(

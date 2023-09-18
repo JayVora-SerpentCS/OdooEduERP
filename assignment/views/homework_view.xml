@@ -127,7 +127,7 @@
                     <header>
                         <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active"
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
-                        <button name="done_assignment" class="oe_stat_button fa fa-check" states="active" string="Done"
+                        <button name="done_assignment" states="active" string="Done"
                                 type="object" groups="school.group_school_teacher,school.group_school_administration"/>
                         <button name="%(assignment.student_homework_reject)d" string="Reject" type="action" states="active"
                                 groups="school.group_school_teacher,school.group_school_administration"/>
@@ -166,12 +166,24 @@
                         <group string="Upload / Download Attachments">
                             <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
-                    <group string="Submission Details" col="4">
-                        <field name="submission_type" attrs="{'readonly':[('state','!=','draft')]}"/>
-                        <field name="attachfile_format" attrs="{'invisible':[('submission_type','=','hardcopy')],'readonly':[('state','!=','draft')]}"/>
-                        <field name="submit_assign" filename="file_name" attrs="{'invisible':[('submission_type','=','hardcopy')],'readonly':[('state','!=','active')]}"/>
-                        <field name="file_name" invisible="1"/>
-                    </group>
+                     <group string="Submission Details">
+                        <group>
+                            <field name="submission_type"
+                                   attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="submit_assign"
+                                   filename="file_name"
+                                   attrs="{'invisible':[('submission_type','=','hardcopy')],
+                                   'readonly':[('state','!=','active')]}"/>
+                            
+                        </group>
+                        <group>
+                            <field name="attachfile_format"
+                                   attrs="{'invisible':[('submission_type','=','hardcopy')],
+                                            'readonly':[('state','!=','draft')],
+                                            'required':[('submission_type','!=','hardcopy')]}"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                     </group>
                     <group string="Rejection History" attrs="{'invisible':[('state','in',['draft','active','done'])]}">
                         <field name="assignment_reject_history_ids" colspan="2" nolabel="1" readonly="1">
                             <tree>

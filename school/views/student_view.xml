@@ -44,7 +44,7 @@
                         </group>
                         <group string="Standard Information">
                             <field name="standard_id" placeholder="Standard" readonly="1" domain="[('school_id','=',school_id)]" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                            <field name="division_id" placeholder="Division" invisible="1" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            <field name="division_id" placeholder="Division" invisible="0" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             <field name="medium_id" placeholder="Medium"  readonly="1" widget="selection" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                         </group>
                     </group>
@@ -149,7 +149,7 @@
                                             <form>
                                                 <group col='4' colspan="4">
                                                     <field name="name"/>
-                                                    <field name="add_sub_id" />
+                                                    <field name="add_sub_id" invisible="1"/>
                                                     <field name="maximum_marks" />
                                                     <field name="minimum_marks" />
                                                 </group>
@@ -221,9 +221,9 @@
                                 <field name="dermatological" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                                 <field name="blood_pressure" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
-                            <separator string="Notes" colspan="4" />
-                            <group col="6" colspan="4">
-                                <field name="comment" placeholder="Notes About Medical.." nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            
+                            <group>
+                                <field name="comment" placeholder="Notes About Medical.." nolabel="0" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             </group>
                         </page>
                         <page string="Certificates">
@@ -461,7 +461,7 @@
                         <group string="Class Information">
                             <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
                             <field name="standard_id" placeholder="Class" domain="[('school_id','=',school_id),('medium_id','=',medium_id)]" widget="selection" attrs="{'readonly':[('state','=','alumni')]}"/>
-                            <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','alumni')]}" invisible="1"/>
+                            <field name="division_id" placeholder="Division" widget="selection" attrs="{'readonly':[('state','=','alumni')]}" invisible="0"/>
 
                         </group>
                     </group>

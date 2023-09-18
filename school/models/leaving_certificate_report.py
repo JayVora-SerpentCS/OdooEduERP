@@ -19,7 +19,8 @@ class LeavingCertificateReport(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         student_id = self.env['student.student'].browse(docids)
-        if self.search([('id','=',student_id.id), ('state','not in',['terminate', 'alumni'])]):
+        if self.env['student.student'].search([('id','=',student_id.id),
+                                               ('state','not in',['terminate', 'alumni'])]):
             raise ValidationError(_(
                     """Student is not alumni or terminated!."""
                 )

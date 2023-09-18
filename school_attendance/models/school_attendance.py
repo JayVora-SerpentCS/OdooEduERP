@@ -465,14 +465,16 @@ class DailyAttendance(models.Model):
     @api.constrains('standard_id', 'user_id', 'date')
     def _check_attendance(self):
         for rec in self:
-            attendance = self.search(
+            attendance = self.env['daily.attendance'].search(
                 [('standard_id', '=', rec.standard_id.id),
                  ('id', '!=', rec.id),
                  ('user_id', '=', rec.user_id.id)
-                 ])
+                 ],limit=1)
             if attendance and \
                 attendance.date.date() == rec.date.date():
-                raise ValidationError("Attendance should be unique!")
+                raise ValidationError(
+                _("""Attendance should be unique!""")
+            )
 
     @api.onchange("is_elective_subject")
     def onchange_is_elective_subject(self):

@@ -8,6 +8,12 @@
     </record>
     <template id="monthly_attendance_report_tmpl">
         <t t-call="web.html_container">
+            <table width="100%">
+                     <center>
+                         <h2>Monthly Attendance Report</h2>
+                     </center>
+                </table>
+                <br/><br/>
             <div class="page" style="font-size:8px;">
                 <t t-foreach="docs" t-as="o">
                     <t t-foreach="get_data(o)" t-as="data">

@@ -413,7 +413,7 @@ class SchoolStandard(models.Model):
             str(self.standard_id.name) + "-" + str(self.division_id.name)
         )
 
-    @api.constrains("standard_id", "division_id")
+    @api.constrains("standard_id", "division_id", "school_id")
     def check_standard_unique(self):
         """Method to check unique standard."""
         if self.env["school.standard"].search(

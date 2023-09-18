@@ -132,7 +132,7 @@
                                                 <b>:</b>
                                             </td>
                                             <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                <span t-field="hostel.room_rent" t-options='{"widget": "monetary","display_currency": account_move_id.currency_id}'/>
+                                                <span t-field="hostel.room_rent" />
                                             </td>
                                             <td width="50%">
                                                 <span></span>
@@ -154,7 +154,7 @@
                                                 <b>:</b>
                                             </td>
                                             <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                <span t-field="hostel.paid_amount" t-options='{"widget": "monetary","display_currency": account_move_id.currency_id}'/>
+                                                <span t-field="hostel.paid_amount" />
                                             </td>
                                             <td align="left" width="19%" style="font-family: 'Helvetica';font-size: 18px;">
                                                 <b>Remaining Fee</b>
@@ -163,7 +163,7 @@
                                                 <b>:</b>
                                             </td>
                                             <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
-                                                <span t-field="hostel.remaining_amount" t-options='{"widget": "monetary","display_currency": account_move_id.currency_id}'/>
+                                                <span t-field="hostel.remaining_amount" />
                                             </td>
                                         </tr>
                                     </table>

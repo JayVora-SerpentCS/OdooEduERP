@@ -30,10 +30,10 @@ class ReportAddExamResult(models.AbstractModel):
         for subject in subject_exam_ids:
             student_data_dict = {
                 "subject": subject.subject_id.name or "",
-                "max_mark": subject.maximum_marks or "",
-                "mini_marks": subject.minimum_marks or "",
-                "obt_marks": subject.obtain_marks or "",
-                "reval_marks": subject.marks_reeval or "",
+                "max_mark": subject.maximum_marks or 0.00,
+                "mini_marks": subject.minimum_marks or 0.00,
+                "obt_marks": subject.obtain_marks or 0.00,
+                "reval_marks": subject.marks_reeval or 0.00,
             }
             if (
                 not student_name

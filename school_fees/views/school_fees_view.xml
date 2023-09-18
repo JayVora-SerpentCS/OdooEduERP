@@ -224,10 +224,16 @@
                             <field name="medium_id" placeholder="Medium" widget="selection" attrs="{'readonly':[('state','not in','draft')]}" readonly="1"/>
                         </group>
                     </group>
-                    <group col="4">
+                    <group>
                         <separator string="Fees Structure" colspan="4"/>
-                        <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
-                        <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/>
+	                    <group col="2">
+	                        <field name="fees_structure_id" required="1" placeholder="Fee Structure" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+	                    </group>
+	                    <group col="2">
+	                       <field name="journal_id" widget="selection" placeholder="Journal" domain="[('type','=','sale')]" attrs="{'readonly':[('state','not in','draft')]}"/>
+	                    </group>
+                    </group>
+                    <group col="4">
                         <notebook colspan="4">
                             <page string="Fees Structure">
                                 <field name="line_ids" colspan="4" nolabel="1" readonly="1"/>
