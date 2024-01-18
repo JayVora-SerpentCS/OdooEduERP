@@ -16,6 +16,8 @@ class StudentStudent(models.Model):
         help="Student exam history",
     )
 
+    # country_id=fields.Many2one("student.student",string="Nationility")
+
     def set_alumni(self):
         """Override method to make exam results of student active false
         when student is alumni"""
@@ -87,9 +89,7 @@ class ExtendedTimeTable(models.Model):
                     [("exam_id", "=", data.id), ("timetable_id", "=", rec.id)]
                 ):
                     raise ValidationError(
-                        _(
-                            "You cannot delete schedule of exam which is in running!"
-                        )
+                        _("You cannot delete schedule of exam which is in running!")
                     )
         return super(ExtendedTimeTable, self).unlink()
 
@@ -130,12 +130,11 @@ class ExtendedTimeTable(models.Model):
 
 class ExtendedTimeTableLine(models.Model):
     _inherit = "time.table.line"
+    _order = "exm_date asc"
 
     exm_date = fields.Date("Exam Date", help="Enter exam date")
     day_of_week = fields.Char("Week Day", help="Enter week day")
-    class_room_id = fields.Many2one(
-        "class.room", "Classroom", help="Enter class room"
-    )
+    class_room_id = fields.Many2one("class.room", "Classroom", help="Enter class room")
 
     @api.onchange("exm_date")
     def onchange_date_day(self):
@@ -173,9 +172,7 @@ class ExtendedTimeTableLine(models.Model):
         """Method to check constraint of start time and end time."""
         for rec in self:
             if rec.start_time >= rec.end_time:
-                raise ValidationError(
-                    _("Start time should be less than end time!")
-                )
+                raise ValidationError(_("Start time should be less than end time!"))
             # Checks if time is greater than 24 hours than raise error
             if rec.start_time > 24 or rec.end_time > 24:
                 raise ValidationError(
@@ -186,9 +183,7 @@ class ExtendedTimeTableLine(models.Model):
     def check_teacher_room(self):
         """Method to Check room."""
         for rec in self:
-            for data in self.env["time.table"].search(
-                [("id", "!=", rec.table_id.id)]
-            ):
+            for data in self.env["time.table"].search([("id", "!=", rec.table_id.id)]):
                 for record in data.timetable_ids:
                     if (
                         data.timetable_type == "exam"
@@ -219,8 +214,7 @@ class ExtendedTimeTableLine(models.Model):
                     and self.subject_id == rec.subject_id
                 ):
                     raise ValidationError(
-                        _("%s Subject Exam Already Taken")
-                        % (self.subject_id.name)
+                        _("%s Subject Exam Already Taken") % (self.subject_id.name)
                     )
                 if (
                     record.timetable_type == "exam"
@@ -273,13 +267,10 @@ class ExamExam(models.Model):
             for result in result_obj.search([("s_exam_ids", "=", self.id)]):
                 if result.state != "done":
                     raise ValidationError(
-                        _("Kindly,mark as done %s examination results!")
-                        % (self.name)
+                        _("Kindly,mark as done %s examination results!") % (self.name)
                     )
 
-    active = fields.Boolean(
-        "Active", default="True", help="Activate/Deactivate record"
-    )
+    active = fields.Boolean("Active", default="True", help="Activate/Deactivate record")
     name = fields.Char("Exam Name", required=True, help="Name of Exam")
     exam_code = fields.Char("Exam Code", readonly=True, help="Code of exam")
     standard_id = fields.Many2many(
@@ -290,9 +281,7 @@ class ExamExam(models.Model):
         "Participant Standards",
         help="Select Standard",
     )
-    start_date = fields.Date(
-        "Exam Start Date", help="Exam will start from this date"
-    )
+    start_date = fields.Date("Exam Start Date", help="Exam will start from this date")
     end_date = fields.Date("Exam End date", help="Exam will end at this date")
     state = fields.Selection(
         [
@@ -321,9 +310,9 @@ class ExamExam(models.Model):
 
     @api.model
     def create(self, vals):
-        vals["exam_code"] = self.env["ir.sequence"].next_by_code(
-            "exam.exam"
-        ) or _("New")
+        vals["exam_code"] = self.env["ir.sequence"].next_by_code("exam.exam") or _(
+            "New"
+        )
         return super(ExamExam, self).create(vals)
 
     def set_to_draft(self):
@@ -419,9 +408,7 @@ class ExamScheduleLine(models.Model):
     _name = "exam.schedule.line"
     _description = "Exam Schedule Line Details"
 
-    standard_id = fields.Many2one(
-        "school.standard", "Standard", help="Select Standard"
-    )
+    standard_id = fields.Many2one("school.standard", "Standard", help="Select Standard")
     timetable_id = fields.Many2one(
         "time.table", "Exam Schedule", help="Enter exam time table"
     )
@@ -444,12 +431,8 @@ class AdditionalExam(models.Model):
         for rec in self:
             rec.color_name = rec.subject_id.id
 
-    name = fields.Char(
-        "Additional Exam Name", required=True, help="Name of Exam"
-    )
-    addtional_exam_code = fields.Char(
-        "Exam Code", help="Exam Code", readonly=True
-    )
+    name = fields.Char("Additional Exam Name", required=True, help="Name of Exam")
+    addtional_exam_code = fields.Char("Exam Code", help="Exam Code", readonly=True)
     standard_id = fields.Many2one(
         "school.standard", "Standard", help="Select standard for exam"
     )
@@ -457,12 +440,8 @@ class AdditionalExam(models.Model):
         "subject.subject", "Subject Name", help="Select subject for exam"
     )
     exam_date = fields.Date("Exam Date", help="Select exam date")
-    maximum_marks = fields.Integer(
-        "Maximum Mark", help="Minimum Marks of exam"
-    )
-    minimum_marks = fields.Integer(
-        "Minimum Mark", help="Maximum Marks of Exam"
-    )
+    maximum_marks = fields.Integer("Maximum Mark", help="Minimum Marks of exam")
+    minimum_marks = fields.Integer("Minimum Mark", help="Maximum Marks of Exam")
     weightage = fields.Char("WEIGHTAGE", help="Enter weightage of exam")
     color_name = fields.Integer(
         "Color index of creator",
@@ -495,9 +474,7 @@ class ExamResult(models.Model):
     _description = "exam result Information"
     _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    @api.depends(
-        "result_ids", "result_ids.obtain_marks", "result_ids.marks_reeval"
-    )
+    @api.depends("result_ids", "result_ids.obtain_marks", "result_ids.marks_reeval")
     def _compute_total(self):
         """Method to compute total"""
         for rec in self:
@@ -528,10 +505,7 @@ class ExamResult(models.Model):
                 per = (obtained_total / total) * 100
                 if result.grade_system:
                     for grade_id in result.grade_system.grade_ids:
-                        if (
-                            per >= grade_id.from_mark
-                            and per <= grade_id.to_mark
-                        ):
+                        if per >= grade_id.from_mark and per <= grade_id.to_mark:
                             result.grade = grade_id.grade or ""
             result.percentage = per
 
@@ -563,9 +537,7 @@ class ExamResult(models.Model):
         readonly=True,
         help="Student Personal ID No.",
     )
-    standard_id = fields.Many2one(
-        "school.standard", "Standard", help="Select Standard"
-    )
+    standard_id = fields.Many2one("school.standard", "Standard", help="Select Standard")
     result_ids = fields.One2many(
         "exam.subject", "exam_id", "Exam Subjects", help="Select exam subjects"
     )
@@ -604,9 +576,7 @@ class ExamResult(models.Model):
         help="State of the exam",
     )
     color = fields.Integer("Color", help="Color")
-    active = fields.Boolean(
-        "Active", default=True, help="Activate/Deactivate record"
-    )
+    active = fields.Boolean("Active", default=True, help="Activate/Deactivate record")
     grade_system = fields.Many2one(
         "grade.master", "Grade System", help="Grade System selected"
     )
@@ -748,12 +718,8 @@ class ExamSubject(models.Model):
     obtain_marks = fields.Float(
         "Obtain Marks", group_operator="avg", help="Enter obtained marks"
     )
-    minimum_marks = fields.Float(
-        "Minimum Marks", help="Minimum Marks of subject"
-    )
-    maximum_marks = fields.Float(
-        "Maximum Marks", help="Maximum Marks of subject"
-    )
+    minimum_marks = fields.Float("Minimum Marks", help="Minimum Marks of subject")
+    maximum_marks = fields.Float("Maximum Marks", help="Maximum Marks of subject")
     marks_reeval = fields.Float(
         "Marks After Re-evaluation", help="Marks Obtain after Re-evaluation"
     )
@@ -761,17 +727,13 @@ class ExamSubject(models.Model):
         "grade.line", "Grade", compute="_compute_grade", help="Grade"
     )
 
-    @api.constrains(
-        "obtain_marks", "minimum_marks", "maximum_marks", "marks_reeval"
-    )
+    @api.constrains("obtain_marks", "minimum_marks", "maximum_marks", "marks_reeval")
     def _validate_marks(self):
         """Method to validate marks"""
         for rec in self:
             if rec.obtain_marks > rec.maximum_marks:
                 raise ValidationError(
-                    _(
-                        """The obtained marks should not extend maximum marks!"""
-                    )
+                    _("""The obtained marks should not extend maximum marks!""")
                 )
             if rec.minimum_marks > rec.maximum_marks:
                 raise ValidationError(
@@ -779,9 +741,7 @@ class ExamSubject(models.Model):
                 )
             if rec.marks_reeval > rec.maximum_marks:
                 raise ValidationError(
-                    _(
-                        """The revaluation marks should not extend maximum marks!"""
-                    )
+                    _("""The revaluation marks should not extend maximum marks!""")
                 )
 
 
@@ -826,9 +786,7 @@ class AdditionalExamResult(models.Model):
         help="Result Obtained",
         store=True,
     )
-    active = fields.Boolean(
-        "Active", default=True, help="Activate/Deactivate record"
-    )
+    active = fields.Boolean("Active", default=True, help="Activate/Deactivate record")
 
     _sql_constraints = [
         (
@@ -841,9 +799,7 @@ class AdditionalExamResult(models.Model):
     def _update_student_vals(self, vals):
         """This is the common method to update student
         record at creation and updation of the exam record"""
-        student_rec = self.env["student.student"].browse(
-            vals.get("student_id")
-        )
+        student_rec = self.env["student.student"].browse(vals.get("student_id"))
         vals.update(
             {
                 "roll_no": student_rec.roll_no,
@@ -866,7 +822,7 @@ class AdditionalExamResult(models.Model):
 
     @api.onchange("student_id")
     def onchange_student(self):
-        """ Method to get student roll no and standard by selecting student"""
+        """Method to get student roll no and standard by selecting student"""
         self.roll_no = self.student_id.roll_no
 
     @api.constrains("obtain_marks")

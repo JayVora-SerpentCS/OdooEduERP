@@ -44,9 +44,7 @@ class AcademicYear(models.Model):
     date_start = fields.Date(
         "Start Date", required=True, help="Starting date of academic year"
     )
-    date_stop = fields.Date(
-        "End Date", required=True, help="Ending of academic year"
-    )
+    date_stop = fields.Date("End Date", required=True, help="Ending of academic year")
     month_ids = fields.One2many(
         "academic.month", "year_id", "Months", help="Related Academic months"
     )
@@ -57,9 +55,7 @@ class AcademicYear(models.Model):
     @api.model
     def next_year(self, sequence):
         """This method assign sequence to years"""
-        year_rec = self.search(
-            [("sequence", ">", sequence)], order="id", limit=1
-        )
+        year_rec = self.search([("sequence", ">", sequence)], order="id", limit=1)
         if year_rec:
             return year_rec.id or False
 
@@ -97,14 +93,8 @@ class AcademicYear(models.Model):
         new_stop_date = self.date_stop
         delta = new_stop_date - new_start_date
         if delta.days > 365 and not calendar.isleap(new_start_date.year):
-            raise ValidationError(
-                _("The duration of the academic year is invalid.")
-            )
-        if (
-            self.date_stop
-            and self.date_start
-            and self.date_stop < self.date_start
-        ):
+            raise ValidationError(_("The duration of the academic year is invalid."))
+        if self.date_stop and self.date_start and self.date_stop < self.date_start:
             raise ValidationError(
                 _(
                     "The start date of the academic year should be less than "
@@ -126,9 +116,16 @@ class AcademicYear(models.Model):
         """Constraint on active current year"""
         current_year_rec = self.search_count([("current", "=", True)])
         if current_year_rec >= 2:
-            raise ValidationError(
-                _("Error! You cannot set two current year active!")
+            raise ValidationError(_("Error! You cannot set two current year active!"))
+
+    @api.constrains("sequence")
+    def _sequence_check(self):
+        for record in self:
+            existing_record = self.env["academic.year"].search(
+                [("sequence", "=", record.sequence), ("id", "!=", record.id)]
             )
+            if existing_record:
+                raise ValidationError(_("Sequence must be unique"))
 
 
 class AcademicMonth(models.Model):
@@ -140,9 +137,7 @@ class AcademicMonth(models.Model):
 
     name = fields.Char("Name", required=True, help="Name")
     code = fields.Char("Code", required=True, help="Code")
-    date_start = fields.Date(
-        "Start of Period", required=True, help="Start date"
-    )
+    date_start = fields.Date("Start of Period", required=True, help="Start date")
     date_stop = fields.Date("End of Period", required=True, help="End Date")
     year_id = fields.Many2one(
         "academic.year",
@@ -180,28 +175,18 @@ class AcademicMonth(models.Model):
     @api.constrains("date_start", "date_stop")
     def check_months(self):
         """Method to check duration of date"""
-        if (
-            self.date_stop
-            and self.date_start
-            and self.date_stop < self.date_start
-        ):
+        if self.date_stop and self.date_start and self.date_stop < self.date_start:
             raise ValidationError(
-                _(
-                    "End of Period date should be greater than Start of Periods Date!"
-                )
+                _("End of Period date should be greater than Start of Periods Date!")
             )
         # Check start date should be less than stop date.
         exist_month_rec = self.search([("id", "not in", self.ids)])
         for old_month in exist_month_rec:
             if (
                 old_month.date_start <= self.date_start <= old_month.date_stop
-                or old_month.date_start
-                <= self.date_stop
-                <= old_month.date_stop
+                or old_month.date_start <= self.date_stop <= old_month.date_stop
             ):
-                raise ValidationError(
-                    _("Error! You cannot define overlapping months!")
-                )
+                raise ValidationError(_("Error! You cannot define overlapping months!"))
 
 
 class StandardMedium(models.Model):
@@ -211,9 +196,7 @@ class StandardMedium(models.Model):
     _description = "Standard Medium"
     _order = "sequence"
 
-    sequence = fields.Integer(
-        "Sequence", required=True, help="Sequence of the record"
-    )
+    sequence = fields.Integer("Sequence", required=True, help="Sequence of the record")
     name = fields.Char("Name", required=True, help="Medium of the standard")
     code = fields.Char("Code", required=True, help="Medium code")
     description = fields.Text("Description", help="Description")
@@ -226,9 +209,7 @@ class StandardDivision(models.Model):
     _description = "Standard Division"
     _order = "sequence"
 
-    sequence = fields.Integer(
-        "Sequence", required=True, help="Sequence of the record"
-    )
+    sequence = fields.Integer("Sequence", required=True, help="Sequence of the record")
     name = fields.Char("Name", required=True, help="Division of the standard")
     code = fields.Char("Code", required=True, help="Standard code")
     description = fields.Text("Description", help="Description")
@@ -241,9 +222,7 @@ class StandardStandard(models.Model):
     _description = "Standard Information"
     _order = "sequence"
 
-    sequence = fields.Integer(
-        "Sequence", required=True, help="Sequence of the record"
-    )
+    sequence = fields.Integer("Sequence", required=True, help="Sequence of the record")
     name = fields.Char("Name", required=True, help="Standard name")
     code = fields.Char("Code", required=True, help="Code of standard")
     description = fields.Text("Description", help="Description")
@@ -251,10 +230,22 @@ class StandardStandard(models.Model):
     @api.model
     def next_standard(self, sequence):
         """This method check sequence of standard"""
-        stand_rec = self.search(
-            [("sequence", ">", sequence)], order="id", limit=1
-        )
+        stand_rec = self.search([("sequence", ">", sequence)], order="id", limit=1)
         return stand_rec and stand_rec.id or False
+
+    @api.constrains("name", "sequence")
+    def _check_standard_name(self):
+        for record in self:
+            existing_records = self.search(
+                [
+                    ("id", "!=", record.id),
+                    "|",
+                    ("name", "=", record.name),
+                    ("sequence", "=", record.sequence),
+                ]
+            )
+            if existing_records:
+                raise ValidationError("Name and Sequence must be unique")
 
 
 class SchoolStandard(models.Model):
@@ -264,9 +255,7 @@ class SchoolStandard(models.Model):
     _description = "School Standards"
     _rec_name = "standard_id"
 
-    @api.depends(
-        "standard_id", "school_id", "division_id", "medium_id", "school_id"
-    )
+    @api.depends("standard_id", "school_id", "division_id", "medium_id", "school_id")
     def _compute_student(self):
         """Compute student of done state"""
         student_obj = self.env["student.student"]
@@ -311,9 +300,7 @@ class SchoolStandard(models.Model):
                     (rec.standard_id.id,),
                 )
                 records = [
-                    record[0]
-                    for record in self._cr.fetchall()
-                    if record and record[0]
+                    record[0] for record in self._cr.fetchall() if record and record[0]
                 ]
                 rec.subject_ids |= subject_obj.browse(records)
 
@@ -409,9 +396,7 @@ class SchoolStandard(models.Model):
     @api.onchange("standard_id", "division_id")
     def onchange_combine(self):
         """Onchange to assign name respective of it's standard and division"""
-        self.name = (
-            str(self.standard_id.name) + "-" + str(self.division_id.name)
-        )
+        self.name = str(self.standard_id.name) + "-" + str(self.division_id.name)
 
     @api.constrains("standard_id", "division_id", "school_id")
     def check_standard_unique(self):
@@ -474,16 +459,12 @@ class SchoolSchool(models.Model):
         return [(language.code, language.name) for language in languages]
 
     company_id = fields.Many2one(
-        'res.company',
-        string='Company',
+        "res.company",
+        string="Company",
         required=True,
-        default=lambda self: self.env.company
+        default=lambda self: self.env.company,
     )
-    name = fields.Char(
-        'School Name',
-        required=True,
-        help='School name'
-    )
+    name = fields.Char("School Name", required=True, help="School name")
     code = fields.Char("Code", required=True, help="School code")
     standards = fields.One2many(
         "school.standard", "school_id", "Standards", help="School standard"
@@ -506,20 +487,9 @@ class SchoolSchool(models.Model):
     street2 = fields.Char()
     zip = fields.Char()
     city = fields.Char()
-    state_id = fields.Many2one(
-        "res.country.state",
-        string="State",
-        ondelete="restrict"
-    )
-    country_id = fields.Many2one(
-        "res.country",
-        string="Country",
-        ondelete="restrict"
-    )
-    currency_id = fields.Many2one(
-        related="company_id.currency_id",
-        readonly=True
-    )
+    state_id = fields.Many2one("res.country.state", string="State", ondelete="restrict")
+    country_id = fields.Many2one("res.country", string="Country", ondelete="restrict")
+    currency_id = fields.Many2one(related="company_id.currency_id", readonly=True)
 
     # @api.model
     # def create(self, vals):
@@ -531,7 +501,7 @@ class SchoolSchool(models.Model):
 
 
 class SubjectSubject(models.Model):
-    """Defining a subject """
+    """Defining a subject"""
 
     _name = "subject.subject"
     _description = "Subjects"
@@ -555,15 +525,15 @@ class SubjectSubject(models.Model):
                         subject_id=%s
                     AND
                         standard_id=%s
-                """,(
-                        standard.id, self.id,
-                    )
+                """,
+                    (
+                        standard.id,
+                        self.id,
+                    ),
                 )
                 subject_record = self.env.cr.fetchone()
                 if subject_record:
-                    subject_list.append(
-                        int("".join(map(str, subject_record)))
-                    )
+                    subject_list.append(int("".join(map(str, subject_record))))
         self.student_ids = [
             (6, 0, standard_obj.browse(subject_list).mapped("student_ids.id"))
         ]
@@ -664,12 +634,8 @@ class SubjectSubject(models.Model):
             )
             sub_ids = [sub_id.id for sub_id in teacher_rec.subject_id]
             args.append(("id", "in", sub_ids))
-        if self._context.get("subject") and not self._context.get(
-            "for_subject"
-        ):
-            standard = self.env["school.standard"].browse(
-                self._context.get("standard")
-            )
+        if self._context.get("subject") and not self._context.get("for_subject"):
+            standard = self.env["school.standard"].browse(self._context.get("standard"))
             subjects = (
                 self.sudo()
                 .with_context(for_subject=True)
@@ -677,9 +643,10 @@ class SubjectSubject(models.Model):
                     [
                         ("is_elective_subject", "=", True),
                         ("standard_id", "=", standard.standard_id.id),
-                    ]))
-            subject_list += [rec.id for rec in subjects 
-                                if rec in standard.subject_ids]
+                    ]
+                )
+            )
+            subject_list += [rec.id for rec in subjects if rec in standard.subject_ids]
             args += [("id", "in", subject_list if subject_list else [])]
             return super(SubjectSubject, self)._search(
                 args,
@@ -762,22 +729,16 @@ class StudentDocument(models.Model):
     file_no = fields.Char(
         "File No",
         readonly="1",
-        default=lambda obj: obj.env["ir.sequence"].next_by_code(
-            "student.document"
-        ),
+        default=lambda obj: obj.env["ir.sequence"].next_by_code("student.document"),
         help="File no of the document",
     )
-    submited_date = fields.Date(
-        "Submitted Date", help="Document submitted date"
-    )
+    submited_date = fields.Date("Submitted Date", help="Document submitted date")
     doc_type = fields.Many2one(
         "document.type", "Document Type", required=True, help="Document type"
     )
     file_name = fields.Char("File Name", help="File name")
     return_date = fields.Date("Return Date", help="Document return date")
-    new_datas = fields.Binary(
-        "Attachments", help="Attachments of the document"
-    )
+    new_datas = fields.Binary("Attachments", help="Attachments of the document")
 
 
 class DocumentType(models.Model):
@@ -794,16 +755,14 @@ class DocumentType(models.Model):
         default=lambda self: _("New"),
         help="Sequence of the document",
     )
-    doc_type = fields.Char(
-        "Document Type", required=True, help="Document type"
-    )
+    doc_type = fields.Char("Document Type", required=True, help="Document type")
 
     @api.model
     def create(self, vals):
         if vals.get("seq_no", _("New")) == _("New"):
-            vals["seq_no"] = self.env["ir.sequence"].next_by_code(
-                "document.type"
-            ) or _("New")
+            vals["seq_no"] = self.env["ir.sequence"].next_by_code("document.type") or _(
+                "New"
+            )
         return super(DocumentType, self).create(vals)
 
 
@@ -831,13 +790,9 @@ class StudentDescipline(models.Model):
         "school.teacher", "Teacher", help="Teacher who examine the student"
     )
     date = fields.Date("Date", help="Date")
-    class_id = fields.Many2one(
-        "standard.standard", "Class", help="Class of student"
-    )
+    class_id = fields.Many2one("standard.standard", "Class", help="Class of student")
     note = fields.Text("Note", help="Discipline Note")
-    action_taken = fields.Text(
-        "Action Taken", help="Action taken against discipline"
-    )
+    action_taken = fields.Text("Action Taken", help="Action taken against discipline")
 
 
 class StudentHistory(models.Model):
@@ -846,9 +801,7 @@ class StudentHistory(models.Model):
     _name = "student.history"
     _description = "Student History"
 
-    student_id = fields.Many2one(
-        "student.student", "Student", help="Related Student"
-    )
+    student_id = fields.Many2one("student.student", "Student", help="Related Student")
     academice_year_id = fields.Many2one(
         "academic.year", "Academic Year", help="Academice Year"
     )
@@ -867,13 +820,9 @@ class StudentCertificate(models.Model):
     _name = "student.certificate"
     _description = "Student Certificate"
 
-    student_id = fields.Many2one(
-        "student.student", "Student", help="Related student"
-    )
+    student_id = fields.Many2one("student.student", "Student", help="Related student")
     description = fields.Char("Description", help="Description")
-    certi = fields.Binary(
-        "Certificate", required=True, help="Student certificate"
-    )
+    certi = fields.Binary("Certificate", required=True, help="Student certificate")
 
 
 class StudentReference(models.Model):
@@ -886,13 +835,9 @@ class StudentReference(models.Model):
         "student.student", "Student", help="Student reference"
     )
     name = fields.Char("First Name", required=True, help="Student name")
-    middle = fields.Char(
-        "Middle Name", required=True, help="Student middle name"
-    )
+    middle = fields.Char("Middle Name", required=True, help="Student middle name")
     last = fields.Char("Surname", required=True, help="Student last name")
-    designation = fields.Char(
-        "Designation", required=True, help="Student designation"
-    )
+    designation = fields.Char("Designation", required=True, help="Student designation")
     phone = fields.Char("Phone", required=True, help="Student phone")
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female")],
@@ -910,18 +855,12 @@ class StudentPreviousSchool(models.Model):
     previous_school_id = fields.Many2one(
         "student.student", "Student", help="Related student"
     )
-    name = fields.Char(
-        "Name", required=True, help="Student previous school name"
-    )
+    name = fields.Char("Name", required=True, help="Student previous school name")
     registration_no = fields.Char(
         "Registration No.", required=True, help="Student registration number"
     )
-    admission_date = fields.Date(
-        "Admission Date", help="Student admission date"
-    )
-    exit_date = fields.Date(
-        "Exit Date", help="Student previous school exit date"
-    )
+    admission_date = fields.Date("Admission Date", help="Student admission date")
+    exit_date = fields.Date("Exit Date", help="Student previous school exit date")
     course_id = fields.Many2one(
         "standard.standard", "Course", required=True, help="Student gender"
     )
@@ -945,15 +884,12 @@ class StudentPreviousSchool(models.Model):
             self.admission_date > self.exit_date
         ):
             raise ValidationError(
-                _(
-                    "Admission date should be less than exit date in previous"
-                    " school!"
-                )
+                _("Admission date should be less than exit date in previous" " school!")
             )
 
 
 class AcademicSubject(models.Model):
-    """ Defining a student previous school information """
+    """Defining a student previous school information"""
 
     _name = "academic.subject"
     _description = "Student Previous School"
@@ -964,9 +900,7 @@ class AcademicSubject(models.Model):
         invisible=True,
         help="Select student previous school",
     )
-    name = fields.Char(
-        "Name", required=True, help="Enter previous school name"
-    )
+    name = fields.Char("Name", required=True, help="Enter previous school name")
     maximum_marks = fields.Integer("Maximum marks", help="Enter maximum mark")
     minimum_marks = fields.Integer("Minimum marks", help="Enter minimum marks")
 
@@ -1015,9 +949,7 @@ class StudentFamilyContact(models.Model):
         required=True,
         help="Select student relation with member",
     )
-    phone = fields.Char(
-        "Phone", required=True, help="Enter family member contact"
-    )
+    phone = fields.Char("Phone", required=True, help="Enter family member contact")
     email = fields.Char("E-Mail", help="Enter student email")
     relative_name = fields.Char(
         compute="_compute_get_name",
@@ -1073,9 +1005,7 @@ class GradeLine(models.Model):
         help="""If fail field is set to True,
 it will allow you to set the grade as fail.""",
     )
-    grade_id = fields.Many2one(
-        "grade.master", "Grade Ref.", help="Related grade"
-    )
+    grade_id = fields.Many2one("grade.master", "Grade Ref.", help="Related grade")
     name = fields.Char("Name", help="Grade name")
 
     @api.constrains("from_mark", "to_mark")
@@ -1083,9 +1013,7 @@ it will allow you to set the grade as fail.""",
         """Method to check overlapping of Marks"""
         for rec in self:
             if rec.to_mark < rec.from_mark:
-                raise ValidationError(
-                    _("To Marks should be greater than From Marks!")
-                )
+                raise ValidationError(_("To Marks should be greater than From Marks!"))
             for line in self.search(
                 [("grade_id", "=", rec.grade_id.id), ("id", "!=", rec.id)]
             ):
@@ -1106,9 +1034,7 @@ class StudentNews(models.Model):
     _rec_name = "subject"
     _order = "date asc"
 
-    subject = fields.Char(
-        "Subject", required=True, help="Subject of the news."
-    )
+    subject = fields.Char("Subject", required=True, help="Subject of the news.")
     description = fields.Text("Description", help="Description")
     date = fields.Datetime("Expiry Date", help="Expiry date of the news.")
     user_ids = fields.Many2many(
@@ -1126,9 +1052,7 @@ class StudentNews(models.Model):
         """Check news date."""
         new_date = fields.datetime.today()
         if self.date < new_date:
-            raise ValidationError(
-                _("Configure expiry date greater than current date!")
-            )
+            raise ValidationError(_("Configure expiry date greater than current date!"))
 
     def news_update(self):
         """Method to send email to student for news update"""
@@ -1149,9 +1073,7 @@ class StudentNews(models.Model):
         for news in self:
             if news.user_ids and news.date:
                 email_list = [
-                    news_user.email
-                    for news_user in news.user_ids
-                    if news_user.email
+                    news_user.email for news_user in news.user_ids if news_user.email
                 ]
                 if not email_list:
                     raise UserError(
@@ -1206,8 +1128,9 @@ Kindly,Configure Outgoing Mail Server!"""
                 subtype="html",
             )
             # Send Email configured above with help of send mail method
-            obj_mail_server.send_email(message=message,
-                                       mail_server_id=mail_server_record.id)
+            obj_mail_server.send_email(
+                message=message, mail_server_id=mail_server_record.id
+            )
         return True
 
 
@@ -1220,11 +1143,7 @@ class StudentReminder(models.Model):
     @api.model
     def check_user(self):
         """Method to get default value of logged in Student"""
-        return (
-            self.env["student.student"]
-            .search([("user_id", "=", self._uid)])
-            .id
-        )
+        return self.env["student.student"].search([("user_id", "=", self._uid)]).id
 
     stu_id = fields.Many2one(
         "student.student",
@@ -1235,9 +1154,7 @@ class StudentReminder(models.Model):
     )
     name = fields.Char("Title", help="Reminder name")
     date = fields.Date("Date", help="Reminder date")
-    description = fields.Text(
-        "Description", help="Description of the reminder"
-    )
+    description = fields.Text("Description", help="Description of the reminder")
     color = fields.Integer("Color Index", default=0, help="Color index")
 
     @api.constrains("date")
@@ -1256,6 +1173,15 @@ class StudentCast(models.Model):
     _description = "Student Cast"
 
     name = fields.Char("Name", required=True, help="Student cast")
+
+    @api.constrains("name")
+    def _check_same_record(self):
+        for record in self:
+            existing_record = self.env["student.cast"].search(
+                [("name", "ilike", record.name), ("id", "!=", record.id)]
+            )
+        if existing_record:
+            raise ValidationError("Religion name must be unique")
 
 
 class ClassRoom(models.Model):

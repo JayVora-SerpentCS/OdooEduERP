@@ -1,7 +1,8 @@
 # See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from odoo import api, fields, models
-
+from odoo.exceptions import ValidationError
 
 class SchoolTeacher(models.Model):
     """Defining a Teacher information."""
@@ -180,3 +181,8 @@ class SchoolTeacher(models.Model):
         phone = partner.phone or False
         self.work_phone = phone or False
         self.phone_numbers = phone or False
+
+    @api.constrains("birthday")
+    def _check_birthday(self):
+        if self.birthday > date.today():
+            raise ValidationError("Birthday cannot be greater than the current date")

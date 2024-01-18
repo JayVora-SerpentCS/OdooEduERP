@@ -22,24 +22,24 @@
                             <field name="reg_code" readonly="1" />
                         </b>
                         <br />
-                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;"/>
+                        <field name="photo" widget="image" attrs="{'readonly':[('state','in',['alumni','terminate'])]}" class="oe_avatar m-0" style="max-width:100px;max-height:117px;"/>
                         <div class="oe_title">
-                            <group>
-                                <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <br />
-                                <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <br />
-                                <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
-                                <br />
-                                <field name="pid" invisible="1"/>
-                            </group>
+                            <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            <br />
+                            <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            <br />
+                            <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
+                            <br />
+                            <field name="pid" invisible="1"/>
                         </div>
                     </div>
                     <group>
                         <group string="Student Information">
                             <field name="student_code" readonly="1" />
+                            <field name="country_id" attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             <field name="roll_no" help="Roll number of Student" readonly="1"/>
                             <field name="year" placeholder="Year" widget="selection" help="Academic year of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
+                            <field name ="leaving_certificate"  attrs="{'readonly':[('state','in',['alumni','terminate'])]}"/>
                             <field name="school_id" placeholder="School" widget="selection" help="School of Student" attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"/>
                         </group>
                         <group string="Standard Information">
@@ -438,17 +438,16 @@
                         <separator string="Personal Information" />
                         <field name="photo" widget="image" class="oe_avatar oe_left" style="max-width:100px;max-height:117px;" />
                         <div class="oe_title">
-                            <group>
-                                <field name="pid" nolabel="1" readonly="1"/>
-                                <br />
-                                <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                <br />
-                                <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                <br />
-                                <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
-                                <br/>
-                                <field name="active" invisible="1"/>
-                            </group>
+                            <field name="pid" nolabel="1" readonly="1"/>
+                            <br />
+                            <field name="name" placeholder="First Name" nolabel="1" required="1" attrs="{'readonly':[('state','=','alumni')]}"
+                                style="font-size: min(4vw, 2.6rem);"/>
+                            <br />
+                            <field name="middle" placeholder="Middle Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                            <br />
+                            <field name="last" placeholder="Last Name" nolabel="1" attrs="{'readonly':[('state','=','alumni')]}"/>
+                            <br/>
+                            <field name="active" invisible="1"/>
                         </div>
                     </div>
                     <group>

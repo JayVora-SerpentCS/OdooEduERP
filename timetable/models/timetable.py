@@ -230,3 +230,18 @@ class SubjectSubject(models.Model):
             count=count,
             access_rights_uid=access_rights_uid,
         )
+
+
+    @api.constrains("minimum_marks")
+    def _check_negative_marks(self):
+        if self.minimum_marks <= 0:
+            raise ValidationError(
+                ("The value of minimum marks must be greater than zero")
+            )
+
+    @api.constrains("maximum_marks","minimum_marks")
+    def _check_similar_name(self):
+        if self.maximum_marks == self.minimum_marks:
+            raise ValidationError(
+                ("Maximum marks and Minimum marks should be different, Not same")
+                )
