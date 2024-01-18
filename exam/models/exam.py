@@ -16,8 +16,6 @@ class StudentStudent(models.Model):
         help="Student exam history",
     )
 
-    # country_id=fields.Many2one("student.student",string="Nationility")
-
     def set_alumni(self):
         """Override method to make exam results of student active false
         when student is alumni"""
