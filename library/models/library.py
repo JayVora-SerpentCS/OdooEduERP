@@ -59,9 +59,9 @@ class LibraryCard(models.Model):
     def _compute_name(self):
         """Compute name."""
         for rec in self:
+            user = rec.teacher_id.name
             if rec.student_id:
                 user = rec.student_id.name
-            user = rec.teacher_id.name
             rec.card_name = user
 
     @api.depends("start_date", "duration")
@@ -464,6 +464,16 @@ class LibraryBookIssue(models.Model):
         vals.update(
             {
                 "teacher_id": card_rec.teacher_id.id,
+                "card_name": card_rec.card_name,
+                "user": str(card_rec.user.title()),
+            }
+        )
+
+    def _update_student_vals(self,vals):
+        card_rec = self.env["library.card"].browse(vals.get("card_id"))
+        vals.update(
+            {
+                "student_id":card_rec.student_id.id,
                 "card_name": card_rec.card_name,
                 "user": str(card_rec.user.title()),
             }
