@@ -59,10 +59,13 @@ class LibraryCard(models.Model):
     def _compute_name(self):
         """Compute name."""
         for rec in self:
-            user = rec.teacher_id.name
+            student_name = False
+            teacher_name = False
+            if rec.teacher_id:
+                teacher_name = rec.teacher_id.name
             if rec.student_id:
-                user = rec.student_id.name
-            rec.card_name = user
+                student_name = rec.student_id.name
+            rec.card_name = teacher_name or student_name
 
     @api.depends("start_date", "duration")
     def _compute_end_date(self):
