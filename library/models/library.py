@@ -472,15 +472,6 @@ class LibraryBookIssue(models.Model):
             }
         )
 
-    def _update_student_vals(self,vals):
-        card_rec = self.env["library.card"].browse(vals.get("card_id"))
-        vals.update(
-            {
-                "student_id":card_rec.student_id.id,
-                "card_name": card_rec.card_name,
-                "user": str(card_rec.user.title()),
-            }
-        )
 
     @api.model
     def create(self, vals):
