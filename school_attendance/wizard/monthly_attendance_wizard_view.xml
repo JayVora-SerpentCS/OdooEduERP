@@ -19,7 +19,7 @@
                                 options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True, &quot;no_open&quot;: True}"/>
                             <field name="is_elective_subject"/>
                             <field name="subject_id" attrs="{'invisible':[('is_elective_subject','=', False)], 'required':[('is_elective_subject','!=', False)]}"
-                                options="{&quot;no_create&quot;: True}"/>
+                                options="{&quot;no_create&quot;: True}" domain="[('is_elective_subject', '=', True)]"/>
                         </group>
                     </group>
                 </sheet>

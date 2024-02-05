@@ -48,7 +48,7 @@ class SchoolTeacherAssignment(models.Model):
         help="Select Assignment type",
     )
     file_format = fields.Many2one(
-        "file.format", "File Format", help="File format"
+        "file.format", "File Format", help="File format" ,required=True
     )
     attach_files = fields.Char("File Name", help="Enter file name")
     subject_standard_assignment = fields.Many2one(
