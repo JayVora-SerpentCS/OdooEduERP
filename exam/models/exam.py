@@ -115,13 +115,8 @@ class ExtendedTimeTable(models.Model):
                 if len(records) > 1:
                     raise ValidationError(
                         _(
-                            "You cannot set exam at same time %s  at same"
-                            " day %s for teacher %s!"
-                        )
-                        % (
-                            rec.start_time,
-                            rec.day_of_week,
-                            rec.teacher_id.name,
+                            f"You cannot set exam at same time {rec.start_time} at same"
+                            f" day {rec.day_of_week} for teacher {rec.teacher_id.name}!"
                         )
                     )
 
@@ -131,7 +126,7 @@ class ExtendedTimeTableLine(models.Model):
     _order = "exm_date asc"
 
     exm_date = fields.Date("Exam Date", help="Enter exam date")
-    day_of_week = fields.Char("Week Day", help="Enter week day")
+    day_of_week = fields.Char(string="Week Day", help="Enter week day")
     class_room_id = fields.Many2one("class.room", "Classroom", help="Enter class room")
 
     @api.onchange("exm_date")
@@ -222,11 +217,9 @@ class ExtendedTimeTableLine(models.Model):
                     and self.start_time == rec.start_time
                 ):
                     raise ValidationError(
-                        _("%s is occupied by '%s' for %s class!")
-                        % (
-                            self.class_room_id.name,
-                            record.name,
-                            record.standard_id.standard_id.name,
+                        _(
+                            f"{self.class_room_id.name} is occupied by \
+                            {record.name} for {record.standard_id.standard_id.name} class!"
                         )
                     )
 
@@ -268,9 +261,9 @@ class ExamExam(models.Model):
                         _("Kindly,mark as done %s examination results!") % (self.name)
                     )
 
-    active = fields.Boolean("Active", default="True", help="Activate/Deactivate record")
-    name = fields.Char("Exam Name", required=True, help="Name of Exam")
-    exam_code = fields.Char("Exam Code", readonly=True, help="Code of exam")
+    active = fields.Boolean(default="True", help="Activate/Deactivate record")
+    name = fields.Char(string="Exam Name", required=True, help="Name of Exam")
+    exam_code = fields.Char(readonly=True, help="Code of exam")
     standard_id = fields.Many2many(
         "standard.standard",
         "standard_standard_exam_rel",
@@ -288,17 +281,12 @@ class ExamExam(models.Model):
             ("finished", "Finished"),
             ("cancelled", "Cancelled"),
         ],
-        "State",
         readonly=True,
         default="draft",
         help="State of the exam",
     )
-    grade_system = fields.Many2one(
-        "grade.master", "Grade System", help="Select Grade System"
-    )
-    academic_year = fields.Many2one(
-        "academic.year", "Academic Year", help="Select Academic Year"
-    )
+    grade_system = fields.Many2one("grade.master", help="Select Grade System")
+    academic_year = fields.Many2one("academic.year", help="Select Academic Year")
     exam_schedule_ids = fields.One2many(
         "exam.schedule.line",
         "exam_id",
@@ -429,18 +417,22 @@ class AdditionalExam(models.Model):
         for rec in self:
             rec.color_name = rec.subject_id.id
 
-    name = fields.Char("Additional Exam Name", required=True, help="Name of Exam")
-    addtional_exam_code = fields.Char("Exam Code", help="Exam Code", readonly=True)
+    name = fields.Char(
+        string="Additional Exam Name", required=True, help="Name of Exam"
+    )
+    addtional_exam_code = fields.Char(
+        string="Exam Code", help="Exam Code", readonly=True
+    )
     standard_id = fields.Many2one(
         "school.standard", "Standard", help="Select standard for exam"
     )
     subject_id = fields.Many2one(
         "subject.subject", "Subject Name", help="Select subject for exam"
     )
-    exam_date = fields.Date("Exam Date", help="Select exam date")
+    exam_date = fields.Date(help="Select exam date")
     maximum_marks = fields.Integer("Maximum Mark", help="Minimum Marks of exam")
     minimum_marks = fields.Integer("Minimum Mark", help="Maximum Marks of Exam")
-    weightage = fields.Char("WEIGHTAGE", help="Enter weightage of exam")
+    weightage = fields.Char(string="WEIGHTAGE", help="Enter weightage of exam")
     color_name = fields.Integer(
         "Color index of creator",
         compute="_compute_color_name",
@@ -526,9 +518,7 @@ class ExamResult(models.Model):
     student_id = fields.Many2one(
         "student.student", "Student Name", required=True, help="Select Student"
     )
-    roll_no = fields.Integer(
-        string="Roll No", readonly=True, help="Enter student roll no."
-    )
+    roll_no = fields.Integer(readonly=True, help="Enter student roll no.")
     pid = fields.Char(
         related="student_id.pid",
         string="Student ID",
@@ -546,20 +536,16 @@ class ExamResult(models.Model):
         help="Total of marks",
     )
     percentage = fields.Float(
-        "Percentage",
         compute="_compute_per",
         store=True,
         help="Percentage Obtained",
     )
     result = fields.Char(
         compute="_compute_result",
-        string="Result",
         store=True,
         help="Result Obtained",
     )
-    grade = fields.Char(
-        "Grade", compute="_compute_per", store=True, help="Grade Obtained"
-    )
+    grade = fields.Char(compute="_compute_per", store=True, help="Grade Obtained")
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -567,17 +553,14 @@ class ExamResult(models.Model):
             ("re-evaluation", "Re-Evaluation"),
             ("re-evaluation_confirm", "Re-Evaluation Confirm"),
         ],
-        "State",
         readonly=True,
         tracking=True,
         default="draft",
         help="State of the exam",
     )
-    color = fields.Integer("Color", help="Color")
-    active = fields.Boolean("Active", default=True, help="Activate/Deactivate record")
-    grade_system = fields.Many2one(
-        "grade.master", "Grade System", help="Grade System selected"
-    )
+    color = fields.Integer(help="Color")
+    active = fields.Boolean(default=True, help="Activate/Deactivate record")
+    grade_system = fields.Many2one("grade.master", help="Grade System selected")
 
     def _update_rollno_standard(self, student):
         student_rec = self.env["student.student"].browse(student)
@@ -668,7 +651,7 @@ class ExamGradeLine(models.Model):
         "standard.standard", "Standard", help="Select student standard"
     )
     exam_id = fields.Many2one("exam.result", "Result", help="Select exam")
-    grade = fields.Char("Grade", help="Enter grade")
+    grade = fields.Char(help="Enter grade")
 
 
 class ExamSubject(models.Model):
@@ -713,11 +696,9 @@ class ExamSubject(models.Model):
     subject_id = fields.Many2one(
         "subject.subject", "Subject Name", help="Select subject"
     )
-    obtain_marks = fields.Float(
-        "Obtain Marks", group_operator="avg", help="Enter obtained marks"
-    )
-    minimum_marks = fields.Float("Minimum Marks", help="Minimum Marks of subject")
-    maximum_marks = fields.Float("Maximum Marks", help="Maximum Marks of subject")
+    obtain_marks = fields.Float(group_operator="avg", help="Enter obtained marks")
+    minimum_marks = fields.Float(help="Minimum Marks of subject")
+    maximum_marks = fields.Float(help="Maximum Marks of subject")
     marks_reeval = fields.Float(
         "Marks After Re-evaluation", help="Marks Obtain after Re-evaluation"
     )
@@ -769,7 +750,7 @@ class AdditionalExamResult(models.Model):
     student_id = fields.Many2one(
         "student.student", "Student Name", required=True, help="Select Student"
     )
-    roll_no = fields.Integer("Roll No", readonly=True, help="Student rol no.")
+    roll_no = fields.Integer(readonly=True, help="Student rol no.")
     standard_id = fields.Many2one(
         "school.standard",
         "Standard",
@@ -777,14 +758,13 @@ class AdditionalExamResult(models.Model):
         store=True,
         help="School Standard",
     )
-    obtain_marks = fields.Float("Obtain Marks", help="Marks obtain in exam")
+    obtain_marks = fields.Float(help="Marks obtain in exam")
     result = fields.Char(
         compute="_compute_student_result",
-        string="Result",
         help="Result Obtained",
         store=True,
     )
-    active = fields.Boolean("Active", default=True, help="Activate/Deactivate record")
+    active = fields.Boolean(default=True, help="Activate/Deactivate record")
 
     _sql_constraints = [
         (

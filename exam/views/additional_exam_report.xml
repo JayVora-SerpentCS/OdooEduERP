@@ -113,7 +113,9 @@
                                     width="25%"
                                     style="font-family: 'Helvetica';font-size: 16px;"
                                 >
-                                    <span t-field="result.standard_id.division_id" />
+                                    <span
+                                        t-field="result.student_id.division_id.name"
+                                    />
                                 </td>
                             </tr>
                         </table>
@@ -131,7 +133,7 @@
                                         align="center"
                                         style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
                                     >
-                                        <b>Maximum Marks</b>
+                                        <b>Maximum marks</b>
                                     </td>
                                     <td
                                         align="center"
@@ -162,7 +164,7 @@
                                         style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
                                     >
                                         <span
-                                            t-field="result.a_exam_id.maximum_marks"
+                                            t-field="result.a_exam_id.subject_id.maximum_marks"
                                         />
                                     </td>
                                     <td
@@ -170,14 +172,14 @@
                                         style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
                                     >
                                         <span
-                                            t-field="result.a_exam_id.minimum_marks"
+                                            t-field="result.a_exam_id.subject_id.minimum_marks"
                                         />
                                     </td>
                                     <td
                                         align="center"
                                         style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
                                     >
-                                        <span t-esc="round(result.obtain_marks, 2)" />
+                                        <span t-field="result.obtain_marks" />
                                     </td>
                                 </tr>
                             </tbody>

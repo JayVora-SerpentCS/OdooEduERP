@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="exam_result_report">
         <t t-call="web.html_container">
@@ -7,25 +6,46 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <div class="oe_structure" />
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
                         <div class="row" align="center">
                             <h1>Teacher Result Report</h1>
                         </div>
-                        <br/>
+                        <br />
                         <t t-foreach="o" t-as="result">
                             <table width="100%">
                                 <tr>
-                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Teacher Name</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span>:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="result.name"></span>
+                                    <td
+                                        width="50%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b
+                                        >Teacher Name</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span
+                                        >:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span
+                                            t-field="result.name"
+                                        />
                                     </td>
-                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Standard</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span>:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-field="result.standard_id.display_name"></span>
+                                    <td
+                                        width="50%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b
+                                        >Standard</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span
+                                        >:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span
+                                            t-field="result.standard_id.display_name"
+                                        />
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td width="50%" style="font-family: 'Helvetica';font-size: 18px;">
-                                        <b>Examination</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span>:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span t-esc="exam_name"></span>
+                                    <td
+                                        width="50%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b
+                                        >Examination</b><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span
+                                        >:</span><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><span
+                                            t-esc="exam_name"
+                                        />
                                     </td>
                                 </tr>
                             </table>
@@ -33,58 +53,97 @@
                             <table width="100%">
                                 <thead>
                                     <tr>
-                                        <td align="center"
-                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <td
+                                            align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                        >
                                             <b>Student Name</b>
                                         </td>
-                                        <td align="center"
-                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <td
+                                            align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                        >
                                             <b>Subject Name</b>
                                         </td>
-                                        <td align="center"
-                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <td
+                                            align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                        >
                                             <b>Maximum marks</b>
                                         </td>
-                                        <td align="center"
-                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <td
+                                            align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                        >
                                             <b>Minimum Marks</b>
                                         </td>
-                                        <td align="center"
-                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <td
+                                            align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                        >
                                             <b>Obtain Marks</b>
                                         </td>
-                                        <td align="center"
-                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                        <td
+                                            align="center"
+                                            style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;"
+                                        >
                                             <b>Revaluation Marks</b>
                                         </td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="get_result_detail" t-as="sub_res_info">
+                                    <t
+                                        t-foreach="get_result_detail"
+                                        t-as="sub_res_info"
+                                    >
                                         <tr>
-                                            <td align="center"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('student_name')"></span>
+                                            <td
+                                                align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
+                                            >
+                                                <span
+                                                    t-esc="sub_res_info.get('student_name')"
+                                                />
                                             </td>
-                                            <td align="center"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="sub_res_info.get('subject')"></span>
+                                            <td
+                                                align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
+                                            >
+                                                <span
+                                                    t-esc="sub_res_info.get('subject')"
+                                                />
                                             </td>
-                                            <td align="center"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="round(sub_res_info.get('max_mark'), 2)"></span>
+                                            <td
+                                                align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
+                                            >
+                                                <span
+                                                    t-esc="round(sub_res_info.get('max_mark'), 2)"
+                                                />
                                             </td>
-                                            <td align="center"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="round(sub_res_info.get('mini_marks'), 2)"></span>
+                                            <td
+                                                align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
+                                            >
+                                                <span
+                                                    t-esc="round(sub_res_info.get('mini_marks'), 2)"
+                                                />
                                             </td>
-                                            <td align="center"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="round(sub_res_info.get('obt_marks'), 2)"></span>
+                                            <td
+                                                align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
+                                            >
+                                                <span
+                                                    t-esc="round(sub_res_info.get('obt_marks'), 2)"
+                                                />
                                             </td>
-                                            <td align="center"
-                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
-                                                <span t-esc="round(sub_res_info.get('reval_marks'), 2)"></span>
+                                            <td
+                                                align="center"
+                                                style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
+                                            >
+                                                <span
+                                                    t-esc="round(sub_res_info.get('reval_marks'), 2)"
+                                                />
                                             </td>
                                         </tr>
                                     </t>

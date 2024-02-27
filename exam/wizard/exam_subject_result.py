@@ -24,9 +24,7 @@ class SubjectResultWiz(models.TransientModel):
     def default_get(self, fields):
         """Override default method to get default subjects"""
         res = super(SubjectResultWiz, self).default_get(fields)
-        exam_rec = self.env["school.teacher"].browse(
-            self._context.get("active_id")
-        )
+        exam_rec = self.env["school.teacher"].browse(self._context.get("active_id"))
         subjectlist = exam_rec.subject_id.ids
         res.update({"result_ids": [(6, 0, subjectlist)]})
         return res
@@ -34,6 +32,4 @@ class SubjectResultWiz(models.TransientModel):
     def result_report(self):
         """Method to get the result report"""
         data = self.read()[0]
-        return self.env.ref("exam.add_exam_result_id_qweb").report_action(
-            [], data=data
-        )
+        return self.env.ref("exam.add_exam_result_id_qweb").report_action([], data=data)

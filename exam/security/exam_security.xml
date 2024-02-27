@@ -1,140 +1,152 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <data>
-        <!-- Record Rule student can see own result of Additional Exam -->
-        <record id="exam_rule_student" model="ir.rule">
-            <field name="name">Student Exam Record Rule</field>
-            <field name="model_id" ref="model_additional_exam_result"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
+    <!-- Record Rule student can see own result of Additional Exam -->
+    <record id="exam_rule_student" model="ir.rule">
+        <field name="name">Student Exam Record Rule</field>
+        <field name="model_id" ref="model_additional_exam_result" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+    </record>
 
-        <!-- Record Rule Parents can see result of Additional Exam of own children -->
-        <record id="exam_rule_parent" model="ir.rule">
-            <field name="name">Parents Exam Record Rule</field>
-            <field name="model_id" ref="model_additional_exam_result"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
-        </record>
+    <!-- Record Rule Parents can see result of Additional Exam of own children -->
+    <record id="exam_rule_parent" model="ir.rule">
+        <field name="name">Parents Exam Record Rule</field>
+        <field name="model_id" ref="model_additional_exam_result" />
+        <field name="global" eval="True" />
+        <field
+            name="domain_force"
+        >[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_parent'))]" />
+    </record>
 
-        <!-- Record rule teacher can see all additional exam result -->
-        <record id="add_exam_rule_teacher" model="ir.rule">
-            <field name="name">Teacher Additional Exam Record Rule</field>
-            <field name="model_id" ref="model_additional_exam_result"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
-        </record>
+    <!-- Record rule teacher can see all additional exam result -->
+    <record id="add_exam_rule_teacher" model="ir.rule">
+        <field name="name">Teacher Additional Exam Record Rule</field>
+        <field name="model_id" ref="model_additional_exam_result" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+    </record>
 
-        <record id="timetable_teacher_record_rule_exam" model="ir.rule">
-            <field name="name">Teacher Timetable Record Rule</field>
-            <field name="model_id" ref="model_time_table"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[('user_ids','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
-        </record>
+    <record id="timetable_teacher_record_rule_exam" model="ir.rule">
+        <field name="name">Teacher Timetable Record Rule</field>
+        <field name="model_id" ref="model_time_table" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('user_ids','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+    </record>
 
-        <!-- Record rule student can see own final exam result -->
-        <record id="final_exam_result_record_rule" model="ir.rule">
-            <field name="name">Student Final Exam Record Rule</field>
-            <field name="model_id" ref="model_exam_result"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
+    <!-- Record rule student can see own final exam result -->
+    <record id="final_exam_result_record_rule" model="ir.rule">
+        <field name="name">Student Final Exam Record Rule</field>
+        <field name="model_id" ref="model_exam_result" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+    </record>
 
-        <!-- Record Rule Parent can own student final exam result -->
-        <record id="parent_final_exam_record_rule" model="ir.rule">
-            <field name="name">Parent Final Exam Record Rule</field>
-            <field name="model_id" ref="model_exam_result"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
-        </record>
+    <!-- Record Rule Parent can own student final exam result -->
+    <record id="parent_final_exam_record_rule" model="ir.rule">
+        <field name="name">Parent Final Exam Record Rule</field>
+        <field name="model_id" ref="model_exam_result" />
+        <field name="global" eval="True" />
+        <field
+            name="domain_force"
+        >[('student_id.parent_id.partner_id','=',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_parent'))]" />
+    </record>
 
-        <!-- Record rule teacher can see own students exam result -->
-        <record id="final_exam_result_record_rule_teacher" model="ir.rule">
-            <field name="name">Teacher can see own students exam result </field>
-            <field name="model_id" ref="model_exam_result"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">[('student_id.standard_id.cmp_id','=',user.company_id.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
-        </record>
+    <!-- Record rule teacher can see own students exam result -->
+    <record id="final_exam_result_record_rule_teacher" model="ir.rule">
+        <field name="name">Teacher can see own students exam result </field>
+        <field name="model_id" ref="model_exam_result" />
+        <field name="global" eval="True" />
+        <field
+            name="domain_force"
+        >[('student_id.standard_id.cmp_id','=',user.company_id.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+    </record>
 
-        <!-- Record Rule for Exam Schedule For Student -->
-        <record id="student_rule_exam_schedule_record" model="ir.rule">
-            <field name="name">Personal Exam Schedule Record</field>
-            <field name="model_id" ref="model_exam_exam"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[('exam_schedule_ids.standard_id.student_ids.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
+    <!-- Record Rule for Exam Schedule For Student -->
+    <record id="student_rule_exam_schedule_record" model="ir.rule">
+        <field name="name">Personal Exam Schedule Record</field>
+        <field name="model_id" ref="model_exam_exam" />
+        <field name="global" eval="1" />
+        <field
+            name="domain_force"
+        >[('exam_schedule_ids.standard_id.student_ids.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+    </record>
 
-        <!-- Record Rule for Additional Exam Schedule For Student -->
-        <record id="student_rule_additional_exam_schedule_record" model="ir.rule">
-            <field name="name">Personal Additional Exam Schedule Record</field>
-            <field name="model_id" ref="model_additional_exam"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[('standard_id.student_ids.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
-        </record>
+    <!-- Record Rule for Additional Exam Schedule For Student -->
+    <record id="student_rule_additional_exam_schedule_record" model="ir.rule">
+        <field name="name">Personal Additional Exam Schedule Record</field>
+        <field name="model_id" ref="model_additional_exam" />
+        <field name="global" eval="1" />
+        <field
+            name="domain_force"
+        >[('standard_id.student_ids.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_student'))]" />
+    </record>
 
-        <!-- Record Rule for Exam Schedule For Parents -->
-        <record id="parents_rule_exam_schedule_record" model="ir.rule">
-            <field name="name">Parents Exam Schedule Record</field>
-            <field name="model_id" ref="model_exam_exam"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[('exam_schedule_ids.standard_id.student_ids.parent_id.partner_id','=',user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
-        </record>
+    <!-- Record Rule for Exam Schedule For Parents -->
+    <record id="parents_rule_exam_schedule_record" model="ir.rule">
+        <field name="name">Parents Exam Schedule Record</field>
+        <field name="model_id" ref="model_exam_exam" />
+        <field name="global" eval="1" />
+        <field
+            name="domain_force"
+        >[('exam_schedule_ids.standard_id.student_ids.parent_id.partner_id','=',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_parent'))]" />
+    </record>
 
-        <!-- Record Rule Teacher can see all regular exams -->
-        <record id="teacher_rule_exam_regular_schedule_record" model="ir.rule">
-            <field name="name">Teacher Regular Exam Schedule Record</field>
-            <field name="model_id" ref="model_exam_exam"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
-        </record>
+    <!-- Record Rule Teacher can see all regular exams -->
+    <record id="teacher_rule_exam_regular_schedule_record" model="ir.rule">
+        <field name="name">Teacher Regular Exam Schedule Record</field>
+        <field name="model_id" ref="model_exam_exam" />
+        <field name="global" eval="1" />
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+    </record>
 
-        <!-- Record Rule for Additional Exam Schedule For Parents -->
-        <record id="parent_rule_additional_exam_schedule_record" model="ir.rule">
-            <field name="name">Parents Additional Exam Schedule Record</field>
-            <field name="model_id" ref="model_additional_exam"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[('standard_id.student_ids.parent_id.partner_id','=',user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
-        </record>
+    <!-- Record Rule for Additional Exam Schedule For Parents -->
+    <record id="parent_rule_additional_exam_schedule_record" model="ir.rule">
+        <field name="name">Parents Additional Exam Schedule Record</field>
+        <field name="model_id" ref="model_additional_exam" />
+        <field name="global" eval="1" />
+        <field
+            name="domain_force"
+        >[('standard_id.student_ids.parent_id.partner_id','=',user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_parent'))]" />
+    </record>
 
-        <!-- Record Rule for Additional Exam Schedule For Teacher -->
-        <record id="teacher_rule_additional_exam_schedule_record" model="ir.rule">
-            <field name="name">Teacher Additional Exam Schedule Record</field>
-            <field name="model_id" ref="model_additional_exam"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
-        </record>
+    <!-- Record Rule for Additional Exam Schedule For Teacher -->
+    <record id="teacher_rule_additional_exam_schedule_record" model="ir.rule">
+        <field name="name">Teacher Additional Exam Schedule Record</field>
+        <field name="model_id" ref="model_additional_exam" />
+        <field name="global" eval="1" />
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+    </record>
 
-        <!-- Record Rule of teacher for exam schedule line -->
-        <record id="teacher_rule_schedule_line" model="ir.rule">
-            <field name="name">Teacher Exam Schedule Line Record Rule</field>
-            <field name="model_id" ref="model_exam_schedule_line"/>
-            <field name="global" eval="1"/>
-            <field name="domain_force">[('standard_id.cmp_id','=',user.company_id.id)]</field>
-            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
-        </record>
+    <!-- Record Rule of teacher for exam schedule line -->
+    <record id="teacher_rule_schedule_line" model="ir.rule">
+        <field name="name">Teacher Exam Schedule Line Record Rule</field>
+        <field name="model_id" ref="model_exam_schedule_line" />
+        <field name="global" eval="1" />
+        <field
+            name="domain_force"
+        >[('standard_id.cmp_id','=',user.company_id.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]" />
+    </record>
 
-        <!-- Record rule teacher can see exam assigned to him -->
-<!--         <record id="timetable_teacher_record_rule_exam" model="ir.rule"> -->
-<!--             <field name="name">Teacher Timetable Record Exam Rule</field> -->
-<!--             <field name="model_id" ref="model_time_table"/> -->
-<!--             <field name="global" eval="True"/> -->
-<!--             <field name="domain_force">[('users','=',user.id),('timetable_type','=','exam')]</field> -->
-<!--             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/> -->
+    <!-- Record rule teacher can see exam assigned to him -->
+    <!--         <record id="timetable_teacher_record_rule_exam" model="ir.rule"> -->
+    <!--             <field name="name">Teacher Timetable Record Exam Rule</field> -->
+    <!--             <field name="model_id" ref="model_time_table"/> -->
+    <!--             <field name="global" eval="True"/> -->
+    <!--             <field name="domain_force">[('users','=',user.id),('timetable_type','=','exam')]</field> -->
+    <!--             <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/> -->
 <!--         </record> -->
-    </data>
 </odoo>

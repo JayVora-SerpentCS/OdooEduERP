@@ -144,9 +144,9 @@ class TestExam(common.TransactionCase):
         self.add_exam_result.onchange_student()
         self.add_exam_result._validate_obtain_marks()
         self.add_exam_result._compute_student_result()
-        data, data_format = self.env.ref(
-            "exam.additional_exam_result_id_qweb"
-        ).render(self.add_exam_result.ids)
+        data, data_format = self.env.ref("exam.additional_exam_result_id_qweb").render(
+            self.add_exam_result.ids
+        )
         if config.get("test_report_directory"):
             open(
                 os.path.join(
@@ -159,9 +159,7 @@ class TestExam(common.TransactionCase):
     def test_exam(self):
         self.assertEqual(self.add_exam_result.student_id.state, "done")
         self.assertEqual(self.exam_result.student_id.state, "done")
-        self.assertEqual(
-            self.exam_schedule_line.timetable_id.timetable_type, "exam"
-        )
+        self.assertEqual(self.exam_schedule_line.timetable_id.timetable_type, "exam")
         self.assertEqual(
             self.exam_schedule_line.timetable_id.year_id.id,
             self.exam_exam.academic_year.id,
