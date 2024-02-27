@@ -1,73 +1,69 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template id="teacher_identity_card">
+    <template id="identity_card">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page" style="height: 2px;">
                         <div class="oe_structure" />
-                        <t t-foreach="o" t-as="teacher">
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <t t-foreach="o" t-as="student">
+                        <br /><br /><br />
                         <table
-                                width="40%"
-                                height="280px"
+                                width="25%"
+                                height="50px"
                                 style="border: 3px solid black;"
-                                align="center"
                             >
-                            <tr style="margin-top:5px">
-                                <td colspan="2" align="center">
-                                    <h1><strong>
-                                        <span t-field="teacher.sudo().school_id.name" />
-                                    </strong></h1>
+                            <tr>
+                                <td width="100%" align="center" height="30">
+                                    <strong>
+                                        <span t-field="student.school_id.name" />
+                                    </strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="top">
+                                <td align="center">
                                     <img
-                                            t-if="teacher.avatar_128"
-                                            t-att-src="'data:image/png;base64,%s' % teacher.avatar_128.decode('utf-8')"
+                                            t-if="student.photo"
+                                            t-att-src="'data:image/png;base64,%s' % to_text(student.photo)"
+                                            style="height:120px;width=120px"
                                         />
                                 </td>
-                                <td align="left">
+                            </tr>
+                            <tr>
+                                <td height="10px" />
+                            </tr>
+                            <tr>
+                                <td align="center" height="30px">
+                                    <strong>
+                                        <span t-field="student.name" />
+                                    </strong>
+                                    <strong>
+                                        <span t-field="student.middle" />
+                                    </strong>
+                                    <strong>
+                                        <span t-field="student.last" />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="130">
                                     <table width="100%">
                                         <tr>
                                             <td
                                                     style="font-family: 'Helvetica';padding-left:20px;"
                                                 >
-                                                <strong>Name</strong>
+                                                <strong>Roll No.</strong>
                                             </td>
                                             <td>
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="teacher.name" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>Gender</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="teacher.sudo().gender" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>BirthDate</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span
-                                                        t-field="teacher.sudo().birthday"
-                                                    />
+                                                <span t-field="student.roll_no" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -81,7 +77,7 @@
                                             </td>
                                             <td>
                                                 <span
-                                                        t-field="teacher.sudo().standard_id.name"
+                                                        t-field="student.standard_id.standard_id.name"
                                                     />
                                             </td>
                                         </tr>
@@ -89,14 +85,14 @@
                                             <td
                                                     style="font-family: 'Helvetica';padding-left:20px;"
                                                 >
-                                                <strong>Email</strong>
+                                                <strong>Division</strong>
                                             </td>
                                             <td>
                                                 <strong>: </strong>
                                             </td>
                                             <td>
                                                 <span
-                                                        t-field="teacher.sudo().work_email"
+                                                        t-field="student.standard_id.division_id.name"
                                                     />
                                             </td>
                                         </tr>
@@ -104,22 +100,44 @@
                                             <td
                                                     style="font-family: 'Helvetica';padding-left:20px;"
                                                 >
-                                                <strong>Contact</strong>
+                                                <strong>Medium</strong>
                                             </td>
                                             <td>
                                                 <strong>: </strong>
                                             </td>
                                             <td>
                                                 <span
-                                                        t-field="teacher.sudo().mobile_phone"
+                                                        t-field="student.medium_id.name"
                                                     />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>BirthDate</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="student.date_of_birth" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Blood Group</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="student.blood_group" />
                                             </td>
                                         </tr>
                                     </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
                                 </td>
                             </tr>
                         </table>

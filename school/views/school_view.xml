@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- Form View Of Student Reminder -->
     <record id="view_student_reminder_form_2" model="ir.ui.view">
@@ -11,15 +10,33 @@
                     <separator string="Reminder" />
                     <group>
                         <group>
-                            <field name="stu_id" widget="selection" placeholder="Student" domain="[('state','=','done')]"/>
-                            <field name="date" placeholder="Select Date"/>
+                            <field
+                                name="stu_id"
+                                widget="selection"
+                                placeholder="Student"
+                                domain="[('state','=','done')]"
+                            />
+                            <field
+                                name="date"
+                                placeholder="Select Date"
+                                string="Date"
+                            />
                         </group>
                         <group>
-                            <field name="name" placeholder="Reminder Title" required="1"/>
+                            <field
+                                name="name"
+                                placeholder="Reminder Title"
+                                required="1"
+                            />
                         </group>
                     </group>
                     <group>
-                        <field name="description" colspan="4" placeholder="Description"/>
+                        <field
+                            name="description"
+                            colspan="4"
+                            placeholder="Description"
+                            string="Description"
+                        />
                     </group>
                 </sheet>
             </form>
@@ -31,9 +48,9 @@
         <field name="model">student.reminder</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="stu_id"/>
+                <field name="stu_id" />
                 <field name="date" />
-                <field name="name"/>
+                <field name="name" />
             </tree>
         </field>
     </record>
@@ -48,7 +65,9 @@
                 <field name="color" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}} oe_kanban_global_click_edit oe_semantic_html_override">
+                        <div
+                            t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}} oe_kanban_global_click_edit oe_semantic_html_override"
+                        >
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <ul class="oe_dropdown_menu">
                                     <li>
@@ -58,14 +77,24 @@
                                         <a type="delete">Delete</a>
                                     </li>
                                     <li>
-                                        <ul class="oe_kanban_colorpicker" data-field="color" />
+                                        <ul
+                                            class="oe_kanban_colorpicker"
+                                            data-field="color"
+                                        />
                                     </li>
                                 </ul>
                             </div>
-                            <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                            <div
+                                class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle"
+                            >
                                 <table class="oe_kanban_table">
                                     <tr>
-                                        <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
+                                        <td
+                                            class="oe_kanban_title1"
+                                            align="left"
+                                            valign="middle"
+                                            style="padding-left:10px;"
+                                        >
                                             <h4>
                                                 <a type="open">
                                                     <field name="date" />
@@ -77,10 +106,16 @@
                                 </table>
                                 <br />
                             </div>
-                            <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                            <div
+                                class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border"
+                            >
                                 <table class="oe_kanban_table">
                                     <tr width="300">
-                                        <td valign="top" align="left" style="padding-left:10px;">
+                                        <td
+                                            valign="top"
+                                            align="left"
+                                            style="padding-left:10px;"
+                                        >
                                             <table>
                                                 <tr>
                                                     <td>Name :</td>
@@ -111,10 +146,19 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                            <div
+                                class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick"
+                            >
                                 <div class="oe_kanban_left" style="margin-left:10px;">
                                     <br />
-                                    <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" title="edit"/>
+                                    <a
+                                        role="button"
+                                        string="Edit"
+                                        class="btn btn-sm btn-default fa fa-pencil"
+                                        type="edit"
+                                        aria-label="edit"
+                                        title="edit"
+                                    />
                                 </div>
                                 <br class="oe_kanban_clear" />
                             </div>
@@ -134,28 +178,63 @@
                     <separator string="School Configuration" />
                     <group col="4" colspan="4">
                         <field name="name" string="Name" placeholder="School Name" />
-                        <field name="code" placeholder="Code" />
+                        <field name="code" placeholder="Code" string="Code" />
                     </group>
                     <group>
                         <label for="street" string="Address" />
                         <div class="o_address_format">
-                            <field name="street" class="o_address_street" placeholder="Street..." />
-                            <field name="street2" class="o_address_street" placeholder="Street2..." />
-                            <field name="city" class="o_address_city" placeholder="City" required="1" />
-                            <field name="state_id" class="o_address_state" domain="[('country_id','=',country_id)]" required="1" placeholder="State" options="{&quot;no_open&quot;: true}" />
+                            <field
+                                name="street"
+                                class="o_address_street"
+                                placeholder="Street..."
+                            />
+                            <field
+                                name="street2"
+                                class="o_address_street"
+                                placeholder="Street2..."
+                            />
+                            <field
+                                name="city"
+                                class="o_address_city"
+                                placeholder="City"
+                                required="1"
+                            />
+                            <field
+                                name="state_id"
+                                class="o_address_state"
+                                domain="[('country_id','=',country_id)]"
+                                required="1"
+                                placeholder="State"
+                                options="{&quot;no_open&quot;: true}"
+                            />
                             <field name="zip" class="o_address_zip" placeholder="ZIP" />
-                            <field name="country_id" class="o_address_city,oe_no_button" placeholder="Country"  options="{&quot;no_open&quot;: true}" required="1"/>
+                            <field
+                                name="country_id"
+                                class="o_address_city,oe_no_button"
+                                placeholder="Country"
+                                options="{&quot;no_open&quot;: true}"
+                                required="1"
+                            />
                         </div>
                     </group>
                     <group col="4" colspan="4">
-                        <field name="currency_id" placeholder="Select Or Create Currency" />
-                        <field name="lang" placeholder="Language"/>
-                        <field name="required_age" required="1"/>
-                        <field name="company_id"/>
+                        <field
+                            name="currency_id"
+                            placeholder="Select Or Create Currency"
+                        />
+                        <field name="lang" placeholder="Language" />
+                        <field name="required_age" required="1" />
+                        <field name="company_id" />
                     </group>
                     <notebook colspan="4">
                         <page string="Standards">
-                            <field name="standards" nolabel="1" colspan="4" readonly="1"/>
+                            <field
+                                name="standards"
+                                nolabel="1"
+                                colspan="4"
+                                readonly="1"
+                                string="Standards"
+                            />
                         </page>
                     </notebook>
                 </sheet>
@@ -167,7 +246,7 @@
         <field name="name">school.school.tree</field>
         <field name="model">school.school</field>
         <field name="arch" type="xml">
-            <tree string="School Information">
+            <tree>
                 <field name="name" string="School Name" />
                 <field name="code" />
             </tree>
@@ -181,8 +260,8 @@
             <form string="Standard Information">
                 <separator string="Attendance Type" />
                 <group col="4" colspan="2">
-                    <field name="name" placeholder="name"/>
-                    <field name="code" placeholder="code"/>
+                    <field name="name" placeholder="name" string="Name" />
+                    <field name="code" placeholder="code" string="Code" />
                 </group>
             </form>
         </field>
@@ -196,23 +275,49 @@
                 <sheet>
                     <separator string="Standard Information" />
                     <group col="4" colspan="4">
-                        <field name="standard_id" widget="selection" placeholder="Standard"/>
-                        <field name="division_id" widget="selection" placeholder="Division"/>
-                        <field name="medium_id" widget="selection" placeholder="Medium"/>
-                        <field name="school_id" widget="selection" placeholder="School"/>
-                        <field name="user_id" placeholder="Select Faculty Name"
-                            widget="selection"/>
-                        <field name="capacity"/>
-                        <field name="total_students"/>
-                        <field name="remaining_seats"/>
-                        <field name="class_room_id" options="{&quot;no_create&quot;: True}"/>
-                        <field name="name" invisible="1"/>
-                        <field name="total_no_subjects" invisible="1"/>
+                        <field
+                            name="standard_id"
+                            widget="selection"
+                            placeholder="Standard"
+                        />
+                        <field
+                            name="division_id"
+                            widget="selection"
+                            placeholder="Division"
+                        />
+                        <field
+                            name="medium_id"
+                            widget="selection"
+                            placeholder="Medium"
+                        />
+                        <field
+                            name="school_id"
+                            widget="selection"
+                            placeholder="School"
+                        />
+                        <field
+                            name="user_id"
+                            placeholder="Select Faculty Name"
+                            widget="selection"
+                        />
+                        <field name="capacity" />
+                        <field name="total_students" />
+                        <field name="remaining_seats" />
+                        <field
+                            name="class_room_id"
+                            options="{&quot;no_create&quot;: True}"
+                        />
+                        <field name="name" invisible="1" string="Name" />
+                        <field
+                            name="total_no_subjects"
+                            invisible="1"
+                            string="Total Students"
+                        />
                     </group>
                     <notebook colspan="4">
                         <page string="Students" name="students">
                             <field name="student_ids" nolabel="1" colspan="4">
-                                <tree string="Student Information">
+                                <tree>
                                     <field name="roll_no" />
                                     <field name="name" />
                                     <field name="year" />
@@ -229,19 +334,44 @@
                             </field>
                         </page>
                         <page string="Subjects">
-                            <field name="subject_ids" nolabel="1" colspan="4" string="Add Subjects" options="{&quot;no_create&quot;: True, &quot;no_edit&quot;: True, &quot;no_open&quot;: True}"/>
+                            <field
+                                name="subject_ids"
+                                nolabel="1"
+                                colspan="4"
+                                string="Add Subjects"
+                                options="{&quot;no_create&quot;: True, &quot;no_edit&quot;: True, &quot;no_open&quot;: True}"
+                            />
                         </page>
-                        <page string="Syllabus" attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}">
-                            <field name="syllabus_ids" nolabel="1" context="{'default_standard_id':standard_id}">
-                                <tree editable="top" string="Syllabs">
-                                    <field name="standard_id" invisible="1"/>
-                                    <field name="subject_id" required="1" widget="selection"/>
-                                    <field name="syllabus_doc" required="1"/>
+                        <page
+                            string="Syllabus"
+                            attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}"
+                        >
+                            <field
+                                name="syllabus_ids"
+                                nolabel="1"
+                                context="{'default_standard_id':standard_id}"
+                            >
+                                <tree editable="top">
+                                    <field name="standard_id" invisible="1" />
+                                    <field
+                                        name="subject_id"
+                                        required="1"
+                                        widget="selection"
+                                    />
+                                    <field
+                                        name="syllabus_doc"
+                                        required="1"
+                                        string="Syllabus Doc"
+                                    />
                                 </tree>
                                 <form string="Syllabus">
                                     <group>
-                                        <field name="subject_id" required="1" options="{&quot;no_open&quot;: True}"/>
-                                        <field name="syllabus_doc" required="1"/>
+                                        <field
+                                            name="subject_id"
+                                            required="1"
+                                            options="{&quot;no_open&quot;: True}"
+                                        />
+                                        <field name="syllabus_doc" required="1" />
                                     </group>
 
                                 </form>
@@ -257,12 +387,12 @@
         <field name="name">school.standard.tree</field>
         <field name="model">school.standard</field>
         <field name="arch" type="xml">
-            <tree string="Standard Information">
-                <field name="standard_id"/>
-                <field name="user_id"/>
-                <field name="division_id"/>
-                <field name="medium_id"/>
-                <field name="remaining_seats"/>
+            <tree>
+                <field name="standard_id" />
+                <field name="user_id" />
+                <field name="division_id" />
+                <field name="medium_id" />
+                <field name="remaining_seats" />
             </tree>
         </field>
     </record>
@@ -280,13 +410,24 @@
                 <field name="color" />
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.school_id.value)" />
-                        <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                        <t
+                            t-set="color"
+                            t-value="kanban_color(record.color.raw_value || record.school_id.value)"
+                        />
+                        <div
+                            t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')"
+                        >
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <div
+                                    class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle"
+                                >
                                     <table class="oe_kanban_table">
                                         <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                            <td
+                                                class="oe_kanban_title1"
+                                                align="left"
+                                                valign="middle"
+                                            >
                                                 <div>
                                                     School :-
                                                     <field name="school_id" /></div>
@@ -294,7 +435,9 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                <div
+                                    class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border"
+                                >
                                     <table class="oe_kanban_table">
                                         <tr>
                                             <td valign="top" align="left">
@@ -306,10 +449,14 @@
                                                 <div class="oe_kanban_title3">
                                                     <div>
                                                         Standard :-
-                                                        <field name="standard_id" /></div>
+                                                        <field
+                                                            name="standard_id"
+                                                        /></div>
                                                     <div>
                                                         Division :-
-                                                        <field name="division_id" /></div>
+                                                        <field
+                                                            name="division_id"
+                                                        /></div>
                                                     <div>
                                                         Medium :-
                                                         <field name="medium_id" /></div>
@@ -318,10 +465,24 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                <div
+                                    class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick"
+                                >
                                     <div class="oe_kanban_left">
-                                        <a role="button" string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" aria-label="edit" />
-                                        <a role="button" string="Delete" class="btn btn-sm btn-default fa fa-trash" type="delete" aria-label="delete"/>
+                                        <a
+                                            role="button"
+                                            string="Edit"
+                                            class="btn btn-sm btn-default fa fa-pencil"
+                                            type="edit"
+                                            aria-label="edit"
+                                        />
+                                        <a
+                                            role="button"
+                                            string="Delete"
+                                            class="btn btn-sm btn-default fa fa-trash"
+                                            type="delete"
+                                            aria-label="delete"
+                                        />
                                     </div>
                                     <br class="oe_kanban_clear" />
                                 </div>
@@ -346,10 +507,30 @@
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
-                    <filter name="school" string="School" help="By School" context="{'group_by':'school_id'}" />
-                    <filter name="class" string="Class" help="By Class" context="{'group_by':'standard_id'}" />
-                    <filter name="division" string="Division" help="By Division" context="{'group_by':'division_id'}" />
-                    <filter name="medium" string="Medium" help="By Medium" context="{'group_by':'medium_id'}" />
+                    <filter
+                        name="school"
+                        string="School"
+                        help="By School"
+                        context="{'group_by':'school_id'}"
+                    />
+                    <filter
+                        name="class"
+                        string="Class"
+                        help="By Class"
+                        context="{'group_by':'standard_id'}"
+                    />
+                    <filter
+                        name="division"
+                        string="Division"
+                        help="By Division"
+                        context="{'group_by':'division_id'}"
+                    />
+                    <filter
+                        name="medium"
+                        string="Medium"
+                        help="By Medium"
+                        context="{'group_by':'medium_id'}"
+                    />
                 </group>
             </search>
         </field>
@@ -359,8 +540,8 @@
         <field name="name">student.caste.tree</field>
         <field name="model">student.cast</field>
         <field name="arch" type="xml">
-            <tree string="Caste Information" editable="bottom">
-                <field name="name" placeholder="Enter Name"/>
+            <tree editable="bottom">
+                <field name="name" placeholder="Enter Name" string="Name" />
             </tree>
         </field>
     </record>
@@ -392,25 +573,37 @@
             <form string="Grade">
                 <sheet>
                     <group col="2" colspan="2" string="Grade">
-                        <field name="name" string="Grade Names" placeholder="Enter GradeName"/>
+                        <field
+                            name="name"
+                            string="Grade Names"
+                            placeholder="Enter GradeName"
+                        />
                     </group>
                         <newline />
                         <field name="grade_ids" nolabel="1" colspan="4">
                             <tree>
-                                <field name="sequence" />
+                                <field name="sequence" string="Sequence" />
                                 <field name="from_mark" />
                                 <field name="to_mark" />
-                                <field name="grade" />
+                                <field name="grade" string="Grade" />
                              </tree>
                              <form>
                                  <group>
-                                     <field name="sequence" colspan="2" />
+                                     <field
+                                    name="sequence"
+                                    colspan="2"
+                                    string="Sequence"
+                                />
                                      <newline />
-                                     <field name="grade" placeholder="Grade"/>
+                                     <field
+                                    name="grade"
+                                    placeholder="Grade"
+                                    string="Grade"
+                                />
                                      <newline />
-                                     <field name="from_mark" placeholder="From Mark"/>
-                                     <field name="to_mark" placeholder="To Mark"/>
-                                     <field name="fail" />
+                                     <field name="from_mark" placeholder="From Mark" />
+                                     <field name="to_mark" placeholder="To Mark" />
+                                     <field name="fail" string="Fail" />
                                  </group>
                              </form>
                          </field>
@@ -423,7 +616,7 @@
         <field name="name">grade.master.tree</field>
         <field name="model">grade.master</field>
         <field name="arch" type="xml">
-            <tree string="Grade">
+            <tree>
                 <field name="name" />
             </tree>
         </field>
@@ -435,24 +628,44 @@
         <field name="arch" type="xml">
             <form string="Academic Years">
                 <header>
-                    <button name="generate_academicmonth" type="object" string="Generate Months"/>
+                    <button
+                        name="generate_academicmonth"
+                        type="object"
+                        string="Generate Months"
+                    />
                 </header>
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="name" placeholder="Name" />
-                        <field name="code" placeholder="Code" />
-                        <field name="date_start" placeholder="Start Date" />
+                        <field name="name" placeholder="Name" string="Name" />
+                        <field name="code" placeholder="Code" string="Code" />
+                        <field
+                            name="date_start"
+                            placeholder="Start Date"
+                            string="Start Date"
+                        />
                          <field name="date_stop" placeholder="End Date" />
-                        <field name="sequence" />
-                        <field name="current" widget="boolean_toggle"/>
-                        <field name="grade_id" placeholder="Grade System"
-                            options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" invisible="1"/>
+                        <field name="sequence" string="Sequence" />
+                        <field
+                            name="current"
+                            widget="boolean_toggle"
+                            string="Current"
+                        />
+                        <field
+                            name="grade_id"
+                            placeholder="Grade System"
+                            options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            invisible="1"
+                        />
                     </group>
                     <notebook colspan="4">
                         <page string="Months">
-                            <field name="month_ids" nolabel="1" colspan="4"
-                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
-                                <tree string="Months">
+                            <field
+                                name="month_ids"
+                                nolabel="1"
+                                colspan="4"
+                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            >
+                                <tree>
                                     <field name="name" />
                                     <field name="code" />
                                     <field name="date_start" />
@@ -472,7 +685,12 @@
                     </notebook>
                     <newline />
                     <separator string="Description" colspan="4" />
-                    <field name="description" colspan="4" placeholder="Description"/>
+                    <field
+                        name="description"
+                        colspan="4"
+                        placeholder="Description"
+                        string="Description"
+                    />
                 </sheet>
             </form>
         </field>
@@ -482,7 +700,7 @@
         <field name="name">academic.year.tree</field>
         <field name="model">academic.year</field>
         <field name="arch" type="xml">
-            <tree string="Academic Years">
+            <tree>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -499,12 +717,20 @@
             <form string="Months">
                 <sheet>
                     <group>
-                        <field name="name" placeholder="Name"/>
-                        <field name="code" placeholder="Code"/>
-                        <field name="date_start" placeholder="Start Date"/>
-                        <field name="date_stop" placeholder="Stop Date"/>
-                        <field name="year_id" placeholder="Year" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
-                        <field name="description" placeholder="Description"/>
+                        <field name="name" placeholder="Name" string="Name" />
+                        <field name="code" placeholder="Code" string="Code" />
+                        <field name="date_start" placeholder="Start Date" />
+                        <field name="date_stop" placeholder="Stop Date" />
+                        <field
+                            name="year_id"
+                            placeholder="Year"
+                            options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                        />
+                        <field
+                            name="description"
+                            placeholder="Description"
+                            string="Description"
+                        />
                     </group>
                 </sheet>
             </form>
@@ -515,7 +741,7 @@
         <field name="name">academic.month.tree</field>
         <field name="model">academic.month</field>
         <field name="arch" type="xml">
-            <tree string="Months">
+            <tree>
                 <field name="name" />
                 <field name="code" />
                 <field name="date_start" />
@@ -532,10 +758,14 @@
             <form string="Medium">
                 <sheet>
                     <group>
-                        <field name="sequence" />
-                        <field name="name" placeholder="Name" />
-                        <field name="code" placeholder="Code" />
-                        <field name="description" placeholder="Description"/>
+                        <field name="sequence" string="Sequence" />
+                        <field name="name" placeholder="Name" string="Name" />
+                        <field name="code" placeholder="Code" string="Code" />
+                        <field
+                            name="description"
+                            placeholder="Description"
+                            string="Description"
+                        />
                     </group>
                 </sheet>
             </form>
@@ -546,7 +776,7 @@
         <field name="name">standard.medium.tree</field>
         <field name="model">standard.medium</field>
         <field name="arch" type="xml">
-            <tree string="Medium">
+            <tree>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -573,7 +803,7 @@
         <field name="name">document.type.tree</field>
         <field name="model">document.type</field>
         <field name="arch" type="xml">
-            <tree string="Document Type">
+            <tree>
                 <field name="seq_no" />
                 <field name="doc_type" />
             </tree>
@@ -586,7 +816,7 @@
         <field name="arch" type="xml">
             <form string="Mother Tongue">
                 <group>
-                    <field name="name" required="1"/>
+                    <field name="name" required="1" />
                 </group>
             </form>
         </field>
@@ -596,8 +826,8 @@
         <field name="name">Mother Tongue</field>
         <field name="model">mother.toungue</field>
         <field name="arch" type="xml">
-            <tree string="Mother Tongue" editable="top">
-                <field name="name" required="1"/>
+            <tree editable="top">
+                <field name="name" required="1" />
             </tree>
         </field>
     </record>
@@ -621,10 +851,14 @@
             <form string="Divisions">
                 <sheet>
                     <group>
-                        <field name="sequence"/>
-                        <field name="name" placeholder="Name"/>
-                        <field name="code" placeholder="Code"/>
-                        <field name="description" placeholder="Description"/>
+                        <field name="sequence" string="Sequence" />
+                        <field name="name" placeholder="Name" string="Name" />
+                        <field name="code" placeholder="Code" string="Code" />
+                        <field
+                            name="description"
+                            placeholder="Description"
+                            string="Description"
+                        />
                     </group>
                 </sheet>
             </form>
@@ -635,7 +869,7 @@
         <field name="name">standard.division.tree</field>
         <field name="model">standard.division</field>
         <field name="arch" type="xml">
-            <tree string="Divisions">
+            <tree>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -651,36 +885,62 @@
             <form string="Subjects">
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="name" placeholder="Name" />
-                        <field name="code" placeholder="Code" />
-                        <field name="maximum_marks" placeholder="Maximum Marks"/>
-                        <field name="minimum_marks" placeholder="Minimum Marks"/>
-                        <field name="is_practical" />
-                        <field name="is_elective_subject"/>
-                        <field name="standard_id" options="{&quot;no_create&quot;: True}"
-                            attrs="{'invisible':[('is_elective_subject','!=',True)],'required':[('is_elective_subject','=',True)]}"/>
+                        <field name="name" placeholder="Name" string="Name" />
+                        <field name="code" placeholder="Code" string="Code" />
+                        <field name="maximum_marks" placeholder="Maximum Marks" />
+                        <field name="minimum_marks" placeholder="Minimum Marks" />
+                        <field name="is_practical" string="Is Practical" />
+                        <field
+                            name="is_elective_subject"
+                            string="Is Elective Subject"
+                        />
+                        <field
+                            name="standard_id"
+                            options="{&quot;no_create&quot;: True}"
+                            attrs="{'invisible':[('is_elective_subject','!=',True)],'required':[('is_elective_subject','=',True)]}"
+                        />
                     </group>
                     <notebook colspan="4">
-                        <page string="Standards" attrs="{'invisible':[('is_elective_subject','=',True)]}">
-                            <field name="standard_ids" nolabel="1" colspan="4"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}">
-                                <tree string="Standards">
+                        <page
+                            string="Standards"
+                            attrs="{'invisible':[('is_elective_subject','=',True)]}"
+                        >
+                            <field
+                                name="standard_ids"
+                                nolabel="1"
+                                colspan="4"
+                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            >
+                                <tree>
                                     <field name="name" />
                                     <field name="code" />
                                 </tree>
                                 <form string="Standards">
                                     <group col="4" colspan="4">
-                                         <field name="name" placeholder="Standard Name"/>
-                                        <field name="code" placeholder="Standard Code"/>
+                                         <field
+                                            name="name"
+                                            placeholder="Standard Name"
+                                        />
+                                        <field
+                                            name="code"
+                                            placeholder="Standard Code"
+                                        />
                                     </group>
                                 </form>
                             </field>
                         </page>
                         <page string="Teachers">
-                            <field name="teacher_ids" nolabel="1" colspan="4"
-                                 options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                            <field
+                                name="teacher_ids"
+                                nolabel="1"
+                                colspan="4"
+                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            />
                         </page>
-                        <page string="Students" attrs="{'invisible':[('is_elective_subject','!=',True)]}">
+                        <page
+                            string="Students"
+                            attrs="{'invisible':[('is_elective_subject','!=',True)]}"
+                        >
                             <field name="student_ids" />
                         </page>
                     </notebook>
@@ -693,7 +953,7 @@
         <field name="name">subject.subject.tree</field>
         <field name="model">subject.subject</field>
         <field name="arch" type="xml">
-            <tree string="Subjects">
+            <tree>
                 <field name="name" />
                 <field name="code" />
                 <field name="maximum_marks" />
@@ -709,10 +969,14 @@
             <form string="Standard Information">
                 <sheet>
                     <group>
-                        <field name="sequence"/>
-                        <field name="name" placeholder="Name"/>
-                        <field name="code" placeholder="Code"/>
-                        <field name="description" placeholder="Description"/>
+                        <field name="sequence" string="Sequence" />
+                        <field name="name" placeholder="Name" string="Name" />
+                        <field name="code" placeholder="Code" string="Code" />
+                        <field
+                            name="description"
+                            placeholder="Description"
+                            string="Description"
+                        />
                     </group>
                 </sheet>
             </form>
@@ -723,7 +987,7 @@
         <field name="name">standard.standard.tree</field>
         <field name="model">standard.standard</field>
         <field name="arch" type="xml">
-            <tree string="Standard Information">
+            <tree>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
@@ -807,25 +1071,49 @@
         <field name="arch" type="xml">
             <form string="Noticeboard">
                 <header>
-                    <button string="Send Mail" class="btn btn-sm btn-default fa fa-envelope" type="object" name="news_update" colspan="2" />
+                    <button
+                        string="Send Mail"
+                        class="btn btn-sm btn-default fa fa-envelope"
+                        type="object"
+                        name="news_update"
+                        colspan="2"
+                    />
                 </header>
                 <sheet>
                     <group>
-                        <separator string="News / Updates" colspan="4"/>
+                        <separator string="News / Updates" colspan="4" />
                         <group col="2">
-                            <field name="subject" placeholder="Subject"/>
+                            <field
+                                name="subject"
+                                placeholder="Subject"
+                                string="Subject"
+                            />
                         </group>
                         <group col="2">
-                            <field name="date" placeholder="Date" required="1"/>
+                            <field
+                                name="date"
+                                placeholder="Date"
+                                required="1"
+                                string="Expiry Date"
+                            />
                         </group>
                     </group>
                     <group>
-                        <field name="description" colspan="4" placeholder="Description"/>
+                        <field
+                            name="description"
+                            colspan="4"
+                            placeholder="Description"
+                            string="Description"
+                        />
                     </group>
                         <notebook colspan="4">
                             <page string="Users">
-                                <field name="user_ids" nolabel="1" colspan="4"
-                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                <field
+                                name="user_ids"
+                                nolabel="1"
+                                colspan="4"
+                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            />
                             </page>
                         </notebook>
 
@@ -838,7 +1126,7 @@
         <field name="name">student.news.tree</field>
         <field name="model">student.news</field>
         <field name="arch" type="xml">
-            <tree string="Noticeboard">
+            <tree>
                 <field name="subject" />
                 <field name="date" />
             </tree>
@@ -871,8 +1159,8 @@
             <form string="Class Room Form View">
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="name" required="1"/>
-                        <field name="number" required="1"/>
+                        <field name="name" required="1" string="Name" />
+                        <field name="number" required="1" string="Room Number" />
                     </group>
                 </sheet>
             </form>
@@ -883,9 +1171,9 @@
         <field name="name">class.room.tree</field>
         <field name="model">class.room</field>
         <field name="arch" type="xml">
-            <tree string="Class Room Tree View">
-                <field name="name"/>
-                <field name="number"/>
+            <tree>
+                <field name="name" />
+                <field name="number" />
             </tree>
        </field>
     </record>
@@ -898,51 +1186,196 @@
     </record>
 
     <!-- Menu Item Of EMS -->
-    <menuitem id="menu_ems" name="EMS" web_icon="school,static/description/ems.png" sequence="1"/>
+    <menuitem
+        id="menu_ems"
+        name="EMS"
+        web_icon="school,static/description/ems.png"
+        sequence="1"
+    />
     <!-- MenuItem Of Admission Register -->
     <menuitem id="admission_register" name="School" parent="menu_ems" sequence="2" />
     <menuitem id="school_facilities" name="Facilities" parent="menu_ems" sequence="3" />
     <menuitem id="school_schedule" name="Schedule" parent="menu_ems" sequence="4" />
-    <menuitem id="menu_admission_form_root" name="Admission" parent="admission_register" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
-    <menuitem id="menu_admission_form" name="Admission Register" parent="menu_admission_form_root" action="action_student_student_form_2" sequence="1" groups="school.group_school_administration,school.group_is_admission"/>
+    <menuitem
+        id="menu_admission_form_root"
+        name="Admission"
+        parent="admission_register"
+        sequence="1"
+        groups="school.group_school_administration,school.group_is_admission"
+    />
+    <menuitem
+        id="menu_admission_form"
+        name="Admission Register"
+        parent="menu_admission_form_root"
+        action="action_student_student_form_2"
+        sequence="1"
+        groups="school.group_school_administration,school.group_is_admission"
+    />
     <!-- Menu Item Of Students & Parents -->
-    <menuitem id="menu_students_parents" name="Profiles" parent="admission_register" sequence="2"/>
-    <menuitem id="menu_student_profile" name="Students" parent="menu_students_parents" action="action_student_student_form_12" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent" sequence="31"/>
+    <menuitem
+        id="menu_students_parents"
+        name="Profiles"
+        parent="admission_register"
+        sequence="2"
+    />
+    <menuitem
+        id="menu_student_profile"
+        name="Students"
+        parent="menu_students_parents"
+        action="action_student_student_form_12"
+        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"
+        sequence="31"
+    />
     <!-- MenuItem For Reminders -->
-    <menuitem id="menu_reminders_root" name="Reminders" parent="school_schedule" sequence="8" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
-    <menuitem id="menu_reminders" name="Reminders" parent="menu_reminders_root" action="action_student_reminder" sequence="1" groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"/>
+    <menuitem
+        id="menu_reminders_root"
+        name="Reminders"
+        parent="school_schedule"
+        sequence="8"
+        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"
+    />
+    <menuitem
+        id="menu_reminders"
+        name="Reminders"
+        parent="menu_reminders_root"
+        action="action_student_reminder"
+        sequence="1"
+        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"
+    />
     <!-- MenuItem For Configurations -->
-    <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="13" groups="group_school_administration" />
+    <menuitem
+        id="menu_configuration"
+        name="Configurations"
+        parent="menu_ems"
+        sequence="13"
+        groups="group_school_administration"
+    />
     <!-- MenuItem For Configurations->School Configurations -->
-    <menuitem id="menu_school_config_form1" name="School Configurations" parent="menu_configuration" />
-    <menuitem id="menu_cast" name="Religion/Caste" parent="menu_school_config_form1" action="action_student_cast_form_7" />
-    <menuitem id="menu_sub_doc_type_sub_form" name="Document Type" parent="menu_school_config_form1" action="action_document_type_form" />
-    <menuitem id="submenu_sub_grade" name="Grade" parent="menu_school_config_form1" action="action_grade_master_form" />
-    <menuitem id="submenu_sub_news" name="Noticeboard" parent="menu_school_config_form1" action="view_student_news" />
-    <menuitem id="mother_tongue_menu" name="Mother Tongue" parent="menu_school_config_form1" action="action_mother_toungue" groups="school.group_school_administration"/>
-    <menuitem id="menu_school_school_sub_form" name="School" parent="menu_school_config_form1" action="action_school_school_form" />
+    <menuitem
+        id="menu_school_config_form1"
+        name="School Configurations"
+        parent="menu_configuration"
+    />
+    <menuitem
+        id="menu_cast"
+        name="Religion/Caste"
+        parent="menu_school_config_form1"
+        action="action_student_cast_form_7"
+    />
+    <menuitem
+        id="menu_sub_doc_type_sub_form"
+        name="Document Type"
+        parent="menu_school_config_form1"
+        action="action_document_type_form"
+    />
+    <menuitem
+        id="submenu_sub_grade"
+        name="Grade"
+        parent="menu_school_config_form1"
+        action="action_grade_master_form"
+    />
+    <menuitem
+        id="submenu_sub_news"
+        name="Noticeboard"
+        parent="menu_school_config_form1"
+        action="view_student_news"
+    />
+    <menuitem
+        id="mother_tongue_menu"
+        name="Mother Tongue"
+        parent="menu_school_config_form1"
+        action="action_mother_toungue"
+        groups="school.group_school_administration"
+    />
+    <menuitem
+        id="menu_school_school_sub_form"
+        name="School"
+        parent="menu_school_config_form1"
+        action="action_school_school_form"
+    />
     <!-- MenuItem For Configurations->Academic Years -->
-    <menuitem id="menu_academic_year_form" name="Academic Years" parent="menu_configuration" />
-    <menuitem id="menu_academic_year_sub_form" name="Years" parent="menu_academic_year_form" action="action_academic_year_form" />
-    <menuitem id="menu_academic_month_form" name="Months" parent="menu_academic_year_form" action="action_academic_month_form" />
+    <menuitem
+        id="menu_academic_year_form"
+        name="Academic Years"
+        parent="menu_configuration"
+    />
+    <menuitem
+        id="menu_academic_year_sub_form"
+        name="Years"
+        parent="menu_academic_year_form"
+        action="action_academic_year_form"
+    />
+    <menuitem
+        id="menu_academic_month_form"
+        name="Months"
+        parent="menu_academic_year_form"
+        action="action_academic_month_form"
+    />
     <!-- MenuItem For Configurations->Standards -->
-    <menuitem id="menu_school_standard_form" name="Standards" parent="menu_configuration" />
-    <menuitem id="menu_sub_school_standard_form" name="Classes" parent="menu_school_standard_form" action="action_school_standard_form" />
-    <menuitem id="menu_standard_standard_form" name="Standards" parent="menu_school_standard_form" action="action_standard_standard_form" />
-    <menuitem id="menu_standard_division_form" name="Divisions" parent="menu_school_standard_form" action="action_standard_division_form" />
-    <menuitem id="menu_standard_medium_form" name="Medium" parent="menu_school_standard_form" action="action_standard_medium_form" />
-    <menuitem id="menu_class_room" name="Class Room" parent="menu_school_standard_form" action="action_class_room"/>
+    <menuitem
+        id="menu_school_standard_form"
+        name="Standards"
+        parent="menu_configuration"
+    />
+    <menuitem
+        id="menu_sub_school_standard_form"
+        name="Classes"
+        parent="menu_school_standard_form"
+        action="action_school_standard_form"
+    />
+    <menuitem
+        id="menu_standard_standard_form"
+        name="Standards"
+        parent="menu_school_standard_form"
+        action="action_standard_standard_form"
+    />
+    <menuitem
+        id="menu_standard_division_form"
+        name="Divisions"
+        parent="menu_school_standard_form"
+        action="action_standard_division_form"
+    />
+    <menuitem
+        id="menu_standard_medium_form"
+        name="Medium"
+        parent="menu_school_standard_form"
+        action="action_standard_medium_form"
+    />
+    <menuitem
+        id="menu_class_room"
+        name="Class Room"
+        parent="menu_school_standard_form"
+        action="action_class_room"
+    />
     <!-- MenuItem For Configurations->Subject -->
-    <menuitem id="menu_subject_subject_form" name="Subjects" parent="menu_configuration" sequence="10" />
-    <menuitem id="menu_subject_subject_sub_form" name="Subjects" parent="menu_subject_subject_form" action="action_subject_subject_form" />
+    <menuitem
+        id="menu_subject_subject_form"
+        name="Subjects"
+        parent="menu_configuration"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_subject_subject_sub_form"
+        name="Subjects"
+        parent="menu_subject_subject_form"
+        action="action_subject_subject_form"
+    />
     <!-- Menuitem of alumni and terminate -->
-    <menuitem id="menu_student_alumni" name="Alumni/Terminate" action="action_student_alumni" parent="menu_admission_form_root" groups="school.group_school_administration,school.group_school_teacher" sequence="2"/>
+    <menuitem
+        id="menu_student_alumni"
+        name="Alumni/Terminate"
+        action="action_student_alumni"
+        parent="menu_admission_form_root"
+        groups="school.group_school_administration,school.group_school_teacher"
+        sequence="2"
+    />
     <menuitem
         id="hr.menu_hr_root"
         name="Employees"
         groups="-hr.group_hr_manager,-hr.group_hr_user,-base.group_user,school.group_school_administration"
         web_icon="hr,static/description/icon.png"
-        sequence="75"/>
+        sequence="75"
+    />
     <!-- MenuItem For Configurations->Subject -->
     <!-- Inherited Form View Of Company -->
     <record id="view_company_form_inherit" model="ir.ui.view">

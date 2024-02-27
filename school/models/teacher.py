@@ -1,8 +1,10 @@
 # See LICENSE file for full copyright and licensing details.
 
 from datetime import date
-from odoo import api, fields, models
+
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+
 
 class SchoolTeacher(models.Model):
     """Defining a Teacher information."""
@@ -39,9 +41,7 @@ class SchoolTeacher(models.Model):
         "Course-Subjects",
         help="Select subject of teacher",
     )
-    school_id = fields.Many2one(
-        "school.school", "Campus", help="Select school"
-    )
+    school_id = fields.Many2one("school.school", "Campus", help="Select school")
     category_ids = fields.Many2many(
         "hr.employee.category",
         "teacher_category_rel",
@@ -53,7 +53,7 @@ class SchoolTeacher(models.Model):
     department_id = fields.Many2one(
         "hr.department", "Department", help="Select department"
     )
-    is_parent = fields.Boolean("Is Parent", help="Select this if it parent")
+    is_parent = fields.Boolean(help="Select this if it parent")
     stu_parent_id = fields.Many2one(
         "school.parent", "Related Parent", help="Enter student parent"
     )
@@ -65,7 +65,7 @@ class SchoolTeacher(models.Model):
         "Children",
         help="Select student",
     )
-    phone_numbers = fields.Char("Phone Number", help="Student PH no")
+    phone_numbers = fields.Char(string="Phone Number", help="Student PH no")
 
     @api.onchange("standard_id")
     def _onchange_standard_id(self):
@@ -93,15 +93,18 @@ class SchoolTeacher(models.Model):
             "login": teacher_id.work_email,
             "email": teacher_id.work_email,
         }
-        ctx_vals = {
-            "teacher_create": True,
-            "school_id": teacher_id.school_id.company_id.id,
-        }
-        user_rec = user_obj.with_context(ctx_vals).create(user_vals)
+        user_rec = user_obj.with_context(
+            teacher_create=True, school_id=teacher_id.school_id.company_id.id
+        ).create(user_vals)
         teacher_id.employee_id.write({"user_id": user_rec.id})
         #        if vals.get('is_parent'):
         #            self.parent_crt(teacher_id)
         return teacher_id
+
+    @api.constrains("birthday")
+    def _check_birthday(self):
+        if self.birthday > date.today():
+            raise ValidationError(_("Birthday cannot be greater than the current date"))
 
     # Removing this code because of issue faced due to email id of the
     # user is same for parent and Teacher, and system will not allow it.
@@ -181,8 +184,3 @@ class SchoolTeacher(models.Model):
         phone = partner.phone or False
         self.work_phone = phone or False
         self.phone_numbers = phone or False
-
-    @api.constrains("birthday")
-    def _check_birthday(self):
-        if self.birthday > date.today():
-            raise ValidationError("Birthday cannot be greater than the current date")

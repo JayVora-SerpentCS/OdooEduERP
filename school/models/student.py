@@ -13,7 +13,7 @@ from . import school
 # windows operating system issue arise because this library is not in Windows.
 try:
     from odoo.tools import image_colorize
-except:
+except Exception:
     image_colorize = False
 
 
@@ -24,8 +24,6 @@ class StudentStudent(models.Model):
     _table = "student_student"
     _description = "Student Information"
     _inherit = ["mail.thread", "mail.activity.mixin"]
-
-    country_id = fields.Many2one("res.country", string="Nationnlty")
 
     @api.model
     def _search(
@@ -101,40 +99,38 @@ class StudentStudent(models.Model):
     family_con_ids = fields.One2many(
         "student.family.contact",
         "family_contact_id",
-        "Family Contact Detail",
+        string="Family Contact Detail",
         states={"done": [("readonly", True)]},
         help="Select the student family contact",
     )
     user_id = fields.Many2one(
         "res.users",
-        "User ID",
+        string="User ID",
         ondelete="cascade",
         required=True,
         delegate=True,
         help="Select related user of the student",
     )
     student_name = fields.Char(
-        "Student Name",
+        string="Student Name",
         related="user_id.name",
         store=True,
         readonly=True,
         help="Student Name",
     )
     pid = fields.Char(
-        "Student ID",
+        string="Student ID",
         required=True,
         default=lambda self: _("New"),
         help="Personal IDentification Number",
     )
-    reg_code = fields.Char("Registration Code", help="Student Registration Code")
-    student_code = fields.Char("Student Code", help="Enter student code")
-    contact_phone = fields.Char("Phone no.", help="Enter student phone no.")
-    contact_mobile = fields.Char("Mobile no", help="Enter student mobile no.")
+    reg_code = fields.Char(string="Registration Code", help="Student Registration Code")
+    student_code = fields.Char(help="Enter student code")
+    contact_phone = fields.Char(string="Phone no.", help="Enter student phone no.")
+    contact_mobile = fields.Char(string="Mobile no", help="Enter student mobile no.")
     roll_no = fields.Integer("Roll No.", readonly=True, help="Enter student roll no.")
-    leaving_certificate = fields.Binary(
-        attachment=True, string="School Leaving Certificate"
-    )
-    photo = fields.Binary("Photo", default=_default_image, help="Attach student photo")
+    leaving_certificate = fields.Char(string="leaving_certificate")
+    photo = fields.Binary(default=_default_image, help="Attach student photo")
     year = fields.Many2one(
         "academic.year",
         "Academic Year",
@@ -147,14 +143,15 @@ class StudentStudent(models.Model):
         "student.cast", "Religion/Caste", help="Select student cast"
     )
     relation = fields.Many2one(
-        "student.relation.master", "Relation", help="Select student relation"
+        "student.relation.master", help="Select student relation"
     )
+    country_id = fields.Many2one("res.country", string="Nationnlty")
+
     admission_date = fields.Date(
-        "Admission Date",
         default=fields.Date.today(),
         help="Enter student admission date",
     )
-    leave_date = fields.Date("Leave Date", help="Enter student leave date")
+    leave_date = fields.Date(help="Enter student leave date")
     middle = fields.Char(
         "Middle Name",
         required=True,
@@ -169,7 +166,6 @@ class StudentStudent(models.Model):
     )
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female")],
-        "Gender",
         states={"done": [("readonly", True)]},
         help="Select student gender",
     )
@@ -180,11 +176,10 @@ class StudentStudent(models.Model):
         help="Enter student date of birth",
     )
     mother_tongue = fields.Many2one(
-        "mother.toungue", "Mother Tongue", help="Select student mother tongue"
+        "mother.toungue", help="Select student mother tongue"
     )
     age = fields.Integer(
         compute="_compute_student_age",
-        string="Age",
         readonly=True,
         help="Enter student age",
     )
@@ -213,30 +208,21 @@ class StudentStudent(models.Model):
         states={"done": [("readonly", True)]},
         help="Enter doctor name for student medical details",
     )
-    designation = fields.Char("Designation", help="Enter doctor designation")
-    doctor_phone = fields.Char("Contact No.", help="Enter doctor phone")
-    blood_group = fields.Char("Blood Group", help="Enter student blood group")
-    height = fields.Float("Height", help="Hieght in C.M")
-    weight = fields.Float("Weight", help="Weight in K.G")
+    designation = fields.Char(help="Enter doctor designation")
+    doctor_phone = fields.Char(string="Contact No.", help="Enter doctor phone")
+    blood_group = fields.Char(help="Enter student blood group")
+    height = fields.Float(help="Hieght in C.M")
+    weight = fields.Float(help="Weight in K.G")
     eye = fields.Boolean("Eyes", help="Eye for medical info")
     ear = fields.Boolean("Ears", help="Eye for medical info")
     nose_throat = fields.Boolean("Nose & Throat", help="Nose & Throat for medical info")
-    respiratory = fields.Boolean("Respiratory", help="Respiratory for medical info")
-    cardiovascular = fields.Boolean(
-        "Cardiovascular", help="Cardiovascular for medical info"
-    )
-    neurological = fields.Boolean("Neurological", help="Neurological for medical info")
-    muskoskeletal = fields.Boolean(
-        "Musculoskeletal", help="Musculoskeletal for medical info"
-    )
-    dermatological = fields.Boolean(
-        "Dermatological", help="Dermatological for medical info"
-    )
-    blood_pressure = fields.Boolean(
-        "Blood Pressure", help="Blood pressure for medical info"
-    )
+    respiratory = fields.Boolean(help="Respiratory for medical info")
+    cardiovascular = fields.Boolean(help="Cardiovascular for medical info")
+    neurological = fields.Boolean(help="Neurological for medical info")
+    muskoskeletal = fields.Boolean(help="Musculoskeletal for medical info")
+    dermatological = fields.Boolean(help="Dermatological for medical info")
+    blood_pressure = fields.Boolean(help="Blood pressure for medical info")
     remark = fields.Text(
-        "Remark",
         states={"done": [("readonly", True)]},
         help="Remark can be entered if any",
     )
@@ -285,13 +271,10 @@ class StudentStudent(models.Model):
         "Documents",
         help="Attach student documents",
     )
-    description = fields.One2many(
-        "student.description", "des_id", "Description", help="Description"
-    )
+    description = fields.One2many("student.description", "des_id", help="Description")
     award_list = fields.One2many(
         "student.award",
         "award_list_id",
-        "Award List",
         help="Student award list",
     )
     stu_name = fields.Char(
@@ -405,13 +388,6 @@ class StudentStudent(models.Model):
             res.user_id.write({"groups_id": [(6, 0, group_list)]})
         return res
 
-    @api.constrains("admission_date", "leave_date")
-    def _check_date(self):
-        if self.leave_date and self.admission_date > self.leave_date:
-            raise ValidationError(
-                "The leave date should be greater than the start date"
-            )
-
     def write(self, vals):
         """Inherited method write to assign
         student to their respective teacher"""
@@ -436,6 +412,13 @@ class StudentStudent(models.Model):
                         % (self.school_id.required_age)
                     )
                 )
+
+    @api.constrains("admission_date", "leave_date")
+    def _check_date(self):
+        if self.leave_date and self.admission_date > self.leave_date:
+            raise ValidationError(
+                _("The leave date should be greater than the start date")
+            )
 
     def set_to_draft(self):
         """Method to change state to draft"""

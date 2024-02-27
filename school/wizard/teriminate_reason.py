@@ -9,16 +9,12 @@ class TerminateReason(models.TransientModel):
     _name = "terminate.reason"
     _description = "Terminate Reason"
 
-    reason = fields.Text("Reason")
-    leave_date = fields.Date(
-        "Leave Date", required=True, help="Enter student leave date"
-    )
+    reason = fields.Text()
+    leave_date = fields.Date(required=True, help="Enter student leave date")
 
     def save_terminate(self):
         """Method to terminate student and change state to terminate."""
-        student_rec = self.env["student.student"].browse(
-            self._context.get("active_id")
-        )
+        student_rec = self.env["student.student"].browse(self._context.get("active_id"))
         student_rec.write(
             {
                 "state": "terminate",
