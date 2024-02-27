@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!-- Sequences For Exam -->
+
+        <record id="seq_exam_exam" model="ir.sequence">
+            <field name="name">Exam</field>
+            <field name="code">exam.exam</field>
+            <field name="prefix">%(year)s/%(month)s/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+        <!-- Sequences For Additional Exam -->
+
+        <record id="seq_additional_exam" model="ir.sequence">
+            <field name="name">Additional Exam</field>
+            <field name="code">additional.exam</field>
+            <field name="prefix">%(year)s/%(month)s/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+    </data>
+</odoo>

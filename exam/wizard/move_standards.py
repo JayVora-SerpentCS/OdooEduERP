@@ -25,9 +25,7 @@ class MoveStandards(models.TransientModel):
                     ]
                 )
                 year_id = academic_obj.next_year(stud.year.sequence)
-                academic_year = academic_obj.search(
-                    [("id", "=", year_id)], limit=1
-                )
+                academic_year = academic_obj.search([("id", "=", year_id)], limit=1)
                 if stud_year_ids:
                     # search the student result
                     result_data = result_obj.search(

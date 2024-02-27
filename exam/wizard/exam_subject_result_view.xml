@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <!-- Form View Of Subject Result -->
@@ -11,14 +10,22 @@
                 <group>
                     <field name="s_exam_id" />
                 </group>
-                <field name="result_ids" context="{'is_from_subject_report':1, 'active_id': active_id, 'active_model': active_model}">
-                    <tree string="Subjects" create="false">
-                        <field name="name"/>
-                        <field name="code"/>
+                <field
+                    name="result_ids"
+                    context="{'is_from_subject_report':1, 'active_id': active_id, 'active_model': active_model}"
+                >
+                    <tree create="false">
+                        <field name="name" />
+                        <field name="code" />
                     </tree>
                 </field>
                 <footer>
-                    <button class="btn btn-sm btn-default fa fa-book oe_highlight" name='result_report' type='object' string='Result'/>
+                    <button
+                        class="btn btn-sm btn-default fa fa-book oe_highlight"
+                        name='result_report'
+                        type='object'
+                        string='Result'
+                    />
                 </footer>
            </form>
         </field>
@@ -37,10 +44,13 @@
         <field name="res_model">subject.result.wiz</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="binding_model_id" ref="school.model_school_teacher"/>
+        <field name="binding_model_id" ref="school.model_school_teacher" />
         <field name="binding_view_types">form,list</field>
         <field name="binding_type">report</field>
-        <field name="groups_id" eval="[(4, ref('school.group_school_administration'))]"/>
+        <field
+            name="groups_id"
+            eval="[(4, ref('school.group_school_administration'))]"
+        />
     </record>
 
 </odoo>

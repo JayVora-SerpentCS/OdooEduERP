@@ -49,9 +49,7 @@ class ReportResultInfo(models.AbstractModel):
         )
         exam_result_obj = self.env["exam.result"]
         for rec in docs:
-            student_search = exam_result_obj.search(
-                [("student_id", "=", rec.id)]
-            )
+            student_search = exam_result_obj.search([("student_id", "=", rec.id)])
             if not student_search or rec.state == "draft":
                 raise ValidationError(
                     _(

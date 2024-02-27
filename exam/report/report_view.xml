@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="additional_exam_result_id_qweb" model="ir.actions.report">
         <field name="name">Additional Exam Result</field>
         <field name="model">additional.exam.result</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="binding_model_id" ref="exam.model_additional_exam_result"/>
+        <field name="binding_model_id" ref="exam.model_additional_exam_result" />
         <field name="report_name">exam.additional_exam_result_report</field>
         <field name="report_file">exam.additional_exam_result_report</field>
     </record>
@@ -16,18 +15,21 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">exam.result_information_report</field>
         <field name="report_file">exam.result_information_report</field>
-        <field name="binding_model_id" ref="school.model_student_student"/>
-        <field name="groups_id" eval="[(4, ref('school.group_school_administration')),
+        <field name="binding_model_id" ref="school.model_student_student" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('school.group_school_administration')),
                                        (4, ref('school.group_school_teacher')),
                                        (4, ref('school.group_school_student')),
-                                       (4, ref('school.group_school_parent'))]"/>
+                                       (4, ref('school.group_school_parent'))]"
+        />
     </record>
 
     <record id="batch_result_qweb" model="ir.actions.report">
         <field name="name">BatchWise Result</field>
         <field name="model">exam.batchwise.result</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="binding_model_id" ref="exam.model_exam_batchwise_result"/>
+        <field name="binding_model_id" ref="exam.model_exam_batchwise_result" />
         <field name="report_name">exam.exam_result_batch</field>
         <field name="report_file">exam.exam_result_batch</field>
     </record>
@@ -36,7 +38,7 @@
         <field name="name">Exam Result</field>
         <field name="model">school.teacher</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="binding_model_id" eval="False"/>
+        <field name="binding_model_id" eval="False" />
         <field name="report_name">exam.exam_result_report</field>
         <field name="report_file">exam.exam_result_report</field>
     </record>
