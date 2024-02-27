@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="identity_card">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page" style="height: 2px;">
-                        <div class="oe_structure"/>
+                        <div class="oe_structure" />
                         <t t-foreach="o" t-as="student">
                         <style>
                             .table-borderless td,
@@ -14,7 +13,12 @@
                                 border: 0;
                             }
                         </style>
-                        <table width="40%" height="280px" style="border: 3px solid black;" align="center">
+                        <table
+                                width="40%"
+                                height="280px"
+                                style="border: 3px solid black;"
+                                align="center"
+                            >
                             <tr style="margin-top:5px">
                                 <td colspan="2" align="center">
                                     <h1><strong>
@@ -24,13 +28,18 @@
                             </tr>
                             <tr class="table table-borderless" style="border: 0px;">
                                 <td align="top" colspan="1">
-                                    <img t-if="student.photo"
-                                        t-att-src="'data:image/png;base64,%s' % student.photo.decode('utf-8')" style="max-height: 300px; max-width: 200px;"/>
+                                    <img
+                                            t-if="student.photo"
+                                            t-att-src="'data:image/png;base64,%s' % student.photo.decode('utf-8')"
+                                            style="max-height: 300px; max-width: 200px;"
+                                        />
                                 </td>
                                 <td align="left">
                                     <table width="100%">
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>Name</strong>
                                             </td>
                                             <td>
@@ -43,7 +52,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>Roll No.</strong>
                                             </td>
                                             <td>
@@ -54,40 +65,54 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>Standard</strong>
                                             </td>
                                             <td>
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="student.standard_id.standard_id.name"/>
+                                                <span
+                                                        t-field="student.standard_id.standard_id.name"
+                                                    />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>Division</strong>
                                             </td>
                                             <td>
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="student.standard_id.division_id.name"/>
+                                                <span
+                                                        t-field="student.standard_id.division_id.name"
+                                                    />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>Medium</strong>
                                             </td>
                                             <td>
                                                 <strong>: </strong>
                                             </td>
                                             <td>
-                                                <span t-field="student.medium_id.name" />
+                                                <span
+                                                        t-field="student.medium_id.name"
+                                                    />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>BirthDate</strong>
                                             </td>
                                             <td>
@@ -98,7 +123,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="font-family: 'Helvetica';padding-left:20px;">
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
                                                 <strong>Blood Group</strong>
                                             </td>
                                             <td>
