@@ -10,10 +10,8 @@ class LibraryEditorSupplier(models.Model):
     _description = "Editor Relations"
 
     name = fields.Many2one("res.partner", "Editor", help="Select editor")
-    supplier_id = fields.Many2one(
-        "res.partner", "Supplier", help="Select supplier"
-    )
-    sequence = fields.Integer("Sequence", help="Enter sequence")
+    supplier_id = fields.Many2one("res.partner", "Supplier", help="Select supplier")
+    sequence = fields.Integer(help="Enter sequence")
     delay = fields.Integer("Customer Lead Time", help="Customer lead time")
     min_qty = fields.Float("Minimal Quantity", help="Minimal quantity")
     junk = fields.Text(

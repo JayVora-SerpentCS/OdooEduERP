@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="card_details">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <div class="page" style="height: 2px;">
-                    <div class="oe_structure"/>
-                    <br/>
-                    <br/>
+                    <div class="oe_structure" />
+                    <br />
+                    <br />
                     <table>
                         <tr>
                             <td>
@@ -14,17 +14,23 @@
                                     <tr>
                                         <td align="center">
                                             <t t-if="o.student_id">
-                                                <img t-if="o.student_id.photo" t-attf-src="data:image/png;base64,{{o.student_id.photo}}"
-                                                     style="height:100px;width=100px" />
+                                                <img
+                                                    t-if="o.student_id.photo"
+                                                    t-attf-src="data:image/png;base64,{{o.student_id.photo}}"
+                                                    style="height:100px;width=100px"
+                                                />
                                             </t>
                                             <t t-else="">
-                                                <img t-if="o.teacher_id.image_1920" t-attf-src="data:image/png;base64,{{o.teacher_id.image_1920}}"
-                                                 style="height:100px;width=100px" />
+                                                <img
+                                                    t-if="o.teacher_id.image_1920"
+                                                    t-attf-src="data:image/png;base64,{{o.teacher_id.image_1920}}"
+                                                    style="height:100px;width=100px"
+                                                />
                                             </t>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td height="10px"></td>
+                                        <td height="10px" />
                                     </tr>
                                     <tr>
                                         <td align="center" height="30px">
@@ -33,7 +39,9 @@
                                                     <span t-field="o.student_id.name" />
                                                 </strong>
                                                 <strong>
-                                                    <span t-field="o.student_id.middle" />
+                                                    <span
+                                                        t-field="o.student_id.middle"
+                                                    />
                                                 </strong>
                                                 <strong>
                                                     <span t-field="o.student_id.last" />
@@ -53,7 +61,9 @@
                                     <tr>
                                         <td width="100%" align="center" height="15">
                                             <strong>
-                                                <span t-field="o.sudo().standard_id.school_id.name" />
+                                                <span
+                                                    t-field="o.sudo().standard_id.school_id.name"
+                                                />
                                             </strong>
                                         </td>
                                     </tr>
@@ -61,72 +71,88 @@
                                         <td height="120">
                                             <table width="100%">
                                                 <tr>
-                                                    <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                    <td
+                                                        style="font-family: 'Helvetica';padding-left:20px;"
+                                                    >
                                                         <strong>Card No.</strong>
                                                     </td>
                                                     <td>
                                                         <strong>: </strong>
                                                     </td>
                                                     <td>
-                                                        <span t-field="o.code"/>
+                                                        <span t-field="o.code" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                    <td
+                                                        style="font-family: 'Helvetica';padding-left:20px;"
+                                                    >
                                                         <strong>Start Date</strong>
                                                     </td>
                                                     <td>
                                                         <strong>: </strong>
                                                     </td>
                                                     <td>
-                                                        <span t-field="o.start_date"/>
+                                                        <span t-field="o.start_date" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                    <td
+                                                        style="font-family: 'Helvetica';padding-left:20px;"
+                                                    >
                                                         <strong>End Date</strong>
                                                     </td>
                                                     <td>
                                                         <strong>: </strong>
                                                     </td>
                                                     <td>
-                                                        <span t-field="o.end_date"/>
+                                                        <span t-field="o.end_date" />
                                                     </td>
                                                 </tr>
                                                 <t t-if="o.student_id">
                                                     <tr>
-                                                        <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                        <td
+                                                            style="font-family: 'Helvetica';padding-left:20px;"
+                                                        >
                                                             <strong>Class</strong>
                                                         </td>
                                                         <td>
                                                             <strong>: </strong>
                                                         </td>
                                                         <td>
-                                                            <span t-field="o.standard_id"/>
+                                                            <span
+                                                                t-field="o.standard_id"
+                                                            />
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                        <td
+                                                            style="font-family: 'Helvetica';padding-left:20px;"
+                                                        >
                                                             <strong>Roll No.</strong>
                                                         </td>
                                                         <td>
                                                             <strong>: </strong>
                                                         </td>
                                                         <td>
-                                                            <span t-field="o.roll_no"/>
+                                                            <span t-field="o.roll_no" />
                                                         </td>
                                                     </tr>
                                                 </t>
                                                 <t t-if="o.teacher_id">
                                                     <tr>
-                                                        <td style="font-family: 'Helvetica';padding-left:20px;">
+                                                        <td
+                                                            style="font-family: 'Helvetica';padding-left:20px;"
+                                                        >
                                                             <strong>Work Email</strong>
                                                         </td>
                                                         <td>
                                                             <strong>: </strong>
                                                         </td>
                                                         <td>
-                                                            <span t-field="o.teacher_id.work_email"/>
+                                                            <span
+                                                                t-field="o.teacher_id.work_email"
+                                                            />
                                                         </td>
                                                     </tr>
                                                 </t>

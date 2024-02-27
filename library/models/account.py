@@ -7,7 +7,6 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     use_parent_address = fields.Boolean(
-        "Use Parent Address",
         help="Avtivate/Deactivate as per use of parent address",
     )
 
@@ -24,13 +23,12 @@ class AccountMove(models.Model):
 
 
 class AccountMoveLine(models.Model):
-
     _inherit = "account.move.line"
 
     lot_id = fields.Many2one(
         "stock.lot", "Production Lot", help="Select Production lot"
     )
-    customer_ref = fields.Char("Customer reference", help="Customer reference")
+    customer_ref = fields.Char(string="Customer reference", help="Customer reference")
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -38,7 +36,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     def action_create_payments(self):
         """
-            Override method to write paid amount in for library fine
+        Override method to write paid amount in for library fine
         """
         res = super(AccountPaymentRegister, self).action_create_payments()
         invoice = False
