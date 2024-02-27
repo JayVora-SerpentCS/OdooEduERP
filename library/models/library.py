@@ -12,11 +12,9 @@ class LibraryRack(models.Model):
     _name = "library.rack"
     _description = "Library Rack"
 
-    name = fields.Char("Name", required=True, help="Rack Name")
-    code = fields.Char("Code", help="Enter code here")
-    active = fields.Boolean(
-        "Active", default="True", help="To active/deactive record"
-    )
+    name = fields.Char(required=True, help="Rack Name")
+    code = fields.Char(help="Enter code here")
+    active = fields.Boolean(default="True", help="To active/deactive record")
 
 
 class LibraryAuthor(models.Model):
@@ -25,10 +23,10 @@ class LibraryAuthor(models.Model):
     _name = "library.author"
     _description = "Author"
 
-    name = fields.Char("Name", required=True, help="Enter library author")
+    name = fields.Char(required=True, help="Enter library author")
     birth_date = fields.Date("Date of Birth", help="Enter date of birth")
     death_date = fields.Date("Date of Death", help="Enter date of death")
-    biography = fields.Text("Biography", help="Enter biography")
+    biography = fields.Text(help="Enter biography")
     note = fields.Text("Notes", help="Enter notes")
     editor_ids = fields.Many2many(
         "res.partner",
@@ -59,13 +57,10 @@ class LibraryCard(models.Model):
     def _compute_name(self):
         """Compute name."""
         for rec in self:
-            student_name = False
-            teacher_name = False
-            if rec.teacher_id:
-                teacher_name = rec.teacher_id.name
             if rec.student_id:
-                student_name = rec.student_id.name
-            rec.card_name = teacher_name or student_name
+                user = rec.student_id.name
+            user = rec.teacher_id.name
+            rec.card_name = user
 
     @api.depends("start_date", "duration")
     def _compute_end_date(self):
@@ -87,66 +82,48 @@ class LibraryCard(models.Model):
     student_id = fields.Many2one(
         "student.student", "Student Name", help="Select related student"
     )
-    standard_id = fields.Many2one(
-        "school.standard", "Standard", help="Select standard"
-    )
-    card_name = fields.Char(
-        compute="_compute_name", string="Card Name", help="Card name"
-    )
+    standard_id = fields.Many2one("school.standard", "Standard", help="Select standard")
+    card_name = fields.Char(compute="_compute_name", help="Card name")
     user = fields.Selection(
         [("student", "Student"), ("teacher", "Teacher")],
-        "User",
         help="Select user",
     )
     state = fields.Selection(
         [("draft", "Draft"), ("running", "Confirm"), ("expire", "Expire")],
-        "State",
         default="draft",
         help="State of library card",
     )
-    roll_no = fields.Integer("Roll No", help="Enter roll no.")
+    roll_no = fields.Integer(help="Enter roll no.")
     teacher_id = fields.Many2one("school.teacher", "Teacher Name")
     start_date = fields.Date(
-        "Start Date",
         default=fields.Date.context_today,
         help="Enter start date",
     )
-    duration = fields.Integer("Duration", help="Duration in months")
-    end_date = fields.Date(
-        "End Date", compute="_compute_end_date", store=True, help="End date"
-    )
-    active = fields.Boolean(
-        "Active", default=True, help="Activate/deactivate record"
-    )
-
+    duration = fields.Integer(help="Duration in months")
+    end_date = fields.Date(compute="_compute_end_date", store=True, help="End date")
+    active = fields.Boolean(default=True, help="Activate/deactivate record")
 
     @api.constrains("duration")
     def check_duration(self):
         """Constraint to assign library card more than once"""
         if self.duration and self.duration < 0:
-            raise UserError(
-                    _(
-                        "Duration(months) should not be negative value!"
-                    )
-                )
+            raise UserError(_("Duration(months) should not be negative value!"))
 
     @api.onchange("student_id")
     def on_change_student(self):
         """
-            This method automatically fill up student roll number.
-            and standard field on student_id field
-            @student : Apply method on this Field name
-            @return : Dictionary having identifier of the record as key
-            and the value of student roll number and standard...
+        This method automatically fill up student roll number.
+        and standard field on student_id field
+        @student : Apply method on this Field name
+        @return : Dictionary having identifier of the record as key
+        and the value of student roll number and standard...
         """
         if self.student_id:
             self.standard_id = self.student_id.standard_id.id
             self.roll_no = self.student_id.roll_no
 
     def _update_student_info(self, vals):
-        student_rec = self.env["student.student"].browse(
-            vals.get("student_id")
-        )
+        student_rec = self.env["student.student"].browse(vals.get("student_id"))
         vals.update(
             {
                 "standard_id": student_rec.standard_id.id,
@@ -201,9 +178,7 @@ class LibraryCard(models.Model):
 
     def running_state(self):
         """Change state to running"""
-        self.code = self.env["ir.sequence"].next_by_code("library.card") or _(
-            "New"
-        )
+        self.code = self.env["ir.sequence"].next_by_code("library.card") or _("New")
         self.state = "running"
 
     def draft_state(self):
@@ -214,9 +189,7 @@ class LibraryCard(models.Model):
         """Inherited method to check state at record deletion"""
         for rec in self:
             if rec.state == "running":
-                raise UserError(
-                    _("""You cannot delete a confirmed library card!""")
-                )
+                raise UserError(_("""You cannot delete a confirmed library card!"""))
         return super(LibraryCard, self).unlink()
 
     def librarycard_expire(self):
@@ -237,8 +210,8 @@ class LibraryBookIssue(models.Model):
     @api.depends("date_issue", "day_to_return_book")
     def _compute_return_date(self):
         """This method calculate a book return date.
-            @return : Dictionary having identifier of the record as key
-            and the book return date as value"""
+        @return : Dictionary having identifier of the record as key
+        and the book return date as value"""
         for rec in self:
             diff = rd(days=rec.day_to_return_book or 0.0)
             if rec.date_issue and diff:
@@ -246,7 +219,7 @@ class LibraryBookIssue(models.Model):
 
     @api.depends("actual_return_date")
     def _compute_penalty(self):
-        """ This method calculate a penalty on book .
+        """This method calculate a penalty on book .
         @return : Dictionary having identifier of the record as key
                   and penalty as value"""
         for line in self:
@@ -262,7 +235,7 @@ class LibraryBookIssue(models.Model):
 
     @api.depends("state")
     def _compute_lost_penalty(self):
-        """ This method calculate a penalty on book lost .
+        """This method calculate a penalty on book lost .
         @return : Dictionary having identifier of the record as key
                   and book lost penalty as value"""
         for rec in self:
@@ -292,11 +265,9 @@ class LibraryBookIssue(models.Model):
     teacher_id = fields.Many2one(
         "school.teacher", "Teacher Name", help="Select teacher"
     )
-    card_name = fields.Char("Card Name", help="Card name")
-    standard_id = fields.Many2one(
-        "school.standard", "Standard", help="Select standard"
-    )
-    roll_no = fields.Integer("Roll No", help="Enter roll no.")
+    card_name = fields.Char(help="Card name")
+    standard_id = fields.Many2one("school.standard", "Standard", help="Select standard")
+    roll_no = fields.Integer(help="Enter roll no.")
     invoice_id = fields.Many2one(
         "account.move", "User's Invoice", help="Select Invoice"
     )
@@ -313,12 +284,10 @@ class LibraryBookIssue(models.Model):
         help="Book To Be Return On This Date",
     )
     actual_return_date = fields.Datetime(
-        "Actual Return Date",
         help="Actual Return Date of Book",
     )
     penalty = fields.Float(
         compute="_compute_penalty",
-        string="Penalty",
         store=True,
         help="It show the late book return penalty",
     )
@@ -345,11 +314,10 @@ class LibraryBookIssue(models.Model):
             ("subscribe", "Subscribe"),
             ("pending", "Pending"),
         ],
-        "State",
         default="draft",
         help="State of the library book",
     )
-    user = fields.Char("User", help="Enter User")
+    user = fields.Char(help="Enter User")
     compute_inv = fields.Integer(
         "Number of invoice",
         compute="_compute_invoices",
@@ -358,15 +326,12 @@ class LibraryBookIssue(models.Model):
     color = fields.Integer("Color Index", help="Color index")
     payment_mode = fields.Selection(
         [("pay_physically", "Pay Cash"), ("by_bank", "Pay By Bank")],
-        "Payment Mode",
         help="Select payment mode",
     )
     subscription_amt = fields.Float(
         "Subscription Amount", help="Enter subscription amount"
     )
-    bank_teller_no = fields.Char(
-        "Bank Teller No.", help="Enter Bank Teller No."
-    )
+    bank_teller_no = fields.Char(string="Bank Teller No.", help="Enter Bank Teller No.")
     bank_teller_amt = fields.Float(
         "Bank Teller Amount", help="Enter Bank Teller amount"
     )
@@ -379,7 +344,7 @@ class LibraryBookIssue(models.Model):
 
     @api.onchange("date_issue", "day_to_return_book")
     def onchange_day_to_return_book(self):
-        """ This method calculate a book return date.
+        """This method calculate a book return date.
         @return : Dictionary having identifier of the record as key
                   and the book return date as value"""
         diff = rd(days=self.day_to_return_book or 0.0)
@@ -388,7 +353,7 @@ class LibraryBookIssue(models.Model):
 
     @api.constrains("card_id", "state")
     def _check_issue_book_limit(self):
-        """ This method used how many book can issue as per user type.
+        """This method used how many book can issue as per user type.
         @return : True or False.
         """
         for rec in self:
@@ -405,15 +370,13 @@ class LibraryBookIssue(models.Model):
                 if rec.card_id.book_limit > card_no:
                     return True
                 # Check the issue limit on card if it is over it give warning
-                raise UserError(
-                    _("""Book issue limit is over on this card!""")
-                )
+                raise UserError(_("""Book issue limit is over on this card!"""))
 
     @api.onchange("card_id")
     def onchange_card_issue(self):
-        """ This method automatically fill up values on card.
-            @return : Dictionary having identifier of the record as key
-                      and the user info as value
+        """This method automatically fill up values on card.
+        @return : Dictionary having identifier of the record as key
+                  and the user info as value
         """
         if self.card_id:
             self.user = str(self.card_id.user.title()) or ""
@@ -472,7 +435,6 @@ class LibraryBookIssue(models.Model):
             }
         )
 
-
     @api.model
     def create(self, vals):
         """Override create method"""
@@ -499,10 +461,7 @@ class LibraryBookIssue(models.Model):
         curr_dt = fields.Date.today()
         seq_obj = self.env["ir.sequence"]
         for rec in self:
-            if (
-                rec.card_id.end_date < curr_dt
-                and rec.card_id.end_date > curr_dt
-            ):
+            if rec.card_id.end_date < curr_dt and rec.card_id.end_date > curr_dt:
                 raise UserError(_("The Membership of library card is over!"))
             code_issue = seq_obj.next_by_code("library.book.issue") or _("New")
             if (
@@ -552,13 +511,17 @@ class LibraryBookIssue(models.Model):
 
     def reissue_book(self):
         """This method used for reissue a books."""
-        self.write({'actual_return_date': fields.datetime.now()})
+        self.write({"actual_return_date": fields.datetime.now()})
         self._compute_penalty()
         if self.penalty > 0:
-            raise UserError(_(
-                    """Return date is expired, Please return your book!"""))
-        self.write({"state": "reissue", "date_issue": fields.Datetime.today(),
-                    'actual_return_date': False})
+            raise UserError(_("""Return date is expired, Please return your book!"""))
+        self.write(
+            {
+                "state": "reissue",
+                "date_issue": fields.Datetime.today(),
+                "actual_return_date": False,
+            }
+        )
 
     def return_book(self):
         """This method used for return a books."""
@@ -586,9 +549,7 @@ class LibraryBookIssue(models.Model):
                     "origin": origin_str,
                 }
             )
-            scrap_id = stock_scrap_obj.with_context({"book_lost": True}).create(
-                scrap_vals
-            )
+            scrap_id = stock_scrap_obj.with_context(book_lost=True).create(scrap_vals)
             scrap_id.action_validate()
             rec.state = "lost"
             rec.lost_penalty = self.name.fine_lost
@@ -609,15 +570,11 @@ class LibraryBookIssue(models.Model):
             if record.user == "Student":
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
-                    raise UserError(
-                        _("Error! The Student must have a Home address!")
-                    )
+                    raise UserError(_("Error! The Student must have a Home address!"))
             else:
                 usr = record.teacher_id.employee_id.user_id.partner_id.id
                 if not record.teacher_id.employee_id.address_home_id:
-                    raise UserError(
-                        _("Error ! Teacher must have a Home address.")
-                    )
+                    raise UserError(_("Error ! Teacher must have a Home address."))
             # prepare and create value of account.move
             vals_invoice = {
                 "move_type": "out_invoice",
@@ -689,15 +646,11 @@ class LibraryBookIssue(models.Model):
             if record.user == "Student":
                 usr = record.student_id.partner_id.id
                 if not record.student_id.partner_id.contact_address:
-                    raise UserError(
-                        _("Error ! The Student must have a Home address.")
-                    )
+                    raise UserError(_("Error ! The Student must have a Home address."))
             else:
                 usr = record.teacher_id.employee_id.user_id.partner_id.id
                 if not record.teacher_id.employee_id.address_home_id:
-                    raise UserError(
-                        _("Error ! Teacher must have a Home address!.")
-                    )
+                    raise UserError(_("Error ! Teacher must have a Home address!."))
             new_invoice_rec = invoice_obj.create(
                 {
                     "move_type": "out_invoice",
@@ -742,15 +695,11 @@ class LibraryBookIssue(models.Model):
         invoice_obj = self.env["account.move"]
         for rec in self:
             invoices_rec = invoice_obj.search([("book_issue_id", "=", rec.id)])
-            action = self.env.ref(
-                "account.action_move_out_invoice_type"
-            ).read()[0]
+            action = self.env.ref("account.action_move_out_invoice_type").read()[0]
             if len(invoices_rec) > 1:
                 action["domain"] = [("id", "in", invoices_rec.ids)]
             elif len(invoices_rec) == 1:
-                action["views"] = [
-                    (self.env.ref("account.view_move_form").id, "form")
-                ]
+                action["views"] = [(self.env.ref("account.view_move_form").id, "form")]
                 action["res_id"] = invoices_rec.ids[0]
             else:
                 action = {"type": "ir.actions.act_window_close"}
@@ -760,9 +709,7 @@ class LibraryBookIssue(models.Model):
         """Method to compute invoices"""
         inv_obj = self.env["account.move"]
         for rec in self:
-            count_invoice = inv_obj.search_count(
-                [("book_issue_id", "=", rec.id)]
-            )
+            count_invoice = inv_obj.search_count([("book_issue_id", "=", rec.id)])
             rec.compute_inv = count_invoice
 
 
@@ -795,13 +742,12 @@ class LibraryBookRequest(models.Model):
         help="Select type of book",
     )
     name = fields.Many2one("product.product", "Book Name", help="Select book")
-    new_book = fields.Char("New Book Name", help="Enter new book name")
+    new_book = fields.Char(string="New Book Name", help="Enter new book name")
     book_name = fields.Char(
         "Name", compute="_compute_bname", store=True, help="Enter book name"
     )
     state = fields.Selection(
         [("draft", "Draft"), ("confirm", "Confirm"), ("cancel", "Cancelled")],
-        "State",
         default="draft",
         help="State of library book request",
     )
@@ -810,9 +756,7 @@ class LibraryBookRequest(models.Model):
         string="Return Days",
         help="Book return days",
     )
-    ebook_name = fields.Many2one(
-        "product.product", "E book Name", help="E-book name"
-    )
+    ebook_name = fields.Many2one("product.product", "E book Name", help="E-book name")
     active = fields.Boolean(
         default=True,
         help="Set active to false to hide the category without removing it.",
@@ -841,9 +785,7 @@ class LibraryBookRequest(models.Model):
     def create(self, vals):
         """Inherited method to generate sequence at record creation"""
         seq_obj = self.env["ir.sequence"]
-        vals.update(
-            {"req_id": (seq_obj.next_by_code("library.book.request") or "New")}
-        )
+        vals.update({"req_id": (seq_obj.next_by_code("library.book.request") or "New")})
         return super(LibraryBookRequest, self).create(vals)
 
     def draft_book_request(self):
@@ -857,9 +799,9 @@ class LibraryBookRequest(models.Model):
         vals = {}
 
         issue_id = False
-        if (
-            self.card_id.start_date and curr_dt <= self.card_id.start_date
-        ) and (self.card_id.end_date and curr_dt >= self.card_id.end_date):
+        if (self.card_id.start_date and curr_dt <= self.card_id.start_date) and (
+            self.card_id.end_date and curr_dt >= self.card_id.end_date
+        ):
             raise UserError(_("The Membership of library card is over!"))
         if self.type == "existing":
             vals.update({"card_id": self.card_id.id, "name": self.name.id})
@@ -929,9 +871,7 @@ class StudentLibrary(models.Model):
         when student is alumni"""
         lib_card_obj = self.env["library.card"]
         for rec in self:
-            student_card_rec = lib_card_obj.search(
-                [("student_id", "=", rec.id)]
-            )
+            student_card_rec = lib_card_obj.search([("student_id", "=", rec.id)])
             if student_card_rec:
                 student_card_rec.active = False
         return super(StudentLibrary, self).set_alumni()

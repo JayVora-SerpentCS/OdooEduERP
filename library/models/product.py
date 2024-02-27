@@ -7,15 +7,13 @@ from odoo.exceptions import ValidationError
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    name = fields.Char("Name", required=True, help="Book Name")
+    name = fields.Char(required=True, help="Book Name")
 
 
 class ProductCategory(models.Model):
     _inherit = "product.category"
 
-    book_categ = fields.Boolean(
-        "Book Category", default=False, help="Book category"
-    )
+    book_categ = fields.Boolean("Book Category", default=False, help="Book category")
 
 
 class ProductLang(models.Model):
@@ -24,8 +22,8 @@ class ProductLang(models.Model):
     _name = "product.lang"
     _description = "Book's Language"
 
-    code = fields.Char("Code", required=True, help="Book code")
-    name = fields.Char("Name", required=True, translate=True, help="Book name")
+    code = fields.Char(required=True, help="Book code")
+    name = fields.Char(required=True, translate=True, help="Book name")
 
     _sql_constraints = [
         (
@@ -39,9 +37,7 @@ class ProductLang(models.Model):
     def _check_code(self):
         for rec in self:
             if self.search([("id", "!=", rec.id), ("code", "=", rec.code)]):
-                raise ValidationError(
-                    _("The code of the language must be unique !")
-                )
+                raise ValidationError(_("The code of the language must be unique !"))
 
 
 class ProductProduct(models.Model):
@@ -60,7 +56,7 @@ class ProductProduct(models.Model):
         return res
 
     def _default_categ(self):
-        """ This method put default category of product"""
+        """This method put default category of product"""
 
         if self._context is None:
             self._context = {}
@@ -74,7 +70,7 @@ class ProductProduct(models.Model):
         return res
 
     def _get_partner_code_name(self, product, parent_id):
-        """ This method get the partner code name"""
+        """This method get the partner code name"""
         for supinfo in product.seller_ids:
             if supinfo.partner_id.id == parent_id:
                 return {
@@ -85,18 +81,16 @@ class ProductProduct(models.Model):
         return res
 
     def _compute_product_code(self):
-        """ This method get the product code"""
+        """This method get the product code"""
         res = {}
         parent_id = self._context.get("parent_id", None)
         for product in self:
-            res[product.id] = self._get_partner_code_name(product, parent_id)[
-                "code"
-            ]
+            res[product.id] = self._get_partner_code_name(product, parent_id)["code"]
         return res
 
     @api.model
     def create(self, vals):
-        """ This method is Create new student"""
+        """This method is Create new student"""
         # add link from editor to supplier:
         if "editor" in vals:
             for supp in self.env["library.editor.supplier"].search(
@@ -149,19 +143,15 @@ class ProductProduct(models.Model):
         "Catalog number", help="Shows Identification number of books"
     )
     lang = fields.Many2one("product.lang", "Language", help="Book language")
-    editor_ids = fields.One2many(
-        "book.editor", "book_id", "Editor", help="Book editor"
-    )
-    author = fields.Many2one("library.author", "Author", help="Library author")
+    editor_ids = fields.One2many("book.editor", "book_id", "Editor", help="Book editor")
+    author = fields.Many2one("library.author", help="Library author")
     code = fields.Char(
         compute="_compute_product_code",
         string="Acronym",
         store=True,
         help="Book code",
     )
-    catalog_num = fields.Char(
-        "Catalog number", help="Reference number of book"
-    )
+    catalog_num = fields.Char(string="Catalog number", help="Reference number of book")
     creation_date = fields.Datetime(
         "Creation date",
         readonly=True,
@@ -169,17 +159,14 @@ class ProductProduct(models.Model):
         default=lambda self: fields.Datetime.today(),
     )
     date_retour = fields.Datetime("Return Date", help="Book Return date")
-    fine_lost = fields.Float("Fine Lost", help="Enter fine lost")
+    fine_lost = fields.Float(help="Enter fine lost")
     fine_late_return = fields.Float("Late Return", help="Enter late return")
     tome = fields.Char(
-        "TOME", help="Stores information of work in several volume"
+        string="TOME", help="Stores information of work in several volume"
     )
     nbpage = fields.Integer("Number of pages", help="Enter number of pages")
-    rack = fields.Many2one(
-        "library.rack", "Rack", help="Shows position of book"
-    )
+    rack = fields.Many2one("library.rack", help="Shows position of book")
     books_available = fields.Float(
-        "Books Available",
         compute="_compute_books_available",
         help="Available books",
     )
@@ -197,15 +184,13 @@ class ProductProduct(models.Model):
         help="Shows books-binding type",
         default="paper",
     )
-    pocket = fields.Char("Pocket", help="Pocket")
+    pocket = fields.Char(help="Pocket")
     num_pocket = fields.Char(
         "Collection No.",
         help="Shows collection number in which" "book resides",
     )
     num_edition = fields.Integer("No. edition", help="Edition number of book")
-    format = fields.Char(
-        "Format", help="The general physical appearance of a book"
-    )
+    format = fields.Char(help="The general physical appearance of a book")
     #    price_cat = fields.Many2one('library.price.category', "Price category")
     is_ebook = fields.Boolean(
         "Is EBook", help="Activate/Deactivate as per the book is ebook or not"
@@ -213,9 +198,7 @@ class ProductProduct(models.Model):
     is_subscription = fields.Boolean(
         "Is Subscription based", help="Activate/deactivate as per subscription"
     )
-    subscrption_amt = fields.Float(
-        "Subscription Amount", help="Subscription amount"
-    )
+    subscrption_amt = fields.Float("Subscription Amount", help="Subscription amount")
     attach_ebook = fields.Binary("Attach EBook", help="Attach book here")
     day_to_return_book = fields.Integer(
         "Book Return Days", help="Enter book return days"
@@ -255,7 +238,7 @@ class ProductProduct(models.Model):
                 AND
                     lower(isbn) = %s
                 """,
-                (rec.id, str(rec.isbn.lower().strip()) if rec.isbn else ''),
+                (rec.id, str(rec.isbn.lower().strip()) if rec.isbn else ""),
             )
             if self._cr.fetchone():
                 raise ValidationError(_("The isbn field must be unique!"))
@@ -311,14 +294,12 @@ class BookAttachment(models.Model):
     _name = "book.attachment"
     _description = "Stores attachments of the book"
 
-    name = fields.Char("Description", required=True, help="Enter Description")
-    product_id = fields.Many2one(
-        "product.product", "Product", help="Select Book"
-    )
+    name = fields.Char(string="Description", required=True, help="Enter Description")
+    product_id = fields.Many2one("product.product", "Product", help="Select Book")
     date = fields.Date(
         "Attachment Date", required=True, default=fields.Datetime.today()
     )
-    attachment = fields.Binary("Attachment", help="Attach attachment here")
+    attachment = fields.Binary(help="Attach attachment here")
 
 
 class LibraryAuthor(models.Model):
@@ -340,25 +321,19 @@ class BookEditor(models.Model):
     _name = "book.editor"
     _description = "Information of Editor of the Book"
 
-    image = fields.Binary("Image", help="Book Image")
-    name = fields.Char("Name", required=True, index=True, help="Book name")
-    biography = fields.Text("Biography", help="Biography")
+    image = fields.Binary(help="Book Image")
+    name = fields.Char(required=True, index=True, help="Book name")
+    biography = fields.Text(help="Biography")
     note = fields.Text("Notes", help="Notes")
-    phone = fields.Char("Phone", help="Phone Number")
-    mobile = fields.Char("Mobile", help="Mobile Number")
-    fax = fields.Char("Fax", help="Fax")
-    title = fields.Many2one("res.partner.title", "Title", help="Book title")
-    website = fields.Char("Website", help="Enter website here")
-    street = fields.Char("Street", help="Enter Street")
-    street2 = fields.Char("Street2", help="Enter secondary street")
-    city = fields.Char("City", help="Enter City")
-    state_id = fields.Many2one(
-        "res.country.state", "State", help="Enter state"
-    )
-    zip = fields.Char("Zip", help="ZIP")
-    country_id = fields.Many2one(
-        "res.country", "Country", help="Select country"
-    )
-    book_id = fields.Many2one(
-        "product.product", "Book Ref", help="Select book ref"
-    )
+    phone = fields.Char(help="Phone Number")
+    mobile = fields.Char(help="Mobile Number")
+    fax = fields.Char(help="Fax")
+    title = fields.Many2one("res.partner.title", help="Book title")
+    website = fields.Char(help="Enter website here")
+    street = fields.Char(help="Enter Street")
+    street2 = fields.Char(help="Enter secondary street")
+    city = fields.Char(help="Enter City")
+    state_id = fields.Many2one("res.country.state", "State", help="Enter state")
+    zip = fields.Char(help="ZIP")
+    country_id = fields.Many2one("res.country", "Country", help="Select country")
+    book_id = fields.Many2one("product.product", "Book Ref", help="Select book ref")

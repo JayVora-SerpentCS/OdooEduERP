@@ -6,7 +6,7 @@ from odoo import fields, models
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    origin_ref = fields.Char("Origin")
+    origin_ref = fields.Char(string="Origin")
 
 
 class StockPicking(models.Model):

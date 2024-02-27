@@ -22,10 +22,7 @@ class UpdateBooks(models.TransientModel):
                 book_rec = lib_book_obj.browse(active_id)
                 if rec.name.availability == "notavailable":
                     raise ValidationError(
-                        _(
-                            "This Book is not available! Please try after "
-                            "sometime!"
-                        )
+                        _("This Book is not available! Please try after " "sometime!")
                     )
                 else:
                     book_rec.name = rec.name.id

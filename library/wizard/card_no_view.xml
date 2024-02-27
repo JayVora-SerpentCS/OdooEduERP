@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
         <!-- Form View Of Card Number Wizard -->
@@ -10,12 +9,21 @@
             <field name="arch" type="xml">
                 <form string="Card Number">
                     <group>
-                       <field name="card_id" widget="selection"/>
+                       <field name="card_id" widget="selection" />
                    </group>
                    <footer>
                        <group col="2">
-                            <button type='object' class="fa fa-id-card-o" name='card_number_ok' string='Card No'/>
-                            <button class="fa fa-ban" special='cancel' string='Cancel'/>
+                            <button
+                            type='object'
+                            class="fa fa-id-card-o"
+                            name='card_number_ok'
+                            string='Card No'
+                        />
+                            <button
+                            class="fa fa-ban"
+                            special='cancel'
+                            string='Cancel'
+                        />
                        </group>
                    </footer>
                </form>
@@ -24,13 +32,15 @@
 
         <!-- Action Of Form View Of Card Number Wizard -->
 
-         <act_window id="card_number_ok"
-            name="Card Number"
-            res_model="card.number"
-            binding_model="library.book.issue"
-            view_mode="form"
-            target="new"
-            binding_views="form"
-            groups="library.group_librarian"/>
+         <act_window
+        id="card_number_ok"
+        name="Card Number"
+        res_model="card.number"
+        binding_model="library.book.issue"
+        view_mode="form"
+        target="new"
+        binding_views="form"
+        groups="library.group_librarian"
+    />
 
 </odoo>

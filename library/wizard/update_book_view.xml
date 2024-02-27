@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
         <!-- Form View Of Update Book Wizard -->
@@ -10,12 +9,21 @@
             <field name="arch" type="xml">
                 <form string="Books">
                     <group>
-                        <field name="name" widget="selection" domain="[('categ_id.book_categ','=',True)]"/>
+                        <field
+                        name="name"
+                        widget="selection"
+                        domain="[('categ_id.book_categ','=',True)]"
+                    />
                     </group>
                     <footer>
                     <group col="2">
-                        <button type='object' class="fa fa-check" name='action_update_books' string='Books'/>
-                        <button special='cancel' class="fa fa-ban" string='Cancel'/>
+                        <button
+                            type='object'
+                            class="fa fa-check"
+                            name='action_update_books'
+                            string='Books'
+                        />
+                        <button special='cancel' class="fa fa-ban" string='Cancel' />
                    </group>
                    </footer>
                </form>
@@ -24,14 +32,15 @@
 
         <!-- Action Of Form View Of Update Book Wizard -->
 
-        <act_window id="action_update_books"
-            name="Update Books"
-            res_model="update.books"
-            binding_model="library.book.issue"
-            view_mode="form"
-            target="new"
-            binding_views="form"
-            groups="library.group_librarian"
-            />
+        <act_window
+        id="action_update_books"
+        name="Update Books"
+        res_model="update.books"
+        binding_model="library.book.issue"
+        view_mode="form"
+        target="new"
+        binding_views="form"
+        groups="library.group_librarian"
+    />
 
 </odoo>

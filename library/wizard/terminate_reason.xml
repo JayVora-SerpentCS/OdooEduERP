@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id='treminate_wizard_inherit' model='ir.ui.view'>
         <field name="name">Terminate Reason Extended</field>
         <field name="model">terminate.reason</field>
-        <field name='inherit_id' ref='school.school_terminate_reason'/>
+        <field name='inherit_id' ref='school.school_terminate_reason' />
         <field name="arch" type="xml">
             <field name='reason' position='before'>
-                <field name='info' readonly='1' nolabel='1' style='color: red;'/>
-                <seperator/>
+                <field name='info' readonly='1' nolabel='1' style='color: red;' />
+                <seperator />
             </field>
         </field>
     </record>
