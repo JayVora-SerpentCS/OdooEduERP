@@ -205,7 +205,7 @@ class StudentFeesStructureLine(models.Model):
         vals["sequence"] = self.env["ir.sequence"].next_by_code(
             "student.fees.structure.line"
         )
-        res = super(StudentFeesStructureLine, self).create(vals)
+        res = super().create(vals)
         return res
 
     @api.onchange("company_id")
@@ -372,7 +372,7 @@ class StudentPayslip(models.Model):
                 raise ValidationError(
                     _("You can delete record in unconfirm state only!")
                 )
-        return super(StudentPayslip, self).unlink()
+        return super().unlink()
 
     @api.onchange("journal_id")
     def onchange_journal_id(self):
@@ -402,13 +402,13 @@ class StudentPayslip(models.Model):
         """Inherited create method to assign values from student model"""
         if vals.get("student_id"):
             self._update_student_vals(vals)
-        return super(StudentPayslip, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
         """Inherited write method to update values from student model"""
         if vals.get("student_id"):
             self._update_student_vals(vals)
-        return super(StudentPayslip, self).write(vals)
+        return super().write(vals)
 
     def payslip_draft(self):
         """Change state to draft"""
@@ -727,13 +727,13 @@ class AccountPaymentRegister(models.TransientModel):
         """
         Override method to write paid amount in hostel student
         """
-        res = super(AccountPaymentRegister, self).action_create_payments()
+        res = super().action_create_payments()
         invoice = False
         curr_date = fields.Date.today()
         for rec in self:
-            if self._context.get("active_model") == "account.move":
+            if self._context.get("active_model") == "account.move.line":
                 invoice = self.env["account.move"].browse(
-                    self._context.get("active_ids", [])
+                    self._context.get("active_id", [])
                 )
             vals = {}
             #        'invoice_ids' deprecated field instead of this
@@ -748,7 +748,7 @@ class AccountPaymentRegister(models.TransientModel):
                         "payment_date": curr_date,
                         "move_id": invoice.id or False,
                         "paid_amount": fees_payment,
-                        "due_amount": invoice.amount_residual,
+                        "due_amount": invoice.amount_residual or 0,
                     }
                 )
             if invoice.student_payslip_id and invoice.payment_state == "not_paid":
@@ -758,7 +758,7 @@ class AccountPaymentRegister(models.TransientModel):
                 vals.update(
                     {
                         "state": "pending",
-                        "due_amount": invoice.amount_residual,
+                        "due_amount": invoice.amount_residual or 0,
                         "paid_amount": fees_payment,
                     }
                 )
@@ -786,4 +786,4 @@ class StudentFees(models.Model):
                         "of student is remaining!"
                     )
                 )
-            return super(StudentFees, self).set_alumni()
+            return super().set_alumni()

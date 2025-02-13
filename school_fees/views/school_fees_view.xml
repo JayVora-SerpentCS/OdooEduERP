@@ -79,37 +79,30 @@
                     <group col="4" string="Calculations">
                         <field name="type" />
                         <field name="amount" string="Amount" />
-                        <field
-                            name="account_id"
-                            options="{&quot;no_create&quot;: True}"
-                        />
+                        <field name="account_id" options="{'no_create': True}" />
                         <field name="company_id" />
                         <field name="currency_id" invisible="0" />
                         <field name="currency_symbol" invisible="0" />
                     </group>
-                    <group
-                        col="2"
-                        attrs="{'invisible':[('type','=','range')]}"
-                        string="Description"
-                    >
+                    <group col="2" invisible="type == 'range'" string="Description">
                         <field name="description" string="Description" />
                     </group>
-                    <notebook colspan="4" attrs="{'invisible':[('type','!=','range')]}">
+                    <notebook colspan="4" invisible="type == 'range'">
                         <page string="Function">
                             <field name="line_ids" colspan="4" nolabel="1">
                                 <tree editable="bottom">
                                     <field
                                         name="academic_year_id"
-                                        options="{&quot;no_create&quot;: True}"
+                                        options="{'no_create': True}"
                                     />
                                     <field
                                         name="from_month"
-                                        options="{&quot;no_create&quot;: True}"
+                                        options="{'no_create': True}"
                                         domain="[('year_id', '=', academic_year_id)]"
                                     />
                                     <field
                                         name="to_month"
-                                        options="{&quot;no_create&quot;: True}"
+                                        options="{'no_create': True}"
                                         domain="[('year_id', '=', academic_year_id)]"
                                     />
                                 </tree>
@@ -135,8 +128,8 @@
                 <field name="type" />
                 <field name="account_id" />
                 <field name="amount" />
-                <field name="currency_id" invisible="1" />
-                <field name="currency_symbol" invisible="1" />
+                <field name="currency_id" />
+                <field name="currency_symbol" />
             </tree>
         </field>
     </record>
@@ -174,27 +167,22 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Function">
-                        <field
-                            name="line_ids"
-                            colspan="4"
-                            nolabel="1"
-                            attrs="{'readonly':[('type','!=','range')]}"
-                        >
+                        <field name="line_ids" colspan="4" nolabel="1">
                             <tree editable="bottom">
                                 <field
                                     name="academic_year_id"
-                                    options="{&quot;no_create&quot;: True}"
+                                    options="{'no_create': True}"
                                 />
                                 <field
                                     name="from_month"
                                     string="From Month"
-                                    options="{&quot;no_create&quot;: True}"
+                                    options="{'no_create': True}"
                                     domain="[('year_id', '=', academic_year_id)]"
                                 />
                                 <field
                                     name="to_month"
                                     string="To Month"
-                                    options="{&quot;no_create&quot;: True}"
+                                    options="{'no_create': True}"
                                     domain="[('year_id', '=', academic_year_id)]"
                                 />
                             </tree>
@@ -236,17 +224,17 @@
                 <header>
                     <button
                         name="payslip_confirm"
-                        class="fa fa-check"
+                        icon="fa-check"
                         string="Confirm"
-                        states="draft"
+                        invisible="state != 'draft'"
                         type="object"
                         groups="school.group_school_administration"
                     />
                     <button
                         name="student_pay_fees"
-                        class="fa fa-share"
+                        icon="fa-share"
                         string="Payment"
-                        states="confirm"
+                        invisible="state != 'confirm'"
                         type="object"
                         groups="school.group_school_administration"
                     />
@@ -265,7 +253,7 @@
                             icon="fa-pencil-square-o"
                             widget="stateinfo"
                             class="oe_stat_button"
-                            states="pending,paid"
+                            invisible="state not in ['pending','paid']"
                             type="object"
                             groups="school.group_school_administration"
                         />
@@ -275,9 +263,9 @@
                             name="student_id"
                             placeholder="Student Name"
                             colspan="4"
-                            attrs="{'readonly':[('state','not in','draft')]}"
+                            readonly="state != 'draft'"
                             domain="[('state','=','done')]"
-                            options="{&quot;no_create&quot;: True}"
+                            options="{'no_create': True}"
                         />
                         </h2>
                     <group>
@@ -287,18 +275,18 @@
                                 string="Name"
                                 placeholder="Description"
                                 required="1"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="number"
                                 string="Number"
                                 readonly="1"
-                                attrs="{'invisible': [('state', 'not in', ('pending', 'paid'))]}"
+                                invisible="state != 'not in', ['pending', 'paid']"
                             />
                             <field
                                 name="date"
                                 string="Date"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             />
                         </group>
                         <group col="2" string="Standard Information">
@@ -306,45 +294,42 @@
                                 name="standard_id"
                                 placeholder="Standard"
                                 widget="selection"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                readonly="1"
+                                readonly=" state != 'draft'"
                             />
                             <field
                                 name="division_id"
                                 placeholder="Division"
                                 widget="selection"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                readonly="1"
+                                readonly=" state != 'draft'"
                             />
                             <field
                                 name="medium_id"
                                 placeholder="Medium"
                                 widget="selection"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                readonly="1"
+                                readonly=" state != 'draft'"
                             />
                         </group>
                     </group>
                     <group>
                         <separator string="Fees Structure" colspan="4" />
-	                    <group col="2">
-	                        <field
+                        <group col="2">
+                            <field
                                 name="fees_structure_id"
                                 required="1"
                                 placeholder="Fee Structure"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly=" state != 'draft'"
+                                options="{'no_create': True}"
                             />
-	                    </group>
-	                    <group col="2">
-	                       <field
+                        </group>
+                        <group col="2">
+                           <field
                                 name="journal_id"
                                 widget="selection"
                                 placeholder="Journal"
                                 domain="[('type','=','sale')]"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly=" state != 'draft'"
                             />
-	                    </group>
+                        </group>
                     </group>
                     <group col="4">
                         <notebook colspan="4">
@@ -376,30 +361,30 @@
                                         name="type"
                                         string="Type"
                                         placeholder="Type"
-                                        attrs="{'readonly':[('state','not in','draft')]}"
+                                        readonly=" state != 'draft'"
                                     />
                                     <field
                                         name="currency_id"
                                         placeholder="Currency"
-                                        attrs="{'readonly':[('state','not in','draft')]}"
+                                        readonly=" state != 'draft'"
                                     />
                                     <field name="currency_symbol" invisible="0" />
                                     <field
                                         name="move_id"
-                                        attrs="{'readonly':[('state','not in','draft')]}"
+                                        readonly=" state != 'draft'"
                                     />
                                     <field
                                         name="payment_date"
                                         string="Payment Date"
                                         placeholder="Payment Date"
-                                        attrs="{'readonly':[('state','not in','draft')]}"
+                                        readonly=" state != 'draft'"
                                     />
                                     <field
                                         name="company_id"
                                         string="School"
                                         placeholder="School Name"
-                                        attrs="{'readonly':[('state','not in','draft')]}"
-                                        options="{&quot;no_create&quot;: True}"
+                                        readonly=" state != 'draft'"
+                                        options="{'no_create': True}"
                                     />
                                 </group>
                             </page>
@@ -490,9 +475,9 @@
                     <button
                         name="fees_register_confirm"
                         type="object"
-                        class="fa fa-check"
+                        icon="fa-check"
                         string="Confirm"
-                        states="draft"
+                        invisible="state != 'draft'"
                         groups="school.group_school_administration"
                     />
                     <field name="state" widget="statusbar" readonly="1" />
@@ -504,19 +489,19 @@
                                 name="name"
                                 string="Name"
                                 placeholder="Name"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="date"
                                 string="Date"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="company_id"
                                 string="School"
                                 placeholder="School Name"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly="state != 'draft'"
+                                options="{'no_create': True}"
                             />
                         </group>
                         <group>
@@ -525,8 +510,8 @@
                                 name="journal_id"
                                 placeholder="Journal"
                                 domain="[('type','=','sale')]"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly="state != 'draft'"
+                                options="{'no_create': True}"
                             />
                             <!-- <field name="period_id" placeholder="Force Period"/> -->
                         </group>
@@ -537,15 +522,15 @@
                                 name="fees_structure"
                                 string="Fees Structure"
                                 placeholder="Fee structure"
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly="state != 'draft'"
+                                options="{'no_create': True}"
                             />
                         </group>
                         <group>
                             <field
                                 name="standard_id"
                                 placeholder="Select Class"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                                 required="1"
                                 widget="selection"
                             />
@@ -557,7 +542,7 @@
                                 name="line_ids"
                                 colspan="4"
                                 nolabel="1"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             >
                                 <tree create="false">
                                     <field name="name" />
@@ -692,6 +677,7 @@
         <field name="res_model">student.payslip</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_student_id': active_id}</field>
+        <field name="domain">[('student_id','=',active_id)]</field>
     </record>
 
     <!-- Inherited Form View Of Student -->
@@ -706,7 +692,7 @@
                         name="%(action_stu_fees_form)d"
                         type="action"
                         class="oe_inline oe_stat_button"
-                        attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}"
+                        invisible="state in  ['draft','terminate','alumni','cancel']"
                         groups="school.group_school_administration,school.group_school_student"
                     >
                         <img
@@ -716,6 +702,35 @@
                         />
                             <lable style="margin-left:20px;">Fees Receipt</lable>
                     </button>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <!-- Inherited Form View Of Student Form 2-->
+    <record id="view_student_student_form2_inherit" model="ir.ui.view">
+        <field name="name">student.student.form.inherit</field>
+        <field name="model">student.student</field>
+        <field name="inherit_id" ref="school.view_student_student_form_2" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//sheet" position="inside">
+                    <div name="button_box" position="inside">
+                        <button
+                            name="%(school_fees.action_stu_fees_form)d"
+                            type="action"
+                            class="oe_inline oe_stat_button"
+                            invisible="state !='verify_document'"
+                            groups="school.group_school_administration,school.group_school_student"
+                        >
+                            <img
+                                src="/school/static/description/payment.png"
+                                alt="Logo"
+                                style="margin-left:20px;"
+                            />
+                            <lable style="margin-left:20px;">Fees Receipt</lable>
+                        </button>
+                    </div>
                 </xpath>
             </data>
         </field>
