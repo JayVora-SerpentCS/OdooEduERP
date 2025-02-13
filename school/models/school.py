@@ -230,6 +230,12 @@ class StandardStandard(models.Model):
         standard_rec = self.search([("sequence", ">", sequence)], order="id", limit=1)
         return standard_rec
 
+    @api.model
+    def same_standard(self, sequence):
+        """This method check sequence of standard"""
+        standard_rec = self.search([("sequence", "=", sequence)], order="id", limit=1)
+        return standard_rec
+
     @api.constrains("name", "sequence")
     def _check_standard_name(self):
         for record in self:
@@ -417,7 +423,7 @@ class SchoolStandard(models.Model):
                         "subject or syllabus!"
                     )
                 )
-        return super(SchoolStandard, self).unlink()
+        return super().unlink()
 
     @api.constrains("capacity")
     def check_seats(self):
@@ -484,6 +490,8 @@ class SchoolSchool(models.Model):
     state_id = fields.Many2one("res.country.state", string="State", ondelete="restrict")
     country_id = fields.Many2one("res.country", string="Country", ondelete="restrict")
     currency_id = fields.Many2one(related="company_id.currency_id", readonly=True)
+    contact_phone = fields.Char(string="Phone no.", help="Enter School phone no.")
+    contact_mobile = fields.Char(string="Mobile no", help="Enter School mobile no.")
 
     # @api.model
     # def create(self, vals):
@@ -577,13 +585,13 @@ class SubjectSubject(models.Model):
 
     @api.model_create_multi
     def create(self, values):
-        result = super(SubjectSubject, self).create(values)
+        result = super().create(values)
         for standard in self.env["school.standard"].search([]):
             standard.onchange_subject_related_standard()
         return result
 
     def write(self, values):
-        res = super(SubjectSubject, self).write(values)
+        res = super().write(values)
         if values.get("standard_id") or values.get("standard_ids"):
             for standard in self.env["school.standard"].search([]):
                 standard.onchange_subject_related_standard()
@@ -605,12 +613,10 @@ class SubjectSubject(models.Model):
     @api.model
     def _search(
         self,
-        args,
+        domain,
         offset=0,
         limit=None,
         order=None,
-        count=False,
-        access_rights_uid=None,
     ):
         subjects = subject_list = []
         # Override method to get exam of subject selection.
@@ -623,7 +629,7 @@ class SubjectSubject(models.Model):
                 self._context.get("active_id")
             )
             sub_ids = [sub_id.id for sub_id in teacher_rec.subject_id]
-            args.append(("id", "in", sub_ids))
+            domain.append(("id", "in", sub_ids))
         if self._context.get("subject") and not self._context.get("for_subject"):
             standard = self.env["school.standard"].browse(self._context.get("standard"))
             subjects = (
@@ -637,22 +643,19 @@ class SubjectSubject(models.Model):
                 )
             )
             subject_list += [rec.id for rec in subjects if rec in standard.subject_ids]
-            args += [("id", "in", subject_list if subject_list else [])]
-            return super(SubjectSubject, self)._search(
-                args,
+            if subject_list:
+                domain.append(("id", "in", subject_list))
+            return super()._search(
+                domain,
                 offset=offset,
                 limit=limit,
                 order=order,
-                count=count,
-                access_rights_uid=access_rights_uid,
             )
-        return super(SubjectSubject, self)._search(
-            args,
+        return super()._search(
+            domain,
             offset=offset,
             limit=limit,
             order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
         )
 
 
@@ -750,7 +753,7 @@ class DocumentType(models.Model):
             vals["seq_no"] = self.env["ir.sequence"].next_by_code("document.type") or _(
                 "New"
             )
-        return super(DocumentType, self).create(vals)
+        return super().create(vals)
 
 
 class StudentDescription(models.Model):
@@ -789,6 +792,7 @@ class StudentHistory(models.Model):
     _description = "Student History"
 
     student_id = fields.Many2one("student.student", "Student", help="Related Student")
+    move_date = fields.Date(string="Move date")
     academice_year_id = fields.Many2one(
         "academic.year", "Academic Year", help="Academice Year"
     )
@@ -1192,4 +1196,4 @@ class Report(models.Model):
             raise ValidationError(
                 _("You cannot print report forstudent in unconfirm state!")
             )
-        return super(Report, self).render_template(template, values)
+        return super().render_template(template, values)

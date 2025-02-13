@@ -7,122 +7,80 @@
                     <div class="page" style="height: 2px;">
                         <div class="oe_structure" />
                         <t t-foreach="o" t-as="teacher">
-                        <table
-                                width="40%"
-                                height="280px"
-                                style="border: 3px solid black;"
-                                align="center"
-                            >
-                            <tr style="margin-top:5px">
-                                <td colspan="2" align="center">
-                                    <h1><strong>
-                                        <span t-field="teacher.sudo().school_id.name" />
-                                    </strong></h1>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="top">
-                                    <img
-                                            t-if="teacher.avatar_128"
-                                            t-att-src="'data:image/png;base64,%s' % teacher.avatar_128.decode('utf-8')"
-                                        />
-                                </td>
-                                <td align="left">
-                                    <table width="100%">
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>Name</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="teacher.name" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>Gender</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span t-field="teacher.sudo().gender" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>BirthDate</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span
-                                                        t-field="teacher.sudo().birthday"
-                                                    />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>Standard</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span
-                                                        t-field="teacher.sudo().standard_id.name"
-                                                    />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>Email</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span
-                                                        t-field="teacher.sudo().work_email"
-                                                    />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                    style="font-family: 'Helvetica';padding-left:20px;"
-                                                >
-                                                <strong>Contact</strong>
-                                            </td>
-                                            <td>
-                                                <strong>: </strong>
-                                            </td>
-                                            <td>
-                                                <span
-                                                        t-field="teacher.sudo().mobile_phone"
-                                                    />
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                </td>
-                            </tr>
-                        </table>
+                            <center>
+                                <table class="table table-sm" style="width: 40%;">
+                                    <tr style="">
+                                        <td align="center">
+                                            <h4><strong><span
+                                                        t-field="teacher.sudo().school_id.name"
+                                                    /></strong></h4>
+                                            <span
+                                                t-field="teacher.school_id.contact_phone"
+                                                class="fa fa-phone"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr style=" border-bottom: 1px solid white;">
+                                        <td align="center">
+                                            <img
+                                                t-if="teacher.avatar_128"
+                                                t-att-src="'data:image/png;base64,%s' % teacher.avatar_128.decode('utf-8')"
+                                                style="max-height: 200px; max-width: 150px; border-radius: 40%;"
+                                                height="125"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="border-top: none; border-bottom: 1px solid white;"
+                                    >
+                                        <td style="font-size:24px;" align="center">
+                                            <span t-field="teacher.name" />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="border-top: none; border-bottom: 1px solid white;"
+                                    >
+                                        <td style="font-size:18px;" align="left">
+                                            <strong>Gender:</strong>
+                                            <span t-field="teacher.gender" />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="border-top: none; border-bottom: 1px solid white;"
+                                    >
+                                        <td style="font-size:18px;" align="left">
+                                            <strong>BirthDate:</strong>
+                                            <span t-field="teacher.sudo().birthday" />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="border-top: none; border-bottom: 1px solid white;"
+                                    >
+                                        <td style="font-size:18px;" align="left">
+                                            <strong>Standard:</strong>
+                                            <span
+                                                t-field="teacher.sudo().standard_id.name"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="border-top: none; border-bottom: 1px solid white;"
+                                    >
+                                        <td style="font-size:18px;" align="left">
+                                            <strong>Email:</strong>
+                                            <span t-field="teacher.sudo().work_email" />
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: none;">
+                                        <td style="font-size:18px;" align="left">
+                                            <strong>Contact:</strong>
+                                            <span
+                                                t-field="teacher.sudo().mobile_phone"
+                                            />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </center>
                       </t>
                    </div>
                 </t>

@@ -12,7 +12,7 @@
                         string="Terminate"
                         type="action"
                         icon="fa-ban"
-                        states="done"
+                        invisible="state != 'done'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -21,7 +21,7 @@
                         string="Alumni"
                         type="object"
                         icon="fa-archive"
-                        states="done"
+                        invisible="state != 'done'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -30,14 +30,13 @@
                         name="admission_done"
                         type="object"
                         string="Done"
-                        states="draft"
                         groups="school.group_school_administration"
                     />
                     <field
                         name="state"
                         widget="statusbar"
                         statusbar_visible="alumni,terminate"
-                        attrs="{'invisible':[('state','=','done')]}"
+                        invisible="state =='done'"
                     />
                 </header>
                 <sheet>
@@ -49,17 +48,10 @@
                             <field name="reg_code" readonly="1" />
                         </b>
                         <br />
-                        <!-- <field
-                            name="photo"
-                            widget="image"
-                            attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
-                            class="oe_avatar m-0"
-                            style="max-width:100px;max-height:117px;"
-                        /> -->
                         <field
                             name="photo"
                             widget="image"
-                            attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                            readonly="state in ['alumni','terminate']"
                             class="oe_avatar m-0"
                             style="max-width:100px;max-height:117px;"
                         />
@@ -69,21 +61,21 @@
                                 placeholder="First Name"
                                 nolabel="1"
                                 required="1"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <br />
                             <field
                                 name="middle"
                                 placeholder="Middle Name"
                                 nolabel="1"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <br />
                             <field
                                 name="last"
                                 placeholder="Last Name"
                                 nolabel="1"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <br />
                             <field name="pid" invisible="1" />
@@ -98,7 +90,7 @@
                             />
                             <field
                                 name="country_id"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <field
                                 name="roll_no"
@@ -110,42 +102,40 @@
                                 placeholder="Year"
                                 widget="selection"
                                 help="Academic year of Student"
-                                attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"
+                                readonly="state in ['alumni','terminate'] or teachr_user_grp"
                             />
-                            <field
+                            <!-- <field
                                 name="leaving_certificate"
                                 attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
-                            />
+                            /> -->
                             <field
                                 name="school_id"
                                 placeholder="School"
                                 widget="selection"
                                 help="School of Student"
-                                attrs="{'readonly':['|',('state','in',['alumni','terminate']),('teachr_user_grp','=',True)]}"
+                                readonly="state in ['alumni','terminate'] or teachr_user_grp"
                             />
                         </group>
                         <group string="Standard Information">
                             <field
                                 name="standard_id"
                                 placeholder="Standard"
-                                readonly="1"
                                 domain="[('school_id','=',school_id)]"
                                 widget="selection"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate'] or 1"
                             />
                             <field
                                 name="division_id"
                                 placeholder="Division"
                                 invisible="0"
                                 widget="selection"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <field
                                 name="medium_id"
                                 placeholder="Medium"
-                                readonly="1"
                                 widget="selection"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate'] or 1"
                             />
                         </group>
                     </group>
@@ -157,20 +147,20 @@
                                     name="street"
                                     class="o_address_street"
                                     placeholder="Street..."
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="street2"
                                     class="o_address_street"
                                     placeholder="Street2..."
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="city"
                                     placeholder="City"
                                     class="o_address_city"
                                     required="1"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="state_id"
@@ -178,22 +168,22 @@
                                     class="o_address_state"
                                     required="1"
                                     placeholder="State"
-                                    options="{&quot;no_open&quot;: True}"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    options="{'no_open': True}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="zip"
                                     placeholder="ZIP"
                                     class="o_address_zip"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="country_id"
                                     placeholder="Country"
                                     class="o_address_country,oe_no_button"
-                                    options="{&quot;no_open&quot;: True}"
+                                    options="{'no_open': True}"
                                     required="1"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                             </div>
                         </group>
@@ -201,24 +191,24 @@
                             <field
                                 name="phone"
                                 placeholder="Phone Number"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <field
                                 name="mobile"
                                 placeholder="Mobile Number"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <field
                                 name="email"
                                 placeholder="Email Address"
                                 String="Email"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <field
                                 name="website"
                                 widget="url"
                                 placeholder="e.g. www.serpentcs.com"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             />
                             <field name="teachr_user_grp" invisible="1" />
                         </group>
@@ -229,7 +219,7 @@
                                 <group>
                                     <field
                                         name="cast_id"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         widget="selection"
                                         placeholder="Religion/Caste"
                                     />
@@ -237,11 +227,11 @@
                                         name="date_of_birth"
                                         widget="date"
                                         placeholder="Birthdate"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                     />
                                     <field
                                         name="gender"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         placeholder="Gender"
                                         required="1"
                                     />
@@ -250,7 +240,7 @@
                                 <group>
                                     <field
                                         name="mother_tongue"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         widget="selection"
                                         placeholder="Mother Tounge"
                                     />
@@ -265,11 +255,12 @@
                                         string="Leave Date"
                                         widget="date"
                                         readonly="1"
-                                        attrs="{'invisible':[('state','not in',['alumni','terminate'])]}"
+                                        invisible="state not in ['alumni','terminate']"
                                     />
                                     <field
                                         name="maritual_status"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
+                                        invisible="age &lt; 18"
                                         placeholder="Maritial Status"
                                     />
                                 </group>
@@ -282,12 +273,12 @@
                                 <group colspan="4" col="4">
                                     <field
                                         name="contact_phone"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         placeholder="Phone Number"
                                     />
                                     <field
                                         name="contact_mobile"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         placeholder="Mobile Number"
                                     />
                                 </group>
@@ -296,12 +287,12 @@
                             <newline />
                             <separator
                                 string="Termination Reason"
-                                attrs="{'invisible':[('state','in',['draft','done','alumni'])]}"
+                                invisible="state in ['draft','done','alumni']"
                             />
                             <group>
                                     <field
                                     name="terminate_reason"
-                                    attrs="{'invisible':[('state','in',['draft','done','alumni'])]}"
+                                    invisible="state in ['draft','done','alumni']"
                                     readonly="1"
                                 />
                               </group>
@@ -309,9 +300,9 @@
                         <page string="Parents">
                             <field
                                 name="parent_id"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                                 context="{'form_view_ref':'school.view_parent_form','default_parent_school':1}"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                options="{'no_open': True, 'no_create': True}"
                             />
                         </page>
                         <page string="References">
@@ -319,7 +310,7 @@
                                 name="reference_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             >
                                 <tree editable="top">
                                     <field name="name" />
@@ -357,7 +348,7 @@
                                 name="previous_school_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             >
                                 <tree>
                                     <field name="name" string="Name" />
@@ -415,7 +406,7 @@
                                 nolabel="1"
                                 colspan="4"
                                 string="Award List"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             >
                                 <tree editable="top">
                                     <field
@@ -446,7 +437,7 @@
                                 name="family_con_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             >
                                 <form string="Family Contact Details">
                                     <group>
@@ -455,13 +446,13 @@
                                             <field
                                                 name="stu_name"
                                                 placeholder="Create or Select Name"
-                                                attrs="{'invisible':[('rel_name','!=','exist')]}"
-                                                options="{&quot;no_create&quot;: True}"
+                                                invisible="rel_name != 'exist'"
+                                                options="{'no_create': True}"
                                             />
                                             <field
                                                 name="name"
                                                 placeholder="Name"
-                                                attrs="{'invisible':[('rel_name','!=','new')]}"
+                                                invisible="rel_name != 'new'"
                                             />
                                             <field
                                                 name="relation"
@@ -495,12 +486,12 @@
                                     <field
                                         name="designation"
                                         placeholder="Doctor Designation"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                     />
                                     <field
                                         name="doctor_phone"
                                         placeholder="Doctor's Contact No"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                     />
                                 </group>
                                 <group string="Physical Information">
@@ -508,18 +499,18 @@
                                         name="blood_group"
                                         string="Blood Group"
                                         placeholder="e.g.B+,Ab+"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                     />
                                     <field
                                         name="height"
                                         string="Height"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         placeholder="Height"
                                     />
                                     <field
                                         name="weight"
                                         string="Weight"
-                                        attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                        readonly="state in ['alumni','terminate']"
                                         placeholder="Weight"
                                     />
                                 </group>
@@ -531,45 +522,45 @@
                             <group col="6" colspan="4">
                                 <field
                                     name="eye"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="ear"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="nose_throat"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="respiratory"
                                     string="Respiratory"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="cardiovascular"
                                     string="Cardiovascular"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="neurological"
                                     string="Neurological"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="muskoskeletal"
                                     string="Musculoskeletal"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="dermatological"
                                     string="Dermatological"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                                 <field
                                     name="blood_pressure"
                                     string="Blood Pressure"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                             </group>
 
@@ -578,7 +569,7 @@
                                     name="comment"
                                     placeholder="Notes About Medical.."
                                     nolabel="0"
-                                    attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                    readonly="state in ['alumni','terminate']"
                                 />
                             </group>
                         </page>
@@ -587,7 +578,7 @@
                                 name="certificate_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
+                                readonly="state in ['alumni','terminate']"
                             >
                                 <form string="Certificate">
                                     <group col="4">
@@ -615,16 +606,41 @@
                             </field>
                         </page>
                         <page string="Remarks">
-                            <form string="Remarks">
-                                <field
-                                    name="remark"
-                                    placeholder="Remark"
-                                    string="Remark"
-                                    nolabel="1"
-                                    colspan="4"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
-                                />
-                            </form>
+                            <field
+                                name="description"
+                                nolabel="1"
+                                colspan="4"
+                                string="Description"
+                                readonly="state in ['alumni','terminate']"
+                            >
+                                <form string="Extra Details">
+                                    <group col="4" colspan="2">
+                                        <field
+                                            name="name"
+                                            placeholder="Field Name"
+                                            string="Name"
+                                        />
+                                        <field
+                                            name="description"
+                                            placeholder="Description"
+                                            string="Description"
+                                        />
+                                    </group>
+                                </form>
+                                <tree editable="top">
+                                    <field
+                                        name="name"
+                                        string="Name"
+                                        required="1"
+                                        placeholder="Enter Name"
+                                    />
+                                    <field
+                                        name="description"
+                                        placeholder="Enter Description"
+                                        string="Description"
+                                    />
+                                </tree>
+                            </field>
                         </page>
                         <page
                             string="History"
@@ -634,9 +650,8 @@
                                 name="history_ids"
                                 nolabel="1"
                                 colspan="4"
-                                readonly="1"
-                                attrs="{'readonly':[('state','in',['alumni','terminate'])]}"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                readonly="state in ['alumni','terminate'] or 1"
+                                options="{'no_open': True, 'no_create': True}"
                             >
                                 <tree>
                                     <field name="academice_year_id" required="1" />
@@ -916,11 +931,11 @@
                 <header>
                     <button
                         class="oe_highlight oe_stat_button"
-                        name="set_terminate"
+                        name="%(school.action_terminate_wizard)d"
                         string="Terminate"
-                        type="object"
+                        type="action"
                         icon="fa-ban"
-                        states="done"
+                        invisible="state != 'done'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -929,7 +944,7 @@
                         string="Alumni"
                         type="object"
                         icon="fa-archive"
-                        states="done"
+                        invisible="state != 'done'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -938,7 +953,7 @@
                         name="admission_done"
                         type="object"
                         string="Done"
-                        states="draft"
+                        invisible="state !='fees_received'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -947,22 +962,30 @@
                         name="cancel_admission"
                         type="object"
                         string="Cancel"
-                        states="draft"
+                        invisible="state != 'fees_received'"
                         groups="school.group_school_administration"
                     />
                     <button
                         class="oe_stat_button"
-                        icon="fa-ban"
-                        name="reset_to_draft"
+                        string="Document Verified"
+                        name="verify_document"
                         type="object"
-                        states="cancel"
-                        string="Reset to draft"
+                        confirm="Hope you've checked all the necessary documents!"
+                        invisible="state !='draft'"
+                        groups="school.group_school_administration"
+                    />
+                    <button
+                        class="oe_stat_button"
+                        string="Fees Payment"
+                        name="fees_received"
+                        type="object"
+                        invisible="state !='verify_document'"
                         groups="school.group_school_administration"
                     />
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,cancel"
+                        statusbar_visible="draft,verify_document,fees_received,cancel,"
                     />
                 </header>
                 <sheet>
@@ -979,19 +1002,12 @@
                         <div class="oe_title">
                                 <field name="pid" nolabel="1" readonly="1" />
                                 <br />
-                               <!--  <field
-                                    name="name"
-                                    placeholder="First Name"
-                                    nolabel="1"
-                                    required="1"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
-                                /> -->
                                 <field
                                 name="name"
                                 placeholder="First Name"
                                 nolabel="1"
                                 required="1"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state == 'alumni'"
                                 style="font-size: min(4vw, 2.6rem);"
                             />
                                 <br />
@@ -999,14 +1015,14 @@
                                 name="middle"
                                 placeholder="Middle Name"
                                 nolabel="1"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                                 <br />
                                 <field
                                 name="last"
                                 placeholder="Last Name"
                                 nolabel="1"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                                 <br />
                                 <field name="active" invisible="1" />
@@ -1018,8 +1034,8 @@
                                 name="school_id"
                                 placeholder="School Name"
                                 required="1"
-                                attrs="{'readonly':[('state','=','alumni')]}"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                readonly="state =='alumni'"
+                                options="{'no_open': True, 'no_create': True}"
                             />
                             <field
                                 name="year"
@@ -1034,20 +1050,20 @@
                                 name="medium_id"
                                 placeholder="Medium"
                                 widget="selection"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                             <field
                                 name="standard_id"
                                 placeholder="Class"
                                 domain="[('school_id','=',school_id),('medium_id','=',medium_id)]"
                                 widget="selection"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                             <field
                                 name="division_id"
                                 placeholder="Division"
                                 widget="selection"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                                 invisible="0"
                             />
 
@@ -1061,43 +1077,43 @@
                                     name="street"
                                     placeholder="Street..."
                                     class="o_address_street"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    readonly="state =='alumni'"
                                 />
                                 <field
                                     name="street2"
                                     placeholder="Street2..."
                                     class="o_address_street"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    readonly="state =='alumni'"
                                 />
                                 <field
                                     name="country_id"
                                     placeholder="Country"
                                     class="o_address_country,oe_no_button"
                                     required="1"
-                                    options="{&quot;no_open&quot;: True}"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    options="{'no_open': True}"
+                                    readonly="state =='alumni'"
                                 />
                                 <field
                                     name="city"
                                     placeholder="City"
                                     class="o_address_city"
                                     required="1"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    readonly="state =='alumni'"
                                 />
                                 <field
                                     name="state_id"
                                     class="o_address_state"
                                     domain="[('country_id','=',country_id)]"
                                     placeholder="State"
-                                    options="{&quot;no_open&quot;: True}"
+                                    options="{'no_open': True}"
                                     required="1"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    readonly="state =='alumni'"
                                 />
                                 <field
                                     name="zip"
                                     placeholder="ZIP"
                                     class="o_address_zip"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    readonly="state =='alumni'"
                                 />
                             </div>
                         </group>
@@ -1105,24 +1121,24 @@
                             <field
                                 name="phone"
                                 placeholder="Phone Number"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                             <field
                                 name="mobile"
                                 placeholder="Mobile Number"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                             <field
                                 name="email"
                                 placeholder="Email Address"
                                 String="Email"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                             <field
                                 name="website"
                                 widget="url"
                                 placeholder="e.g. www.serpentcs.com"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             />
                         </group>
                     </group>
@@ -1136,13 +1152,13 @@
                                                 name="gender"
                                                 placeholder="Gender"
                                                 string="Gender"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
+                                                readonly="state =='alumni'"
                                                 required="1"
                                             />
                                             <field
                                                 name="date_of_birth"
                                                 placeholder="Birthdate"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
+                                                readonly="state =='alumni'"
                                             />
                                             <field name="age" string="Age" />
                                         </group>
@@ -1152,19 +1168,19 @@
                                                 widget="selection"
                                                 placeholder="Mother Tongue"
                                                 string="Mother Tongue"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
+                                                readonly="state =='alumni'"
                                             />
                                             <field
                                                 name="admission_date"
                                                 string="Admission Date"
                                                 placeholder="Admission Date"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
-                                                readonly="1"
+                                                readonly="state =='alumni' or 1"
                                             />
                                             <field
                                                 name="maritual_status"
                                                 placeholder="Select Maritual Status"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
+                                                invisible="age &lt; 18"
+                                                readonly="state =='alumni'"
                                             />
                                         </group>
                                         <newline />
@@ -1176,12 +1192,12 @@
                                         <group colspan="4" col="4">
                                             <field
                                                 name="contact_phone"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
+                                                readonly="state =='alumni'"
                                                 placeholder="Phone Number"
                                             />
                                             <field
                                                 name="contact_mobile"
-                                                attrs="{'readonly':[('state','=','alumni')]}"
+                                                readonly="state =='alumni'"
                                                 placeholder="Mobile Number"
                                             />
                                         </group>
@@ -1192,9 +1208,9 @@
                         <page string="Parents">
                             <field
                                 name="parent_id"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                                 context="{'form_view_ref':'school.view_parent_form','default_parent_school':1}"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                options="{'no_open': True, 'no_create': True}"
                             />
                         </page>
                         <page string="References">
@@ -1202,7 +1218,7 @@
                                 name="reference_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             >
                                 <tree editable="top">
                                     <field name="name" placeholder="Firstname" />
@@ -1246,7 +1262,7 @@
                                 name="previous_school_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             >
                                 <tree>
                                     <field name="name" />
@@ -1299,7 +1315,7 @@
                                 name="family_con_ids"
                                 nolabel="1"
                                 colspan="4"
-                                attrs="{'readonly':[('state','=','alumni')]}"
+                                readonly="state =='alumni'"
                             >
                                 <tree>
                                     <field name="relative_name" />
@@ -1313,13 +1329,13 @@
                                             <field
                                                 name="stu_name"
                                                 placeholder="Create or Select Name"
-                                                attrs="{'invisible':[('rel_name','!=','exist')]}"
-                                                options="{&quot;no_create&quot;: True}"
+                                                invisible="rel_name != 'exist'"
+                                                options="{'no_create': True}"
                                             />
                                             <field
                                                 name="name"
                                                 placeholder="Name"
-                                                attrs="{'invisible':[('rel_name','!=','new')]}"
+                                                invisible="rel_name != 'new'"
                                             />
                                             <field
                                                 name="relation"
@@ -1349,7 +1365,7 @@
                                     string="Remark"
                                     nolabel="1"
                                     colspan="4"
-                                    attrs="{'readonly':[('state','=','alumni')]}"
+                                    readonly="state == 'alumni'"
                                 />
                             </form>
                         </page>
@@ -1440,7 +1456,9 @@
     <record id="action_student_student_form_2" model="ir.actions.act_window">
         <field name="name">Admission Register</field>
         <field name="res_model">student.student</field>
-        <field name="domain">['|',('state','=','draft'),('state','=','cancel')]</field>
+        <field
+            name="domain"
+        >['|','|','|',('state','=','fees_received'),('state','=','verify_document'),('state','=','draft'),('state','=','cancel')]</field>
         <field name="view_id" ref="view_student_student_form_2" />
         <field name="search_view_id" ref="view_student_student_search_2" />
         <field name="view_mode">kanban,tree,form</field>

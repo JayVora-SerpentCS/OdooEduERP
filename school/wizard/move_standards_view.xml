@@ -16,7 +16,8 @@
                     </group>
                     <footer>
                         <button
-                        class="oe_highlight fa fa-plus"
+                        class="oe_highlight"
+                        icon="fa-plus"
                         name="move_start"
                         string="Move"
                         type="object"

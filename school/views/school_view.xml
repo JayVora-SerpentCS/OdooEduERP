@@ -69,44 +69,6 @@
                         <div
                             t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}} oe_kanban_global_click_edit oe_semantic_html_override"
                         >
-                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                <ul class="oe_dropdown_menu">
-                                    <li>
-                                        <a type="edit">Edit...</a>
-                                    </li>
-                                    <li>
-                                        <a type="delete">Delete</a>
-                                    </li>
-                                    <li>
-                                        <ul
-                                            class="oe_kanban_colorpicker"
-                                            data-field="color"
-                                        />
-                                    </li>
-                                </ul>
-                            </div>
-                            <div
-                                class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle"
-                            >
-                                <table class="oe_kanban_table">
-                                    <tr>
-                                        <td
-                                            class="oe_kanban_title1"
-                                            align="left"
-                                            valign="middle"
-                                            style="padding-left:10px;"
-                                        >
-                                            <h4>
-                                                <a type="open">
-                                                    <field name="date" />
-                                                    <field name="name" />
-                                                </a>
-                                            </h4>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <br />
-                            </div>
                             <div
                                 class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border"
                             >
@@ -122,6 +84,14 @@
                                                     <td>Name :</td>
                                                     <td style="padding-left:10px;">
                                                         <b>
+                                                            <field name="stu_id" />
+                                                        </b>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Title :</td>
+                                                    <td style="padding-left:10px;">
+                                                        <b>
                                                             <field name="name" />
                                                         </b>
                                                     </td>
@@ -134,34 +104,10 @@
                                                         </b>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Description : </td>
-                                                    <td style="padding-left:10px;">
-                                                        <b>
-                                                            <field name="description" />
-                                                        </b>
-                                                    </td>
-                                                </tr>
                                             </table>
                                         </td>
                                     </tr>
                                 </table>
-                            </div>
-                            <div
-                                class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick"
-                            >
-                                <div class="oe_kanban_left" style="margin-left:10px;">
-                                    <br />
-                                    <a
-                                        role="button"
-                                        string="Edit"
-                                        class="btn btn-sm btn-default fa fa-pencil"
-                                        type="edit"
-                                        aria-label="edit"
-                                        title="edit"
-                                    />
-                                </div>
-                                <br class="oe_kanban_clear" />
                             </div>
                         </div>
                     </t>
@@ -206,19 +152,30 @@
                                 domain="[('country_id','=',country_id)]"
                                 required="1"
                                 placeholder="State"
-                                options="{&quot;no_open&quot;: true}"
+                                options="{'no_open': true}"
                             />
                             <field name="zip" class="o_address_zip" placeholder="ZIP" />
                             <field
                                 name="country_id"
                                 class="o_address_city,oe_no_button"
                                 placeholder="Country"
-                                options="{&quot;no_open&quot;: true}"
+                                options="{'no_open': true}"
                                 required="1"
                             />
                         </div>
                     </group>
                     <group col="4" colspan="4">
+                        <field
+                            name="contact_phone"
+                            placeholder="Phone no"
+                            widget="phone"
+                        />
+                        <field
+                            name="contact_mobile"
+                            placeholder="Mobile no"
+                            widget="phone"
+                        />
+
                         <field
                             name="currency_id"
                             placeholder="Select Or Create Currency"
@@ -304,10 +261,7 @@
                         <field name="capacity" />
                         <field name="total_students" />
                         <field name="remaining_seats" />
-                        <field
-                            name="class_room_id"
-                            options="{&quot;no_create&quot;: True}"
-                        />
+                        <field name="class_room_id" options="{'no_create': True}" />
                         <field name="name" invisible="1" string="Name" />
                         <field
                             name="total_no_subjects"
@@ -340,13 +294,10 @@
                                 nolabel="1"
                                 colspan="4"
                                 string="Add Subjects"
-                                options="{&quot;no_create&quot;: True, &quot;no_edit&quot;: True, &quot;no_open&quot;: True}"
+                                options="{'no_create': True, 'no_edit': True, 'no_open': True}"
                             />
                         </page>
-                        <page
-                            string="Syllabus"
-                            attrs="{'invisible': [('total_no_subjects', '&lt;', 1)]}"
-                        >
+                        <page string="Syllabus" invisible="total_no_subjects &lt; 1">
                             <field
                                 name="syllabus_ids"
                                 nolabel="1"
@@ -370,7 +321,7 @@
                                         <field
                                             name="subject_id"
                                             required="1"
-                                            options="{&quot;no_open&quot;: True}"
+                                            options="{'no_open': True}"
                                         />
                                         <field name="syllabus_doc" required="1" />
                                     </group>
@@ -654,7 +605,7 @@
                         <field
                             name="grade_id"
                             placeholder="Grade System"
-                            options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            options="{'no_open': True, 'no_create': True}"
                             invisible="1"
                         />
                     </group>
@@ -664,7 +615,7 @@
                                 name="month_ids"
                                 nolabel="1"
                                 colspan="4"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                options="{'no_open': True, 'no_create': True}"
                             >
                                 <tree>
                                     <field name="name" />
@@ -725,7 +676,7 @@
                         <field
                             name="year_id"
                             placeholder="Year"
-                            options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                            options="{'no_open': True, 'no_create': True}"
                         />
                         <field
                             name="description"
@@ -897,20 +848,18 @@
                         />
                         <field
                             name="standard_id"
-                            options="{&quot;no_create&quot;: True}"
-                            attrs="{'invisible':[('is_elective_subject','!=',True)],'required':[('is_elective_subject','=',True)]}"
+                            options="{'no_create': True}"
+                            invisible=" not is_elective_subject "
+                            required="is_elective_subject"
                         />
                     </group>
                     <notebook colspan="4">
-                        <page
-                            string="Standards"
-                            attrs="{'invisible':[('is_elective_subject','=',True)]}"
-                        >
+                        <page string="Standards" invisible="is_elective_subject">
                             <field
                                 name="standard_ids"
                                 nolabel="1"
                                 colspan="4"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                options="{'no_open': True, 'no_create': True}"
                             >
                                 <tree>
                                     <field name="name" />
@@ -935,13 +884,10 @@
                                 name="teacher_ids"
                                 nolabel="1"
                                 colspan="4"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                options="{'no_open': True, 'no_create': True}"
                             />
                         </page>
-                        <page
-                            string="Students"
-                            attrs="{'invisible':[('is_elective_subject','!=',True)]}"
-                        >
+                        <page string="Students" invisible="not is_elective_subject ">
                             <field name="student_ids" />
                         </page>
                     </notebook>
@@ -960,6 +906,19 @@
                 <field name="maximum_marks" />
                 <field name="minimum_marks" />
             </tree>
+        </field>
+    </record>
+    <record id="view_subject_subject_search" model="ir.ui.view">
+        <field name="name">subject.subject.search</field>
+        <field name="model">subject.subject</field>
+        <field name="arch" type="xml">
+            <search string="Subject">
+                <filter
+                    string="Elective Subject"
+                    name="is_elective_subject"
+                    domain="[('is_elective_subject','=',True)]"
+                />
+            </search>
         </field>
     </record>
     <!-- Form View Of Standard Information -->
@@ -1074,7 +1033,8 @@
                 <header>
                     <button
                         string="Send Mail"
-                        class="btn btn-sm btn-default fa fa-envelope"
+                        class="btn btn-sm btn-default"
+                        icon="fa-envelope"
                         type="object"
                         name="news_update"
                         colspan="2"
@@ -1113,7 +1073,7 @@
                                 name="user_ids"
                                 nolabel="1"
                                 colspan="4"
-                                options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                options="{'no_open': True, 'no_create': True}"
                             />
                             </page>
                         </notebook>
@@ -1194,9 +1154,19 @@
         sequence="1"
     />
     <!-- MenuItem Of Admission Register -->
-    <menuitem id="admission_register" name="School" parent="menu_ems" sequence="2" />
-    <menuitem id="school_facilities" name="Facilities" parent="menu_ems" sequence="3" />
-    <menuitem id="school_schedule" name="Schedule" parent="menu_ems" sequence="4" />
+    <menuitem
+        id="admission_register"
+        name="School"
+        web_icon="school,static/description/menu_icons/icons_education.png"
+        sequence="2"
+    />
+    <!-- <menuitem id="school_facilities" name="Facilities" parent="menu_ems" sequence="3" /> -->
+    <menuitem
+        id="school_schedule"
+        name="Schedule"
+        web_icon="school,static/description/menu_icons/icons_schedule.png"
+        sequence="4"
+    />
     <menuitem
         id="menu_admission_form_root"
         name="Admission"
@@ -1246,16 +1216,17 @@
     <!-- MenuItem For Configurations -->
     <menuitem
         id="menu_configuration"
-        name="Configurations"
-        parent="menu_ems"
+        name="Academic Configurations"
+        web_icon="school,static/description/menu_icons/icons_configuration.png"
         sequence="13"
         groups="group_school_administration"
     />
     <!-- MenuItem For Configurations->School Configurations -->
     <menuitem
         id="menu_school_config_form1"
-        name="School Configurations"
-        parent="menu_configuration"
+        name="Configuration"
+        parent="admission_register"
+        sequence="199"
     />
     <menuitem
         id="menu_cast"

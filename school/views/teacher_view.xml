@@ -73,7 +73,7 @@
         <field name="arch" type="xml">
             <kanban nocreate="1" create="false">
                 <field name="color" />
-                <field name="phone" />
+                <!-- <field name="phone" /> -->
                 <templates>
                     <t t-name="kanban-box">
                     <div
@@ -103,9 +103,9 @@
                                         <li t-if="record.job_id.raw_value"><field
                                                     name="job_id"
                                                 /></li>
-                                        <li t-if="record.phone"><field
+                                        <!-- <li t-if="record.phone"><field
                                                     name="phone"
-                                                /></li>
+                                                /></li> -->
                                         <li t-if="record.work_email.raw_value"><field
                                                     name="work_email"
                                                 /></li>
@@ -151,7 +151,7 @@
                         name="image_1920"
                         widget="image"
                         class="oe_avatar"
-                        options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;avatar_128&quot;}"
+                        options="{'zoom': true, 'preview_image':'avatar_128'}"
                     />
                     <field name="company_id" invisible="1" />
                     <div class="oe_title">
@@ -189,7 +189,8 @@
                         />
                         <field
                             name='stu_parent_id'
-                            attrs="{'invisible':[('is_parent','=',False)],'required': [('is_parent','!=',False)]}"
+                            invisible="not is_parent"
+                            required="is_parent"
                         />
                     </group>
                     <notebook>
@@ -199,7 +200,7 @@
                                     <field
                                         name="address_id"
                                         context="{'show_address': 1}"
-                                        options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"
+                                        options="{'always_reload': True, 'highlight_first_line': True}"
                                         string="Work Address"
                                     />
                                     <field name="mobile_phone" />
@@ -230,7 +231,7 @@
                                 <group string="Citizenship &amp; Other Information">
                                     <field
                                         name="country_id"
-                                        options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                        options="{'no_open': True, 'no_create': True}"
                                     />
                                     <field
                                         name="identification_id"
@@ -240,14 +241,14 @@
                                         name="passport_id"
                                         groups="hr.group_hr_user"
                                     />
-                                    <field name="bank_account_id" />
+                                    <!-- <field name="bank_account_id" /> -->
                                 </group>
                                 <group string="Contact Information">
-                                    <field
+                                    <!-- <field
                                         name="address_home_id"
                                         context="{'show_address': 1}"
-                                        options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"
-                                    />
+                                        options="{'always_reload': True, 'highlight_first_line': True}"
+                                    /> -->
                                 </group>
                                 <group string="Status">
                                     <field name="gender" />
@@ -258,10 +259,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page
-                            string="Children"
-                            attrs="{'invisible': [('is_parent','=', False)]}"
-                        >
+                        <page string="Children" invisible="not is_parent">
                              <field
                                 name="student_id"
                                 domain="[('state', '=', 'done')]"

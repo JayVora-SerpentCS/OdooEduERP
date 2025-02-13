@@ -2,6 +2,8 @@
 
 import base64
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules import get_module_resource
@@ -28,12 +30,10 @@ class StudentStudent(models.Model):
     @api.model
     def _search(
         self,
-        args,
+        domain,
         offset=0,
         limit=None,
         order=None,
-        count=False,
-        access_rights_uid=None,
     ):
         """Method to get student of parent having group teacher"""
         teacher_group = self.env.user.has_group("school.group_school_teacher")
@@ -45,28 +45,28 @@ class StudentStudent(models.Model):
                 [("partner_id", "=", login_user_rec.partner_id.id)]
             )
             childrens = parent_login_stud_rec.student_id
-            args.append(("id", "in", childrens.ids))
-        return super(StudentStudent, self)._search(
-            args,
+            domain.append(("id", "in", childrens.ids))
+        return super()._search(
+            domain,
             offset=offset,
             limit=limit,
             order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
         )
 
     @api.depends("date_of_birth")
     def _compute_student_age(self):
         """Method to calculate student age"""
-        current_dt = fields.Date.today()
+        today = fields.Date.today()
         for rec in self:
+            birth_date = rec.date_of_birth
             rec.age = 0
-            if rec.date_of_birth and rec.date_of_birth < current_dt:
-                start = rec.date_of_birth
-                age_calc = (current_dt - start).days / 365
-                # Age should be greater than 0
-                if age_calc > 0.0:
-                    rec.age = age_calc
+            if birth_date:
+                age = (
+                    today.year
+                    - birth_date.year
+                    - ((today.month, today.day) < (birth_date.month, birth_date.day))
+                )
+                rec.age = age
 
     @api.model
     def _default_image(self):
@@ -100,7 +100,6 @@ class StudentStudent(models.Model):
         "student.family.contact",
         "family_contact_id",
         string="Family Contact Detail",
-        states={"done": [("readonly", True)]},
         help="Select the student family contact",
     )
     user_id = fields.Many2one(
@@ -155,24 +154,20 @@ class StudentStudent(models.Model):
     middle = fields.Char(
         "Middle Name",
         required=True,
-        states={"done": [("readonly", True)]},
         help="Enter student middle name",
     )
     last = fields.Char(
         "Surname",
         required=True,
-        states={"done": [("readonly", True)]},
         help="Enter student last name",
     )
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female")],
-        states={"done": [("readonly", True)]},
         help="Select student gender",
     )
     date_of_birth = fields.Date(
         "BirthDate",
         required=True,
-        states={"done": [("readonly", True)]},
         help="Enter student date of birth",
     )
     mother_tongue = fields.Many2one(
@@ -186,26 +181,22 @@ class StudentStudent(models.Model):
     maritual_status = fields.Selection(
         [("unmarried", "Unmarried"), ("married", "Married")],
         "Marital Status",
-        states={"done": [("readonly", True)]},
         help="Select student maritual status",
     )
     reference_ids = fields.One2many(
         "student.reference",
         "reference_id",
         "References",
-        states={"done": [("readonly", True)]},
         help="Enter student references",
     )
     previous_school_ids = fields.One2many(
         "student.previous.school",
         "previous_school_id",
         "Previous School Detail",
-        states={"done": [("readonly", True)]},
         help="Enter student school details",
     )
     doctor = fields.Char(
         "Doctor Name",
-        states={"done": [("readonly", True)]},
         help="Enter doctor name for student medical details",
     )
     designation = fields.Char(help="Enter doctor designation")
@@ -223,19 +214,19 @@ class StudentStudent(models.Model):
     dermatological = fields.Boolean(help="Dermatological for medical info")
     blood_pressure = fields.Boolean(help="Blood pressure for medical info")
     remark = fields.Text(
-        states={"done": [("readonly", True)]},
         help="Remark can be entered if any",
     )
     school_id = fields.Many2one(
         "school.school",
         "School",
-        states={"done": [("readonly", True)]},
         help="Select school",
         tracking=True,
     )
     state = fields.Selection(
         [
             ("draft", "Draft"),
+            ("verify_document", "Document Verification"),
+            ("fees_received", "Fees Received"),
             ("done", "Done"),
             ("terminate", "Terminate"),
             ("cancel", "Cancel"),
@@ -315,7 +306,6 @@ class StudentStudent(models.Model):
         "student_id",
         "students_parent_id",
         "Parent(s)",
-        states={"done": [("readonly", True)]},
         help="Enter student parents",
     )
     terminate_reason = fields.Text(
@@ -371,7 +361,7 @@ class StudentStudent(models.Model):
             vals.update(company_vals)
         if vals.get("email"):
             school.emailvalidation(vals.get("email"))
-        res = super(StudentStudent, self).create(vals)
+        res = super().create(vals)
         teacher = self.env["school.teacher"]
         for data in res.parent_id:
             for record in teacher.search([("stu_parent_id", "=", data.id)]):
@@ -393,25 +383,33 @@ class StudentStudent(models.Model):
         student to their respective teacher"""
         teacher = self.env["school.teacher"]
         if vals.get("parent_id"):
-            for parent in vals.get("parent_id")[0][2]:
+            for parent in vals.get("parent_id"):
                 for data in teacher.search([("stu_parent_id", "=", parent)]):
                     data.write({"student_id": [(4, self.id)]})
-        return super(StudentStudent, self).write(vals)
+        return super().write(vals)
 
     @api.constrains("date_of_birth")
     def check_age(self):
         """Method to check age should be greater than 6"""
-        if self.date_of_birth:
-            start = self.date_of_birth
-            age_calc = (fields.Date.today() - start).days / 365
-            # Check if age less than required age
-            if age_calc < self.school_id.required_age:
-                raise ValidationError(
-                    _(
-                        "Age of student should be greater than %s years!"
-                        % (self.school_id.required_age)
+        for rec in self:
+            if rec.date_of_birth:
+                if not rec.school_id.required_age:
+                    raise ValidationError(
+                        _(
+                            "Please set a default age for student "
+                            "enrollment in the school."
+                        )
                     )
+                start = rec.date_of_birth + relativedelta(
+                    years=rec.school_id.required_age
                 )
+                if start > fields.Date.today():
+                    raise ValidationError(
+                        _(
+                            "Age of student should be greater than %s years!"
+                            % (rec.school_id.required_age)
+                        )
+                    )
 
     @api.constrains("admission_date", "leave_date")
     def _check_date(self):
@@ -481,20 +479,16 @@ class StudentStudent(models.Model):
             reg_code = ir_sequence.next_by_code("student.registration")
             registation_code = (
                 str(rec.school_id.state_id.name)
-                + str("/")
+                + "/"
                 + str(rec.school_id.city)
-                + str("/")
+                + "/"
                 + str(rec.school_id.name)
-                + str("/")
+                + "/"
                 + str(reg_code)
             )
             stu_code = ir_sequence.next_by_code("student.code")
             student_code = (
-                str(rec.school_id.code)
-                + str("/")
-                + str(rec.year.code)
-                + str("/")
-                + str(stu_code)
+                str(rec.school_id.code) + "/" + str(rec.year.code) + "/" + str(stu_code)
             )
             rec.write(
                 {
@@ -541,3 +535,20 @@ class StudentStudent(models.Model):
                             force_send=True,
                         )
         return True
+
+    def verify_document(self):
+        self.state = "verify_document"
+        return {
+            "effect": {
+                "fadeout": "slow",
+                "message": _("Document verification done"),
+            }
+        }
+
+    def fees_received(self):
+        student_fees = self.env["student.payslip"].search(
+            [("student_id", "=", self.id), ("state", "=", "paid")]
+        )
+        if not student_fees:
+            raise UserError(_("Fees Payment are due"))
+        self.state = "fees_received"

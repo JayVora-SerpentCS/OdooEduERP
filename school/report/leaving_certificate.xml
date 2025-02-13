@@ -81,9 +81,7 @@
                                         <td
                                     style="font-family: 'Helvetica';font-size: 18px; border-bottom: 1px solid;padding-top:15px"
                                 >
-                                            <span t-field="stud.name" /> <span
-                                        t-field="stud.middle"
-                                    /> <span t-field="stud.last" />
+                                            <span t-field="stud.school_id.name" />
                                         </td>
                                     </tr>
                                     <tr>
