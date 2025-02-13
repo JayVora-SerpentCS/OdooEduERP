@@ -21,7 +21,8 @@
                 </field>
                 <footer>
                     <button
-                        class="btn btn-sm btn-default fa fa-book oe_highlight"
+                        class="btn btn-sm btn-default oe_highlight"
+                        icon="fa-book"
                         name='result_report'
                         type='object'
                         string='Result'

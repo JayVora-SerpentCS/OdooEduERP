@@ -17,46 +17,40 @@ class StudentStudent(models.Model):
     )
 
     def set_alumni(self):
-        """Override method to make exam results of student active false
-        when student is alumni"""
+        """Override method to make exam results of student inactive
+        when student is marked as alumni."""
         addexam_result_obj = self.env["additional.exam.result"]
         regular_examresult_obj = self.env["exam.result"]
+
         for rec in self:
-            addexam_result_rec = addexam_result_obj.search(
-                [("student_id", "=", rec.id)]
+            addexam_result_obj.search([("student_id", "=", rec.id)]).write(
+                {"active": False}
             )
-            regular_examresult_rec = regular_examresult_obj.search(
-                [("student_id", "=", rec.id)]
+            regular_examresult_obj.search([("student_id", "=", rec.id)]).write(
+                {"active": False}
             )
-            if addexam_result_rec:
-                addexam_result_rec.active = False
-            if regular_examresult_rec:
-                regular_examresult_rec.active = False
-        return super(StudentStudent, self).set_alumni()
+
+        return super().set_alumni()
 
     @api.model
     def _search(
         self,
-        args,
+        domain,
         offset=0,
         limit=None,
         order=None,
-        count=False,
-        access_rights_uid=None,
     ):
         """Override method to get exam of student selected."""
         if self._context.get("exam"):
             exam_obj = self.env["exam.exam"]
             exam_rec = exam_obj.browse(self._context.get("exam"))
             std_ids = [std_id.id for std_id in exam_rec.standard_id]
-            args.append(("standard_id", "in", std_ids))
-        return super(StudentStudent, self)._search(
-            args=args,
+            domain.append(("standard_id", "in", std_ids))
+        return super()._search(
+            domain=domain,
             offset=offset,
             limit=limit,
             order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
         )
 
 
@@ -89,7 +83,7 @@ class ExtendedTimeTable(models.Model):
                     raise ValidationError(
                         _("You cannot delete schedule of exam which is in running!")
                     )
-        return super(ExtendedTimeTable, self).unlink()
+        return super().unlink()
 
     @api.constrains("exam_timetable_line_ids")
     def _check_exam(self):
@@ -219,7 +213,8 @@ class ExtendedTimeTableLine(models.Model):
                     raise ValidationError(
                         _(
                             f"{self.class_room_id.name} is occupied by \
-                            {record.name} for {record.standard_id.standard_id.name} class!"
+                            {record.name} for \
+                            {record.standard_id.standard_id.name} class!"
                         )
                     )
 
@@ -234,6 +229,10 @@ class ExamExam(models.Model):
     def check_date_exam(self):
         """Method to check constraint of exam start date and end date."""
         for rec in self:
+            if rec.start_date < fields.date.today():
+                raise ValidationError(
+                    _("Exam date should be greater than today's date!")
+                )
             if rec.end_date < rec.start_date:
                 raise ValidationError(
                     _("Exam end date should be greater than start date!")
@@ -299,7 +298,7 @@ class ExamExam(models.Model):
         vals["exam_code"] = self.env["ir.sequence"].next_by_code("exam.exam") or _(
             "New"
         )
-        return super(ExamExam, self).create(vals)
+        return super().create(vals)
 
     def set_to_draft(self):
         """Method to set state to draft"""
@@ -445,7 +444,7 @@ class AdditionalExam(models.Model):
         vals["addtional_exam_code"] = self.env["ir.sequence"].next_by_code(
             "additional.exam"
         ) or _("New")
-        return super(AdditionalExam, self).create(vals)
+        return super().create(vals)
 
     @api.constrains("maximum_marks", "minimum_marks")
     def check_marks(self):
@@ -574,13 +573,13 @@ class ExamResult(models.Model):
         """Inherited the create method to assign the roll no and std"""
         if vals.get("student_id"):
             vals.update(self._update_rollno_standard(vals.get("student_id")))
-        return super(ExamResult, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
         """Inherited the write method to update the roll no and std"""
         if vals.get("student_id"):
             vals.update(self._update_rollno_standard(vals.get("student_id")))
-        return super(ExamResult, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         """Inherited the unlink method to check the state at the deletion."""
@@ -589,7 +588,7 @@ class ExamResult(models.Model):
                 raise ValidationError(
                     _("You can delete record in unconfirm state only!")
                 )
-        return super(ExamResult, self).unlink()
+        return super().unlink()
 
     @api.onchange("student_id")
     def onchange_student(self):
@@ -790,13 +789,13 @@ class AdditionalExamResult(models.Model):
         """Override create method to get roll no and standard"""
         if vals.get("student_id"):
             self._update_student_vals(vals)
-        return super(AdditionalExamResult, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
         """Override write method to get roll no and standard"""
         if vals.get("student_id"):
             self._update_student_vals(vals)
-        return super(AdditionalExamResult, self).write(vals)
+        return super().write(vals)
 
     @api.onchange("student_id")
     def onchange_student(self):

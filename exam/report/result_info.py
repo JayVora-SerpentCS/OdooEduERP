@@ -53,8 +53,8 @@ class ReportResultInfo(models.AbstractModel):
             if not student_search or rec.state == "draft":
                 raise ValidationError(
                     _(
-                        """You cannot print report for student
-in unconfirm state or when data is not found !"""
+                        "You cannot print report for student"
+                        "in unconfirm state or when data is not found !"
                     )
                 )
             return {

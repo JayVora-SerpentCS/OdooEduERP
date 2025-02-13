@@ -21,7 +21,7 @@
                         name="%(action_stu_result_form)d"
                         class="oe_inline oe_stat_button"
                         type="action"
-                        attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}"
+                        invisible="state in ['draft','terminate','alumni','cancel']"
                         groups="school.group_school_administration,school.group_school_teacher,school.group_school_student"
                     >
                         <img
@@ -106,28 +106,28 @@
                         name="set_to_draft"
                         string="Set to Draft"
                         type="object"
-                        states="cancelled"
+                        invisible="state != 'cancelled'"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
                     <button
                         name="set_running"
                         string="Start"
                         type="object"
-                        states="draft"
+                        invisible="state != 'draft'"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
                     <button
                         name="set_finish"
                         string="Finish"
                         type="object"
-                        states="running"
+                        invisible="state != 'running'"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
                     <button
                         name="set_cancel"
                         string="Cancel"
                         type="object"
-                        states="draft,running"
+                        invisible="state not in ['draft','running']"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
                     <field name="state" nolabel="1" widget="statusbar" string="State" />
@@ -138,12 +138,13 @@
                             name="generate_result"
                             string="Generate result"
                             type="object"
-                            class="oe_stat_button fa fa-graduation-cap"
-                            attrs="{'invisible':[('state','in',['draft','running','cancelled'])]}"
+                            class="oe_stat_button"
+                            icon="fa-graduation-cap"
+                            invisible="state in ['draft','running','cancelled']"
                             groups="school.group_school_teacher,school.group_school_administration"
                         />
                     </div>
-                    <group attrs="{'readonly': [('state','!=','draft')]}">
+                    <group readonly="state != 'draft'">
                         <separator string="Exam Detail" colspan="4" />
                         <group col="2">
                             <field name="exam_code" string="Exam Code" />
@@ -151,12 +152,12 @@
                                 name="grade_system"
                                 string="Grade System"
                                 required="1"
-                                attrs="{'readonly': [('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 widget="selection"
                             />
                             <field
                                 name="start_date"
-                                attrs="{'readonly': [('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 placeholder="Start Date"
                                 required="1"
                             />
@@ -165,7 +166,7 @@
                             <field
                                 name="name"
                                 placeholder="Exam Name"
-                                attrs="{'readonly': [('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="academic_year"
@@ -173,11 +174,11 @@
                                 placeholder="Select Academic Year.."
                                 widget="selection"
                                 required="1"
-                                attrs="{'readonly': [('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="end_date"
-                                attrs="{'readonly': [('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 placeholder="End Date"
                                 required="1"
                             />
@@ -191,8 +192,8 @@
                                     name="standard_id"
                                     nolabel="1"
                                     colspan="4"
-                                    attrs="{'readonly': [('state','!=','draft')]}"
-                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                    readonly="state != 'draft'"
+                                    options="{'no_open': True, 'no_create': True}"
                                 />
                             </page>
                             <page string="Exam Schedule">
@@ -200,25 +201,28 @@
                                     name="exam_schedule_ids"
                                     nolabel="1"
                                     colspan="4"
-                                    attrs="{'readonly': [('state','!=','draft')]}"
+                                    readonly="state != 'draft'"
                                     context="{'default_standard_ids':standard_id,'academic_year':academic_year}"
                                 >
                                     <tree editable="top">
-                                        <field name="standard_ids" invisible="1" />
+                                        <field
+                                            name="standard_ids"
+                                            column_invisible="1"
+                                        />
                                         <field
                                             name="standard_id"
                                             domain="[('standard_id', 'in', standard_ids)]"
                                             required="1"
-                                            options="{&quot;no_create&quot;: True}"
+                                            options="{'no_create': True}"
                                             string="Class"
                                         />
                                         <field
                                             name="timetable_id"
                                             required="1"
                                             domain="[('timetable_type','=','exam'),
-                                                                                         ('year_id','=',context.get('academic_year')),
-                                                                                         ('standard_id','=',standard_id)]"
-                                            options="{&quot;no_create&quot;: True}"
+                                                ('year_id','=',context.get('academic_year')),
+                                                ('standard_id','=',standard_id)]"
+                                            options="{'no_create': True}"
                                         />
                                     </tree>
                                 </field>
@@ -226,11 +230,7 @@
 
                         </notebook>
                     </group>
-                    <group
-                        col="6"
-                        colspan="4"
-                        attrs="{'readonly': [('state','!=','draft')]}"
-                    >
+                    <group col="6" colspan="4" readonly="state != 'draft'">
                         <field
                             name="create_date"
                             readonly="1"
@@ -278,15 +278,13 @@
                 />
             </xpath>
             <field name="timetable_ids" position="attributes">
-                <attribute
-                    name="attrs"
-                >{'invisible': [('timetable_type','!=','regular')]}</attribute>
+                <attribute name="invisible">timetable_type != 'regular'</attribute>
             </field>
             <field name="timetable_ids" position="after">
                 <field
                     name="exam_timetable_line_ids"
                     nolabel="1"
-                    attrs="{'invisible':[('timetable_type','!=','exam')]}"
+                    invisible="timetable_type != 'exam'"
                 >
                     <tree editable="top">
                         <field name="exm_date" required="1" />
@@ -320,7 +318,12 @@
     </record>
 
     <!-- Menu Items Of Exam -->
-    <menuitem id="menu_exam" name="Exams" parent="school.menu_ems" sequence="10" />
+    <menuitem
+        id="menu_exam"
+        name="Exams"
+        web_icon="school,static/description/menu_icons/icons_exam.png"
+        sequence="10"
+    />
     <menuitem
         id="regular_exams_details"
         name="Regular Exams"
@@ -503,25 +506,28 @@
                 <header>
                     <button
                         name="result_confirm"
-                        class="oe_stat_button fa fa-check"
+                        class="oe_stat_button"
+                        icon="fa-check"
                         string="Confirm"
-                        states="draft"
+                        invisible="state != 'draft'"
                         type="object"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
                     <button
                         name="result_re_evaluation"
-                        class="oe_stat_button fa fa-retweet"
+                        class="oe_stat_button"
+                        icon="fa-retweet"
                         string="Re-Evaluation"
-                        states="confirm,re-access,re-access_confirm"
+                        invisible="state not in ['confirm','re-access','re-access_confirm']"
                         type="object"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
                     <button
                         name="re_evaluation_confirm"
-                        class="oe_stat_button fa fa-refresh"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
                         string="Re-Evaluation Confirm"
-                        states="re-evaluation"
+                        invisible="state != 're-evaluation'"
                         type="object"
                         groups="school.group_school_administration,school.group_school_teacher"
                     />
@@ -540,7 +546,7 @@
                             placeholder="Select Examination"
                             widget="selection"
                             domain="[('state','=','finished')]"
-                            attrs="{'readonly' : [('state','!=','draft')]}"
+                            readonly="state != 'draft'"
                         />
                     </group>
                     <group>
@@ -550,7 +556,7 @@
                                 name="student_id"
                                 placeholder="Select Student"
                                 context="{'exam':s_exam_ids}"
-                                options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"
+                                options="{'no_create': True, 'no_open': True}"
                                 domain="[('state','!=','draft')]"
                                 readonly="1"
                             />
@@ -569,62 +575,65 @@
                                 string="Grade System"
                                 required="1"
                                 widget="selection"
-                                attrs="{'readonly' : [('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                         </group>
                     </group>
                     <field name="result_ids" nolabel="1" colspan="4">
                         <tree editable="bottom" create="false" delete="false">
+                            <!-- <field name="state"/> -->
                             <field
                                 name="subject_id"
                                 placeholder="Select Subject"
                                 options="{'no_create': True, 'no_open': True}"
-                                attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                                 required="1"
                             />
                             <field
                                 name="maximum_marks"
                                 string="Maximum Marks"
-                                attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                             />
                             <field
                                 name="minimum_marks"
                                 string="Minimum Marks"
-                                attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                             />
                             <field
                                 name="obtain_marks"
                                 string="Obtain Marks"
-                                attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                             />
                             <field name="state" invisible="1" />
                             <field name="grade_line_id" readonly="1" />
                             <field
                                 name="marks_reeval"
-                                attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])],'readonly':[('state','in',['re-evaluation_confirm'])]}"
+                                invisible="state not in ['re-evaluation','re-evaluation_confirm']"
+                                readonly="state in ['re-evaluation_confirm']"
                             />
                         </tree>
                         <form string="Subjects">
                             <group col="4">
                                 <field
                                     name="subject_id"
-                                    attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                    readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                                 />
                                 <field
                                     name="maximum_marks"
-                                    attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                    readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                                 />
                                 <field
                                     name="minimum_marks"
-                                    attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                    readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                                 />
                                 <field
                                     name="obtain_marks"
-                                    attrs="{'readonly':[('state','in',['confirm','re-evaluation','re-evaluation_confirm'])]}"
+                                    readonly="state in ['confirm','re-evaluation','re-evaluation_confirm']"
                                 />
                                 <field
                                     name="marks_reeval"
-                                    attrs="{'invisible':[('state','not in',['re-evaluation','re-evaluation_confirm'])],'readonly':[('state','in',['re-evaluation_confirm'])]}"
+                                    invisible="state not in ['re-evaluation','re-evaluation_confirm']"
+                                    readonly="state in ['re-evaluation_confirm']"
                                 />
                                 <field name="state" invisible="1" />
                                 <field name="grade_line_id" readonly="1" />
@@ -639,7 +648,7 @@
                         <group>
                             <field name="grade" string="Grade" />
                             <field name="result" string="Result" />
-                            <field name='active' invisible='1' string="Active" />
+                            <field name="active" invisible='1' string="Active" />
                         </group>
                     </group>
                 </sheet>
@@ -768,7 +777,8 @@
                                             string="Edit"
                                             role="button"
                                             title="Edit"
-                                            class="btn btn-sm btn-default fa fa-pencil"
+                                            class="btn btn-sm btn-default"
+                                            icon="fa-pencil"
                                             type="edit"
                                             groups="school.group_school_administration"
                                         />
@@ -851,10 +861,7 @@
             <form string="Results">
                 <sheet>
                     <group col="2" string="Result Information">
-                        <field
-                            name="a_exam_id"
-                            options="{&quot;no_create&quot;: True}"
-                        />
+                        <field name="a_exam_id" options="{'no_create': True}" />
                     </group>
                     <group string="Student Information">
                         <group>
@@ -862,7 +869,7 @@
                                 name="student_id"
                                 domain="[('state','=','done'), ('standard_id', '=', standard_id)]"
                                 context="{'a_exam':a_exam_id}"
-                                options="{&quot;no_create&quot;: True}"
+                                options="{'no_create': True}"
                             />
                             <field name="standard_id" string="Class" />
                         </group>
@@ -923,12 +930,27 @@
         <field name="context">{'default_timetable_type':'exam'}</field>
     </record>
     <menuitem
+        id="menu_timetable_1"
+        name="TimeTable"
+        parent="menu_exam"
+        groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
+        sequence="1"
+    />
+    <menuitem
         id="timetable_exam_regular_menu"
         name="Exam Timetable"
-        parent="timetable.menu_timetable_1"
+        parent="menu_timetable_1"
         action="timetable_exam_action"
         sequence="62"
         groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
+    />
+    <menuitem
+        id="menu_timetable_regular"
+        name="Regular Timetable"
+        parent="menu_timetable_1"
+        action="timetable.action_timetable_regular"
+        groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
+        sequence="61"
     />
 
     <!-- Actions Of Form & Tree Views Of Additional Result Information -->
