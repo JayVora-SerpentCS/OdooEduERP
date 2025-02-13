@@ -5,7 +5,7 @@ from odoo.tests import common
 
 class TestTimetable(common.TransactionCase):
     def setUp(self):
-        super(TestTimetable, self).setUp()
+        super().setUp()
         self.time_table_obj = self.env["time.table"]
         self.time_table_line_obj = self.env["time.table.line"]
         self.stander_id = self.env.ref("school.demo_standard_standard_2")

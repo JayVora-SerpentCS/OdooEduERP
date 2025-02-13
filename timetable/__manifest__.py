@@ -2,7 +2,7 @@
 
 {
     "name": "Timetable Management",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.,\
                Odoo Community Association (OCA)",
     "website": "http://www.serpentcs.com",
@@ -10,7 +10,7 @@
     "category": "School Management",
     "complexity": "easy",
     "summary": "A Module For Timetable Management In School",
-    "images": ["static/description/SchoolTimetable.png"],
+    "images": ["static/description/Banner_timetable_17.png"],
     "depends": ["school"],
     "data": [
         "security/timetable_security.xml",

@@ -39,7 +39,7 @@ class TimeTable(models.Model):
         [("regular", "Regular")],
         "Time Table Type",
         default="regular",
-        invisible=True,
+        # invisible=True,
         help="Select time table type",
     )
     user_ids = fields.Many2many(
@@ -64,6 +64,7 @@ class TimeTable(models.Model):
                         ("year_id", "=", record.year_id.id),
                         ("standard_id", "=", record.standard_id.id),
                         ("id", "!=", record.id),  # Exclude the current record
+                        ("timetable_type", "=", record.timetable_type),
                     ]
                 )
                 if existing_records:
@@ -93,7 +94,8 @@ class TimeTable(models.Model):
                     raise ValidationError(
                         _(
                             f"You cannot set lecture at same time {rec.start_time}"
-                            f"at same day {rec.week_day} for teacher {rec.teacher_id.name}.!"
+                            f"at same day {rec.week_day}"
+                            f"for teacher {rec.teacher_id.name}.!"
                         )
                     )
                 # Checks if time is greater than 24 hours than raise error
@@ -225,25 +227,21 @@ class SubjectSubject(models.Model):
     @api.model
     def _search(
         self,
-        args,
+        domain,
         offset=0,
         limit=None,
         order=None,
-        count=False,
-        access_rights_uid=None,
     ):
         """Override method to get subject related to teacher."""
         teacher_id = self._context.get("teacher_id")
         if teacher_id:
             for teacher_data in self.env["school.teacher"].browse(teacher_id):
-                args.append(("teacher_ids", "in", [teacher_data.id]))
-        return super(SubjectSubject, self)._search(
-            args=args,
+                domain.append(("teacher_ids", "in", [teacher_data.id]))
+        return super()._search(
+            domain=domain,
             offset=offset,
             limit=limit,
             order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
         )
 
     @api.constrains("minimum_marks")
