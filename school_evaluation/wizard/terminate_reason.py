@@ -16,4 +16,4 @@ class TerminateReasonEvaluation(models.TransientModel):
         )
         if student_eval_rec:
             student_eval_rec.active = False
-        return super(TerminateReasonEvaluation, self).save_terminate()
+        return super().save_terminate()

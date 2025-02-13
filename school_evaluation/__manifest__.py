@@ -2,13 +2,13 @@
 
 {
     "name": "Evaluation Management for Education ERP",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
     "category": "School Management",
     "license": "AGPL-3",
     "summary": "A Module For Evaluation Management In School",
-    "images": ["static/description/Evaluation1.jpg"],
+    "images": ["static/description/Banner_school_evaluation_17.jpg"],
     "depends": ["school", "rating"],
     "data": [
         "security/evaluation_security.xml",

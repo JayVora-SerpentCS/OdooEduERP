@@ -1,6 +1,5 @@
 # See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -75,7 +74,7 @@ class SchoolEvaluation(models.Model):
     @api.model
     def default_get(self, fields):
         """Override method to get default value of teacher"""
-        res = super(SchoolEvaluation, self).default_get(fields)
+        res = super().default_get(fields)
         if res.get("type") == "student":
             hr_emp_rec = self.env["school.teacher"].search(
                 [("user_id", "=", self._uid)]
@@ -84,32 +83,25 @@ class SchoolEvaluation(models.Model):
         return res
 
     @api.model
-    def fields_view_get(
-        self, view_id=None, viewtype="form", toolbar=False, submenu=False
-    ):
-        """Inherited this method to hide the create,edit button from list"""
-        res = super(SchoolEvaluation, self).fields_view_get(
-            view_id=view_id,
-            view_type=viewtype,
-            toolbar=toolbar,
-            submenu=submenu,
-        )
+    def _get_view(self, view_id=None, view_type="form", **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        arch = self.sudo().hide_create_write(arch, view_type=view_type)
+        return arch, view
+
+    def hide_create_write(self, view_node, view_type="form"):
+        doc = view_node
         teacher_group = self.env.user.has_group("school.group_school_teacher")
-        doc = etree.XML(res["arch"])
         if teacher_group:
-            if viewtype == "tree":
+            if view_type == "tree":
                 nodes = doc.xpath("//tree[@name='teacher_evaluation']")
                 for node in nodes:
                     node.set("create", "false")
                     node.set("edit", "false")
-                res["arch"] = etree.tostring(doc)
-            if viewtype == "form":
+            if view_type == "form":
                 nodes = doc.xpath("//form[@name='teacher_evaluation']")
                 for node in nodes:
                     node.set("create", "false")
                     node.set("edit", "false")
-                res["arch"] = etree.tostring(doc)
-        return res
 
     def get_record(self):
         """Method to get the evaluation questions"""
@@ -166,7 +158,7 @@ the Rating/Remarks are not added for all the Questions!"""
                 raise ValidationError(
                     _("""You can delete record in unconfirmed state only!""")
                 )
-        return super(SchoolEvaluation, self).unlink()
+        return super().unlink()
 
 
 class StudentEvaluationLine(models.Model):
@@ -226,22 +218,6 @@ class SchoolEvaluationTemplate(models.Model):
         "rating.rating", "template_id", "Rating", help="Rating"
     )
 
-    @api.constrains("rating_line")
-    def _check_rating(self):
-        for record in self:
-            ratings = record.rating_line.mapped("rating")
-            for rating in ratings:
-                duplicate = self.env["rating.rating"].search(
-                    [
-                        ("rating", "=", rating),
-                        ("template_id", "!=", record.id),  # Exclude current record
-                    ]
-                )
-                if duplicate:
-                    raise ValidationError(
-                        _("Rating %s already exists in another record") % rating
-                    )
-
 
 class RatingRating(models.Model):
     """Defining Rating."""
@@ -258,7 +234,7 @@ class RatingRating(models.Model):
             [("model", "=", "school.evaluation.template")]
         )
         vals.update({"res_model_id": res_model_rec.id})
-        res = super(RatingRating, self).create(vals)
+        res = super().create(vals)
         return res
 
     @api.depends("res_model", "res_id")
@@ -274,7 +250,7 @@ class RatingRating(models.Model):
             else:
                 name = self.env[rate.res_model].sudo().browse(rate.res_id).name_get()
                 rate.res_name = (
-                    name and name[0][1] or ("%s/%s") % (rate.res_model, rate.res_id)
+                    name and name[0][1] or (f"{rate.res_model} {rate.res_id}")
                 )
 
     @api.constrains("rating", "feedback")
@@ -283,6 +259,15 @@ class RatingRating(models.Model):
             raise ValidationError(
                 _("Please provide a rating greater than 0 and add Feedback.")
             )
+        duplicate = self.search_count(
+            [
+                ("rating", "=", self.rating),
+                ("id", "!=", self.id),
+                ("template_id", "=", self.template_id.id),
+            ]
+        )
+        if self.rating and duplicate > 1:
+            raise ValidationError(_("Rating already exists."))
 
 
 class StudentExtend(models.Model):
@@ -298,4 +283,4 @@ class StudentExtend(models.Model):
             )
             if student_eval_rec:
                 student_eval_rec.active = False
-        return super(StudentExtend, self).set_alumni()
+        return super().set_alumni()
