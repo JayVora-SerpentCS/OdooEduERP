@@ -119,7 +119,7 @@ class SchoolTeacherAssignment(models.Model):
         for rec in self:
             if rec.state != "draft":
                 raise ValidationError(_("""Confirmed assignment can not be deleted!"""))
-        return super(SchoolTeacherAssignment, self).unlink()
+        return super().unlink()
 
 
 class SchoolStudentAssignment(models.Model):
@@ -245,7 +245,7 @@ class SchoolStudentAssignment(models.Model):
         for rec in self:
             if rec.state != "draft":
                 raise ValidationError(_("""Confirmed assignment can not be deleted!"""))
-        return super(SchoolStudentAssignment, self).unlink()
+        return super().unlink()
 
 
 class FileFormat(models.Model):
@@ -270,11 +270,12 @@ class StudentStudent(models.Model):
             student_assign = student_assign_obj.search([("student_id", "=", rec.id)])
             if student_assign:
                 student_assign.active = False
-        return super(StudentStudent, self).set_alumni()
+        return super().set_alumni()
 
 
 class AssignmentRejctHistory(models.Model):
     _name = "assignment.reject.history"
+    _description = "Assignment Rejct History"
 
     name = fields.Text("Reason")
     user_id = fields.Many2one("res.users", string="User")

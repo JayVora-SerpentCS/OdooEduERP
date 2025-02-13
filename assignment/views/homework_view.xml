@@ -85,16 +85,19 @@
             <field name="arch" type="xml">
                 <form string="Assignment Information">
                     <header>
+                        <!-- states="draft" -->
                         <button
                         name="active_assignment"
-                        class="oe_stat_button fa fa-check"
-                        states="draft"
+                        class="oe_stat_button"
+                        icon="fa-check"
+                        invisible="state != 'draft'"
                         string="Active Assignment"
                         type="object"
                     />
+                        <!-- states="active" -->
                         <button
                         name="done_assignments"
-                        states="active"
+                        invisible="state != 'active'"
                         string="Done"
                         type="object"
                     />
@@ -106,13 +109,13 @@
                         <field
                             name="name"
                             placeholder="Assignment Name"
-                            attrs="{'readonly':[('state','!=','draft')]}"
+                            readonly="state != 'draft'"
                         />
                         <field
                             name="teacher_id"
                             placeholder="Teacher Name"
-                            attrs="{'readonly':[('state','!=','draft')]}"
-                            options="{&quot;no_create&quot;: True}"
+                            readonly="state != 'draft'"
+                            options="{'no_create': True}"
                         />
                     </group>
                     <group string="Subject and Dates">
@@ -121,7 +124,7 @@
                                 name="standard_id"
                                 select="1"
                                 placeholder="Class"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 widget="selection"
                                 required="1"
                             />
@@ -129,7 +132,7 @@
                                 name="subject_id"
                                 select="1"
                                 placeholder="Subject"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 domain="[('teacher_ids','in',teacher_id),('standard_ids','in',subject_standard_assignment)]"
                                 widget="selection"
                             />
@@ -139,30 +142,28 @@
                                 name="assign_date"
                                 string="assign_date"
                                 placeholder="Assign Date"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="due_date"
                                 string="due_date"
                                 placeholder="Due Date"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field name="subject_standard_assignment" invisible="1" />
                         </group>
                     </group>
                     <group string="Submission Format Information">
                         <group>
-                            <field
-                                name="type_submission"
-                                attrs="{'readonly':[('state','!=','draft')]}"
-                            />
+                            <field name="type_submission" readonly="state != 'draft'" />
                         </group>
                         <group>
                             <field
                                 name="file_format"
                                 string="file_format"
-                                attrs="{'invisible':[('type_submission','=','hardcopy')], 'required':[('type_submission','=','softcopy')] ,'readonly':[('state','!=','draft')]}
-                                "
+                                readonly="state != 'draft'"
+                                invisible="type_submission == 'hardcopy'"
+                                required="type_submission == 'softcopy'"
                             />
                         </group>
                     </group>
@@ -172,7 +173,7 @@
                             <field
                                 name="attached_homework"
                                 placeholder="Attachment File"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 filename="attach_files"
                             />
                         </group>
@@ -180,7 +181,7 @@
                             <field
                                 name="attach_files"
                                 invisible="1"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                         </group>
                     </group>
@@ -197,7 +198,7 @@
                                         type="object"
                                         icon="fa-check text-success"
                                         help="done assigment"
-                                        states="active"
+                                        invisible="state != 'active'"
                                     />
                                     <button
                                         name="reassign_assignment"
@@ -205,7 +206,7 @@
                                         type="object"
                                         icon="fa-recycle"
                                         help="Re-assign assigment"
-                                        states="reject"
+                                        invisible="state != 'reject'"
                                     />
                                     <button
                                         name="%(assignment.student_homework_reject)d"
@@ -213,7 +214,7 @@
                                         icon="fa-times-circle text-danger"
                                         help="reject assignment"
                                         type="action"
-                                        states="active"
+                                        invisible="state != 'active'"
                                     />
                                 </tree>
                             </field>
@@ -244,15 +245,16 @@
                     <header>
                         <button
                         name="active_assignment"
-                        class="oe_stat_button fa fa-check"
-                        states="draft"
+                        class="oe_stat_button"
+                        icon="fa-check"
+                        invisible="state != 'draft'"
                         string="Active"
                         type="object"
                         groups="school.group_school_teacher,school.group_school_administration"
                     />
                         <button
                         name="done_assignment"
-                        states="active"
+                        invisible="state != 'active'"
                         string="Done"
                         type="object"
                         groups="school.group_school_teacher,school.group_school_administration"
@@ -261,12 +263,12 @@
                         name="%(assignment.student_homework_reject)d"
                         string="Reject"
                         type="action"
-                        states="active"
+                        invisible="state != 'active'"
                         groups="school.group_school_teacher,school.group_school_administration"
                     />
                         <button
                         name="reassign_assignment"
-                        states="reject"
+                        invisible="state != 'reject'"
                         string="Re-Assign"
                         type="object"
                         groups="school.group_school_teacher, school.group_school_administration"
@@ -280,23 +282,23 @@
                             <field
                                 name="student_id"
                                 placeholder="Student"
-                                attrs="{'readonly':[('state','!=','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly="state != 'draft'"
+                                options="{'no_create': True}"
                                 domain="[('state','=','done')]"
                             />
                             <field name="stud_roll_no" invisible="1" />
                             <field
                                 name="teacher_id"
                                 placeholder="Teacher"
-                                attrs="{'readonly':[('state','!=','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly="state != 'draft'"
+                                options="{'no_create': True}"
                             />
                         </group>
                         <group>
                             <field
                                 name="name"
                                 placeholder="Assignment Name"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                         </group>
                     </group>
@@ -305,7 +307,7 @@
                             <field
                                 name="standard_id"
                                 placeholder="Class"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 widget="selection"
                             />
                         </group>
@@ -313,7 +315,7 @@
                             <field
                                 name="subject_id"
                                 placeholder="Subject"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                                 widget="selection"
                                 domain="[('teacher_ids','in',teacher_id),'|',('standard_ids','in',student_standard),('standard_id','=',student_standard)]"
                             />
@@ -325,7 +327,7 @@
                                 name="assign_date"
                                 string="assign_date"
                                 placeholder="Assign Date"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                         </group>
                         <group>
@@ -333,7 +335,7 @@
                                 name="due_date"
                                 string="due_date"
                                 placeholder="Due Date"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                         </group>
                     </group>
@@ -341,7 +343,7 @@
                             <field
                             name="attached_homework"
                             placeholder="Attachment File"
-                            attrs="{'readonly':[('state','!=','draft')]}"
+                            readonly="state != 'draft'"
                         />
                         </group>
                      <group string="Submission Details">
@@ -349,30 +351,30 @@
                             <field
                                 name="submission_type"
                                 string="Submission_type"
-                                attrs="{'readonly':[('state','!=','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="submit_assign"
                                 filename="file_name"
                                 string="File Name"
-                                attrs="{'invisible':[('submission_type','=','hardcopy')],
-                                   'readonly':[('state','!=','active')]}"
+                                readonly="state != 'active'"
+                                invisible="submission_type == 'hardcopy'"
                             />
 
                         </group>
                         <group>
                             <field
                                 name="attachfile_format"
-                                attrs="{'invisible':[('submission_type','=','hardcopy')],
-                                            'readonly':[('state','!=','draft')],
-                                            'required':[('submission_type','!=','hardcopy')]}"
+                                invisible="submission_type == 'hardcopy'"
+                                readonly="state != 'draft'"
+                                required="submission_type != 'hardcopy'"
                             />
                             <field name="file_name" invisible="1" />
                         </group>
                      </group>
                     <group
                         string="Rejection History"
-                        attrs="{'invisible':[('state','in',['draft','active','done'])]}"
+                        invisible="state in ['draft','active','done']"
                     >
                         <field
                             name="assignment_reject_history_ids"
@@ -512,7 +514,7 @@
                         name="%(action_school_student_assignment_form_btn)d"
                         type="action"
                         class="oe_stat_button"
-                        attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}"
+                        invisible="state in ['draft','terminate','alumni','cancel']"
                         groups="school.group_school_administration,school.group_school_teacher,school.group_school_student"
                     >
                             <img
@@ -542,7 +544,7 @@
         <menuitem
         id="menu_assignment"
         name="Assignment"
-        parent="school.menu_ems"
+        web_icon="school,static/description/menu_icons/icons_assignment.png"
         sequence="7"
     />
         <menuitem
