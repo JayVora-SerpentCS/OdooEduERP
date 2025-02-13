@@ -155,13 +155,13 @@ class LibraryCard(models.Model):
         """Inherited this method to assign student values at record creation"""
         if vals.get("student_id"):
             self._update_student_info(vals)
-        return super(LibraryCard, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
         """Inherited this method to update student values at record updation"""
         if vals.get("student_id"):
             self._update_student_info(vals)
-        return super(LibraryCard, self).write(vals)
+        return super().write(vals)
 
     @api.constrains("student_id", "teacher_id")
     def check_member_card(self):
@@ -209,7 +209,7 @@ class LibraryCard(models.Model):
         for rec in self:
             if rec.state == "running":
                 raise UserError(_("""You cannot delete a confirmed library card!"""))
-        return super(LibraryCard, self).unlink()
+        return super().unlink()
 
     def librarycard_expire(self):
         """Schedular to change in librarycard state when end date is over"""
@@ -278,6 +278,7 @@ class LibraryBookIssue(models.Model):
         default=lambda self: _("New"),
         help="Enter Issue No.",
     )
+    book_request_id = fields.Many2one("library.book.request", "Request ID")
     student_id = fields.Many2one(
         "student.student", "Student Name", help="Enter student"
     )
@@ -420,8 +421,8 @@ class LibraryBookIssue(models.Model):
         ):
             raise UserError(
                 _(
-                    """You cannot issue same book on same card more than once "
-                    "at same time!"""
+                    "You cannot issue same book on same card more than once "
+                    "at same time!"
                 )
             )
 
@@ -461,7 +462,7 @@ class LibraryBookIssue(models.Model):
             self._update_student_vals(vals)
         if vals.get("card_id") and vals.get("user") == "Teacher":
             self._update_teacher_vals(vals)
-        return super(LibraryBookIssue, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
         """Override write method"""
@@ -469,7 +470,7 @@ class LibraryBookIssue(models.Model):
             self._update_student_vals(vals)
         if vals.get("card_id") and vals.get("user") == "Teacher":
             self._update_teacher_vals(vals)
-        return super(LibraryBookIssue, self).write(vals)
+        return super().write(vals)
 
     def draft_book(self):
         """This method for books in draft state."""
@@ -576,6 +577,7 @@ class LibraryBookIssue(models.Model):
 
     def cancel_book(self):
         """This method used for cancel book issue."""
+        self.book_request_id.write({"state": "cancel"})
         self.state = "cancel"
 
     def user_fine(self):
@@ -780,6 +782,7 @@ class LibraryBookRequest(models.Model):
         default=True,
         help="Set active to false to hide the category without removing it.",
     )
+    book_issue_id = fields.Many2one("library.book.issue", "Book Issue")
 
     @api.constrains("card_id", "name")
     def check_book_request(self):
@@ -811,7 +814,7 @@ class LibraryBookRequest(models.Model):
         """Inherited method to generate sequence at record creation"""
         seq_obj = self.env["ir.sequence"]
         vals.update({"req_id": (seq_obj.next_by_code("library.book.request") or "New")})
-        return super(LibraryBookRequest, self).create(vals)
+        return super().create(vals)
 
     def draft_book_request(self):
         """Method to change state as draft"""
@@ -829,7 +832,13 @@ class LibraryBookRequest(models.Model):
         ):
             raise UserError(_("The Membership of library card is over!"))
         if self.type == "existing":
-            vals.update({"card_id": self.card_id.id, "name": self.name.id})
+            vals.update(
+                {
+                    "card_id": self.card_id.id,
+                    "book_request_id": self.id,
+                    "name": self.name.id,
+                }
+            )
         elif self.type == "ebook" and self.ebook_name:
             vals.update(
                 {
@@ -859,6 +868,7 @@ class LibraryBookRequest(models.Model):
         else:
             issue_id.write({"state": "draft"})
         self.state = "confirm"
+        self.book_issue_id = issue_id.id
         # changes state to confirm
         if issue_id:
             issue_id.onchange_card_issue()
@@ -881,7 +891,7 @@ class LibraryBookRequest(models.Model):
                         " request!"
                     )
                 )
-        return super(LibraryBookRequest, self).unlink()
+        return super().unlink()
 
     def cancle_book_request(self):
         """Method to change state as cancel"""
@@ -899,4 +909,4 @@ class StudentLibrary(models.Model):
             student_card_rec = lib_card_obj.search([("student_id", "=", rec.id)])
             if student_card_rec:
                 student_card_rec.active = False
-        return super(StudentLibrary, self).set_alumni()
+        return super().set_alumni()

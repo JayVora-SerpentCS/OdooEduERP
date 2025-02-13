@@ -38,11 +38,11 @@ class AccountPaymentRegister(models.TransientModel):
         """
         Override method to write paid amount in for library fine
         """
-        res = super(AccountPaymentRegister, self).action_create_payments()
+        res = super().action_create_payments()
         invoice = False
-        if self._context.get("active_model") == "account.move":
+        if self._context.get("active_model") == "account.move.line":
             invoice = self.env["account.move"].browse(
-                self._context.get("active_ids", [])
+                self._context.get("active_id", [])
             )
         if invoice.book_issue_id and invoice.payment_state == "paid":
             invoice.book_issue_id.penalty = 0.00

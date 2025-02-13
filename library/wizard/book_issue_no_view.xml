@@ -18,12 +18,12 @@
                <footer>
                    <group col="2">
                         <button
-                            class="fa fa-file"
+                            icon="fa-file"
                             name='create_new_books'
                             type='object'
                             string='Book'
                         />
-                        <button class="fa fa-ban" special='cancel' string='Cancel' />
+                        <button icon="fa-ban" special='cancel' string='Cancel' />
                    </group>
                </footer>
            </form>

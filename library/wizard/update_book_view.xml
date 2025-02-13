@@ -19,11 +19,11 @@
                     <group col="2">
                         <button
                             type='object'
-                            class="fa fa-check"
+                            icon="fa-check"
                             name='action_update_books'
                             string='Books'
                         />
-                        <button special='cancel' class="fa fa-ban" string='Cancel' />
+                        <button special='cancel' icon="fa-ban" string='Cancel' />
                    </group>
                    </footer>
                </form>

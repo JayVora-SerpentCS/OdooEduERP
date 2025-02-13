@@ -48,7 +48,7 @@ class ProductProduct(models.Model):
     @api.model
     def default_get(self, fields):
         """Overide method to get default category books"""
-        res = super(ProductProduct, self).default_get(fields)
+        res = super().default_get(fields)
         category = self.env["product.category"].search(
             [("name", "=", "Books")], limit=1
         )
@@ -113,7 +113,7 @@ class ProductProduct(models.Model):
                     vals["seller_ids"] = [supplier]
                 else:
                     vals["seller_ids"].append(supplier)
-        return super(ProductProduct, self).create(vals)
+        return super().create(vals)
 
     @api.depends("qty_available")
     def _compute_books_available(self):
