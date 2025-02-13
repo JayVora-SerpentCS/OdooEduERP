@@ -9,7 +9,7 @@ from odoo.tests import common
 
 class TestAttendance(common.TransactionCase):
     def setUp(self):
-        super(TestAttendance, self).setUp()
+        super().setUp()
         self.daily_attendance_obj = self.env["daily.attendance"]
         self.student_leave_request = self.env["studentleave.request"]
         self.teacher = self.env.ref("school.demo_school_teacher_2")

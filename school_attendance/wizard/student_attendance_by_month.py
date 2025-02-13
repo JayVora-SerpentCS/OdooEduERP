@@ -19,14 +19,11 @@ class StudentAttendanceByMonth(models.TransientModel):
     @api.model
     def default_get(self, fields):
         """Overriding DefaultGet."""
-        res = super(StudentAttendanceByMonth, self).default_get(fields)
+        res = super().default_get(fields)
         students = self.env["student.student"].browse(self._context.get("active_id"))
         if students.state == "draft":
             raise ValidationError(
-                _(
-                    """You can not print report for student in \
-unconfirm state!"""
-                )
+                _("You can not print report for student in " "unconfirm state!")
             )
         return res
 
@@ -56,7 +53,8 @@ unconfirm state!"""
             ):
                 raise ValidationError(
                     _(
-                        "There is no data of attendance for student in selected month or year!"
+                        "There is no data of attendance "
+                        "for student in selected month or year!"
                     )
                 )
         data = self.read([])[0]

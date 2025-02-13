@@ -1,16 +1,12 @@
 # See LICENSE file for full copyright and licensing details.
 
-import json
 import time
 from datetime import date, datetime
 
-from dateutil.relativedelta import relativedelta as rd
-from lxml import etree
 from num2words import num2words
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError, Warning as UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.exceptions import ValidationError
 
 
 class AttendanceSheet(models.Model):
@@ -59,82 +55,6 @@ class AttendanceSheet(models.Model):
                 ]
             rec.attendance_ids = stud_list
 
-    @api.model
-    def fields_view_get(
-        self, view_id=None, view_type="form", toolbar=False, submenu=False
-    ):
-        res = super(AttendanceSheet, self).fields_view_get(
-            view_id=view_id,
-            view_type=view_type,
-            toolbar=toolbar,
-            submenu=submenu,
-        )
-        start = self._context.get("start_date")
-        end = self._context.get("end_date")
-        st_dates = end_dates = False
-        if start:
-            st_dates = datetime.strptime(start, DEFAULT_SERVER_DATE_FORMAT)
-        if end:
-            end_dates = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
-        if view_type == "form":
-            digits_temp_dict = {
-                1: "one",
-                2: "two",
-                3: "three",
-                4: "four",
-                5: "five",
-                6: "six",
-                7: "seven",
-                8: "eight",
-                9: "nine",
-                10: "ten",
-                11: "eleven",
-                12: "twelve",
-                13: "thirteen",
-                14: "fourteen",
-                15: "fifteen",
-                16: "sixteen",
-                17: "seventeen",
-                18: "eighteen",
-                19: "nineteen",
-                20: "twenty",
-                21: "twentyone",
-                22: "twentytwo",
-                23: "twentythree",
-                24: "twentyfour",
-                25: "twentyfive",
-                26: "twentysix",
-                27: "twentyseven",
-                28: "twentyeight",
-                29: "twentynine",
-                30: "thirty",
-                31: "thirtyone",
-            }
-            flag = 1
-            if st_dates and end_dates:
-                while st_dates <= end_dates:
-                    res["fields"]["attendance_ids"]["views"]["tree"]["fields"][
-                        digits_temp_dict.get(flag)
-                    ]["string"] = st_dates.day
-                    st_dates += rd(days=1)
-                    flag += 1
-            if flag < 32:
-                res["fields"]["attendance_ids"]["views"]["tree"]["fields"][
-                    digits_temp_dict.get(flag)
-                ]["string"] = ""
-                doc2 = etree.XML(
-                    res["fields"]["attendance_ids"]["views"]["tree"]["arch"]
-                )
-                nodes = doc2.xpath(
-                    "//field[@name='" + digits_temp_dict.get(flag) + "']"
-                )
-                for node in nodes:
-                    node.set("modifiers", json.dumps({"invisible": True}))
-                res["fields"]["attendance_ids"]["views"]["tree"][
-                    "arch"
-                ] = etree.tostring(doc2)
-        return res
-
 
 class StudentleaveRequest(models.Model):
     """Defining Model Student Leave Request."""
@@ -156,12 +76,12 @@ class StudentleaveRequest(models.Model):
     def create(self, vals):
         if vals.get("student_id"):
             vals.update(self._update_vals(vals.get("student_id")))
-        return super(StudentleaveRequest, self).create(vals)
+        return super().create(vals)
 
     def write(self, vals):
         if vals.get("student_id"):
             vals.update(self._update_vals(vals.get("student_id")))
-        return super(StudentleaveRequest, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         """Inherited unlink method to give warning on record deletion"""
@@ -171,7 +91,7 @@ class StudentleaveRequest(models.Model):
                     raise ValidationError(_("""Approve leave can not be deleted!"""))
                 else:
                     raise ValidationError(_("""Reject leave can not be deleted!"""))
-        return super(StudentleaveRequest, self).unlink()
+        return super().unlink()
 
     @api.onchange("student_id")
     def onchange_student(self):
@@ -183,7 +103,9 @@ class StudentleaveRequest(models.Model):
 
     def approve_state(self):
         """Change state to approve."""
-        self.state = "approve"
+        leaves = self.filtered(lambda leave: leave.state == "toapprove")
+        if leaves:
+            self.state = "approve"
 
     def draft_state(self):
         """Change state to draft."""
@@ -191,7 +113,9 @@ class StudentleaveRequest(models.Model):
 
     def toapprove_state(self):
         """Change state to toapprove."""
-        self.state = "toapprove"
+        leaves = self.filtered(lambda leave: leave.state == "draft")
+        if leaves:
+            self.state = "toapprove"
 
     def reject_state(self):
         """Change state to reject."""
@@ -556,7 +480,7 @@ class DailyAttendance(models.Model):
                     line_vals.update({"is_absent": True})
             student_list.append((0, 0, line_vals))
         vals.update({"student_ids": student_list})
-        return super(DailyAttendance, self).create(vals)
+        return super().create(vals)
 
     def attendance_draft(self):
         """Change the state of attendance to draft"""
@@ -566,7 +490,7 @@ class DailyAttendance(models.Model):
 
         for rec in self:
             if not rec.date:
-                raise UserError(_("Please enter todays date."))
+                raise ValidationError(_("Please enter todays date."))
             year_search_ids = academic_year_obj.search([("code", "=", rec.date.year)])
             month_search_ids = academic_month_obj.search(
                 [("code", "=", rec.date.month)]

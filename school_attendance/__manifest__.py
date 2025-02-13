@@ -2,10 +2,10 @@
 
 {
     "name": "Attendance Management",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
-    "images": ["static/description/SchoolAttendance.png"],
+    "images": ["static/description/Banner_school_attendance_17.png"],
     "category": "School Management",
     "license": "AGPL-3",
     "summary": "A Module For Attendance Management In School",

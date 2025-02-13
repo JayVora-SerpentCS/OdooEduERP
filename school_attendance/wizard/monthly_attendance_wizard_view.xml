@@ -12,7 +12,7 @@
                             <field
                                 name="academic_year_id"
                                 required="1"
-                                options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}"
+                                options="{'no_create': True, 'no_open': True}"
                             />
                             <field name="month" required="1" />
                             <field name="month_str" required="1" invisible="1" />
@@ -23,14 +23,15 @@
                                 required="1"
                                 context="{'default_standard_id': id}"
                             />
-                                <!-- options="{&quot;no_create&quot;: True, &quot;no_open&quot;: True}" -->
+                                <!-- options="{'no_create': True, 'no_open': True}" -->
                                 <!-- domain="[('standard_id', '=', standard_name))]" -->
                             <field name="standard_name" />
                             <field name="is_elective_subject" />
                             <field
                                 name="subject_id"
-                                attrs="{'invisible':[('is_elective_subject','=', False)], 'required':[('is_elective_subject','!=', False)]}"
-                                options="{&quot;no_create&quot;: True}"
+                                invisible="not is_elective_subject"
+                                required="is_elective_subject"
+                                options="{'no_create': True}"
                                 domain="[('is_elective_subject', '=', True),('standard_id.name','=',standard_name)]"
                             />
                         </group>

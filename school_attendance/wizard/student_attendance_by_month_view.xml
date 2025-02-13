@@ -28,13 +28,13 @@
                     <group colspan="4">
                         <button
                             name="print_report"
-                            class="fa fa-check"
+                            icon="fa-check"
                             string="Print"
                             type="object"
                             colspan="1"
                         />
                         <button
-                            class="fa fa-ban"
+                            icon="fa-ban"
                             special="cancel"
                             string="Cancel"
                             colspan="1"
