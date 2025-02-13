@@ -11,7 +11,7 @@ class TerminateReasonTransport(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        res = super(TerminateReasonTransport, self).default_get(fields)
+        res = super().default_get(fields)
         student_rec = self.env["student.student"].browse(self._context.get("active_id"))
         student_transport_rec = self.env["transport.registration"].search(
             [

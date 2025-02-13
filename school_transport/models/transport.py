@@ -17,10 +17,11 @@ class FleetVehicle(models.Model):
     @api.depends("vehi_participants_ids")
     def _compute_participants(self):
         """Method to get number participant."""
-        for rec in self:
-            rec.participant_count = len(
-                rec.vehi_participants_ids.filtered(
-                    lambda r: r.vehicle_id.id == rec.id and r.state != "over"
+        for vehicle in self:
+            vehicle.participant_count = len(
+                vehicle.vehi_participants_ids.filtered(
+                    lambda participant: participant.vehicle_id.id == vehicle.id
+                    and participant.state != "over"
                 )
             )
 
@@ -73,12 +74,11 @@ class FleetVehicle(models.Model):
             student_obj = self.env["student.transport"]
             student_rec = student_obj.browse(self._context.get("name"))
             args += [("id", "in", student_rec.sudo().trans_vehicle_ids.ids)]
-        return super(FleetVehicle, self)._search(
+        return super()._search(
             args,
             offset=offset,
             limit=limit,
             order=order,
-            count=count,
             access_rights_uid=access_rights_uid,
         )
 
@@ -97,8 +97,8 @@ class ResPartner(models.Model):
         if driver_rec:
             raise ValidationError(
                 _(
-                    """ The licence number you have entered already exist.
-                Please enter different licence number!"""
+                    "The licence number you have entered already exist."
+                    "Please enter different licence number!"
                 )
             )
 
@@ -155,7 +155,6 @@ class TransportParticipant(models.Model):
         offset=0,
         limit=None,
         order=None,
-        count=False,
         access_rights_uid=None,
     ):
         """Inherited method to get domain from student transportation"""
@@ -173,11 +172,10 @@ class TransportParticipant(models.Model):
                         ],
                     )
                 )
-        return super(TransportParticipant, self)._search(
+        return super()._search(
             args,
             offset=offset,
             limit=limit,
-            count=count,
             access_rights_uid=access_rights_uid,
         )
 
@@ -190,7 +188,7 @@ class TransportParticipant(models.Model):
         for rec in self:
             if rec.state == "running":
                 raise ValidationError(_("You cannot delete record in running state!."))
-        return super(TransportParticipant, self).unlink()
+        return super().unlink()
 
 
 class StudentTransports(models.Model):
@@ -276,7 +274,8 @@ class StudentTransports(models.Model):
             if rec.start_date < new_dt or rec.end_date < new_dt:
                 raise ValidationError(
                     _(
-                        "Start date or End date should be greater than or equal to the current date!"
+                        "Start date or End date should be"
+                        " greater than or equal to the current date!"
                     )
                 )
 
@@ -292,7 +291,7 @@ class StudentTransports(models.Model):
                 raise ValidationError(
                     _("You can delete record in draft state or cancel state only!")
                 )
-        return super(StudentTransports, self).unlink()
+        return super().unlink()
 
 
 class StudentStudent(models.Model):
@@ -322,7 +321,7 @@ class StudentStudent(models.Model):
                 trans_regi_rec.state = "cancel"
             if trans_student_rec:
                 trans_student_rec.active = False
-        return super(StudentStudent, self).set_alumni()
+        return super().set_alumni()
 
 
 class TransportRegistration(models.Model):
@@ -433,7 +432,7 @@ class TransportRegistration(models.Model):
     @api.model
     def create(self, vals):
         """Inherited create method to call onchange methods"""
-        ret_val = super(TransportRegistration, self).create(vals)
+        ret_val = super().create(vals)
         if ret_val:
             ret_val.onchange_registration_month()
         return ret_val
@@ -448,7 +447,7 @@ class TransportRegistration(models.Model):
                         "state only!"
                     )
                 )
-        return super(TransportRegistration, self).unlink()
+        return super().unlink()
 
     def transport_fees_pay(self):
         """Method to generate invoice of participant."""
@@ -614,33 +613,35 @@ class AccountPaymentRegister(models.TransientModel):
         """
         Override method to write paid amount in hostel student
         """
-        res = super(AccountPaymentRegister, self).action_create_payments()
+        res = super().action_create_payments()
         invoice = False
         for rec in self:
-            if self._context.get("active_model") == "account.move":
+            if self._context.get("active_model") == "account.move.line":
                 invoice = self.env["account.move"].browse(
-                    self._context.get("active_ids", [])
+                    self._context.get("active_id", [])
                 )
-            vals = {}
-            if invoice.transport_student_id and invoice.payment_state == "paid":
-                fees_payment = invoice.transport_student_id.paid_amount + rec.amount
-                vals.update(
-                    {
-                        "state": "paid",
-                        "paid_amount": fees_payment,
-                        "remain_amt": 0.0,
-                        "tax_amount": invoice.amount_tax,
-                    }
-                )
-            elif invoice.transport_student_id and invoice.payment_state == "not_paid":
-                fees_payment = invoice.transport_student_id.paid_amount + rec.amount
-                vals.update(
-                    {
-                        "state": "pending",
-                        "paid_amount": fees_payment,
-                        "tax_amount": invoice.amount_tax,
-                        "remain_amt": invoice.amount_residual,
-                    }
-                )
-            invoice.transport_student_id.write(vals)
+                vals = {}
+                if invoice.transport_student_id and invoice.payment_state == "paid":
+                    fees_payment = invoice.transport_student_id.paid_amount + rec.amount
+                    vals.update(
+                        {
+                            "state": "paid",
+                            "paid_amount": fees_payment,
+                            "remain_amt": 0.0,
+                            "tax_amount": invoice.amount_tax,
+                        }
+                    )
+                elif (
+                    invoice.transport_student_id and invoice.payment_state == "not_paid"
+                ):
+                    fees_payment = invoice.transport_student_id.paid_amount + rec.amount
+                    vals.update(
+                        {
+                            "state": "pending",
+                            "paid_amount": fees_payment,
+                            "tax_amount": invoice.amount_tax,
+                            "remain_amt": invoice.amount_residual,
+                        }
+                    )
+                invoice.transport_student_id.write(vals)
         return res

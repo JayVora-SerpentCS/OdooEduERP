@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-        <!-- Form View Of Transfer Vehicle -->
-
-        <record id="transfer_vehicle_1" model="ir.ui.view">
-            <field name="name">transfer.vehicle</field>
-            <field name="model">transfer.vehicle</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Transfer Vehicle">
-                    <group colspan="4">
-                        <field name='name' />
-                        <field
+    <!-- Form View Of Transfer Vehicle -->
+    <record id="transfer_vehicle_1" model="ir.ui.view">
+        <field name="name">transfer.vehicle</field>
+        <field name="model">transfer.vehicle</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Transfer Vehicle">
+                <group colspan="4">
+                    <field name='name' />
+                    <field
                         name='participation_id'
                         context="{'name':name}"
                         domain="[('name','=',name)]"
                     />
-                        <field name='root_id' />
-                        <field name='old_vehicle_id' />
-                        <field name='new_vehicle_id' context="{'name':root_id}" />
-                    </group>
-                    <separator colspan="4" />
-                    <footer>
-                        <group>
-                            <button
+                    <field name='root_id' />
+                    <field name='old_vehicle_id' />
+                    <field name='new_vehicle_id' context="{'name':root_id}" />
+                </group>
+                <separator colspan="4" />
+                <footer>
+                    <group>
+                        <button
                             name="vehicle_transfer"
                             string="Transfer"
-                            class="fa fa-check"
+                            icon="fa-check"
                             type="object"
                             colspan="1"
                         />
-                           <button
+                        <button
                             special="cancel"
                             string="Close"
-                            class="fa fa-ban"
+                            icon="fa-ban"
                             colspan="1"
                         />
-                        </group>
-                    </footer>
-                    </form>
-            </field>
-        </record>
+                    </group>
+                </footer>
+                </form>
+        </field>
+    </record>
 
-        <!-- Action Of Transfer Vehicle -->
-
+    <!-- Action Of Transfer Vehicle -->
     <record id="act_transfer_vehicle" model="ir.actions.act_window">
         <field name="name">Transfer Vehicle</field>
         <field name="res_model">transfer.vehicle</field>

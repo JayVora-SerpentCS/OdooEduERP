@@ -23,6 +23,7 @@
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
         <field name="arch" type="xml">
+            <!-- TODO: Open comment fields code. -->
             <field name="driver_id" position="attributes">
                 <attribute name="domain">[('is_driver','=',True)]</attribute>
             </field>
@@ -78,7 +79,7 @@
                     <button
                         name="set_over"
                         string="Over"
-                        states="running"
+                        invisible="state in 'over'"
                         type='object'
                         groups="school.group_school_administration,school_transport.group_transportation_manager"
                     />
@@ -174,17 +175,17 @@
                 <header>
                     <button
                         name="transport_open"
-                        class="fa fa-folder-open"
+                        icon="fa-folder-open"
                         string="Open"
-                        states="draft"
+                        invisible="state in ('open','close')"
                         type='object'
                         groups="school.group_school_administration,school_transport.group_transportation_manager"
                     />
                     <button
                         name="transport_close"
-                        class="fa fa-folder-close"
+                        icon="fa-folder-close"
                         string="Close"
-                        states="open"
+                        invisible="state in ('close','draft')"
                         type='object'
                         groups="school.group_school_administration,school_transport.group_transportation_manager"
                     />
@@ -196,28 +197,28 @@
                     <field
                             name="name"
                             placeholder="Route Name"
-                            attrs="{'readonly':[('state','=','close')]}"
+                            readonly="state == 'close'"
                         />
                     <field
                             name="contact_per_id"
                             placeholder="Contact Person"
-                            attrs="{'readonly':[('state','=','close')]}"
-                            options="{&quot;no_create&quot;: True}"
+                            readonly="state == 'close'"
+                            options="{'no_create': True}"
                         />
                     <field
                             name="start_date"
                             string='Start Date'
                             placeholder="Start Date"
-                            attrs="{'readonly':[('state','=','close')]}"
+                            readonly="state == 'close'"
                         />
                     <field
                             name="end_date"
                             string='End Date'
                             placeholder="End Date"
-                            attrs="{'readonly':[('state','=','close')]}"
+                            readonly="state == 'close'"
                         />
                     <field name="total_participantes" readonly="1" />
-                    <field name="amount" attrs="{'readonly':[('state','=','close')]}" />
+                    <field name="amount" readonly="state == 'close'" />
                 </group>
                 <notebook colspan="4">
                     <page string="Vehicles">
@@ -225,8 +226,8 @@
                             <field
                                 name="trans_vehicle_ids"
                                 nolabel='1'
-                                attrs="{'readonly':[('state','not in','draft')]}"
-                                options="{&quot;no_create&quot;: True}"
+                                readonly="state != 'draft'"
+                                options="{'no_create': True}"
                             />
                     </page>
                     <page string="Participants">
@@ -335,23 +336,23 @@
                 <header>
                     <button
                         name="trans_regi_confirm"
-                        class="fa fa-check"
+                        icon="fa-check"
                         string="Confirm"
-                        states="draft"
                         type='object'
+                        invisible="state in ('confirm','pending','cancel','paid')"
                     />
                     <button
                         name="trans_regi_cancel"
-                        class="fa fa-ban"
+                        icon="fa-ban"
                         string="Cancel"
                         type='object'
-                        attrs="{'invisible':['|',('transport_user','=',True),('state','in' ,('draft','cancel','paid'))]}"
+                        invisible="transport_user == True or state in ('draft','cancel','paid')"
                     />
                     <button
                         name="transport_fees_pay"
                         string="Payment"
                         type="object"
-                        states="confirm"
+                        invisible="state in ('draft','pending','cancel','paid')"
                         groups="school_transport.group_transportation_manager"
                     />
                     <field
@@ -370,7 +371,7 @@
                             type="object"
                             widget="stateinfo"
                             class="oe_stat_button"
-                            states="pending,paid"
+                            invisible="state in ('draft','confire','cancel')"
                             groups="school_transport.group_transportation_manager"
                         >
                             <div class="o_stat_info">
@@ -383,26 +384,27 @@
                             </div>
                         </button>
                    </div>
-                    <group attrs="{'readonly':[('state','!=','draft')]}">
+                    <group readonly="state != 'draft'">
                        <separator string="Transport Registration" colspan="4" />
                         <group>
                             <field name="transport_user" invisible="1" />
                             <field
                                 name="student_id"
                                 placeholder="Enter Participant Name"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                                 domain="[('state','=','done')]"
-                                options="{&quot;no_create&quot;: True}"
+                                options="{'no_create': True}"
                             />
                             <field
                                 name="vehicle_id"
-                                attrs="{'invisible':[('name','=',False)],'readonly':[('state','not in','draft')]}"
+                                invisible="name == False"
+                                readonly="state != 'draft'"
                                 context="{'name':name}"
-                                options="{&quot;no_create&quot;: True}"
+                                options="{'no_create': True}"
                             />
                             <field
                                 name="registration_month"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field
                                 name="paid_amount"
@@ -414,13 +416,13 @@
                             <field
                                 name="name"
                                 placeholder="Enter Transport Route Name"
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                                 options="{'no_create': True, 'no_open': True}"
                             />
                             <field
                                 name="monthly_amount"
                                 string='Monthly Amount'
-                                attrs="{'readonly':[('state','not in','draft')]}"
+                                readonly="state != 'draft'"
                             />
                             <field name="transport_fees" string='Transport Fees' />
                             <field name="remain_amt" readonly="1" />
@@ -524,18 +526,18 @@
     </record>
 
     <!-- Overrite the EMS Menu and Added the Transport manager and user groups -->
-    <menuitem
+    <!-- <menuitem
         id="school.menu_ems"
         name="EMS"
         sequence="1"
         groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,group_transportation_manager,group_transportation_user"
-    />
+    /> -->
 
     <!--Menu Items for Transport  -->
     <menuitem
         id="menu_transport"
         name="Transport"
-        parent="school.school_facilities"
+        web_icon="school,static/description/menu_icons/icons_transport.png"
         sequence="3"
         groups="group_transportation_manager,group_transportation_user"
     />
@@ -564,14 +566,14 @@
         groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"
     />
     <!-- <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="13" groups="group_school_administration" /> -->
-    <menuitem
+    <!-- <menuitem
         name="Fleet"
         parent="school.menu_ems"
         id="fleet_vehicles"
         sequence="9"
         groups="fleet.fleet_group_user"
-    />
-        <menuitem
+    /> -->
+        <!-- <menuitem
         action="fleet.fleet_vehicle_action"
         parent="fleet_vehicles"
         name="Fleet"
@@ -599,7 +601,7 @@
         id="fleet_vehicle_odometer_menu"
         groups="fleet.fleet_group_user"
         sequence="10"
-    />
+    /> -->
     <menuitem
         id="menu_fleet_configuration"
         name="Fleet Configuration"

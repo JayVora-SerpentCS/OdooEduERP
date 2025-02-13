@@ -20,7 +20,7 @@ class TransferVehicle(models.TransientModel):
     def default_get(self, fields):
         """Override method to get student."""
         active_id = self._context.get("active_id")
-        result = super(TransferVehicle, self).default_get(fields)
+        result = super().default_get(fields)
         if active_id:
             student = self.env["student.student"].browse(active_id)
             if "name" in fields:
