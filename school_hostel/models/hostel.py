@@ -64,12 +64,10 @@ class HostelType(models.Model):
     @api.model
     def _search(
         self,
-        args,
+        domain,
         offset=0,
         limit=None,
         order=None,
-        count=False,
-        access_rights_uid=None,
     ):
         """Override method to get hostel of student selected"""
         if self._context.get("student_id"):
@@ -91,14 +89,12 @@ class HostelType(models.Model):
                 data = self._cr.fetchall()
                 for d in data:
                     datas.append(d[0])
-            args.append(("id", "in", datas))
-        return super(HostelType, self)._search(
-            args,
+            domain.append(("id", "in", datas))
+        return super()._search(
+            domain,
             offset=offset,
             limit=limit,
             order=order,
-            count=count,
-            access_rights_uid=access_rights_uid,
         )
 
 
@@ -318,7 +314,7 @@ class HostelStudent(models.Model):
     def create(self, vals):
         """This method is to set Discharge Date according to values added in
         admission date or duration fields."""
-        res = super(HostelStudent, self).create(vals)
+        res = super().create(vals)
         res.discharge_date = res.admission_date + rd(months=res.duration)
         return res
 
@@ -336,7 +332,7 @@ class HostelStudent(models.Model):
             duration_months = vals.get("duration") or self.duration
             discharge_date = addmissiondate + rd(months=duration_months)
             vals.update({"discharge_date": discharge_date})
-        return super(HostelStudent, self).write(vals)
+        return super().write(vals)
 
     def unlink(self):
         """Inherited unlink method to make check state at record deletion"""
@@ -344,7 +340,7 @@ class HostelStudent(models.Model):
         for rec in self:
             if rec.status in status_list:
                 raise ValidationError(_("You can delete record in unconfirmed state!"))
-        return super(HostelStudent, self).unlink()
+        return super().unlink()
 
     @api.constrains("student_id")
     def check_student_registration(self):
@@ -478,12 +474,12 @@ class AccountPaymentRegister(models.TransientModel):
         """
         Override method to write paid amount in hostel student
         """
-        res = super(AccountPaymentRegister, self).action_create_payments()
+        res = super().action_create_payments()
         inv = False
         for rec in self:
-            if self._context.get("active_model") == "account.move":
+            if self._context.get("active_model") == "account.move.line":
                 inv = self.env["account.move"].browse(
-                    self._context.get("active_ids", [])
+                    self._context.get("active_id", [])
                 )
             vals = {}
             if inv.hostel_student_id and inv.payment_state == "paid":
@@ -529,4 +525,4 @@ class Student(models.Model):
             if student_hostel_rec:
                 student_hostel_rec.active = False
                 student_hostel_rec.room_id._compute_check_availability()
-        return super(Student, self).set_alumni()
+        return super().set_alumni()

@@ -2,7 +2,7 @@
 
 {
     "name": "Hostel Management for Education ERP",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
     "website": "http://www.serpentcs.com",
@@ -10,7 +10,7 @@
     "complexity": "easy",
     "summary": "Module For HOSTEL Management In School",
     "depends": ["school"],
-    "images": ["static/description/SchoolHostel.png"],
+    "images": ["static/description/Banner_school_hostel_17.png"],
     "data": [
         "security/hostel_security.xml",
         "security/ir.model.access.csv",
@@ -23,4 +23,5 @@
     ],
     "demo": ["demo/school_hostel_demo.xml"],
     "installable": True,
+    "application": True,
 }

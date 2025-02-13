@@ -30,7 +30,7 @@
                         <newline />
                         <field
                             name="rector"
-                            options="{&quot;no_create&quot;: True}"
+                            options="{'no_create': True}"
                             domain="[('is_hostel_rector','=',True)]"
                         />
                     </group>
@@ -136,7 +136,7 @@
     <menuitem
         id="hostel_main_menu"
         name="Hostel"
-        parent="school.school_facilities"
+        web_icon="school,static/description/menu_icons/icons_hostel.png"
         sequence="2"
         groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"
     />
@@ -159,11 +159,7 @@
                 <sheet style="width: 10%%,height:10%%">
                     <separator string="Room Information" />
                     <group col="4">
-                        <field
-                            name="name"
-                            required="1"
-                            options="{&quot;no_create&quot;: True}"
-                        />
+                        <field name="name" required="1" options="{'no_create': True}" />
                         <field name="floor_no" />
                         <field name="room_no" />
                         <field name="student_per_room" />
@@ -237,34 +233,34 @@
                         string="Reservation"
                         type="object"
                         groups="school.group_school_administration,school_hostel.group_hostel_manager"
-                        attrs="{'invisible':[('status','in',['paid','reservation','cancel','pending','discharge'])]}"
+                        invisible="status in ['paid','reservation','cancel','pending','discharge']"
                     />
                     <button
                         name="print_fee_receipt"
                         string="Print Fee Slip"
                         type="object"
                         groups="school.group_school_administration,school_hostel.group_hostel_manager"
-                        attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"
+                        invisible="status in ['draft','reservation','cancel','discharge']"
                     />
                     <button
                         name="cancel_state"
                         string="Cancel"
                         type="object"
                         groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"
-                        attrs="{'invisible':[('status','in',['paid','cancel','reservation','discharge'])]}"
+                        invisible="status in ['paid','cancel','reservation','discharge']"
                     />
                     <button
                         name="pay_fees"
                         string="Payment"
                         type="object"
                         groups="school.group_school_administration,school_hostel.group_hostel_manager"
-                        attrs="{'invisible':[('status','in',['draft','paid','cancel','pending','discharge'])]}"
+                        invisible="status in ['draft','paid','cancel','pending','discharge']"
                     />
                     <button
                         name="discharge_state"
                         string="Discharge"
                         type="object"
-                        attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"
+                        invisible="status in ['draft','reservation','cancel','discharge']"
                         groups="school_hostel.group_hostel_manager"
                     />
                     <field
@@ -283,7 +279,7 @@
                             widget="stateinfo"
                             class="oe_stat_button"
                             type="object"
-                            attrs="{'invisible':[('status','in',['draft','reservation','cancel','discharge'])]}"
+                            invisible="status in ['draft','reservation','cancel','discharge']"
                             groups="school_hostel.group_hostel_manager"
                         >
                             <div class="o_stat_info">
@@ -300,36 +296,36 @@
                     <group col="4">
                         <field
                             name="student_id"
-                            attrs="{'readonly':[('status','not in','draft')]}"
+                            readonly="status != 'draft'"
                             domain="[('state','=','done')]"
                             required="1"
-                            options="{&quot;no_create&quot;: True}"
+                            options="{'no_create': True}"
                         />
                         <field name="hostel_id" readonly="1" />
                         <field
                             name="hostel_info_id"
                             required="1"
-                            attrs="{'readonly':[('status','not in','draft')]}"
-                            options="{&quot;no_create&quot;: True}"
+                            readonly="status != 'draft'"
+                            options="{'no_create': True}"
                             context="{'student_id':student_id}"
                         />
                         <field
                             name="room_id"
                             domain="[('name','=',hostel_info_id),('availability','&gt;=',1)]"
                             required="1"
-                            attrs="{'readonly':[('status','not in','draft')]}"
-                            options="{&quot;no_create&quot;: True}"
+                            readonly="status != 'draft'"
+                            options="{'no_create': True}"
                         />
                         <field
                             name="admission_date"
                             required="1"
-                            attrs="{'readonly':[('status','not in','draft')]}"
+                            readonly="status not in 'draft'"
                         />
                         <field
                             name="duration"
                             string='Duration'
                             required="1"
-                            attrs="{'readonly':[('status','not in','draft')]}"
+                            readonly="status != 'draft'"
                         />
                         <field name="discharge_date" readonly="1" />
                         <field name="room_rent" readonly="1" />
@@ -338,15 +334,13 @@
                         <field
                             name="paid_amount"
                             string='Paid Amount'
-                            readonly="1"
-                            attrs="{'readonly':[('status','not in','draft')]}"
+                            readonly="status != 'draft' or 1"
                         />
                         <field name="acutal_discharge_date" readonly="1" />
                         <field
                             name="remaining_amount"
                             string='Remaining Amount'
-                            readonly="1"
-                            attrs="{'readonly':[('status','not in','draft')]}"
+                            readonly="status != 'draft' or 1"
                         />
                         <field name='active' invisible='1' string='Active' />
                     </group>
@@ -459,7 +453,7 @@
                         name="%(action_hostel_student_button)d"
                         type="action"
                         class="oe_right oe_stat_button"
-                        attrs="{'invisible':[('state', 'in', ['draft','terminate','alumni','cancel'])]}"
+                        invisible="state in ['draft','terminate','alumni','cancel']"
                         groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"
                     >
                         <img
@@ -486,11 +480,7 @@
                     position="before"
                 >
                     <field name="hostel_student_id" invisible="1" />
-                    <field
-                        name="hostel_ref"
-                        readonly="1"
-                        attrs="{'invisible': [('hostel_ref', '=', False)]}"
-                    />
+                    <field name="hostel_ref" readonly="1" invisible="not hostel_ref" />
                 </xpath>
             </data>
         </field>
@@ -552,7 +542,7 @@
     <menuitem
         id="hostel_rector_menu"
         name="Hostel Rector"
-        parent="menu_hostel"
+        parent="hostel_main_menu"
         action="menu_hostel_rector_action"
     />
 </odoo>
