@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError
 class SchoolStandard(models.Model):
     _name = "school.standard"
     _inherit = "school.standard"
-    _rec_name = "event_ids"
 
     event_ids = fields.Many2many(
         "event.event",
@@ -54,6 +53,7 @@ class EventRegistration(models.Model):
     @api.onchange("part_name_id")
     def onchange_student_standard(self):
         """Onchange method for participant"""
+
         self.student_standard_id = self.part_name_id.standard_id.id
 
     def action_set_draft(self):
@@ -65,4 +65,4 @@ class EventRegistration(models.Model):
                         "event is ended!"
                     )
                 )
-        return super(EventRegistration, self).action_set_draft()
+        return super().action_set_draft()

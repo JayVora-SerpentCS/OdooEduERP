@@ -9,15 +9,6 @@
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <field name="event_type" string='Event Type' />
             </xpath>
-            <xpath expr="//field[@name='user_id']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//field[@name='user_id']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//field[@name='organizer_id']" position="attributes">
-                <field name="string">Supervisor</field>
-            </xpath>
             <xpath expr="//page[@name='event_notes']" position="after">
                 <page string="Participants">
                     <field name="part_standard_ids" />
@@ -32,14 +23,11 @@
         <field name="model">event.registration</field>
         <field name="inherit_id" ref="event.view_event_registration_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">0</attribute>
-            </xpath>
             <xpath expr="//field[@name='name']" position="before">
                 <field
                     name="part_name_id"
                     domain="[('state','=','done')]"
-                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                    options="{'no_open': True, 'no_create': True}"
                 />
                 <field name="student_standard_id" />
             </xpath>

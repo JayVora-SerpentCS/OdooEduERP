@@ -46,7 +46,6 @@
     </record>
 
     <!--school.event.registration-->
-
     <record id="event_registration_1" model="event.registration">
         <field name="name">John William - Hockey(Demo-1)</field>
         <field name="event_id" ref="school_event_1" />
