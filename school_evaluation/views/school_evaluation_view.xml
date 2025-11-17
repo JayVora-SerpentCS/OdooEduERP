@@ -5,7 +5,7 @@
     <record id="action_student_eval_form" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field
             name="context"
@@ -15,7 +15,7 @@
     <record id="action_student_eval_form_actions" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field
             name="context"
@@ -54,13 +54,13 @@
         <field name="name">school.evaluation.tree</field>
         <field name="model">school.evaluation</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="student_id" />
                 <field name="type" />
                 <field name="date" />
                 <field name="total" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -180,7 +180,7 @@
                                 context="{'type':type}"
                                 readonly="state != 'draft'"
                             >
-                                <tree editable='top'>
+                                <list editable='top'>
                                     <field
                                         name="stu_eval_id"
                                         domain="[('type','=',context.get('type'))]"
@@ -191,7 +191,7 @@
                                         options="{'no_create': True}"
                                     />
                                     <field name="rating" />
-                                </tree>
+                                </list>
                             </field>
                             <group colspan="4">
                                 <field name="total" />
@@ -292,7 +292,7 @@
                                 context="{'type':type}"
                                 readonly="state != 'draft'"
                             >
-                                <tree editable='top'>
+                                <list editable='top'>
                                     <field
                                         name="stu_eval_id"
                                         domain="[('type','=',context.get('type'))]"
@@ -303,7 +303,7 @@
                                         options="{'no_create': True}"
                                     />
                                     <field name="rating" />
-                                </tree>
+                                </list>
                             </field>
                             <group colspan="4">
                                 <field name="total" />
@@ -321,13 +321,13 @@
         <field name="name">teacher.evaluation.tree</field>
         <field name="model">school.evaluation</field>
         <field name="arch" type="xml">
-            <tree name="teacher_evaluation">
+            <list name="teacher_evaluation">
                 <field name="teacher_id" />
                 <field name="type" />
                 <field name="date" />
                 <field name="total" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -358,7 +358,7 @@
      <record id="action_teacher_eval" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_mode">tree,form</field>
+         <field name="view_mode">list,form</field>
          <field name="domain">[('type','=','faculty')]</field>
          <field name="context">{'default_type':'faculty'}</field>
          <field name="search_view_id" ref="view_teacher_eval_search" />
@@ -367,7 +367,7 @@
     <record id="action_teacher_eval_finished" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation Finished</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_mode">tree,form</field>
+         <field name="view_mode">list,form</field>
          <field name="domain">[('type','=','faculty'),('state','=','finished')]</field>
          <field name="context">{'default_type':'faculty'}</field>
          <field name="search_view_id" ref="view_teacher_eval_search" />
@@ -376,7 +376,7 @@
     <record id="action_teacher_eval_top" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation AA</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_mode">tree,form</field>
+         <field name="view_mode">list,form</field>
          <field
             name="domain"
         >[('type','=','faculty'),('state','=','finished'),('total', '>', '10')]</field>
@@ -384,14 +384,14 @@
          <field name="search_view_id" ref="view_teacher_eval_search" />
     </record>
 
-    <record
+    <!-- <record
         id="action_view_teacher_evaluation_tree_finished"
         model="ir.actions.act_window.view"
     >
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_teacher_evaluation_tree" />
         <field name="act_window_id" ref="action_teacher_eval_finished" />
-    </record>
+    </record> -->
     <record
         id="action_view_teacher_evaluation_form_finished"
         model="ir.actions.act_window.view"
@@ -401,14 +401,14 @@
         <field name="act_window_id" ref="action_teacher_eval_finished" />
     </record>
 
-    <record
+    <!-- <record
         id="action_view_teacher_evaluation_tree_new"
         model="ir.actions.act_window.view"
     >
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_teacher_evaluation_tree" />
         <field name="act_window_id" ref="action_teacher_eval_top" />
-    </record>
+    </record> -->
     <record
         id="action_view_teacher_evaluation_form_new"
         model="ir.actions.act_window.view"
@@ -421,20 +421,20 @@
     <record id="action_teacher_eval_new_draft" model="ir.actions.act_window">
         <field name="name">Teacher Evaluation New Draft</field>
          <field name="res_model">school.evaluation</field>
-         <field name="view_mode">tree,form</field>
+         <field name="view_mode">list,form</field>
          <field name="domain">[('type','=','faculty'),('state','=','draft')]</field>
          <field name="context">{'default_type':'faculty'}</field>
          <field name="search_view_id" ref="view_teacher_eval_search" />
     </record>
 
-    <record
+    <!-- <record
         id="action_view_teacher_evaluation_tree_new_draft"
         model="ir.actions.act_window.view"
     >
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_teacher_evaluation_tree" />
         <field name="act_window_id" ref="action_teacher_eval_new_draft" />
-    </record>
+    </record> -->
     <record
         id="action_view_teacher_evaluation_form_new_draft"
         model="ir.actions.act_window.view"
@@ -466,10 +466,10 @@
         <field name="name">school.evaluation.template.tree</field>
         <field name="model">school.evaluation.template</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="desc" />
                 <field name="type" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -488,12 +488,12 @@
                     <field
                         name="rating_line"
                         nolabel="1"
-                        context="{'default_res_id': active_id}"
+                        context="{'default_res_id': id}"
                     >
-                        <tree>
+                        <list>
                             <field name="rating" />
                             <field name="feedback" />
-                        </tree>
+                        </list>
                         <form>
                             <sheet>
                                 <group>
@@ -514,7 +514,7 @@
     <record id="action_student_eval" model="ir.actions.act_window">
         <field name="name">Student Evaluation</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('type','=','student')]</field>
         <field name="context">{'default_type':'student'}</field>
     </record>
@@ -523,13 +523,13 @@
     <record id="action_student_eval_temp" model="ir.actions.act_window">
         <field name="name">Evaluation Templates</field>
         <field name="res_model">school.evaluation.template</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 
     <!-- Actions View of the School Student Tree View -->
     <record id="action_view_student_evaluation_tree" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_student_evaluation_tree" />
         <field name="act_window_id" ref="action_student_eval_form" />
     </record>
@@ -543,7 +543,7 @@
 
     <!-- Actions View of the School Teacher Tree View -->
     <record id="action_view_teacher_evaluation_tree" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_teacher_evaluation_tree" />
         <field name="act_window_id" ref="action_teacher_eval" />
     </record>
@@ -558,7 +558,7 @@
     <record id="action_student_eval_finished" model="ir.actions.act_window">
         <field name="name">Student Evaluation Finished</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('type','=','student'),('state','=','finished')]</field>
         <field name="context">{'default_type':'student'}</field>
     </record>
@@ -568,7 +568,7 @@
         id="action_view_student_evaluation_tree_finished"
         model="ir.actions.act_window.view"
     >
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_student_evaluation_tree" />
         <field name="act_window_id" ref="action_student_eval_finished" />
     </record>
@@ -586,7 +586,7 @@
     <record id="action_student_eval_draft" model="ir.actions.act_window">
         <field name="name">Student Evaluation Draft</field>
         <field name="res_model">school.evaluation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('type','=','student'),('state','=','draft')]</field>
         <field name="context">{'default_type':'student'}</field>
     </record>
@@ -596,7 +596,7 @@
         id="action_view_student_evaluation_tree_draft"
         model="ir.actions.act_window.view"
     >
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_student_evaluation_tree" />
         <field name="act_window_id" ref="action_student_eval_draft" />
     </record>
@@ -615,7 +615,7 @@
     <menuitem
         id="menu_stu_eval"
         name="Evaluations"
-        web_icon="school,static/description/menu_icons/icons_evalutions.png"
+        web_icon="school,static/menu_icons/icons_evalutions.png"
         sequence="8"
     />
     <menuitem
