@@ -83,10 +83,10 @@ class SchoolTeacher(models.Model):
         self.stu_parent_id = False
         self.student_id = False
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """Inherited create method to assign value to users for delegation"""
-        teacher_id = super(SchoolTeacher, self).create(vals)
+        teacher_id = super().create(vals)
         user_obj = self.env["res.users"]
         user_vals = {
             "name": teacher_id.name,
@@ -103,8 +103,11 @@ class SchoolTeacher(models.Model):
 
     @api.constrains("birthday")
     def _check_birthday(self):
-        if self.birthday > date.today():
-            raise ValidationError(_("Birthday cannot be greater than the current date"))
+        for record in self.filtered(lambda x: x.birthday > date.today()):
+            if record:
+                raise ValidationError(
+                    _("Birthday cannot be greater than the current date")
+                )
 
     # Removing this code because of issue faced due to email id of the
     # user is same for parent and Teacher, and system will not allow it.
@@ -151,7 +154,7 @@ class SchoolTeacher(models.Model):
             user_obj = self.employee_id.user_id
             user_vals = {"name": vals.get("name")}
             user_rec = user_obj.write(user_vals)
-        return super(SchoolTeacher, self).write(vals)
+        return super().write(vals)
 
     @api.onchange("address_id")
     def onchange_address_id(self):
@@ -175,7 +178,7 @@ class SchoolTeacher(models.Model):
         if self.user_id:
             self.name = self.name or self.user_id.name
             self.work_email = self.user_id.email
-            self.image = self.image or self.user_id.image
+            self.image_1920 = self.image_1920 or self.user_id.image
 
     @api.onchange("school_id")
     def onchange_school(self):

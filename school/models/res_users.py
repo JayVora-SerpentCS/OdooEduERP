@@ -4,14 +4,14 @@ from odoo import api, models
 
 
 class ResUsers(models.Model):
-
     _inherit = "res.users"
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """Inherit Method to create user of group teacher or parent."""
-        vals.update({"employee_ids": False})
-        res = super(ResUsers, self).create(vals)
+        for val in vals:
+            val.update({"employee_ids": False})
+        res = super().create(vals)
         if self._context.get("teacher_create", False):
             teacher_group_ids = [
                 self.env.ref("school.group_school_teacher").id,

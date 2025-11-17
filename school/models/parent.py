@@ -73,11 +73,11 @@ class SchoolParent(models.Model):
             self.standard_id = [(6, 0, standard_ids.ids)]
             self.stand_id = [(6, 0, standard_ids.mapped("standard_id").ids)]
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """Inherited create method to assign values in
         the users record to maintain the delegation"""
-        res = super(SchoolParent, self).create(vals)
+        res = super().create(vals)
         parent_grp_id = self.env.ref("school.group_school_parent")
         emp_grp = self.env.ref("base.group_user")
         self.env["res.users"].create(

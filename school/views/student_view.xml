@@ -112,6 +112,7 @@
                                 name="school_id"
                                 placeholder="School"
                                 widget="selection"
+                                string="School"
                                 help="School of Student"
                                 readonly="state in ['alumni','terminate'] or teachr_user_grp"
                             />
@@ -260,6 +261,7 @@
                                     <field
                                         name="maritual_status"
                                         readonly="state in ['alumni','terminate']"
+                                        string="Maritial Status"
                                         invisible="age &lt; 18"
                                         placeholder="Maritial Status"
                                     />
@@ -312,14 +314,14 @@
                                 colspan="4"
                                 readonly="state in ['alumni','terminate']"
                             >
-                                <tree editable="top">
+                                <list editable="top">
                                     <field name="name" />
                                     <field name="middle" />
                                     <field name="last" />
                                     <field name="designation" string="Designation" />
                                     <field name="phone" string="Phone" />
                                     <field name="gender" string="Gender" />
-                                </tree>
+                                </list>
                                 <form string="Reference">
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="First Name" />
@@ -350,7 +352,7 @@
                                 colspan="4"
                                 readonly="state in ['alumni','terminate']"
                             >
-                                <tree>
+                                <list>
                                     <field name="name" string="Name" />
                                     <field name="registration_no" />
                                     <field
@@ -363,7 +365,7 @@
                                         widget="selection"
                                         string="Course"
                                     />
-                                </tree>
+                                </list>
                                 <form string="Previous School Details">
                                     <separator string="Previous School Details" />
                                     <group col="4" colspan="4">
@@ -408,7 +410,7 @@
                                 string="Award List"
                                 readonly="state in ['alumni','terminate']"
                             >
-                                <tree editable="top">
+                                <list editable="top">
                                     <field
                                         name="name"
                                         required="1"
@@ -419,7 +421,7 @@
                                         placeholder="Description"
                                         string="Description"
                                     />
-                                </tree>
+                                </list>
                                 <form string="Reference">
                                     <group col="4" colspan="4">
                                         <field name="name" placeholder="Enter Name" />
@@ -473,11 +475,11 @@
                                         </group>
                                     </group>
                                 </form>
-                                <tree>
+                                <list>
                                     <field name="relative_name" />
                                     <field name="relation" />
                                     <field name="phone" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Medical">
@@ -590,7 +592,7 @@
                                         <field name="certi" />
                                     </group>
                                 </form>
-                                <tree editable="top">
+                                <list editable="top">
                                     <field
                                         name="description"
                                         string="Description"
@@ -602,7 +604,7 @@
                                         required="1"
                                         placeholder="Upload Certi"
                                     />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Remarks">
@@ -627,7 +629,7 @@
                                         />
                                     </group>
                                 </form>
-                                <tree editable="top">
+                                <list editable="top">
                                     <field
                                         name="name"
                                         string="Name"
@@ -639,7 +641,7 @@
                                         placeholder="Enter Description"
                                         string="Description"
                                     />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page
@@ -653,12 +655,12 @@
                                 readonly="state in ['alumni','terminate'] or 1"
                                 options="{'no_open': True, 'no_create': True}"
                             >
-                                <tree>
+                                <list>
                                     <field name="academice_year_id" required="1" />
                                     <field name="standard_id" required="1" />
                                     <field name="percentage" string="Percentage" />
                                     <field name="result" />
-                                </tree>
+                                </list>
                                 <form string="History">
                                     <group col="4" colspan="4">
                                         <field
@@ -677,14 +679,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field
-                        name="message_follower_ids"
-                        widget="mail_followers"
-                        groups="base.group_user"
-                    />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
@@ -693,7 +688,7 @@
         <field name="name">student.student.tree.1</field>
         <field name="model">student.student</field>
         <field name="arch" type="xml">
-            <tree create="false" delete="false">
+            <list delete="false">
                 <field name="pid" />
                 <field name="name" />
                 <field name="student_name" invisible="1" />
@@ -701,8 +696,8 @@
                 <field name="admission_date" />
                 <field name="gender" />
                 <field name="state" />
-                <field name="school_id" />
-            </tree>
+                <field name="school_id" string="School" />
+            </list>
         </field>
     </record>
     <!-- Search View 1 Of Student's Profiles -->
@@ -716,7 +711,7 @@
                     <field name="student_name" invisible="1" />
                     <field name="year" />
                     <field name="gender" />
-                    <field name="school_id" placeholder="School" />
+                    <field name="school_id" string="School" placeholder="School" />
                 </group>
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
@@ -796,13 +791,13 @@
         <field name="name">Student KANBAN</field>
         <field name="model">student.student</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="standard_id" nocreate="1" create="false">
+            <kanban default_group_by="standard_id" nocreate="1">
                 <field name="color" />
                 <field name="id" />
                 <field name="name" />
                 <field name="email" />
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <t
                             t-set="color"
                             t-value="kanban_color(record.color.raw_value || record.name.raw_value)"
@@ -860,11 +855,10 @@
                                         <tr width="300">
                                             <td valign="top" width="64" align="left">
                                                 <a type="open">
-                                                    <img
-                                                        heigh="80"
-                                                        width="80"
-                                                        t-att-src="kanban_image('student.student', 'photo', record.id.raw_value)"
-                                                        alt="image"
+                                                    <field
+                                                        name="photo"
+                                                        widget="image"
+                                                        options="{'preview_image': 'photo'}"
                                                     />
                                                 </a>
                                             </td>
@@ -953,7 +947,7 @@
                         name="admission_done"
                         type="object"
                         string="Done"
-                        invisible="state !='fees_received'"
+                        invisible="state != 'verify_document'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -962,7 +956,7 @@
                         name="cancel_admission"
                         type="object"
                         string="Cancel"
-                        invisible="state != 'fees_received'"
+                        invisible="state != 'verify_document'"
                         groups="school.group_school_administration"
                     />
                     <button
@@ -974,18 +968,10 @@
                         invisible="state !='draft'"
                         groups="school.group_school_administration"
                     />
-                    <button
-                        class="oe_stat_button"
-                        string="Fees Payment"
-                        name="fees_received"
-                        type="object"
-                        invisible="state !='verify_document'"
-                        groups="school.group_school_administration"
-                    />
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,verify_document,fees_received,cancel,"
+                        statusbar_visible="draft,verify_document,cancel"
                     />
                 </header>
                 <sheet>
@@ -1032,6 +1018,7 @@
                         <group string="School Information">
                             <field
                                 name="school_id"
+                                string="School"
                                 placeholder="School Name"
                                 required="1"
                                 readonly="state =='alumni'"
@@ -1179,6 +1166,7 @@
                                             <field
                                                 name="maritual_status"
                                                 placeholder="Select Maritual Status"
+                                                string="Maritual Status"
                                                 invisible="age &lt; 18"
                                                 readonly="state =='alumni'"
                                             />
@@ -1220,7 +1208,7 @@
                                 colspan="4"
                                 readonly="state =='alumni'"
                             >
-                                <tree editable="top">
+                                <list editable="top">
                                     <field name="name" placeholder="Firstname" />
                                     <field name="middle" placeholder="Middlename" />
                                     <field name="last" placeholder="Surname" />
@@ -1231,7 +1219,7 @@
                                     />
                                     <field name="phone" placeholder="Phone" />
                                     <field name="gender" placeholder="Gender" />
-                                </tree>
+                                </list>
                                 <form string="Reference">
                                     <group col="4" colspan="4">
                                         <field
@@ -1264,13 +1252,13 @@
                                 colspan="4"
                                 readonly="state =='alumni'"
                             >
-                                <tree>
+                                <list>
                                     <field name="name" />
                                     <field name="registration_no" />
                                     <field name="admission_date" />
                                     <field name="exit_date" />
                                     <field name="course_id" widget="selection" />
-                                </tree>
+                                </list>
                                 <form string="Previous School Details">
                                     <separator string="Previous School Details" />
                                     <group col="4" colspan="4">
@@ -1297,14 +1285,15 @@
                                         <newline />
                                         <separator string="Subjects Details" />
                                         <field name="add_sub" nolabel="1" colspan="4">
-                                            <form>
-                                                <group col='4' colspan="4">
-                                                    <field name="name" />
-                                                    <field name="add_sub_id" />
-                                                    <field name="maximum_marks" />
-                                                    <field name="minimum_marks" />
-                                                </group>
-                                            </form>
+                                            <list editable="top">
+                                                <field name="name" />
+                                                <field
+                                                    name="add_sub_id"
+                                                    invisible="1"
+                                                />
+                                                <field name="maximum_marks" />
+                                                <field name="minimum_marks" />
+                                            </list>
                                         </field>
                                     </group>
                                 </form>
@@ -1317,11 +1306,11 @@
                                 colspan="4"
                                 readonly="state =='alumni'"
                             >
-                                <tree>
+                                <list>
                                     <field name="relative_name" />
                                     <field name="relation" />
                                     <field name="phone" />
-                                </tree>
+                                </list>
                                 <form string="Family Contact Details">
                                     <group>
                                         <group>
@@ -1371,14 +1360,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field
-                        name="message_follower_ids"
-                        widget="mail_followers"
-                        groups="base.group_user"
-                    />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
@@ -1387,17 +1369,17 @@
         <field name="name">student.student.tree.2</field>
         <field name="model">student.student</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="pid" />
                 <field name="name" />
                 <field name="student_name" invisible="1" />
                 <field name="year" widget="selection" />
                 <field name="standard_id" widget="selection" />
-                <field name="school_id" />
+                <field name="school_id" string="School" />
                 <field name="admission_date" />
                 <field name="gender" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Admission Register Information -->
@@ -1417,7 +1399,7 @@
                 <field name="year" />
                 <field name="standard_id" />
                 <field name="gender" />
-                <field name="school_id" />
+                <field name="school_id" string="School" />
                 <newline />
                 <group expand="0" string="Group By..." colspan="12" col="10">
                     <filter
@@ -1458,10 +1440,10 @@
         <field name="res_model">student.student</field>
         <field
             name="domain"
-        >['|','|','|',('state','=','fees_received'),('state','=','verify_document'),('state','=','draft'),('state','=','cancel')]</field>
+        >['|','|',('state','=','verify_document'),('state','=','draft'),('state','=','cancel')]</field>
         <field name="view_id" ref="view_student_student_form_2" />
         <field name="search_view_id" ref="view_student_student_search_2" />
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
     <!-- Action View 2 Of Kanban View Of Student Information -->
@@ -1476,12 +1458,12 @@
     </record>
 
     <!-- Action View 2 Of Tree View Of Student Information -->
-    <record id="action_student_student_tree_2" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+    <!-- <record id="action_student_student_tree_2" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
         <field eval="20" name="sequence" />
         <field name="view_id" ref="view_student_student_tree_2" />
         <field name="act_window_id" ref="action_student_student_form_2" />
-    </record>
+    </record> -->
 
     <!-- Action Of Form, Tree & Kanban Views Of Student Information -->
     <record id="action_student_student_form_12" model="ir.actions.act_window">
@@ -1491,7 +1473,7 @@
         <field name="res_model">student.student</field>
          <field name="view_id" ref="" />
         <field name="search_view_id" ref="view_student_student_search_1" />
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
     <!-- Action of Alumni state -->
@@ -1499,7 +1481,7 @@
         <field name="name">Student Alumni</field>
         <field name="domain">[('active','=',False)]</field>
         <field name="res_model">student.student</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'is_student_alumni_terminate':1}</field>
     </record>
 

@@ -1,12 +1,13 @@
 # See LICENSE file for full copyright and licensing details.
 
 import base64
+from pathlib import Path
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.modules import get_module_resource
+from odoo.modules.module import get_module_path
 
 from . import school
 
@@ -71,7 +72,8 @@ class StudentStudent(models.Model):
     @api.model
     def _default_image(self):
         """Method to get default Image"""
-        image_path = get_module_resource("hr", "static/src/img", "default_image.png")
+        module_path = get_module_path("hr")
+        image_path = Path(module_path) / "static" / "src" / "img" / "default_image.png"
         return base64.b64encode(open(image_path, "rb").read())
 
     @api.depends("state")
@@ -180,7 +182,7 @@ class StudentStudent(models.Model):
     )
     maritual_status = fields.Selection(
         [("unmarried", "Unmarried"), ("married", "Married")],
-        "Marital Status",
+        "M. Status",
         help="Select student maritual status",
     )
     reference_ids = fields.One2many(
@@ -218,7 +220,7 @@ class StudentStudent(models.Model):
     )
     school_id = fields.Many2one(
         "school.school",
-        "School",
+        "School Id",
         help="Select school",
         tracking=True,
     )
@@ -226,7 +228,6 @@ class StudentStudent(models.Model):
         [
             ("draft", "Draft"),
             ("verify_document", "Document Verification"),
-            ("fees_received", "Fees Received"),
             ("done", "Done"),
             ("terminate", "Terminate"),
             ("cancel", "Cancel"),
@@ -344,38 +345,40 @@ class StudentStudent(models.Model):
     #             form_reports.pop(int(rem_index))
     #     return res
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Method to create user when student is created"""
-        if vals.get("pid", _("New")) == _("New"):
-            vals["pid"] = self.env["ir.sequence"].next_by_code("student.student") or _(
-                "New"
-            )
-        if vals.get("pid", False):
-            vals["login"] = vals["pid"]
-            vals["password"] = vals["pid"]
-        else:
-            raise UserError(_("Error! PID not valid so record will not be saved."))
-        if vals.get("company_id", False):
-            company_vals = {"company_ids": [(4, vals.get("company_id"))]}
-            vals.update(company_vals)
-        if vals.get("email"):
-            school.emailvalidation(vals.get("email"))
-        res = super().create(vals)
+        for vals in vals_list:
+            if vals.get("pid", _("New")) == _("New"):
+                vals["pid"] = self.env["ir.sequence"].next_by_code(
+                    "student.student"
+                ) or _("New")
+            if vals.get("pid", False):
+                vals["login"] = vals["pid"]
+                vals["password"] = vals["pid"]
+            else:
+                raise UserError(_("Error! PID not valid so record will not be saved."))
+            if vals.get("company_id", False):
+                company_vals = {"company_ids": [(4, vals.get("company_id"))]}
+                vals.update(company_vals)
+            if vals.get("email"):
+                school.emailvalidation(vals.get("email"))
+        res = super().create(vals_list)
         teacher = self.env["school.teacher"]
-        for data in res.parent_id:
-            for record in teacher.search([("stu_parent_id", "=", data.id)]):
-                record.write({"student_id": [(4, res.id, None)]})
-        # Assign group to student based on condition
         emp_grp = self.env.ref("base.group_user")
-        if res.state == "draft":
-            admission_group = self.env.ref("school.group_is_admission")
-            new_grp_list = [admission_group.id, emp_grp.id]
-            res.user_id.write({"groups_id": [(6, 0, new_grp_list)]})
-        elif res.state == "done":
-            done_student = self.env.ref("school.group_school_student")
-            group_list = [done_student.id, emp_grp.id]
-            res.user_id.write({"groups_id": [(6, 0, group_list)]})
+        for student in res:
+            for data in student.parent_id:
+                for record in teacher.search([("stu_parent_id", "=", data.id)]):
+                    record.write({"student_id": [(4, student.id, None)]})
+            # Assign group to student based on condition
+            if student.state == "draft":
+                admission_group = self.env.ref("school.group_is_admission")
+                new_grp_list = [admission_group.id, emp_grp.id]
+                student.user_id.write({"groups_id": [(6, 0, new_grp_list)]})
+            elif student.state == "done":
+                done_student = self.env.ref("school.group_school_student")
+                group_list = [done_student.id, emp_grp.id]
+                student.user_id.write({"groups_id": [(6, 0, group_list)]})
         return res
 
     def write(self, vals):
@@ -391,32 +394,32 @@ class StudentStudent(models.Model):
     @api.constrains("date_of_birth")
     def check_age(self):
         """Method to check age should be greater than 6"""
-        for rec in self:
-            if rec.date_of_birth:
-                if not rec.school_id.required_age:
-                    raise ValidationError(
-                        _(
-                            "Please set a default age for student "
-                            "enrollment in the school."
-                        )
+        for rec in self.filtered(lambda x: x.date_of_birth):
+            if not rec.school_id.required_age:
+                raise ValidationError(
+                    _(
+                        "Please set a default age for student "
+                        "enrollment in the school."
                     )
-                start = rec.date_of_birth + relativedelta(
-                    years=rec.school_id.required_age
                 )
-                if start > fields.Date.today():
-                    raise ValidationError(
-                        _(
-                            "Age of student should be greater than %s years!"
-                            % (rec.school_id.required_age)
-                        )
+            start = rec.date_of_birth + relativedelta(years=rec.school_id.required_age)
+            if start > fields.Date.today():
+                raise ValidationError(
+                    _(
+                        "Age of student should be greater than %s years!"
+                        % rec.school_id.required_age
                     )
+                )
 
     @api.constrains("admission_date", "leave_date")
     def _check_date(self):
-        if self.leave_date and self.admission_date > self.leave_date:
-            raise ValidationError(
-                _("The leave date should be greater than the start date")
-            )
+        for record in self.filtered(
+            lambda x: x.leave_date and x.admission_date > x.leave_date
+        ):
+            if record:
+                raise ValidationError(
+                    _("The leave date should be greater than the start date")
+                )
 
     def set_to_draft(self):
         """Method to change state to draft"""
@@ -544,11 +547,3 @@ class StudentStudent(models.Model):
                 "message": _("Document verification done"),
             }
         }
-
-    def fees_received(self):
-        student_fees = self.env["student.payslip"].search(
-            [("student_id", "=", self.id), ("state", "=", "paid")]
-        )
-        if not student_fees:
-            raise UserError(_("Fees Payment are due"))
-        self.state = "fees_received"

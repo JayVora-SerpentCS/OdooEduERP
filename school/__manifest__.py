@@ -2,14 +2,14 @@
 
 {
     "name": "School",
-    "version": "17.0.1.0.0",
+    "version": "18.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "website": "http://www.serpentcs.com",
     "category": "School Management",
     "license": "AGPL-3",
     "complexity": "easy",
     "Summary": "A Module For School Management",
-    "images": ["static/description/Banner_school_17.jpg"],
+    "images": ["static/description/school_management_product_banner.jpg"],
     "depends": ["hr", "crm", "account"],
     "data": [
         "security/school_security.xml",

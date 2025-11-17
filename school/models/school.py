@@ -56,9 +56,10 @@ class AcademicYear(models.Model):
         if year_rec:
             return year_rec.id or False
 
-    def name_get(self):
+    def _compute_display_name(self):
         """Method to display name and code"""
-        return [(rec.id, " [" + rec.code + "]" + rec.name) for rec in self]
+        for rec in self:
+            rec.display_name = f"[{rec.code}] {rec.name} "
 
     def generate_academicmonth(self):
         """Generate academic months."""
@@ -431,12 +432,10 @@ class SchoolStandard(models.Model):
         if self.capacity <= 0:
             raise ValidationError(_("Total seats should be greater than 0!"))
 
-    def name_get(self):
-        """Method to display standard and division"""
-        return [
-            (rec.id, rec.standard_id.name + "[" + rec.division_id.name + "]")
-            for rec in self
-        ]
+    def _compute_display_name(self):
+        """Method to display name and code standard and division"""
+        for rec in self:
+            rec.display_name = f"{rec.standard_id.name} [ {rec.division_id.name} ]"
 
 
 class SchoolSchool(models.Model):
@@ -718,7 +717,7 @@ class StudentDocument(models.Model):
         "student.student", "Student", help="Student of the following doc"
     )
     file_no = fields.Char(
-        readonly="1",
+        readonly=True,
         default=lambda obj: obj.env["ir.sequence"].next_by_code("student.document"),
         help="File no of the document",
     )
@@ -747,12 +746,13 @@ class DocumentType(models.Model):
     )
     doc_type = fields.Char(string="Document Type", required=True, help="Document type")
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
-        if vals.get("seq_no", _("New")) == _("New"):
-            vals["seq_no"] = self.env["ir.sequence"].next_by_code("document.type") or _(
-                "New"
-            )
+        for val in vals:
+            if val.get("seq_no", _("New")) == _("New"):
+                val["seq_no"] = self.env["ir.sequence"].next_by_code(
+                    "document.type"
+                ) or _("New")
         return super().create(vals)
 
 
@@ -889,7 +889,6 @@ class AcademicSubject(models.Model):
     add_sub_id = fields.Many2one(
         "student.previous.school",
         "Add Subjects",
-        invisible=True,
         help="Select student previous school",
     )
     name = fields.Char(required=True, help="Enter previous school name")
