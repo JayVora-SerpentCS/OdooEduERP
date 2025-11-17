@@ -14,3 +14,5 @@ access_student_hostel_room_student,hostel.room,school_hostel.model_hostel_room,s
 access_student_hostel_studnet_stu,hostel.student,school_hostel.model_hostel_student,school.group_school_student,1,1,1,0
 access_acctmove_hostelmanager,account.move.hostelmanager,account.model_account_move,school_hostel.group_hostel_manager,1,1,1,0
 access_hostel_amenities_user,hostel.amenities,school_hostel.model_hostel_amenities,school_hostel.group_hostel_user,1,0,0,0
+access_student_student_hostel_manager,student.student,model_student_student,school_hostel.group_hostel_manager,1,1,0,0
+access_student_hostel_studnet_hostel_manager,hostel.student,school_hostel.model_hostel_student,school_hostel.group_hostel_manager,1,1,1,1

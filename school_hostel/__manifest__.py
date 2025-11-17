@@ -2,10 +2,10 @@
 
 {
     "name": "Hostel Management for Education ERP",
-    "version": "17.0.1.0.0",
+    "version": "18.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
-    "website": "http://www.serpentcs.com",
+    "website": "https://www.serpentcs.com",
     "license": "AGPL-3",
     "complexity": "easy",
     "summary": "Module For HOSTEL Management In School",

@@ -5,8 +5,6 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="state">code</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False" />
             <field ref="model_hostel_student" name="model_id" />
             <field name="active" eval="True" />
             <field name="code">model.student_expire()</field>
