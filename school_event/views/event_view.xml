@@ -38,7 +38,7 @@
     <record id="act_school_event_registration_from_event" model="ir.actions.act_window">
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph</field>
+        <field name="view_mode">kanban,list,form,calendar,graph</field>
     </record>
 
     <menuitem
