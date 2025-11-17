@@ -68,7 +68,7 @@ class FleetVehicle(models.Model):
         limit=None,
         order=None,
         count=False,
-        access_rights_uid=None,
+        # access_rights_uid=None,
     ):
         if self._context.get("name"):
             student_obj = self.env["student.transport"]
@@ -79,7 +79,7 @@ class FleetVehicle(models.Model):
             offset=offset,
             limit=limit,
             order=order,
-            access_rights_uid=access_rights_uid,
+            # access_rights_uid=access_rights_uid,
         )
 
 
@@ -155,7 +155,7 @@ class TransportParticipant(models.Model):
         offset=0,
         limit=None,
         order=None,
-        access_rights_uid=None,
+        # access_rights_uid=None,
     ):
         """Inherited method to get domain from student transportation"""
         if self._context.get("name"):
@@ -176,7 +176,7 @@ class TransportParticipant(models.Model):
             args,
             offset=offset,
             limit=limit,
-            access_rights_uid=access_rights_uid,
+            # access_rights_uid=access_rights_uid,
         )
 
     def set_over(self):
@@ -429,13 +429,13 @@ class TransportRegistration(models.Model):
         if self.name:
             self.monthly_amount = self.name.amount
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """Inherited create method to call onchange methods"""
-        ret_val = super().create(vals)
-        if ret_val:
+        ret_vals = super().create(vals)
+        for ret_val in ret_vals:
             ret_val.onchange_registration_month()
-        return ret_val
+        return ret_vals
 
     def unlink(self):
         """Inherited method to check state at record deletion"""
@@ -632,7 +632,7 @@ class AccountPaymentRegister(models.TransientModel):
                         }
                     )
                 elif (
-                    invoice.transport_student_id and invoice.payment_state == "not_paid"
+                    invoice.transport_student_id and invoice.payment_state != "not_paid"
                 ):
                     fees_payment = invoice.transport_student_id.paid_amount + rec.amount
                     vals.update(
