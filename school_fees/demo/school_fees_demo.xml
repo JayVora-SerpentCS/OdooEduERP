@@ -4,21 +4,21 @@
     <record id="demo_product_fees_1" model="product.product">
         <field name="name">Educational Fees</field>
         <field name="code">FEEEDU</field>
-        <field name="detailed_type">service</field>
+        <field name="type">service</field>
         <field name="list_price">4000.00</field>
         <field name="categ_id" ref="school_fees.product_categ_fees" />
     </record>
     <record id="demo_product_fees_2" model="product.product">
         <field name="name">Library Fees</field>
         <field name="code">FEELIB</field>
-        <field name="detailed_type">service</field>
+        <field name="type">service</field>
         <field name="list_price">2000.00</field>
         <field name="categ_id" ref="school_fees.product_categ_fees" />
     </record>
     <record id="demo_product_fees_3" model="product.product">
         <field name="name">Laboratory Fees</field>
         <field name="code">FEELAB</field>
-        <field name="detailed_type">service</field>
+        <field name="type">service</field>
         <field name="list_price">3000.00</field>
         <field name="categ_id" ref="school_fees.product_categ_fees" />
     </record>

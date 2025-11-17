@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class StudentFeesRegister(models.Model):
@@ -200,13 +200,13 @@ class StudentFeesStructureLine(models.Model):
         help="Select currency symbol",
     )
 
-    @api.model
-    def create(self, vals):
-        vals["sequence"] = self.env["ir.sequence"].next_by_code(
-            "student.fees.structure.line"
-        )
-        res = super().create(vals)
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["sequence"] = self.env["ir.sequence"].next_by_code(
+                "student.fees.structure.line"
+            )
+        return super().create(vals_list)
 
     @api.onchange("company_id")
     def set_currency_company(self):
@@ -252,7 +252,6 @@ class StudentPayslip(models.Model):
     fees_structure_id = fields.Many2one(
         "student.fees.structure",
         "Fees Structure",
-        states={"paid": [("readonly", True)]},
         help="Select fee structure",
     )
     standard_id = fields.Many2one(
@@ -323,7 +322,6 @@ class StudentPayslip(models.Model):
     )
     payment_date = fields.Date(
         readonly=True,
-        states={"draft": [("readonly", False)]},
         help="Keep empty to use the current date",
     )
     type = fields.Selection(
@@ -389,25 +387,24 @@ class StudentPayslip(models.Model):
 
     def _update_student_vals(self, vals):
         student_rec = self.env["student.student"].browse(vals.get("student_id"))
-        vals.update(
-            {
-                "standard_id": student_rec.standard_id.id,
-                "division_id": student_rec.standard_id.division_id.id,
-                "medium_id": student_rec.medium_id.id,
-            }
-        )
+        return {
+            "standard_id": student_rec.standard_id.id,
+            "division_id": student_rec.standard_id.division_id.id,
+            "medium_id": student_rec.medium_id.id,
+        }
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Inherited create method to assign values from student model"""
-        if vals.get("student_id"):
-            self._update_student_vals(vals)
-        return super().create(vals)
+        for vals in vals_list:
+            if vals.get("student_id"):
+                vals.update(self._update_student_vals(vals))
+        return super().create(vals_list)
 
     def write(self, vals):
         """Inherited write method to update values from student model"""
         if vals.get("student_id"):
-            self._update_student_vals(vals)
+            vals.update(self._update_student_vals(vals))
         return super().write(vals)
 
     def payslip_draft(self):
@@ -607,7 +604,7 @@ class StudentPayslip(models.Model):
         """Generate invoice of student fee"""
         sequence_obj = self.env["ir.sequence"]
         for rec in self:
-            if rec.number == "/":
+            if rec.number == "/" or rec.number == "":
                 rec.number = sequence_obj.next_by_code("student.payslip") or _("New")
             rec.state = "pending"
             partner = rec.student_id and rec.student_id.partner_id
@@ -615,7 +612,7 @@ class StudentPayslip(models.Model):
                 "partner_id": partner.id,
                 "invoice_date": rec.date,
                 "journal_id": rec.journal_id.id,
-                "name": rec.number,
+                # "name": rec.number,
                 "student_payslip_id": rec.id,
                 "move_type": "out_invoice",
             }
@@ -751,7 +748,7 @@ class AccountPaymentRegister(models.TransientModel):
                         "due_amount": invoice.amount_residual or 0,
                     }
                 )
-            if invoice.student_payslip_id and invoice.payment_state == "not_paid":
+            if invoice.student_payslip_id and invoice.payment_state != "paid":
                 # Calculate paid amount and due amount and changes state
                 # to pending
                 fees_payment = invoice.student_payslip_id.paid_amount + rec.amount
@@ -768,6 +765,19 @@ class AccountPaymentRegister(models.TransientModel):
 
 class StudentFees(models.Model):
     _inherit = "student.student"
+
+    state = fields.Selection(
+        selection_add=[("fees_received", "Fees Received")],
+        ondelete={"fees_received": "cascade"},
+    )
+
+    def fees_received(self):
+        student_fees = self.env["student.payslip"].search(
+            [("student_id", "=", self.id), ("state", "=", "paid")]
+        )
+        if not student_fees:
+            raise UserError(_("Fees Payment are due"))
+        self.state = "fees_received"
 
     def set_alumni(self):
         """Override method to raise warning when fees payment of student is

@@ -59,10 +59,10 @@
         <field name="name">student.fees.structure.tree</field>
         <field name="model">student.fees.structure</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View Of Student PaySlip Line Information -->
@@ -90,7 +90,7 @@
                     <notebook colspan="4" invisible="type == 'range'">
                         <page string="Function">
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field
                                         name="academic_year_id"
                                         options="{'no_create': True}"
@@ -105,7 +105,7 @@
                                         options="{'no_create': True}"
                                         domain="[('year_id', '=', academic_year_id)]"
                                     />
-                                </tree>
+                                </list>
                                 <!-- <form string="Function Arguments" >
                                     <field name="from_month" placeholder="Month (From)"/>
                                     <field name="to_month" placeholder="Month (To)"/>
@@ -122,7 +122,7 @@
         <field name="name">student.payslip.line.tree</field>
         <field name="model">student.payslip.line</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="type" />
@@ -130,7 +130,7 @@
                 <field name="amount" />
                 <field name="currency_id" />
                 <field name="currency_symbol" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View Of Student PaySlip Line Information -->
@@ -168,7 +168,7 @@
                 <notebook colspan="4">
                     <page string="Function">
                         <field name="line_ids" colspan="4" nolabel="1">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field
                                     name="academic_year_id"
                                     options="{'no_create': True}"
@@ -185,7 +185,7 @@
                                     options="{'no_create': True}"
                                     domain="[('year_id', '=', academic_year_id)]"
                                 />
-                            </tree>
+                            </list>
                             <!-- <form string="Function Arguments" >
                                 <label for="sequence"/>
                                 <field name="sequence"/>
@@ -205,14 +205,14 @@
         <field name="name">student.fees.structure.line.tree</field>
         <field name="model">student.fees.structure.line</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
                 <field name="type" />
                 <field name="account_id" />
                 <field name="amount" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View Of Student PaySlip Information -->
@@ -281,7 +281,7 @@
                                 name="number"
                                 string="Number"
                                 readonly="1"
-                                invisible="state != 'not in', ['pending', 'paid']"
+                                invisible="state not in ['pending','paid']"
                             />
                             <field
                                 name="date"
@@ -317,7 +317,7 @@
                                 name="fees_structure_id"
                                 required="1"
                                 placeholder="Fee Structure"
-                                readonly=" state != 'draft'"
+                                readonly="state != 'draft'"
                                 options="{'no_create': True}"
                             />
                         </group>
@@ -377,7 +377,7 @@
                                         name="payment_date"
                                         string="Payment Date"
                                         placeholder="Payment Date"
-                                        readonly=" state != 'draft'"
+                                        readonly="state != 'draft'"
                                     />
                                     <field
                                         name="company_id"
@@ -399,7 +399,7 @@
         <field name="name">student.payslip.tree</field>
         <field name="model">student.payslip</field>
         <field name="arch" type="xml">
-            <tree
+            <list
                 decoration-danger="state in '[draft,pending]'"
                 decoration-info="state == 'paid'"
             >
@@ -414,7 +414,7 @@
                     decoration-info="state in ('draft','pending')"
                     decoration-success="state in ('confirm','paid')"
                 />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Student PaySlip Information -->
@@ -544,13 +544,13 @@
                                 nolabel="1"
                                 readonly="state != 'draft'"
                             >
-                                <tree create="false">
+                                <list create="false">
                                     <field name="name" />
                                     <field name="number" />
                                     <field name="student_id" />
                                     <field name="total" />
                                     <field name="state" />
-                                </tree>
+                                </list>
                                 <form string="Student Payslip">
                                     <header>
                                         <field
@@ -595,7 +595,7 @@
         <field name="name">student.fees.register.tree</field>
         <field name="model">student.fees.register</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="number" />
                 <field name="date" />
@@ -605,7 +605,7 @@
                     decoration-info="state in ('draft')"
                     decoration-success="state in ('confirm')"
                 />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Student Fees Register Information -->
@@ -648,20 +648,20 @@
     <record model="ir.actions.act_window" id="action_student_fees_structure_form">
         <field name="name">Fees Structure</field>
         <field name="res_model">student.fees.structure</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student PaySlip Line Information -->
     <record id="action_student_payslip_line_form" model="ir.actions.act_window">
         <field name="name">Fees Head</field>
         <field name="res_model">student.fees.structure.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student PaySlip Information -->
 
     <record id="action_student_payslip_form" model="ir.actions.act_window">
         <field name="name">Fees Receipt</field>
         <field name="res_model">student.payslip</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student Fees Register Information -->
     <record id="action_student_fees_register_form" model="ir.actions.act_window">
@@ -669,13 +669,13 @@
         <field name="res_model">student.fees.register</field>
         <field name="view_id" ref="view_student_fees_register_tree" />
         <field name="search_view_id" ref="view_student_fees_register_search" />
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student View's Fees Button -->
     <record id="action_stu_fees_form" model="ir.actions.act_window">
         <field name="name">Fees Register</field>
         <field name="res_model">student.payslip</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_student_id': active_id}</field>
         <field name="domain">[('student_id','=',active_id)]</field>
     </record>
@@ -686,24 +686,22 @@
         <field name="model">student.student</field>
         <field name="inherit_id" ref="school.view_student_student_form_1" />
         <field name="arch" type="xml">
-            <data>
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button
-                        name="%(action_stu_fees_form)d"
-                        type="action"
-                        class="oe_inline oe_stat_button"
-                        invisible="state in  ['draft','terminate','alumni','cancel']"
-                        groups="school.group_school_administration,school.group_school_student"
-                    >
-                        <img
-                            src="/school/static/description/payment.png"
-                            alt="Logo"
-                            style="margin-left:20px;"
-                        />
-                            <lable style="margin-left:20px;">Fees Receipt</lable>
-                    </button>
-                </xpath>
-            </data>
+            <xpath expr="//div[@name='buttons']" position="inside">
+                <button
+                    name="%(action_stu_fees_form)d"
+                    type="action"
+                    class="oe_inline oe_stat_button"
+                    invisible="state in  ['draft','terminate','alumni','cancel']"
+                    groups="school.group_school_administration,school.group_school_student"
+                >
+                    <img
+                        src="/school/static/description/payment.png"
+                        alt="Logo"
+                        style="margin-left:20px;"
+                    />
+                        <lable style="margin-left:20px;">Fees Receipt</lable>
+                </button>
+            </xpath>
         </field>
     </record>
 
@@ -713,27 +711,55 @@
         <field name="model">student.student</field>
         <field name="inherit_id" ref="school.view_student_student_form_2" />
         <field name="arch" type="xml">
-            <data>
-                <xpath expr="//sheet" position="inside">
-                    <div name="button_box" position="inside">
-                        <button
-                            name="%(school_fees.action_stu_fees_form)d"
-                            type="action"
-                            class="oe_inline oe_stat_button"
-                            invisible="state !='verify_document'"
-                            groups="school.group_school_administration,school.group_school_student"
-                        >
-                            <img
-                                src="/school/static/description/payment.png"
-                                alt="Logo"
-                                style="margin-left:20px;"
-                            />
-                            <lable style="margin-left:20px;">Fees Receipt</lable>
-                        </button>
-                    </div>
-                </xpath>
-            </data>
+            <xpath expr="//header" position="inside">
+                <button
+                    class="oe_stat_button"
+                    string="Fees Payment"
+                    name="fees_received"
+                    type="object"
+                    invisible="state !='verify_document'"
+                    groups="school.group_school_administration"
+                />
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="attributes">
+                <attribute
+                    name="statusbar_visible"
+                >draft,verify_document,cancel,fees_received</attribute>
+            </xpath>
+            <xpath
+                expr="//header/button[@name='cancel_admission']"
+                position="attributes"
+            >
+                <attribute name="invisible">state != 'fees_received'</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='admission_done']" position="attributes">
+                <attribute name="invisible">state != 'fees_received'</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <div name="button_box" position="inside">
+                    <button
+                        name="%(school_fees.action_stu_fees_form)d"
+                        type="action"
+                        class="oe_inline oe_stat_button"
+                        invisible="state !='verify_document'"
+                        groups="school.group_school_administration,school.group_school_student"
+                    >
+                        <img
+                            src="/school/static/description/payment.png"
+                            alt="Logo"
+                            style="margin-left:20px;"
+                        />
+                        <lable style="margin-left:20px;">Fees Receipt</lable>
+                    </button>
+                </div>
+            </xpath>
         </field>
+    </record>
+
+    <record id="school.action_student_student_form_2" model="ir.actions.act_window">
+        <field
+            name="domain"
+        >['|','|','|',('state','=','fees_received'),('state','=','verify_document'),('state','=','draft'),('state','=','cancel')]</field>
     </record>
 
     <!-- memu Items for Fees -->
