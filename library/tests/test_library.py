@@ -6,7 +6,7 @@ from odoo.tests import common
 
 class TestLibrary(common.TransactionCase):
     def setUp(self):
-        super(TestLibrary, self).setUp()
+        super().setUp()
         self.product_product_obj = self.env["product.product"]
         self.library_rack_obj = self.env["library.rack"]
         self.product_lang_obj = self.env["product.lang"]
@@ -46,7 +46,7 @@ class TestLibrary(common.TransactionCase):
             {
                 "name": "Java",
                 "categ_id": categ.id,
-                "type": "product",
+                "type": "consu",
                 "day_to_return_book": 10,
                 "weight": 1.23,
                 "fine_lost": 100,

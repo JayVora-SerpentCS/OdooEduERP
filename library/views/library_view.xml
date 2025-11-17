@@ -35,12 +35,12 @@
     </record>
     <!-- Tree View Of Library Author -->
     <record id="author_tree" model="ir.ui.view">
-        <field name="name">library.author.tree</field>
+        <field name="name">library.author.list</field>
         <field name="model">library.author</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Library Author -->
@@ -58,7 +58,7 @@
         <field name="name">Authors</field>
         <field name="res_model">library.author</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="author_search" />
     </record>
     <!-- Form View Of Library Rack -->
@@ -79,14 +79,14 @@
     </record>
     <!-- Tree View Of Library Rack -->
     <record id="rack_tree" model="ir.ui.view">
-        <field name="name">Library Rack Tree</field>
+        <field name="name">Library Rack list</field>
         <field name="model">library.rack</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="active" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Library Rack -->
@@ -111,14 +111,14 @@
         <field name="name">Library Rack</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">library.rack</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Menu Items Of Library -->
 
     <menuitem
         id="menu_library"
         name="Library"
-        web_icon="school,static/description/menu_icons/icons_library.png"
+        web_icon="school,static/menu_icons/icons_library.png"
         sequence="1"
         groups="library.group_librarian,group_userian"
     />
@@ -173,8 +173,8 @@
                             nolabel="1"
                         />
                     </h1>
-                    <group col="5">
-                        <group col="1" class="oe_left">
+                    <group>
+                        <group>
                             <field
                                 name="image_1920"
                                 widget="image"
@@ -183,8 +183,7 @@
                                 nolabel="1"
                             />
                         </group>
-                        <group col="2" />
-                        <group col="2" colspan="2">
+                        <group>
                             <field name="isbn" placeholder="ISBN Number" />
                             <field
                                 name="default_code"
@@ -293,11 +292,11 @@
     </record>
     <!-- Tree View Of Product Book -->
     <record id="view_product_book_tree" model="ir.ui.view">
-        <field name="name">product.book.tree.view</field>
+        <field name="name">product.book.list.view</field>
         <field name="model">product.product</field>
         <field name="priority" eval="1" />
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="uom_id" />
                 <field name="categ_id" />
@@ -310,7 +309,7 @@
                     decoration-danger="availability == 'available'"
                     decoration-success="availability == 'notavailable'"
                 />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- KanBan View Of Books -->
@@ -328,75 +327,73 @@
                 <field name="books_available" />
                 <field name="id" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div
-                            class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
-                        >
-                            <div
-                                class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image: url(#{kanban_image('product.product', 'image_512', record.id.raw_value)})"
-                                role="img"
+                    <t t-name="card" class="flex-row">
+                        <aside class="d-flex align-items-center me-2">
+                            <field
+                                name="image_512"
+                                widget="image"
+                                options="{'img_class': 'object-fit-cover'}"
                             />
-                             <div class="oe_kanban_details">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <strong
-                                            class="o_kanban_record_title oe_partner_heading"
-                                        >
-                                            <field name="name" />
-                                        </strong>
-                                        <div
-                                            class="o_kanban_tags_section oe_kanban_partner_categories"
-                                        />
-                                        <ul>
-                                            <li
-                                                t-if="record.author.raw_value"
-                                            >Author: <field name="author" /></li>
-                                            <li
-                                                t-if="record.num_edition.raw_value"
-                                            >Edition: <field name="num_edition" /></li>
-                                            <li
-                                                t-if="record.lang.raw_value"
-                                            >Language: <field name="lang" /></li>
-                                            <li
-                                                t-if="record.availability.raw_value"
-                                            >Availability: <field
-                                                    name="availability"
-                                                /></li>
-                                            <li
-                                                t-if="record.nbpage.raw_value"
-                                            >Pages: <field name="nbpage" /></li>
-                                            <div class="o_kanban_record_bottom">
-                                                <div
-                                                    class="oe_kanban_bottom_left o_kanban_project_tasks"
+                        </aside>
+                        <main>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong
+                                        class="o_kanban_record_title oe_partner_heading"
+                                    >
+                                        <field name="name" />
+                                    </strong>
+                                    <div
+                                        class="o_kanban_tags_section oe_kanban_partner_categories"
+                                    />
+                                    <ul>
+                                        <li
+                                            t-if="record.author.raw_value"
+                                        >Author: <field name="author" /></li>
+                                        <li
+                                            t-if="record.num_edition.raw_value"
+                                        >Edition: <field name="num_edition" /></li>
+                                        <li
+                                            t-if="record.lang.raw_value"
+                                        >Language: <field name="lang" /></li>
+                                        <li
+                                            t-if="record.availability.raw_value"
+                                        >Availability: <field
+                                                name="availability"
+                                            /></li>
+                                        <li t-if="record.nbpage.raw_value">Pages: <field
+                                                name="nbpage"
+                                            /></li>
+                                        <div class="o_kanban_record_bottom">
+                                            <div
+                                                class="oe_kanban_bottom_left o_kanban_project_tasks"
+                                            >
+                                                <span>Available Qty: </span>
+                                                 <div
+                                                    t-attf-class="oe_kanban_align badge {{ record.books_available.raw_value &gt; 0 ? 'border-success' : 'border-danger' }} me-0"
                                                 >
-                                                    <span>Available Qty: </span>
-                                                     <div
-                                                        t-attf-class="oe_kanban_align badge {{ record.books_available.raw_value &gt; 0 ? 'border-success' : 'border-danger' }} me-0"
-                                                    >
-                                                        <field
-                                                            name="books_available"
-                                                            widget="timesheet_uom"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="oe_kanban_bottom_right o_kanban_project_tasks"
-                                                >
-                                                    <span>Total Qty: </span>
-                                                    <div
-                                                        t-attf-class="oe_kanban_align badge me-0"
-                                                    >
-                                                        <field name="qty_available" />
-                                                    </div>
+                                                    <field
+                                                        name="books_available"
+                                                        widget="timesheet_uom"
+                                                    />
                                                 </div>
                                             </div>
-                                        </ul>
-                                        <div class="oe_kanban_partner_links" />
-                                    </div>
+                                            <div
+                                                class="oe_kanban_bottom_right o_kanban_project_tasks"
+                                            >
+                                                <span>Total Qty: </span>
+                                                <div
+                                                    t-attf-class="oe_kanban_align badge me-0"
+                                                >
+                                                    <field name="qty_available" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                    <div class="oe_kanban_partner_links" />
                                 </div>
                             </div>
-                        </div>
+                        </main>
                     </t>
                 </templates>
             </kanban>
@@ -417,13 +414,13 @@
     </record>
     <!-- Tree View Of Book Attachment -->
     <record id="attachment_tree_id" model="ir.ui.view">
-        <field name="name">attachement.tree</field>
+        <field name="name">attachement.list</field>
         <field name="model">book.attachment</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="date" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Action Of Product Book List -->
@@ -431,9 +428,9 @@
         <field name="name">Books</field>
         <field name="res_model">product.product</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="books_kanban_view" />
-        <field name="context">{'search_default_book':1,'default_type':'product'}</field>
+        <field name="context">{'search_default_book':1,'default_type':'consu'}</field>
     </record>
     <!-- Menu Items Of Library Books -->
     <menuitem
@@ -466,17 +463,17 @@
     <!-- Action Of Tree View Of View Book -->
     <record id="action_view_book2" model="ir.actions.act_window.view">
         <field name="sequence" eval="2" />
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_product_book_tree" />
         <field name="act_window_id" ref="action_product_book_list" />
     </record>
     <!-- Tree View Of Account Invoice -->
     <record id="invoice_tree" model="ir.ui.view">
-        <field name="name">account.move.tree</field>
+        <field name="name">account.move.list</field>
         <field name="model">account.move</field>
         <field name="priority" eval="1" />
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="move_type" />
                 <field name="invoice_date" />
@@ -486,22 +483,22 @@
                 <field name="amount_total" />
                 <field name="currency_id" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Tree View Of Stock Picking -->
     <record id="vpicktree" model="ir.ui.view">
-        <field name="name">stock.picking.tree</field>
+        <field name="name">stock.picking.list</field>
         <field name="model">stock.picking</field>
         <field name="priority" eval="1" />
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" colspan="3" />
                 <field name="date" />
                 <field name="origin" />
                 <field name="state" readonly="1" />
                 <field name="date_done" readonly="1" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View Of Library Card Details -->
@@ -582,16 +579,16 @@
     </record>
     <!-- Tree View Of Library Card Details -->
     <record id="product_card_tree_view" model="ir.ui.view">
-        <field name="name">library.card.tree</field>
+        <field name="name">library.card.list</field>
         <field name="model">library.card</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="code" />
                 <field name="user" />
                 <field name="book_limit" />
                 <field name="card_name" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Library Card Details -->
@@ -610,7 +607,7 @@
     <record id="action_card_info" model="ir.actions.act_window">
         <field name="name">Card Details</field>
         <field name="res_model">library.card</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Menu Item Of Library Card -->
     <menuitem
@@ -849,15 +846,16 @@
                         />
                     </group>
                 </sheet>
+                <chatter />
             </form>
         </field>
     </record>
     <!-- Tree View Of Library Book Issue -->
     <record id="view_library_book_tree" model="ir.ui.view">
-        <field name="name">library.book.issue.tree</field>
+        <field name="name">library.book.issue.list</field>
         <field name="model">library.book.issue</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="issue_code" />
                 <field name="name" />
                 <field name="user" />
@@ -874,7 +872,7 @@
                 <field name="actual_return_date" />
                 <field name="penalty" />
                 <field name="lost_penalty" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Kanban View Of Library Book Issue -->
@@ -895,54 +893,48 @@
                 <field name="day_to_return_book" />
                 <field name="state" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div
-                            class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
-                        >
-                            <div
-                                t-if="record.name"
-                                class="o_kanban_image_fill_left d-none d-md-block"
-                                t-attf-style="background-image: url(#{kanban_image('product.product', 'image_512', record.name.raw_value)})"
-                                role="img"
+                    <t t-name="card" class="flex-row">
+                        <aside class="d-flex align-items-center me-2">
+                            <field
+                                name="name"
+                                widget="image"
+                                options="{'preview_image': 'image_128'}"
+                                t-att-alt="record.name.value"
                             />
-                            <div class="oe_kanban_details">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings">
-                                        <strong
-                                            class="o_kanban_record_title oe_partner_heading"
-                                        >
-                                            <field name="name" />
-                                        </strong>
-                                        <div
-                                            class="o_kanban_tags_section oe_kanban_partner_categories"
-                                        />
-                                        <ul>
-                                            <li
-                                                t-if="record.card_id.raw_value"
-                                            >Card No: <field name="card_id" /></li>
-                                            <li
-                                                t-if="record.date_issue.raw_value"
-                                            >Date Issue: <field
-                                                    name="date_issue"
-                                                /></li>
-                                            <li
-                                                t-if="record.date_return.raw_value"
-                                            >Date Return: <field
-                                                    name="date_return"
-                                                /></li>
-                                            <li
-                                                t-if="record.day_to_return_book.raw_value"
-                                            >Day To Return Book: <field
-                                                    name="day_to_return_book"
-                                                /></li>
-                                            <li
-                                                t-if="record.state.raw_value"
-                                            >Status: <field name="state" /></li>
-                                        </ul>
-                                    </div>
+                        </aside>
+                        <main>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong
+                                        class="o_kanban_record_title oe_partner_heading"
+                                    >
+                                        <field name="name" />
+                                    </strong>
+                                    <div
+                                        class="o_kanban_tags_section oe_kanban_partner_categories"
+                                    />
+                                    <ul>
+                                        <li
+                                            t-if="record.card_id.raw_value"
+                                        >Card No: <field name="card_id" /></li>
+                                        <li
+                                            t-if="record.date_issue.raw_value"
+                                        >Date Issue: <field name="date_issue" /></li>
+                                        <li
+                                            t-if="record.date_return.raw_value"
+                                        >Date Return: <field name="date_return" /></li>
+                                        <li
+                                            t-if="record.day_to_return_book.raw_value"
+                                        >Day To Return Book: <field
+                                                name="day_to_return_book"
+                                            /></li>
+                                        <li t-if="record.state.raw_value">Status: <field
+                                                name="state"
+                                            /></li>
+                                    </ul>
                                 </div>
                             </div>
-                        </div>
+                        </main>
                     </t>
                 </templates>
             </kanban>
@@ -996,7 +988,7 @@
         <field name="name">Book Issue</field>
         <field name="res_model">library.book.issue</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
     <!--Menu Item Of Library Book Issue -->
     <menuitem
@@ -1016,7 +1008,7 @@
                 <header>
                     <button
                         name="confirm_book_request"
-                        icon="fa fa-undo"
+                        icon="fa-undo"
                         type="object"
                         string="Confirm Request"
                         groups="library.group_librarian"
@@ -1089,10 +1081,10 @@
     </record>
     <!-- Tree View Of Library Book Request -->
     <record id="view_library_req_tree" model="ir.ui.view">
-        <field name="name">library.book.req.tree</field>
+        <field name="name">library.book.req.list</field>
         <field name="model">library.book.request</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="req_id" />
                 <field name="card_id" />
                 <field name="type" />
@@ -1105,7 +1097,7 @@
                     decoration-danger="state == 'cancel'"
                     decoration-success="state == 'confirm'"
                 />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Library Book Request -->
@@ -1135,7 +1127,7 @@
     <record id="action_lib_book_req" model="ir.actions.act_window">
         <field name="name">Book Requests</field>
         <field name="res_model">library.book.request</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field
             name="context"
         >{'search_default_fil_state':1,'search_default_state':'draft'}</field>
@@ -1166,13 +1158,13 @@
     </record>
     <!-- Tree view Of Product Language -->
     <record id="product_lang_tree_view" model="ir.ui.view">
-        <field name="name">product.lang.tree</field>
+        <field name="name">product.lang.list</field>
         <field name="model">product.lang</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="code" />
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Action Of Form & Tree Views Of Product Language -->
@@ -1180,7 +1172,7 @@
         <field name="name">Languages</field>
         <field name="res_model">product.lang</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Menu Item Of Product Language -->
     <menuitem
@@ -1272,12 +1264,12 @@
     </record>
     <!-- Tree View Of Library Editor -->
     <record id="editor_tree" model="ir.ui.view">
-        <field name="name">book.editor.tree</field>
+        <field name="name">book.editor.list</field>
         <field name="model">book.editor</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Library Author -->
@@ -1298,7 +1290,7 @@
         <field name="arch" type="xml">
             <form string="Partners">
                 <sheet>
-                    <field
+                    <!-- <field
                         name="image_1920"
                         widget="image"
                         class="oe_left oe_avatar"
@@ -1394,8 +1386,8 @@
                             <field name="email" widget="email" />
                             <field
                                 name="title"
-                                groups="base.group_no_one"
                                 options="{'no_open': True}"
+                                groups="base.group_no_one"
                                 invisible="is_company == True"
                             />
                         </group>
@@ -1427,11 +1419,10 @@
                                     <field name="state_id" />
                                     <field name="image_128" />
                                     <field name="lang" />
-                                    <!-- fields in form x2many view to diminish requests -->
                                     <field name="comment" />
                                     <field name="display_name" />
                                     <templates>
-                                        <t t-name="kanban-box">
+                                        <t t-name="card">
                                             <t
                                                 t-set="color"
                                                 t-value="kanban_color(record.color.raw_value)"
@@ -1440,11 +1431,6 @@
                                                 t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'"
                                             >
                                                 <div class="o_kanban_image">
-                                                    <img
-                                                        t-if="record.image_128.raw_value"
-                                                        alt="Image"
-                                                        t-att-src="kanban_image('res.partner', 'image_128', record.id.raw_value)"
-                                                    />
                                                     <t
                                                         t-if="!record.image_128.raw_value"
                                                     >
@@ -1540,7 +1526,7 @@
                                 </form>
                             </field>
                         </page>
-                    </notebook>
+                    </notebook> -->
                 </sheet>
             </form>
         </field>
@@ -1572,13 +1558,13 @@
         <field name="name">Editor - supplier realtions</field>
         <field name="model">library.editor.supplier</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="supplier_id" />
                 <field name="sequence" />
                 <field name="delay" />
                 <field name="junk" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Library Editor Supplier -->
@@ -1597,11 +1583,11 @@
     </record>
     <!-- Overwritten Tree View Of Stock Move -->
     <record id="stock.view_move_tree" model="ir.ui.view">
-        <field name="name">stock.move.tree</field>
+        <field name="name">stock.move.list</field>
         <field name="model">stock.move</field>
         <field name="priority" eval="6" />
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="product_id" />
                 <field name="origin_ref" />
                 <field name="product_uom_qty" />
@@ -1613,7 +1599,7 @@
                 <field name="name" />
                 <field name="company_id" invisible="1" />
                 <field name="product_uom_category_id" invisible="1" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Product Book Search -->
