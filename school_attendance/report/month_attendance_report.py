@@ -3,7 +3,7 @@
 import calendar
 from datetime import datetime
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class ReportMonthAttendace(models.AbstractModel):
@@ -50,7 +50,7 @@ class ReportMonthAttendace(models.AbstractModel):
             + " 23:00:00"
         )
 
-        elective_subject = f"and is_elective_subject = 'f'"
+        elective_subject = "and is_elective_subject = 'f'"
         if rec.is_elective_subject:
             elective_subject = f"and subject_id = {rec.subject_id.id}"
 
@@ -75,7 +75,9 @@ class ReportMonthAttendace(models.AbstractModel):
             if record and record[0]:
                 records.append(record[0])
         for att in self.env["daily.attendance"].browse(records):
-            date = datetime.strptime(str(att.date), "%Y-%m-%d %H:%M:%S")
+            # date = datetime.strptime(str(att.date), "%Y-%m-%d %H:%M:%S")
+            date = fields.Datetime.to_datetime(att.date)
+
             day_date = date.strftime("%Y-%m-%d")
             if not group_data:
                 group_data.append(

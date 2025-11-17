@@ -32,7 +32,7 @@ class MonthlyAttendanceSheet(models.TransientModel):
         tree_view = self.env.ref("school_attendance.view_attendance_sheet_tree").id
         return {
             "view_type": "form",
-            "view_mode": "tree, form",
+            "view_mode": "list, form",
             "res_model": "attendance.sheet",
             "view_id": False,
             "domain": [

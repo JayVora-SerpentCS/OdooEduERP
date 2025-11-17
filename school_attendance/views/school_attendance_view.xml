@@ -25,7 +25,7 @@
                 <notebook colspan="4">
                     <page string="Attendances">
                         <field name="attendance_ids" nolabel="1" colspan="4">
-                            <tree editable="bottom" create="false" delete="false">
+                            <list editable="bottom" create="false" delete="false">
                                 <field name="roll_no" />
                                 <field name="name" />
                                 <field name="one" />
@@ -60,7 +60,7 @@
                                 <field name="thirty" />
                                 <field name="thirtyone" />
                                 <field name="percentage" widget="progressbar" />
-                            </tree>
+                            </list>
                             <form string="Monthly Attendance">
                                 <group col="6" colspan="4">
                                     <field name="roll_no" />
@@ -111,12 +111,12 @@
         <field name="name">attendance.sheet.tree</field>
         <field name="model">attendance.sheet</field>
         <field name="arch" type="xml">
-            <tree create="0">
+            <list create="0">
                 <field name="name" />
                 <field name="standard_id" />
                 <field name="month_id" />
                 <field name="year_id" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -247,14 +247,7 @@
                         />
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field
-                        name="message_follower_ids"
-                        widget="mail_followers"
-                        groups="base.group_user"
-                    />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
@@ -263,7 +256,7 @@
         <field name="name">studentleave.request.tree</field>
         <field name="model">studentleave.request</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="student_id" />
                 <field name="roll_no" />
@@ -272,7 +265,7 @@
                 <field name="start_date" />
                 <field name="end_date" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -281,14 +274,14 @@
     <record id="action_attendance_sheet_form" model="ir.actions.act_window">
         <field name="name">Attendance Sheet</field>
         <field name="res_model">attendance.sheet</field>
-        <field name="view_mode">form,tree</field>
+        <field name="view_mode">form,list</field>
     </record>
 
     <!-- Action of Student Leave REquest -->
     <record id="action_student_leave_form" model="ir.actions.act_window">
         <field name="name">Student Leave Request Action</field>
         <field name="res_model">studentleave.request</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 
@@ -366,7 +359,7 @@
                             placeholder="Select"
                             required="1"
                             options="{'no_create': True}"
-                            readonly="is_generate != False"
+                            readonly="state == 'validate' or is_generate != False"
                         />
                         <field
                             name="standard_id"
@@ -409,6 +402,7 @@
                         <page string="Students">
                             <field
                                 name="student_ids"
+                                readonly="state == 'validate'"
                                 mode="kanban"
                                 context="{
                             'main_teacher_id': user_id,
@@ -419,7 +413,7 @@
                                     <field name="is_present" />
                                     <field name="is_absent" />
                                     <templates>
-                                        <t t-name="kanban-box">
+                                        <t t-name="card">
                                             <div
                                                 align="center"
                                                 t-if="record.is_present.raw_value"
@@ -437,10 +431,8 @@
                                                     >
                                                         <a>
                                                             <img
-                                                                style="width: 94px !important;height: 110px !important;"
-                                                                t-att-src="kanban_image('student.student', 'photo', record.stud_id.raw_value)"
-                                                                class=""
-                                                                alt="Logo"
+                                                                t-att-src="'/web/image/student.student/' + record.stud_id.raw_value + '/photo'"
+                                                                style="width:94px;height:110px;"
                                                             />
                                                         </a>
                                                         <h3
@@ -492,10 +484,8 @@
                                                     >
                                                         <a>
                                                             <img
-                                                                style="width: 94px !important;height: 110px !important;"
-                                                                t-att-src="kanban_image('student.student', 'photo', record.stud_id.raw_value)"
-                                                                class=""
-                                                                alt="Logo"
+                                                                t-att-src="'/web/image/student.student/' + record.stud_id.raw_value + '/photo'"
+                                                                style="width:94px;height:110px;"
                                                             />
                                                         </a>
                                                         <h3
@@ -569,16 +559,13 @@
         <field name="name">daily.attendance.tree</field>
         <field name="model">daily.attendance</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="date" />
                 <field name="state" />
                 <field name="user_id" />
                 <field name="standard_id" />
-                <field name="student_ids">
-                    <!--                        <field name="roll_no" />-->
-                    <!--                        <field name="stud_id" />-->
-                </field>
-            </tree>
+                <field name="student_ids" />
+            </list>
         </field>
     </record>
 
@@ -587,7 +574,7 @@
     <record id="action_daily_attendance_form" model="ir.actions.act_window">
         <field name="name">Daily Attendance Information</field>
         <field name="res_model">daily.attendance</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- Menu Item Of Daily Attendance Sheets -->
