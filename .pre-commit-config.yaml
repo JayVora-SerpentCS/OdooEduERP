@@ -52,7 +52,7 @@ repos:
       - id: oca-gen-addon-readme
         args:
           - --addons-dir=.
-          - --branch=17.0
+          - --branch=18.0
           - --org-name=Serpent Consulting Services Pvt. Ltd.
           - --repo-name=OdooEduERP
           - --if-source-changed
