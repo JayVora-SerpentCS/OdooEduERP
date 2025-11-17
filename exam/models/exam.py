@@ -293,12 +293,13 @@ class ExamExam(models.Model):
         help="Enter exam schedule",
     )
 
-    @api.model
-    def create(self, vals):
-        vals["exam_code"] = self.env["ir.sequence"].next_by_code("exam.exam") or _(
-            "New"
-        )
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["exam_code"] = self.env["ir.sequence"].next_by_code("exam.exam") or _(
+                "New"
+            )
+        return super().create(vals_list)
 
     def set_to_draft(self):
         """Method to set state to draft"""
@@ -380,7 +381,7 @@ class ExamExam(models.Model):
                         result_list.append(result_rec.id)
         return {
             "name": _("Result Info"),
-            "view_mode": "tree,form",
+            "view_mode": "list,form",
             "res_model": "exam.result",
             "type": "ir.actions.act_window",
             "domain": [("id", "in", result_list)],
@@ -439,12 +440,13 @@ class AdditionalExam(models.Model):
         help="Select color",
     )
 
-    @api.model
-    def create(self, vals):
-        vals["addtional_exam_code"] = self.env["ir.sequence"].next_by_code(
-            "additional.exam"
-        ) or _("New")
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals["addtional_exam_code"] = self.env["ir.sequence"].next_by_code(
+                "additional.exam"
+            ) or _("New")
+        return super().create(vals_list)
 
     @api.constrains("maximum_marks", "minimum_marks")
     def check_marks(self):
@@ -568,12 +570,13 @@ class ExamResult(models.Model):
             "standard_id": student_rec.standard_id.id,
         }
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Inherited the create method to assign the roll no and std"""
-        if vals.get("student_id"):
-            vals.update(self._update_rollno_standard(vals.get("student_id")))
-        return super().create(vals)
+        for vals in vals_list:
+            if vals.get("student_id"):
+                vals.update(self._update_rollno_standard(vals.get("student_id")))
+        return super().create(vals_list)
 
     def write(self, vals):
         """Inherited the write method to update the roll no and std"""
@@ -695,7 +698,7 @@ class ExamSubject(models.Model):
     subject_id = fields.Many2one(
         "subject.subject", "Subject Name", help="Select subject"
     )
-    obtain_marks = fields.Float(group_operator="avg", help="Enter obtained marks")
+    obtain_marks = fields.Float(aggregator="avg", help="Enter obtained marks")
     minimum_marks = fields.Float(help="Minimum Marks of subject")
     maximum_marks = fields.Float(help="Maximum Marks of subject")
     marks_reeval = fields.Float(
@@ -777,24 +780,23 @@ class AdditionalExamResult(models.Model):
         """This is the common method to update student
         record at creation and updation of the exam record"""
         student_rec = self.env["student.student"].browse(vals.get("student_id"))
-        vals.update(
-            {
-                "roll_no": student_rec.roll_no,
-                "standard_id": student_rec.standard_id.id,
-            }
-        )
+        return {
+            "roll_no": student_rec.roll_no,
+            "standard_id": student_rec.standard_id.id,
+        }
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Override create method to get roll no and standard"""
-        if vals.get("student_id"):
-            self._update_student_vals(vals)
-        return super().create(vals)
+        for vals in vals_list:
+            if vals.get("student_id"):
+                vals.update(self._update_student_vals(vals))
+        return super().create(vals_list)
 
     def write(self, vals):
         """Override write method to get roll no and standard"""
         if vals.get("student_id"):
-            self._update_student_vals(vals)
+            vals.update(self._update_student_vals(vals))
         return super().write(vals)
 
     @api.onchange("student_id")

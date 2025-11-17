@@ -6,14 +6,22 @@
         <field name="name">Final Exam</field>
         <field name="state">finished</field>
         <field name="grade_system" ref="school.demo_student_grade_1" />
-        <field name="end_date" eval="time.strftime('%Y-03-09')" />
-        <field name="start_date" eval="time.strftime('%Y-03-06')" />
+        <field
+            name="end_date"
+            eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"
+        />
+        <field
+            name="start_date"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
         <field
             eval="[(6,0,[ref('school.demo_standard_standard_1')])]"
             name="standard_id"
         />
         <field name="academic_year" ref="school.demo_academic_year_3" />
     </record>
+
+    <!-- Timetable Record -->
     <record id="time_table_finalexamtimetable0" model="time.table">
         <field name="name">Final Exam Timetable</field>
         <field name="standard_id" ref="school.demo_school_standard_1" />
@@ -25,74 +33,94 @@
             search="[('name', '=', u'Final Exam')]"
         />
     </record>
+
+    <!-- Exam Schedule Line -->
     <record id="exam_schedule_line_record" model="exam.schedule.line">
         <field name="standard_id" ref="school.demo_school_standard_1" />
         <field name="exam_id" ref="exam.exam_exam_finalexam0" />
         <field name="timetable_id" ref="exam.time_table_finalexamtimetable0" />
     </record>
+
+    <!-- Time Table Lines with NO conflicts -->
+
     <record id="time_table_line_0" model="time.table.line">
         <field name="teacher_id" ref="school.demo_school_teacher_1" />
         <field name="subject_id" ref="school.demo_subject_subject_1" />
-        <field name="exm_date" eval="time.strftime('%Y-03-06')" />
+        <field
+            name="exm_date"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+        />
         <field
             name="week_day"
-            eval="datetime.strptime(time.strftime('%Y-03-06'), '%Y-%m-%d').strftime('%A').lower()"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%A').lower()"
         />
+        <field name="start_time" eval="10.0" />
+        <field name="end_time" eval="12.0" />
         <field
             model="time.table"
             name="table_id"
             search="[('name', '=', u'Final Exam Timetable')]"
         />
-        <field eval="12.0" name="end_time" />
-        <field eval="10.0" name="start_time" />
     </record>
+
     <record id="time_table_line_1" model="time.table.line">
         <field name="teacher_id" ref="school.demo_school_teacher_2" />
         <field name="subject_id" ref="school.demo_subject_subject_2" />
-        <field name="exm_date" eval="time.strftime('%Y-03-07')" />
+        <field
+            name="exm_date"
+            eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')"
+        />
         <field
             name="week_day"
-            eval="datetime.strptime(time.strftime('%Y-03-07'), '%Y-%m-%d').strftime('%A').lower()"
+            eval="(DateTime.today() + relativedelta(days=2)).strftime('%A').lower()"
         />
+        <field name="start_time" eval="10.0" />
+        <field name="end_time" eval="12.0" />
         <field
             model="time.table"
             name="table_id"
             search="[('name', '=', u'Final Exam Timetable')]"
         />
-        <field eval="12.0" name="end_time" />
-        <field eval="10.0" name="start_time" />
     </record>
+
     <record id="time_table_line_2" model="time.table.line">
         <field name="teacher_id" ref="school.demo_school_teacher_3" />
         <field name="subject_id" ref="school.demo_subject_subject_3" />
-        <field name="exm_date" eval="time.strftime('%Y-03-08')" />
+        <field
+            name="exm_date"
+            eval="(DateTime.today() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')"
+        />
         <field
             name="week_day"
-            eval="datetime.strptime(time.strftime('%Y-03-08'), '%Y-%m-%d').strftime('%A').lower()"
+            eval="(DateTime.today() + relativedelta(days=3)).strftime('%A').lower()"
         />
+        <field name="start_time" eval="10.0" />
+        <field name="end_time" eval="12.0" />
         <field
             model="time.table"
             name="table_id"
             search="[('name', '=', u'Final Exam Timetable')]"
         />
-        <field eval="12.0" name="end_time" />
-        <field eval="10.0" name="start_time" />
     </record>
+
     <record id="time_table_line_3" model="time.table.line">
         <field name="teacher_id" ref="school.demo_school_teacher_1" />
-        <field name="subject_id" ref="school.demo_subject_subject_5" />
-        <field name="exm_date" eval="time.strftime('%Y-03-09')" />
+        <field name="subject_id" ref="school.demo_subject_subject_4" />
+        <field
+            name="exm_date"
+            eval="(DateTime.today() + relativedelta(days=4)).strftime('%Y-%m-%d %H:%M')"
+        />
         <field
             name="week_day"
-            eval="datetime.strptime(time.strftime('%Y-03-09'), '%Y-%m-%d').strftime('%A').lower()"
+            eval="(DateTime.today() + relativedelta(days=4)).strftime('%A').lower()"
         />
+        <field name="start_time" eval="10.0" />
+        <field name="end_time" eval="12.0" />
         <field
             model="time.table"
             name="table_id"
             search="[('name', '=', u'Final Exam Timetable')]"
         />
-        <field eval="12.0" name="end_time" />
-        <field eval="10.0" name="start_time" />
     </record>
 
     <!-- Exam Result Demo Data -->
