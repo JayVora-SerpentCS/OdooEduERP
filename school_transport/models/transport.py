@@ -68,7 +68,6 @@ class FleetVehicle(models.Model):
         limit=None,
         order=None,
         count=False,
-        # access_rights_uid=None,
     ):
         if self._context.get("name"):
             student_obj = self.env["student.transport"]
@@ -79,7 +78,6 @@ class FleetVehicle(models.Model):
             offset=offset,
             limit=limit,
             order=order,
-            # access_rights_uid=access_rights_uid,
         )
 
 
@@ -155,7 +153,6 @@ class TransportParticipant(models.Model):
         offset=0,
         limit=None,
         order=None,
-        # access_rights_uid=None,
     ):
         """Inherited method to get domain from student transportation"""
         if self._context.get("name"):
@@ -176,7 +173,6 @@ class TransportParticipant(models.Model):
             args,
             offset=offset,
             limit=limit,
-            # access_rights_uid=access_rights_uid,
         )
 
     def set_over(self):
