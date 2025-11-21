@@ -13,11 +13,6 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    is_driver = fields.Boolean(
-        "Vehicle Driver",
-        help="""Activate if the
-        following person is driver""",
-    )
     is_hostel_rector = fields.Boolean(
         "Hostel Rector",
         help="Activate if the following person is hostel rector",

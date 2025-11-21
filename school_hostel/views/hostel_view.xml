@@ -523,14 +523,6 @@
         >{'default_is_hostel_rector': 1,'default_customer':False}</field>
     </record>
 
-    <record id="menu_driver_action" model="ir.actions.act_window">
-        <field name="name">Driver</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,list,form</field>
-        <field name="domain">[('is_driver','=',True)]</field>
-        <field name="context">{'default_is_driver': 1,'default_customer':False}</field>
-    </record>
-
     <!-- MenuItems Of HOSTEL & HOSTEL->Bed Type -->
     <menuitem
         id="menu_hostel"
