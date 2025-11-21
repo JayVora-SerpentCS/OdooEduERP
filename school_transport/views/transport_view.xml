@@ -23,10 +23,6 @@
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
         <field name="arch" type="xml">
-            <!-- TODO: Open comment fields code. -->
-            <!-- <field name="driver_id" position="attributes">
-                <attribute name="domain">[('is_driver','=',True)]</attribute>
-            </field> -->
             <xpath expr="//button[@name='return_action_to_open']" position='after'>
                 <button
                     name="action_show_participant"
