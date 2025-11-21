@@ -384,14 +384,6 @@
          <field name="search_view_id" ref="view_teacher_eval_search" />
     </record>
 
-    <!-- <record
-        id="action_view_teacher_evaluation_tree_finished"
-        model="ir.actions.act_window.view"
-    >
-        <field name="view_mode">list</field>
-        <field name="view_id" ref="view_teacher_evaluation_tree" />
-        <field name="act_window_id" ref="action_teacher_eval_finished" />
-    </record> -->
     <record
         id="action_view_teacher_evaluation_form_finished"
         model="ir.actions.act_window.view"
@@ -401,14 +393,6 @@
         <field name="act_window_id" ref="action_teacher_eval_finished" />
     </record>
 
-    <!-- <record
-        id="action_view_teacher_evaluation_tree_new"
-        model="ir.actions.act_window.view"
-    >
-        <field name="view_mode">list</field>
-        <field name="view_id" ref="view_teacher_evaluation_tree" />
-        <field name="act_window_id" ref="action_teacher_eval_top" />
-    </record> -->
     <record
         id="action_view_teacher_evaluation_form_new"
         model="ir.actions.act_window.view"
@@ -427,14 +411,6 @@
          <field name="search_view_id" ref="view_teacher_eval_search" />
     </record>
 
-    <!-- <record
-        id="action_view_teacher_evaluation_tree_new_draft"
-        model="ir.actions.act_window.view"
-    >
-        <field name="view_mode">list</field>
-        <field name="view_id" ref="view_teacher_evaluation_tree" />
-        <field name="act_window_id" ref="action_teacher_eval_new_draft" />
-    </record> -->
     <record
         id="action_view_teacher_evaluation_form_new_draft"
         model="ir.actions.act_window.view"
