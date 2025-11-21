@@ -533,6 +533,25 @@
         groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,group_transportation_manager,group_transportation_user"
     /> -->
 
+ <!-- add driver menu in transport configuration -->
+
+     <record id="menu_driver_action" model="ir.actions.act_window">
+        <field name="name">Driver</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_driver','=',True)]</field>
+        <field name="context">{'default_is_driver': 1,'default_customer':False}</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem
+        id="menu_res_partner_driver"
+        name="Drivers"
+        parent="menu_fleet_configuration"
+        action="menu_driver_action"
+        sequence="4"
+    />
+
     <!--Menu Items for Transport  -->
     <menuitem
         id="menu_transport"
