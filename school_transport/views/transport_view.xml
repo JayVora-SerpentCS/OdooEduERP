@@ -521,14 +521,6 @@
 
     </record>
 
-    <!-- Overrite the EMS Menu and Added the Transport manager and user groups -->
-    <!-- <menuitem
-        id="school.menu_ems"
-        name="EMS"
-        sequence="1"
-        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent,group_transportation_manager,group_transportation_user"
-    /> -->
-
  <!-- add driver menu in transport configuration -->
 
      <record id="menu_driver_action" model="ir.actions.act_window">
