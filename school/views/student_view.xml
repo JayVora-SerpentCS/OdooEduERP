@@ -1471,7 +1471,6 @@
         <field name="domain">[('state', '=', 'done')]</field>
         <field name="context">{'search_default_done_student':1}</field>
         <field name="res_model">student.student</field>
-         <field name="view_id" ref="" />
         <field name="search_view_id" ref="view_student_student_search_1" />
         <field name="view_mode">kanban,list,form</field>
     </record>

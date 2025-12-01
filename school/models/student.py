@@ -14,10 +14,6 @@ from . import school
 # from lxml import etree
 # added import statement in try-except because when server runs on
 # windows operating system issue arise because this library is not in Windows.
-try:
-    from odoo.tools import image_colorize
-except Exception:
-    image_colorize = False
 
 
 class StudentStudent(models.Model):
@@ -220,7 +216,7 @@ class StudentStudent(models.Model):
     )
     school_id = fields.Many2one(
         "school.school",
-        "School Id",
+        "School",
         help="Select school",
         tracking=True,
     )
@@ -405,10 +401,8 @@ class StudentStudent(models.Model):
             start = rec.date_of_birth + relativedelta(years=rec.school_id.required_age)
             if start > fields.Date.today():
                 raise ValidationError(
-                    _(
-                        "Age of student should be greater than %s years!"
-                        % rec.school_id.required_age
-                    )
+                    _("Age of student should be greater than %s years!")
+                    % rec.school_id.required_age
                 )
 
     @api.constrains("admission_date", "leave_date")
@@ -416,10 +410,9 @@ class StudentStudent(models.Model):
         for record in self.filtered(
             lambda x: x.leave_date and x.admission_date > x.leave_date
         ):
-            if record:
-                raise ValidationError(
-                    _("The leave date should be greater than the start date")
-                )
+            raise ValidationError(
+                _("The leave date should be greater than the start date")
+            )
 
     def set_to_draft(self):
         """Method to change state to draft"""

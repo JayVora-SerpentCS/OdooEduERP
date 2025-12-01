@@ -104,10 +104,7 @@ class SchoolTeacher(models.Model):
     @api.constrains("birthday")
     def _check_birthday(self):
         for record in self.filtered(lambda x: x.birthday > date.today()):
-            if record:
-                raise ValidationError(
-                    _("Birthday cannot be greater than the current date")
-                )
+            raise ValidationError(_("Birthday cannot be greater than the current date"))
 
     # Removing this code because of issue faced due to email id of the
     # user is same for parent and Teacher, and system will not allow it.
