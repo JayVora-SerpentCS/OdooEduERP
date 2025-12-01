@@ -126,10 +126,6 @@ class ProductProduct(models.Model):
             )
             # reduces the quantity when book is issued
             rec.books_available = rec.qty_available - issue_rec_no
-            rec.availability = "notavailable"
-            if rec.books_available >= 1:
-                rec.availability = "available"
-        return True
 
     @api.depends("books_available", "day_to_return_book")
     def _compute_books_availablity(self):
