@@ -6,11 +6,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
-class StudentTransport(models.Model):
-    _name = "student.transport"
-    _description = "Transport Information"
-
-
 class FleetVehicle(models.Model):
     _inherit = "fleet.vehicle"
 

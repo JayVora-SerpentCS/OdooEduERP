@@ -531,15 +531,6 @@
         <field name="context">{'default_is_driver': 1,'default_customer':False}</field>
     </record>
 
-    <!-- Menu Item -->
-    <menuitem
-        id="menu_res_partner_driver"
-        name="Drivers"
-        parent="menu_fleet_configuration"
-        action="menu_driver_action"
-        sequence="4"
-    />
-
     <!--Menu Items for Transport  -->
     <menuitem
         id="menu_transport"
@@ -572,49 +563,21 @@
         action="action_school_transport_participant_form"
         groups="school_transport.group_transportation_manager,school_transport.group_transportation_user,school.group_school_teacher,school.group_school_parent"
     />
-    <!-- <menuitem id="menu_configuration" name="Configurations" parent="menu_ems" sequence="13" groups="group_school_administration" /> -->
-    <!-- <menuitem
-        name="Fleet"
-        parent="school.menu_ems"
-        id="fleet_vehicles"
-        sequence="9"
-        groups="fleet.fleet_group_user"
-    /> -->
-        <!-- <menuitem
-        action="fleet.fleet_vehicle_action"
-        parent="fleet_vehicles"
-        name="Fleet"
-        id="fleet_vehicle_menu"
-        groups="fleet.fleet_group_user"
-        sequence="0"
-    />
-        <menuitem
-        action="fleet.fleet_vehicle_log_contract_action"
-        parent="fleet_vehicles"
-        id="fleet_vehicle_log_contract_menu"
-        groups="fleet.fleet_group_user"
-        sequence="2"
-    />
-        <menuitem
-        action="fleet.fleet_vehicle_log_services_action"
-        parent="fleet_vehicles"
-        id="fleet_vehicle_log_services_menu"
-        groups="fleet.fleet_group_user"
-        sequence="3"
-    />
-        <menuitem
-        action="fleet.fleet_vehicle_odometer_action"
-        parent="fleet_vehicles"
-        id="fleet_vehicle_odometer_menu"
-        groups="fleet.fleet_group_user"
-        sequence="10"
-    /> -->
     <menuitem
         id="menu_fleet_configuration"
         name="Fleet Configuration"
         parent="menu_transport"
         sequence="100"
     />
+
+    <menuitem
+        id="menu_res_partner_driver"
+        name="Drivers"
+        parent="menu_fleet_configuration"
+        action="menu_driver_action"
+        sequence="4"
+    />
+
         <menuitem
         id="fleet_config_settings_menu"
         name="Settings"
