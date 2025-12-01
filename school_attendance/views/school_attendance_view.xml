@@ -365,7 +365,7 @@
                             name="standard_id"
                             widget="selection"
                             domain="[('user_id','=',user_id)]"
-                            readonly="is_generate != False"
+                            readonly="is_generate != False or state == 'validate'"
                         />
                         <field
                             name="is_elective_subject"

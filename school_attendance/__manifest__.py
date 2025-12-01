@@ -25,4 +25,7 @@
     "demo": ["demo/school_attendance_demo.xml"],
     "installable": True,
     "application": True,
+    "external_dependencies": {
+        "python": ["num2words"],
+    },
 }
