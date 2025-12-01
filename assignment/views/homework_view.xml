@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html>
 <odoo>
         <!-- Tree View Of Teacher Assignment Information -->
         <record id="view_school_teacher_assignment_tree" model="ir.ui.view">
