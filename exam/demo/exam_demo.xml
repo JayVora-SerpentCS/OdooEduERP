@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<odoo noupdate="0">
+<odoo noupdate="1">
     <!-- Exam Demo Data -->
     <record id="exam_exam_finalexam0" model="exam.exam">
         <field name="exam_code" eval="time.strftime('%Y-%m-03')" />
