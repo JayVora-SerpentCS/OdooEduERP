@@ -1,5 +1,4 @@
-<?xml version="1.0" ?>
-<!DOCTYPE html>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
     <record id="demo_subject_subject_9" model="subject.subject">
         <field name="name">Economic</field>
