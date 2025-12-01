@@ -523,7 +523,7 @@ class StudentPayslip(models.Model):
             ctx = self._context.copy()
             ctx.update({"lang": fees.student_id.lang})
             if not fees.payment_date:
-                self.write([fees.id], {"payment_date": fields.Date.today()})
+                self.write({"payment_date": fields.Date.today()})
             company_currency = fees.company_id.currency_id.id
             diff_currency_p = fees.currency_id.id != company_currency
             current_currency = (
@@ -598,7 +598,7 @@ class StudentPayslip(models.Model):
             }
             move_line_obj.create(move_line)
             fees.write({"move_id": move_id})
-            move_obj.action_post([move_id])
+            move_id.action_post()
 
     def student_pay_fees(self):
         """Generate invoice of student fee"""

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html>
 <odoo>
     <!-- Search View Of Student PaySlip Line Information -->
     <record id="view_student_payslip_line_search" model="ir.ui.view">

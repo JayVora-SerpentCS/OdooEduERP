@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html>
 <odoo noupdate="1">
     <!-- Sequences For student.payslip -->
     <record id="seq_student_payslip" model="ir.sequence">
