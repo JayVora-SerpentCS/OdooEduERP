@@ -75,46 +75,30 @@
                 <field name="color" />
                 <!-- <field name="phone" /> -->
                 <templates>
-                    <t t-name="kanban-box">
-                    <div
-                            class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
-                        >
-                        <field
+                    <t t-name="card" class="flex-row">
+                        <aside class="d-flex align-items-center me-2">
+                            <field
                                 name="avatar_128"
                                 widget="image"
-                                class="o_kanban_image_fill_left"
-                                options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"
+                                options="{'img_class': 'object-fit-cover'}"
                             />
-                        <div class="oe_kanban_details">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong
-                                            class="o_kanban_record_title oe_partner_heading"
-                                        >
-                                        <field name="name" />
-                                    </strong>
-                                    <div
-                                            class="o_kanban_tags_section oe_kanban_partner_categories"
-                                        />
-                                    <ul>
-                                        <li t-if="record.school_id.raw_value"><field
-                                                    name="school_id"
-                                                /></li>
-                                        <li t-if="record.job_id.raw_value"><field
-                                                    name="job_id"
-                                                /></li>
-                                        <!-- <li t-if="record.phone"><field
-                                                    name="phone"
-                                                /></li> -->
-                                        <li t-if="record.work_email.raw_value"><field
-                                                    name="work_email"
-                                                /></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </t>
+                        </aside>
+                        <main>
+                            <field class="fw-bolder fs-5" name="name" />
+                            <t t-if="record.school_id.raw_value"><field
+                                    name="school_id"
+                                /></t>
+                            <t t-if="record.job_id.raw_value"><field
+                                    name="job_id"
+                                /></t>
+                            <!-- <t t-if="record.phone"><field
+                                        name="phone"
+                                    /></t> -->
+                            <t t-if="record.work_email.raw_value"><field
+                                    name="work_email"
+                                /></t>
+                        </main>
+                    </t>
                 </templates>
             </kanban>
         </field>
@@ -125,7 +109,7 @@
         <field name="name">school.teacher.tree</field>
         <field name="model">school.teacher</field>
         <field name="arch" type="xml">
-            <tree decoration-bf="message_needaction==True">
+            <list decoration-bf="message_needaction==True">
                 <field name="name" />
                 <field name="work_phone" invisible="1" />
                 <field name="phone_numbers" />
@@ -136,7 +120,7 @@
                 <field name="parent_id" />
                 <field name="coach_id" invisible="1" />
                 <field name="message_needaction" invisible="1" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -286,14 +270,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field
-                        name="message_follower_ids"
-                        widget="mail_followers"
-                        groups="base.group_user"
-                    />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
@@ -303,7 +280,7 @@
     <record id="action_school_teacher_form" model="ir.actions.act_window">
         <field name="name">Teacher Profile</field>
         <field name="res_model">school.teacher</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
     <menuitem

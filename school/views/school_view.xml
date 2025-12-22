@@ -48,11 +48,11 @@
         <field name="name">student.reminder.tree</field>
         <field name="model">student.reminder</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="stu_id" />
                 <field name="date" />
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Kanban View Of Student Reminder -->
@@ -65,7 +65,7 @@
                 <field name="date" />
                 <field name="color" />
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div
                             t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}} oe_kanban_global_click_edit oe_semantic_html_override"
                         >
@@ -204,10 +204,10 @@
         <field name="name">school.school.tree</field>
         <field name="model">school.school</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" string="School Name" />
                 <field name="code" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View Of School Attendace -->
@@ -272,12 +272,12 @@
                     <notebook colspan="4">
                         <page string="Students" name="students">
                             <field name="student_ids" nolabel="1" colspan="4">
-                                <tree>
+                                <list>
                                     <field name="roll_no" />
                                     <field name="name" />
                                     <field name="year" />
                                     <field name="state" invisible="1" />
-                                </tree>
+                                </list>
                                 <form string="Student Information">
                                     <group col="4" colspan="4">
                                         <field name="roll_no" />
@@ -303,7 +303,7 @@
                                 nolabel="1"
                                 context="{'default_standard_id':standard_id}"
                             >
-                                <tree editable="top">
+                                <list editable="top">
                                     <field name="standard_id" invisible="1" />
                                     <field
                                         name="subject_id"
@@ -315,7 +315,7 @@
                                         required="1"
                                         string="Syllabus Doc"
                                     />
-                                </tree>
+                                </list>
                                 <form string="Syllabus">
                                     <group>
                                         <field
@@ -339,13 +339,13 @@
         <field name="name">school.standard.tree</field>
         <field name="model">school.standard</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="standard_id" />
                 <field name="user_id" />
                 <field name="division_id" />
                 <field name="medium_id" />
                 <field name="remaining_seats" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Kanban View Of School Standard Information -->
@@ -361,7 +361,7 @@
                 <field name="user_id" />
                 <field name="color" />
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <t
                             t-set="color"
                             t-value="kanban_color(record.color.raw_value || record.school_id.value)"
@@ -492,9 +492,9 @@
         <field name="name">student.caste.tree</field>
         <field name="model">student.cast</field>
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="name" placeholder="Enter Name" string="Name" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View Of Student Caste -->
@@ -515,7 +515,7 @@
     <record id="action_student_cast_form_7" model="ir.actions.act_window">
         <field name="name">Religion/Caste</field>
         <field name="res_model">student.cast</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- From View Of Grade System -->
     <record id="view_grade_form" model="ir.ui.view">
@@ -533,12 +533,12 @@
                     </group>
                         <newline />
                         <field name="grade_ids" nolabel="1" colspan="4">
-                            <tree>
+                            <list>
                                 <field name="sequence" string="Sequence" />
                                 <field name="from_mark" />
                                 <field name="to_mark" />
                                 <field name="grade" string="Grade" />
-                             </tree>
+                             </list>
                              <form>
                                  <group>
                                      <field
@@ -568,9 +568,9 @@
         <field name="name">grade.master.tree</field>
         <field name="model">grade.master</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- From View Of Academic Year's Information -->
@@ -617,12 +617,12 @@
                                 colspan="4"
                                 options="{'no_open': True, 'no_create': True}"
                             >
-                                <tree>
+                                <list>
                                     <field name="name" />
                                     <field name="code" />
                                     <field name="date_start" />
                                     <field name="date_stop" />
-                                </tree>
+                                </list>
                                 <!-- <form string="Months">
                                     <group colspan="2">
                                         <field name="name" placeholder="Name" />
@@ -652,13 +652,13 @@
         <field name="name">academic.year.tree</field>
         <field name="model">academic.year</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
                 <field name="date_start" />
                 <field name="date_stop" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- From View Of Academic Month's Information -->
@@ -693,13 +693,13 @@
         <field name="name">academic.month.tree</field>
         <field name="model">academic.month</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="date_start" />
                 <field name="date_stop" />
                 <field name="year_id" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- From View Of Standard Medium Information -->
@@ -728,11 +728,11 @@
         <field name="name">standard.medium.tree</field>
         <field name="model">standard.medium</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- From View Of Student Document Type -->
@@ -755,10 +755,10 @@
         <field name="name">document.type.tree</field>
         <field name="model">document.type</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="seq_no" />
                 <field name="doc_type" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Form View of mother Tongue -->
@@ -778,22 +778,22 @@
         <field name="name">Mother Tongue</field>
         <field name="model">mother.toungue</field>
         <field name="arch" type="xml">
-            <tree editable="top">
+            <list editable="top">
                 <field name="name" required="1" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Action of mother Toungue -->
     <record id="action_mother_toungue" model="ir.actions.act_window">
         <field name="name">Mother Tongue</field>
         <field name="res_model">mother.toungue</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Student Document Type -->
     <record id="action_document_type_form" model="ir.actions.act_window">
         <field name="name">Document Type</field>
         <field name="res_model">document.type</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Form View Of Standard Division Information-->
     <record id="view_standard_division_form" model="ir.ui.view">
@@ -821,11 +821,11 @@
         <field name="name">standard.division.tree</field>
         <field name="model">standard.division</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -861,10 +861,10 @@
                                 colspan="4"
                                 options="{'no_open': True, 'no_create': True}"
                             >
-                                <tree>
+                                <list>
                                     <field name="name" />
                                     <field name="code" />
-                                </tree>
+                                </list>
                                 <form string="Standards">
                                     <group col="4" colspan="4">
                                          <field
@@ -900,12 +900,12 @@
         <field name="name">subject.subject.tree</field>
         <field name="model">subject.subject</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="maximum_marks" />
                 <field name="minimum_marks" />
-            </tree>
+            </list>
         </field>
     </record>
     <record id="view_subject_subject_search" model="ir.ui.view">
@@ -947,18 +947,18 @@
         <field name="name">standard.standard.tree</field>
         <field name="model">standard.standard</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="sequence" />
                 <field name="name" />
                 <field name="code" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Actions Of Form & Kanban Views Of Student Reminder -->
     <record id="action_student_reminder" model="ir.actions.act_window">
         <field name="name">Students Reminder</field>
         <field name="res_model">student.reminder</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new Reminder.
@@ -974,55 +974,55 @@
     <record id="action_school_school_form" model="ir.actions.act_window">
         <field name="name">Schools</field>
         <field name="res_model">school.school</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of School Standard -->
     <record id="action_school_standard_form" model="ir.actions.act_window">
         <field name="name">Classes</field>
         <field name="res_model">school.standard</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Grade System -->
     <record id="action_grade_master_form" model="ir.actions.act_window">
         <field name="name">Grade</field>
         <field name="res_model">grade.master</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Academic Year Information -->
     <record id="action_academic_year_form" model="ir.actions.act_window">
         <field name="name">Academic Years</field>
         <field name="res_model">academic.year</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Academic Month Information -->
     <record id="action_academic_month_form" model="ir.actions.act_window">
         <field name="name">Months</field>
         <field name="res_model">academic.month</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Standard Medium Information -->
     <record id="action_standard_medium_form" model="ir.actions.act_window">
         <field name="name">Medium</field>
         <field name="res_model">standard.medium</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Standard Division Information Action -->
     <record id="action_standard_division_form" model="ir.actions.act_window">
         <field name="name">Divisions</field>
         <field name="res_model">standard.division</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Subject Information -->
     <record id="action_subject_subject_form" model="ir.actions.act_window">
         <field name="name">Subjects</field>
         <field name="res_model">subject.subject</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Action Of Form & Tree Views Of Standard Information -->
     <record id="action_standard_standard_form" model="ir.actions.act_window">
         <field name="name">Standards</field>
         <field name="res_model">standard.standard</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Form View Of Student News -->
     <record id="edit_student_news_form" model="ir.ui.view">
@@ -1087,10 +1087,10 @@
         <field name="name">student.news.tree</field>
         <field name="model">student.news</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="subject" />
                 <field name="date" />
-            </tree>
+            </list>
         </field>
     </record>
     <!-- Search View Of Student News -->
@@ -1110,7 +1110,7 @@
         <field name="name">Noticeboard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">student.news</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
     <!-- Form View of Class Room -->
     <record id="class_room_form_view" model="ir.ui.view">
@@ -1132,10 +1132,10 @@
         <field name="name">class.room.tree</field>
         <field name="model">class.room</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="number" />
-            </tree>
+            </list>
        </field>
     </record>
 
@@ -1143,7 +1143,7 @@
     <record id="action_class_room" model="ir.actions.act_window">
         <field name="name">Class Room</field>
         <field name="res_model">class.room</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- Menu Item Of EMS -->
@@ -1157,14 +1157,14 @@
     <menuitem
         id="admission_register"
         name="School"
-        web_icon="school,static/description/menu_icons/icons_education.png"
+        web_icon="school,static/menu_icons/icons_education.png"
         sequence="2"
     />
     <!-- <menuitem id="school_facilities" name="Facilities" parent="menu_ems" sequence="3" /> -->
     <menuitem
         id="school_schedule"
         name="Schedule"
-        web_icon="school,static/description/menu_icons/icons_schedule.png"
+        web_icon="school,static/menu_icons/icons_schedule.png"
         sequence="4"
     />
     <menuitem
@@ -1217,16 +1217,17 @@
     <menuitem
         id="menu_configuration"
         name="Academic Configurations"
-        web_icon="school,static/description/menu_icons/icons_configuration.png"
+        web_icon="school,static/menu_icons/icons_configuration.png"
         sequence="13"
         groups="group_school_administration"
     />
-    <!-- MenuItem For Configurations->School Configurations -->
+    <!-- MenuItem For Configurations->School Configurations only show teacher and administration -->
     <menuitem
         id="menu_school_config_form1"
         name="Configuration"
         parent="admission_register"
         sequence="199"
+        groups="school.group_school_administration,school.group_school_teacher"
     />
     <menuitem
         id="menu_cast"
