@@ -1,8 +1,3 @@
-[![Build Status](https://travis-ci.org/JayVora-SerpentCS/OdooEduERP.svg?branch=16.0)](https://travis-ci.org/JayVora-SerpentCS/OdooEduERP)
-
-# EduERPv16
-Education ERP v16
+# EduERPv18
+Education ERP v18
 Serpent Consulting Services Pvt Ltd, the Official Odoo GOLD partner has here contributed the Education ERP.
-
-Help us do better by donating to us and motivating us : http://www.serpentcs.com/page/donate-to-serpentcs
-Thanks.
