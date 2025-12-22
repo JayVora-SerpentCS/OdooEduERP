@@ -8,8 +8,9 @@
 
     <record id="product_product_b1" model="product.product">
         <field name="name">C++</field>
-        <field name="type">product</field>
+        <field name="type">consu</field>
         <field name="categ_id" ref="product_category_1" />
         <field name='default_code'>c++</field>
+        <field name='is_storable' eval="True" />
     </record>
 </odoo>

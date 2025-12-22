@@ -88,32 +88,33 @@ class ProductProduct(models.Model):
             res[product.id] = self._get_partner_code_name(product, parent_id)["code"]
         return res
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """This method is Create new student"""
         # add link from editor to supplier:
-        if "editor" in vals:
-            for supp in self.env["library.editor.supplier"].search(
-                ("name", "=", vals.get("editor"))
-            ):
-                supplier = [
-                    0,
-                    0,
-                    {
-                        "pricelist_ids": [],
-                        "name": supp.supplier_id.id,
-                        "sequence": supp.sequence,
-                        "qty": 0,
-                        "delay": 1,
-                        "product_code": False,
-                        "product_name": False,
-                    },
-                ]
-                if "seller_ids" not in vals:
-                    vals["seller_ids"] = [supplier]
-                else:
-                    vals["seller_ids"].append(supplier)
-        return super().create(vals)
+        for vals in vals_list:
+            if "editor" in vals:
+                for supp in self.env["library.editor.supplier"].search(
+                    ("name", "=", vals.get("editor"))
+                ):
+                    supplier = (
+                        0,
+                        0,
+                        {
+                            "pricelist_ids": [],
+                            "name": supp.supplier_id.id,
+                            "sequence": supp.sequence,
+                            "qty": 0,
+                            "delay": 1,
+                            "product_code": False,
+                            "product_name": False,
+                        },
+                    )
+                    if "seller_ids" not in vals:
+                        vals["seller_ids"] = [supplier]
+                    else:
+                        vals["seller_ids"].append(supplier)
+        return super().create(vals_list)
 
     @api.depends("qty_available")
     def _compute_books_available(self):
@@ -125,10 +126,6 @@ class ProductProduct(models.Model):
             )
             # reduces the quantity when book is issued
             rec.books_available = rec.qty_available - issue_rec_no
-            rec.availability = "notavailable"
-            if rec.books_available >= 1:
-                rec.availability = "available"
-        return True
 
     @api.depends("books_available", "day_to_return_book")
     def _compute_books_availablity(self):

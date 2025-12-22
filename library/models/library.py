@@ -143,24 +143,23 @@ class LibraryCard(models.Model):
 
     def _update_student_info(self, vals):
         student_rec = self.env["student.student"].browse(vals.get("student_id"))
-        vals.update(
-            {
-                "standard_id": student_rec.standard_id.id,
-                "roll_no": student_rec.roll_no,
-            }
-        )
+        return {
+            "standard_id": student_rec.standard_id.id,
+            "roll_no": student_rec.roll_no,
+        }
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Inherited this method to assign student values at record creation"""
-        if vals.get("student_id"):
-            self._update_student_info(vals)
-        return super().create(vals)
+        for vals in vals_list:
+            if vals.get("student_id"):
+                vals.update(self._update_student_info(vals))
+        return super().create(vals_list)
 
     def write(self, vals):
         """Inherited this method to update student values at record updation"""
         if vals.get("student_id"):
-            self._update_student_info(vals)
+            vals.update(self._update_student_info(vals))
         return super().write(vals)
 
     @api.constrains("student_id", "teacher_id")
@@ -223,6 +222,7 @@ class LibraryBookIssue(models.Model):
     """Book variant of product."""
 
     _name = "library.book.issue"
+    _inherit = ["mail.thread"]
     _description = "Library information"
     _rec_name = "standard_id"
 
@@ -296,11 +296,13 @@ class LibraryBookIssue(models.Model):
         required=True,
         help="Release(Issue) date of the book",
         default=fields.Datetime.now,
+        tracking=True,
     )
     date_return = fields.Datetime(
         compute="_compute_return_date",
         string="Return Date",
         store=True,
+        tracking=True,
         help="Book To Be Return On This Date",
     )
     actual_return_date = fields.Datetime(
@@ -335,6 +337,7 @@ class LibraryBookIssue(models.Model):
             ("pending", "Pending"),
         ],
         default="draft",
+        tracking=True,
         help="State of the library book",
     )
     user = fields.Char(help="Enter User")
@@ -455,14 +458,15 @@ class LibraryBookIssue(models.Model):
             }
         )
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Override create method"""
-        if vals.get("card_id") and vals.get("user") != "Teacher":
-            self._update_student_vals(vals)
-        if vals.get("card_id") and vals.get("user") == "Teacher":
-            self._update_teacher_vals(vals)
-        return super().create(vals)
+        for vals in vals_list:
+            if vals.get("card_id") and vals.get("user") != "Teacher":
+                self._update_student_vals(vals)
+            if vals.get("card_id") and vals.get("user") == "Teacher":
+                self._update_teacher_vals(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         """Override write method"""
@@ -809,12 +813,15 @@ class LibraryBookRequest(models.Model):
         if self.card_id.start_date > date:
             raise UserError(_("You can't request book!"))
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Inherited method to generate sequence at record creation"""
-        seq_obj = self.env["ir.sequence"]
-        vals.update({"req_id": (seq_obj.next_by_code("library.book.request") or "New")})
-        return super().create(vals)
+        for vals in vals_list:
+            seq_obj = self.env["ir.sequence"]
+            vals.update(
+                {"req_id": (seq_obj.next_by_code("library.book.request") or "New")}
+            )
+        return super().create(vals_list)
 
     def draft_book_request(self):
         """Method to change state as draft"""

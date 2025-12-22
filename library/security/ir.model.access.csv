@@ -13,6 +13,7 @@ access_stock_move_manager,stock.move,stock.model_stock_move,library.group_librar
 access_stock_picking_manager,stock.picking,stock.model_stock_picking,library.group_librarian,1,1,1,1
 access_account_move_line_manager,account.move.line,account.model_account_move_line,library.group_librarian,1,1,1,1
 access_student_manager,student.student,school.model_student_student,library.group_librarian,1,0,0,0
+access_school_teacher,school.teacher,school.model_school_teacher,library.group_librarian,1,0,0,0
 access_standard_manager,school.standard,school.model_school_standard,library.group_librarian,1,0,0,0
 access_standard_standard_manager,standard.standard,school.model_standard_standard,library.group_librarian,1,0,0,0
 access_standard_division_manager,standard.division,school.model_standard_division,library.group_librarian,1,0,0,0
