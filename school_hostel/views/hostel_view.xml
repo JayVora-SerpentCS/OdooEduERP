@@ -75,12 +75,12 @@
                     <notebook>
                         <page string="Room Detail">
                             <field name="room_ids" readonly="1">
-                                <tree>
+                                <list>
                                     <field name="floor_no" />
                                     <field name="room_no" />
                                     <field name="student_per_room" />
                                     <field name="availability" />
-                                </tree>
+                                </list>
                                 <form>
                                     <group col="4">
                                         <field name="floor_no" />
@@ -97,14 +97,14 @@
                          </page>
                          <page string="Student Details">
                              <field name="student_ids" readonly="1">
-                                 <tree>
+                                 <list>
                                      <field name="hostel_id" />
                                      <field name="student_id" />
                                      <field name="room_id" />
                                      <field name="admission_date" />
                                      <field name="discharge_date" />
                                      <field name="status" />
-                                 </tree>
+                                 </list>
                              </field>
                          </page>
                      </notebook>
@@ -118,10 +118,10 @@
         <field name="name">view.hostel.type.tree</field>
         <field name="model">hostel.type</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="type" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -129,14 +129,14 @@
     <record id="action_hostel_type" model="ir.actions.act_window">
         <field name="name">Hostel</field>
         <field name="res_model">hostel.type</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- MenuItem Of HOSTEL -->
     <menuitem
         id="hostel_main_menu"
         name="Hostel"
-        web_icon="school,static/description/menu_icons/icons_hostel.png"
+        web_icon="school,static/menu_icons/icons_hostel.png"
         sequence="2"
         groups="school_hostel.group_hostel_manager,school_hostel.group_hostel_user"
     />
@@ -173,14 +173,14 @@
                     <notebook>
                         <page string="Students">
                             <field name="student_ids" readonly="1">
-                                <tree>
+                                <list>
                                     <field name="hostel_id" />
                                      <field name="student_id" />
                                      <field name="room_id" />
                                      <field name="admission_date" />
                                      <field name="discharge_date" />
                                      <field name="status" />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -194,13 +194,13 @@
         <field name="name">view.hostel.room.tree</field>
         <field name="model">hostel.room</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="floor_no" />
                 <field name="room_no" />
                 <field name="student_per_room" />
                 <field name="availability" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -208,7 +208,7 @@
     <record id="action_hostel_room" model="ir.actions.act_window">
         <field name="name">Hostel Room</field>
         <field name="res_model">hostel.room</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- MenuItem Of HOSTEL Room -->
@@ -239,7 +239,7 @@
                         name="print_fee_receipt"
                         string="Print Fee Slip"
                         type="object"
-                        groups="school.group_school_administration,school_hostel.group_hostel_manager"
+                        groups="school.group_school_administration,school_hostel.group_hostel_manager,school_hostel.group_hostel_user"
                         invisible="status in ['draft','reservation','cancel','discharge']"
                     />
                     <button
@@ -354,12 +354,12 @@
         <field name="name">view.hostel.room.student</field>
         <field name="model">hostel.student</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="hostel_id" />
                 <field name="student_id" />
                 <field name="admission_date" />
                 <field name="discharge_date" />
-                <field name="room_rent" />
+                <field name="room_rent" string="Room Rent" />
                 <field name="paid_amount" />
                 <field name="remaining_amount" />
                 <field
@@ -369,7 +369,7 @@
                     decoration-danger="status in ('discharge', 'cancel')"
                     decoration-success="status in ('paid')"
                 />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -419,10 +419,10 @@
         <field name="name">view.hostel.amenities.tree</field>
         <field name="model">hostel.amenities</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="active" widget="boolean_toggle" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -430,14 +430,14 @@
     <record id="action_hostel_amenities" model="ir.actions.act_window">
         <field name="name">Hostel Amenities</field>
         <field name="res_model">hostel.amenities</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- Actions Of Form & Tree Views Of HOSTEL Student Button -->
     <record id="action_hostel_student_button" model="ir.actions.act_window">
         <field name="name">Hostel Student</field>
         <field name="res_model">hostel.student</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_student_id': active_id}</field>
     </record>
 
@@ -490,7 +490,7 @@
     <record id="action_hostel_student" model="ir.actions.act_window">
         <field name="name">Hostel Student</field>
         <field name="res_model">hostel.student</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- MenuItem Of HOSTEL Student -->
@@ -516,19 +516,11 @@
     <record id="menu_hostel_rector_action" model="ir.actions.act_window">
         <field name="name">Hostel Rector</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('is_hostel_rector','=',True)]</field>
         <field
             name="context"
         >{'default_is_hostel_rector': 1,'default_customer':False}</field>
-    </record>
-
-    <record id="menu_driver_action" model="ir.actions.act_window">
-        <field name="name">Driver</field>
-        <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="domain">[('is_driver','=',True)]</field>
-        <field name="context">{'default_is_driver': 1,'default_customer':False}</field>
     </record>
 
     <!-- MenuItems Of HOSTEL & HOSTEL->Bed Type -->

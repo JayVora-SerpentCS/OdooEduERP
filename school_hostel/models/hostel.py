@@ -13,11 +13,6 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    is_driver = fields.Boolean(
-        "Vehicle Driver",
-        help="""Activate if the
-        following person is driver""",
-    )
     is_hostel_rector = fields.Boolean(
         "Hostel Rector",
         help="Activate if the following person is hostel rector",
@@ -310,12 +305,13 @@ class HostelStudent(models.Model):
         if self.admission_date:
             self.discharge_date = self.admission_date + rd(months=self.duration)
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """This method is to set Discharge Date according to values added in
         admission date or duration fields."""
         res = super().create(vals)
-        res.discharge_date = res.admission_date + rd(months=res.duration)
+        for record in res:
+            record.discharge_date = record.admission_date + rd(months=res.duration)
         return res
 
     def write(self, vals):
@@ -492,7 +488,7 @@ class AccountPaymentRegister(models.TransientModel):
                     }
                 )
                 inv.hostel_student_id.write(vals)
-            elif inv.hostel_student_id and inv.payment_state == "not_paid":
+            elif inv.hostel_student_id and inv.payment_state != "paid":
                 fees_payment = inv.hostel_student_id.paid_amount + rec.amount
                 vals.update(
                     {

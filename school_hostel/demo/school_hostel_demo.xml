@@ -58,7 +58,7 @@
         <field name="student_id" ref="school.demo_student_student_4" />
         <field
             name="admission_date"
-            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field name="duration">6</field>
         <field name="hostel_info_id" ref="demo_school_hostel_1" />
@@ -69,7 +69,7 @@
         <field name="student_id" ref="school.demo_student_student_5" />
         <field
             name="admission_date"
-            eval="(DateTime.today() - relativedelta(years=1)).strftime('%Y-06-01 %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field name="duration">6</field>
         <field name="hostel_info_id" ref="demo_school_hostel_2" />
@@ -80,7 +80,7 @@
         <field name="student_id" ref="school.demo_student_student_6" />
         <field
             name="admission_date"
-            eval="(DateTime.today()).strftime('%Y-06-01 %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field name="duration">6</field>
         <field name="hostel_info_id" ref="demo_school_hostel_3" />
