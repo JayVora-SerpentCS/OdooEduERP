@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html>
 <odoo>
     <!-- Record Rule Of TimeTable For All Users -->
     <record id="student_rule_timetable_record" model="ir.rule">

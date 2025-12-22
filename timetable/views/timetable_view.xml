@@ -1,5 +1,4 @@
-<?xml version="1.0" ?>
-<!DOCTYPE html>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
         <!-- Form View Of Time Table Information -->
         <record id="view_time_table_form" model="ir.ui.view">
@@ -30,7 +29,7 @@
                         <notebook colspan="4">
                             <page string="TimeTable">
                                 <field name="timetable_ids" nolabel="1" colspan="4">
-                                    <tree editable="top">
+                                    <list editable="top">
                                         <field name="week_day" required="1" />
                                         <field
                                         name="subject_id"
@@ -48,7 +47,7 @@
                                         name="class_room_id"
                                         options='{"no_open": True, "no_create": True}'
                                     />
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -61,11 +60,11 @@
             <field name="name">time.table.tree</field>
             <field name="model">time.table</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="name" />
                     <field name="standard_id" />
                     <field name="year_id" />
-                </tree>
+                </list>
             </field>
         </record>
         <!-- Search View Time Table Information -->
@@ -99,7 +98,7 @@
         <record id="action_timetable_regular" model="ir.actions.act_window">
             <field name="name">Regular Timetable</field>
             <field name="res_model">time.table</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="domain">[('timetable_type','=','regular')]</field>
             <field name="context">{'default_timetable_type':'regular'}</field>
         </record>
@@ -111,12 +110,4 @@
         groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
         sequence="1"
     />
-        <!-- <menuitem
-        id="menu_timetable_regular"
-        name="Regular Timetable"
-        parent="menu_timetable_1"
-        action="action_timetable_regular"
-        groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"
-        sequence="61"
-    /> -->
 </odoo>
