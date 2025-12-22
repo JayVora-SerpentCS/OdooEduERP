@@ -1,5 +1,5 @@
 # See LICENSE file for full copyright and licensing details.
-
+from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -84,24 +84,41 @@ class SchoolEvaluation(models.Model):
 
     @api.model
     def _get_view(self, view_id=None, view_type="form", **options):
+        # Get the architecture as a string
         arch, view = super()._get_view(view_id, view_type, **options)
-        arch = self.sudo().hide_create_write(arch, view_type=view_type)
+
+        # Modify architecture
+        arch = self.sudo()._hide_create_write(arch, view_type=view_type)
+
         return arch, view
 
-    def hide_create_write(self, view_node, view_type="form"):
-        doc = view_node
+    def _hide_create_write(self, arch, view_type="form"):
+        """
+        Modify the view XML to disable create/edit for teachers.
+        """
         teacher_group = self.env.user.has_group("school.group_school_teacher")
-        if teacher_group:
-            if view_type == "tree":
-                nodes = doc.xpath("//tree[@name='teacher_evaluation']")
-                for node in nodes:
-                    node.set("create", "false")
-                    node.set("edit", "false")
-            if view_type == "form":
-                nodes = doc.xpath("//form[@name='teacher_evaluation']")
-                for node in nodes:
-                    node.set("create", "false")
-                    node.set("edit", "false")
+        if not teacher_group:
+            return arch  # No change needed
+
+        try:
+            doc = etree.fromstring(arch)
+        except Exception:
+            return arch  # Fail-safe
+
+        if view_type == "tree":  # tree = list view
+            nodes = doc.xpath("//tree[@name='teacher_evaluation']")
+            for node in nodes:
+                node.set("create", "false")
+                node.set("edit", "false")
+
+        elif view_type == "form":
+            nodes = doc.xpath("//form[@name='teacher_evaluation']")
+            for node in nodes:
+                node.set("create", "false")
+                node.set("edit", "false")
+
+        # Return XML back to string
+        return etree.tostring(doc, encoding="unicode")
 
     def get_record(self):
         """Method to get the evaluation questions"""
@@ -227,14 +244,15 @@ class RatingRating(models.Model):
 
     template_id = fields.Many2one("school.evaluation.template", "Stud", help="Ratings")
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Set Document model name for rating."""
         res_model_rec = self.env["ir.model"].search(
             [("model", "=", "school.evaluation.template")]
         )
-        vals.update({"res_model_id": res_model_rec.id})
-        res = super().create(vals)
+        for vals in vals_list:
+            vals.update({"res_model_id": res_model_rec.id})
+        res = super().create(vals_list)
         return res
 
     @api.depends("res_model", "res_id")
