@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html>
 <odoo>
         <!-- Tree View Of Teacher Assignment Information -->
         <record id="view_school_teacher_assignment_tree" model="ir.ui.view">
             <field name="name">school.teacher.assignment.tree</field>
             <field name="model">school.teacher.assignment</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="name" />
                     <field name="teacher_id" select="1" />
                     <field name="standard_id" />
@@ -20,7 +19,7 @@
                     decoration-info="state in ('draft')"
                     decoration-success="state in ('active','done')"
                 />
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -140,15 +139,15 @@
                         <group>
                             <field
                                 name="assign_date"
-                                string="assign_date"
-                                placeholder="Assign Date"
+                                string="Assign Date"
                                 readonly="state != 'draft'"
+                                placeholder="Assign Date"
                             />
                             <field
                                 name="due_date"
-                                string="due_date"
-                                placeholder="Due Date"
+                                string="Due Date"
                                 readonly="state != 'draft'"
+                                placeholder="Due Date"
                             />
                             <field name="subject_standard_assignment" invisible="1" />
                         </group>
@@ -188,7 +187,7 @@
                     <notebook>
                         <page string="Student Assignment Details">
                             <field name="student_assign_ids" readonly="1">
-                                <tree>
+                                <list>
                                     <field name="stud_roll_no" />
                                     <field name="student_id" />
                                     <field name="state" />
@@ -216,7 +215,7 @@
                                         type="action"
                                         invisible="state != 'active'"
                                     />
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -232,7 +231,7 @@
     >
             <field name="name">Assign Assignment</field>
             <field name="res_model">school.teacher.assignment</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="context">{'search_default_active_assign':1}</field>
         </record>
 
@@ -271,7 +270,7 @@
                         invisible="state != 'reject'"
                         string="Re-Assign"
                         type="object"
-                        groups="school.group_school_teacher, school.group_school_administration"
+                        groups="school.group_school_teacher,school.group_school_administration"
                     />
                         <field name="state" widget="statusbar" readonly="1" />
                     </header>
@@ -382,10 +381,10 @@
                             nolabel="1"
                             readonly="1"
                         >
-                            <tree>
+                            <list>
                                 <field name="name" />
                                 <field name="user_id" />
-                            </tree>
+                            </list>
                             <form>
                                 <field name="name" />
                                 <field name="user_id" />
@@ -409,7 +408,7 @@
             <field name="name">school.student.assignment.tree</field>
             <field name="model">school.student.assignment</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="student_id" />
                     <field name="name" />
                     <field name="teacher_id" />
@@ -424,7 +423,7 @@
                     decoration-success="state in ('active','done')"
                     decoration-danger="state in ('reject')"
                 />
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -498,7 +497,7 @@
     >
             <field name="name">Student Assignment</field>
             <field name="res_model">school.student.assignment</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="context">{'search_default_student_id': active_id}</field>
         </record>
 
@@ -536,7 +535,7 @@
     >
             <field name="name">Student Assignment</field>
             <field name="res_model">school.student.assignment</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="context">{'search_default_active_assigns':1}</field>
         </record>
 
@@ -544,7 +543,7 @@
         <menuitem
         id="menu_assignment"
         name="Assignment"
-        web_icon="school,static/description/menu_icons/icons_assignment.png"
+        web_icon="school,static/menu_icons/icons_assignment.png"
         sequence="7"
     />
         <menuitem
