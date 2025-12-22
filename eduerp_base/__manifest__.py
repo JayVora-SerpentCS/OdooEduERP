@@ -2,10 +2,10 @@
 
 {
     "name": "Education ERP",
-    "version": "17.0.1.0.0",
+    "version": "18.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "EduERP Management",
-    "website": "http://www.serpentcs.com",
+    "website": "https://www.serpentcs.com",
     "images": ["static/description/Banner_eduerp_base_17.jpg"],
     "depends": [
         "assignment",
