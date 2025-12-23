@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<odoo noupdate="0">
+<odoo noupdate="1">
      <!--School.event-->
      <record id="school_event_1" model="event.event">
         <field name="name">Hockey(Demo-1)</field>
