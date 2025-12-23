@@ -11,7 +11,7 @@
         <field name="name"> Transport Point-1 to Transport Point-4</field>
         <field
             name="start_date"
-            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field
             name="end_date"
@@ -24,7 +24,7 @@
         <field name="name"> Transport Point-1 to Transport Point-3</field>
         <field
             name="start_date"
-            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field
             name="end_date"
@@ -37,7 +37,7 @@
         <field name="name"> Transport Point-1 to Transport Point-2</field>
         <field
             name="start_date"
-            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field
             name="end_date"
@@ -50,7 +50,7 @@
         <field name="name"> Transport Point-2 to Transport Point-4</field>
         <field
             name="start_date"
-            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field
             name="end_date"
@@ -63,7 +63,7 @@
         <field name="name"> Transport Point-2 to Transport Point-3</field>
         <field
             name="start_date"
-            eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
+            eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"
         />
         <field
             name="end_date"
