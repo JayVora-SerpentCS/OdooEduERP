@@ -55,7 +55,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
             ("12", "December"),
         ],
     )
-    month_str = fields.Char(string="Month")
+    month_str = fields.Char(string="Month String")
     subject_ids = fields.Many2many(
         "subject.subject",
         "subject_wizard_rel",
@@ -414,9 +414,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                                                 student.stud_id.name
                                             ) and att_data.get(
                                                 student.stud_id.name
-                                            ).get(
-                                                att_count
-                                            ):
+                                            ).get(att_count):
                                                 if (
                                                     att_data.get(
                                                         student.stud_id.name
@@ -437,9 +435,7 @@ class DailyAttendanceStudentRemark(models.TransientModel):
                                                 student.stud_id.name
                                             ) and att_data.get(
                                                 student.stud_id.name
-                                            ).get(
-                                                att_count
-                                            ):
+                                            ).get(att_count):
                                                 if (
                                                     att_data.get(
                                                         student.stud_id.name

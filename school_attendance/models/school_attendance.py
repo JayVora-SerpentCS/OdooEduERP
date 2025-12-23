@@ -72,11 +72,12 @@ class StudentleaveRequest(models.Model):
             "teacher_id": student.standard_id.user_id.id,
         }
 
-    @api.model
-    def create(self, vals):
-        if vals.get("student_id"):
-            vals.update(self._update_vals(vals.get("student_id")))
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("student_id"):
+                vals.update(self._update_vals(vals.get("student_id")))
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get("student_id"):
@@ -329,23 +330,17 @@ class DailyAttendance(models.Model):
         "Academic Class",
         required=True,
         help="Select Standard",
-        states={"validate": [("readonly", True)]},
     )
     student_ids = fields.One2many(
         "daily.attendance.line",
         "standard_id",
         "Students",
-        states={
-            "validate": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     user_id = fields.Many2one(
         "school.teacher",
         "Faculty",
         help="Select Teacher",
         ondelete="restrict",
-        states={"validate": [("readonly", True)]},
     )
     state = fields.Selection(
         [("draft", "Draft"), ("validate", "Validate")],
@@ -446,41 +441,42 @@ class DailyAttendance(models.Model):
             else:
                 raise ValidationError(_("No Students are found for selected criteria!"))
 
-    @api.model
-    def create(self, vals):
-        student_list = []
+    @api.model_create_multi
+    def create(self, vals_list):
         stud_obj = self.env["student.student"]
-        standard_id = vals.get("student_id")
-        date = vals.get("date")
-        stud_ids = stud_obj.search(
-            [
-                ("standard_id", "=", vals.get("standard_id")),
-                ("state", "=", "done"),
-            ]
-        )
-        for stud in stud_ids:
-            line_vals = {
-                "roll_no": stud.roll_no,
-                "stud_id": stud.id,
-                "is_present": True,
-            }
-            if vals.get("student_ids") and not vals.get("student_ids")[0][2].get(
-                "present_absentcheck"
-            ):
-                student_leave = self.env["studentleave.request"].search(
-                    [
-                        ("state", "=", "approve"),
-                        ("student_id", "=", stud.id),
-                        ("standard_id", "=", standard_id),
-                        ("start_date", "<=", date),
-                        ("end_date", ">=", date),
-                    ]
-                )
-                if student_leave:
-                    line_vals.update({"is_absent": True})
-            student_list.append((0, 0, line_vals))
-        vals.update({"student_ids": student_list})
-        return super().create(vals)
+        for vals in vals_list:
+            student_list = []
+            standard_id = vals.get("student_id")
+            date = vals.get("date")
+            stud_ids = stud_obj.search(
+                [
+                    ("standard_id", "=", vals.get("standard_id")),
+                    ("state", "=", "done"),
+                ]
+            )
+            for stud in stud_ids:
+                line_vals = {
+                    "roll_no": stud.roll_no,
+                    "stud_id": stud.id,
+                    "is_present": True,
+                }
+                if vals.get("student_ids") and not vals.get("student_ids")[0][2].get(
+                    "present_absentcheck"
+                ):
+                    student_leave = self.env["studentleave.request"].search(
+                        [
+                            ("state", "=", "approve"),
+                            ("student_id", "=", stud.id),
+                            ("standard_id", "=", standard_id),
+                            ("start_date", "<=", date),
+                            ("end_date", ">=", date),
+                        ]
+                    )
+                    if student_leave:
+                        line_vals.update({"is_absent": True})
+                student_list.append((0, 0, line_vals))
+            vals.update({"student_ids": student_list})
+        return super().create(vals_list)
 
     def attendance_draft(self):
         """Change the state of attendance to draft"""
