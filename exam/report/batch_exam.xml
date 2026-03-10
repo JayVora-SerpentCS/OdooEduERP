@@ -35,7 +35,7 @@
                                     width="14.16%"
                                     style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;"
                                 >
-                                      <span t-field="o.year.name" />
+                                      <span t-field="o.year" />
                                </td>
                                <td
                                     align="center"

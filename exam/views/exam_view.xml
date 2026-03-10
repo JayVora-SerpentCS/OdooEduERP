@@ -5,7 +5,7 @@
     <record id="action_stu_result_form" model="ir.actions.act_window">
         <field name="name">Result</field>
         <field name="res_model">exam.result</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_student_id': active_id}</field>
     </record>
 
@@ -41,13 +41,13 @@
         <field name="name">exam.exam.tree</field>
         <field name="model">exam.exam</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" select="1" />
                 <field name="start_date" />
                 <field name="end_date" />
                 <field name="write_date" />
                 <field name="state" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -204,7 +204,7 @@
                                     readonly="state != 'draft'"
                                     context="{'default_standard_ids':standard_id,'academic_year':academic_year}"
                                 >
-                                    <tree editable="top">
+                                    <list editable="top">
                                         <field
                                             name="standard_ids"
                                             column_invisible="1"
@@ -224,7 +224,7 @@
                                                 ('standard_id','=',standard_id)]"
                                             options="{'no_create': True}"
                                         />
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
 
@@ -286,7 +286,7 @@
                     nolabel="1"
                     invisible="timetable_type != 'exam'"
                 >
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="exm_date" required="1" />
                         <field name="day_of_week" readonly="1" force_save="1" />
                         <field
@@ -304,7 +304,7 @@
                             name="class_room_id"
                             options='{"no_open": True, "no_create": True}'
                         />
-                    </tree>
+                    </list>
                 </field>
             </field>
         </field>
@@ -314,14 +314,14 @@
     <record id="action_exam_exam_form" model="ir.actions.act_window">
         <field name="name">Regular Exam</field>
         <field name="res_model">exam.exam</field>
-        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_mode">calendar,list,form</field>
     </record>
 
     <!-- Menu Items Of Exam -->
     <menuitem
         id="menu_exam"
         name="Exams"
-        web_icon="school,static/description/menu_icons/icons_exam.png"
+        web_icon="school,static/menu_icons/icons_exam.png"
         sequence="10"
     />
     <menuitem
@@ -360,12 +360,12 @@
         <field name="name">additional.exam.tree</field>
         <field name="model">additional.exam</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" select="1" />
                 <field name="standard_id" />
                 <field name="subject_id" select="1" />
                 <field name="exam_date" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -459,11 +459,11 @@
         </field>
     </record>
 
-    <!-- Actions Of Form, Tree, Calendar Views Of Additional Exam Information -->
+    <!-- Actions Of Form, list, Calendar Views Of Additional Exam Information -->
     <record id="action_additional_exam_form" model="ir.actions.act_window">
         <field name="name">Additional Exam</field>
         <field name="res_model">additional.exam</field>
-        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_mode">calendar,list,form</field>
     </record>
 
     <!-- Menu Item Of Additional Exam -->
@@ -486,14 +486,14 @@
         <field name="name">exam.result.tree</field>
         <field name="model">exam.result</field>
         <field name="arch" type="xml">
-            <tree create="false">
+            <list create="false">
                 <field name="student_id" />
                 <field name="standard_id" />
                 <field name="s_exam_ids" />
                 <field name="percentage" />
                 <field name="total" />
                 <field name="result" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -580,7 +580,7 @@
                         </group>
                     </group>
                     <field name="result_ids" nolabel="1" colspan="4">
-                        <tree editable="bottom" create="false" delete="false">
+                        <list editable="bottom" create="false" delete="false">
                             <!-- <field name="state"/> -->
                             <field
                                 name="subject_id"
@@ -611,7 +611,7 @@
                                 invisible="state not in ['re-evaluation','re-evaluation_confirm']"
                                 readonly="state in ['re-evaluation_confirm']"
                             />
-                        </tree>
+                        </list>
                         <form string="Subjects">
                             <group col="4">
                                 <field
@@ -652,14 +652,7 @@
                         </group>
                     </group>
                 </sheet>
-                <div class="oe_chatter">
-                    <field
-                        name="message_follower_ids"
-                        widget="mail_followers"
-                        groups="base.group_user"
-                    />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter />
             </form>
         </field>
     </record>
@@ -680,7 +673,7 @@
                 <field name="result" />
                 <field name="grade" />
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <t
                             t-set="color"
                             t-value="kanban_color(record.color.raw_value || record.student_id.raw_value)"
@@ -825,7 +818,7 @@
     <record id="action_exam_result_form" model="ir.actions.act_window">
         <field name="name">Exam Results</field>
         <field name="res_model">exam.result</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
     <!-- Menu Item Of Result -->
@@ -842,14 +835,14 @@
         <field name="name">additional.exam.result.tree</field>
         <field name="model">additional.exam.result</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="student_id" select="1" />
                 <field name="roll_no" select="1" />
                 <field name="a_exam_id" />
                 <field name="standard_id" />
                 <field name="obtain_marks" />
                 <field name="result" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -925,7 +918,7 @@
     <record id="timetable_exam_action" model="ir.actions.act_window">
         <field name="name">Exam Timetable</field>
         <field name="res_model">time.table</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('timetable_type','=','exam')]</field>
         <field name="context">{'default_timetable_type':'exam'}</field>
     </record>
@@ -957,7 +950,7 @@
     <record id="action_additional_exam_result_form01" model="ir.actions.act_window">
         <field name="name">Additional Exam Results</field>
         <field name="res_model">additional.exam.result</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- Menu Item Of Additional Exam Result -->

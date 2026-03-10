@@ -10,15 +10,18 @@
                 <group>
                     <field name="s_exam_id" />
                 </group>
-                <field
-                    name="result_ids"
-                    context="{'is_from_subject_report':1, 'active_id': active_id, 'active_model': active_model}"
-                >
-                    <tree create="false">
-                        <field name="name" />
-                        <field name="code" />
-                    </tree>
-                </field>
+                <group>
+                    <field
+                        name="result_ids"
+                        context="{'is_from_subject_report':1,'active_id': id,}"
+                    >
+                     <!-- 'active_model': active_model -->
+                        <list create="false">
+                            <field name="name" />
+                            <field name="code" />
+                        </list>
+                    </field>
+                </group>
                 <footer>
                     <button
                         class="btn btn-sm btn-default oe_highlight"
