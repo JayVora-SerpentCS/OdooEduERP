@@ -64,7 +64,7 @@ class ProductProduct(models.Model):
             return self._context["category_id"]
         res = False
         try:
-            res = self.env.ref("library.product_category_1").id
+            res = self.env.ref("school_library.product_category_1").id
         except ValueError:
             res = False
         return res
@@ -276,13 +276,13 @@ class ProductProduct(models.Model):
             )
             if not book_req:
                 raise ValidationError(_("There is no Book requested"))
-            action = self.env.ref("library.action_lib_book_req")
+            action = self.env.ref("school_library.action_lib_book_req")
             result = action.read()[0]
             req = [request_rec.id for request_rec in book_req]
             if len(req) != 1:
                 result["domain"] = "[('id', 'in', " + str(req) + ")]"
             else:
-                res = self.env.ref("library.view_book_library_req_form", False)
+                res = self.env.ref("school_library.view_book_library_req_form", False)
                 result["views"] = [(res and res.id or False, "form")]
                 result["res_id"] = book_req.id
             return result

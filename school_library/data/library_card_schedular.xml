@@ -4,7 +4,7 @@
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="state">code</field>
-        <field ref='library.model_library_card' name="model_id" />
+        <field ref='school_library.model_library_card' name="model_id" />
         <field name="code">model.librarycard_expire()</field>
         <field name="active" eval="True" />
     </record>

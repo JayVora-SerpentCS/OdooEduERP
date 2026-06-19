@@ -22,11 +22,11 @@ class TestLibrary(common.TransactionCase):
         self.student_id = self.env.ref("school.demo_student_student_5")
         self.school_standard = self.env.ref("school.demo_school_standard_2")
         self.standard = self.env.ref("school.demo_standard_standard_2")
-        self.product = self.env.ref("library.library_product_b2")
+        self.product = self.env.ref("school_library.library_product_b2")
         self.res_partner = self.env.ref("base.res_partner_1")
         self.category = self.env.ref("product.product_category_1")
         self.company_id = self.env.ref("school.demo_school_1")
-        self.product_book = self.env.ref("library.product_product_b1")
+        self.product_book = self.env.ref("school_library.product_product_b1")
         self.prd_uom = self.env.ref("product.product_uom_unit")
         # Create library rack
         self.library_rack = self.library_rack_obj.create(
