@@ -84,26 +84,51 @@ class SchoolTeacher(models.Model):
         self.student_id = False
 
     @api.model_create_multi
-    def create(self, vals):
-        """Inherited create method to assign value to users for delegation"""
-        teacher_id = super().create(vals)
+    def create(self, vals_list):
+        """Create the user account associated with each teacher.
+
+        A user cannot be linked to more than one employee in the same company,
+        and its login must be unique.  Each teacher therefore needs a distinct
+        work email/login unless a user is already linked to that employee.
+        """
+        teachers = super().create(vals_list)
         user_obj = self.env["res.users"]
-        user_vals = {
-            "name": teacher_id.name,
-            "login": teacher_id.work_email,
-            "email": teacher_id.work_email,
-        }
-        user_rec = user_obj.with_context(
-            teacher_create=True, school_id=teacher_id.school_id.company_id.id
-        ).create(user_vals)
-        teacher_id.employee_id.write({"user_id": user_rec.id})
+        for teacher in teachers:
+            # A user may already have been selected while the delegated
+            # ``hr.employee`` record was created.
+            user = teacher.employee_id.user_id
+            existing_user = user_obj.search(
+                [("login", "=ilike", teacher.work_email)], limit=1
+            )
+            if not user and existing_user:
+                raise ValidationError(
+                    _(
+                        "The work email '%(email)s' is already used as a "
+                        "login. Enter a unique work email for this teacher."
+                    )
+                    % {"email": teacher.work_email}
+                )
+
+            if not user:
+                user = user_obj.with_context(
+                    teacher_create=True,
+                    school_id=teacher.school_id.company_id.id,
+                ).create(
+                    {
+                        "name": teacher.name,
+                        "login": teacher.work_email,
+                        "email": teacher.work_email,
+                    }
+                )
+
+            teacher.employee_id.write({"user_id": user.id})
         #        if vals.get('is_parent'):
         #            self.parent_crt(teacher_id)
-        return teacher_id
+        return teachers
 
     @api.constrains("birthday")
     def _check_birthday(self):
-        for record in self.filtered(lambda x: x.birthday > date.today()):
+        for _record in self.filtered(lambda x: x.birthday > date.today()):
             raise ValidationError(_("Birthday cannot be greater than the current date"))
 
     # Removing this code because of issue faced due to email id of the
@@ -184,7 +209,6 @@ class SchoolTeacher(models.Model):
         self.address_id = partner.id or False
         self.mobile_phone = partner.mobile or False
         self.work_location_id = partner.id or False
-        self.work_email = partner.email or False
         phone = partner.phone or False
         self.work_phone = phone or False
         self.phone_numbers = phone or False
