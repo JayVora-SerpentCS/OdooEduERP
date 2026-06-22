@@ -97,19 +97,24 @@ class SchoolTeacher(models.Model):
             # A user may already have been selected while the delegated
             # ``hr.employee`` record was created.
             user = teacher.employee_id.user_id
-            existing_user = user_obj.search(
-                [("login", "=ilike", teacher.work_email)], limit=1
-            )
-            if not user and existing_user:
-                raise ValidationError(
-                    _(
-                        "The work email '%(email)s' is already used as a "
-                        "login. Enter a unique work email for this teacher."
-                    )
-                    % {"email": teacher.work_email}
-                )
-
             if not user:
+                if not teacher.work_email:
+                    raise ValidationError(
+                        _("A work email is required to create a teacher user.")
+                    )
+
+                existing_user = user_obj.search(
+                    [("login", "=ilike", teacher.work_email)], limit=1
+                )
+                if existing_user:
+                    raise ValidationError(
+                        _(
+                            "The work email '%(email)s' is already used as a "
+                            "login. Enter a unique work email for this teacher."
+                        )
+                        % {"email": teacher.work_email}
+                    )
+
                 user = user_obj.with_context(
                     teacher_create=True,
                     school_id=teacher.school_id.company_id.id,
@@ -120,8 +125,7 @@ class SchoolTeacher(models.Model):
                         "email": teacher.work_email,
                     }
                 )
-
-            teacher.employee_id.write({"user_id": user.id})
+                teacher.employee_id.write({"user_id": user.id})
         #        if vals.get('is_parent'):
         #            self.parent_crt(teacher_id)
         return teachers
