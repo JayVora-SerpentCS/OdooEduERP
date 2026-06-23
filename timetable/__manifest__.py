@@ -5,7 +5,7 @@
     "version": "18.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.,\
                Odoo Community Association (OCA)",
-    "website": "http://www.serpentcs.com",
+    "website": "https://www.serpentcs.com",
     "license": "AGPL-3",
     "category": "School Management",
     "complexity": "easy",
