@@ -4,7 +4,7 @@
     "name": "Transport Management for Education ERP",
     "version": "18.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
-    "website": "https://www.serpentcs.com",
+    "website": "http://www.serpentcs.com",
     "license": "AGPL-3",
     "category": "School Management",
     "complexity": "easy",

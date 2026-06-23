@@ -5,7 +5,7 @@
     "version": "18.0.1.0.0",
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "School Management",
-    "website": "https://www.serpentcs.com",
+    "website": "http://www.serpentcs.com",
     "license": "AGPL-3",
     "complexity": "easy",
     "summary": "Module For HOSTEL Management In School",
