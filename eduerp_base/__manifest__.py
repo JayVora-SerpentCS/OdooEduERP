@@ -10,7 +10,7 @@
     "depends": [
         "assignment",
         "exam",
-        "school_library_management_management",
+        "school_library_management",
         "school_attendance",
         "school_evaluation",
         "school_event",
