@@ -12,7 +12,7 @@ class TerminateReasonLibrary(models.TransientModel):
     def default_get(self, fields):
         """Override method to display message if student has issued book
         while terminate student"""
-        res = super(TerminateReasonLibrary, self).default_get(fields)
+        res = super().default_get(fields)
         student_obj = self.env["student.student"].browse(self._context.get("active_id"))
         library_card_rec = self.env["library.card"].search(
             [("student_id", "=", student_obj.id), ("state", "=", "running")]
