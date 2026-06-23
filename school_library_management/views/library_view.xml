@@ -120,21 +120,21 @@
         name="Library"
         web_icon="school,static/menu_icons/icons_library.png"
         sequence="1"
-        groups="school_library.group_librarian,group_userian"
+        groups="school_library_management.group_librarian,group_userian"
     />
     <menuitem
         id="menu_library_config"
         name="Configuration"
-        parent="school_library.menu_library"
+        parent="school_library_management.menu_library"
         sequence="99"
-        groups="school_library.group_librarian,group_userian"
+        groups="school_library_management.group_librarian,group_userian"
     />
     <menuitem
         id="menu_library_rack"
         name="Library Rack"
         parent="menu_library_config"
         action="action_library_rack"
-        groups="school.group_school_administration,school_library.group_librarian,school_library.group_userian"
+        groups="school.group_school_administration,school_library_management.group_librarian,school_library_management.group_userian"
     />
     <!-- Form View Of Product Book -->
     <record id="view_product_book_form" model="ir.ui.view">
@@ -149,7 +149,7 @@
                             name="action_purchase_order"
                             type="object"
                             icon="fa-book"
-                            groups="school_library.group_librarian"
+                            groups="school_library_management.group_librarian"
                         >
                             <field
                                 string="Actual Qty"
@@ -436,7 +436,7 @@
     <menuitem
         id="menu_library_config"
         name="Configuration"
-        parent="school_library.menu_library"
+        parent="school_library_management.menu_library"
         sequence="99"
     />
     <menuitem
@@ -444,7 +444,7 @@
         parent="menu_library"
         action="action_product_book_list"
         sequence="71"
-        groups="school.group_school_administration,school.group_school_student,school_library.group_librarian,school_library.group_userian"
+        groups="school.group_school_administration,school.group_school_student,school_library_management.group_librarian,school_library_management.group_userian"
     />
     <!-- Action Of Form View Of View Book -->
     <record id="action_view_book" model="ir.actions.act_window.view">
@@ -513,14 +513,14 @@
                         type="object"
                         string="Confirm"
                         invisible="state == 'running'"
-                        groups="school_library.group_librarian"
+                        groups="school_library_management.group_librarian"
                     />
                     <button
                         name="draft_state"
                         type="object"
                         string="Draft State"
                         invisible="state == 'draft'"
-                        groups="school_library.group_librarian"
+                        groups="school_library_management.group_librarian"
                     />
                     <field name="state" widget="statusbar" readonly="1" />
                 </header>
@@ -615,7 +615,7 @@
         parent="menu_library"
         action="action_card_info"
         sequence="74"
-        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school_library.group_librarian,school_library.group_userian"
+        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school_library_management.group_librarian,school_library_management.group_userian"
     />
     <!-- Form View Of Library Book Issue -->
     <record id="view_book_library_form_1" model="ir.ui.view">
@@ -631,7 +631,7 @@
                         icon="fa-undo"
                         string="Book Return"
                         invisible="ebook_check == True or state not in ['issue','reissue']"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="issue_book"
@@ -640,7 +640,7 @@
                         class="oe_highlight"
                         icon="fa-check-circle"
                         invisible="state != 'draft'"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="reissue_book"
@@ -649,14 +649,14 @@
                         icon="fa-reply"
                         string="Book Reissue"
                         invisible="ebook_check == True or state not in ['issue']"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="cancel_book"
                         type="object"
                         string="Cancel"
                         invisible="ebook_check == True or state not in ['draft', 'issue', 'subscribe']"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="draft_book"
@@ -665,7 +665,7 @@
                         icon="fa-file-code-o"
                         string="Draft"
                         invisible="state != 'cancel' and book_request_id.state != 'cancel'"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="lost_book"
@@ -674,7 +674,7 @@
                         icon="fa-snowflake-o"
                         string="Book Lost"
                         invisible="ebook_check == True or state not in ['issue', 'reissue']"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="user_fine"
@@ -683,7 +683,7 @@
                         string="Fine"
                         type="object"
                         invisible="state not in ['return', 'lost'] or lost_penalty &lt; 1.0"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="user_fine"
@@ -692,7 +692,7 @@
                         string="Fine"
                         type="object"
                         invisible="state not in ['return', 'lost'] or penalty &lt; 1.0"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <button
                         name="subscription_pay"
@@ -701,7 +701,7 @@
                         string="Subscription Payment"
                         type="object"
                         invisible="state != 'subscribe'"
-                        groups="school.group_school_administration,school_library.group_librarian"
+                        groups="school.group_school_administration,school_library_management.group_librarian"
                     />
                     <field name="book_request_id" invisible="1" />
                     <field
@@ -719,7 +719,7 @@
                             name="view_invoice"
                             type="object"
                             invisible="state not in ['fine','paid','pending']"
-                            groups="school_library.group_librarian"
+                            groups="school_library_management.group_librarian"
                             icon="fa-pencil-square-o"
                         >
                             <field
@@ -997,7 +997,7 @@
         parent="menu_library"
         action="action_library_book_list1"
         sequence="73"
-        groups="school.group_school_administration,school_library.group_librarian,school_library.group_userian"
+        groups="school.group_school_administration,school_library_management.group_librarian,school_library_management.group_userian"
     />
     <!-- Form View Of Library Book Request -->
     <record id="view_book_library_req_form" model="ir.ui.view">
@@ -1011,7 +1011,7 @@
                         icon="fa-undo"
                         type="object"
                         string="Confirm Request"
-                        groups="school_library.group_librarian"
+                        groups="school_library_management.group_librarian"
                         invisible="type == 'new' or state != 'draft'"
                     />
                     <button
@@ -1138,7 +1138,7 @@
         parent="menu_library"
         action="action_lib_book_req"
         sequence="72"
-        groups="school.group_school_administration,school.group_school_student,school_library.group_librarian,school_library.group_userian"
+        groups="school.group_school_administration,school.group_school_student,school_library_management.group_librarian,school_library_management.group_userian"
     />
     <!-- Form view Of Product Language -->
     <record id="product_lang_form_view" model="ir.ui.view">
@@ -1178,14 +1178,14 @@
     <menuitem
         id="menu_library_config"
         name="Configuration"
-        parent="school_library.menu_library"
+        parent="school_library_management.menu_library"
         sequence="99"
     />
     <menuitem
         id="menu_lang"
         parent="menu_library_config"
         action="action_lang"
-        groups="school.group_school_administration,school_library.group_librarian"
+        groups="school.group_school_administration,school_library_management.group_librarian"
     />
     <!-- Form View Of Library Editor -->
     <record id="book_editor_form" model="ir.ui.view">
@@ -1542,7 +1542,7 @@
                         <field
                             name="name"
                             required="1"
-                            context="{'form_view_ref':'school_library.view_partner_form_11'}"
+                            context="{'form_view_ref':'school_library_management.view_partner_form_11'}"
                         />
                         <field name="supplier_id" required="1" />
                         <field name="sequence" string="Sequence" />
@@ -1645,7 +1645,7 @@
         name="Author"
         parent="menu_library_config"
         action="action_author_list"
-        groups="school.group_school_administration,school_library.group_librarian"
+        groups="school.group_school_administration,school_library_management.group_librarian"
     />
     <!-- Inherit Form View of Product Category -->
     <record id="library_book_product_category_inherit" model="ir.ui.view">

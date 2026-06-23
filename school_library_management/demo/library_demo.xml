@@ -36,7 +36,7 @@
     <record id="library_product_b13" model="product.product">
         <field name="name">DBMS</field>
         <field name="type">consu</field>
-        <field name="categ_id" ref="school_library.product_category_1" />
+        <field name="categ_id" ref="school_library_management.product_category_1" />
         <field name='default_code'>dbms</field>
     </record>
 
@@ -51,7 +51,7 @@
 
     <record id="demo_library_book_1" model="library.book.issue">
         <field name="issue_code">New</field>
-        <field name="name" ref="school_library.product_product_b1" />
+        <field name="name" ref="school_library_management.product_product_b1" />
         <field name="card_id" ref="demo_library_card_1" />
         <field name="user">Student</field>
         <field name="student_id" ref="school.demo_student_student_7" />
@@ -72,14 +72,14 @@
     <record id="demo_library_book_request_1" model="library.book.request">
         <field name="card_id" ref="demo_library_card_1" />
         <field name="type">existing</field>
-        <field name="name" ref="school_library.product_product_b1" />
+        <field name="name" ref="school_library_management.product_product_b1" />
 
     </record>
 
     <record id="demo_library_book_request_2" model="library.book.request">
         <field name="card_id" ref="demo_library_card_2" />
         <field name="type">existing</field>
-        <field name="name" ref="school_library.product_product_b1" />
+        <field name="name" ref="school_library_management.product_product_b1" />
     </record>
 
     <!-- library.rack -->

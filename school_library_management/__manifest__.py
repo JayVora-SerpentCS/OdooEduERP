@@ -24,7 +24,7 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "school_library/static/src/css/library.css",
+            "school_library_management/static/src/css/library.css",
         ]
     },
     "demo": ["demo/library_demo.xml"],
