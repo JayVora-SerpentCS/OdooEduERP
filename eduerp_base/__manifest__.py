@@ -19,6 +19,7 @@
         "school_transport",
         "timetable",
     ],
+    "image": ["static/description/banner_EDU ERP.png"],
     "license": "AGPL-3",
     "auto_install": False,
     "installable": True,
