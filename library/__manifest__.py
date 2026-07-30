@@ -28,7 +28,7 @@
         ]
     },
     "demo": ["demo/library_demo.xml"],
-    "image": ["static/description/library_management_product_banner.png"],
+    "images": ["static/description/library_management_product_banner.png"],
     "installable": True,
     "application": True,
 }
