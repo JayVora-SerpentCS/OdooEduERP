@@ -6,7 +6,6 @@
     "author": "Serpent Consulting Services Pvt. Ltd.",
     "category": "EduERP Management",
     "website": "https://www.serpentcs.com",
-    "images": ["static/description/Banner_eduerp_base_17.jpg"],
     "depends": [
         "assignment",
         "exam",
@@ -19,7 +18,7 @@
         "school_transport",
         "timetable",
     ],
-    "image": ["static/description/banner_EDU ERP.png"],
+    "images": ["static/description/banner_EDU ERP.png"],
     "license": "AGPL-3",
     "auto_install": False,
     "installable": True,
